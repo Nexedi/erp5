@@ -97,13 +97,17 @@ class PaymentSimulationRule(Rule, PredicateMatrix):
 
     if cell is not None : # else, we do nothing
       for payment_condition in payment_condition_list:
-        aggregated_ammount_list = payment_condition.getAggregatedAmountList(
-            input_movement, movement_list=[input_movement])
-        assert len(aggregated_ammount_list) == 1
-        aggregated_ammount = aggregated_ammount_list[0]
-        start_date = aggregated_ammount.getStartDate()
-        stop_date = aggregated_ammount.getStopDate()
-        quantity = aggregated_ammount.getQuantity()
+        # XXX
+        if (payment_condition.getCalculationScript(input_movement) is not None
+            or payment_condition.getEfficiency() != 1):
+          raise NotImplementedError
+        #amount, = payment_condition.getAggregatedAmountList((input_movement,))
+        #start_date = amount.getStartDate()  # does it depend on any property
+        #stop_date = amount.getStopDate()    # of payment_condition ?
+        #quantity = amount.getQuantity()
+        start_date = input_movement.getStartDate()
+        stop_date = input_movement.getStopDate()
+        quantity = input_movement.getTotalPrice() * payment_condition.getQuantity(1)
         payment_mode = payment_condition.getPaymentMode()
 
         # one for payable

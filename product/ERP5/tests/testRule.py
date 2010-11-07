@@ -31,7 +31,8 @@ import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
-from testOrder import TestOrderMixin
+from Products.ERP5.tests.testOrder import TestOrderMixin
+from Products.ERP5.tests.utils import newSimulationExpectedFailure
 
 class TestRuleMixin(TestOrderMixin):
   """
@@ -108,6 +109,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
   run_all_test = 1
   quiet = 0
 
+  @newSimulationExpectedFailure
   def test_01_ValidatedRuleWithNoScript(self, quiet=quiet, run=run_all_test):
     """
     test that when a rule is validated, but has no script it will not apply
@@ -124,6 +126,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
       validation_state="validated")[0][0], 1)
     self.assertEquals(len(self.getRuleTool().searchRuleList(self.pl)), 0)
 
+  @newSimulationExpectedFailure
   def test_02_WrongTestMethod(self, quiet=quiet, run=run_all_test):
     """
     test that when a rule's test method returns False, it will not apply
@@ -144,6 +147,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
       validation_state="validated")[0][0], 1)
     self.assertEquals(len(self.getRuleTool().searchRuleList(self.pl)), 0)
 
+  @newSimulationExpectedFailure
   def test_03_GoodTestMethod(self, quiet=quiet, run=run_all_test):
     """
     test that when a rule's test method returns True, it will apply
@@ -164,6 +168,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
       validation_state="validated")[0][0], 1)
     self.assertEquals(len(self.getRuleTool().searchRuleList(self.pl)), 1)
 
+  @newSimulationExpectedFailure
   def test_04_NotValidatedRule(self, quiet=quiet, run=run_all_test):
     """
     test that when a rule is not validated, it will not apply, even if it has
@@ -186,6 +191,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
       validation_state="validated")[0][0], 0)
     self.assertEquals(len(self.getRuleTool().searchRuleList(self.pl)), 0)
 
+  @newSimulationExpectedFailure
   def test_06_WrongDateRange(self, quiet=quiet, run=run_all_test):
     """
     test that when a rule is validated but does not have correct date range,
@@ -209,6 +215,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
       validation_state="validated")[0][0], 1)
     self.assertEquals(len(self.getRuleTool().searchRuleList(self.pl)), 0)
 
+  @newSimulationExpectedFailure
   def test_07_GoodDateRange(self, quiet=quiet, run=run_all_test):
     """
     test that when a rule is validated and has a correct date range, it will
@@ -232,6 +239,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
       validation_state="validated")[0][0], 1)
     self.assertEquals(len(self.getRuleTool().searchRuleList(self.pl)), 1)
 
+  @newSimulationExpectedFailure
   def test_08_updateAppliedRule(self, quiet=quiet, run=run_all_test):
     """
     test that when updateAppliedRule is called, the rule with the correct
@@ -286,6 +294,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     self.assertEquals(self.pl.getCausalityRelatedValue().getSpecialise(),
         delivery_rule_1.getRelativeUrl())
 
+  @newSimulationExpectedFailure
   def test_09_expandTwoRules(self, quiet=quiet, run=run_all_test):
     """
     test that when expand is called on a simulation movement, if two rules
@@ -365,6 +374,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     self.assertEquals(applied_rule.getSpecialise(),
         invoicing_rule_1.getRelativeUrl())
 
+  @newSimulationExpectedFailure
   def test_10_expandAddsRule(self, quiet=quiet, run=run_all_test):
     """
     test that if a rule didn't match previously, and does now, it should apply
@@ -467,6 +477,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
         invoicing_rule_2.getRelativeUrl())
 
 
+  @newSimulationExpectedFailure
   def test_11_expandRemovesRule(self, quiet=quiet, run=run_all_test):
     """
     test that if a rule matched previously and does not anymore, it should be
@@ -597,6 +608,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     sub_movement = applied_rule.objectValues()[0]
     self.assertEquals(sub_movement.getDelivery(), self.pl.line.getRelativeUrl())
 
+  @newSimulationExpectedFailure
   def test_12_expandReplacesRule(self, quiet=quiet, run=run_all_test):
     """
     test that if a rule matched previously and does not anymore, and another

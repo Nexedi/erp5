@@ -47,6 +47,7 @@ import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
+from Products.ERP5.tests.utils import newSimulationExpectedFailure
 from Products.ERP5.Document.MirrorMovementGroup import _isMirrored
 
 from Testing import ZopeTestCase
@@ -1662,6 +1663,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     self.failUnless(self.getProductModule() != None)
     self.failUnless(self.getCurrencyModule() != None)
 
+  @newSimulationExpectedFailure
   def test_02_UpdateInvoiceTransactionRuleMatrix(self, quiet=QUIET,
                                               run=RUN_ALL_TESTS):
     """ test edition of matrix and rule.
@@ -1689,6 +1691,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCheckRestoreOriginalPredicates
     """, quiet=quiet)
 
+  @newSimulationExpectedFailure
   def test_03_invoiceTransactionRule_getMatchingCell(self,
                                     quiet=QUIET, run=RUN_ALL_TESTS):
     """ test predicates for the cells of invoice transaction rule
@@ -1719,6 +1722,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCheckNotMatchableInvoiceMovements
     """, quiet=quiet)
 
+  @newSimulationExpectedFailure
   def test_04_SimpleInvoice(self, quiet=QUIET, run=RUN_ALL_TESTS):
     """ Simple Invoice.
     Try to expand an invoice containing only one simple Invoice Line.
@@ -1760,6 +1764,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCheckPaymentLinesCreatedForSimpleInvoice
       """, quiet=quiet )
 
+  @newSimulationExpectedFailure
   def test_04b_SimpleInvoiceConfirm(self, quiet=QUIET, run=RUN_ALL_TESTS):
     """  Same test as SimpleInvoice but directly confirm the invoice
     without planning it """
@@ -1795,6 +1800,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepRebuildAndCheckNothingIsCreated
       """, quiet=quiet )
 
+  @newSimulationExpectedFailure
   def test_04c_SimpleInvoiceTwoLines(self, quiet=QUIET, run=RUN_ALL_TESTS):
     """ Simple Invoice, 2 lines.
     Same test as SimpleInvoice but use 2 lines of quantity 5 instead of
@@ -1832,6 +1838,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepRebuildAndCheckNothingIsCreated
       """, quiet=quiet )
 
+  @newSimulationExpectedFailure
   def test_04d_SimpleInvoiceTwoCells(self, quiet=QUIET, run=RUN_ALL_TESTS):
     """ Simple Invoice, 2 cells.
     Same test as SimpleInvoice but use 2 cells of quantity 5 instead of
@@ -1870,6 +1877,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       """, quiet=quiet )
 
   # next 5 tests will check update of applied rules.
+  @newSimulationExpectedFailure
   def test_05a_SimpleInvoiceReExpandAddLine(self, quiet=QUIET,
         run=RUN_ALL_TESTS):
     """ Add a new line then updateAppliedRule.
@@ -1912,6 +1920,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepRebuildAndCheckNothingIsCreated
       """, quiet=quiet )
 
+  @newSimulationExpectedFailure
   def test_05b_SimpleInvoiceReExpandEditLine(self, quiet=QUIET,
               run = RUN_ALL_TESTS):
     """ Tests that editing a line updates simulation correctly """
@@ -1950,6 +1959,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepRebuildAndCheckNothingIsCreated
       """, quiet=quiet )
 
+  @newSimulationExpectedFailure
   def test_05c_SimpleInvoiceReExpandDeleteLine(
                         self, quiet=QUIET, run=RUN_ALL_TESTS):
     """ Tests that removing a line updates simulation correctly """
@@ -1990,6 +2000,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepRebuildAndCheckNothingIsCreated
       """, quiet=quiet )
 
+  @newSimulationExpectedFailure
   def test_05d_SimpleInvoiceReExpandCreateCell(self, quiet=QUIET,
                   run=RUN_ALL_TESTS):
     """ Tests that replacing a line by cells updates simulation correctly """
@@ -2028,6 +2039,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepRebuildAndCheckNothingIsCreated
       """, quiet=quiet)
 
+  @newSimulationExpectedFailure
   def test_05e_SimpleInvoiceExpandManyTimes(
                                 self, quiet=QUIET, run=RUN_ALL_TESTS):
     """ Tests that updating an applied rule many times doesn't break the
@@ -2071,6 +2083,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepRebuildAndCheckNothingIsCreated
       """, quiet=quiet )
 
+  @newSimulationExpectedFailure
   def test_06_MultiLineInvoice(self, quiet=QUIET, run=RUN_ALL_TESTS):
     """ Multiple lines invoice.
     Try to expand an invoice containing multiples Invoice Line.
@@ -2120,6 +2133,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     #   quantity from sum of receivable movement
     #   link to sale invoice
 
+  @newSimulationExpectedFailure
   def test_planning_invoice_creates_simulation(self, quiet=QUIET):
     # http://mail.nexedi.com/pipermail/erp5-dev/2008-June/001969.html
     self.playSequence("""
