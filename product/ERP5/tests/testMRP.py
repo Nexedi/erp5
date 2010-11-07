@@ -60,10 +60,6 @@ class TestMRPMixin(TestBPMMixin):
       if rule.getValidationState() == 'validated':
         rule.invalidate()
 
-  def getRule(self, **kw):
-    return self.portal.portal_rules.searchFolder(
-          sort_on='version', sort_order='descending', **kw)[0].getObject()
-
   def _createDocument(self, portal_type, **kw):
     module = self.portal.getDefaultModule(
         portal_type=portal_type)

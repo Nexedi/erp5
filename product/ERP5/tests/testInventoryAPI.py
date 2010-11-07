@@ -185,10 +185,6 @@ class InventoryAPITestCase(ERP5TypeTestCase):
             'erp5_trade', 'erp5_apparel', 'erp5_project',
             'erp5_simulation_test')
 
-  def getRule(self, **kw):
-    return self.portal.portal_rules.searchFolder(
-          sort_on='version', sort_order='descending', **kw)[0].getObject()
-
   # TODO: move this to a base class {{{
   @reindex
   def _makeOrganisation(self, **kw):

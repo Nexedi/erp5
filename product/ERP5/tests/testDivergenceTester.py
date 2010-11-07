@@ -43,17 +43,15 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
   def getTitle(self):
     return "Divergence Tester"
 
-  def getRule(self):
-    rule_reference = 'default_delivering_rule'
-    return self.portal.portal_rules.searchFolder(reference=rule_reference,
-          validation_state="validated", sort_on='version',
-          sort_order='descending')[0].getObject()
+  def getDeliveringRule(self):
+    return self.getRule(reference='default_delivering_rule',
+                        validation_state="validated")
 
   def afterSetUp(self):
     """
     Remove all divergence testers from order_rule.
     """
-    rule = self.getRule()
+    rule = self.getDeliveringRule()
     tester_list = rule.contentValues(
              portal_type=rule.getPortalDivergenceTesterTypeList())
     rule.deleteContent([x.getId() for x in tester_list])
@@ -108,7 +106,7 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     packing_list = sql_result[0].getObject()
     # XXX Hardcoded id
     movement=packing_list['1']
-    rule = self.getRule()
+    rule = self.getDeliveringRule()
     sequence.edit(
         packing_list=packing_list,
         movement=movement,

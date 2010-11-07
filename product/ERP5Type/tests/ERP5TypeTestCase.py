@@ -712,6 +712,10 @@ class ERP5TypeTestCase(ProcessingNodeTestCase, PortalTestCase):
       # reset aq_dynamic cache
       _aq_reset()
 
+    def getRule(self, **kw):
+      return self.portal.portal_rules.searchFolder(
+          sort_on='version', sort_order='descending', **kw)[0].getObject()
+
     def validateRules(self):
       """
       try to validate all rules in rule_tool.

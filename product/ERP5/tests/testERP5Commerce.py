@@ -110,10 +110,6 @@ class TestCommerce(ERP5TypeTestCase):
             'erp5_commerce',
             'erp5_simulation_test')
 
-  def getRule(self, **kw):
-    return self.portal.portal_rules.searchFolder(
-          sort_on='version', sort_order='descending', **kw)[0].getObject()
-
   def afterSetUp(self):
     uf = self.getPortal().acl_users
     uf._doAddUser('ivan', '', ['Manager'], [])
