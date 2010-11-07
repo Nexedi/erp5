@@ -45,9 +45,9 @@ implements_tuple_list = [
     'IActionContainer'),
   (('Products.ERP5Type.ERP5Type', 'ERP5TypeInformation'),
     'ILocalRoleAssignor'),
-  (('Products.ERP5Type.Document.ActionInformation', 'CacheableAction'),
+  (('Products.ERP5Type.Core.ActionInformation', 'CacheableAction'),
     'IAction'),
-  (('Products.ERP5Type.Document.RoleInformation', 'RoleInformation'),
+  (('Products.ERP5Type.Core.RoleInformation', 'RoleInformation'),
     'ILocalRoleGenerator'),
 ]
 
