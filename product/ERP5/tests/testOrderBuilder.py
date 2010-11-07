@@ -59,14 +59,6 @@ class TestOrderBuilderMixin(TestOrderMixin):
   max_delay = 0.0
   min_flow = 0.0
 
-  def stepClearActivities(self, sequence=None, sequence_list=None,
-                          **kw):
-    """
-    Clear activity tables
-    """
-    activity_tool = self.getPortal().portal_activities
-    activity_tool.manageClearActivities(keep=0)
-
   def stepSetMaxDelayOnResource(self, sequence=None, sequence_list=None,
                           **kw):
     """
@@ -364,7 +356,6 @@ class TestOrderBuilder(TestOrderBuilderMixin, ERP5TypeTestCase):
   run_all_test = 1
 
   common_sequence_string = '\
-                      ClearActivities \
                       CreateOrganisation \
                       CreateNotVariatedResource \
                       SetMaxDelayOnResource \
@@ -407,7 +398,6 @@ class TestOrderBuilder(TestOrderBuilderMixin, ERP5TypeTestCase):
     if not run: return
 
     sequence_string = '\
-                      ClearActivities \
                       CreateOrganisation \
                       CreateVariatedResource \
                       SetMaxDelayOnResource \

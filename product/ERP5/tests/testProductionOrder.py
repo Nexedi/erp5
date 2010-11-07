@@ -177,14 +177,6 @@ class TestProductionOrderMixin(TestOrderMixin):
     resource_list.append(resource)
     sequence.edit( resource_list = resource_list )
 
-  def stepClearActivities(self, sequence=None, sequence_list=None, 
-                          **kw):
-    """
-    Clear activity tables
-    """
-    activity_tool = self.getPortal().portal_activities
-    activity_tool.manageClearActivities(keep=0)
-
   def stepCreateProductionOrganisation1(self, sequence=None, sequence_list=None, 
                                         **kw):
     """
@@ -1297,7 +1289,6 @@ class TestProductionOrderMixin(TestOrderMixin):
     self.assertEquals(0, len(supply_movement.objectValues()))
 
   SOURCING_ORDER_SEQUENCE = '\
-                      ClearActivities \
                       CreateProductionOrganisation1 \
                       CreateSupplyOrganisation1 \
                       CreateSourcingSC \
@@ -1333,7 +1324,6 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
     sequence_list = SequenceList()
     # Test when order is 
     sequence_string = '\
-                      ClearActivities \
                       CreateProductionOrganisation1 \
                       CreateProductionSC \
                       CreateNotVariatedResource \
@@ -1359,7 +1349,6 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
     sequence_list = SequenceList()
     # Test when order is 
     sequence_string = '\
-                      ClearActivities \
                       CreateProductionOrganisation1 \
                       CreateSupplyOrganisation1 \
                       CreateSourcingSC \
@@ -1384,7 +1373,6 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
     sequence_list = SequenceList()
     # Test when order is 
     sequence_string = '\
-                      ClearActivities \
                       CreateProductionOrganisation1 \
                       CreateProductionOrganisation2 \
                       CreateSupplyOrganisation1 \
@@ -1414,7 +1402,6 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
     sequence_list = SequenceList()
     # Test when order is 
     sequence_string = '\
-                      ClearActivities \
                       CreateProductionOrganisation1 \
                       CreateProductionSC \
                       CreateNotVariatedResource \
@@ -1453,7 +1440,6 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
     sequence_list = SequenceList()
     # Test when order is 
     sequence_string = '\
-                      ClearActivities \
                       CreateProductionOrganisation1 \
                       CreateProductionOrganisation2 \
                       CreateSupplyOrganisation1 \
@@ -1508,7 +1494,6 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
     if not run: return
 
     bootstrap_sequence_string = '\
-                      ClearActivities \
                       CreateNotVariatedResource \
                       CreateOrder \
                       '
@@ -1593,7 +1578,6 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
     if not run: return
 
     sequence_string = '\
-                      ClearActivities \
                       CreateProductionOrganisation1 \
                       CreateSupplyOrganisation1 \
                       CreateSourcingSC \
@@ -1725,7 +1709,6 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
     }
 
     sequence_string = '\
-                      ClearActivities \
                       CreateProductionOrganisation1 \
                       CreateSupplyOrganisation1 \
                       CreateSourcingSC \
@@ -1770,7 +1753,6 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
     if not run: return
     sequence_list = SequenceList()
     sequence_string = '\
-            ClearActivities \
             CreateProductionOrganisation1 \
             CreateProductionSC \
             CopyPasteSupplyChain \
@@ -1848,7 +1830,6 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
     if not run: return
     sequence_list = SequenceList()
     sequence_string = '\
-            ClearActivities \
             CreateProductionOrganisation1 \
             CreateProductionSC \
             CreateEmptySC \
