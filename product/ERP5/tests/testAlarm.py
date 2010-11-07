@@ -67,6 +67,9 @@ class TestAlarm(ERP5TypeTestCase):
   def getTitle(self):
     return "Alarm"
 
+  def getBusinessTemplateList(self):
+    return ('erp5_base',)
+
   def afterSetUp(self):
     # add a dummy mailhost to capture alarm notifications
     if 'MailHost' in self.portal.objectIds():
@@ -76,11 +79,7 @@ class TestAlarm(ERP5TypeTestCase):
     self.login()
 
   def beforeTearDown(self):
-    transaction.commit()
-    self.getActivityTool().manageClearActivities()
-    transaction.commit()
     del self.portal.MailHost._message_list[:]
-    ERP5TypeTestCase.beforeTearDown(self)
 
   def newAlarm(self, **kw):
     """
@@ -600,7 +599,7 @@ class TestAlarm(ERP5TypeTestCase):
       elif m.method_id == sense_method_id:
         self.assertEqual(expected_tag, m.activity_kw.get('tag'))
       else:
-        raise AssertionError, m.method_id
+        self.fail(m.method_id)
     # execute alarm sense script and check tags
     self.getActivityTool().manageInvoke(alarm.getPhysicalPath(),sense_method_id)
     transaction.commit()
@@ -611,7 +610,8 @@ class TestAlarm(ERP5TypeTestCase):
       elif m.method_id == 'immediateReindexObject':
         self.assertEqual(expected_tag, m.activity_kw.get('tag'))
       else:
-        raise AssertionError, m.method_id
+        self.fail(m.method_id)
+    self.tic()
 
   def test_19_ManualInvocation(self, quiet=0, run=run_all_test):
     """
