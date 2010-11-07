@@ -940,7 +940,6 @@ class TestInvoiceMixin(TestPackingListMixin):
 
   def stepAdoptPrevisionQuantityInvoice(self,sequence=None, sequence_list=None):
     invoice = sequence.get('invoice')
-    self.portal.pdb()
     self._solveDivergence(invoice, 'quantity', 'Adopt Solver')
 
   def stepAcceptDecisionQuantityInvoice(self,sequence=None, sequence_list=None):
