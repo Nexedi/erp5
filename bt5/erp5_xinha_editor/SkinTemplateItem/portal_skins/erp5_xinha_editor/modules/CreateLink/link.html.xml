@@ -1,0 +1,183 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts86919689.27</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>link.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<html>\n
+\n
+<head>\n
+  <title>Insert/Modify Link</title>\n
+  <script type="text/javascript" src="../../popups/popup.js"></script>\n
+  <link rel="stylesheet" type="text/css" href="../../popups/popup.css" />\n
+\n
+  <script type="text/javascript">\n
+    window.resizeTo(400, 200);\n
+\n
+Xinha = window.opener.Xinha;\n
+\n
+function i18n(str) {\n
+  return (Xinha._lc(str, \'Xinha\'));\n
+}\n
+\n
+function onTargetChanged() {\n
+  var f = document.getElementById("f_other_target");\n
+  if (this.value == "_other") {\n
+    f.style.visibility = "visible";\n
+    f.select();\n
+    f.focus();\n
+  } else f.style.visibility = "hidden";\n
+}\n
+\n
+function Init() {\n
+  __dlg_translate(\'Xinha\');\n
+  __dlg_init();\n
+\n
+  // Make sure the translated string appears in the drop down. (for gecko)\n
+  document.getElementById("f_target").selectedIndex = 1;\n
+  document.getElementById("f_target").selectedIndex = 0;\n
+\n
+  var param = window.dialogArguments;\n
+  var target_select = document.getElementById("f_target");\n
+  var use_target = true;\n
+  if (param) {\n
+    if ( typeof param["f_usetarget"] != "undefined" ) {\n
+      use_target = param["f_usetarget"];\n
+    }\n
+    if ( typeof param["f_href"] != "undefined" ) {\n
+      document.getElementById("f_href").value = param["f_href"];\n
+      document.getElementById("f_title").value = param["f_title"];\n
+      comboSelectValue(target_select, param["f_target"]);\n
+      if (target_select.value != param.f_target) {\n
+        var opt = document.createElement("option");\n
+        opt.value = param.f_target;\n
+        opt.innerHTML = opt.value;\n
+        target_select.appendChild(opt);\n
+        opt.selected = true;\n
+      }\n
+    }\n
+  }\n
+  if (! use_target) {\n
+    document.getElementById("f_target_label").style.visibility = "hidden";\n
+    document.getElementById("f_target").style.visibility = "hidden";\n
+    document.getElementById("f_other_target").style.visibility = "hidden";\n
+  }\n
+  var opt = document.createElement("option");\n
+  opt.value = "_other";\n
+  opt.innerHTML = i18n("Other");\n
+  target_select.appendChild(opt);\n
+  target_select.onchange = onTargetChanged;\n
+  document.getElementById("f_href").focus();\n
+  document.getElementById("f_href").select();\n
+}\n
+\n
+function onOK() {\n
+  var required = {\n
+    // f_href shouldn\'t be required or otherwise removing the link by entering an empty\n
+    // url isn\'t possible anymore.\n
+    // "f_href": i18n("You must enter the URL where this link points to")\n
+  };\n
+  for (var i in required) {\n
+    var el = document.getElementById(i);\n
+    if (!el.value) {\n
+      alert(required[i]);\n
+      el.focus();\n
+      return false;\n
+    }\n
+  }\n
+  // pass data back to the calling window\n
+  var fields = ["f_href", "f_title", "f_target" ];\n
+  var param = new Object();\n
+  for (var i in fields) {\n
+    var id = fields[i];\n
+    var el = document.getElementById(id);\n
+    param[id] = el.value;\n
+  }\n
+  if (param.f_target == "_other")\n
+    param.f_target = document.getElementById("f_other_target").value;\n
+  __dlg_close(param);\n
+  return false;\n
+}\n
+\n
+function onCancel() {\n
+  __dlg_close(null);\n
+  return false;\n
+}\n
+\n
+</script>\n
+\n
+</head>\n
+\n
+<body class="dialog" onload="Init()">\n
+<div class="title">Insert/Modify Link</div>\n
+<form>\n
+<table border="0" style="width: 100%;">\n
+  <tr>\n
+    <td class="label">URL:</td>\n
+    <td><input type="text" id="f_href" style="width: 100%" /></td>\n
+  </tr>\n
+  <tr>\n
+    <td class="label">Title (tooltip):</td>\n
+    <td><input type="text" id="f_title" style="width: 100%" /></td>\n
+  </tr>\n
+  <tr>\n
+    <td class="label"><span id="f_target_label">Target:</span></td>\n
+    <td><select id="f_target">\n
+      <option value="">None (use implicit)</option>\n
+      <option value="_blank">New window (_blank)</option>\n
+      <option value="_self">Same frame (_self)</option>\n
+      <option value="_top">Top frame (_top)</option>\n
+    </select>\n
+    <input type="text" name="f_other_target" id="f_other_target" size="10" style="visibility: hidden" />\n
+    </td>\n
+  </tr>\n
+</table>\n
+\n
+<div id="buttons">\n
+  <button type="submit" name="ok" onclick="return onOK();">OK</button>\n
+  <button type="button" name="cancel" onclick="return onCancel();">Cancel</button>\n
+</div>\n
+</form>\n
+</body>\n
+</html>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4010</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>link.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

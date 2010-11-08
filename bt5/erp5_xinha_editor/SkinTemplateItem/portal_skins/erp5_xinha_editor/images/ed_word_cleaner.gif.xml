@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Image" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts86909333.15</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ed_word_cleaner.gif</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/gif</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">R0lGODlhFwAUAO5+AP///////yYmJoCAgP//ACYmkwQEWwQEkQQEiwQEcwQEegQEgQQEnwgIYgAA
+egQEilpa1QQEVQQEZ1paowQEYiAgpQAAbwAAgNTU/wQEHODg4Kur8RMTfQAAfwAAlAQEeAEBF9ra
+EYiItIiI3QAAiAAAaVpaeAAAooiI2wQEci8vfKmp6QAAbX9/kgAAYWpq8AEBD0dHdg0NFW1trAQE
+gAAAVNDQxjc3cr297jc3fOfn1AAAlgAAchcXYzU1zCkpexQUaw0NHm9vjm9vtf//JiMjvVpaymJi
+mfPz/56e/21t32BgjQAAiQAAdjY2pNPT0wAAjWdn4CUlIo6OvQAAhpiYjAAAZAgIHAAAEQgIphER
+lAAAeAAAaA0NGgQEmXFx1HFx1wQEUQAAWg4OHXFxu4iIlAQEmHFxlk5OrQAAgwQEfwQEnoiIowQE
+cAAAigEBDQQEoWVltnFxlxwcgVpafF1drx4edKurj5KSlL29u2pqoXZ2s3NzkWBg4zc3nAAAACH5
+BAEAAAAALAEAAQAVABIAAAfpgACCg4SFgwIChoqFAgUFiYuHiACNF4+RggIBm5WXmAJEA5sBA54N
+CAsGDBQKB28gIQEEopyDDxUTEHRBXTJRpASytAGQanqjxKSbA8GztQASHE43Pjl+VzG0zLJPkABw
+Dh07OCRcKxlA2sHe0Gh1JToWWzY/WHei64Ufe1NNLw48+miZI2VGvkIH5LBxI4ZKGitQVAQYA4Pd
+oAhgUNQosoGFhzBVAphYs8gMnxZMeuSx4OKEhgBGDCxqMwRDmSRIRIzAs+kIjUUJ7MQ5o2QJmS9C
+IEyo8GBRlgQpvEQ4oIACAwMLEDRYFAgAOw==</string> </value>
+        </item>
+        <item>
+            <key> <string>height</string> </key>
+            <value> <int>20</int> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>652</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ed_word_cleaner.gif</string> </value>
+        </item>
+        <item>
+            <key> <string>width</string> </key>
+            <value> <int>23</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

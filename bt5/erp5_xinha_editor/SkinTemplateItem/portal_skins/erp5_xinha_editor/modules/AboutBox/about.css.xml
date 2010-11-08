@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts86919545.83</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>about.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>.dialog .about.buttons a.tab {\n
+  color: #000;\n
+  cursor: pointer;\n
+  margin-left: -5px;\n
+  float: left; position: relative;\n
+  border: 1px solid #555;\n
+  top: -3px; left: -2px;\n
+  padding: 2px 10px 3px 10px;\n
+  border-top: none; background-color: #CCC;\n
+  -moz-border-radius: 0px 0px 4px 4px;\n
+  -webkit-border-radius: 4px;\n
+  -webkit-border-top-left-radius:0;\n
+  -webkit-border-top-right-radius:0;\n
+  \n
+  z-index: 0;\n
+  text-decoration:none;\n
+}\n
+.dialog .about.buttons a.tab-current\n
+{\n
+  top: -4px;\n
+  background-color: #f5f6f6;\n
+  padding: 3px 10px 4px 10px;\n
+  z-index: 10;\n
+}\n
+\n
+.dialog .about.buttons {\n
+  background-color:white;\n
+  padding:3px 3px 0 10px;\n
+}\n
+\n
+.dialog .about.content .tab-content {\n
+  padding-bottom:15px;\n
+  width:95%;\n
+}\n
+.dialog .about.content {\n
+  height:300px;\n
+  overflow:auto;\n
+  background-color:#f5f6f6;\n
+}\n
+.dialog .about.content table.plugins{\n
+  width:95%;\n
+  border: 1px solid black;\n
+  margin: 1em;\n
+}\n
+.dialog .about.content table.plugins th{\n
+  font-weight: bold;\n
+  background-color: #CCC;\n
+}\n
+.dialog .about.content table.plugins td{\n
+  padding:3px;\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1046</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>about.css</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

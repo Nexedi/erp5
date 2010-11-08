@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts86921267.1</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>popup.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>html, body, .dialog {\n
+  background: ButtonFace;\n
+  color: ButtonText;\n
+  font: 11px Tahoma,Verdana,sans-serif;\n
+  margin: 0px;\n
+  padding: 0px;\n
+}\n
+body { padding: 5px; }\n
+form { padding: 0px; margin: 0px; }\n
+form p {\n
+  margin-top: 5px;\n
+  margin-bottom: 5px;\n
+}\n
+table {\n
+  font: 11px Tahoma,Verdana,sans-serif;\n
+}\n
+select, input, button { font: 11px Tahoma,Verdana,sans-serif; }\n
+button { width: 70px; }\n
+table .label { text-align: right; width: 8em; }\n
+\n
+.fl { width: 9em; float: left; padding: 2px 5px; text-align: right; }\n
+.fr { width: 7em; float: left; padding: 2px 5px; text-align: right; }\n
+fieldset { padding: 0px 10px 5px 5px; }\n
+.space { padding: 2px; }\n
+.title { background: #ddf; color: #000; font-weight: bold; font-size: 120%; padding: 3px 10px; margin-bottom: 10px;\n
+border-bottom: 1px solid black; letter-spacing: 2px;\n
+}\n
+.buttonColor {\n
+  padding: 1px;\n
+  cursor: default;\n
+  border: 1px solid;\n
+  border-color: ButtonHighlight ButtonShadow ButtonShadow ButtonHighlight;\n
+}\n
+#buttons {\n
+      margin-top: 1em; \n
+      border-top: 1px solid #999;\n
+      padding: 1em; \n
+      text-align: right;\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1080</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>popup.css</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

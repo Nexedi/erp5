@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>LoadEditor.js</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>var xinha_plugins = [];\n
+\n
+var xinha_editors =\n
+[\n
+  \'my_text_content\',\n
+];\n
+\n
+function xinha_init()\n
+{\n
+  if(!Xinha.loadPlugins(xinha_plugins, xinha_init)) return;\n
+  var xinha_config = new Xinha.Config();\n
+  xinha_editors = Xinha.makeEditors(xinha_editors, xinha_config, xinha_plugins);\n
+  Xinha.startEditors(xinha_editors);\n
+}\n
+Xinha.addOnloadHandler(xinha_init);</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Image" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts86909244.11</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ed_save.png</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/png</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAArUlEQVR4nK2UsQ7CMAxEz4ipo0e+
+rR9z38DI3M/qnPHGrmaAQIYUOShPshIp9umUODapYAaXKSoArnXjfovRYqlY1xH5WiPiNFqB+/0R
+XaEsrXvpiL+FqvOWaZc9/9UqJGBmndTveUroV/KQo4zQ8GWzqZCKtQ2YFiL5iQzThCAVSAUkA8BQ
+kIx930MqsHaMSEds25Zz8GZdV7gvZr15VP9PFvfFus/vvpx35AlPrcZq7KTa//4AAAAASUVORK5C
+YII=</string> </value>
+        </item>
+        <item>
+            <key> <string>height</string> </key>
+            <value> <int>18</int> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>230</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ed_save.png</string> </value>
+        </item>
+        <item>
+            <key> <string>width</string> </key>
+            <value> <int>18</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,205 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts86919940.54</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>insert_table.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<html>\n
+\n
+<head>\n
+  <title>Insert Table</title>\n
+\n
+<script type="text/javascript" src="../../popups/popup.js"></script>\n
+<link rel="stylesheet" type="text/css" href="../../popups/popup.css" />\n
+\n
+<script type="text/javascript">\n
+\n
+window.resizeTo(425, 250);\n
+\n
+Xinha = window.opener.Xinha;\n
+function i18n(str) {\n
+  return (Xinha._lc(str, \'Xinha\'));\n
+}\n
+\n
+function Init() {\n
+  Xinha = window.opener.Xinha; // load the Xinha plugin and lang file\n
+  __dlg_translate(\'Xinha\');\n
+  __dlg_init(null, Xinha.is_ie ? null : {width:425,height:250});\n
+  // Make sure the translated string appears in the drop down. (for gecko)\n
+  document.getElementById("f_unit").selectedIndex = 1;\n
+  document.getElementById("f_unit").selectedIndex = 0;\n
+  document.getElementById("f_align").selectedIndex = 1;\n
+  document.getElementById("f_align").selectedIndex = 0;\n
+  document.getElementById("f_rows").focus();\n
+}\n
+\n
+function onOK() {\n
+  var required = {\n
+    "f_rows": i18n("You must enter a number of rows"),\n
+    "f_cols": i18n("You must enter a number of columns")\n
+  };\n
+  for (var i in required) {\n
+    var el = document.getElementById(i);\n
+    if (!el.value) {\n
+      alert(required[i]);\n
+      el.focus();\n
+      return false;\n
+    }\n
+  }\n
+  var fields = ["f_rows", "f_cols", "f_width", "f_unit", "f_fixed",\n
+                "f_align", "f_border", "f_spacing", "f_padding"];\n
+  var param = new Object();\n
+  for (var i in fields) {\n
+    var id = fields[i];\n
+    var el = document.getElementById(id);\n
+    param[id] = (el.type == "checkbox") ? el.checked : el.value;\n
+  }\n
+  __dlg_close(param);\n
+  return false;\n
+}\n
+\n
+function onCancel() {\n
+  __dlg_close(null);\n
+  return false;\n
+}\n
+\n
+</script>\n
+\n
+</head>\n
+\n
+<body class="dialog" onload="Init()">\n
+\n
+<div class="title">Insert Table</div>\n
+\n
+<form action="" method="get">\n
+<table border="0" style="padding: 0px; margin: 0px">\n
+  <tbody>\n
+\n
+  <tr>\n
+    <td style="width: 4em; text-align: right">Rows:</td>\n
+    <td><input type="text" name="rows" id="f_rows" size="5" title="Number of rows" value="2" /></td>\n
+    <td style="width: 4em; text-align: right">Width:</td>\n
+    <td><input type="text" name="width" id="f_width" size="5" title="Width of the table" value="100" /></td>\n
+    <td><select size="1" name="unit" id="f_unit" title="Width unit">\n
+      <option value="%" selected="selected"  >Percent</option>\n
+      <option value="px"              >Pixels</option>\n
+      <option value="em"              >Em</option>\n
+    </select></td>\n
+  </tr>\n
+  <tr>\n
+    <td style="width: 4em; text-align: right">Cols:</td>\n
+    <td><input type="text" name="cols" id="f_cols" size="5" title="Number of columns" value="4" /></td>\n
+    <td style="text-align: right"><input type="checkbox" checked="checked" name="fixed" id="f_fixed" value="on" /></td>\n
+    <td colspan="2"><label for="f_fixed"\n
+    >Fixed width columns</label></td>\n
+  </tr>\n
+  </tbody>\n
+</table>\n
+\n
+<p />\n
+\n
+<fieldset style="float: left; margin-left: 5px;">\n
+<legend>Layout</legend>\n
+\n
+<div class="space"></div>\n
+\n
+<div class="fl">Alignment:</div>\n
+<select size="1" name="align" id="f_align"\n
+  title="Positioning of this table">\n
+  <option value="" selected="selected"         >Not set</option>\n
+  <option value="left"                         >Left</option>\n
+  <option value="right"                        >Right</option>\n
+  <option value="texttop"                      >Texttop</option>\n
+  <option value="absmiddle"                    >Absmiddle</option>\n
+  <option value="baseline"                     >Baseline</option>\n
+  <option value="absbottom"                    >Absbottom</option>\n
+  <option value="bottom"                       >Bottom</option>\n
+  <option value="middle"                       >Middle</option>\n
+  <option value="top"                          >Top</option>\n
+</select>\n
+\n
+<p />\n
+\n
+<div class="fl">Border thickness:</div>\n
+<input type="text" name="border" id="f_border" size="5" value="1"\n
+title="Leave empty for no border" />\n
+<!--\n
+<p />\n
+\n
+<div class="fl">Collapse borders:</div>\n
+<input type="checkbox" name="collapse" id="f_collapse" />\n
+-->\n
+<div class="space"></div>\n
+\n
+</fieldset>\n
+\n
+<fieldset style="float:right; margin-right: 5px;">\n
+<legend>Spacing</legend>\n
+\n
+<div class="space"></div>\n
+\n
+<div class="fr">Cell spacing:</div>\n
+<input type="text" name="spacing" id="f_spacing" size="5" value="1"\n
+title="Space between adjacent cells" />\n
+\n
+<p />\n
+\n
+<div class="fr">Cell padding:</div>\n
+<input type="text" name="padding" id="f_padding" size="5" value="1"\n
+title="Space between content and border in cell" />\n
+\n
+<div class="space"></div>\n
+\n
+</fieldset>\n
+\n
+<div style="margin-top: 85px; border-top: 1px solid #999; padding: 2px; text-align: right;">\n
+<button type="button" name="ok" onclick="return onOK();">OK</button>\n
+<button type="button" name="cancel" onclick="return onCancel();">Cancel</button>\n
+</div>\n
+\n
+</form>\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4703</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>insert_table.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

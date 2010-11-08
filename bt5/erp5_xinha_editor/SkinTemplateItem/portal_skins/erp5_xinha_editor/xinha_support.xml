@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<head>\n
+  <tal:block tal:define="site_root    python: here.getWebSiteValue() or here.getPortalObject();\n
+                         portal_url   python: site_root.absolute_url();">\n
+  <script type="text/javascript" tal:content="structure string:\n
+     _editor_url = \'${portal_url}/portal_skins/erp5_xinha\'">\n
+  </script>\n
+  <script type="text/javascript" tal:attributes="src string:${portal_url}/XinhaCore.js"/>\n
+  <script type="text/javascript" tal:attributes="src string:${portal_url}/LoadEditor.js"/>\n
+  </tal:block>\n
+</head>\n
+<body>\n
+  <tal:block tal:define="field_value   python: field_value;\n
+                         field_name    python: field_name;\n
+                         cols          python: field.get_value(\'width\');\n
+                         rows          python: field.get_value(\'height\');">\n
+    <textarea id="my_text_content" tal:content="field_value"\n
+                                   tal:attributes="name field_name;\n
+                                                   rows rows;\n
+                                                   cols cols;"/>\n
+  </tal:block>\n
+</body>\n
+
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>xinha_support</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

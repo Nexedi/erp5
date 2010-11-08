@@ -1,0 +1,148 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts86919934.19</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dialog.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<h1 id="[h1]"><l10n>Insert Table</l10n></h1>\r\n
+<form action="" method="get" style="margin-top:10px">\r\n
+<div id="[columns_alert]" style="color:red;display:none"><l10n>You must enter a number of columns</l10n></div>\r\n
+<div id="[rows_alert]" style="color:red;display:none"><l10n>You must enter a number of rows</l10n></div>\r\n
+\r\n
+<table border="0" style="padding: 0px; margin: 0px">\r\n
+  <tbody>\r\n
+  <tr>\r\n
+  <td>\r\n
+    <l10n>Caption</l10n>:\r\n
+  </td>  \r\n
+  <td colspan="4">\r\n
+    <input type="text" name="[caption]" id="[caption]" style="width:90%" title="_(Caption for the table)" />\r\n
+  </td>\r\n
+  </tr>\r\n
+  <tr>\r\n
+    <td style="width: 4em; text-align: right"><l10n>Rows:</l10n></td>\r\n
+    <td><input type="text" name="[rows]" id="[rows]" size="5" title="_(Number of rows)"  /></td>\r\n
+    <td style="width: 4em; text-align: right">Width:</td>\r\n
+    <td><input type="text" name="[width]" id="[width]" size="5" title="_(Width of the table)" /></td>\r\n
+    <td><select size="1" name="[unit]" id="[unit]" title="Width unit">\r\n
+      <option value="%"               ><l10n>Percent</l10n></option>\r\n
+      <option value="px"              ><l10n>Pixels</l10n></option>\r\n
+      <option value="em"              >Em</option>\r\n
+    </select></td>\r\n
+  </tr>\r\n
+  <tr>\r\n
+    <td style="width: 4em; text-align: right">Cols:</td>\r\n
+    <td><input type="text" name="[cols]" id="[cols]" size="5" title="_(Number of columns)"  /></td>\r\n
+    <td style="text-align: right"><input type="checkbox" name="[fixed]" id="[fixed]" value="on" /></td>\r\n
+    <td colspan="2"><label\r\n
+    ><l10n>Fixed width columns</l10n></label></td>\r\n
+  </tr>\r\n
+  </tbody>\r\n
+</table>\r\n
+\r\n
+<br />\r\n
+\r\n
+<fieldset id="[layout_fieldset]" style="float: left; margin-left: 10px;">\r\n
+<legend><l10n>Layou</l10n>t</legend>\r\n
+\r\n
+<div class="space"></div>\r\n
+\r\n
+<div class="fl"><l10n>Alignment:</l10n></div>\r\n
+<select size="1" name="[align]" id="[align]"\r\n
+  title="Positioning of this table">\r\n
+  <option value=""                             ><l10n>Not set</l10n></option>\r\n
+  <option value="left"                         ><l10n>Left</l10n></option>\r\n
+  <option value="right"                        ><l10n>Right</l10n></option>\r\n
+  <option value="texttop"                      ><l10n>Texttop</l10n></option>\r\n
+  <option value="absmiddle"                    ><l10n>Absmiddle</l10n></option>\r\n
+  <option value="baseline"                     ><l10n>Baseline</l10n></option>\r\n
+  <option value="absbottom"                    ><l10n>Absbottom</l10n></option>\r\n
+  <option value="bottom"                       ><l10n>Bottom</l10n></option>\r\n
+  <option value="middle"                       ><l10n>Middle</option>\r\n
+  <option value="top"                          ><l10n>Top</l10n></option>\r\n
+</select>\r\n
+\r\n
+<br />\r\n
+\r\n
+<div class="fl"><l10n>Border</l10n></div>\r\n
+<input type="text" name="[border]" id="[border]" size="2" title="_(Leave empty for no border)" /> <l10n>Pixels</l10n>\r\n
+<select size="1" name="[border_style]" id="[border_style]" title="_(Style of the border)">\r\n
+  <option value="solid"   >Solid</option>\r\n
+  <option value="dotted"  >Dotted</option>\r\n
+  <option value="dashed"  >Dashed</option>\r\n
+  <option value="double"  >Double</option>\r\n
+  <option value="groove"  >Groove</option>\r\n
+  <option value="ridge"   >Ridge</option>\r\n
+  <option value="inset"   >Inset</option>\r\n
+  <option value="outset"  >outset</option>\r\n
+</select>\r\n
+<input type="text" size="7" id="[border_color]" name="[border_color]"/>\r\n
+<br /><l10n>Collapse borders:</l10n> \r\n
+<input type="checkbox" name="[border_collapse]" id="[border_collapse]" value="on" />\r\n
+\r\n
+<div class="space"></div>\r\n
+\r\n
+</fieldset>\r\n
+\r\n
+<fieldset  id="[spacing_fieldset]">\r\n
+<legend><l10n>Spacing</l10n></legend>\r\n
+\r\n
+<div class="space"></div>\r\n
+\r\n
+<div class="fr"><l10n>Cell spacing:</l10n></div>\r\n
+<input type="text" name="[spacing]" id="[spacing]" size="5" title="_(Space between adjacent cells)" />\r\n
+\r\n
+<br />\r\n
+\r\n
+<div class="fr"><l10n>Cell padding:</l10n></div>\r\n
+<input type="text" name="[padding]" id="[padding]" size="5" title="_(Space between content and border in cell)" />\r\n
+\r\n
+\r\n
+</fieldset>\r\n
+  <div class="buttons" style="clear:left">\r\n
+  <input type="button" id="[ok]"     value="_(OK)"     />\r\n
+  <input type="button" id="[cancel]" value="_(Cancel)" />\r\n
+  </div>\r\n
+</form>\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4184</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>dialog.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

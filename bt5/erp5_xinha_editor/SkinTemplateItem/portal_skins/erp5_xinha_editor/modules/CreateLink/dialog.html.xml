@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts86919683.63</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dialog.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<h1 id="[h1]"><l10n>Insert/Modify Link</l10n></h1>\n
+<table border="0" style="margin-top:10px;width: 100%;">\n
+  <tr>\n
+    <td class="label"><l10n>URL:</l10n></td>\n
+    <td style="width: 70%"><input type="text" id="[f_href]" name="[f_href]" style="width: 90%" /></td>\n
+  </tr>\n
+  <tr>\n
+    <td class="label"><l10n>Title (tooltip):</l10n></td>\n
+    <td><input type="text" id="[f_title]" name="[f_title]" style="width: 90%" /></td>\n
+  </tr>\n
+  <tr>\n
+    <td class="label"><span id="[f_target_label]"><l10n>Target:</l10n></span></td>\n
+    <td><select id="[f_target]" name="[f_target]">\n
+      <option value=""><l10n>None (use implicit)</l10n></option>\n
+      <option value="_blank"><l10n>New window (_blank)</l10n></option>\n
+      <option value="_self"><l10n>Same frame (_self)</l10n></option>\n
+      <option value="_top"><l10n>Top frame (_top)</l10n></option>\n
+      <option value="_other"><l10n>Other</l10n></option>\n
+    </select>\n
+    <input type="text" name="[f_other_target]" id="[f_other_target]" size="10" style="visibility: hidden" />\n
+    </td>\n
+  </tr>\n
+</table>\n
+\n
+<div class="buttons" id="[buttons]">\n
+  <input type="button" id="[ok]"     value="_(OK)"     />\n
+  <input type="button" id="[cancel]" value="_(Cancel)" />\n
+</div>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1207</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>dialog.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
