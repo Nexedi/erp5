@@ -3391,7 +3391,8 @@ class Base( CopyContainer,
       return True if we are in editable mode
     """
     return getattr(self.REQUEST, 'editable_mode', 0)
-    
+
+  security.declarePublic('isEditableMode')
   isEditableMode = isEditableWebMode # for backwards compatability
 
 
