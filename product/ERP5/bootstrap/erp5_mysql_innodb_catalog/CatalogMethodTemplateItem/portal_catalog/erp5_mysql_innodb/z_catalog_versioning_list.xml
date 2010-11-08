@@ -63,6 +63,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>subject_set_uid</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>uid</string> </key>
                                 <value>
                                   <dictionary/>
@@ -79,6 +85,7 @@
                             <string>getLanguage</string>
                             <string>getVersion</string>
                             <string>getRevision</string>
+                            <string>subject_set_uid</string>
                             <string>getEffectiveDate</string>
                             <string>getExpirationDate</string>
                             <string>getCreationDateIndex</string>
@@ -109,10 +116,12 @@
 getLanguage\r\n
 getVersion\r\n
 getRevision\r\n
+subject_set_uid\r\n
 getEffectiveDate\r\n
 getExpirationDate\r\n
 getCreationDateIndex\r\n
-getFrequencyIndex</string> </value>
+getFrequencyIndex\r\n
+</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -154,6 +163,8 @@ getFrequencyIndex</string> </value>
 
 REPLACE INTO\n
   versioning\n
+  (`uid`, `version`, `language`, `revision`, `subject_set_uid`, `effective_date`,\n
+   `expiration_date`, `creation_date_index`, `frequency_index`)\n
 VALUES\n
 <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
 (\n
@@ -161,6 +172,7 @@ VALUES\n
   <dtml-sqlvar expr="getVersion[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getLanguage[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getRevision[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="subject_set_uid[loop_item]" type="int" optional>,\n
   <dtml-sqlvar expr="getEffectiveDate[loop_item]" type="datetime" optional>,\n
   <dtml-sqlvar expr="getExpirationDate[loop_item]" type="datetime" optional>,\n
   <dtml-sqlvar expr="getCreationDateIndex[loop_item]" type="int" optional>,\n
@@ -213,6 +225,8 @@ VALUES\n
 
 REPLACE INTO\n
   versioning\n
+  (`uid`, `version`, `language`, `revision`, `subject_set_uid`, `effective_date`,\n
+   `expiration_date`, `creation_date_index`, `frequency_index`)\n
 VALUES\n
 <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
 (\n
@@ -220,6 +234,7 @@ VALUES\n
   <dtml-sqlvar expr="getVersion[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getLanguage[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getRevision[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="subject_set_uid[loop_item]" type="int" optional>,\n
   <dtml-sqlvar expr="getEffectiveDate[loop_item]" type="datetime" optional>,\n
   <dtml-sqlvar expr="getExpirationDate[loop_item]" type="datetime" optional>,\n
   <dtml-sqlvar expr="getCreationDateIndex[loop_item]" type="int" optional>,\n

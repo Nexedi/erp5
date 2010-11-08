@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="SQL" module="Products.ZSQLMethods.SQL"/>
-        <tuple/>
-      </tuple>
+      <global name="SQL" module="Products.ZSQLMethods.SQL"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -22,13 +19,29 @@
                     <item>
                         <key> <string>_data</string> </key>
                         <value>
-                          <dictionary/>
+                          <dictionary>
+                            <item>
+                                <key> <string>table_0</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>table_1</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                          </dictionary>
                         </value>
                     </item>
                     <item>
                         <key> <string>_keys</string> </key>
                         <value>
-                          <list/>
+                          <list>
+                            <string>table_0</string>
+                            <string>table_1</string>
+                          </list>
                         </value>
                     </item>
                   </dictionary>
@@ -44,7 +57,8 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string></string> </value>
+            <value> <string>table_0\r\n
+table_1</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -70,7 +84,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>z_create_subject</string> </value>
+            <value> <string>z_related_subject</string> </value>
         </item>
         <item>
             <key> <string>max_cache_</string> </key>
@@ -82,13 +96,12 @@
         </item>
         <item>
             <key> <string>src</string> </key>
-            <value> <string>CREATE TABLE subject (\n
-  uid BIGINT UNSIGNED NOT NULL,\n
-  subject VARCHAR(255),\n
-  PRIMARY KEY `uid` (`uid`),\n
-  KEY `subject` (`subject`)\n
-) TYPE=InnoDB; \n
-</string> </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+<dtml-var table_0>.uid = catalog.uid AND\n
+<dtml-var table_0>.subject_set_uid = <dtml-var table_1>.subject_set_uid
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>template</string> </key>
@@ -124,13 +137,12 @@
                     </item>
                     <item>
                         <key> <string>raw</string> </key>
-                        <value> <string>CREATE TABLE subject (\n
-  uid BIGINT UNSIGNED NOT NULL,\n
-  subject VARCHAR(255),\n
-  PRIMARY KEY `uid` (`uid`),\n
-  KEY `subject` (`subject`)\n
-) TYPE=InnoDB; \n
-</string> </value>
+                        <value> <string encoding="cdata"><![CDATA[
+
+<dtml-var table_0>.uid = catalog.uid AND\n
+<dtml-var table_0>.subject_set_uid = <dtml-var table_1>.subject_set_uid
+
+]]></string> </value>
                     </item>
                   </dictionary>
                 </state>

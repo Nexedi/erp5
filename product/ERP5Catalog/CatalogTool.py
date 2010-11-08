@@ -745,6 +745,9 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         if predicate_property_dict is not None:
           w.predicate_property_dict = predicate_property_dict
         w.security_uid = security_uid
+        (subject_set_uid, optimised_subject_list) = catalog.getSubjectSetUid(document_w)
+        w.optimised_subject_list = optimised_subject_list
+        w.subject_set_uid = subject_set_uid
 
         return ImplicitAcquisitionWrapper(w, aq_parent(document_object))
 

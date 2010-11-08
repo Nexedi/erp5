@@ -759,6 +759,10 @@ class Catalog(Folder,
     self.security_uid_dict = OIBTree()
     self.security_uid_index = None
 
+  def _clearSubjectCache(self):
+    self.subject_set_uid_dict = OIBTree()
+    self.subject_set_uid_index = None
+
   security.declarePrivate('getSecurityUid')
   def getSecurityUid(self, wrapped_object):
     """
@@ -826,6 +830,49 @@ class Catalog(Folder,
       extend([(role, security_uid) for role in role_list])
     return result
 
+  security.declarePrivate('getSubjectSetUid')
+  def getSubjectSetUid(self, wrapped_object):
+    """
+    Cache a uid for each unique subject tuple.
+    Return a tuple with a subject uid (string) and a new subject tuple
+    if not exist already.
+    """
+    getSubjectList = getattr(wrapped_object, 'getSubjectList', None)
+    if getSubjectList is None:
+      return (None, None)
+    # Get subject information
+    # XXX if more collation is available, we can have smaller number of
+    # unique subject sets.
+    subject_list = tuple(sorted(set([(x or '').lower() for x in getSubjectList()])))
+    if not subject_list:
+      return (None, None)
+    # Make sure no duplicates
+    if getattr(aq_base(self), 'subject_set_uid_dict', None) is None:
+      self._clearSubjectCache()
+    elif self.subject_set_uid_dict.has_key(subject_list):
+      return (self.subject_set_uid_dict[subject_list], None)
+    # If the id_tool is there, it is better to use it, it allows
+    # to create many new subject uids by the same time
+    # because with this tool we are sure that we will have 2 different
+    # uids if two instances are doing this code in the same time
+    id_tool = getattr(self.getPortalObject(), 'portal_ids', None)
+    if id_tool is not None:
+      default = 1
+      # We must keep compatibility with existing sites
+      previous_subject_set_uid = getattr(self, 'subject_set_uid_index', None)
+      if previous_subject_set_uid is not None:
+        default = previous_subject_set_uid
+      subject_set_uid = int(id_tool.generateNewId(id_generator='uid',
+          id_group='subject_set_uid_index', default=default))
+    else:
+      previous_subject_set_uid = getattr(self, 'subject_set_uid_index', None)
+      if previous_subject_set_uid is None:
+        previous_subject_set_uid = 0
+      subject_set_uid = previous_subject_set_uid + 1
+      self.subject_set_uid_index = subject_set_uid
+    self.subject_set_uid_dict[subject_list] = subject_set_uid
+    return (subject_set_uid, subject_list)
+
   def clear(self):
     """
     Clears the catalog by calling a list of methods
@@ -851,6 +898,7 @@ class Catalog(Folder,
       self.insertMaxUid()
 
     self._clearSecurityCache()
+    self._clearSubjectCache()
     self._clearCaches()
 
   def insertMaxUid(self):

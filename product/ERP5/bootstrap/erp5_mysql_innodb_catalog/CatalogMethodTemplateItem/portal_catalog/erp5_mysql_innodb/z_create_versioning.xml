@@ -58,13 +58,15 @@
   `version` varchar(10) default \'\',\n
   `language` varchar(5) default \'\',\n
   `revision` varchar(10) default \'\',\n
+  `subject_set_uid` INT UNSIGNED,\n
   `effective_date` datetime default NULL,\n
   `expiration_date` datetime default NULL,\n
-  `creation_date_index` INT, \n
-  `frequency_index` INT, \n
+  `creation_date_index` INT,\n
+  `frequency_index` INT,\n
   PRIMARY KEY  (`uid`),\n
   KEY `version` (`version`),\n
   KEY `language` (`language`),\n
+  KEY `subject_set_uid` (`subject_set_uid`),\n
   KEY `effective_date` (`effective_date`),\n
   KEY `expiration_date` (`effective_date`),\n
   KEY `frequency_index` (`creation_date_index`, `frequency_index`)\n
@@ -110,13 +112,15 @@
   `version` varchar(10) default \'\',\n
   `language` varchar(5) default \'\',\n
   `revision` varchar(10) default \'\',\n
+  `subject_set_uid` INT UNSIGNED,\n
   `effective_date` datetime default NULL,\n
   `expiration_date` datetime default NULL,\n
-  `creation_date_index` INT, \n
-  `frequency_index` INT, \n
+  `creation_date_index` INT,\n
+  `frequency_index` INT,\n
   PRIMARY KEY  (`uid`),\n
   KEY `version` (`version`),\n
   KEY `language` (`language`),\n
+  KEY `subject_set_uid` (`subject_set_uid`),\n
   KEY `effective_date` (`effective_date`),\n
   KEY `expiration_date` (`effective_date`),\n
   KEY `frequency_index` (`creation_date_index`, `frequency_index`)\n

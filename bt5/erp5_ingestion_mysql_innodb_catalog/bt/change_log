@@ -1,3 +1,6 @@
+2010-11-08 Kazuhiko
+* subject related tables are moved to erp5_mysql_innodb_catalog.
+
 2009-04-18 Kazuhiko
 * Version 5.4.1
 

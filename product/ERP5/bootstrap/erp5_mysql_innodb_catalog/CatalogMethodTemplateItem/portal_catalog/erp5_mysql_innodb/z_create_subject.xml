@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="SQL" module="Products.ZSQLMethods.SQL"/>
-        <tuple/>
-      </tuple>
+      <global name="SQL" module="Products.ZSQLMethods.SQL"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -70,7 +67,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>z0_drop_subject</string> </value>
+            <value> <string>z_create_subject</string> </value>
         </item>
         <item>
             <key> <string>max_cache_</string> </key>
@@ -82,7 +79,13 @@
         </item>
         <item>
             <key> <string>src</string> </key>
-            <value> <string>DROP TABLE IF EXISTS subject</string> </value>
+            <value> <string>CREATE TABLE subject (\n
+  subject_set_uid INT UNSIGNED NOT NULL,\n
+  subject VARCHAR(255),\n
+  KEY `subject_set_uid` (`subject_set_uid`),\n
+  KEY `subject` (`subject`)\n
+) TYPE=InnoDB; \n
+</string> </value>
         </item>
         <item>
             <key> <string>template</string> </key>
@@ -118,7 +121,13 @@
                     </item>
                     <item>
                         <key> <string>raw</string> </key>
-                        <value> <string>DROP TABLE IF EXISTS subject</string> </value>
+                        <value> <string>CREATE TABLE subject (\n
+  subject_set_uid INT UNSIGNED NOT NULL,\n
+  subject VARCHAR(255),\n
+  KEY `subject_set_uid` (`subject_set_uid`),\n
+  KEY `subject` (`subject`)\n
+) TYPE=InnoDB; \n
+</string> </value>
                     </item>
                   </dictionary>
                 </state>

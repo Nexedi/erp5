@@ -2194,7 +2194,6 @@ return 1
     self.assertEquals('test-en-003-title', document.getTitle())
     self.assertEquals('test-en-003-keywords', document.getSubject())
 
-  @expectedFailure
   def test_DocumentIndexation(self):
     """
       Test how a document is being indexed in MySQL.
@@ -2212,10 +2211,11 @@ return 1
     self.assertTrue(document.getReference() in full_text_result[0]['searchabletext'])
     
     # subject indexation
-    subject_result = portal.erp5_sql_connection.manage_test('select * from subject where uid="%s"' %document.getUid())
-    self.assertTrue('subject2' in subject_result[0]['subject'])
-    self.assertTrue('subject1' in subject_result[0]['subject'])
-    
+    for subject_list in (['subject1',], ['subject2',],
+                         ['subject1', 'subject2',],):
+      subject_result = portal.portal_catalog(subject=subject_list)
+      self.assertEquals(len(subject_result), 1)
+      self.assertEquals(subject_result[0].getPath(), document.getPath())
 
 class TestDocumentWithSecurity(TestDocumentMixin):
 

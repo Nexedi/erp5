@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="SQL" module="Products.ZSQLMethods.SQL"/>
-        <tuple/>
-      </tuple>
+      <global name="SQL" module="Products.ZSQLMethods.SQL"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -24,19 +21,13 @@
                         <value>
                           <dictionary>
                             <item>
-                                <key> <string>getSubjectList</string> </key>
+                                <key> <string>optimised_subject_list</string> </key>
                                 <value>
                                   <dictionary/>
                                 </value>
                             </item>
                             <item>
-                                <key> <string>isDocument</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                            <item>
-                                <key> <string>uid</string> </key>
+                                <key> <string>subject_set_uid</string> </key>
                                 <value>
                                   <dictionary/>
                                 </value>
@@ -48,9 +39,8 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>getSubjectList</string>
-                            <string>isDocument</string>
-                            <string>uid</string>
+                            <string>subject_set_uid</string>
+                            <string>optimised_subject_list</string>
                           </list>
                         </value>
                     </item>
@@ -67,9 +57,8 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>getSubjectList\r\n
-isDocument\r\n
-uid</string> </value>
+            <value> <string>subject_set_uid\r\n
+optimised_subject_list</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -109,20 +98,25 @@ uid</string> </value>
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-REPLACE INTO subject VALUES \n
-<dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
-  <dtml-if sequence-start><dtml-else>,</dtml-if>\n
-  <dtml-let subject="getSubjectList[loop_item]">\n
-    <dtml-if subject>\n
-      <dtml-in prefix="word" expr="subject">\n
-<dtml-if sequence-start><dtml-else>,</dtml-if>\n
-(<dtml-sqlvar "uid[loop_item]" type="int">, <dtml-sqlvar word_item type="string">)\n
+<dtml-let row_list="[]">\n
+  <dtml-in prefix="loop" expr="_.range(_.len(subject_set_uid))">\n
+    <dtml-if expr="optimised_subject_list[loop_item]">\n
+      <dtml-in prefix="role" expr="optimised_subject_list[loop_item]">\n
+        <dtml-call expr="row_list.append([subject_set_uid[loop_item], role_item])">\n
       </dtml-in>\n
-    <dtml-else>\n
-(<dtml-sqlvar "uid[loop_item]" type="int">, NULL)\n
     </dtml-if>\n
-  </dtml-let>\n
-</dtml-in>\n
+  </dtml-in>\n
+  <dtml-if expr="row_list">\n
+INSERT INTO\n
+  subject\n
+  (`subject_set_uid`,  `subject`)\n
+VALUES\n
+    <dtml-in prefix="row" expr="row_list">\n
+(<dtml-sqlvar expr="row_item[0]" type="string">, <dtml-sqlvar expr="row_item[1]" type="string">)\n
+<dtml-if sequence-end><dtml-else>,</dtml-if>\n
+    </dtml-in>\n
+  </dtml-if>\n
+</dtml-let>\n
 
 
 ]]></string> </value>
@@ -163,20 +157,25 @@ REPLACE INTO subject VALUES \n
                         <key> <string>raw</string> </key>
                         <value> <string encoding="cdata"><![CDATA[
 
-REPLACE INTO subject VALUES \n
-<dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
-  <dtml-if sequence-start><dtml-else>,</dtml-if>\n
-  <dtml-let subject="getSubjectList[loop_item]">\n
-    <dtml-if subject>\n
-      <dtml-in prefix="word" expr="subject">\n
-<dtml-if sequence-start><dtml-else>,</dtml-if>\n
-(<dtml-sqlvar "uid[loop_item]" type="int">, <dtml-sqlvar word_item type="string">)\n
+<dtml-let row_list="[]">\n
+  <dtml-in prefix="loop" expr="_.range(_.len(subject_set_uid))">\n
+    <dtml-if expr="optimised_subject_list[loop_item]">\n
+      <dtml-in prefix="role" expr="optimised_subject_list[loop_item]">\n
+        <dtml-call expr="row_list.append([subject_set_uid[loop_item], role_item])">\n
       </dtml-in>\n
-    <dtml-else>\n
-(<dtml-sqlvar "uid[loop_item]" type="int">, NULL)\n
     </dtml-if>\n
-  </dtml-let>\n
-</dtml-in>\n
+  </dtml-in>\n
+  <dtml-if expr="row_list">\n
+INSERT INTO\n
+  subject\n
+  (`subject_set_uid`,  `subject`)\n
+VALUES\n
+    <dtml-in prefix="row" expr="row_list">\n
+(<dtml-sqlvar expr="row_item[0]" type="string">, <dtml-sqlvar expr="row_item[1]" type="string">)\n
+<dtml-if sequence-end><dtml-else>,</dtml-if>\n
+    </dtml-in>\n
+  </dtml-if>\n
+</dtml-let>\n
 
 
 ]]></string> </value>
