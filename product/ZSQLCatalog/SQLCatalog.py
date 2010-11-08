@@ -1951,20 +1951,19 @@ class Catalog(Folder,
       Also return a related key definition string with following rules:
        - If returned SearchKey is a RelatedKey, value is its definition
        - Otherwise, value is None
+
+      If both a related key and a real column are found, the related key
+      is used.
     """
-    # Is key a "real" column or some related key ?
-    related_key_definition = None
-    if key in self.getColumnMap():
-      search_key = self.getSearchKey(key, search_key_name)
-    else:
-      # Maybe a related key...
-      related_key_definition = self.getRelatedKeyDefinition(key)
-      if related_key_definition is None:
-        # Unknown
-        search_key = None
+    # Is key a related key or a "real" column ?
+    related_key_definition = self.getRelatedKeyDefinition(key)
+    if related_key_definition is None:
+      if key in self.getColumnMap():
+        search_key = self.getSearchKey(key, search_key_name)
       else:
-        # It's a related key
-        search_key = self.getSearchKey(key, 'RelatedKey')
+        search_key = None
+    else:
+      search_key = self.getSearchKey(key, 'RelatedKey')
     return search_key, related_key_definition
 
   def hasColumn(self, column):
