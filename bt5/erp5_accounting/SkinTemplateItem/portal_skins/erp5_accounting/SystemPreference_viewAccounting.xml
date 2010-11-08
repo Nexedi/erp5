@@ -82,6 +82,7 @@
                     <value>
                       <list>
                         <string>my_preferred_accounting_transaction_line_function_base_category</string>
+                        <string>my_preferred_accounting_transaction_line_funding_base_category</string>
                         <string>my_preferred_accounting_transaction_line_analytic_base_category_list</string>
                       </list>
                     </value>

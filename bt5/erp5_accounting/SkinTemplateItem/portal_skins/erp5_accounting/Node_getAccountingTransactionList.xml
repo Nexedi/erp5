@@ -84,12 +84,31 @@ if project_uid:\n
     params[\'project_uid\'] = Query(project_uid=None)\n
   else:\n
     params[\'project_uid\'] = project_uid\n
+funding_uid = kw.get(\'funding_uid\')\n
+if funding_uid:\n
+  if funding_uid == \'None\':\n
+    params[\'funding_uid\'] = Query(funding_uid=None)\n
+  else:\n
+    params[\'funding_uid\'] = funding_uid\n
+funding_category = kw.get(\'funding_category\')\n
+if funding_category:\n
+  if funding_category == \'None\':\n
+    params[\'funding_uid\'] = Query(funding_uid=None)\n
+  else:\n
+    params[\'funding_category\'] = funding_category\n
 function_uid = kw.get(\'function_uid\')\n
 if function_uid:\n
   if function_uid == \'None\':\n
     params[\'function_uid\'] = Query(function_uid=None)\n
   else:\n
     params[\'function_uid\'] = function_uid\n
+function_category = kw.get(\'function_category\')\n
+if function_category:\n
+  if function_category == \'None\':\n
+    params[\'function_uid\'] = Query(function_uid=None)\n
+  else:\n
+    params[\'function_category\'] = function_category\n
+\n
 if node_category_strict_membership:\n
   params[\'node_category_strict_membership\'] = node_category_strict_membership\n
 if node_category:\n
@@ -192,6 +211,7 @@ if from_date or is_pl_account:\n
         Movement_getMirrorSectionTitle=\'\',\n
         Movement_getNodeGapId=\'\',\n
         Movement_getExplanationUrl=lambda **kw: \'\',\n
+        Movement_getFundingTitle=lambda: \'\',\n
         Movement_getFunctionTitle=lambda: \'\',\n
         Movement_getProjectTitle=lambda: \'\',\n
         Node_statAccountingBalance=\'\',\n
@@ -247,6 +267,94 @@ return portal.portal_simulation.getMovementHistoryList(\n
             <key> <string>errors</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>8</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>selection</string>
+                            <string>sort_on</string>
+                            <string>node_category</string>
+                            <string>node_category_strict_membership</string>
+                            <string>mirror_section_category</string>
+                            <string>from_date</string>
+                            <string>selection_name</string>
+                            <string>src__</string>
+                            <string>kw</string>
+                            <string>Products.ZSQLCatalog.SQLCatalog</string>
+                            <string>Query</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>translateString</string>
+                            <string>Products.ERP5Type.Log</string>
+                            <string>log</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>request</string>
+                            <string>params</string>
+                            <string>None</string>
+                            <string>_getitem_</string>
+                            <string>_write_</string>
+                            <string>payment_uid</string>
+                            <string>project_uid</string>
+                            <string>funding_uid</string>
+                            <string>funding_category</string>
+                            <string>function_uid</string>
+                            <string>function_category</string>
+                            <string>new_result</string>
+                            <string>net_balance</string>
+                            <string>False</string>
+                            <string>is_pl_account</string>
+                            <string>node</string>
+                            <string>period_start_date</string>
+                            <string>get_inventory_kw</string>
+                            <string>max</string>
+                            <string>previous_total_debit</string>
+                            <string>previous_total_credit</string>
+                            <string>getInventoryAssetPrice</string>
+                            <string>period_openning_balance</string>
+                            <string>_apply_</string>
+                            <string>min</string>
+                            <string>True</string>
+                            <string>Products.ERP5Type.Document</string>
+                            <string>newTempBase</string>
+                            <string>previous_balance</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+                <list/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <int>0</int>
+              </tuple>
             </value>
         </item>
         <item>

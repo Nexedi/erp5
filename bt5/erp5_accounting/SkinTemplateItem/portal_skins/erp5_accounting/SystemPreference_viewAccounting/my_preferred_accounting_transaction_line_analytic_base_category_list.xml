@@ -263,7 +263,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'\', \'\')] + [(x.getTranslatedTitle(), x.getRelativeUrl()) for x in context.portal_categories.contentValues(sort_on=(\'translated_title\', ))]</string> </value>
+            <value> <string>python: [(\'\', \'\')] + [(\'%s - %s\' % (x.getId(), x.getTranslatedTitle()),  x.getRelativeUrl()) for x in context.portal_categories.contentValues(sort_on=(\'id\', ))]</string> </value>
         </item>
       </dictionary>
     </pickle>

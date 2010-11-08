@@ -90,9 +90,10 @@
                     <value>
                       <list>
                         <string>your_section_category</string>
+                        <string>your_currency</string>
+                        <string>your_funding</string>
                         <string>your_function</string>
                         <string>your_project</string>
-                        <string>your_currency</string>
                         <string>your_omit_grouping_reference</string>
                         <string>your_mirror_section</string>
                         <string>your_payment</string>

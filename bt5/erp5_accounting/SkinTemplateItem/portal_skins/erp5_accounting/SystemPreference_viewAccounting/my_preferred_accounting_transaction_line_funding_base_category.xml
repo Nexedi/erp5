@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_preferred_accounting_transaction_line_function_base_category</string> </value>
+            <value> <string>my_preferred_accounting_transaction_line_funding_base_category</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -245,7 +245,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Base Category for Function on Accounting Transaction Lines</string> </value>
+                    <value> <string>Base Category for Funding on Accounting Transaction Lines</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>

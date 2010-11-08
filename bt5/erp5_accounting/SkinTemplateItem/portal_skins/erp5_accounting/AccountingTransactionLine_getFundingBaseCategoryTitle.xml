@@ -50,58 +50,14 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Returns the list of columns to use in accounting reports (GL, account statement, journal)\n
-"""\n
-from Products.ZSQLCatalog.SQLCatalog import Query\n
-portal = context.getPortalObject()\n
-request = portal.REQUEST\n
+            <value> <string>portal = context.getPortalObject()\n
 \n
-# cache the title in the request, it will be used by Movement_getProjectTitle\n
-# and Movement_getFunctionTitle scripts\n
-request.other[\'Movement_getProjectTitle.project_title_dict\'\n
-    ] = project_title_dict = dict()\n
-request.other[\'Movement_getFunctionTitle.function_title_dict\'\n
-    ] = function_title_dict = dict()\n
-request.other[\'Movement_getFundingTitle.funding_title_dict\'\n
-    ] = funding_title_dict = dict()\n
+funding_base_category = portal.portal_preferences.getPreferredAccountingTransactionLineFundingBaseCategory()\n
 \n
-analytic_column_list = ()\n
-funding_item_list = context.AccountingTransactionLine_getFundingItemList()\n
-if funding_item_list:\n
-  analytic_column_list += ((\'funding\', context.AccountingTransactionLine_getFundingBaseCategoryTitle()),)\n
-for v, k in funding_item_list:\n
-  if k:\n
-    if k == \'None\' or isinstance(k, Query):\n
-      funding_title_dict[None] = \'\'\n
-    else:\n
-      funding_title_dict[portal.portal_categories.restrictedTraverse(k).getUid()] = v\n
+if funding_base_category:\n
+  return portal.portal_categories.restrictedTraverse(funding_base_category).getBaseCategoryValue().getTitle()\n
 \n
-function_item_list = context.AccountingTransactionLine_getFunctionItemList()\n
-if function_item_list:\n
-  analytic_column_list += ((\'function\', context.AccountingTransactionLine_getFunctionBaseCategoryTitle()),)\n
-for v, k in function_item_list:\n
-  if k:\n
-    if k == \'None\' or isinstance(k, Query):\n
-      function_title_dict[None] = \'\'\n
-    else:\n
-      function_title_dict[portal.portal_categories.restrictedTraverse(k).getUid()] = v\n
-\n
-project_item_list = context.AccountingTransactionLine_getProjectItemList()\n
-if project_item_list:\n
-  analytic_column_list += ((\'project\', \'Project\'),)\n
-for v, k in project_item_list:\n
-  if k:\n
-    if k == \'None\' or isinstance(k, Query):\n
-      project_title_dict[None] = \'\'\n
-    else:\n
-      project_title_dict[portal.portal_categories.restrictedTraverse(k).getUid()] = v\n
-\n
-for base_category in \\\n
-    portal.portal_preferences.getPreferredAccountingTransactionLineAnalyticBaseCategoryList() or []:\n
-  title = portal.portal_categories.restrictedTraverse(base_category).getTitle()\n
-  analytic_column_list += ((\'%s_translated_title\' % base_category, title),)\n
-\n
-return analytic_column_list\n
+return \'Funding\'\n
 </string> </value>
         </item>
         <item>
@@ -138,29 +94,10 @@ return analytic_column_list\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>Products.ZSQLCatalog.SQLCatalog</string>
-                            <string>Query</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
-                            <string>request</string>
-                            <string>dict</string>
-                            <string>_write_</string>
-                            <string>project_title_dict</string>
-                            <string>function_title_dict</string>
-                            <string>funding_title_dict</string>
-                            <string>analytic_column_list</string>
-                            <string>funding_item_list</string>
-                            <string>_inplacevar_</string>
-                            <string>_getiter_</string>
-                            <string>v</string>
-                            <string>k</string>
-                            <string>isinstance</string>
-                            <string>None</string>
-                            <string>function_item_list</string>
-                            <string>project_item_list</string>
-                            <string>base_category</string>
-                            <string>title</string>
+                            <string>funding_base_category</string>
                           </tuple>
                         </value>
                     </item>
@@ -177,7 +114,7 @@ return analytic_column_list\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountModule_getAnalyticColumnList</string> </value>
+            <value> <string>AccountingTransactionLine_getFundingBaseCategoryTitle</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

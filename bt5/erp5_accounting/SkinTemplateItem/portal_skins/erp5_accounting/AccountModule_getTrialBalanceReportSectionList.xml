@@ -62,6 +62,7 @@ at_date  = request[\'at_date\']\n
 from_date = request.get(\'from_date\', None)\n
 portal_type = request.get(\'portal_type\', None)\n
 function = request.get(\'function\', None)\n
+funding = request.get(\'funding\', None)\n
 project = request.get(\'project\', None)\n
 simulation_state = request[\'simulation_state\']\n
 expand_accounts = request.get(\'expand_accounts\', False)\n
@@ -114,6 +115,10 @@ for analytic in group_analytic:\n
     extra_columns += ((\'function_uid\',\n
         context.AccountingTransactionLine_getFunctionBaseCategoryTitle()),)\n
     group_analytic_uid += (\'function_uid\',)\n
+  elif analytic == \'funding\':\n
+    extra_columns += ((\'funding_uid\',\n
+        context.AccountingTransactionLine_getFundingBaseCategoryTitle()),)\n
+    group_analytic_uid += (\'funding_uid\',)\n
   else:\n
     for analytic_column in possible_analytic_column_list:\n
       if analytic_column[0] == analytic:\n
@@ -147,7 +152,8 @@ return [ ReportSection(\n
                                   period_start_date=\n
                                           period_start_date.earliestTime(),\n
                                   section_uid=section_uid,\n
-                                  function=function,\n
+                                  function_category=function,\n
+                                  funding_cateory=funding,\n
                                   project=project,\n
                                   portal_type=portal_type,\n
                                   simulation_state=simulation_state,\n
@@ -175,6 +181,82 @@ return [ ReportSection(\n
             <key> <string>errors</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>Products.ERP5Form.Report</string>
+                            <string>ReportSection</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>portal</string>
+                            <string>N_</string>
+                            <string>_getitem_</string>
+                            <string>at_date</string>
+                            <string>None</string>
+                            <string>from_date</string>
+                            <string>portal_type</string>
+                            <string>function</string>
+                            <string>funding</string>
+                            <string>project</string>
+                            <string>simulation_state</string>
+                            <string>False</string>
+                            <string>expand_accounts</string>
+                            <string>show_empty_accounts</string>
+                            <string>per_account_class_summary</string>
+                            <string>gap_root</string>
+                            <string>mirror_section_category</string>
+                            <string>section_uid</string>
+                            <string>period_start_date</string>
+                            <string>currency</string>
+                            <string>precision</string>
+                            <string>node_uid</string>
+                            <string>gap_uid_list</string>
+                            <string>_getiter_</string>
+                            <string>gap</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
+                            <string>True</string>
+                            <string>group_analytic</string>
+                            <string>group_analytic_uid</string>
+                            <string>extra_columns</string>
+                            <string>_inplacevar_</string>
+                            <string>possible_analytic_column_list</string>
+                            <string>analytic</string>
+                            <string>analytic_column</string>
+                            <string>uid_key</string>
+                            <string>selection_columns</string>
+                            <string>dict</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
             </value>
         </item>
         <item>
