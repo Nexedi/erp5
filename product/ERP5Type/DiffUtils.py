@@ -97,6 +97,9 @@ class DiffFile:
           tmp.append(line)
     self.children.append(CodeBlock(os.linesep.join(tmp)))
 
+  def __len__(self):
+    return len(self.children)
+
   def toHTML(self):
     """ return HTML diff
     """
@@ -104,7 +107,7 @@ class DiffFile:
     if self.binary:
       return '<b>Folder or binary file or just no changes!</b><br/><br/><br/>'
 
-    if not len(self.children):
+    if not self:
       return ''
     
     html_list = []

@@ -826,19 +826,30 @@ class SubversionTool(BaseTool):
     # Business template root directory is the root of the tree
     root = Dir(business_template.getTitle(), "normal")
     something_modified = False
-    
+    template_tool = self.getPortalObject().portal_templates
+    if template_tool.getDiffFilterScriptList():
+      client_diff = self._getClient().diff
+      def hasDiff(path):
+        return template_tool.getFilteredDiff(client_diff(path, None, None))
+    else:
+      def hasDiff(path):
+        return True
     statusObj_list = self.status(os.path.join(bt_path, \
     business_template.getTitle()), update=False)
     # We browse the files returned by svn status
     for status_obj in statusObj_list :
       # can be (normal, added, modified, deleted, conflicted, unversioned)
-      status = str(status_obj.getTextStatus())
       if str(status_obj.getReposTextStatus()) != 'none':
         status = "outdated"
-      if (show_unmodified or status != "normal") and status != "unversioned":
+      else:
+        status = str(status_obj.getTextStatus())
+        if status == "unversioned" or \
+           status == "normal" and not show_unmodified:
+          continue
+      full_path = status_obj.getPath()
+      if status != "modified" or hasDiff(full_path):
         something_modified = True
         # Get object path
-        full_path = status_obj.getPath()
         relative_path = full_path.replace(bt_path, '')
         filename = os.path.basename(relative_path)
 
