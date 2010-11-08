@@ -1,0 +1,4189 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts79979098.47</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>jquery.sheet.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>131137</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Pdata" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\r\n
+jQuery.sheet() The Web Based Spreadsheet\r\n
+Version: 1.1.0\r\n
+http://code.google.com/p/jquerysheet/\r\n
+\t\t\r\n
+Copyright (C) 2010 Robert Plummer\r\n
+Dual licensed under the LGPL v2 and GPL v2 licenses.\r\n
+http://www.gnu.org/licenses/\r\n
+*/\r\n
+\r\n
+/*\r\n
+\tDimensions Info:\r\n
+\t\tWhen dealing with size, it seems that outerHeight is generally the most stable cross browser\r\n
+\t\tattribute to use for bar sizing.  We try to use this as much as possible.  But because col\'s\r\n
+\t\tdon\'t have boarders, we subtract or add jS.s.boxModelCorrection for those browsers.\r\n
+\ttr/td column and row Index VS cell/column/row index\r\n
+\t\tDOM elements are all 0 based (tr/td/table)\r\n
+\t\tSpreadsheet elements are all 1 based (A1, A1:B4, TABLE2:A1, TABLE2:A1:B4)\r\n
+\t\tColumn/Row/Cell\r\n
+\tDOCTYPE:\r\n
+\t\tIt is recommended to use STRICT doc types on the viewing page when using sheet to ensure that the heights/widths of bars and sheet rows show up correctly\r\n
+\t\tExample of recommended doc type: <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">\r\n
+*/\r\n
+jQuery.fn.extend({\r\n
+\tsheet: function(settings) {\r\n
+\t\tsettings = jQuery.extend({\r\n
+\t\t\turlGet: \t\t"sheets/enduser.documentation.html", //local url, if you want to get a sheet from a url\r\n
+\t\t\turlSave: \t\t"save.html", \t\t\t\t\t//local url, for use only with the default save for sheet\r\n
+\t\t\teditable: \t\ttrue, \t\t\t\t\t\t\t//bool, Makes the jSheetControls_formula & jSheetControls_fx appear\r\n
+\t\t\tallowToggleState: true,\t\t\t\t\t\t\t//allows the function that changes the spreadsheet\'s state from static to editable and back\r\n
+\t\t\turlMenu: \t\t"menu.html", \t\t\t\t\t//local url, for the menu to the right of title\r\n
+\t\t\tnewColumnWidth: 120, \t\t\t\t\t\t\t//int, the width of new columns or columns that have no width assigned\r\n
+\t\t\ttitle: \t\t\tnull, \t\t\t\t\t\t\t//html, general title of the sheet group\r\n
+\t\t\tinlineMenu:\t\tnull, \t\t\t\t\t\t\t//html, menu for editing sheet\r\n
+\t\t\tbuildSheet: \tfalse,\t\t\t\t\t\t\t//bool, string, or object\r\n
+\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t//bool true - build sheet inside of parent\r\n
+\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t//bool false - use urlGet from local url\r\n
+\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t//string  - \'{number_of_cols}x{number_of_rows} (5x100)\r\n
+\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t//object - table\r\n
+\t\t\tcalcOff: \t\tfalse, \t\t\t\t\t\t\t//bool, turns calculationEngine off (no spreadsheet, just grid)\r\n
+\t\t\tlog: \t\t\tfalse, \t\t\t\t\t\t\t//bool, turns some debugging logs on (jS.log(\'msg\'))\r\n
+\t\t\tlockFormulas: \tfalse, \t\t\t\t\t\t\t//bool, turns the ability to edit any formula off\r\n
+\t\t\tparent: \t\tjQuery(this), \t\t\t\t\t//object, sheet\'s parent, DON\'T CHANGE\r\n
+\t\t\tcolMargin: \t\t18, \t\t\t\t\t\t\t//int, the height and the width of all bar items, and new rows\r\n
+\t\t\tfnBefore: \t\tfunction() {}, \t\t\t\t\t//fn, fires just before jQuery.sheet loads\r\n
+\t\t\tfnAfter: \t\tfunction() {},\t \t\t\t\t//fn, fires just after all sheets load\r\n
+\t\t\tfnSave: \t\tfunction() { jS.saveSheet(); }, //fn, default save function, more of a proof of concept\r\n
+\t\t\tfnOpen: \t\tfunction() { \t\t\t\t\t//fn, by default allows you to paste table html into a javascript prompt for you to see what it looks likes if you where to use sheet\r\n
+\t\t\t\tvar t = prompt(\'Paste your table html here\');\r\n
+\t\t\t\tif (t) {\r\n
+\t\t\t\t\tjS.openSheet(t);\r\n
+\t\t\t\t}\r\n
+\t\t\t},\r\n
+\t\t\tfnClose: \t\tfunction() {}, \t\t\t\t\t//fn, default clase function, more of a proof of concept\r\n
+\t\t\tfnAfterCellEdit:function() {},\t\t\t\t\t//fn, fires just after someone edits a cell\r\n
+\t\t\tjoinedResizing: false, \t\t\t\t\t\t\t//bool, this joins the column/row with the resize bar\r\n
+\t\t\tboxModelCorrection: 2, \t\t\t\t\t\t\t//int, attempts to correct the differences found in heights and widths of different browsers, if you mess with this, get ready for the must upsetting and delacate js ever\r\n
+\t\t\tshowErrors:\t\ttrue,\t\t\t\t\t\t\t//bool, will make cells value an error if spreadsheet function isn\'t working correctly or is broken\r\n
+\t\t\tcalculations:\t{},\t\t\t\t\t\t\t\t//object, used to extend the standard functions that come with sheet\r\n
+\t\t\tcellSelectModel: \'excel\',\t\t\t\t\t\t//string, \'excel\' || \'oo\' || \'gdocs\' Excel sets the first cell onmousedown active, openoffice sets the last, now you can choose how you want it to be ;)\r\n
+\t\t\tautoAddCells:\ttrue,\r\n
+\t\t\tcaseInsensitive: false\r\n
+\t\t}, settings);\r\n
+\t\t\r\n
+\t\t\r\n
+\t\tvar o = settings.parent;\r\n
+\t\tif (jQuery.sheet.instance) {\r\n
+\t\t\to.sheetInstance = jQuery.sheet.createInstance(settings, jQuery.sheet.instance.length, o);\r\n
+\t\t\tjQuery.sheet.instance.push(o.sheetInstance);\r\n
+\t\t} else {\r\n
+\t\t\to.sheetInstance = jQuery.sheet.createInstance(settings, 0, o);\r\n
+\t\t\tjQuery.sheet.instance = [o.sheetInstance];\r\n
+\t\t}\r\n
+\t\treturn o;\r\n
+\t}\r\n
+});\r\n
+\r\n
+jQuery.sheet = {\r\n
+\tcreateInstance: function(s, I, origParent) { //s = jQuery.sheet settings, I = jQuery.sheet Instance Integer\r\n
+\t\tvar jS = {\r\n
+\t\t\tversion: \'1.1.0\',\r\n
+\t\t\ti: 0,\r\n
+\t\t\tI: I,\r\n
+\t\t\tsheetCount: 0,\r\n
+\t\t\ts: {},//s = settings object, used for shorthand, populated from jQuery.sheet\r\n
+\t\t\tobj: {//obj = object references\r\n
+\t\t\t\t//Please note, class references use the tag name because it\'s about 4 times faster\r\n
+\t\t\t\tbarCorner:\t\t\tfunction() { return jQuery(\'#\' + jS.id.barCorner + jS.i); },\r\n
+\t\t\t\tbarCornerAll:\t\tfunction() { return s.parent.find(\'div.\' + jS.cl.barCorner); },\r\n
+\t\t\t\tbarCornerParent:\tfunction() { return jQuery(\'#\' + jS.id.barCornerParent + jS.i); },\r\n
+\t\t\t\tbarCornerParentAll: function() { return s.parent.find(\'td.\' + jS.cl.barCornerParent); },\r\n
+\t\t\t\tbarTop: \t\t\tfunction() { return jQuery(\'#\' + jS.id.barTop + jS.i); },\r\n
+\t\t\t\tbarTopAll:\t\t\tfunction() { return s.parent.find(\'div.\' + jS.cl.barTop); },\r\n
+\t\t\t\tbarTopParent: \t\tfunction() { return jQuery(\'#\' + jS.id.barTopParent + jS.i); },\r\n
+\t\t\t\tbarTopParentAll:\tfunction() { return s.parent.find(\'div.\' + jS.cl.barTopParent); },\r\n
+\t\t\t\tbarLeft: \t\t\tfunction() { return jQuery(\'#\' + jS.id.barLeft + jS.i); },\r\n
+\t\t\t\tbarLeftAll:\t\t\tfunction() { return s.parent.find(\'div.\' + jS.cl.barLeft); },\r\n
+\t\t\t\tbarLeftParent: \t\tfunction() { return jQuery(\'#\' + jS.id.barLeftParent + jS.i); },\r\n
+\t\t\t\tbarLeftParentAll:\tfunction() { return s.parent.find(\'div.\' + jS.cl.barLeftParent); },\r\n
+\t\t\t\tcellActive:\t\t\tfunction() { return jQuery(jS.cellLast.td); },\r\n
+\t\t\t\tcellHighlighted:\tfunction() { return jQuery(jS.highlightedLast.td); },\r\n
+\t\t\t\tcontrols:\t\t\tfunction() { return jQuery(\'#\' + jS.id.controls); },\r\n
+\t\t\t\tformula: \t\t\tfunction() { return jQuery(\'#\' + jS.id.formula); },\r\n
+\t\t\t\tfullScreen:\t\t\tfunction() { return jQuery(\'div.\' + jS.cl.fullScreen); },\r\n
+\t\t\t\tinPlaceEdit:\t\tfunction() { return jQuery(\'#\' + jS.id.inPlaceEdit); },\r\n
+\t\t\t\tlabel: \t\t\t\tfunction() { return jQuery(\'#\' + jS.id.label); },\r\n
+\t\t\t\tlog: \t\t\t\tfunction() { return jQuery(\'#\' + jS.id.log); },\r\n
+\t\t\t\tmenu:\t\t\t\tfunction() { return jQuery(\'#\' + jS.id.menu); },\r\n
+\t\t\t\tpane: \t\t\t\tfunction() { return jQuery(\'#\' + jS.id.pane + jS.i); },\r\n
+\t\t\t\tpaneAll:\t\t\tfunction() { return s.parent.find(\'div.\' + jS.cl.pane); },\r\n
+\t\t\t\tparent: \t\t\tfunction() { return s.parent; },\r\n
+\t\t\t\tsheet: \t\t\t\tfunction() { return jQuery(\'#\' + jS.id.sheet + jS.i); },\r\n
+\t\t\t\tsheetAll: \t\t\tfunction() { return s.parent.find(\'table.\' + jS.cl.sheet); },\r\n
+\t\t\t\ttab:\t\t\t\tfunction() { return jQuery(\'#\' + jS.id.tab + jS.i); },\r\n
+\t\t\t\ttabAll:\t\t\t\tfunction() { return this.tabContainer().find(\'a.\' + jS.cl.tab); },\r\n
+\t\t\t\ttabContainer:\t\tfunction() { return jQuery(\'#\' + jS.id.tabContainer); },\r\n
+\t\t\t\ttableBody: \t\t\tfunction() { return document.getElementById(jS.id.sheet + jS.i); },\r\n
+\t\t\t\ttableControl:\t\tfunction() { return jQuery(\'#\' + jS.id.tableControl + jS.i); },\r\n
+\t\t\t\ttableControlAll:\tfunction() { return s.parent.find(\'table.\' + jS.cl.tableControl); },\r\n
+\t\t\t\tui:\t\t\t\t\tfunction() { return jQuery(\'#\' + jS.id.ui); },\r\n
+\t\t\t\tuiActive:\t\t\tfunction() { return s.parent.find(\'div.\' + jS.cl.uiActive); }\r\n
+\t\t\t},\r\n
+\t\t\tid: {//id = id\'s references\r\n
+\t\t\t\tbarCorner:\t\t\t\'jSheetBarCorner_\' + I + \'_\',\r\n
+\t\t\t\tbarCornerParent:\t\'jSheetBarCornerParent_\' + I + \'_\',\r\n
+\t\t\t\tbarTop: \t\t\t\'jSheetBarTop_\' + I + \'_\',\r\n
+\t\t\t\tbarTopParent: \t\t\'jSheetBarTopParent_\' + I + \'_\',\r\n
+\t\t\t\tbarLeft: \t\t\t\'jSheetBarLeft_\' + I + \'_\',\r\n
+\t\t\t\tbarLeftParent: \t\t\'jSheetBarLeftParent_\' + I + \'_\',\r\n
+\t\t\t\tcontrols:\t\t\t\'jSheetControls_\' + I,\r\n
+\t\t\t\tformula: \t\t\t\'jSheetControls_formula_\' + I,\r\n
+\t\t\t\tinPlaceEdit:\t\t\'jSheetInPlaceEdit_\' + I,\r\n
+\t\t\t\tlabel: \t\t\t\t\'jSheetControls_loc_\' + I,\r\n
+\t\t\t\tlog: \t\t\t\t\'jSheetLog_\' + I,\r\n
+\t\t\t\tmenu:\t\t\t\t\'jSheetMenu_\' + I,\r\n
+\t\t\t\tpane: \t\t\t\t\'jSheetEditPane_\' + I + \'_\',\r\n
+\t\t\t\tsheet: \t\t\t\t\'jSheet_\' + I + \'_\',\r\n
+\t\t\t\ttableControl:\t\t\'tableControl_\' + I + \'_\',\r\n
+\t\t\t\ttab:\t\t\t\t\'jSheetTab_\' + I,\r\n
+\t\t\t\ttabContainer:\t\t\'jSheetTabContainer_\' + I + \'_\',\r\n
+\t\t\t\tui:\t\t\t\t\t\'jSheetUI_\' + I\r\n
+\t\t\t},\r\n
+\t\t\tcl: {//cl = class references\r\n
+\t\t\t\tbarCorner:\t\t\t\'jSheetBarCorner\',\r\n
+\t\t\t\tbarCornerParent:\t\'jSheetBarCornerParent\',\r\n
+\t\t\t\tbarLeftTd:\t\t\t\'barLeft\',\r\n
+\t\t\t\tbarLeft: \t\t\t\'jSheetBarLeft\',\r\n
+\t\t\t\tbarLeftParent: \t\t\'jSheetBarLeftParent\',\r\n
+\t\t\t\tbarTop: \t\t\t\'jSheetBarTop\',\r\n
+\t\t\t\tbarTopParent: \t\t\'jSheetBarTopParent\',\r\n
+\t\t\t\tbarTopTd:\t\t\t\'barTop\',\r\n
+\t\t\t\tcellActive:\t\t\t\'jSheetCellActive\',\r\n
+\t\t\t\tcellHighlighted: \t\'jSheetCellHighighted\',\r\n
+\t\t\t\tcontrols:\t\t\t\'jSheetControls\',\r\n
+\t\t\t\tformula: \t\t\t\'jSheetControls_formula\',\r\n
+\t\t\t\tfullScreen:\t\t\t\'jSheetFullScreen\',\r\n
+\t\t\t\tinPlaceEdit:\t\t\'jSheetInPlaceEdit\',\r\n
+\t\t\t\tmenu:\t\t\t\t\'jSheetMenu\',\r\n
+\t\t\t\tsheet: \t\t\t\t\'jSheet\',\r\n
+\t\t\t\tsheetPaneTd:\t\t\'sheetPane\',\r\n
+\t\t\t\tlabel: \t\t\t\t\'jSheetControls_loc\',\r\n
+\t\t\t\tlog: \t\t\t\t\'jSheetLog\',\r\n
+\t\t\t\tpane: \t\t\t\t\'jSheetEditPane\',\r\n
+\t\t\t\ttab:\t\t\t\t\'jSheetTab\',\r\n
+\t\t\t\ttabContainer:\t\t\'jSheetTabContainer\',\r\n
+\t\t\t\ttabContainerFullScreen: \'jSheetFullScreenTabContainer\',\r\n
+\t\t\t\ttableControl:\t\t\'tableControl\',\r\n
+\t\t\t\ttoggle:\t\t\t\t\'cellStyleToggle\',\r\n
+\t\t\t\tui:\t\t\t\t\t\'jSheetUI\',\r\n
+\t\t\t\tuiActive:\t\t\t\'ui-state-active\',\r\n
+\t\t\t\tuiBar: \t\t\t\t\'ui-widget-header\',\r\n
+\t\t\t\tuiCellActive:\t\t\'ui-state-active\',\r\n
+\t\t\t\tuiCellHighlighted: \t\'ui-state-highlight\',\r\n
+\t\t\t\tuiControl: \t\t\t\'ui-widget-header ui-corner-top\',\r\n
+\t\t\t\tuiControlTextBox:\t\'ui-widget-content\',\r\n
+\t\t\t\tuiFullScreen:\t\t\'ui-widget-content ui-corner-all\',\r\n
+\t\t\t\tuiInPlaceEdit:\t\t\'ui-state-active\',\r\n
+\t\t\t\tuiMenu:\t\t\t\t\'ui-state-highlight\',\r\n
+\t\t\t\tuiMenuUl: \t\t\t\'ui-widget-header\',\r\n
+\t\t\t\tuiMenuLi: \t\t\t\'ui-widget-header\',\r\n
+\t\t\t\tuiMenuHighlighted: \t\'ui-state-highlight\',\r\n
+\t\t\t\tuiPane: \t\t\t\'ui-widget-content\',\r\n
+\t\t\t\tuiParent: \t\t\t\'ui-widget-content ui-corner-all\',\r\n
+\t\t\t\tuiSheet:\t\t\t\'ui-widget-content\',\r\n
+\t\t\t\tuiTab:\t\t\t\t\'ui-widget-header\',\r\n
+\t\t\t\tuiTabActive:\t\t\'ui-state-highlight\'\r\n
+\t\t\t},\r\n
+\t\t\tkill: function() {\r\n
+\t\t\t\tjS.obj.tabContainer().remove();\r\n
+\t\t\t\tjS.obj.fullScreen().remove();\r\n
+\t\t\t\tjS.obj.inPlaceEdit().remove();\r\n
+\t\t\t\torigParent.removeClass(jS.cl.uiParent).html(\'\');\r\n
+\t\t\t\tcE = s = jQuery.sheet.instance[I] = jS = origParent.sheetInstance = null;\r\n
+\t\t\t\tdelete cE;\r\n
+\t\t\t\tdelete s;\r\n
+\t\t\t\tdelete jQuery.sheet.instance[I];\r\n
+\t\t\t\tdelete jS;\r\n
+\t\t\t\tdelete origParent.sheetInstance;\r\n
+\t\t\t},\r\n
+\t\t\tcontrolFactory: {\r\n
+\t\t\t\taddRowMulti: function(qty, isBefore) {\r\n
+\t\t\t\t\tif (!qty) {\r\n
+\t\t\t\t\t\tqty = prompt(\'How many rows would you like to add?\');\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\tif (qty) {\r\n
+\t\t\t\t\t\tjS.controlFactory.addCells(null, isBefore, null, qty, \'row\');\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t},\r\n
+\t\t\t\taddColumnMulti: function(qty, isBefore) {\r\n
+\t\t\t\t\tif (!qty) {\r\n
+\t\t\t\t\t\tqty = prompt(\'How many columns would you like to add?\');\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\tif (qty) {\r\n
+\t\t\t\t\t\tjS.controlFactory.addCells(null, isBefore, null, qty, \'col\');\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t},\r\n
+\t\t\t\taddCells: function(eq, isBefore, eqO, qty, type) {\r\n
+\t\t\t\t\tjS.setDirty(true);\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tvar sheet = jS.obj.sheet();\r\n
+\t\t\t\t\tvar sheetWidth = sheet.width();\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\t//jS.evt.cellEditAbandon();\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tqty = (qty ? qty : 1);\r\n
+\t\t\t\t\ttype = (type ? type : \'col\');\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\t//var barLast = (type == \'row\' ? jS.rowLast : jS.colLast);\r\n
+\t\t\t\t\tvar cellLastBar = (type == \'row\' ? jS.cellLast.row : jS.cellLast.col);\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tif (!eq) {\r\n
+\t\t\t\t\t\tif (cellLastBar == -1) {\r\n
+\t\t\t\t\t\t\teq = \':last\';\r\n
+\t\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\t\teq = \':eq(\' + cellLastBar + \')\';\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t} else if (!isNaN(eq)){\r\n
+\t\t\t\t\t\teq = \':eq(\' + (eq - 1) + \')\';\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\t/*\r\n
+\t\t\t\t\tif (!eqO) {\r\n
+\t\t\t\t\t\tif (!eq && barLast > -1) {\r\n
+\t\t\t\t\t\t\teqO = \':eq(\' + barLast + \')\';\r\n
+\t\t\t\t\t\t} else if (!eq || barLast < 1) {\r\n
+\t\t\t\t\t\t\t//if eq has no value, lets just add it to the end.\r\n
+\t\t\t\t\t\t\teqO = \':last\';\r\n
+\t\t\t\t\t\t\teq = false;\r\n
+\t\t\t\t\t\t} else if (eq === true) {//if eq is boolean, then lets add it just after the currently selected row.\r\n
+\t\t\t\t\t\t\teqO = \':eq(\' + (cellLastBar - 1) + \')\';\r\n
+\t\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\t\t//If eq is a number, lets add it at that row\r\n
+\t\t\t\t\t\t\teqO = \':eq(\' + (eq - 1) + \')\';\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\t*/\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tvar o;\r\n
+\t\t\t\t\tswitch (type) {\r\n
+\t\t\t\t\t\tcase "row":\r\n
+\t\t\t\t\t\t\to = {\r\n
+\t\t\t\t\t\t\t\tbar: jS.obj.barLeft().find(\'div\' + eq),\r\n
+\t\t\t\t\t\t\t\tbarParent: jS.obj.barLeft(),\r\n
+\t\t\t\t\t\t\t\tcells: function() {\r\n
+\t\t\t\t\t\t\t\t\treturn sheet.find(\'tr\' + eq);\r\n
+\t\t\t\t\t\t\t\t},\r\n
+\t\t\t\t\t\t\t\tcol: function() { return \'\'; },\r\n
+\t\t\t\t\t\t\t\tnewBar: \'<div class="\' + jS.cl.uiBar + \'" style="height: \' + (s.colMargin - s.boxModelCorrection) + \'px;" />\',\r\n
+\t\t\t\t\t\t\t\tloc: function() {\r\n
+\t\t\t\t\t\t\t\t\treturn jS.getTdLocation(o.cells().find(\'td:last\'));\r\n
+\t\t\t\t\t\t\t\t},\r\n
+\t\t\t\t\t\t\t\tnewCells: function() {\r\n
+\t\t\t\t\t\t\t\t\tvar j = o.loc()[1];\r\n
+\t\t\t\t\t\t\t\t\tvar newCells = \'\';\r\n
+\t\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\t\tfor (var i = 0; i <= j; i++) {\r\n
+\t\t\t\t\t\t\t\t\t\tnewCells += \'<td />\';\r\n
+\t\t\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\t\treturn \'<tr style="height: \' + s.colMargin + \'px;">\' + newCells + \'</tr>\';\r\n
+\t\t\t\t\t\t\t\t},\r\n
+\t\t\t\t\t\t\t\tnewCol: \'\',\r\n
+\t\t\t\t\t\t\t\treLabel: function() {\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\t\to.barParent.children().each(function(i) {\r\n
+\t\t\t\t\t\t\t\t\t\tjQuery(this).text(i + 1);\r\n
+\t\t\t\t\t\t\t\t\t});\r\n
+\t\t\t\t\t\t\t\t},\r\n
+\t\t\t\t\t\t\t\tdimensions: function(loc, bar, cell, col) {\r\n
+\t\t\t\t\t\t\t\t\tbar.height(cell.height(s.colMargin).outerHeight() - s.boxModelCorrection);\r\n
+\t\t\t\t\t\t\t\t},\r\n
+\t\t\t\t\t\t\t\toffset: [qty, 0]\r\n
+\t\t\t\t\t\t\t};\r\n
+\t\t\t\t\t\t\tbreak;\r\n
+\t\t\t\t\t\tcase "col":\r\n
+\t\t\t\t\t\t\to = {\r\n
+\t\t\t\t\t\t\t\tbar: jS.obj.barTop().find(\'div\' + eq),\r\n
+\t\t\t\t\t\t\t\tbarParent: jS.obj.barTop(),\r\n
+\t\t\t\t\t\t\t\tcells: function() {\r\n
+\t\t\t\t\t\t\t\t\tvar cellStart = sheet.find(\'tr:first td\' + eq);\r\n
+\t\t\t\t\t\t\t\t\tvar cellEnd = sheet.find(\'td:last\');\r\n
+\t\t\t\t\t\t\t\t\tvar loc1 = jS.getTdLocation(cellStart);\r\n
+\t\t\t\t\t\t\t\t\tvar loc2 = jS.getTdLocation(cellEnd);\r\n
+\t\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\t\t//we get the first cell then get all the other cells directly... faster ;)\r\n
+\t\t\t\t\t\t\t\t\tvar cells = jQuery(jS.getTd(jS.i, loc1[0], loc1[1]));\r\n
+\t\t\t\t\t\t\t\t\tvar cell;\r\n
+\t\t\t\t\t\t\t\t\tfor (var i = 1; i <= loc2[0]; i++) {\r\n
+\t\t\t\t\t\t\t\t\t\tcells.push(jS.getTd(jS.i, i, loc1[1]));\r\n
+\t\t\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\t\treturn cells;\r\n
+\t\t\t\t\t\t\t\t},\r\n
+\t\t\t\t\t\t\t\tcol: function() {\r\n
+\t\t\t\t\t\t\t\t\treturn sheet.find(\'col\' + eq);\r\n
+\t\t\t\t\t\t\t\t},\r\n
+\t\t\t\t\t\t\t\tnewBar: \'<div class="\' + jS.cl.uiBar + \'"/>\',\r\n
+\t\t\t\t\t\t\t\tnewCol: \'<col />\',\r\n
+\t\t\t\t\t\t\t\tloc: function(cells) {\r\n
+\t\t\t\t\t\t\t\t\tcells = (cells ? cells : o.cells());\r\n
+\t\t\t\t\t\t\t\t\treturn jS.getTdLocation(cells.first());\r\n
+\t\t\t\t\t\t\t\t},\r\n
+\t\t\t\t\t\t\t\tnewCells: function() {\r\n
+\t\t\t\t\t\t\t\t\treturn \'<td />\';\r\n
+\t\t\t\t\t\t\t\t},\r\n
+\t\t\t\t\t\t\t\treLabel: function() {\r\n
+\t\t\t\t\t\t\t\t\to.barParent.children().each(function(i) {\r\n
+\t\t\t\t\t\t\t\t\t\tjQuery(this).text(cE.columnLabelString(i + 1));\r\n
+\t\t\t\t\t\t\t\t\t});\r\n
+\t\t\t\t\t\t\t\t},\r\n
+\t\t\t\t\t\t\t\tdimensions: function(loc, bar, cell, col) {\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\t\tvar w = s.newColumnWidth;\r\n
+\t\t\t\t\t\t\t\t\tcol\r\n
+\t\t\t\t\t\t\t\t\t\t.width(w)\r\n
+\t\t\t\t\t\t\t\t\t\t.css(\'width\', w + \'px\')\r\n
+\t\t\t\t\t\t\t\t\t\t.attr(\'width\', w + \'px\');\r\n
+\t\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\t\tbar\r\n
+\t\t\t\t\t\t\t\t\t\t.width(w - s.boxModelCorrection);\r\n
+\t\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\t\tsheet.width(sheetWidth + (w * qty));\r\n
+\t\t\t\t\t\t\t\t},\r\n
+\t\t\t\t\t\t\t\toffset: [0, qty]\r\n
+\t\t\t\t\t\t\t};\r\n
+\t\t\t\t\t\t\tbreak;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\t//make undoable\r\n
+\t\t\t\t\tjS.cellUndoable.add(jQuery(sheet).add(o.barParent));\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tvar cells = o.cells();\r\n
+\t\t\t\t\tvar loc = o.loc(cells);\t\r\n
+\t\t\t\t\tvar col = o.col();\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tvar newBar = o.newBar;\r\n
+\t\t\t\t\tvar newCell = o.newCells();\r\n
+\t\t\t\t\tvar newCol = o.newCol;\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tvar newCols = \'\';\r\n
+\t\t\t\t\tvar newBars = \'\';\r\n
+\t\t\t\t\tvar newCells = \'\';\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tfor (var i = 0; i < qty; i++) { //by keeping these variables strings temporarily, we cut down on using system resources\r\n
+\t\t\t\t\t\tnewCols += newCol;\r\n
+\t\t\t\t\t\tnewBars += newBar;\r\n
+\t\t\t\t\t\tnewCells += newCell;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tnewCols = jQuery(newCols);\r\n
+\t\t\t\t\tnewBars = jQuery(newBars);\r\n
+\t\t\t\t\tnewCells = jQuery(newCells);\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tif (isBefore) {\r\n
+\t\t\t\t\t\tcells.before(newCells);\r\n
+\t\t\t\t\t\to.bar.before(newBars);\r\n
+\t\t\t\t\t\tjQuery(col).before(newCols);\r\n
+\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\tcells.after(newCells);\r\n
+\t\t\t\t\t\to.bar.after(newBars);\r\n
+\t\t\t\t\t\tjQuery(col).after(newCols);\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tjS.setTdIds(sheet);\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\to.dimensions(loc, newBars, newCells, newCols);\r\n
+\t\t\t\t\to.reLabel();\r\n
+\r\n
+\t\t\t\t\tjS.obj.pane().scroll();\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\t//offset formulas\r\n
+\t\t\t\t\tjS.offsetFormulaRange((isBefore ? loc[0] - qty : loc[0]) , (isBefore ? loc[1] - qty : loc[0]), o.offset[0], o.offset[1], isBefore);\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\t//Because the line numbers get bigger, it is possible that the bars have changed in size, lets sync them\r\n
+\t\t\t\t\tjS.sheetSyncSize();\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\t//Let\'s make it redoable\r\n
+\t\t\t\t\tjS.cellUndoable.add(jQuery(sheet).add(o.barParent));\r\n
+\t\t\t\t},\r\n
+\t\t\t\taddRow: function(atRow, isBefore, atRowQ) {\r\n
+\t\t\t\t\tjS.controlFactory.addCells(atRow, isBefore, atRowQ, 1, \'row\');\r\n
+\t\t\t\t},\r\n
+\t\t\t\taddColumn: function(atColumn, isBefore, atColumnQ) {\r\n
+\t\t\t\t\tjS.controlFactory.addCells(atColumn, isBefore, atColumnQ, 1, \'col\');\r\n
+\t\t\t\t},\r\n
+\t\t\t\tbarLeft: function(reload, o) {//Works great!\r\n
+\t\t\t\t\tjS.obj.barLeft().remove();\r\n
+\t\t\t\t\tvar barLeft = jQuery(\'<div border="1px" id="\' + jS.id.barLeft + jS.i + \'" class="\' + jS.cl.barLeft + \'" />\');\r\n
+\t\t\t\t\tvar heightFn;\r\n
+\t\t\t\t\tif (reload) { //This is our standard way of detecting height when a sheet loads from a url\r\n
+\t\t\t\t\t\theightFn = function(i, objSource, objBar) {\r\n
+\t\t\t\t\t\t\tobjBar.height(parseInt(objSource.outerHeight()) - s.boxModelCorrection);\r\n
+\t\t\t\t\t\t};\r\n
+\t\t\t\t\t} else { //This way of detecting height is used becuase the object has some problems getting\r\n
+\t\t\t\t\t\t\t//height because both tr and td have height set\r\n
+\t\t\t\t\t\t\t//This corrects the problem\r\n
+\t\t\t\t\t\t\t//This is only used when a sheet is already loaded in the pane\r\n
+\t\t\t\t\t\theightFn = function(i, objSource, objBar) {\r\n
+\t\t\t\t\t\t\tobjBar.height(parseInt(objSource.css(\'height\').replace(\'px\',\'\')) - s.boxModelCorrection);\r\n
+\t\t\t\t\t\t};\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\to.find(\'tr\').each(function(i) {\r\n
+\t\t\t\t\t\tvar child = jQuery(\'<div>\' + (i + 1) + \'</div>\');\r\n
+\t\t\t\t\t\tjQuery(barLeft).append(child);\r\n
+\t\t\t\t\t\theightFn(i, jQuery(this), child);\r\n
+\t\t\t\t\t});\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tjS.evt.barMouseDown.height(\r\n
+\t\t\t\t\t\tjS.obj.barLeftParent().append(barLeft)\r\n
+\t\t\t\t\t);\r\n
+\t\t\t\t},\r\n
+\t\t\t\tbarTop: function(reload, o) { //Works great!\r\n
+\t\t\t\t\tjS.obj.barTop().remove();\r\n
+\t\t\t\t\tvar barTop = jQuery(\'<div id="\' + jS.id.barTop + jS.i + \'" class="\' + jS.cl.barTop + \'" />\');\r\n
+\t\t\t\t\tbarTop.height(s.colMargin);\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tvar parents;\r\n
+\t\t\t\t\tvar widthFn;\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tif (reload) {\r\n
+\t\t\t\t\t\tparents = o.find(\'tr:first td\');\r\n
+\t\t\t\t\t\twidthFn = function(obj) {\r\n
+\t\t\t\t\t\t\treturn jS.attrH.width(obj);\r\n
+\t\t\t\t\t\t};\r\n
+\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\tparents = o.find(\'col\');\r\n
+\t\t\t\t\t\twidthFn = function(obj) {\r\n
+\t\t\t\t\t\t\treturn parseInt(jQuery(obj).css(\'width\').replace(\'px\',\'\')) - s.boxModelCorrection;\r\n
+\t\t\t\t\t\t};\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tparents.each(function(i) {\r\n
+\t\t\t\t\t\tvar v = cE.columnLabelString(i + 1);\r\n
+\t\t\t\t\t\tvar w = widthFn(this);\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\tvar child = jQuery("<div>" + v + "</div>")\r\n
+\t\t\t\t\t\t\t.width(w)\r\n
+\t\t\t\t\t\t\t.height(s.colMargin);\r\n
+\t\t\t\t\t\tbarTop.append(child);\r\n
+\t\t\t\t\t});\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tjS.evt.barMouseDown.width(\r\n
+\t\t\t\t\t\tjS.obj.barTopParent().append(barTop)\r\n
+\t\t\t\t\t);\r\n
+\t\t\t\t},\r\n
+\t\t\t\theader: function() {\r\n
+\t\t\t\t\tjS.obj.controls().remove();\r\n
+\t\t\t\t\tjS.obj.tabContainer().remove();\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tvar header = jQuery(\'<div id="\' + jS.id.controls + \'" class="\' + jS.cl.controls + \'"></div>\');\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tvar firstRow = jQuery(\'<table cellpadding="0" cellspacing="0" border="0"><tr /></table>\').prependTo(header);\r\n
+\t\t\t\t\tvar firstRowTr = jQuery(\'<tr />\');\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tif (s.title) {\r\n
+\t\t\t\t\t\tvar title;\r\n
+\t\t\t\t\t\tif (jQuery.isFunction(s.title)) {\r\n
+\t\t\t\t\t\t\ttitle = jS.title(jS);\r\n
+\t\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\t\ttitle = s.title;\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\tfirstRowTr.append(jQuery(\'<td style="width: auto;text-align: center;" />\').html(title));\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tif (s.inlineMenu && s.editable) {\r\n
+\t\t\t\t\t\tvar inlineMenu;\r\n
+\t\t\t\t\t\tif (jQuery.isFunction(s.inlineMenu)) {\r\n
+\t\t\t\t\t\t\tinlineMenu = s.inlineMenu(jS);\r\n
+\t\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\t\tinlineMenu = s.inlineMenu;\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\tfirstRowTr.append(jQuery(\'<td style="text-align: center;" />\').html(inlineMenu));\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tif (s.editable) {\r\n
+\t\t\t\t\t\t//Page Menu Control\t\r\n
+\t\t\t\t\t\tif (jQuery.mbMenu) {\r\n
+\t\t\t\t\t\t\tjQuery(\'<div />\').load(s.urlMenu, function() {\r\n
+\t\t\t\t\t\t\t\tvar menu = jQuery(\'<td style="width: 50px; text-align: center;" id="\' + jS.id.menu + \'" class="rootVoices ui-corner-tl \' + jS.cl.menu + \'" />\')\r\n
+\t\t\t\t\t\t\t\t\t.html(\r\n
+\t\t\t\t\t\t\t\t\t\tjQuery(this).html()\r\n
+\t\t\t\t\t\t\t\t\t\t\t.replace(/sheetInstance/g, "jQuery.sheet.instance[" + I + "]")\r\n
+\t\t\t\t\t\t\t\t\t\t\t.replace(/menuInstance/g, I));\r\n
+\t\t\t\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\t\tmenu\r\n
+\t\t\t\t\t\t\t\t\t\t.prependTo(firstRowTr)\r\n
+\t\t\t\t\t\t\t\t\t\t.buildMenu({\r\n
+\t\t\t\t\t\t\t\t\t\t\tmenuWidth:\t\t100,\r\n
+\t\t\t\t\t\t\t\t\t\t\topenOnRight:\tfalse,\r\n
+\t\t\t\t\t\t\t\t\t\t\tcontainment: \ts.parent.attr(\'id\'),\r\n
+\t\t\t\t\t\t\t\t\t\t\thasImages:\t\tfalse,\r\n
+\t\t\t\t\t\t\t\t\t\t\tfadeInTime:\t\t0,\r\n
+\t\t\t\t\t\t\t\t\t\t\tfadeOutTime:\t0,\r\n
+\t\t\t\t\t\t\t\t\t\t\tadjustLeft:\t\t2,\r\n
+\t\t\t\t\t\t\t\t\t\t\tminZindex:\t\t"auto",\r\n
+\t\t\t\t\t\t\t\t\t\t\tadjustTop:\t\t10,\r\n
+\t\t\t\t\t\t\t\t\t\t\topacity:\t\t.95,\r\n
+\t\t\t\t\t\t\t\t\t\t\tshadow:\t\t\tfalse,\r\n
+\t\t\t\t\t\t\t\t\t\t\tcloseOnMouseOut:true,\r\n
+\t\t\t\t\t\t\t\t\t\t\tcloseAfter:\t\t1000,\r\n
+\t\t\t\t\t\t\t\t\t\t\thoverIntent:\t0, //if you use jquery.hoverIntent.js set this to time in milliseconds; 0= false;\r\n
+\t\t\t\t\t\t\t\t\t\t\tsubmenuHoverIntent: 0\r\n
+\t\t\t\t\t\t\t\t\t\t})\r\n
+\t\t\t\t\t\t\t\t\t\t.hover(function() {\r\n
+\t\t\t\t\t\t\t\t\t\t\t//not going to add to jS.cl because this isn\'t our control\r\n
+\t\t\t\t\t\t\t\t\t\t\tjQuery(this).addClass(jS.cl.uiMenu);\r\n
+\t\t\t\t\t\t\t\t\t\t}, function() {\r\n
+\t\t\t\t\t\t\t\t\t\t\tjQuery(this).removeClass(jS.cl.uiMenu);\r\n
+\t\t\t\t\t\t\t\t\t\t});\r\n
+\t\t\t\t\t\t\t});\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t//Edit box menu\r\n
+\t\t\t\t\t\tvar secondRow = jQuery(\'<table cellpadding="0" cellspacing="0" border="0">\' +\r\n
+\t\t\t\t\t\t\t\t\'<tr>\' +\r\n
+\t\t\t\t\t\t\t\t\t\'<td style="width: 35px; text-align: right;" id="\' + jS.id.label + \'" class="\' + jS.cl.label + \'"></td>\' +\r\n
+\t\t\t\t\t\t\t\t\t\'<td>\' +\r\n
+\t\t\t\t\t\t\t\t\t\t\'<textarea id="\' + jS.id.formula + \'" class="\' + jS.cl.formula + \'"></textarea>\' +\r\n
+\t\t\t\t\t\t\t\t\t\'</td>\' +\r\n
+\t\t\t\t\t\t\t\t\'</tr>\' +\r\n
+\t\t\t\t\t\t\t\'</table>\')\r\n
+\t\t\t\t\t\t\t.keydown(jS.evt.keyDownHandler.formulaOnKeyDown)\r\n
+\t\t\t\t\t\t\t.keyup(function() {\r\n
+\t\t\t\t\t\t\t\tjS.obj.inPlaceEdit().val(jS.obj.formula().val());\r\n
+\t\t\t\t\t\t\t})\r\n
+\t\t\t\t\t\t\t.change(function() {\r\n
+\t\t\t\t\t\t\t\tjS.obj.inPlaceEdit().val(jS.obj.formula().val());\r\n
+\t\t\t\t\t\t\t})\r\n
+\t\t\t\t\t\t\t.appendTo(header);\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tfirstRowTr.appendTo(firstRow);\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tvar tabParent = jQuery(\'<div id="\' + jS.id.tabContainer + \'" class="\' + jS.cl.tabContainer + \'">\' + \r\n
+\t\t\t\t\t\t\t\t\t(s.editable ? \'<span class="\' + jS.cl.uiTab + \' ui-corner-bottom" title="Add a spreadsheet" i="-1">+</span>\' : \'<span />\') + \r\n
+\t\t\t\t\t\t\t\t\'</div>\')\r\n
+\t\t\t\t\t\t\t.mousedown(jS.evt.tabOnMouseDown);\r\n
+\r\n
+\t\t\t\t\ts.parent\r\n
+\t\t\t\t\t\t.html(\'\')\r\n
+\t\t\t\t\t\t.append(header) //add controls header\r\n
+\t\t\t\t\t\t.append(\'<div id="\' + jS.id.ui + \'" class="\' + jS.cl.ui + \'">\') //add spreadsheet control\r\n
+\t\t\t\t\t\t.after(tabParent);\r\n
+\t\t\t\t},\r\n
+\t\t\t\tsheet: function(size) {\r\n
+\t\t\t\t\tif (!size) {\r\n
+\t\t\t\t\t\tsize = s.buildSheet;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\tsize = size.toLowerCase().split(\'x\');\r\n
+\r\n
+\t\t\t\t\tvar columnsCount = parseInt(size[0]);\r\n
+\t\t\t\t\tvar rowsCount = parseInt(size[1]);\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\t//Create elements before loop to make it faster.\r\n
+\t\t\t\t\tvar newSheet = jQuery(\'<table  cellpadding="0" cellspacing="0" border="0" border="1px" class="\' + jS.cl.sheet + \'" id="\' + jS.id.sheet + jS.i + \'"></table>\');\r\n
+\t\t\t\t\tvar standardTd = \'<td> </td>\';\r\n
+\t\t\t\t\tvar tds = \'\';\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\t//Using -- is many times faster than ++\r\n
+\t\t\t\t\tfor (var i = columnsCount; i >= 1; i--) {\r\n
+\t\t\t\t\t\ttds += standardTd;\r\n
+\t\t\t\t\t}\r\n
+\r\n
+\t\t\t\t\tvar standardTr = \'<tr height="\' + s.colMargin + \'" style="height: \' + s.colMarg + \';">\' + tds + \'</tr>\';\r\n
+\t\t\t\t\tvar trs = \'\';\r\n
+\t\t\t\t\tfor (var i = rowsCount; i >= 1; i--) {\r\n
+\t\t\t\t\t\ttrs += standardTr;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tnewSheet.html(\'<tbody>\' + trs + \'</tbody>\');\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tnewSheet.width(columnsCount * s.newColumnWidth);\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\treturn newSheet;\r\n
+\t\t\t\t},\r\n
+\t\t\t\tsheetUI: function(o, i, fn, reloadBars) {\r\n
+\t\t\t\t\tif (!i) {\r\n
+\t\t\t\t\t\tjS.sheetCount = 0;\r\n
+\t\t\t\t\t\tjS.i = 0;\r\n
+\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\tjS.sheetCount++;\r\n
+\t\t\t\t\t\tjS.i = jS.sheetCount;\r\n
+\t\t\t\t\t\ti = jS.i;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tvar objContainer = jS.controlFactory.table().appendTo(jS.obj.ui());\r\n
+\t\t\t\t\tvar pane = jS.obj.pane().html(o);\r\n
+\t\t\t\t\t\t\t\r\n
+\t\t\t\t\to = jS.tuneTableForSheetUse(o);\r\n
+\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\tjS.sheetDecorate(o);\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tjS.controlFactory.barTop(reloadBars, o);\r\n
+\t\t\t\t\tjS.controlFactory.barLeft(reloadBars, o);\r\n
+\t\t\t\t\r\n
+\t\t\t\t\tjS.sheetTab(true);\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tif (s.editable) {\r\n
+\t\t\t\t\t\tpane\r\n
+\t\t\t\t\t\t\t.mousedown(function(e) {\r\n
+\t\t\t\t\t\t\t\tjS.evt.cellOnMouseDown(e);\r\n
+\t\t\t\t\t\t\t\treturn false;\r\n
+\t\t\t\t\t\t\t});\r\n
+\t\t\t\t\t\tpane\r\n
+\t\t\t\t\t\t\t.dblclick(jS.evt.cellOnDblClick);\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tjS.themeRoller.start(i);\r\n
+\r\n
+\t\t\t\t\tjS.setTdIds(o);\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tjS.evt.scrollBars();\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tjS.addTab();\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tif (fn) {\r\n
+\t\t\t\t\t\tfn();\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tjS.log(\'Sheet Initialized\');\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\treturn objContainer;\r\n
+\t\t\t\t},\r\n
+\t\t\t\ttable: function() {\r\n
+\t\t\t\t\treturn jQuery(\'<table cellpadding="0" cellspacing="0" border="0" id="\' + jS.id.tableControl + jS.i + \'" class="\' + jS.cl.tableControl + \'">\' +\r\n
+\t\t\t\t\t\t\'<tbody>\' +\r\n
+\t\t\t\t\t\t\t\'<tr>\' + \r\n
+\t\t\t\t\t\t\t\t\'<td id="\' + jS.id.barCornerParent + jS.i + \'" class="\' + jS.cl.barCornerParent + \'">\' + //corner\r\n
+\t\t\t\t\t\t\t\t\t\'<div style="height: \' + s.colMargin + \'; width: \' + s.colMargin + \';" id="\' + jS.id.barCorner + jS.i + \'" class="\' + jS.cl.barCorner +\'"\' + (s.editable ? \' onClick="jQuery.sheet.instance[\' + I + \'].cellSetActiveBar(\\\'all\\\');"\' : \'\') + \' title="Select All">&nbsp;</div>\' +\r\n
+\t\t\t\t\t\t\t\t\'</td>\' + \r\n
+\t\t\t\t\t\t\t\t\'<td class="\' + jS.cl.barTopTd + \'">\' + //barTop\r\n
+\t\t\t\t\t\t\t\t\t\'<div id="\' + jS.id.barTopParent + jS.i + \'" class="\' + jS.cl.barTopParent + \'"></div>\' +\r\n
+\t\t\t\t\t\t\t\t\'</td>\' +\r\n
+\t\t\t\t\t\t\t\'</tr>\' +\r\n
+\t\t\t\t\t\t\t\'<tr>\' +\r\n
+\t\t\t\t\t\t\t\t\'<td class="\' + jS.cl.barLeftTd + \'">\' + //barLeft\r\n
+\t\t\t\t\t\t\t\t\t\'<div style="width: \' + s.colMargin + \';" id="\' + jS.id.barLeftParent + jS.i + \'" class="\' + jS.cl.barLeftParent + \'"></div>\' +\r\n
+\t\t\t\t\t\t\t\t\'</td>\' +\r\n
+\t\t\t\t\t\t\t\t\'<td class="\' + jS.cl.sheetPaneTd + \'">\' + //pane\r\n
+\t\t\t\t\t\t\t\t\t\'<div id="\' + jS.id.pane + jS.i + \'" class="\' + jS.cl.pane + \'"></div>\' +\r\n
+\t\t\t\t\t\t\t\t\'</td>\' +\r\n
+\t\t\t\t\t\t\t\'</tr>\' +\r\n
+\t\t\t\t\t\t\'</tbody>\' +\r\n
+\t\t\t\t\t\'</table>\');\r\n
+\t\t\t\t},\r\n
+\t\t\t\tchart: function(type, data, legend, axisLabels, w, h, row) {\r\n
+\t\t\t\t\tif (jGCharts) {\r\n
+\t\t\t\t\t\tvar api = new jGCharts.Api();\r\n
+\t\t\t\t\t\tfunction refine(v) {\r\n
+\t\t\t\t\t\t\tvar refinedV = new Array();\r\n
+\t\t\t\t\t\t\tjQuery(v).each(function(i) {\r\n
+\t\t\t\t\t\t\t\trefinedV[i] = jS.manageHtmlToText(v[i] + \'\');\r\n
+\t\t\t\t\t\t\t});\r\n
+\t\t\t\t\t\t\treturn refinedV;\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\tvar o = {};\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\tif (type) {\r\n
+\t\t\t\t\t\t\to.type = type;\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\tif (data) {\r\n
+\t\t\t\t\t\t\tdata = data.filter(function(v) { return (v ? v : 0); }); //remove nulls\r\n
+\t\t\t\t\t\t\to.data = data;\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\tif (legend) {\r\n
+\t\t\t\t\t\t\to.legend = refine(legend);\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\tif (axisLabels) {\r\n
+\t\t\t\t\t\t\to.axis_labels = refine(axisLabels);\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\tif (w || h) {\r\n
+\t\t\t\t\t\t\to.size = w + \'x\' + h;\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\treturn jS.controlFactory.safeImg(api.make(o), row);\r\n
+\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\treturn jQuery(\'<div>Charts are not enabled</div>\');\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t},\r\n
+\t\t\t\tsafeImg: function(src, row) {\r\n
+\t\t\t\t\treturn jQuery(\'<img />\')\r\n
+\t\t\t\t\t\t.hide()\r\n
+\t\t\t\t\t\t.load(function() { //prevent the image from being too big for the row\r\n
+\t\t\t\t\t\t\tjQuery(this).fadeIn(function() {\r\n
+\t\t\t\t\t\t\t\tjQuery(this).addClass(\'safeImg\');\r\n
+\t\t\t\t\t\t\t\tjS.attrH.setHeight(parseInt(row), \'cell\', false);\r\n
+\t\t\t\t\t\t\t});\r\n
+\t\t\t\t\t\t})\r\n
+\t\t\t\t\t\t.attr(\'src\', src);\r\n
+\t\t\t\t},\r\n
+\t\t\t\tinPlaceEdit: function(td) {\r\n
+\t\t\t\t\tjS.obj.inPlaceEdit().remove();\r\n
+\t\t\t\t\tvar formula = jS.obj.formula();\t\t\t\t\t\r\n
+\t\t\t\t\tvar offset = td.offset();\r\n
+\t\t\t\t\tvar style = td.attr(\'style\');\r\n
+\t\t\t\t\tvar w = td.width();\r\n
+\t\t\t\t\tvar h = td.height();\r\n
+\t\t\t\t\tvar textarea = jQuery(\'<textarea id="\' + jS.id.inPlaceEdit + \'" class="\' + jS.cl.inPlaceEdit + \' \' + jS.cl.uiInPlaceEdit + \'" />\')\r\n
+\t\t\t\t\t\t.css(\'left\', offset.left)\r\n
+\t\t\t\t\t\t.css(\'top\', offset.top)\r\n
+\t\t\t\t\t\t.width(w)\r\n
+\t\t\t\t\t\t.height(h)\r\n
+\t\t\t\t\t\t.keydown(jS.evt.inPlaceEditOnKeyDown)\r\n
+\t\t\t\t\t\t.keyup(function() {\r\n
+\t\t\t\t\t\t\tformula.val(textarea.val());\r\n
+\t\t\t\t\t\t})\r\n
+\t\t\t\t\t\t.change(function() {\r\n
+\t\t\t\t\t\t\tformula.val(textarea.val());\r\n
+\t\t\t\t\t\t})\r\n
+\t\t\t\t\t\t.appendTo(\'body\')\r\n
+\t\t\t\t\t\t.val(formula.val())\r\n
+\t\t\t\t\t\t.focus()\r\n
+\t\t\t\t\t\t.select();\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\t//Make the textarrea resizeable automatically\r\n
+\t\t\t\t\tif (jQuery.fn.elastic) {\r\n
+\t\t\t\t\t\ttextarea.elastic();\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t},\r\n
+\t\t\t\tinput: {\r\n
+\t\t\t\t\tselect: function() {\r\n
+\t\t\t\t\t\treturn jQuery(\'<select style="width: 100%;" onchange="jQuery.sheet.instance[\' + I + \'].controlFactory.input.setValue(jQuery(this).val(), jQuery(this).parent());" class="clickable" />\');\r\n
+\t\t\t\t\t},\r\n
+\t\t\t\t\tradio: function(v, cell) {\r\n
+\t\t\t\t\t\tvar radio = jQuery(\'<span class="clickable" />\');\r\n
+\t\t\t\t\t\tvar name = I + \'_table\' + cell.tableI + \'_cell_c\' + (cell.col - 1) + \'_r\' + (cell.row - 1) + \'radio\';\r\n
+\t\t\t\t\t\tfor (var i = 0; i < (v.length <= 25 ? v.length : 25); i++) {\r\n
+\t\t\t\t\t\t\tif (v[i]) {\r\n
+\t\t\t\t\t\t\t\tradio.append(\'<input onchange="jQuery.sheet.instance[\' + I + \'].controlFactory.input.setValue(jQuery(this).val(), jQuery(this).parent().parent());" type="radio" value="\' + v[i] + \'" name="\' + name + \'" />\' + v[i] + \'<br />\');\r\n
+\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\treturn radio;\r\n
+\t\t\t\t\t},\r\n
+\t\t\t\t\tcheckbox: function(v) {\r\n
+\t\t\t\t\t\treturn jQuery(\'<input onclick="jQuery.sheet.instance[\' + I + \'].controlFactory.input.setValue(jQuery(this).is(\\\':checked\\\') + \\\'\\\', jQuery(this).parent());" type="checkbox" value="\' + v + \'" />\' + v + \'<br />\');\r\n
+\t\t\t\t\t},\r\n
+\t\t\t\t\tsetValue: function(v, p) {\r\n
+\t\t\t\t\t\tp.attr(\'selectedvalue\', v);\r\n
+\t\t\t\t\t\tjS.calc(cE.calcState.i);\r\n
+\t\t\t\t\t},\r\n
+\t\t\t\t\tgetValue: function(cell) {\r\n
+\t\t\t\t\t\treturn jQuery(jS.getTd(cell.tableI, cell.row - 1, cell.col - 1)).attr(\'selectedvalue\');\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t}\r\n
+\t\t\t},\r\n
+\t\t\tsizeSync: {\r\n
+\t\t\t\r\n
+\t\t\t},\r\n
+\t\t\tevt: {\r\n
+\t\t\t\tkeyDownHandler: {\r\n
+\t\t\t\t\tenterOnInPlaceEdit: function(e) {\r\n
+\t\t\t\t\t\tif (!e.shiftKey) {\r\n
+\t\t\t\t\t\t\treturn jS.evt.cellSetFocusFromKeyCode(e);\r\n
+\t\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\t\treturn true;\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t},\r\n
+\t\t\t\t\tenter: function(e) {\r\n
+\t\t\t\t\t\tif (!jS.cellLast.isEdit && !e.ctrlKey) {\r\n
+\t\t\t\t\t\t\tjS.cellLast.td.dblclick();\r\n
+\t\t\t\t\t\t\treturn false;\r\n
+\t\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\t\treturn this.enterOnInPlaceEdit(e);\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t},\r\n
+\t\t\t\t\ttab: function(e) {\r\n
+\t\t\t\t\t\treturn jS.evt.cellSetFocusFromKeyCode(e);\r\n
+\t\t\t\t\t},\r\n
+\t\t\t\t\tpasteOverCells: function(e) { //used for pasting from other spreadsheets\r\n
+\t\t\t\t\t\tif (e.ctrlKey) {\r\n
+\t\t\t\t\t\t\tvar formula = jS.obj.formula(); //so we don\'t have to keep calling the function and wasting memory\r\n
+\t\t\t\t\t\t\tvar oldVal = formula.val();\r\n
+\t\t\t\t\t\t\tformula.val(\'\');  //we use formula to catch the pasted data\r\n
+\t\t\t\t\t\t\tjQuery(document).one(\'keyup\', function() {\r\n
+\t\t\t\t\t\t\t\tvar loc = jS.getTdLocation(jS.cellLast.td); //save the currrent cell\r\n
+\t\t\t\t\t\t\t\tvar val = formula.val(); //once ctrl+v is hit formula now has the data we need\r\n
+\t\t\t\t\t\t\t\tvar firstValue = \'\';\r\n
+\t\t\t\t\t\t\t\tformula.val(\'\'); \r\n
+\t\t\t\t\t\t\t\tvar tdsBefore = jQuery(\'<div />\');\r\n
+\t\t\t\t\t\t\t\tvar tdsAfter = jQuery(\'<div />\');\r\n
+\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\tvar row = val.split(/\\n/g); //break at rows\r\n
+\t\t\t\t\t\t\t\tfor (var i = 0; i < row.length; i++) {\r\n
+\t\t\t\t\t\t\t\t\tvar col = row[i].split(/\\t/g); //break at columns\r\n
+\t\t\t\t\t\t\t\t\tfor (var j = 0; j < col.length; j++) {\r\n
+\t\t\t\t\t\t\t\t\t\tif (col[j]) {\r\n
+\t\t\t\t\t\t\t\t\t\t\tvar td = jQuery(jS.getTd(jS.i, i + loc[0], j + loc[1]));\r\n
+\t\t\t\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\t\t\t\ttdsBefore.append(td.clone());\r\n
+\t\t\t\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\t\t\t\tif ((col[j] + \'\').charAt(0) == \'=\') { //we need to know if it\'s a formula here\r\n
+\t\t\t\t\t\t\t\t\t\t\t\ttd.attr(\'formula\', col[j]);\r\n
+\t\t\t\t\t\t\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\t\t\t\t\t\t\ttd\r\n
+\t\t\t\t\t\t\t\t\t\t\t\t\t.html(col[j])\r\n
+\t\t\t\t\t\t\t\t\t\t\t\t\t.removeAttr(\'formula\'); //we get rid of formula because we don\'t know if it was a formula, to check may take too long\r\n
+\t\t\t\t\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\t\t\t\ttdsAfter.append(td.clone());\r\n
+\t\t\t\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\t\t\t\tif (i == 0 && j == 0) { //we have to finish the current edit\r\n
+\t\t\t\t\t\t\t\t\t\t\t\tfirstValue = col[j];\r\n
+\t\t\t\t\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\tjS.cellUndoable.add(tdsBefore.children());\r\n
+\t\t\t\t\t\t\t\tjS.cellUndoable.add(tdsAfter.children());\r\n
+\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\tformula.val(firstValue);\r\n
+\t\t\t\t\t\t\t\tjS.setDirty(true);\r\n
+\t\t\t\t\t\t\t\tjS.evt.cellEditDone(true);\r\n
+\t\t\t\t\t\t\t});\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\treturn true;\r\n
+\t\t\t\t\t},\r\n
+\t\t\t\t\tfindCell: function(e) {\r\n
+\t\t\t\t\t\tif (e.ctrlKey) { \r\n
+\t\t\t\t\t\t\tjS.cellFind();\r\n
+\t\t\t\t\t\t\treturn false;\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\treturn true;\r\n
+\t\t\t\t\t},\r\n
+\t\t\t\t\tredo: function(e) {\r\n
+\t\t\t\t\t\tif (e.ctrlKey && !jS.cellLast.isEdit) { \r\n
+\t\t\t\t\t\t\tjS.cellUndoable.undoOrRedo();\r\n
+\t\t\t\t\t\t\treturn false;\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\treturn true;\r\n
+\t\t\t\t\t},\r\n
+\t\t\t\t\tundo: function(e) {\r\n
+\t\t\t\t\t\tif (e.ctrlKey && !jS.cellLast.isEdit) {\r\n
+\t\t\t\t\t\t\tjS.cellUndoable.undoOrRedo(true);\r\n
+\t\t\t\t\t\t\treturn false;\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\treturn true;\r\n
+\t\t\t\t\t},\r\n
+\t\t\t\t\tpageUpDown: function(reverse) {\r\n
+\t\t\t\t\t\tvar pane = jS.obj.pane();\r\n
+\t\t\t\t\t\tvar left = jS.cellLast.td.position().left;\r\n
+\t\t\t\t\t\tvar top = 0;\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\tif (reverse) {\r\n
+\t\t\t\t\t\t\ttop = 0;\r\n
+\t\t\t\t\t\t\tpane.scrollTop(pane.scrollTop() - pane.height());\r\n
+\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\t\ttop = pane.height() - (s.colMargin * 3);\r\n
+\t\t\t\t\t\t\tpane.scrollTop(pane.scrollTop() + top);\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\treturn jS.evt.cellSetFocusFromCoordinates(left, top);\r\n
+\t\t\t\t\t},\r\n
+\t\t\t\t\tformulaOnKeyDown: function(e) {\r\n
+\t\t\t\t\t\tswitch (e.keyCode) {\r\n
+\t\t\t\t\t\t\tcase key.ESCAPE: \tjS.evt.cellEditAbandon();\r\n
+\t\t\t\t\t\t\t\tbreak;\r\n
+\t\t\t\t\t\t\tcase key.TAB: \t\treturn jS.evt.keyDownHandler.tab(e);\r\n
+\t\t\t\t\t\t\t\tbreak;\r\n
+\t\t\t\t\t\t\tcase key.ENTER: \treturn jS.evt.keyDownHandler.enter(e);\r\n
+\t\t\t\t\t\t\t\tbreak;\r\n
+\t\t\t\t\t\t\tcase key.LEFT:\r\n
+\t\t\t\t\t\t\tcase key.UP:\r\n
+\t\t\t\t\t\t\tcase key.RIGHT:\r\n
+\t\t\t\t\t\t\tcase key.DOWN:\t\treturn jS.evt.cellSetFocusFromKeyCode(e);\r\n
+\t\t\t\t\t\t\t\tbreak;\r\n
+\t\t\t\t\t\t\tcase key.PAGE_UP:\treturn jS.evt.keyDownHandler.pageUpDown(true);\r\n
+\t\t\t\t\t\t\t\tbreak;\r\n
+\t\t\t\t\t\t\tcase key.PAGE_DOWN:\treturn jS.evt.keyDownHandler.pageUpDown();\r\n
+\t\t\t\t\t\t\t\tbreak;\r\n
+\t\t\t\t\t\t\tcase key.V:\t\t\treturn jS.evt.keyDownHandler.pasteOverCells(e);\r\n
+\t\t\t\t\t\t\t\tbreak;\r\n
+\t\t\t\t\t\t\tcase key.Y:\t\t\treturn jS.evt.keyDownHandler.redo(e);\r\n
+\t\t\t\t\t\t\t\tbreak;\r\n
+\t\t\t\t\t\t\tcase key.Z:\t\t\treturn jS.evt.keyDownHandler.undo(e);\r\n
+\t\t\t\t\t\t\t\tbreak;\r\n
+\t\t\t\t\t\t\tcase key.F:\t\t\treturn jS.evt.keyDownHandler.findCell(e);\r\n
+\t\t\t\t\t\t\tcase key.CONTROL: //we need to filter these to keep cell state\r\n
+\t\t\t\t\t\t\tcase key.CAPS_LOCK:\r\n
+\t\t\t\t\t\t\tcase key.SHIFT:\r\n
+\t\t\t\t\t\t\tcase key.ALT:\r\n
+\t\t\t\t\t\t\tcase key.UP:\r\n
+\t\t\t\t\t\t\tcase key.DOWN:\r\n
+\t\t\t\t\t\t\tcase key.LEFT:\r\n
+\t\t\t\t\t\t\tcase key.RIGHT:\r\n
+\t\t\t\t\t\t\t\tbreak;\r\n
+\t\t\t\t\t\t\tcase key.HOME:\r\n
+\t\t\t\t\t\t\tcase key.END:\t\tjS.evt.cellSetFocusFromKeyCode(e);\r\n
+\t\t\t\t\t\t\t\tbreak;\r\n
+\t\t\t\t\t\t\tdefault: \t\t\tjS.cellLast.isEdit = true;\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t},\r\n
+\t\t\t\tinPlaceEditOnKeyDown: function(e) {\r\n
+\t\t\t\t\tswitch (e.keyCode) {\r\n
+\t\t\t\t\t\tcase key.ENTER: \treturn jS.evt.keyDownHandler.enterOnInPlaceEdit(e);\r\n
+\t\t\t\t\t\t\tbreak;\r\n
+\t\t\t\t\t\tcase key.TAB: \t\treturn jS.evt.keyDownHandler.tab(e);\r\n
+\t\t\t\t\t\t\tbreak;\r\n
+\t\t\t\t\t\tcase key.ESCAPE:\tjS.evt.cellEditAbandon(); return false;\r\n
+\t\t\t\t\t\t\tbreak;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t},\r\n
+\t\t\t\tformulaChange: function(e) {\r\n
+\t\t\t\t\tjS.obj.inPlaceEdit().val(jS.obj.formula().val());\r\n
+\t\t\t\t},\r\n
+\t\t\t\tinPlaceEditChange: function(e) {\r\n
+\t\t\t\t\tjS.obj.formula().val(jS.obj.inPlaceEdit().val());\r\n
+\t\t\t\t},\r\n
+\t\t\t\tcellEditDone: function(forceCalc) {\r\n
+\t\t\t\t\tswitch (jS.cellLast.isEdit) {\r\n
+\t\t\t\t\t\tcase true:\r\n
+\t\t\t\t\t\t\tjS.obj.inPlaceEdit().remove();\r\n
+\t\t\t\t\t\t\tvar formula = jS.obj.formula();\r\n
+\t\t\t\t\t\t\tformula.unbind(\'keydown\'); //remove any lingering events from inPlaceEdit\r\n
+\t\t\t\t\t\t\tvar td = jS.cellLast.td;\r\n
+\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\tswitch(jS.isFormulaEditable(td)) {\r\n
+\t\t\t\t\t\t\t\tcase true:\r\n
+\t\t\t\t\t\t\t\t\t//Lets ensure that the cell being edited is actually active\r\n
+\t\t\t\t\t\t\t\t\tif (td) { \r\n
+\t\t\t\t\t\t\t\t\t\t//first, let\'s make it undoable before we edit it\r\n
+\t\t\t\t\t\t\t\t\t\tjS.cellUndoable.add(td);\r\n
+\t\t\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\t\t\t//This should return either a val from textbox or formula, but if fails it tries once more from formula.\r\n
+\t\t\t\t\t\t\t\t\t\tvar v = jS.manageTextToHtml(formula.val());\r\n
+\t\t\t\t\t\t\t\t\t\tvar prevVal = td.html();\r\n
+\r\n
+\t\t\t\t\t\t\t\t\t\tif (v.charAt(0) == \'=\') {\r\n
+\t\t\t\t\t\t\t\t\t\t\ttd\r\n
+\t\t\t\t\t\t\t\t\t\t\t\t.attr(\'formula\', v)\r\n
+\t\t\t\t\t\t\t\t\t\t\t\t.html(\'\');\r\n
+\t\t\t\t\t\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\t\t\t\t\t\ttd\r\n
+\t\t\t\t\t\t\t\t\t\t\t\t.removeAttr(\'formula\')\r\n
+\t\t\t\t\t\t\t\t\t\t\t\t.html(v);\r\n
+\t\t\t\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\t\t\tif (v != prevVal || forceCalc) {\r\n
+\t\t\t\t\t\t\t\t\t\t\tjS.calc(jS.i);\r\n
+\t\t\t\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\t\t\tjS.attrH.setHeight(jS.cellLast.row, \'cell\');\r\n
+\t\t\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\t\t\t//Save the newest version of that cell\r\n
+\t\t\t\t\t\t\t\t\t\tjS.cellUndoable.add(td);\r\n
+\t\t\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\t\t\tformula.focus().select();\r\n
+\t\t\t\t\t\t\t\t\t\tjS.cellLast.isEdit = false;\r\n
+\t\t\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\t\t\tjS.setDirty(true);\r\n
+\t\t\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\t\t\t//perform final function call\r\n
+\t\t\t\t\t\t\t\t\t\ts.fnAfterCellEdit({\r\n
+\t\t\t\t\t\t\t\t\t\t\ttd: jS.cellLast.td,\r\n
+\t\t\t\t\t\t\t\t\t\t\trow: jS.cellLast.row,\r\n
+\t\t\t\t\t\t\t\t\t\t\tcol: jS.cellLast.col,\r\n
+\t\t\t\t\t\t\t\t\t\t\tspreadsheetIndex: jS.i,\r\n
+\t\t\t\t\t\t\t\t\t\t\tsheetIndex: I\r\n
+\t\t\t\t\t\t\t\t\t\t});\r\n
+\t\t\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\tbreak;\r\n
+\t\t\t\t\t\tdefault:\r\n
+\t\t\t\t\t\t\tjS.attrH.setHeight(jS.cellLast.row, \'cell\', false);\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t},\r\n
+\t\t\t\tcellEditAbandon: function(skipCalc) {\r\n
+\t\t\t\t\tjS.obj.inPlaceEdit().remove();\r\n
+\t\t\t\t\tjS.themeRoller.cell.clearActive();\r\n
+\t\t\t\t\tjS.themeRoller.bar.clearActive();\r\n
+\t\t\t\t\tjS.themeRoller.cell.clearHighlighted();\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tif (!skipCalc) {\r\n
+\t\t\t\t\t\tjS.calc(jS.i);\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tjS.cellLast.td = jQuery(\'<td />\');\r\n
+\t\t\t\t\tjS.cellLast.row = jS.cellLast.col = -1;\r\n
+\t\t\t\t\tjS.rowLast = jS.colLast = -1;\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tjS.labelUpdate(\'\', true);\r\n
+\t\t\t\t\tjS.obj.formula()\r\n
+\t\t\t\t\t\t.val(\'\');\r\n
+\t\t\t\t\treturn false;\r\n
+\t\t\t\t},\r\n
+\t\t\t\tcellSetFocusFromCoordinates: function(left, top, skipOffset) {\r\n
+\t\t\t\t\tvar pane = jS.obj.pane();\r\n
+\t\t\t\t\tvar paneOffset = (skipOffset ? {left: 0, top: 0} : pane.offset());\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\ttop += paneOffset.top + 2;\r\n
+\t\t\t\t\tleft += paneOffset.left + 2;\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\t//here we double check that the coordinates are inside that of the pane, if so then we can continue\r\n
+\t\t\t\t\tif ((top >= paneOffset.top && top <= paneOffset.top + pane.height()) &&\r\n
+\t\t\t\t\t\t(left >= paneOffset.left && left <= paneOffset.left + pane.width())) {\r\n
+\t\t\t\t\t\tvar td = jQuery(document.elementFromPoint(left - $window.scrollLeft(), top - $window.scrollTop()));\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t//I use this snippet to help me know where the point was positioned\r\n
+\t\t\t\t\t\t/*jQuery(\'<div class="ui-widget-content" style="position: absolute;">TESTING TESTING</div>\')\r\n
+\t\t\t\t\t\t\t.css(\'top\', top + \'px\')\r\n
+\t\t\t\t\t\t\t.css(\'left\', left + \'px\')\r\n
+\t\t\t\t\t\t\t.appendTo(\'body\');\r\n
+\t\t\t\t\t\t*/\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\tif (jS.isTd(td)) {\r\n
+\t\t\t\t\t\t\tjS.themeRoller.cell.clearHighlighted();\r\n
+\t\t\t\t\t\t\tjS.cellEdit(td);\r\n
+\t\t\t\t\t\t\treturn false;\r\n
+\t\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\t\treturn true;\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\treturn false;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t},\r\n
+\t\t\t\tcellSetFocusFromKeyCode: function(e) { //invoces a click on next/prev cell\r\n
+\t\t\t\t\tvar c = jS.cellLast.col; //we don\'t set the cellLast.col here so that we never go into indexes that don\'t exist\r\n
+\t\t\t\t\tvar r = jS.cellLast.row;\r\n
+\t\t\t\t\tvar overrideIsEdit = false;\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tswitch (e.keyCode) {\r\n
+\t\t\t\t\t\tcase key.UP: \t\tr--; break;\r\n
+\t\t\t\t\t\tcase key.DOWN: \t\tr++; break;\r\n
+\t\t\t\t\t\tcase key.LEFT: \t\tc--; break;\r\n
+\t\t\t\t\t\tcase key.RIGHT: \tc++; break;\r\n
+\t\t\t\t\t\tcase key.ENTER:\t\tr++;\r\n
+\t\t\t\t\t\t\toverrideIsEdit = true;\r\n
+\t\t\t\t\t\t\tif (s.autoAddCells) {\r\n
+\t\t\t\t\t\t\t\tif (jS.cellLast.row == jS.sheetSize()[0]) {\r\n
+\t\t\t\t\t\t\t\t\tjS.controlFactory.addCells(\':last\', false, null, 1, \'row\');\r\n
+\t\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\tbreak;\r\n
+\t\t\t\t\t\tcase key.TAB:\r\n
+\t\t\t\t\t\t\toverrideIsEdit = true;\r\n
+\t\t\t\t\t\t\tif (e.shiftKey) {\r\n
+\t\t\t\t\t\t\t\tc--;\r\n
+\t\t\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\t\t\tc++;\r\n
+\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\tif (s.autoAddCells) {\r\n
+\t\t\t\t\t\t\t\tif (jS.cellLast.col == jS.sheetSize()[1]) {\r\n
+\t\t\t\t\t\t\t\t\tjS.controlFactory.addCells(\':last\', false, null, 1, \'col\');\r\n
+\t\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\tbreak;\r\n
+\t\t\t\t\t\tcase key.HOME:\t\tc = 0; break;\r\n
+\t\t\t\t\t\tcase key.END:\t\tc = jS.cellLast.td.parent().find(\'td\').length - 1; break;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\t//we check here and make sure all values are above -1, so that we get a selected cell\r\n
+\t\t\t\t\tc = (c < 0 ? 0 : c);\r\n
+\t\t\t\t\tr = (r < 0 ? 0 : r);\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\t//to get the td could possibly make keystrokes slow, we prevent it here so the user doesn\'t even know we are listening ;)\r\n
+\t\t\t\t\tif (!jS.cellLast.isEdit || overrideIsEdit) {\r\n
+\t\t\t\t\t\t//get the td that we want to go to\r\n
+\t\t\t\t\t\tvar td = jS.getTd(jS.i, r, c);\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\t\t//if the td exists, lets go to it\r\n
+\t\t\t\t\t\tif (td) {\r\n
+\t\t\t\t\t\t\tjS.themeRoller.cell.clearHighlighted();\r\n
+\t\t\t\t\t\t\tjS.cellEdit(jQuery(td));\r\n
+\t\t\t\t\t\t\treturn false;\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\t//default, can be overridden above\r\n
+\t\t\t\t\treturn true;\r\n
+\t\t\t\t},\r\n
+\t\t\t\tcellOnMouseDown: function(e) {\r\n
+\t\t\t\t\tif (e.shiftKey) {\r\n
+\t\t\t\t\t\tjS.getTdRange(e, jS.obj.formula().val());\r\n
+\t\t\t\t\t\treturn false;\r\n
+\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\tif (jS.isTd([e.target])) {\r\n
+\t\t\t\t\t\t\treturn jS.cellEdit(jQuery(e.target), true);\r\n
+\t\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\t\treturn true;\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t}\t\t\t\r\n
+\t\t\t\t},\r\n
+\t\t\t\tcellOnDblClick: function(e) {\r\n
+\t\t\t\t\tjS.cellLast.isEdit = jS.isSheetEdit = true;\r\n
+\t\t\t\t\tjS.controlFactory.inPlaceEdit(jS.cellLast.td);\r\n
+\t\t\t\t\tjS.log(\'click, in place edit activated\');\r\n
+\t\t\t\t},\r\n
+\t\t\t\ttabOnMouseDown: function(e) {\r\n
+\t\t\t\t\tvar i = jQuery(e.target).attr(\'i\');\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tif (i != \'-1\' && i != jS.i) {\r\n
+\t\t\t\t\t\tjS.setActiveSheet(jQuery(\'#\' + jS.id.tableControl + i), i); jS.calc(i);\r\n
+\t\t\t\t\t} else if (i != \'-1\' && jS.i == i) {\r\n
+\t\t\t\t\t\tjS.sheetTab();\r\n
+\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\tjS.addSheet(\'5x10\');\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\treturn false;\r\n
+\t\t\t\t},\r\n
+\t\t\t\tresizeBar: function(e, o) {\r\n
+\t\t\t\t\t//Resize Column & Row & Prototype functions are private under class jSheet\t\t\r\n
+\t\t\t\t\tvar target = jQuery(e.target);\r\n
+\t\t\t\t\tvar resizeBar = {\r\n
+\t\t\t\t\t\tstart: function(e) {\r\n
+\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\tjS.log(\'start resize\');\r\n
+\t\t\t\t\t\t\t//I never had any problems with the numbers not being ints but I used the parse method\r\n
+\t\t\t\t\t\t\t//to ensuev non-breakage\r\n
+\t\t\t\t\t\t\to.offset = target.offset();\r\n
+\t\t\t\t\t\t\to.tdPageXY = [o.offset.left, o.offset.top][o.xyDimension];\r\n
+\t\t\t\t\t\t\to.startXY = [e.pageX, e.pageY][o.xyDimension];\r\n
+\t\t\t\t\t\t\to.i = o.getIndex(target);\r\n
+\t\t\t\t\t\t\to.srcBarSize = o.getSize(target);\r\n
+\t\t\t\t\t\t\to.edgeDelta = o.startXY - (o.tdPageXY + o.srcBarSize);\r\n
+\t\t\t\t\t\t\to.min = 10;\r\n
+\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\tif (s.joinedResizing) {\r\n
+\t\t\t\t\t\t\t\to.resizeFn = function(size) {\r\n
+\t\t\t\t\t\t\t\t\to.setDesinationSize(size);\r\n
+\t\t\t\t\t\t\t\t\to.setSize(target, size);\r\n
+\t\t\t\t\t\t\t\t};\r\n
+\t\t\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\t\t\to.resizeFn = function(size) {\r\n
+\t\t\t\t\t\t\t\t\to.setSize(target, size);\r\n
+\t\t\t\t\t\t\t\t};\r\n
+\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t//We start the drag sequence\r\n
+\t\t\t\t\t\t\tif (Math.abs(o.edgeDelta) <= o.min) {\r\n
+\t\t\t\t\t\t\t\t//some ui enhancements, lets the user know he\'s resizing\r\n
+\t\t\t\t\t\t\t\tjQuery(e.target).parent().css(\'cursor\', o.cursor);\r\n
+\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\tjQuery(document)\r\n
+\t\t\t\t\t\t\t\t\t.mousemove(resizeBar.drag)\r\n
+\t\t\t\t\t\t\t\t\t.mouseup(resizeBar.stop);\r\n
+\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\treturn true; //is resizing\r\n
+\t\t\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\t\t\treturn false; //isn\'t resizing\r\n
+\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t},\r\n
+\t\t\t\t\t\tdrag: function(e) {\r\n
+\t\t\t\t\t\t\tvar newSize = o.min;\r\n
+\r\n
+\t\t\t\t\t\t\tvar v = o.srcBarSize + ([e.pageX, e.pageY][o.xyDimension] - o.startXY);\r\n
+\t\t\t\t\t\t\tif (v > 0) {// A non-zero minimum size saves many headaches.\r\n
+\t\t\t\t\t\t\t\tnewSize = Math.max(v, o.min);\r\n
+\t\t\t\t\t\t\t}\r\n
+\r\n
+\t\t\t\t\t\t\to.resizeFn(newSize);\r\n
+\t\t\t\t\t\t\treturn false;\r\n
+\t\t\t\t\t\t},\r\n
+\t\t\t\t\t\tstop: function(e) {\r\n
+\t\t\t\t\t\t\to.setDesinationSize(o.getSize(target));\r\n
+\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\tjQuery(document)\r\n
+\t\t\t\t\t\t\t\t.unbind(\'mousemove\')\r\n
+\t\t\t\t\t\t\t\t.unbind(\'mouseup\');\r\n
+\r\n
+\t\t\t\t\t\t\tjS.obj.formula()\r\n
+\t\t\t\t\t\t\t\t.focus()\r\n
+\t\t\t\t\t\t\t\t.select();\r\n
+\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\ttarget.parent().css(\'cursor\', \'pointer\');\r\n
+\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\tjS.log(\'stop resizing\');\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t};\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\treturn resizeBar.start(e);\r\n
+\t\t\t\t},\r\n
+\t\t\t\tscrollBars: function() {\r\n
+\t\t\t\t\tvar o = { //cut down on recursion, grabe them once\r\n
+\t\t\t\t\t\tpane: jS.obj.pane(), \r\n
+\t\t\t\t\t\tbarLeft: jS.obj.barLeftParent(), \r\n
+\t\t\t\t\t\tbarTop: jS.obj.barTopParent()\r\n
+\t\t\t\t\t};\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tjS.obj.pane().scroll(function() {\r\n
+\t\t\t\t\t\to.barTop.scrollLeft(o.pane.scrollLeft());//2 lines of beautiful jQuery js\r\n
+\t\t\t\t\t\to.barLeft.scrollTop(o.pane.scrollTop());\r\n
+\t\t\t\t\t});\r\n
+\t\t\t\t},\r\n
+\t\t\t\tbarMouseDown: {\r\n
+\t\t\t\t\tselect: function(o, e, selectFn, resizeFn) {\r\n
+\t\t\t\t\t\tvar isResizing = jS.evt.resizeBar(e, resizeFn);\r\n
+\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\tif (!isResizing) {\r\n
+\t\t\t\t\t\t\tselectFn(e.target);\r\n
+\t\t\t\t\t\t\to\r\n
+\t\t\t\t\t\t\t\t.unbind(\'mouseover\')\r\n
+\t\t\t\t\t\t\t\t.mouseover(function(e) {\r\n
+\t\t\t\t\t\t\t\t\tselectFn(e.target);\r\n
+\t\t\t\t\t\t\t\t});\r\n
+\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\tjQuery(document)\r\n
+\t\t\t\t\t\t\t\t.one(\'mouseup\', function() {\r\n
+\t\t\t\t\t\t\t\t\to\r\n
+\t\t\t\t\t\t\t\t\t\t.unbind(\'mouseover\')\r\n
+\t\t\t\t\t\t\t\t\t\t.unbind(\'mouseup\');\r\n
+\t\t\t\t\t\t\t\t});\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\treturn false;\r\n
+\t\t\t\t\t},\r\n
+\t\t\t\t\tfirst: 0,\r\n
+\t\t\t\t\tlast: 0,\r\n
+\t\t\t\t\theight: function(o) {\t\t\t\r\n
+\t\t\t\t\t\tvar selectRow = function () {};\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\to //let any user resize\r\n
+\t\t\t\t\t\t\t.unbind(\'mousedown\')\r\n
+\t\t\t\t\t\t\t.mousedown(function(e) {\r\n
+\t\t\t\t\t\t\t\tif (!jQuery(e.target).hasClass(jS.cl.barLeft)) {\r\n
+\t\t\t\t\t\t\t\t\tjS.evt.barMouseDown.first = jS.evt.barMouseDown.last = jS.rowLast = jS.getBarLeftIndex(e.target);\r\n
+\t\t\t\t\t\t\t\t\tjS.evt.barMouseDown.select(o, e, selectRow, jS.rowResizer);\r\n
+\t\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\t\treturn false;\r\n
+\t\t\t\t\t\t\t});\r\n
+\t\t\t\t\t\tif (s.editable) { //only let editable select\r\n
+\t\t\t\t\t\t\tselectRow = function(o) {\r\n
+\t\t\t\t\t\t\t\tif (!jQuery(o).attr(\'id\')) {\r\n
+\t\t\t\t\t\t\t\t\tvar i = jS.getBarLeftIndex(o);\r\n
+\t\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\t\tjS.rowLast = i; //keep track of last row for inserting new rows\r\n
+\t\t\t\t\t\t\t\t\tjS.evt.barMouseDown.last = i;\r\n
+\t\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\t\tjS.cellSetActiveBar(\'row\', jS.evt.barMouseDown.first, jS.evt.barMouseDown.last);\r\n
+\t\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\t};\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t},\r\n
+\t\t\t\t\twidth: function(o) {\r\n
+\t\t\t\t\t\tvar selectColumn = function() {};\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\to //let any user resize\r\n
+\t\t\t\t\t\t\t.unbind(\'mousedown\')\r\n
+\t\t\t\t\t\t\t.mousedown(function(e) {\r\n
+\t\t\t\t\t\t\t\tif (!jQuery(e.target).hasClass(jS.cl.barTop)) {\r\n
+\t\t\t\t\t\t\t\t\tjS.evt.barMouseDown.first = jS.evt.barMouseDown.last = jS.colLast = jS.getBarTopIndex(e.target);\r\n
+\t\t\t\t\t\t\t\t\tjS.evt.barMouseDown.select(o, e, selectColumn, jS.columnResizer);\r\n
+\t\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\treturn false;\r\n
+\t\t\t\t\t\t\t});\r\n
+\t\t\t\t\t\tif (s.editable) { //only let editable select\r\n
+\t\t\t\t\t\t\tselectColumn = function(o) {\r\n
+\t\t\t\t\t\t\t\tif (!jQuery(o).attr(\'id\')) {\r\n
+\t\t\t\t\t\t\t\t\tvar i = jS.getBarTopIndex(o);\r\n
+\t\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\t\tjS.colLast = i; //keep track of last column for inserting new columns\r\n
+\t\t\t\t\t\t\t\t\tjS.evt.barMouseDown.last = i;\r\n
+\t\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\t\tjS.cellSetActiveBar(\'col\', jS.evt.barMouseDown.first, jS.evt.barMouseDown.last);\r\n
+\t\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\t};\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t}\r\n
+\t\t\t},\r\n
+\t\t\tisTd: function(o) {\r\n
+\t\t\t\tif (o[0]) {\r\n
+\t\t\t\t\tif (!isNaN(o[0].cellIndex)) { \r\n
+\t\t\t\t\t\treturn true;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t}\r\n
+\t\t\t\treturn false;\r\n
+\t\t\t},\r\n
+\t\t\tisFormulaEditable: function(o) {\r\n
+\t\t\t\tif (s.lockFormulas) {\r\n
+\t\t\t\t\tif(o.attr(\'formula\') !== undefined) {\r\n
+\t\t\t\t\t\treturn false;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t}\r\n
+\t\t\t\treturn true;\r\n
+\t\t\t},\r\n
+\t\t\ttoggleFullScreen: function() {\r\n
+\t\t\t\tif (jS.obj.fullScreen().is(\':visible\')) { //here we remove full screen\r\n
+\t\t\t\t\ts.parent = origParent;\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tvar w = s.parent.width();\r\n
+\t\t\t\t\tvar h = s.parent.height();\r\n
+\t\t\t\t\ts.width = w;\r\n
+\t\t\t\t\ts.height = h;\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tjS.obj.tabContainer().insertAfter(\r\n
+\t\t\t\t\t\ts.parent.append(jS.obj.fullScreen().children())\r\n
+\t\t\t\t\t).removeClass(jS.cl.tabContainerFullScreen);\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tjS.obj.fullScreen().remove();\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tjS.sheetSyncSize();\r\n
+\t\t\t\t} else { //here we make a full screen\r\n
+\t\t\t\t\tvar w = $window.width() - 15;\r\n
+\t\t\t\t\tvar h = $window.height() - 35;\r\n
+\t\t\t\t\ts.width = w;\r\n
+\t\t\t\t\ts.height = h;\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tjS.obj.tabContainer().insertAfter(\r\n
+\t\t\t\t\t\tjQuery(\'<div class="\' + jS.cl.fullScreen + \' \' + jS.cl.uiFullScreen + \'" />\')\r\n
+\t\t\t\t\t\t\t.append(s.parent.children())\r\n
+\t\t\t\t\t\t\t.appendTo(\'body\')\r\n
+\t\t\t\t\t).addClass(jS.cl.tabContainerFullScreen);\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\ts.parent = jS.obj.fullScreen();\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tjS.sheetSyncSize();\r\n
+\t\t\t\t}\r\n
+\t\t\t},\r\n
+\t\t\ttuneTableForSheetUse: function(o) {\r\n
+\t\t\t\to\r\n
+\t\t\t\t\t.addClass(jS.cl.sheet)\r\n
+\t\t\t\t\t.attr(\'id\', jS.id.sheet + jS.i)\r\n
+\t\t\t\t\t.attr(\'border\', \'1px\')\r\n
+\t\t\t\t\t.attr(\'cellpadding\', \'0\')\r\n
+\t\t\t\t\t.attr(\'cellspacing\', \'0\');\r\n
+\t\t\t\t\t\r\n
+\t\t\t\to.find(\'td.\' + jS.cl.cellActive).removeClass(jS.cl.cellActive);\r\n
+\t\t\t\t\r\n
+\t\t\t\treturn o;\r\n
+\t\t\t},\r\n
+\t\t\tattrH: {//Attribute Helpers\r\n
+\t\t\t//I created this object so I could see, quickly, which attribute was most stable.\r\n
+\t\t\t//As it turns out, all browsers are different, thus this has evolved to a much uglier beast\r\n
+\t\t\t\twidth: function(o, skipCorrection) {\r\n
+\t\t\t\t\treturn jQuery(o).outerWidth() - (skipCorrection ? 0 : s.boxModelCorrection);\r\n
+\t\t\t\t},\r\n
+\t\t\t\twidthReverse: function(o, skipCorrection) {\r\n
+\t\t\t\t\treturn jQuery(o).outerWidth() + (skipCorrection ? 0 : s.boxModelCorrection);\r\n
+\t\t\t\t},\r\n
+\t\t\t\theight: function(o, skipCorrection) {\r\n
+\t\t\t\t\treturn jQuery(o).outerHeight() - (skipCorrection ? 0 : s.boxModelCorrection);\r\n
+\t\t\t\t},\r\n
+\t\t\t\theightReverse: function(o, skipCorrection) {\r\n
+\t\t\t\t\treturn jQuery(o).outerHeight() + (skipCorrection ? 0 : s.boxModelCorrection);\r\n
+\t\t\t\t},\r\n
+\t\t\t\tsyncSheetWidthFromTds: function(o) {\r\n
+\t\t\t\t\tvar w = 0;\r\n
+\t\t\t\t\to = (o ? o : jS.obj.sheet());\r\n
+\t\t\t\t\to.find(\'col\').each(function() {\r\n
+\t\t\t\t\t\tw += jQuery(this).width();\r\n
+\t\t\t\t\t});\r\n
+\t\t\t\t\to.width(w);\r\n
+\t\t\t\t\treturn w;\r\n
+\t\t\t\t},\r\n
+\t\t\t\tsetHeight: function(i, from, skipCorrection, o) {\r\n
+\t\t\t\t\tvar correction = 0;\r\n
+\t\t\t\t\tvar h = 0;\r\n
+\t\t\t\t\tvar fn;\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tswitch(from) {\r\n
+\t\t\t\t\t\tcase \'cell\':\r\n
+\t\t\t\t\t\t\to = (o ? o : jS.obj.barLeft().find(\'div\').eq(i));\r\n
+\t\t\t\t\t\t\th = jS.attrH.height(jQuery(jS.getTd(jS.i, i, 0)).parent().andSelf(), skipCorrection);\r\n
+\t\t\t\t\t\t\tbreak;\r\n
+\t\t\t\t\t\tcase \'bar\':\r\n
+\t\t\t\t\t\t\to = (o ? o : jQuery(jS.getTd(jS.i, i, 0)).parent().andSelf());\r\n
+\t\t\t\t\t\t\th = jS.attrH.heightReverse(jS.obj.barLeft().find(\'div\').eq(i), skipCorrection);\r\n
+\t\t\t\t\t\t\tbreak;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tif (h) {\r\n
+\t\t\t\t\t\tjQuery(o)\r\n
+\t\t\t\t\t\t\t.height(h)\r\n
+\t\t\t\t\t\t\t.css(\'height\', h)\r\n
+\t\t\t\t\t\t\t.attr(\'height\', h);\r\n
+\t\t\t\t\t}\r\n
+\r\n
+\t\t\t\t\treturn o;\r\n
+\t\t\t\t}\r\n
+\t\t\t},\r\n
+\t\t\tsetTdIds: function(o) {\r\n
+\t\t\t\to = (o ? o : jS.obj.sheet());\r\n
+\t\t\t\to.find(\'tr\').each(function(row) {\r\n
+\t\t\t\t\tjQuery(this).find(\'td\').each(function(col) {\r\n
+\t\t\t\t\t\tjQuery(this).attr(\'id\', jS.getTdId(jS.i, row, col));\r\n
+\t\t\t\t\t});\r\n
+\t\t\t\t});\r\n
+\t\t\t},\r\n
+\t\t\tsetControlIds: function() {\r\n
+\t\t\t\tvar resetIds = function(o, id) {\r\n
+\t\t\t\t\to.each(function(i) {\r\n
+\t\t\t\t\t\tjQuery(this).attr(\'id\', id + i);\r\n
+\t\t\t\t\t});\r\n
+\t\t\t\t};\r\n
+\t\t\t\t\r\n
+\t\t\t\tresetIds(jS.obj.sheetAll().each(function() {\r\n
+\t\t\t\t\tjS.setTdIds(jQuery(this));\r\n
+\t\t\t\t}), jS.id.sheet);\r\n
+\t\t\t\t\r\n
+\t\t\t\tresetIds(jS.obj.barTopAll(), jS.id.barTop);\r\n
+\t\t\t\tresetIds(jS.obj.barTopParentAll(), jS.id.barTopParent);\r\n
+\t\t\t\tresetIds(jS.obj.barLeftAll(), jS.id.barLeft);\r\n
+\t\t\t\tresetIds(jS.obj.barLeftParentAll(), jS.id.barLeftParent);\r\n
+\t\t\t\tresetIds(jS.obj.barCornerAll(), jS.id.barCorner);\r\n
+\t\t\t\tresetIds(jS.obj.barCornerParentAll(), jS.id.barCornerParent);\r\n
+\t\t\t\tresetIds(jS.obj.tableControlAll(), jS.id.tableControl);\r\n
+\t\t\t\tresetIds(jS.obj.paneAll(), jS.id.pane);\r\n
+\t\t\t\tresetIds(jS.obj.tabAll().each(function(j) {\r\n
+\t\t\t\t\tjQuery(this).attr(\'i\', j);\r\n
+\t\t\t\t}), jS.id.tab);\r\n
+\t\t\t},\r\n
+\t\t\tcolumnResizer: {\r\n
+\t\t\t\txyDimension: 0,\r\n
+\t\t\t\tgetIndex: function(o) {\r\n
+\t\t\t\t\treturn jS.getBarTopIndex(o);\r\n
+\t\t\t\t},\r\n
+\t\t\t\tgetSize: function(o) {\r\n
+\t\t\t\t\treturn jS.attrH.width(o, true);\r\n
+\t\t\t\t},\r\n
+\t\t\t\tsetSize: function(o, v) {\r\n
+\t\t\t\t\to.width(v);\r\n
+\t\t\t\t},\r\n
+\t\t\t\tsetDesinationSize: function(w) {\r\n
+\t\t\t\t\tjS.sheetSyncSizeToDivs();\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tjS.obj.sheet().find(\'col\').eq(this.i)\r\n
+\t\t\t\t\t\t.width(w)\r\n
+\t\t\t\t\t\t.css(\'width\', w)\r\n
+\t\t\t\t\t\t.attr(\'width\', w);\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tjS.obj.pane().scroll();\r\n
+\t\t\t\t},\r\n
+\t\t\t\tcursor: \'w-resize\'\r\n
+\t\t\t},\r\n
+\t\t\trowResizer: {\r\n
+\t\t\t\txyDimension: 1,\r\n
+\t\t\t\t\tgetIndex: function(o) {\r\n
+\t\t\t\t\t\treturn jS.getBarLeftIndex(o);\r\n
+\t\t\t\t\t},\r\n
+\t\t\t\t\tgetSize: function(o) {\r\n
+\t\t\t\t\t\treturn jS.attrH.height(o, true);\r\n
+\t\t\t\t\t},\r\n
+\t\t\t\t\tsetSize: function(o, v) {\r\n
+\t\t\t\t\t\tif (v) {\r\n
+\t\t\t\t\t\to\r\n
+\t\t\t\t\t\t\t.height(v)\r\n
+\t\t\t\t\t\t\t.css(\'height\', v)\r\n
+\t\t\t\t\t\t\t.attr(\'height\', v);\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\treturn jS.attrH.height(o);\r\n
+\t\t\t\t\t},\r\n
+\t\t\t\t\tsetDesinationSize: function() {\r\n
+\t\t\t\t\t\t//Set the cell height\r\n
+\t\t\t\t\t\tjS.attrH.setHeight(this.i, \'bar\', true);\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t//Reset the bar height if the resized row don\'t match\r\n
+\t\t\t\t\t\tjS.attrH.setHeight(this.i, \'cell\', false);\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\tjS.obj.pane().scroll();\r\n
+\t\t\t\t\t},\r\n
+\t\t\t\t\tcursor: \'s-resize\'\r\n
+\t\t\t},\r\n
+\t\t\ttoggleHide: {//These are not ready for prime time\r\n
+\t\t\t\trow: function(i) {\r\n
+\t\t\t\t\tif (!i) {//If i is empty, lets get the current row\r\n
+\t\t\t\t\t\ti = jS.obj.cellActive().parent().attr(\'rowIndex\');\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\tif (i) {//Make sure that i equals something\r\n
+\t\t\t\t\t\tvar o = jS.obj.barLeft().find(\'div\').eq(i);\r\n
+\t\t\t\t\t\tif (o.is(\':visible\')) {//This hides the current row\r\n
+\t\t\t\t\t\t\to.hide();\r\n
+\t\t\t\t\t\t\tjS.obj.sheet().find(\'tr\').eq(i).hide();\r\n
+\t\t\t\t\t\t} else {//This unhides\r\n
+\t\t\t\t\t\t\t//This unhides the currently selected row\r\n
+\t\t\t\t\t\t\to.show();\r\n
+\t\t\t\t\t\t\tjS.obj.sheet().find(\'tr\').eq(i).show();\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\talert(\'No row selected.\');\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t},\r\n
+\t\t\t\trowAll: function() {\r\n
+\t\t\t\t\tjS.obj.sheet().find(\'tr\').show();\r\n
+\t\t\t\t\tjS.obj.barLeft().find(\'div\').show();\r\n
+\t\t\t\t},\r\n
+\t\t\t\tcolumn: function(i) {\r\n
+\t\t\t\t\tif (!i) {\r\n
+\t\t\t\t\t\ti = jS.obj.cellActive().attr(\'cellIndex\');\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\tif (i) {\r\n
+\t\t\t\t\t\t//We need to hide both the col and td of the same i\r\n
+\t\t\t\t\t\tvar o = jS.obj.barTop().find(\'div\').eq(i);\r\n
+\t\t\t\t\t\tif (o.is(\':visible\')) {\r\n
+\t\t\t\t\t\t\tjS.obj.sheet().find(\'tbody tr\').each(function() {\r\n
+\t\t\t\t\t\t\t\tjQuery(this).find(\'td\').eq(i).hide();\r\n
+\t\t\t\t\t\t\t});\r\n
+\t\t\t\t\t\t\to.hide();\r\n
+\t\t\t\t\t\t\tjS.obj.sheet().find(\'colgroup col\').eq(i).hide();\r\n
+\t\t\t\t\t\t\tjS.toggleHide.columnSizeManage();\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\talert(\'Now column selected.\');\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t},\r\n
+\t\t\t\tcolumnAll: function() {\r\n
+\t\t\t\t\r\n
+\t\t\t\t},\r\n
+\t\t\t\tcolumnSizeManage: function() {\r\n
+\t\t\t\t\tvar w = jS.obj.barTop().width();\r\n
+\t\t\t\t\tvar newW = 0;\r\n
+\t\t\t\t\tvar newW = 0;\r\n
+\t\t\t\t\tjS.obj.barTop().find(\'div\').each(function() {\r\n
+\t\t\t\t\t\tvar o = jQuery(this);\r\n
+\t\t\t\t\t\tif (o.is(\':hidden\')) {\r\n
+\t\t\t\t\t\t\tnewW += o.width();\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t});\r\n
+\t\t\t\t\tjS.obj.barTop().width(w);\r\n
+\t\t\t\t\tjS.obj.sheet().width(w);\r\n
+\t\t\t\t}\r\n
+\t\t\t},\r\n
+\t\t\tmerge: function() {\r\n
+\t\t\t\tvar cellsValue = "";\r\n
+\t\t\t\tvar cellValue = "";\r\n
+\t\t\t\tvar cells = jS.obj.cellHighlighted();\r\n
+\t\t\t\tvar formula;\r\n
+\t\t\t\tvar cellFirstLoc = jS.getTdLocation(cells.first());\r\n
+\t\t\t\tvar cellLastLoc = jS.getTdLocation(cells.last());\r\n
+\t\t\t\tvar colI = (cellLastLoc[1] - cellFirstLoc[1]) + 1;\r\n
+\t\t\t\t\r\n
+\t\t\t\tif (cells.length > 1 && cellFirstLoc[0]) {\r\n
+\t\t\t\t\tfor (var i = cellFirstLoc[1]; i <= cellLastLoc[1]; i++) {\r\n
+\t\t\t\t\t\tvar cell = jQuery(jS.getTd(jS.i, cellFirstLoc[0], i)).hide();\r\n
+\t\t\t\t\t\tformula = cell.attr(\'formula\');\r\n
+\t\t\t\t\t\tcellValue = cell.html();\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\tcellValue = (cellValue ? cellValue + \' \' : \'\');\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\tcellsValue = (formula ? "(" + formula.replace(\'=\', \'\') + ")" : cellValue) + cellsValue;\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\tif (i != cellFirstLoc[1]) {\r\n
+\t\t\t\t\t\t\tcell\r\n
+\t\t\t\t\t\t\t\t.attr(\'formula\', \'\')\r\n
+\t\t\t\t\t\t\t\t.html(\'\')\r\n
+\t\t\t\t\t\t\t\t.hide();\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tvar cell = cells.first()\r\n
+\t\t\t\t\t\t.show()\r\n
+\t\t\t\t\t\t.attr(\'colspan\', colI)\r\n
+\t\t\t\t\t\t.html(cellsValue);\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tjS.setDirty(true);\r\n
+\t\t\t\t\tjS.calc(jS.i);\r\n
+\t\t\t\t} else if (!cellFirstLoc[0]) {\r\n
+\t\t\t\t\talert(\'Merging is not allowed on the first row.\');\r\n
+\t\t\t\t}\r\n
+\t\t\t},\r\n
+\t\t\tunmerge: function() {\r\n
+\t\t\t\tvar cell = jS.obj.cellHighlighted().first();\r\n
+\t\t\t\tvar loc = jS.getTdLocation(cell);\r\n
+\t\t\t\tvar formula = cell.attr(\'formula\');\r\n
+\t\t\t\tvar v = cell.html();\r\n
+\t\t\t\tv = (formula ? formula : v);\r\n
+\t\t\t\t\r\n
+\t\t\t\tvar rowI = cell.attr(\'rowspan\');\r\n
+\t\t\t\tvar colI = cell.attr(\'colspan\');\r\n
+\t\t\t\t\r\n
+\t\t\t\t//rowI = parseInt(rowI ? rowI : 1); //we have to have a minimum here;\r\n
+\t\t\t\tcolI = parseInt(colI ? colI : 1);\r\n
+\t\t\t\t\r\n
+\t\t\t\tvar td = \'<td />\';\r\n
+\t\t\t\t\r\n
+\t\t\t\tvar tds = \'\';\r\n
+\t\t\t\t\r\n
+\t\t\t\tif (colI) {\r\n
+\t\t\t\t\tfor (var i = 0; i < colI; i++) {\r\n
+\t\t\t\t\t\ttds += td;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t}\r\n
+\t\t\t\t\r\n
+\t\t\t\tfor (var i = loc[1]; i < colI; i++) {\r\n
+\t\t\t\t\tjQuery(jS.getTd(jS.i, loc[0], i)).show();\r\n
+\t\t\t\t}\r\n
+\t\t\t\t\r\n
+\t\t\t\tcell.removeAttr(\'colspan\');\r\n
+\t\t\t\t\r\n
+\t\t\t\tjS.setDirty(true);\r\n
+\t\t\t\tjS.calc(jS.i);\r\n
+\t\t\t},\r\n
+\t\t\tfillUpOrDown: function(goUp, skipOffsetForumals) { //default behavior is to go down var goUp changes it\r\n
+\t\t\t\tvar cells = jS.obj.cellHighlighted();\r\n
+\t\t\t\tvar cellActive = jS.obj.cellActive();\r\n
+\t\t\t\t//Make it undoable\r\n
+\t\t\t\tjS.cellUndoable.add(cells);\r\n
+\t\t\t\t\r\n
+\t\t\t\tvar startFromActiveCell = cellActive.hasClass(jS.cl.uiCellHighlighted);\r\n
+\t\t\t\tvar locFirst = jS.getTdLocation(cells.first());\r\n
+\t\t\t\tvar locLast = jS.getTdLocation(cells.last());\r\n
+\t\t\t\t\r\n
+\t\t\t\tvar v = jS.obj.formula().val();\r\n
+\t\t\t\tvar fn;\r\n
+\t\t\t\t\r\n
+\t\t\t\tvar formulaOffset = (startFromActiveCell ? 0 : 1);\r\n
+\t\t\t\t\r\n
+\t\t\t\tif ((v + \'\').charAt(0) == \'=\') {\r\n
+\t\t\t\t\tfn = function(o, i) {\r\n
+\t\t\t\t\t\to\r\n
+\t\t\t\t\t\t\t.attr(\'formula\', (skipOffsetForumals ? v : jS.offsetFormula(v, i + formulaOffset, 0)))\r\n
+\t\t\t\t\t\t\t.html(\'\'); //we subtract one here because cells are 1 based and indexes are 0 based\r\n
+\t\t\t\t\t};\r\n
+\t\t\t\t} else {\r\n
+\t\t\t\t\tfn = function (o) {\r\n
+\t\t\t\t\t\to\r\n
+\t\t\t\t\t\t\t.removeAttr(\'formula\')\r\n
+\t\t\t\t\t\t\t.html(v);\r\n
+\t\t\t\t\t};\r\n
+\t\t\t\t}\r\n
+\t\t\t\t\r\n
+\t\t\t\tfunction fill(r, c, i) {\r\n
+\t\t\t\t\tvar td = jQuery(jS.getTd(jS.i, r, c));\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\t//make sure the formula isn\'t locked for this cell\r\n
+\t\t\t\t\tif (jS.isFormulaEditable(td)) {\r\n
+\t\t\t\t\t\tfn(td, i);\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t}\r\n
+\t\t\t\t\r\n
+\t\t\t\tvar k = 0;\r\n
+\t\t\t\tif (goUp) {\r\n
+\t\t\t\t\tfor (var i = locLast[0]; i >= locFirst[0]; i--) {\r\n
+\t\t\t\t\t\tfor (var j = locLast[1]; j >= locFirst[1]; j--) {\r\n
+\t\t\t\t\t\t\tfill(i, j, k);\r\n
+\t\t\t\t\t\t\tk++;\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t} else {\r\n
+\t\t\t\t\tfor (var i = locFirst[0]; i <= locLast[0]; i++) {\r\n
+\t\t\t\t\t\tfor (var j = locFirst[1]; j <= locLast[1]; j++) {\r\n
+\t\t\t\t\t\t\tfill(i, j, k);\r\n
+\t\t\t\t\t\t\tk++;\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t}\r\n
+\t\t\t\t\r\n
+\t\t\t\tjS.setDirty(true);\r\n
+\t\t\t\tjS.calc(jS.i);\r\n
+\t\t\t\t\r\n
+\t\t\t\t//Make it redoable\r\n
+\t\t\t\tjS.cellUndoable.add(cells);\r\n
+\t\t\t},\r\n
+\t\t\toffsetFormulaRange: function(row, col, rowOffset, colOffset, isBefore) {//col = int; offset = int\r\n
+\t\t\t\tvar shiftedRange = {\r\n
+\t\t\t\t\tfirst: [(row ? row : 0), (col ? col : 0)],\r\n
+\t\t\t\t\tlast: jS.sheetSize()\r\n
+\t\t\t\t};\r\n
+\t\t\t\t\r\n
+\t\t\t\tif (!isBefore && rowOffset) { //this shift is from a row\r\n
+\t\t\t\t\tshiftedRange.first[0]++;\r\n
+\t\t\t\t\tshiftedRange.last[0]++;\r\n
+\t\t\t\t}\r\n
+\t\t\t\t\r\n
+\t\t\t\tif (!isBefore && colOffset) { //this shift is from a col\r\n
+\t\t\t\t\tshiftedRange.first[1]++;\r\n
+\t\t\t\t\tshiftedRange.last[1]++;\r\n
+\t\t\t\t}\r\n
+\t\t\t\t\r\n
+\t\t\t\tfunction isInFormula(loc) {\r\n
+\t\t\t\t\tif ((loc[0] - 1) >= shiftedRange.first[0] &&\r\n
+\t\t\t\t\t\t(loc[1] - 1) >= shiftedRange.first[1] &&\r\n
+\t\t\t\t\t\t(loc[0] - 1) <= shiftedRange.last[0] &&\r\n
+\t\t\t\t\t\t(loc[1] - 1) <= shiftedRange.last[1]\r\n
+\t\t\t\t\t) {\r\n
+\t\t\t\t\t\treturn true;\r\n
+\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\treturn false;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t}\r\n
+\t\t\t\t\r\n
+\t\t\t\tfunction isInFormulaRange(startLoc, endLoc) {\r\n
+\t\t\t\t\tif (\r\n
+\t\t\t\t\t\t(\r\n
+\t\t\t\t\t\t\t(startLoc[0] - 1) >= shiftedRange.first[0] &&\r\n
+\t\t\t\t\t\t\t(startLoc[1] - 1) >= shiftedRange.first[1]\r\n
+\t\t\t\t\t\t) && (\r\n
+\t\t\t\t\t\t\t(startLoc[0] - 1) <= shiftedRange.last[0] &&\r\n
+\t\t\t\t\t\t\t(startLoc[1] - 1) <= shiftedRange.last[1]\r\n
+\t\t\t\t\t\t) && (\r\n
+\t\t\t\t\t\t\t(endLoc[0] - 1) >= shiftedRange.first[0] &&\r\n
+\t\t\t\t\t\t\t(endLoc[1] - 1) >= shiftedRange.first[1]\r\n
+\t\t\t\t\t\t) && (\r\n
+\t\t\t\t\t\t\t(endLoc[0] - 1) <= shiftedRange.last[0] &&\r\n
+\t\t\t\t\t\t\t(endLoc[1] - 1) <= shiftedRange.last[1]\r\n
+\t\t\t\t\t\t)\r\n
+\t\t\t\t\t) {\r\n
+\t\t\t\t\t\treturn true;\r\n
+\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\treturn false;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t}\r\n
+\t\t\t\t\r\n
+\t\t\t\tfunction reparseFormula(loc) {\r\n
+\t\t\t\t\treturn ( //A1\r\n
+\t\t\t\t\t\tcE.columnLabelString(loc[1] + colOffset) + (loc[0] + rowOffset)\r\n
+\t\t\t\t\t);\r\n
+\t\t\t\t}\r\n
+\t\t\t\t\r\n
+\t\t\t\tfunction reparseFormulaRange(startLoc, endLoc) {\r\n
+\t\t\t\t\treturn ( //A1:B4\r\n
+\t\t\t\t\t\t(cE.columnLabelString(startLoc[1] + colOffset) + (startLoc[0] + rowOffset)) + \':\' + \r\n
+\t\t\t\t\t\t(cE.columnLabelString(endLoc[1] + colOffset) + (endLoc[0] + rowOffset))\r\n
+\t\t\t\t\t);\r\n
+\t\t\t\t}\r\n
+\t\t\t\t\r\n
+\t\t\t\tjS.cylceCells(function (td) {\r\n
+\t\t\t\t\tvar formula = td.attr(\'formula\');\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tif (formula && jS.isFormulaEditable(td)) {\r\n
+\t\t\t\t\t\tformula = formula.replace(cE.regEx.cell, \r\n
+\t\t\t\t\t\t\tfunction(ignored, colStr, rowStr, pos) {\r\n
+\t\t\t\t\t\t\t\tvar charAt = [formula.charAt(pos - 1), formula.charAt(ignored.length + pos)]; //find what is exactly before and after formula\r\n
+\t\t\t\t\t\t\t\tif (!colStr.match(cE.regEx.sheet) &&\r\n
+\t\t\t\t\t\t\t\t\tcharAt[0] != \':\' &&\r\n
+\t\t\t\t\t\t\t\t\tcharAt[1] != \':\'\r\n
+\t\t\t\t\t\t\t\t) { //verify it\'s not a range or an exact location\r\n
+\t\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\t\tvar colI = cE.columnLabelIndex(colStr);\r\n
+\t\t\t\t\t\t\t\t\tvar rowI = parseInt(rowStr);\r\n
+\t\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\t\tif (isInFormula([rowI, colI])) {\r\n
+\t\t\t\t\t\t\t\t\t\treturn reparseFormula([rowI, colI]);\r\n
+\t\t\t\t\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\t\t\t\t\treturn ignored;\r\n
+\t\t\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\t\t\t\treturn ignored;\r\n
+\t\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t});\r\n
+\t\t\t\t\t\tformula = formula.replace(cE.regEx.range, \r\n
+\t\t\t\t\t\t\tfunction(ignored, startColStr, startRowStr, endColStr, endRowStr, pos) {\r\n
+\t\t\t\t\t\t\t\tvar charAt = [formula.charAt(pos - 1), formula.charAt(ignored.length + pos)]; //find what is exactly before and after formula\r\n
+\t\t\t\t\t\t\t\tif (!startColStr.match(cE.regEx.sheet) &&\r\n
+\t\t\t\t\t\t\t\t\tcharAt[0] != \':\'\r\n
+\t\t\t\t\t\t\t\t) {\r\n
+\t\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\t\tvar startRowI = parseInt(startRowStr);\r\n
+\t\t\t\t\t\t\t\t\tvar startColI = cE.columnLabelIndex(startColStr);\r\n
+\t\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\t\tvar endRowI = parseInt(endRowStr);\r\n
+\t\t\t\t\t\t\t\t\tvar endColI = cE.columnLabelIndex(endColStr);\r\n
+\t\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\t\tif (isInFormulaRange([startRowI, startColI], [endRowI, endColI])) {\r\n
+\t\t\t\t\t\t\t\t\t\treturn reparseFormulaRange([startRowI, startColI], [endRowI, endColI]);\r\n
+\t\t\t\t\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\t\t\t\t\treturn ignored;\r\n
+\t\t\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\t\t\t\treturn ignored;\r\n
+\t\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t});\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\ttd.attr(\'formula\', formula);\r\n
+\t\t\t\t\t}\r\n
+\r\n
+\t\t\t\t}, [0, 0], shiftedRange.last);\r\n
+\t\t\t\t\r\n
+\t\t\t\tjS.calc(jS.i);\r\n
+\t\t\t},\r\n
+\t\t\tcylceCells: function(fn, firstLoc, lastLoc) {\r\n
+\t\t\t\tfor (var i = firstLoc[0]; i < lastLoc[0]; i++) {\r\n
+\t\t\t\t\tfor (var j = firstLoc[1]; j < lastLoc[1]; j++) {\r\n
+\t\t\t\t\t\tfn(jQuery(jS.getTd(jS.i, i, j)));\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t}\r\n
+\t\t\t},\r\n
+\t\t\tcycleCellsAndMaintainPoint: function(fn, firstLoc, lastLoc) {\r\n
+\t\t\t\tvar o = [];\r\n
+\t\t\t\tfor (var i = (firstLoc[0] < lastLoc[0] ? firstLoc[0] : lastLoc[0]) ; i <= (firstLoc[0] > lastLoc[0] ? firstLoc[0] : lastLoc[0]); i++) {\r\n
+\t\t\t\t\tfor (var j = (firstLoc[1] < lastLoc[1] ? firstLoc[1] : lastLoc[1]); j <= (firstLoc[1] > lastLoc[1] ? firstLoc[1] : lastLoc[[1]]); j++) {\r\n
+\t\t\t\t\t\to.push(jS.getTd(jS.i, i, j));\r\n
+\t\t\t\t\t\tfn(o[o.length - 1]);\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t}\r\n
+\t\t\t\treturn o;\r\n
+\t\t\t},\r\n
+\t\t\toffsetFormula: function(formula, rowOffset, colOffset, includeRanges) {\t\t\r\n
+\t\t\t\t//Cell References Fixed\r\n
+\t\t\t\tvar charAt = [];\r\n
+\t\t\t\tvar col = \'\';\r\n
+\t\t\t\tvar row = \'\';\r\n
+\t\t\t\tformula = formula.replace(cE.regEx.cell, \r\n
+\t\t\t\t\tfunction(ignored, colStr, rowStr, pos) {\r\n
+\t\t\t\t\t\tcharAt[0] = formula.charAt(pos - 1);\r\n
+\t\t\t\t\t\tcharAt[1] = formula.charAt(ignored.length + pos);\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\tcharAt[0] = (charAt[0] ? charAt[0] : \'\');\r\n
+\t\t\t\t\t\tcharAt[1] = (charAt[1] ? charAt[1] : \'\');\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\tif (colStr.match(cE.regEx.sheet) || \r\n
+\t\t\t\t\t\t\tcharAt[0] == \':\' || \r\n
+\t\t\t\t\t\t\tcharAt[1] == \':\'\r\n
+\t\t\t\t\t\t) { //verify it\'s not a range or an exact location\r\n
+\t\t\t\t\t\t\treturn ignored;\r\n
+\t\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\t\trow = parseInt(rowStr) + rowOffset;\r\n
+\t\t\t\t\t\t\tcol = cE.columnLabelIndex(colStr) + colOffset;\r\n
+\t\t\t\t\t\t\trow = (row > 0 ? row : \'1\'); //table rows are never negative\r\n
+\t\t\t\t\t\t\tcol = (col > 0 ? col : \'1\'); //table cols are never negative\r\n
+\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\treturn cE.columnLabelString(col) + row;\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t);\r\n
+\t\t\t\treturn formula;\r\n
+\t\t\t},\r\n
+\t\t\taddTab: function() {\r\n
+\t\t\t\tjQuery(\'<span class="\' + jS.cl.uiTab + \' ui-corner-bottom">\' + \r\n
+\t\t\t\t\t\t\'<a class="\' + jS.cl.tab + \'" id="\' + jS.id.tab + jS.i + \'" i="\' + jS.i + \'">\' + jS.sheetTab(true) + \'</a>\' + \r\n
+\t\t\t\t\t\'</span>\')\r\n
+\t\t\t\t\t\t.insertBefore(\r\n
+\t\t\t\t\t\t\tjS.obj.tabContainer().find(\'span:last\')\r\n
+\t\t\t\t\t\t);\r\n
+\t\t\t},\r\n
+\t\t\tsheetDecorate: function(o) {\t\r\n
+\t\t\t\tjS.formatSheet(o);\r\n
+\t\t\t\tjS.sheetSyncSizeToCols(o);\r\n
+\t\t\t\tjS.sheetDecorateRemove();\r\n
+\t\t\t},\r\n
+\t\t\tformatSheet: function(o) {\r\n
+\t\t\t\tvar tableWidth = 0;\r\n
+\t\t\t\tif (o.find(\'tbody\').length < 1) {\r\n
+\t\t\t\t\to.wrapInner(\'<tbody />\');\r\n
+\t\t\t\t}\r\n
+\t\t\t\t\r\n
+\t\t\t\tif (o.find(\'colgroup\').length < 1 || o.find(\'col\').length < 1) {\r\n
+\t\t\t\t\to.remove(\'colgroup\');\r\n
+\t\t\t\t\tvar colgroup = jQuery(\'<colgroup />\');\r\n
+\t\t\t\t\to.find(\'tr:first\').find(\'td\').each(function() {\r\n
+\t\t\t\t\t\tvar w = s.newColumnWidth;\r\n
+\t\t\t\t\t\tjQuery(\'<col />\')\r\n
+\t\t\t\t\t\t\t.width(w)\r\n
+\t\t\t\t\t\t\t.css(\'width\', (w) + \'px\')\r\n
+\t\t\t\t\t\t\t.attr(\'width\', (w) + \'px\')\r\n
+\t\t\t\t\t\t\t.appendTo(colgroup);\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\ttableWidth += w;\r\n
+\t\t\t\t\t});\r\n
+\t\t\t\t\to.find(\'tr\').each(function() {\r\n
+\t\t\t\t\t\tjQuery(this)\r\n
+\t\t\t\t\t\t\t.height(s.colMargin)\r\n
+\t\t\t\t\t\t\t.css(\'height\', s.colMargin + \'px\')\r\n
+\t\t\t\t\t\t\t.attr(\'height\', s.colMargin + \'px\');\r\n
+\t\t\t\t\t});\r\n
+\t\t\t\t\tcolgroup.prependTo(o);\r\n
+\t\t\t\t}\r\n
+\t\t\t\t\r\n
+\t\t\t\to\r\n
+\t\t\t\t\t.removeAttr(\'width\')\r\n
+\t\t\t\t\t.css(\'width\', \'\')\r\n
+\t\t\t\t\t.width(tableWidth);\r\n
+\t\t\t},\r\n
+\t\t\tthemeRoller: {\r\n
+\t\t\t\tstart: function() {\r\n
+\t\t\t\t\t//Style sheet\t\t\t\r\n
+\t\t\t\t\ts.parent.addClass(jS.cl.uiParent);\r\n
+\t\t\t\t\tjS.obj.sheet().addClass(jS.cl.uiSheet);\r\n
+\t\t\t\t\t//Style bars\r\n
+\t\t\t\t\tjS.obj.barLeft().find(\'div\').addClass(jS.cl.uiBar);\r\n
+\t\t\t\t\tjS.obj.barTop().find(\'div\').addClass(jS.cl.uiBar);\r\n
+\t\t\t\t\tjS.obj.barCornerParent().addClass(jS.cl.uiBar);\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tjS.obj.controls().addClass(jS.cl.uiControl);\r\n
+\t\t\t\t\tjS.obj.label().addClass(jS.cl.uiControl);\r\n
+\t\t\t\t\tjS.obj.formula().addClass(jS.cl.uiControlTextBox);\r\n
+\t\t\t\t},\r\n
+\t\t\t\tcell: {\r\n
+\t\t\t\t\tsetActive: function() {\r\n
+\t\t\t\t\t\tthis.clearActive();\r\n
+\t\t\t\t\t\tthis.setHighlighted(\r\n
+\t\t\t\t\t\t\tjS.cellLast.td\r\n
+\t\t\t\t\t\t\t\t.addClass(jS.cl.cellActive)\r\n
+\t\t\t\t\t\t);\r\n
+\t\t\t\t\t},\r\n
+\t\t\t\t\tsetHighlighted: function(td) {\r\n
+\t\t\t\t\t\tjQuery(td)\r\n
+\t\t\t\t\t\t\t.addClass(jS.cl.cellHighlighted + \' \' + jS.cl.uiCellHighlighted);\r\n
+\t\t\t\t\t},\r\n
+\t\t\t\t\tclearActive: function() {\r\n
+\t\t\t\t\t\tjS.obj.cellActive()\r\n
+\t\t\t\t\t\t\t.removeClass(jS.cl.cellActive);\r\n
+\t\t\t\t\t},\r\n
+\t\t\t\t\tclearHighlighted: function() {\r\n
+\t\t\t\t\t\tjS.obj.cellHighlighted()\r\n
+\t\t\t\t\t\t\t.removeClass(jS.cl.cellHighlighted + \' \' + jS.cl.uiCellHighlighted);\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\tjS.highlightedLast.rowStart = -1;\r\n
+\t\t\t\t\t\tjS.highlightedLast.colStart = -1;\r\n
+\t\t\t\t\t\tjS.highlightedLast.rowEnd = -1;\r\n
+\t\t\t\t\t\tjS.highlightedLast.colEnd = -1;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t},\r\n
+\t\t\t\tbar: {\r\n
+\t\t\t\t\tstyle: function(o) {\r\n
+\t\t\t\t\t\tjQuery(o).addClass(jS.cl.uiBar);\r\n
+\t\t\t\t\t},\r\n
+\t\t\t\t\tsetActive: function(direction, i) {\r\n
+\t\t\t\t\t\t//We don\'t clear here because we can have multi active bars\r\n
+\t\t\t\t\t\tswitch(direction) {\r\n
+\t\t\t\t\t\t\tcase \'top\': jS.obj.barTop().find(\'div\').eq(i).addClass(jS.cl.uiActive);\r\n
+\t\t\t\t\t\t\t\tbreak;\r\n
+\t\t\t\t\t\t\tcase \'left\': jS.obj.barLeft().find(\'div\').eq(i).addClass(jS.cl.uiActive);\r\n
+\t\t\t\t\t\t\t\tbreak;\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t},\r\n
+\t\t\t\t\tclearActive: function() {\r\n
+\t\t\t\t\t\tjS.obj.barTop().add(jS.obj.barLeft()).find(\'div.\' + jS.cl.uiActive)\r\n
+\t\t\t\t\t\t\t.removeClass(jS.cl.uiActive);\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t},\r\n
+\t\t\t\ttab: {\r\n
+\t\t\t\t\tsetActive: function(o) {\r\n
+\t\t\t\t\t\tthis.clearActive();\r\n
+\t\t\t\t\t\tjS.obj.tab().parent().addClass(jS.cl.uiTabActive);\r\n
+\t\t\t\t\t},\r\n
+\t\t\t\t\tclearActive: function () {\r\n
+\t\t\t\t\t\tjS.obj.tabContainer().find(\'span.\' + jS.cl.uiTabActive)\r\n
+\t\t\t\t\t\t\t.removeClass(jS.cl.uiTabActive);\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t},\r\n
+\t\t\t\tresize: function() {\r\n
+\t\t\t\t\t// add resizable jquery.ui if available\r\n
+\t\t\t\t\tif (jQuery.ui) {\r\n
+\t\t\t\t\t\t// resizable container div\r\n
+\t\t\t\t\t\tvar o;\r\n
+\t\t\t\t\t\tvar barTop;\r\n
+\t\t\t\t\t\tvar barLeft;\r\n
+\t\t\t\t\t\tvar controlsHeight;\r\n
+\t\t\t\t\t\tvar parent = s.parent;\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\tparent.resizable(\'destroy\').resizable({\r\n
+\t\t\t\t\t\t\tminWidth: s.width * 0.5,\r\n
+\t\t\t\t\t\t\tminHeight: s.height * 0.5,\r\n
+\t\t\t\t\t\t\tstart: function() {\r\n
+\t\t\t\t\t\t\t\tjS.obj.ui().hide();\r\n
+\t\t\t\t\t\t\t},\r\n
+\t\t\t\t\t\t\tstop: function() {\r\n
+\t\t\t\t\t\t\t\tjS.obj.ui().show();\r\n
+\t\t\t\t\t\t\t\ts.width = parent.width();\r\n
+\t\t\t\t\t\t\t\ts.height = parent.height();\r\n
+\t\t\t\t\t\t\t\tjS.sheetSyncSize();\r\n
+\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t});\r\n
+\t\t\t\t\t\t// resizable f
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>next</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="Pdata" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>ormula area - a bit hard to grab the handle but is there!\r\n
+\t\t\t\t\t\tvar formulaResizeParent = jQuery(\'\074span /\076\');\r\n
+\t\t\t\t\t\tjS.obj.formula().wrap(formulaResizeParent).parent().resizable({\r\n
+\t\t\t\t\t\t\tminHeight: jS.obj.formula().height(), \r\n
+\t\t\t\t\t\t\tmaxHeight: 78,\r\n
+\t\t\t\t\t\t\thandles: \'s\',\r\n
+\t\t\t\t\t\t\tresize: function(e, ui) {\r\n
+\t\t\t\t\t\t\t\tjS.obj.formula().height(ui.size.height);\r\n
+\t\t\t\t\t\t\t\tjS.sheetSyncSize();\r\n
+\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t});\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t}\r\n
+\t\t\t},\r\n
+\t\t\tmanageHtmlToText: function(v) {\r\n
+\t\t\t\tv = jQuery.trim(v);\r\n
+\t\t\t\tif (v.charAt(0) != "=") {\r\n
+\t\t\t\t\tv = v.replace(/\046nbsp;/g, \' \')\r\n
+\t\t\t\t\t\t.replace(/\046gt;/g, \'\076\')\r\n
+\t\t\t\t\t\t.replace(/\046lt;/g, \'\074\')\r\n
+\t\t\t\t\t\t.replace(/\\t/g, \'\')\r\n
+\t\t\t\t\t\t.replace(/\\n/g, \'\')\r\n
+\t\t\t\t\t\t.replace(/\074br\076/g, \'\\r\')\r\n
+\t\t\t\t\t\t.replace(/\074BR\076/g, \'\\n\');\r\n
+\r\n
+\t\t\t\t\t//jS.log("from html to text");\r\n
+\t\t\t\t}\r\n
+\t\t\t\treturn v;\r\n
+\t\t\t},\r\n
+\t\t\tmanageTextToHtml: function(v) {\t\r\n
+\t\t\t\tv = jQuery.trim(v);\r\n
+\t\t\t\tif (v.charAt(0) != "=") {\r\n
+\t\t\t\t\tv = v.replace(/\\t/g, \'\046nbsp;\046nbsp;\046nbsp;\046nbsp;\')\r\n
+\t\t\t\t\t\t.replace(/ /g, \'\046nbsp;\')\r\n
+\t\t\t\t\t\t.replace(/\076/g, \'\046gt;\')\r\n
+\t\t\t\t\t\t.replace(/\074/g, \'\046lt;\')\r\n
+\t\t\t\t\t\t.replace(/\\n/g, \'\074br\076\')\r\n
+\t\t\t\t\t\t.replace(/\\r/g, \'\074br\076\');\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\t//jS.log("from text to html");\r\n
+\t\t\t\t}\r\n
+\t\t\t\treturn v;\r\n
+\t\t\t},\r\n
+\t\t\tsheetDecorateRemove: function(makeClone) {\r\n
+\t\t\t\tvar o = (makeClone ? jS.obj.sheetAll().clone() : jS.obj.sheetAll());\r\n
+\t\t\t\t\r\n
+\t\t\t\t//Get rid of highlighted cells and active cells\r\n
+\t\t\t\tjQuery(o).find(\'td.\' + jS.cl.cellActive)\r\n
+\t\t\t\t\t.removeClass(jS.cl.cellActive + \' \' + jS.cl.uiCellActive);\r\n
+\t\t\t\t\t\r\n
+\t\t\t\tjQuery(o).find(\'td.\' + jS.cl.cellHighlighted)\r\n
+\t\t\t\t\t.removeClass(jS.cl.cellHighlighted + \' \' + jS.cl.uiCellHighlighted);\r\n
+\t\t\t\t/*\r\n
+\t\t\t\t//IE Bug, match width with css width\r\n
+\t\t\t\tjQuery(o).find(\'col\').each(function(i) {\r\n
+\t\t\t\t\tvar v = jQuery(this).css(\'width\');\r\n
+\t\t\t\t\tv = ((v + \'\').match(\'px\') ? v : v + \'px\');\r\n
+\t\t\t\t\tjQuery(o).find(\'col\').eq(i).attr(\'width\', v);\r\n
+\t\t\t\t});\r\n
+\t\t\t\t*/\r\n
+\t\t\t\treturn o;\r\n
+\t\t\t},\r\n
+\t\t\tlabelUpdate: function(v, setDirect) {\r\n
+\t\t\t\tif (!setDirect) {\r\n
+\t\t\t\t\tjS.obj.label().html(cE.columnLabelString(v[1] + 1) + (v[0] + 1));\r\n
+\t\t\t\t} else {\r\n
+\t\t\t\t\tjS.obj.label().html(v);\r\n
+\t\t\t\t}\r\n
+\t\t\t},\r\n
+\t\t\tcellEdit: function(td, isDrag) {\r\n
+\t\t\t\t//This finished up the edit of the last cell\r\n
+\t\t\t\tjS.evt.cellEditDone();\r\n
+\t\t\t\tjS.followMe(td);\r\n
+\t\t\t\tvar loc = jS.getTdLocation(td);\r\n
+\t\t\t\t\r\n
+\t\t\t\t//Show where we are to the user\r\n
+\t\t\t\tjS.labelUpdate(loc);\r\n
+\t\t\t\t\r\n
+\t\t\t\tvar v = td.attr(\'formula\');\r\n
+\t\t\t\tif (!v) {\r\n
+\t\t\t\t\tv = jS.manageHtmlToText(td.html());\r\n
+\t\t\t\t}\r\n
+\t\t\t\t\r\n
+\t\t\t\tjS.obj.formula()\r\n
+\t\t\t\t\t.val(v)\r\n
+\t\t\t\t\t.focus()\r\n
+\t\t\t\t\t.select();\r\n
+\t\t\t\tjS.cellSetActive(td, loc, isDrag);\r\n
+\t\t\t},\r\n
+\t\t\tcellSetActive: function(td, loc, isDrag) {\r\n
+\t\t\t\tif (typeof(loc[1]) != \'undefined\') {\r\n
+\t\t\t\t\tjS.cellLast.td = td; //save the current cell/td\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tjS.cellLast.row = jS.rowLast = loc[0];\r\n
+\t\t\t\t\tjS.cellLast.col = jS.colLast = loc[1];\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tjS.themeRoller.bar.clearActive();\r\n
+\t\t\t\t\tjS.themeRoller.cell.clearHighlighted();\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tjS.highlightedLast.td = td;\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tjS.themeRoller.cell.setActive(); //themeroll the cell and bars\r\n
+\t\t\t\t\tjS.themeRoller.bar.setActive(\'left\', jS.cellLast.row);\r\n
+\t\t\t\t\tjS.themeRoller.bar.setActive(\'top\', jS.cellLast.col);\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tvar selectModel;\r\n
+\t\t\t\t\tvar clearHighlightedModel;\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tjS.highlightedLast.rowStart = loc[0];\r\n
+\t\t\t\t\tjS.highlightedLast.colStart = loc[1];\r\n
+\t\t\t\t\tjS.highlightedLast.rowLast = loc[0];\r\n
+\t\t\t\t\tjS.highlightedLast.colLast = loc[1];\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tswitch (s.cellSelectModel) {\r\n
+\t\t\t\t\t\tcase \'excel\':\r\n
+\t\t\t\t\t\tcase \'gdocs\':\r\n
+\t\t\t\t\t\t\tselectModel = function() {};\r\n
+\t\t\t\t\t\t\tclearHighlightedModel = jS.themeRoller.cell.clearHighlighted;\r\n
+\t\t\t\t\t\t\tbreak;\r\n
+\t\t\t\t\t\tcase \'oo\':\r\n
+\t\t\t\t\t\t\tselectModel = function(target) {\r\n
+\t\t\t\t\t\t\t\tvar td = jQuery(target);\r\n
+\t\t\t\t\t\t\t\tif (jS.isTd(td)) {\r\n
+\t\t\t\t\t\t\t\t\tjS.cellEdit(td);\r\n
+\t\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\t};\r\n
+\t\t\t\t\t\t\tclearHighlightedModel = function() {};\r\n
+\t\t\t\t\t\t\tbreak;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tif (isDrag) {\r\n
+\t\t\t\t\t\tjS.obj.pane()\r\n
+\t\t\t\t\t\t\t.mousemove(function(e) {\r\n
+\t\t\t\t\t\t\t\tvar endLoc = jS.getTdLocation([e.target]);\r\n
+\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\tif (loc[1] != endLoc[1] || loc[0] != endLoc[0]) { //this prevents this method from firing too much\r\n
+\t\t\t\t\t\t\t\t\t//clear highlighted cells if needed\r\n
+\t\t\t\t\t\t\t\t\tclearHighlightedModel();\r\n
+\t\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\t\t//set current bars\r\n
+\t\t\t\t\t\t\t\t\tjS.highlightedLast.colEnd = endLoc[1];\r\n
+\t\t\t\t\t\t\t\t\tjS.highlightedLast.rowEnd = endLoc[0];\r\n
+\t\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\t\t//select active cell if needed\r\n
+\t\t\t\t\t\t\t\t\tselectModel(e.target);\r\n
+\t\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\t\t//highlight the cells\r\n
+\t\t\t\t\t\t\t\t\tjS.highlightedLast.td = jS.cycleCellsAndMaintainPoint(jS.themeRoller.cell.setHighlighted, loc, endLoc);\r\n
+\t\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\t});\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\tjQuery(document)\r\n
+\t\t\t\t\t\t\t.one(\'mouseup\', function() {\r\n
+\t\r\n
+\t\t\t\t\t\t\t\tjS.obj.pane()\r\n
+\t\t\t\t\t\t\t\t\t.unbind(\'mousemove\')\r\n
+\t\t\t\t\t\t\t\t\t.unbind(\'mouseup\');\r\n
+\t\t\t\t\t\t\t});\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t}\r\n
+\t\t\t},\r\n
+\t\t\tcolLast: 0,\r\n
+\t\t\trowLast: 0,\r\n
+\t\t\tcellLast: {\r\n
+\t\t\t\ttd: jQuery(\'\074td /\076\'), //this is a dud td, so that we don\'t get errors\r\n
+\t\t\t\trow: -1,\r\n
+\t\t\t\tcol: -1,\r\n
+\t\t\t\tisEdit: false\r\n
+\t\t\t},\r\n
+\t\t\thighlightedLast: {\r\n
+\t\t\t\ttd: jQuery(\'\074td /\076\'),\r\n
+\t\t\t\trowStart: -1,\r\n
+\t\t\t\tcolStart: -1,\r\n
+\t\t\t\trowEnd: -1,\r\n
+\t\t\t\tcolEnd: -1\r\n
+\t\t\t},\r\n
+\t\t\tcellStyleToggle: function(setClass, removeClass) {\r\n
+\t\t\t\t//Lets check to remove any style classes\r\n
+\t\t\t\tvar uiCell = jS.obj.cellHighlighted();\r\n
+\t\t\t\t\r\n
+\t\t\t\tjS.cellUndoable.add(uiCell);\r\n
+\t\t\t\t\r\n
+\t\t\t\tif (removeClass) {\r\n
+\t\t\t\t\tuiCell.removeClass(removeClass);\r\n
+\t\t\t\t}\r\n
+\t\t\t\t//Now lets add some style\r\n
+\t\t\t\tif (uiCell.hasClass(setClass)) {\r\n
+\t\t\t\t\tuiCell.removeClass(setClass);\r\n
+\t\t\t\t} else {\r\n
+\t\t\t\t\tuiCell.addClass(setClass);\r\n
+\t\t\t\t}\r\n
+\t\t\t\t\r\n
+\t\t\t\tjS.cellUndoable.add(uiCell);\r\n
+\t\t\t\t\r\n
+\t\t\t\tjS.obj.formula()\r\n
+\t\t\t\t\t.focus()\r\n
+\t\t\t\t\t.select();\r\n
+\t\t\t\treturn false;\r\n
+\t\t\t},\r\n
+\t\t\tcontext: {},\r\n
+\t\t\tcalc: function(tableI, fuel) {\r\n
+\t\t\t\tjS.log(\'Calculation Started\');\r\n
+\t\t\t\tif (!s.calcOff) {\r\n
+\t\t\t\t\tcE.calc(new jS.tableCellProvider(tableI), jS.context, fuel);\r\n
+\t\t\t\t\tjS.isSheetEdit = false;\r\n
+\t\t\t\t}\r\n
+\t\t\t\tjS.log(\'Calculation Ended\');\r\n
+\t\t\t},\r\n
+\t\t\trefreshLabelsColumns: function(){\r\n
+\t\t\t\tvar w = 0;\r\n
+\t\t\t\tjS.obj.barTop().find(\'div\').each(function(i) {\r\n
+\t\t\t\t\tjQuery(this).text(cE.columnLabelString(i+1));\r\n
+\t\t\t\t\tw += jQuery(this).width();\r\n
+\t\t\t\t});\r\n
+\t\t\t\treturn w;\r\n
+\t\t\t},\r\n
+\t\t\trefreshLabelsRows: function(){\r\n
+\t\t\t\tjS.obj.barLeft().find(\'div\').each(function(i) {\r\n
+\t\t\t\t\tjQuery(this).text((i + 1));\r\n
+\t\t\t\t});\r\n
+\t\t\t},\r\n
+\t\t\taddSheet: function(size) {\r\n
+\t\t\t\tsize = (size ? size : prompt(jS.newSheetDialog));\r\n
+\t\t\t\tif (size) {\r\n
+\t\t\t\t\tjS.evt.cellEditAbandon();\r\n
+\t\t\t\t\tjS.setDirty(true);\r\n
+\t\t\t\t\tvar newSheetControl = jS.controlFactory.sheetUI(jS.controlFactory.sheet(size), jS.sheetCount + 1, function() { \r\n
+\t\t\t\t\t\tjS.setActiveSheet(newSheetControl, jS.sheetCount + 1);\r\n
+\t\t\t\t\t}, true);\r\n
+\t\t\t\t}\r\n
+\t\t\t},\r\n
+\t\t\tdeleteSheet: function() {\r\n
+\t\t\t\tjS.obj.tableControl().remove();\r\n
+\t\t\t\tjS.obj.tabContainer().children().eq(jS.i).remove();\r\n
+\t\t\t\tjS.i = 0;\r\n
+\t\t\t\tjS.sheetCount--;\r\n
+\t\t\t\t\r\n
+\t\t\t\tjS.setControlIds();\r\n
+\t\t\t\t\r\n
+\t\t\t\tjS.setActiveSheet(jS.obj.tableControl(), jS.i);\r\n
+\t\t\t},\r\n
+\t\t\tdeleteRow: function() {\r\n
+\t\t\t\tvar v = confirm("Are you sure that you want to delete that row?");\r\n
+\t\t\t\tif (v) {\r\n
+\t\t\t\t\tjS.obj.barLeft().find(\'div\').eq(jS.rowLast).remove();\r\n
+\t\t\t\t\tjS.obj.sheet().find(\'tr\').eq(jS.rowLast).remove();\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tjS.evt.cellEditAbandon();\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tjS.setTdIds();\r\n
+\t\t\t\t\tjS.refreshLabelsRows();\r\n
+\t\t\t\t\tjS.obj.pane().scroll();\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tjS.rowLast = -1;\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tjS.offsetFormulaRange(jS.rowLast, 0, -1, 0);\r\n
+\t\t\t\t}\t\t\r\n
+\t\t\t},\r\n
+\t\t\tdeleteColumn: function() {\r\n
+\t\t\t\tvar v = confirm("Are you sure that you want to delete that column?");\r\n
+\t\t\t\tif (v) {\r\n
+\t\t\t\t\tjS.obj.barTop().find(\'div\').eq(jS.colLast).remove();\r\n
+\t\t\t\t\tjS.obj.sheet().find(\'colgroup col\').eq(jS.colLast).remove();\r\n
+\t\t\t\t\tjS.obj.sheet().find(\'tr\').each(function(i) {\r\n
+\t\t\t\t\t\t\tjQuery(this).find(\'td\').eq(jS.colLast).remove();\r\n
+\t\t\t\t\t});\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tjS.evt.cellEditAbandon();\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tvar w = jS.refreshLabelsColumns();\r\n
+\t\t\t\t\tjS.setTdIds();\r\n
+\t\t\t\t\tjS.obj.sheet().width(w);\r\n
+\t\t\t\t\tjS.obj.pane().scroll();\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tjS.colLast = -1;\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tjS.offsetFormulaRange(0, jS.colLast, 0, -1);\r\n
+\t\t\t\t}\t\t\r\n
+\t\t\t},\r\n
+\t\t\tsheetTab: function(get) {\r\n
+\t\t\t\tvar sheetTab = \'\';\r\n
+\t\t\t\tif (get) {\r\n
+\t\t\t\t\tsheetTab = jS.obj.sheet().attr(\'title\');\r\n
+\t\t\t\t\tsheetTab = (sheetTab ? sheetTab : \'Spreadsheet \' + (jS.i + 1));\r\n
+\t\t\t\t} else if (s.editable) { //ensure that the sheet is editable, then let them change the sheet\'s name\r\n
+\t\t\t\t\tvar newTitle = prompt("What would you like the sheet\'s title to be?", jS.sheetTab(true));\r\n
+\t\t\t\t\tif (!newTitle) { //The user didn\'t set the new tab name\r\n
+\t\t\t\t\t\tsheetTab = jS.obj.sheet().attr(\'title\');\r\n
+\t\t\t\t\t\tnewTitle = (sheetTab ? sheetTab : \'Spreadsheet\' + (jS.i + 1));\r\n
+\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\tjS.setDirty(true);\r\n
+\t\t\t\t\t\tjS.obj.sheet().attr(\'title\', newTitle);\r\n
+\t\t\t\t\t\tjS.obj.tab().html(newTitle);\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\tsheetTab = newTitle;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t}\r\n
+\t\t\t\treturn sheetTab;\r\n
+\t\t\t},\r\n
+\t\t\tprint: function(o) {\r\n
+\t\t\t\tvar w = window.open();\r\n
+\t\t\t\tw.document.write("\074html\076\074body\076\074xmp\076" + o + "\\n\074/xmp\076\074/body\076\074/html\076");\r\n
+\t\t\t\tw.document.close();\r\n
+\t\t\t},\r\n
+\t\t\tgetSource: function(pretty) {\r\n
+\t\t\t\tvar sheetClone = jS.sheetDecorateRemove(true);\r\n
+\t\t\t\t\r\n
+\t\t\t\tvar s = "";\r\n
+\t\t\t\tif (pretty) {\r\n
+\t\t\t\t\tjQuery(sheetClone).each(function() {\r\n
+\t\t\t\t\t\ts += jS.HTMLtoPrettySource(this);\r\n
+\t\t\t\t\t});\r\n
+\t\t\t\t} else {\r\n
+\t\t\t\t\ts += jQuery(\'\074div /\076\').html(sheetClone).html();\r\n
+\t\t\t\t}\r\n
+\t\t\t\t\r\n
+\t\t\t\treturn s;\r\n
+\t\t\t},\r\n
+\t\t\tviewSource: function(pretty) {\r\n
+\t\t\t\tvar sheetClone = jS.sheetDecorateRemove(true);\r\n
+\t\t\t\t\r\n
+\t\t\t\tvar s = "";\r\n
+\t\t\t\tif (pretty) {\r\n
+\t\t\t\t\tjQuery(sheetClone).each(function() {\r\n
+\t\t\t\t\t\ts += jS.HTMLtoPrettySource(this);\r\n
+\t\t\t\t\t});\r\n
+\t\t\t\t} else {\r\n
+\t\t\t\t\ts += jQuery(\'\074div /\076\').html(sheetClone).html();\r\n
+\t\t\t\t}\r\n
+\t\t\t\t\r\n
+\t\t\t\tjS.print(s);\r\n
+\t\t\t\t\r\n
+\t\t\t\treturn false;\r\n
+\t\t\t},\r\n
+\t\t\tsaveSheet: function() {\r\n
+\t\t\t\tvar v = jS.sheetDecorateRemove(true);\r\n
+\t\t\t\tvar d = jQuery(\'\074div /\076\').html(v).html();\r\n
+\r\n
+\t\t\t\tjQuery.ajax({\r\n
+\t\t\t\t\turl: s.urlSave,\r\n
+\t\t\t\t\ttype: \'POST\',\r\n
+\t\t\t\t\tdata: \'s=\' + d,\r\n
+\t\t\t\t\tdataType: \'html\',\r\n
+\t\t\t\t\tsuccess: function(data) {\r\n
+\t\t\t\t\t\tjS.setDirty(false);\r\n
+\t\t\t\t\t\talert(\'Success! - \' + data);\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t});\r\n
+\t\t\t},\r\n
+\t\t\tHTMLtoCompactSource: function(node) {\r\n
+\t\t\t\tvar result = "";\r\n
+\t\t\t\tif (node.nodeType == 1) {\r\n
+\t\t\t\t\t// ELEMENT_NODE\r\n
+\t\t\t\t\tresult += "\074" + node.tagName;\r\n
+\t\t\t\t\thasClass = false;\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tvar n = node.attributes.length;\r\n
+\t\t\t\t\tfor (var i = 0, hasClass = false; i \074 n; i++) {\r\n
+\t\t\t\t\t\tvar key = node.attributes[i].name;\r\n
+\t\t\t\t\t\tvar val = node.getAttribute(key);\r\n
+\t\t\t\t\t\tif (val) {\r\n
+\t\t\t\t\t\t\tif (key == "contentEditable" \046\046 val == "inherit") {\r\n
+\t\t\t\t\t\t\t\tcontinue;\r\n
+\t\t\t\t\t\t\t\t// IE hack.\r\n
+\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\tif (key == "class") {\r\n
+\t\t\t\t\t\t\t\thasClass = true;\r\n
+\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\tif (typeof(val) == "string") {\r\n
+\t\t\t\t\t\t\t\tresult += " " + key + \'="\' + val.replace(/"/g, "\'") + \'"\';\r\n
+\t\t\t\t\t\t\t} else if (key == "style" \046\046 val.cssText) {\r\n
+\t\t\t\t\t\t\t\tresult += \' style="\' + val.cssText + \'"\';\r\n
+\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t}\r\n
+\r\n
+\t\t\t\t\tif (node.tagName == "COL") {\r\n
+\t\t\t\t\t\t// IE hack, which doesn\'t like \074COL..\076\074/COL\076.\r\n
+\t\t\t\t\t\tresult += \'/\076\';\r\n
+\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\tresult += "\076";\r\n
+\t\t\t\t\t\tvar childResult = "";\r\n
+\t\t\t\t\t\tjQuery(node.childNodes).each(function() {\r\n
+\t\t\t\t\t\t\tchildResult += jS.HTMLtoCompactSource(this);\r\n
+\t\t\t\t\t\t});\r\n
+\t\t\t\t\t\tresult += childResult;\r\n
+\t\t\t\t\t\tresult += "\074/" + node.tagName + "\076";\r\n
+\t\t\t\t\t}\r\n
+\r\n
+\t\t\t\t} else if (node.nodeType == 3) {\r\n
+\t\t\t\t\t// TEXT_NODE\r\n
+\t\t\t\t\tresult += node.data.replace(/^\\s*(.*)\\s*$/g, "$1");\r\n
+\t\t\t\t}\r\n
+\t\t\t\treturn result;\r\n
+\t\t\t},\r\n
+\t\t\tHTMLtoPrettySource: function(node, prefix) {\r\n
+\t\t\t\tif (!prefix) {\r\n
+\t\t\t\t\tprefix = "";\r\n
+\t\t\t\t}\r\n
+\t\t\t\tvar result = "";\r\n
+\t\t\t\tif (node.nodeType == 1) {\r\n
+\t\t\t\t\t// ELEMENT_NODE\r\n
+\t\t\t\t\tresult += "\\n" + prefix + "\074" + node.tagName;\r\n
+\t\t\t\t\tvar n = node.attributes.length;\r\n
+\t\t\t\t\tfor (var i = 0; i \074 n; i++) {\r\n
+\t\t\t\t\t\tvar key = node.attributes[i].name;\r\n
+\t\t\t\t\t\tvar val = node.getAttribute(key);\r\n
+\t\t\t\t\t\tif (val) {\r\n
+\t\t\t\t\t\t\tif (key == "contentEditable" \046\046 val == "inherit") {\r\n
+\t\t\t\t\t\t\t\tcontinue; // IE hack.\r\n
+\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\tif (typeof(val) == "string") {\r\n
+\t\t\t\t\t\t\t\tresult += " " + key + \'="\' + val.replace(/"/g, "\'") + \'"\';\r\n
+\t\t\t\t\t\t\t} else if (key == "style" \046\046 val.cssText) {\r\n
+\t\t\t\t\t\t\t\tresult += \' style="\' + val.cssText + \'"\';\r\n
+\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\tif (node.childNodes.length \074= 0) {\r\n
+\t\t\t\t\t\tresult += "/\076";\r\n
+\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\tresult += "\076";\r\n
+\t\t\t\t\t\tvar childResult = "";\r\n
+\t\t\t\t\t\tvar n = node.childNodes.length;\r\n
+\t\t\t\t\t\tfor (var i = 0; i \074 n; i++) {\r\n
+\t\t\t\t\t\t\tchildResult += jS.HTMLtoPrettySource(node.childNodes[i], prefix + "  ");\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\tresult += childResult;\r\n
+\t\t\t\t\t\tif (childResult.indexOf(\'\\n\') \076= 0) {\r\n
+\t\t\t\t\t\t\tresult += "\\n" + prefix;\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\tresult += "\074/" + node.tagName + "\076";\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t} else if (node.nodeType == 3) {\r\n
+\t\t\t\t\t// TEXT_NODE\r\n
+\t\t\t\t\tresult += node.data.replace(/^\\s*(.*)\\s*$/g, "$1");\r\n
+\t\t\t\t}\r\n
+\t\t\t\treturn result;\r\n
+\t\t\t},\r\n
+\t\t\tfollowMe: function(td) {\r\n
+\t\t\t\tvar pane = jS.obj.pane();\r\n
+\t\t\t\tvar panePos = pane.offset();\r\n
+\t\t\t\tvar paneWidth = pane.width();\r\n
+\t\t\t\tvar paneHeight = pane.height();\r\n
+\r\n
+\t\t\t\tvar tdPos = td.offset();\r\n
+\t\t\t\tvar tdWidth = td.width();\r\n
+\t\t\t\tvar tdHeight = td.height();\r\n
+\t\t\t\t\r\n
+\t\t\t\tvar margin = 20;\r\n
+\t\t\t\t\r\n
+\t\t\t\t//jS.log(\'td: [\' + tdPos.left + \', \' + tdPos.top + \']\');\r\n
+\t\t\t\t//jS.log(\'pane: [\' + panePos.left + \', \' + panePos.top + \']\');\r\n
+\t\t\t\t\r\n
+\t\t\t\tif ((tdPos.left + tdWidth + margin) \076 (panePos.left + paneWidth)) { //right\r\n
+\t\t\t\t\tpane.stop().scrollTo(td, {\r\n
+\t\t\t\t\t\taxis: \'x\',\r\n
+\t\t\t\t\t\tduration: 50,\r\n
+\t\t\t\t\t\toffset: - ((paneWidth - tdWidth) - margin)\r\n
+\t\t\t\t\t});\r\n
+\t\t\t\t} else if (tdPos.left \074 panePos.left) { //left\r\n
+\t\t\t\t\tpane.stop().scrollTo(td, {\r\n
+\t\t\t\t\t\taxis: \'x\',\r\n
+\t\t\t\t\t\tduration: 50\r\n
+\t\t\t\t\t});\r\n
+\t\t\t\t}\r\n
+\t\t\t\t\r\n
+\t\t\t\tif ((tdPos.top + tdHeight + margin) \076 (panePos.top + paneHeight)) { //bottom\r\n
+\t\t\t\t\tpane.stop().scrollTo(td, {\r\n
+\t\t\t\t\t\taxis: \'y\',\r\n
+\t\t\t\t\t\tduration: 50,\r\n
+\t\t\t\t\t\toffset: - ((paneHeight - tdHeight) - margin)\r\n
+\t\t\t\t\t});\r\n
+\t\t\t\t} else if (tdPos.top \074 panePos.top) { //top\r\n
+\t\t\t\t\tpane.stop().scrollTo(td, {\r\n
+\t\t\t\t\t\taxis: \'y\',\r\n
+\t\t\t\t\t\tduration: 50\r\n
+\t\t\t\t\t});\r\n
+\t\t\t\t}\r\n
+\t\t\t},\r\n
+\t\t\tcount: {\r\n
+\t\t\t\trows: function() {\r\n
+\t\t\t\t\treturn jS.getBarLeftIndex(jS.obj.barLeft().find(\'div:last\').text());\r\n
+\t\t\t\t},\r\n
+\t\t\t\tcolumns: function() {\r\n
+\t\t\t\t\treturn jS.getBarTopLocatoin(jS.obj.barTop().find(\'div:last\').text());\r\n
+\t\t\t\t}\r\n
+\t\t\t},\r\n
+\t\t\tisRowHeightSync: [],\r\n
+\t\t\tsetActiveSheet: function(o, i) {\r\n
+\t\t\t\t\r\n
+\t\t\t\t\r\n
+\t\t\t\tif (o) {\r\n
+\t\t\t\t\to.show().siblings().hide();\r\n
+\t\t\t\t\tjS.i = i;\t\t\t\r\n
+\t\t\t\t} else {\r\n
+\t\t\t\t\tjS.obj.tableControl().siblings().not(\'div\').hide();\r\n
+\t\t\t\t\ti = 0;\r\n
+\t\t\t\t}\r\n
+\t\t\t\t\r\n
+\t\t\t\tjS.themeRoller.tab.setActive();\r\n
+\t\t\t\t\r\n
+\t\t\t\tif (!jS.isRowHeightSync[i]) { //this makes it only run once, no need to have it run every time a user changes a sheet\r\n
+\t\t\t\t\tjS.isRowHeightSync[i] = true;\r\n
+\t\t\t\t\tjS.obj.sheet().find(\'tr\').each(function(j) {\r\n
+\t\t\t\t\t\tjS.attrH.setHeight(j, \'cell\');\r\n
+\t\t\t\t\t\t/*\r\n
+\t\t\t\t\t\tfixes a wired bug with height in chrome and ie\r\n
+\t\t\t\t\t\tIt seems that at some point during the sheet\'s initializtion the height for each\r\n
+\t\t\t\t\t\trow isn\'t yet clearly defined, this ensures that the heights for barLeft match \r\n
+\t\t\t\t\t\tthat of each row in the currently active sheet when a user uses a non strict doc type.\r\n
+\t\t\t\t\t\t*/\r\n
+\t\t\t\t\t});\r\n
+\t\t\t\t}\r\n
+\t\t\t\t\r\n
+\t\t\t\tjS.sheetSyncSize();\r\n
+\t\t\t\tjS.replaceWithSafeImg(jS.obj.sheet().find(\'img\'));\r\n
+\t\t\t},\r\n
+\t\t\topenSheetURL: function ( url ) {\r\n
+\t\t\t\ts.urlGet = url;\r\n
+\t\t\t\treturn jS.openSheet();\r\n
+\t\t\t},\r\n
+\t\t\topenSheet: function(o) {\r\n
+\t\t\t\tif (!jS.isDirty ? true : confirm("Are you sure you want to open a different sheet?  All unsaved changes will be lost.")) {\r\n
+\t\t\t\t\tjS.controlFactory.header();\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tvar fnAfter = function(i, l) {\r\n
+\t\t\t\t\t\tif (i == (l - 1)) {\r\n
+\t\t\t\t\t\t\tjS.i = 0;\r\n
+\t\t\t\t\t\t\tjS.setActiveSheet();\r\n
+\t\t\t\t\t\t\tjS.themeRoller.resize();\r\n
+\t\t\t\t\t\t\tfor (var i = 0; i \074= jS.sheetCount; i++) {\r\n
+\t\t\t\t\t\t\t\tjS.calc(i);\r\n
+\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\ts.fnAfter();\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t};\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tif (!o) {\r\n
+\t\t\t\t\t\tjQuery(\'\074div /\076\').load(s.urlGet, function() {\r\n
+\t\t\t\t\t\t\tvar sheets = jQuery(this).find(\'table\');\r\n
+\t\t\t\t\t\t\tsheets.each(function(i) {\r\n
+\t\t\t\t\t\t\t\tjS.controlFactory.sheetUI(jQuery(this), i, function() { \r\n
+\t\t\t\t\t\t\t\t\tfnAfter(i, sheets.length);\r\n
+\t\t\t\t\t\t\t\t}, true);\r\n
+\t\t\t\t\t\t\t});\r\n
+\t\t\t\t\t\t});\r\n
+\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\tvar sheets = jQuery(\'\074div /\076\').html(o).find(\'table\');\r\n
+\t\t\t\t\t\tsheets.show().each(function(i) {\r\n
+\t\t\t\t\t\t\tjS.controlFactory.sheetUI(jQuery(this), i,  function() { \r\n
+\t\t\t\t\t\t\t\tfnAfter(i, sheets.length);\r\n
+\t\t\t\t\t\t\t}, false);\r\n
+\t\t\t\t\t\t});\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tjS.setDirty(false);\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\treturn true;\r\n
+\t\t\t\t} else {\r\n
+\t\t\t\t\treturn false;\r\n
+\t\t\t\t}\r\n
+\t\t\t},\r\n
+\t\t\tnewSheetDialog: "What size would you like to make your spreadsheet? Example: \'5x10\' creates a sheet that is 5 columns by 10 rows.",\r\n
+\t\t\tnewSheet: function() {\r\n
+\t\t\t\tvar size = prompt(jS.newSheetDialog);\r\n
+\t\t\t\tif (size) {\r\n
+\t\t\t\t\tjS.openSheet(jS.controlFactory.sheet(size));\r\n
+\t\t\t\t}\r\n
+\t\t\t},\r\n
+\t\t\timportRow: function(rowArray) {\r\n
+\t\t\t\tjS.controlFactory.addRow(null, null, \':last\');\r\n
+\r\n
+\t\t\t\tvar error = "";\r\n
+\t\t\t\tjS.obj.sheet().find(\'tr:last td\').each(function(i) {\r\n
+\t\t\t\t\tjQuery(this).removeAttr(\'formula\');\r\n
+\t\t\t\t\ttry {\r\n
+\t\t\t\t\t\t//To test this, we need to first make sure it\'s a string, so converting is done by adding an empty character.\r\n
+\t\t\t\t\t\tif ((rowArray[i] + \'\').charAt(0) == "=") {\r\n
+\t\t\t\t\t\t\tjQuery(this).attr(\'formula\', rowArray[i]);\t\t\t\t\t\r\n
+\t\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\t\tjQuery(this).html(rowArray[i]);\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t} catch(e) {\r\n
+\t\t\t\t\t\t//We want to make sure that is something bad happens, we let the user know\r\n
+\t\t\t\t\t\terror += e + \';\\n\';\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t});\r\n
+\t\t\t\t\r\n
+\t\t\t\tif (error) {//Show them the errors\r\n
+\t\t\t\t\talert(error);\r\n
+\t\t\t\t}\r\n
+\t\t\t\t//Let\'s recalculate the sheet just in case\r\n
+\t\t\t\tjS.setTdIds();\r\n
+\t\t\t\tjS.calc(jS.i);\r\n
+\t\t\t},\r\n
+\t\t\timportColumn: function(columnArray) {\r\n
+\t\t\t\tjS.controlFactory.addColumn();\r\n
+\r\n
+\t\t\t\tvar error = "";\r\n
+\t\t\t\tjS.obj.sheet().find(\'tr\').each(function(i) {\r\n
+\t\t\t\t\tvar o = jQuery(this).find(\'td:last\');\r\n
+\t\t\t\t\ttry {\r\n
+\t\t\t\t\t\t//To test this, we need to first make sure it\'s a string, so converting is done by adding an empty character.\r\n
+\t\t\t\t\t\tif ((columnArray[i] + \'\').charAt(0) == "=") {\r\n
+\t\t\t\t\t\t\to.attr(\'formula\', columnArray[i]);\t\t\t\t\t\r\n
+\t\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\t\to.html(columnArray[i]);\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t} catch(e) {\r\n
+\t\t\t\t\t\t//We want to make sure that is something bad happens, we let the user know\r\n
+\t\t\t\t\t\terror += e + \';\\n\';\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t});\r\n
+\t\t\t\t\r\n
+\t\t\t\tif (error) {//Show them the errors\r\n
+\t\t\t\t\talert(error);\r\n
+\t\t\t\t}\r\n
+\t\t\t\t//Let\'s recalculate the sheet just in case\r\n
+\t\t\t\tjS.setTdIds();\r\n
+\t\t\t\tjS.calc(jS.i);\r\n
+\t\t\t},\r\n
+\t\t\texportSheet: {\r\n
+\t\t\t\txml: function (skipCData) {\r\n
+\t\t\t\t\tvar sheetClone = jS.sheetDecorateRemove(true);\t\t\t\r\n
+\t\t\t\t\tvar document = "";\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tvar cdata = [\'\074![CDATA[\',\']]\076\'];\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tif (skipCData) {\r\n
+\t\t\t\t\t\tcdata = [\'\',\'\'];\r\n
+\t\t\t\t\t}\r\n
+\r\n
+\t\t\t\t\tjQuery(sheetClone).each(function() {\r\n
+\t\t\t\t\t\tvar row = \'\';\r\n
+\t\t\t\t\t\tvar table = jQuery(this);\r\n
+\t\t\t\t\t\tvar colCount = 0;\r\n
+\t\t\t\t\t\tvar col_widths = \'\';\r\n
+\r\n
+\t\t\t\t\t\ttable.find(\'colgroup\').children().each(function (i) {\r\n
+\t\t\t\t\t\t\tcol_widths += \'\074c\' + i + \'\076\' + (jQuery(this).attr(\'width\') + \'\').replace(\'px\', \'\') + \'\074/c\' + i + \'\076\';\r\n
+\t\t\t\t\t\t});\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\tvar trs = table.find(\'tr\');\r\n
+\t\t\t\t\t\tvar rowCount = trs.length;\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\ttrs.each(function(i){\r\n
+\t\t\t\t\t\t\tvar col = \'\';\r\n
+\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\tvar tr = jQuery(this);\r\n
+\t\t\t\t\t\t\tvar h = tr.attr(\'height\');\r\n
+\t\t\t\t\t\t\tvar height = (h ? h : s.colMargin);\r\n
+\t\t\t\t\t\t\tvar tds = tr.find(\'td\');\r\n
+\t\t\t\t\t\t\tcolCount = tds.length;\r\n
+\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\ttds.each(function(j){\r\n
+\t\t\t\t\t\t\t\tvar td = jQuery(this);\r\n
+\t\t\t\t\t\t\t\tvar colSpan = td.attr(\'colspan\');\r\n
+\t\t\t\t\t\t\t\tcolSpan = (colSpan \076 1 ? colSpan : \'\');\r\n
+\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\tvar formula = td.attr(\'formula\');\r\n
+\t\t\t\t\t\t\t\tvar text = (formula ? formula : td.text());\r\n
+\t\t\t\t\t\t\t\tvar cl = td.attr(\'class\');\r\n
+\t\t\t\t\t\t\t\tvar style = td.attr(\'style\');\r\n
+\t\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\t//Add to current row\r\n
+\t\t\t\t\t\t\t\tcol += \'\074c\' + j +\r\n
+\t\t\t\t\t\t\t\t\t(style ? \' style=\\"\' + style + \'\\"\' : \'\') + \r\n
+\t\t\t\t\t\t\t\t\t(cl ? \' class=\\"\' + cl + \'\\"\' : \'\') + \r\n
+\t\t\t\t\t\t\t\t\t(colSpan ? \' colspan=\\"\' + colSpan + \'\\"\' : \'\') +\r\n
+\t\t\t\t\t\t\t\t\'\076\' + text + \'\074/c\' + j + \'\076\';\r\n
+\t\t\t\t\t\t\t});\r\n
+\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\trow += \'\074r\' + i + \' h=\\"\' + height + \'\\"\076\' + col + \'\074/r\' + i + \'\076\';\r\n
+\t\t\t\t\t\t});\r\n
+\r\n
+\t\t\t\t\t\tdocument += \'\074document title="\' + table.attr(\'title\') + \'"\076\' +\r\n
+\t\t\t\t\t\t\t\t\t\'\074metadata\076\' +\r\n
+\t\t\t\t\t\t\t\t\t\t\'\074columns\076\' + colCount + \'\074/columns\076\' +  //length is 1 based, index is 0 based\r\n
+\t\t\t\t\t\t\t\t\t\t\'\074rows\076\' + rowCount + \'\074/rows\076\' +  //length is 1 based, index is 0 based\r\n
+\t\t\t\t\t\t\t\t\t\t\'\074col_widths\076\' + col_widths + \'\074/col_widths\076\' +\r\n
+\t\t\t\t\t\t\t\t\t\'\074/metadata\076\' +\r\n
+\t\t\t\t\t\t\t\t\t\'\074data\076\' + row + \'\074/data\076\' +\r\n
+\t\t\t\t\t\t\t\t\'\074/document\076\';\r\n
+\t\t\t\t\t});\r\n
+\r\n
+\t\t\t\t\treturn \'\074documents\076\' + document + \'\074/documents\076\';\r\n
+\t\t\t\t},\r\n
+\t\t\t\tjson: function() {\r\n
+\t\t\t\t\tvar sheetClone = jS.sheetDecorateRemove(true);\r\n
+\t\t\t\t\tvar documents = []; //documents\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tjQuery(sheetClone).each(function() {\r\n
+\t\t\t\t\t\tvar document = {}; //document\r\n
+\t\t\t\t\t\tdocument[\'metadata\'] = {};\r\n
+\t\t\t\t\t\tdocument[\'data\'] = {};\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\tvar table = jQuery(this);\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\tvar trs = table.find(\'tr\');\r\n
+\t\t\t\t\t\tvar rowCount = trs.length;\r\n
+\t\t\t\t\t\tvar colCount = 0;\r\n
+\t\t\t\t\t\tvar col_widths = \'\';\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\ttrs.each(function(i) {\r\n
+\t\t\t\t\t\t\tvar tr = jQuery(this);\r\n
+\t\t\t\t\t\t\tvar tds = tr.find(\'td\');\r\n
+\t\t\t\t\t\t\tcolCount = tds.length;\r\n
+\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\tdocument[\'data\'][\'r\' + i] = {};\r\n
+\t\t\t\t\t\t\tdocument[\'data\'][\'r\' + i][\'h\'] = tr.attr(\'height\');\r\n
+\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\ttds.each(function(j) {\r\n
+\t\t\t\t\t\t\t\tvar td = jQuery(this);\r\n
+\t\t\t\t\t\t\t\tvar colSpan = td.attr(\'colspan\');\r\n
+\t\t\t\t\t\t\t\tcolSpan = (colSpan \076 1 ? colSpan : null);\r\n
+\t\t\t\t\t\t\t\tvar formula = td.attr(\'formula\');\r\n
+\r\n
+\t\t\t\t\t\t\t\tdocument[\'data\'][\'r\' + i][\'c\' + j] = {\r\n
+\t\t\t\t\t\t\t\t\t\'value\': (formula ? formula : td.text()),\r\n
+\t\t\t\t\t\t\t\t\t\'style\': td.attr(\'style\'),\r\n
+\t\t\t\t\t\t\t\t\t\'colspan\': colSpan,\r\n
+\t\t\t\t\t\t\t\t\t\'cl\': td.attr(\'class\')\r\n
+\t\t\t\t\t\t\t\t};\r\n
+\t\t\t\t\t\t\t});\r\n
+\t\t\t\t\t\t});\r\n
+\t\t\t\t\t\tdocument[\'metadata\'] = {\r\n
+\t\t\t\t\t\t\t\'columns\': colCount, //length is 1 based, index is 0 based\r\n
+\t\t\t\t\t\t\t\'rows\': rowCount, //length is 1 based, index is 0 based\r\n
+\t\t\t\t\t\t\t\'title\': table.attr(\'title\'),\r\n
+\t\t\t\t\t\t\t\'col_widths\': {}\r\n
+\t\t\t\t\t\t};\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\ttable.find(\'colgroup\').children().each(function(i) {\r\n
+\t\t\t\t\t\t\tdocument[\'metadata\'][\'col_widths\'][\'c\' + i] = (jQuery(this).attr(\'width\') + \'\').replace(\'px\', \'\');\r\n
+\t\t\t\t\t\t});\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\tdocuments.push(document); //append to documents\r\n
+\t\t\t\t\t});\r\n
+\t\t\t\t\treturn documents;\r\n
+\t\t\t\t},\r\n
+\t\t\t\thtml: function() {\r\n
+\t\t\t\t\treturn jS.sheetDecorateRemove(true);\r\n
+\t\t\t\t}\r\n
+\t\t\t},\r\n
+\t\t\tsheetSyncSizeToDivs: function() {\r\n
+\t\t\t\tvar newSheetWidth = 0;\r\n
+\t\t\t\tjS.obj.barTop().find(\'div\').each(function() {\r\n
+\t\t\t\t\tnewSheetWidth += parseInt(jQuery(this).outerWidth());\r\n
+\t\t\t\t});\r\n
+\t\t\t\tjS.obj.sheet().width(newSheetWidth);\r\n
+\t\t\t},\r\n
+\t\t\tsheetSyncSizeToCols: function(o) {\r\n
+\t\t\t\tvar newSheetWidth = 0;\r\n
+\t\t\t\to.find(\'colgroup col\').each(function() {\r\n
+\t\t\t\t\tnewSheetWidth += jQuery(this).width();\r\n
+\t\t\t\t});\r\n
+\t\t\t\to.width(newSheetWidth);\r\n
+\t\t\t},\r\n
+\t\t\tsheetSyncSize: function() {\r\n
+\t\t\t\tvar h = s.height;\r\n
+\t\t\t\tif (!h) {\r\n
+\t\t\t\t\th = 400; //Height really needs to be set by the parent\r\n
+\t\t\t\t} else if (h \074 200) {\r\n
+\t\t\t\t\th = 200;\r\n
+\t\t\t\t}\r\n
+\t\t\t\ts.parent\r\n
+\t\t\t\t\t.height(h)\r\n
+\t\t\t\t\t.width(s.width);\r\n
+\t\t\t\t\t\r\n
+\t\t\t\tvar w = s.width - jS.attrH.width(jS.obj.barLeftParent()) - (s.boxModelCorrection);\r\n
+\t\t\t\t\r\n
+\t\t\t\th = h - jS.attrH.height(jS.obj.controls()) - jS.attrH.height(jS.obj.barTopParent()) - (s.boxModelCorrection * 2);\r\n
+\t\t\t\t\r\n
+\t\t\t\tjS.obj.pane()\r\n
+\t\t\t\t\t.height(h)\r\n
+\t\t\t\t\t.width(w)\r\n
+\t\t\t\t\t.parent()\r\n
+\t\t\t\t\t\t.width(w);\r\n
+\t\t\t\t\r\n
+\t\t\t\tjS.obj.ui()\r\n
+\t\t\t\t\t.width(w + jS.attrH.width(jS.obj.barLeftParent()));\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\tjS.obj.barLeftParent()\r\n
+\t\t\t\t\t.height(h);\r\n
+\t\t\t\t\r\n
+\t\t\t\tjS.obj.barTopParent()\r\n
+\t\t\t\t\t.width(w)\r\n
+\t\t\t\t\t.parent()\r\n
+\t\t\t\t\t\t.width(w);\r\n
+\t\t\t},\r\n
+\t\t\tcellFind: function(v) {\r\n
+\t\t\t\tif(!v) {\r\n
+\t\t\t\t\tv = prompt("What are you looking for in this spreadsheet?");\r\n
+\t\t\t\t}\r\n
+\t\t\t\tif (v) {//We just do a simple uppercase/lowercase search.\r\n
+\t\t\t\t\tvar o = jS.obj.sheet().find(\'td:contains("\' + v + \'")\');\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tif (o.length \074 1) {\r\n
+\t\t\t\t\t\to = jS.obj.sheet().find(\'td:contains("\' + v.toLowerCase() + \'")\');\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tif (o.length \074 1) {\r\n
+\t\t\t\t\t\to = jS.obj.sheet().find(\'td:contains("\' + v.toUpperCase() + \'")\');\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\to = o.eq(0);\r\n
+\t\t\t\t\tif (o.length \076 0) {\r\n
+\t\t\t\t\t\tjS.cellEdit(o);\r\n
+\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\talert(\'No results found.\');\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t}\r\n
+\t\t\t},\r\n
+\t\t\tcellSetActiveBar: function(type, start, end) {\r\n
+\t\t\t\tvar loc = jS.sheetSize();\r\n
+\t\t\t\tvar first = (start \074 end ? start : end);\r\n
+\t\t\t\tvar last = (start \074 end ? end : start);\r\n
+\t\t\t\t\r\n
+\t\t\t\tvar setActive = function(td, rowStart, colStart, rowFollow, colFollow) {\r\n
+\t\t\t\t\tswitch (s.cellSelectModel) {\r\n
+\t\t\t\t\t\tcase \'oo\': //follow cursor behavior\r\n
+\t\t\t\t\t\t\tjS.cellEdit(jQuery(jS.getTd(jS.i, rowFollow, colFollow)));\r\n
+\t\t\t\t\t\t\tbreak;\r\n
+\t\t\t\t\t\tdefault: //stay at initial cell\r\n
+\t\t\t\t\t\t\tjS.cellEdit(jQuery(jS.getTd(jS.i, rowStart, colStart)));\r\n
+\t\t\t\t\t\t\tbreak;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tsetActive = function(td) { //save resources\r\n
+\t\t\t\t\t\treturn td;\r\n
+\t\t\t\t\t};\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\treturn td;\r\n
+\t\t\t\t};\r\n
+\r\n
+\t\t\t\tvar cycleFn;\r\n
+\r\n
+\t\t\t\tvar td = [];\r\n
+\t\t\t\t\r\n
+\t\t\t\tswitch (type) {\r\n
+\t\t\t\t\tcase \'col\':\r\n
+\t\t\t\t\t\tcycleFn = function() {\r\n
+\t\t\t\t\t\t\tfor (var i = 0; i \074= loc[0]; i++) { //rows\r\n
+\t\t\t\t\t\t\t\tfor (var j = first; j \074= last; j++) { //cols\r\n
+\t\t\t\t\t\t\t\t\ttd.push(jS.getTd(jS.i, i, j));\r\n
+\t\t\t\t\t\t\t\t\tjS.themeRoller.cell.setHighlighted(setActive(td[td.length - 1], 0, start, 0, end));\r\n
+\t\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t};\r\n
+\t\t\t\t\t\tbreak;\r\n
+\t\t\t\t\tcase \'row\':\r\n
+\t\t\t\t\t\tcycleFn = function() {\r\n
+\t\t\t\t\t\t\tfor (var i = first; i \074= last; i++) { //rows\r\n
+\t\t\t\t\t\t\t\tfor (var j = 0; j \074= loc[1]; j++) { //cols\r\n
+\t\t\t\t\t\t\t\t\ttd.push(jS.getTd(jS.i, i, j));\r\n
+\t\t\t\t\t\t\t\t\tjS.themeRoller.cell.setHighlighted(setActive(td[td.length - 1], start, 0, end, 0));\r\n
+\t\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t};\r\n
+\t\t\t\t\t\tbreak;\r\n
+\t\t\t\t\tcase \'all\':\r\n
+\t\t\t\t\t\tcycleFn = function() {\r\n
+\t\t\t\t\t\t\tsetActive = function(td) {\r\n
+\t\t\t\t\t\t\t\tjS.cellEdit(jQuery(td));\r\n
+\t\t\t\t\t\t\t\tsetActive = function() {};\r\n
+\t\t\t\t\t\t\t};\r\n
+\t\t\t\t\t\t\tfor (var i = 0; i \074= loc[0]; i++) {\r\n
+\t\t\t\t\t\t\t\tfor (var j = 0; j \074= loc[1]; j++) {\r\n
+\t\t\t\t\t\t\t\t\ttd.push(jS.getTd(jS.i, i, j));\r\n
+\t\t\t\t\t\t\t\t\tsetActive(td[td.length - 1]);\r\n
+\t\t\t\t\t\t\t\t\tjS.themeRoller.cell.setHighlighted(td[td.length - 1]);\r\n
+\t\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\tfirst = [0, 0];\r\n
+\t\t\t\t\t\t\tlast = loc;\r\n
+\t\t\t\t\t\t};\r\n
+\t\t\t\t\t\tbreak;\r\n
+\t\t\t\t}\r\n
+\t\t\t\t\r\n
+\t\t\t\tcycleFn();\r\n
+\t\t\t\t\r\n
+\t\t\t\tjS.highlightedLast.td = td;\r\n
+\t\t\t\tjS.highlightedLast.rowStart = first[0];\r\n
+\t\t\t\tjS.highlightedLast.colStart = first[1];\r\n
+\t\t\t\tjS.highlightedLast.rowEnd = last[0];\r\n
+\t\t\t\tjS.highlightedLast.colEnd = last[1];\r\n
+\t\t\t},\r\n
+\t\t\tsheetClearActive: function() {\r\n
+\t\t\t\tjS.obj.formula().val(\'\');\r\n
+\t\t\t\tjS.obj.barSelected().removeClass(jS.cl.barSelected);\r\n
+\t\t\t},\r\n
+\t\t\tgetTdRange: function(e, v, newFn, notSetFormula) {\r\n
+\t\t\t\tjS.cellLast.isEdit = true;\r\n
+\t\t\t\t\r\n
+\t\t\t\tvar range = function(loc) {\r\n
+\t\t\t\t\tif (loc.first[1] \076 loc.last[1] ||\r\n
+\t\t\t\t\t\tloc.first[0] \076 loc.last[0]\r\n
+\t\t\t\t\t) {\r\n
+\t\t\t\t\t\treturn {\r\n
+\t\t\t\t\t\t\tfirst: cE.columnLabelString(loc.last[1] + 1) + (loc.last[0] + 1),\r\n
+\t\t\t\t\t\t\tlast: cE.columnLabelString(loc.first[1] + 1) + (loc.first[0] + 1)\r\n
+\t\t\t\t\t\t};\r\n
+\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\treturn {\r\n
+\t\t\t\t\t\t\tfirst: cE.columnLabelString(loc.first[1] + 1) + (loc.first[0] + 1),\r\n
+\t\t\t\t\t\t\tlast: cE.columnLabelString(loc.last[1] + 1) + (loc.last[0] + 1)\r\n
+\t\t\t\t\t\t};\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t};\r\n
+\t\t\t\tvar label = function(loc) {\r\n
+\t\t\t\t\tvar rangeLabel = range(loc);\r\n
+\t\t\t\t\tvar v2 = v + \'\';\r\n
+\t\t\t\t\tv2 = (v2.match(/=/) ? v2 : \'=\' + v2); //make sure we can use this value as a formula\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tif (newFn || v2.charAt(v2.length - 1) != \'(\') { //if a function is being sent, make sure it can be called by wrapping it in ()\r\n
+\t\t\t\t\t\tv2 = v2 + (newFn ? newFn : \'\') + \'(\';\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tvar formula;\r\n
+\t\t\t\t\tvar lastChar = \'\';\r\n
+\t\t\t\t\tif (rangeLabel.first != rangeLabel.last) {\r\n
+\t\t\t\t\t\tformula = rangeLabel.first + \':\' + rangeLabel.last;\r\n
+\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\tformula = rangeLabel.first;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tif (v2.charAt(v2.length - 1) == \'(\') {\r\n
+\t\t\t\t\t\tlastChar = \')\';\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\treturn v2 + formula + lastChar;\r\n
+\t\t\t\t};\r\n
+\t\t\t\tvar newVal = \'\';\r\n
+\t\t\t\t\r\n
+\t\t\t\tif (e) { //if from an event, we use mousemove method\r\n
+\t\t\t\t\tvar loc = {\r\n
+\t\t\t\t\t\tfirst: jS.getTdLocation([e.target])\r\n
+\t\t\t\t\t};\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tvar sheet = jS.obj.sheet().mousemove(function(e) {\r\n
+\t\t\t\t\t\tloc.last = jS.getTdLocation([e.target]);\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\tnewVal = label(loc);\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\tif (!notSetFormula) {\r\n
+\t\t\t\t\t\t\tjS.obj.formula().val(newVal);\r\n
+\t\t\t\t\t\t\tjS.obj.inPlaceEdit().val(newVal);\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t});\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tjQuery(document).one(\'mouseup\', function() {\r\n
+\t\t\t\t\t\tsheet.unbind(\'mousemove\');\r\n
+\t\t\t\t\t\treturn newVal;\r\n
+\t\t\t\t\t});\r\n
+\t\t\t\t} else {\r\n
+\t\t\t\t\tvar cells = jS.obj.cellHighlighted().not(jS.obj.cellActive());\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tif (cells.length) {\r\n
+\t\t\t\t\t\tvar loc = { //tr/td column and row index\r\n
+\t\t\t\t\t\t\tfirst: jS.getTdLocation(cells.first()),\r\n
+\t\t\t\t\t\t\tlast: jS.getTdLocation(cells.last())\r\n
+\t\t\t\t\t\t};\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\tnewVal = label(loc);\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\tif (!notSetFormula) {\r\n
+\t\t\t\t\t\t\tjS.obj.formula().val(newVal);\r\n
+\t\t\t\t\t\t\tjS.obj.inPlaceEdit().val(newVal);\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\treturn newVal;\r\n
+\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\treturn \'\';\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t}\r\n
+\t\t\t},\r\n
+\t\t\tgetTdId: function(tableI, row, col) {\r\n
+\t\t\t\treturn I + \'_table\' + tableI + \'_cell_c\' + col + \'_r\' + row;\r\n
+\t\t\t},\r\n
+\t\t\tgetTd: function(tableI, row, col) {\r\n
+\t\t\t\treturn document.getElementById(jS.getTdId(tableI, row, col));\r\n
+\t\t\t},\r\n
+\t\t\tgetTdLocation: function(td) {\r\n
+\t\t\t\tvar col = parseInt(td[0].cellIndex);\r\n
+\t\t\t\tvar row = parseInt(td[0].parentNode.rowIndex);\r\n
+\t\t\t\treturn [row, col];\r\n
+\t\t\t\t// The row and col are 1-based.\r\n
+\t\t\t},\r\n
+\t\t\tgetBarLeftIndex: function(o) {\r\n
+\t\t\t\tvar i = jQuery.trim(jQuery(o).text());\r\n
+\t\t\t\treturn parseInt(i) - 1;\r\n
+\t\t\t},\r\n
+\t\t\tgetBarTopIndex: function(o) {\r\n
+\t\t\t\tvar i = cE.columnLabelIndex(jQuery.trim(jQuery(o).text()));\r\n
+\t\t\t\treturn parseInt(i) - 1;\r\n
+\t\t\t},\r\n
+\t\t\ttableCellProvider: function(tableI) {\r\n
+\t\t\t\tthis.tableBodyId = jS.id.sheet + tableI;\r\n
+\t\t\t\tthis.tableI = tableI;\r\n
+\t\t\t\tthis.cells = {};\r\n
+\t\t\t},\r\n
+\t\t\ttableCell: function(tableI, row, col) {\r\n
+\t\t\t\tthis.tableBodyId = jS.id.sheet + tableI;\r\n
+\t\t\t\tthis.tableI = tableI;\r\n
+\t\t\t\tthis.row = row;\r\n
+\t\t\t\tthis.col = col;\r\n
+\t\t\t\tthis.value = jS.EMPTY_VALUE;\r\n
+\t\t\t\t\r\n
+\t\t\t\t//this.prototype = new cE.cell();\r\n
+\t\t\t},\r\n
+\t\t\tEMPTY_VALUE: {},\r\n
+\t\t\ttime: {\r\n
+\t\t\t\tnow: new Date(),\r\n
+\t\t\t\tlast: new Date(),\r\n
+\t\t\t\tdiff: function() {\r\n
+\t\t\t\t\treturn Math.abs(Math.ceil(this.last.getTime() - this.now.getTime()) / 1000).toFixed(5);\r\n
+\t\t\t\t},\r\n
+\t\t\t\tset: function() {\r\n
+\t\t\t\t\tthis.last = this.now;\r\n
+\t\t\t\t\tthis.now = new Date();\r\n
+\t\t\t\t},\r\n
+\t\t\t\tget: function() {\r\n
+\t\t\t\t\treturn this.now.getHours() + \':\' + this.now.getMinutes() + \':\' + this.now.getSeconds();\r\n
+\t\t\t\t}\r\n
+\t\t\t},\r\n
+\t\t\tlog: function(msg) {  //The log prints: {Current Time}, {Seconds from last log};{msg}\r\n
+\t\t\t\tjS.time.set();\r\n
+\t\t\t\tjS.obj.log().prepend(jS.time.get() + \', \' + jS.time.diff() + \'; \' + msg + \'\074br /\076\\n\');\r\n
+\t\t\t},\r\n
+\t\t\treplaceWithSafeImg: function(o) {  //ensures all pictures will load and keep their respective bar the same size.\r\n
+\t\t\t\to.each(function() {\t\t\t\r\n
+\t\t\t\t\tvar src = jQuery(this).attr(\'src\');\r\n
+\t\t\t\t\tjQuery(this).replaceWith(jS.controlFactory.safeImg(src, jS.getTdLocation(jQuery(this).parent())[0]));\r\n
+\t\t\t\t});\r\n
+\t\t\t},\r\n
+\t\t\t\r\n
+\t\t\tisDirty:  false,\r\n
+\t\t\tsetDirty: function(dirty) { jS.isDirty = dirty; },\r\n
+\t\t\tappendToFormula: function(v, o) {\r\n
+\t\t\t\tvar formula = jS.obj.formula();\r\n
+\t\t\t\t\r\n
+\t\t\t\tvar fV = formula.val();\r\n
+\t\t\t\t\r\n
+\t\t\t\tif (fV.charAt(0) != \'=\') {\r\n
+\t\t\t\t\tfV = \'=\' + fV;\r\n
+\t\t\t\t}\r\n
+\t\t\t\t\r\n
+\t\t\t\tformula.val(fV + v);\r\n
+\t\t\t},\r\n
+\t\t\tcellUndoable: {\r\n
+\t\t\t\tundoOrRedo: function(undo) {\r\n
+\t\t\t\t\tif (!undo \046\046 this.i \076 0) {\r\n
+\t\t\t\t\t\tthis.i--;\r\n
+\t\t\t\t\t} else if (undo \046\046 this.i \074 this.stack.length) {\r\n
+\t\t\t\t\t\tthis.i++;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tthis.get().clone().each(function() {\r\n
+\t\t\t\t\t\tvar o = jQuery(this);\r\n
+\t\t\t\t\t\tvar id = o.attr(\'undoable\');\r\n
+\t\t\t\t\t\tif (id) {\r\n
+\t\t\t\t\t\t\tjQuery(\'#\' + id).replaceWith(\r\n
+\t\t\t\t\t\t\t\to\r\n
+\t\t\t\t\t\t\t\t\t.removeAttr(\'undoable\')\r\n
+\t\t\t\t\t\t\t\t\t.attr(\'id\', id)\r\n
+\t\t\t\t\t\t\t);\r\n
+\t\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\t\tjS.log(\'Not available.\');\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t});\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tjS.themeRoller.cell.clearActive();\r\n
+\t\t\t\t\tjS.themeRoller.bar.clearActive();\r\n
+\t\t\t\t\tjS.themeRoller.cell.clearHighlighted();\r\n
+\t\t\t\t},\r\n
+\t\t\t\tget: function() { //gets the current cell\r\n
+\t\t\t\t\treturn jQuery(this.stack[this.i]);\r\n
+\t\t\t\t},\r\n
+\t\t\t\tadd: function(tds) {\r\n
+\t\t\t\t\tvar oldTds = tds.clone().each(function() {\r\n
+\t\t\t\t\t\tvar o = jQuery(this);\r\n
+\t\t\t\t\t\tvar id = o.attr(\'id\');\r\n
+\t\t\t\t\t\to\r\n
+\t\t\t\t\t\t\t.removeAttr(\'id\') //id can only exist in one location, on the sheet, so here we use the id as the attr \'undoable\'\r\n
+\t\t\t\t\t\t\t.attr(\'undoable\', id)\r\n
+\t\t\t\t\t\t\t.removeClass(jS.cl.cellHighlighted + \' \' + jS.cl.uiCellHighlighted);\r\n
+\t\t\t\t\t});\r\n
+\t\t\t\t\tif (this.stack.length \076 0) {\r\n
+\t\t\t\t\t\tthis.stack.unshift(oldTds);\r\n
+\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\tthis.stack = [oldTds];\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\tthis.i = -1;\r\n
+\t\t\t\t\tif (this.stack.length \076 20) { //undoable count, we want to be careful of too much memory consumption\r\n
+\t\t\t\t\t\tthis.stack.pop(); //drop the last value\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t},\r\n
+\t\t\t\ti: 0,\r\n
+\t\t\t\tstack: []\r\n
+\t\t\t},\r\n
+\t\t\tsheetSize: function() {\r\n
+\t\t\t\treturn jS.getTdLocation(jS.obj.sheet().find(\'td:last\'));\r\n
+\t\t\t},\r\n
+\t\t\ttoggleState:  function(newS) {\r\n
+\t\t\t\tif (s.allowToggleState) {\r\n
+\t\t\t\t\ts.editable = !s.editable;\r\n
+\t\t\t\t\tjS.obj.tabContainer().remove();\r\n
+\t\t\t\t\tvar sheets = jS.obj.sheetAll().clone();\r\n
+\t\t\t\t\torigParent.children().remove();\r\n
+\t\t\t\t\tjS.openSheet(sheets);\r\n
+\t\t\t\t}\r\n
+\t\t\t}\r\n
+\t\t};\r\n
+\r\n
+\t\tjS.tableCellProvider.prototype = {\r\n
+\t\t\tgetCell: function(tableI, row, col) {\r\n
+\t\t\t\tif (typeof(col) == "string") {\r\n
+\t\t\t\t\tcol = cE.columnLabelIndex(col);\r\n
+\t\t\t\t}\r\n
+\t\t\t\tvar key = tableI + "," + row + "," + col;\r\n
+\t\t\t\tvar cell = this.cells[key];\r\n
+\t\t\t\tif (!cell) {\r\n
+\t\t\t\t\tvar td = jS.getTd(tableI, row - 1, col - 1);\r\n
+\t\t\t\t\tif (td) {\r\n
+\t\t\t\t\t\tcell = this.cells[key] = new jS.tableCell(tableI, row, col);\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t}\r\n
+\t\t\t\treturn cell;\r\n
+\t\t\t},\r\n
+\t\t\tgetNumberOfColumns: function(row) {\r\n
+\t\t\t\tvar tableBody = document.getElementById(this.tableBodyId);\r\n
+\t\t\t\tif (tableBody) {\r\n
+\t\t\t\t\tvar tr = tableBody.rows[row];\r\n
+\t\t\t\t\tif (tr) {\r\n
+\t\t\t\t\t\treturn tr.cells.length;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t}\r\n
+\t\t\t\treturn 0;\r\n
+\t\t\t},\r\n
+\t\t\ttoString: function() {\r\n
+\t\t\t\tresult = "";\r\n
+\t\t\t\tjQuery(\'#\' + (this.tableBodyId) + \' tr\').each(function() {\r\n
+\t\t\t\t\tresult += this.innerHTML.replace(/\\n/g, "") + "\\n";\r\n
+\t\t\t\t});\r\n
+\t\t\t\treturn result;\r\n
+\t\t\t}\r\n
+\t\t};\r\n
+\r\n
+\t\tjS.tableCell.prototype = {\r\n
+\t\t\ttd: null,\r\n
+\t\t\tgetTd: function() {\r\n
+\t\t\t\tif (!this.td) { //this attempts to check if the td is cached, then cache it if not, then return it\r\n
+\t\t\t\t\tthis.td = document.getElementById(jS.getTdId(this.tableI, this.row - 1, this.col - 1));\t\r\n
+\t\t\t\t}\r\n
+\t\t\t\t\r\n
+\t\t\t\treturn this.td;\r\n
+\t\t\t},\r\n
+\t\t\tsetValue: function(v, e) {\r\n
+\t\t\t\tthis.error = e;\r\n
+\t\t\t\tthis.value = v;\r\n
+\t\t\t\tjQuery(this.getTd()).html(v ? v: \'\'); //I know this is slower than innerHTML = \'\', but sometimes stability just rules!\r\n
+\t\t\t},\r\n
+\t\t\tgetValue: function() {\r\n
+\t\t\t\tvar v = this.value;\r\n
+\t\t\t\tif (v === jS.EMPTY_VALUE \046\046 !this.getFormula()) {\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tv = jQuery(this.getTd()).text(); //again, stability rules!\r\n
+\r\n
+\t\t\t\t\tv = this.value = (v.length \076 0 ? cE.parseFormulaStatic(v) : null);\r\n
+\t\t\t\t}\r\n
+\t\t\t\t\r\n
+\t\t\t\treturn (v === jS.EMPTY_VALUE ? null: v);\r\n
+\t\t\t},\r\n
+\t\t\tgetFormat: function() {\r\n
+\t\t\t\treturn jQuery(this.getTd()).attr("format");\r\n
+\t\t\t},\r\n
+\t\t\tsetFormat: function(v) {\r\n
+\t\t\t\tjQuery(this.getTd()).attr("format", v);\r\n
+\t\t\t},\r\n
+\t\t\tgetFormulaFunc: function() {\r\n
+\t\t\t\treturn this.formulaFunc;\r\n
+\t\t\t},\r\n
+\t\t\tsetFormulaFunc: function(v) {\r\n
+\t\t\t\tthis.formulaFunc = v;\r\n
+\t\t\t},\r\n
+\t\t\tformula: null,\r\n
+\t\t\tgetFormula: function() {\r\n
+\t\t\t\tif (!this.formula) { //this if statement takes line breaks out of formulas so that they calculate better, then they are cached because the formulas to not change, on the cell \r\n
+\t\t\t\t\tvar v = jQuery(this.getTd()).attr(\'formula\'); \r\n
+\t\t\t\t\tthis.formula = (v ? v.replace(/\\n/g, \' \') : v);\r\n
+\t\t\t\t}\r\n
+\t\t\t\t\r\n
+\t\t\t\treturn this.formula;\r\n
+\t\t\t},\r\n
+\t\t\tsetFormula: function(v) {\r\n
+\t\t\t\tif (v \046\046 v.length \076 0) {\r\n
+\t\t\t\t\tjQuery(this.getTd()).attr(\'formula\', v);\r\n
+\t\t\t\t} else {\r\n
+\t\t\t\t\tjQuery(this.getTd()).removeAttr(\'formula\');\r\n
+\t\t\t\t}\r\n
+\t\t\t}\r\n
+\t\t};\r\n
+\r\n
+\t\tvar cE = { //Calculations Engine\r\n
+\t\t\tTEST: {},\r\n
+\t\t\tERROR: "#VALUE!",\r\n
+\t\t\tcFN: {//cFN = compiler functions, usually mathmatical\r\n
+\t\t\t\tsum: \tfunction(x, y) { return x + y; },\r\n
+\t\t\t\tmax: \tfunction(x, y) { return x \076 y ? x: y; },\r\n
+\t\t\t\tmin: \tfunction(x, y) { return x \074 y ? x: y; },\r\n
+\t\t\t\tcount: \tfunction(x, y) { return (y != null) ? x + 1: x; },\r\n
+\t\t\t\tclean: function(v) {\r\n
+\t\t\t\t\tif (typeof(v) == \'string\') {\r\n
+\t\t\t\t\t\tv = v.replace(cE.regEx.amp, \'\046\')\r\n
+\t\t\t\t\t\t\t\t.replace(cE.regEx.nbsp, \' \')\r\n
+\t\t\t\t\t\t\t\t.replace(/\\n/g,\'\')\r\n
+\t\t\t\t\t\t\t\t.replace(/\\r/g,\'\');\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\treturn v;\r\n
+\t\t\t\t}\r\n
+\t\t\t},\r\n
+\t\t\tfn: {//fn = standard functions used in cells\r\n
+\t\t\t\tHTML: function(v) {\r\n
+\t\t\t\t\treturn jQuery(v);\r\n
+\t\t\t\t},\r\n
+\t\t\t\tIMG: function(v) {\r\n
+\t\t\t\t\treturn jS.controlFactory.safeImg(v, cE.calcState.row, cE.calcState.col);\r\n
+\t\t\t\t},\r\n
+\t\t\t\tAVERAGE:\tfunction(values) { \r\n
+\t\t\t\t\tvar arr = cE.foldPrepare(values, arguments);\r\n
+\t\t\t\t\treturn cE.fn.SUM(arr) / cE.fn.COUNT(arr); \r\n
+\t\t\t\t},\r\n
+\t\t\t\tAVG: \t\tfunction(values) { \r\n
+\t\t\t\t\treturn cE.fn.AVERAGE(values);\r\n
+\t\t\t\t},\r\n
+\t\t\t\tCOUNT: \t\tfunction(values) { return cE.fold(cE.foldPrepare(values, arguments), cE.cFN.count, 0); },\r\n
+\t\t\t\tSUM: \t\tfunction(values) { return cE.fold(cE.foldPrepare(values, arguments), cE.cFN.sum, 0, true); },\r\n
+\t\t\t\tMAX: \t\tfunction(values) { return cE.fold(cE.foldPrepare(values, arguments), cE.cFN.max, Number.MIN_VALUE, true); },\r\n
+\t\t\t\tMIN: \t\tfunction(values) { return cE.fold(cE.foldPrepare(values, arguments), cE.cFN.min, Number.MAX_VALUE, true); },\r\n
+\t\t\t\tABS\t: \t\tfunction(v) { return Math.abs(cE.fn.N(v)); },\r\n
+\t\t\t\tCEILING: \tfunction(v) { return Math.ceil(cE.fn.N(v)); },\r\n
+\t\t\t\tFLOOR: \t\tfunction(v) { return Math.floor(cE.fn.N(v)); },\r\n
+\t\t\t\tINT: \t\tfunction(v) { return Math.floor(cE.fn.N(v)); },\r\n
+\t\t\t\tROUND: \t\tfunction(v, decimals) {\r\n
+\t\t\t\t\treturn cE.fn.FIXED(v, (decimals ? decimals : 0), false);\r\n
+\t\t\t\t},\r\n
+\t\t\t\tRAND: \t\tfunction(v) { return Math.random(); },\r\n
+\t\t\t\tRND: \t\tfunction(v) { return Math.random(); },\r\n
+\t\t\t\tTRUE: \t\tfunction() { return \'TRUE\'; },\r\n
+\t\t\t\tFALSE: \t\tfunction() { return \'FALSE\'; },\r\n
+\t\t\t\tNOW: \t\tfunction() { return new Date ( ); },\r\n
+\t\t\t\tTODAY: \t\tfunction() { return Date( Math.floor( new Date ( ) ) ); },\r\n
+\t\t\t\tDAYSFROM: \tfunction(year, month, day) { \r\n
+\t\t\t\t\treturn Math.floor( (new Date() - new Date (year, (month - 1), day)) / 86400000);\r\n
+\t\t\t\t},\r\n
+\t\t\t\tIF:\t\t\tfunction(v, t, f){\r\n
+\t\t\t\t\tt = cE.cFN.clean(t);\r\n
+\t\t\t\t\tf = cE.cFN.clean(f);\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\ttry { v = eval(v); } catch(e) {};\r\n
+\t\t\t\t\ttry { t = eval(t); } catch(e) {};\r\n
+\t\t\t\t\ttry { t = eval(t); } catch(e) {};\r\n
+\r\n
+\t\t\t\t\tif (v == \'true\' || v == true || v \076 0 || v == \'TRUE\') {\r\n
+\t\t\t\t\t\treturn t;\r\n
+\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\treturn f;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t},\r\n
+\t\t\t\tFIXED: \t\tfunction(v, decimals, noCommas) { \r\n
+\t\t\t\t\tif (decimals == null) {\r\n
+\t\t\t\t\t\tdecimals = 2;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\tvar x = Math.pow(10, decimals);\r\n
+\t\t\t\t\tvar n = String(Math.round(cE.fn.N(v) * x) / x); \r\n
+\t\t\t\t\tvar p = n.indexOf(\'.\');\r\n
+\t\t\t\t\tif (p \074 0) {\r\n
+\t\t\t\t\t\tp = n.length;\r\n
+\t\t\t\t\t\tn += \'.\';\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\tfor (var i = n.length - p - 1; i \074 decimals; i++) {\r\n
+\t\t\t\t\t\tn += \'0\';\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\tif (noCommas == true) {// Treats null as false.\r\n
+\t\t\t\t\t\treturn n;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\tvar arr\t= n.replace(\'-\', \'\').split(\'.\');\r\n
+\t\t\t\t\tvar result = [];\r\n
+\t\t\t\t\tvar first  = true;\r\n
+\t\t\t\t\twhile (arr[0].length \076 0) { // LHS of decimal point.\r\n
+\t\t\t\t\t\tif (!first) {\r\n
+\t\t\t\t\t\t\tresult.unshift(\',\');\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\tresult.unshift(arr[0].slice(-3));\r\n
+\t\t\t\t\t\tarr[0] = arr[0].slice(0, -3);\r\n
+\t\t\t\t\t\tfirst = false;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\tif (decimals \076 0) {\r\n
+\t\t\t\t\t\tresult.push(\'.\');\r\n
+\t\t\t\t\t\tvar first = true;\r\n
+\t\t\t\t\t\twhile (arr[1].length \076 0) { // RHS of decimal point.\r\n
+\t\t\t\t\t\t\tif (!first) {\r\n
+\t\t\t\t\t\t\t\tresult.push(\',\');\r\n
+\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\tresult.push(arr[1].slice(0, 3));\r\n
+\t\t\t\t\t\t\tarr[1] = arr[1].slice(3);\r\n
+\t\t\t\t\t\t\tfirst = false;\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\tif (v \074 0) {\r\n
+\t\t\t\t\t\treturn \'-\' + result.join(\'\');\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\treturn result.join(\'\');\r\n
+\t\t\t\t},\r\n
+\t\t\t\tTRIM:\t\tfunction(v) { \r\n
+\t\t\t\t\tif (typeof(v) == \'string\') {\r\n
+\t\t\t\t\t\tv = jQuery.trim(v);\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\treturn v;\r\n
+\t\t\t\t},\r\n
+\t\t\t\tHYPERLINK: function(link, name) {\r\n
+\t\t\t\t\tname = (name ? name : \'LINK\');\r\n
+\t\t\t\t\treturn jQuery(\'\074a href="\' + link + \'" target="_new" class="clickable"\076\' + name + \'\074/a\076\');\r\n
+\t\t\t\t},\r\n
+\t\t\t\tDOLLAR: \tfunction(v, decimals, symbol) { \r\n
+\t\t\t\t\tif (decimals == null) {\r\n
+\t\t\t\t\t\tdecimals = 2;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tif (symbol == null) {\r\n
+\t\t\t\t\t\tsymbol = \'$\';\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tvar r = cE.fn.FIXED(v, decimals, false);\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tif (v \076= 0) {\r\n
+\t\t\t\t\t\treturn symbol + r; \r\n
+\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\treturn \'-\' + symbol + r.slice(1);\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t},\r\n
+\t\t\t\tVALUE: \t\tfunction(v) { return parseFloat(v); },\r\n
+\t\t\t\tN: \t\t\tfunction(v) { if (v == null) {return 0;}\r\n
+\t\t\t\t\t\t\t\t  if (v instanceof Date) {return v.getTime();}\r\n
+\t\t\t\t\t\t\t\t  if (typeof(v) == \'object\') {v = v.toString();}\r\n
+\t\t\t\t\t\t\t\t  if (typeof(v) == \'string\') {v = parseFloat(v.replace(cE.regEx.n, \'\'));}\r\n
+\t\t\t\t\t\t\t\t  if (isNaN(v))\t\t   {return 0;}\r\n
+\t\t\t\t\t\t\t\t  if (typeof(v) == \'number\') {return v;}\r\n
+\t\t\t\t\t\t\t\t  if (v == true)\t\t\t {return 1;}\r\n
+\t\t\t\t\t\t\t\t  return 0; },\r\n
+\t\t\t\tPI: \t\tfunction() { return Math.PI; },\r\n
+\t\t\t\tPOWER: \t\tfunction(x, y) {\r\n
+\t\t\t\t\treturn Math.pow(x, y);\r\n
+\t\t\t\t},\r\n
+\t\t\t\t\r\n
+\t\t\t\t//Note, form objects are experimental, they don\'t work always as expected\r\n
+\t\t\t\tINPUT: {\r\n
+\t\t\t\t\tSELECT:\tfunction(v, noBlank) {\r\n
+\t\t\t\t\t\tif (s.editable) {\r\n
+\t\t\t\t\t\t\tv = cE.foldPrepare(v, arguments);\r\n
+\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\tvar selectObj = jS.controlFactory.input.select();\r\n
+\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\tif (!noBlank) {\r\n
+\t\t\t\t\t\t\t\tselectObj.append(\'\074option value=""\076Select a value\074/option\076\');\r\n
+\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\tfor (var i = 0; i \074 (v.length \074= 50 ? v.length : 50); i++) {\r\n
+\t\t\t\t\t\t\t\tif (v[i]) {\r\n
+\t\t\t\t\t\t\t\t\tselectObj.append(\'\074option value="\' + v[i] + \'"\076\' + v[i] + \'\074/option\076\');\r\n
+\t\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\tselectObj.val(jS.controlFactory.input.getValue(cE.thisCell));\r\n
+\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\treturn selectObj;\r\n
+\t\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\t\treturn jS.controlFactory.input.getValue(cE.thisCell);\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t},\r\n
+\t\t\t\t\tSELECTVAL:\tfunction(v) {\r\n
+\t\t\t\t\t\t//v = cE.foldPrepare(v, arguments);\r\n
+\t\t\t\t\t\treturn (s.editable ? jQuery(v).val() : v);\r\n
+\t\t\t\t\t},\r\n
+\t\t\t\t\tRADIO: function(v) {\r\n
+\t\t\t\t\t\tif (s.editable) {\r\n
+\t\t\t\t\t\t\tv = cE.foldPrepare(v, arguments);\r\n
+\t\t\t\t\t\t\tvar o = jS.controlFactory.input.radio(v, cE.thisCell);\r\n
+\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\to.find(\'input[value="\' + jS.controlFactory.input.getValue(cE.thisCell) + \'"]\').attr(\'CHECKED\', \'true\');\r\n
+\t\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\t\treturn jS.controlFactory.input.getValue(cE.thisCell);\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\treturn o;\r\n
+\t\t\t\t\t},\r\n
+\t\t\t\t\tRADIOVAL: function(v) {\r\n
+\t\t\t\t\t\t//v = cE.foldPrepare(v, arguments);\r\n
+\t\t\t\t\t\treturn (s.editable ? jQuery(v).find(\'input:checked\').val() : v);\r\n
+\t\t\t\t\t},\r\n
+\t\t\t\t\tCHECKBOX: function(v) {\r\n
+\t\t\t\t\t\tif (s.editable) {\r\n
+\t\t\t\t\t\t\tv = cE.foldPrepare(v, arguments)[0];\r\n
+\t\t\t\t\t\t\tvar o = jS.controlFactory.input.checkbox(v, cE.thisCell);\r\n
+\t\t\t\t\t\t\tvar checked = jS.controlFactory.input.getValue(cE.thisCell);\r\n
+\t\t\t\t\t\t\tif (checked == \'true\' || checked == true) {\r\n
+\t\t\t\t\t\t\t\to.attr(\'CHECKED\', \'TRUE\');\r\n
+\t\t\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\t\t\to.removeAttr(\'CHECKED\');\r\n
+\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\treturn o;\r\n
+\t\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\t\treturn jS.controlFactory.input.getValue(cE.thisCell);\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t},\r\n
+\t\t\t\t\tCHECKBOXVAL: function(v) {\r\n
+\t\t\t\t\t\treturn (s.editable ? jQuery(cE.foldPrepare(v, arguments)).val() : v);\r\n
+\t\t\t\t\t},\r\n
+\t\t\t\t\tISCHECKED:\t\tfunction(v) {\r\n
+\t\t\t\t\t\tvar checked = jQuery(v).is(":checked");\r\n
+\t\t\t\t\t\tif (checked) {\r\n
+\t\t\t\t\t\t\treturn \'TRUE\';\r\n
+\t\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\t\treturn \'FALSE\';\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t},\r\n
+\t\t\t\tCHART: {\r\n
+\t\t\t\t\tBAR:\tfunction(v, legend, axisLabels, w, h) {\r\n
+\t\t\t\t\t\treturn jS.controlFactory.chart(null, cE.foldPrepare(v, arguments), legend, axisLabels, w, h, cE.calcState.row - 1);\r\n
+\t\t\t\t\t},\r\n
+\t\t\t\t\tBARH:\tfunction(v, legend, axisLabels, w, h) {\r\n
+\t\t\t\t\t\treturn jS.controlFactory.chart(\'bhg\', cE.foldPrepare(v, arguments), legend, axisLabels, w, h, cE.calcState.row - 1);\r\n
+\t\t\t\t\t},\r\n
+\t\t\t\t\tSBAR:\tfunction(v, legend, axisLabels, w, h) {\r\n
+\t\t\t\t\t\treturn jS.controlFactory.chart(\'bvs\', cE.foldPrepare(v, arguments), legend, axisLabels, w, h, cE.calcState.row - 1);\r\n
+\t\t\t\t\t},\r\n
+\t\t\t\t\tSBARH:\tfunction(v, legend, axisLabels, w, h) {\r\n
+\t\t\t\t\t\treturn jS.controlFactory.chart(\'bhs\', cE.foldPrepare(v, arguments), legend, axisLabels, w, h, cE.calcState.row - 1);\r\n
+\t\t\t\t\t},\r\n
+\t\t\t\t\tLINE:\tfunction(v, legend, axisLabels, w, h) {\r\n
+\t\t\t\t\t\treturn jS.controlFactory.chart(\'lc\', cE.foldPrepare(v, arguments), legend, axisLabels, w, h, cE.calcState.row - 1);\r\n
+\t\t\t\t\t},\r\n
+\t\t\t\t\tPIE:\tfunction(v, legend, axisLabels, w, h) {\r\n
+\t\t\t\t\t\treturn jS.controlFactory.chart(\'p\', cE.foldPrepare(v, arguments), legend, axisLabels, w, h, cE.calcState.row - 1);\r\n
+\t\t\t\t\t},\r\n
+\t\t\t\t\tPIETHREED:\tfunction(v, legend, axisLabels, w, h) {\r\n
+\t\t\t\t\t\treturn jS.controlFactory.chart(\'p3\', cE.foldPrepare(v, arguments), legend, axisLabels, w, h, cE.calcState.row - 1);\r\n
+\t\t\t\t\t},\r\n
+\t\t\t\t\tCUSTOM:\tfunction(type, v, legend, axisLabels, w, h) {\r\n
+\t\t\t\t\t\treturn jS.controlFactory.chart(type, cE.foldPrepare(v, arguments), legend, axisLabels,  w, h, cE.calcState.row - 1);\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t}\r\n
+\t\t\t},\r\n
+\t\t\tcalcState: {},\r\n
+\t\t\tcalc: function(cellProvider, context, startFuel) {\r\n
+\t\t\t\t// Returns null if all done with a complete calc() run.\r\n
+\t\t\t\t// Else, returns a non-null continuation function if we ran out of fuel.  \r\n
+\t\t\t\t// The continuation function can then be later invoked with more fuel value.\r\n
+\t\t\t\t// The fuelStart is either null (which forces a complete calc() to the finish) \r\n
+\t\t\t\t// or is an integer \076 0 to slice up long calc() runs.  A fuelStart number\r\n
+\t\t\t\t// is roughly matches the number of cells to visit per calc() run.\r\n
+\t\t\t\tcE.calcState = { \r\n
+\t\t\t\t\tcellProvider:\tcellProvider, \r\n
+\t\t\t\t\tcontext: \t\t(context != null ? context: {}),\r\n
+\t\t\t\t\trow: \t\t\t1, \r\n
+\t\t\t\t\tcol: \t\t\t1,\r\n
+\t\t\t\t\ti:\t\t\t\tcellProvider.tableI,\r\n
+\t\t\t\t\tdone:\t\t\tfalse,\r\n
+\t\t\t\t\tstack:\t\t\t[],\r\n
+\t\t\t\t\tcalcMore: \t\tfunction(moreFuel) {\r\n
+\t\t\t\t\t\t\t\t\t\tcE.calcState.fuel = moreFuel;\r\n
+\t\t\t\t\t\t\t\t\t\treturn cE.calcLoop();\r\n
+\t\t\t\t\t\t\t\t\t}\r\n
+\t\t\t\t};\r\n
+\t\t\t\treturn cE.calcState.calcMore(startFuel);\r\n
+\t\t\t},\r\n
+\t\t\tcell: function() {\r\n
+\t\t\t\tprototype: {// Cells don\'t know their coordinates, to make shifting easier.\r\n
+\t\t\t\t\tgetError = \t\t\tfunction()\t { return this.error; },\r\n
+\t\t\t\t\tgetValue = \t\t\tfunction()\t { return this.value; },\r\n
+\t\t\t\t\tsetValue = \t\t\tfunction(v, e) { this.value = v; this.error = e; },\r\n
+\t\t\t\t\tgetFormula\t = \t\tfunction()  { return this.formula; },\t // Like "=1+2+3" or "\'hello" or "1234.5"\r\n
+\t\t\t\t\tsetFormula\t = \t\tfunction(v) { this.formula = v; },\r\n
+\t\t\t\t\tgetFormulaFunc = \tfunction()  { return this.formulaFunc; },\r\n
+\t\t\t\t\tsetFormulaFunc = \tfunction(v) { this.formulaFunc = v; },\r\n
+\t\t\t\t\ttoString = \t\t\tfunction() { return "Cell:[" + this.getFormula() + ": " + this.getValue() + ": " + this.getError() + "]"; };\r\n
+\t\t\t\t}\r\n
+\t\t\t}, // Prototype setup is later.\r\n
+\t\t\tcolumnLabelIndex: function(str) {\r\n
+\t\t\t\t// Converts A to 1, B to 2, Z to 26, AA to 27.\r\n
+\t\t\t\tvar num = 0;\r\n
+\t\t\t\tfor (var i = 0; i \074 str.length; i++) {\r\n
+\t\t\t\t\tvar digit = str.toUpperCase().charCodeAt(i) - 65 + 1;\t   // 65 == \'A\'.\r\n
+\t\t\t\t\tnum = (num * 26) + digit;\r\n
+\t\t\t\t}\r\n
+\t\t\t\treturn num;\r\n
+\t\t\t},\r\n
+\t\t\tparseLocation: function(locStr) { // With input of "A1", "B4", "F20",\r\n
+\t\t\t\tif (locStr != null \046\046\t\t\t\t\t\t\t\t  // will return [1,1], [4,2], [20,6].\r\n
+\t\t\t\t\tlocStr.length \076 0 \046\046\r\n
+\t\t\t\t\tlocStr != "\046nbsp;") {\r\n
+\t\t\t\t\tfor (var firstNum = 0; firstNum \074 locStr.length; firstNum++) {\r\n
+\t\t\t\t\t\tif (locStr.charCodeAt(firstNum) \074= 57) {// 57 == \'9\'\r\n
+\t\t\t\t\t\t\tbreak;\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\treturn [ parseInt(locStr.substring(firstNum)),\r\n
+\t\t\t\t\t\t\t cE.columnLabelIndex(locStr.substring(0, firstNum)) ];\r\n
+\t\t\t\t} else {\r\n
+\t\t\t\t\treturn null;\r\n
+\t\t\t\t}\r\n
+\t\t\t},\r\n
+\t\t\tcolumnLabelString: function(index) {\r\n
+\t\t\t\t// The index is 1 based.  Convert 1 to A, 2 to B, 25 to Y, 26 to Z, 27 to AA, 28 to AB.\r\n
+\t\t\t\t// TODO: Got a bug when index \076 676.  675==YZ.  676==YZ.  677== AAA, which skips ZA series.\r\n
+\t\t\t\t//\t   In the spirit of billg, who needs more than 676 columns anyways?\r\n
+\t\t\t\tvar b = (index - 1).toString(26).toUpperCase();   // Radix is 26.\r\n
+\t\t\t\tvar c = [];\r\n
+\t\t\t\tfor (var i = 0; i \074 b.length; i++) {\r\n
+\t\t\t\t\tvar x = b.charCodeAt(i);\r\n
+\t\t\t\t\tif (i \074= 0 \046\046 b.length \076 1) {\t\t\t\t   // Leftmost digit is special, where 1 is A.\r\n
+\t\t\t\t\t\tx = x - 1;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\tif (x \074= 57) {\t\t\t\t\t\t\t\t  // x \074= \'9\'.\r\n
+\t\t\t\t\t\tc.push(String.fromCharCode(x - 48 + 65)); // x - \'0\' + \'A\'.\r\n
+\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\tc.push(String.fromCharCode(x + 10));\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t}\r\n
+\t\t\t\treturn c.join("");\r\n
+\t\t\t},\r\n
+\t\t\tregEx: {\r\n
+\t\t\t\tn: \t\t\t\t\t/[\\$,\\s]/g,\r\n
+\t\t\t\tcell: \t\t\t\t/\\$?([a-zA-Z]+)\\$?([0-9]+)/g, //A1\r\n
+\t\t\t\trange: \t\t\t\t/\\$?([a-zA-Z]+)\\$?([0-9]+):\\$?([a-zA-Z]+)\\$?([0-9]+)/g, //A1:B4\r\n
+\t\t\t\tremoteCell:\t\t\t/\\$?(SHEET+)\\$?([0-9]+):\\$?([a-zA-Z]+)\\$?([0-9]+)/g, //SHEET1:A1\r\n
+\t\t\t\tremoteCellRange: \t/\\$?(SHEET+)\\$?([0-9]+):\\$?([a-zA-Z]+)\\$?([0-9]+):\\$?([a-zA-Z]+)\\$?([0-9]+)/g, //SHEET1:A1:B4\r\n
+\t\t\t\tsheet: \t\t\t\t/SHEET/,\r\n
+\t\t\t\tcellInsensitive: \t\t\t\t/\\$?([a-zA-Z]+)\\$?([0-9]+)/gi, //a1\r\n
+\t\t\t\trangeInsensitive: \t\t\t\t/\\$?([a-zA-Z]+)\\$?([0-9]+):\\$?([a-zA-Z]+)\\$?([0-9]+)/gi, //a1:a4\r\n
+\t\t\t\tremoteCellInsensitive:\t\t\t/\\$?(SHEET+)\\$?([0-9]+):\\$?([a-zA-Z]+)\\$?([0-9]+)/gi, //sheet1:a1\r\n
+\t\t\t\tremoteCellRangeInsensitive: \t/\\$?(SHEET+)\\$?([0-9]+):\\$?([a-zA-Z]+)\\$?([0-9]+):\\$?([a-zA-Z]+)\\$?([0-9]+)/gi, //sheet1:a1:b4\r\n
+\t\t\t\tsheetInsensitive:\t/SHEET/i,\r\n
+\t\t\t\tamp: \t\t\t\t/\046/g,\r\n
+\t\t\t\tgt: \t\t\t\t/\074/g,\r\n
+\t\t\t\tlt: \t\t\t\t/\076/g,\r\n
+\t\t\t\tnbsp: \t\t\t\t/\046nbsp;/g\r\n
+\t\t\t},\r\n
+\t\t\tstr: {\r\n
+\t\t\t\tamp: \t\'\046amp;\',\r\n
+\t\t\t\tlt: \t\'\046lt;\',\r\n
+\t\t\t\tgt: \t\'\046gt;\',\r\n
+\t\t\t\tnbsp: \t\'\046nbps;\'\r\n
+\t\t\t},\r\n
+\t\t\tparseFormula: function(formula, dependencies, thisTableI) { // Parse formula (without "=" prefix) like "123+SUM(A1:A6)/D5" into JavaScript expression string.\r\n
+\t\t\t\tvar nrows = null;\r\n
+\t\t\t\tvar ncols = null;\r\n
+\t\t\t\tif (cE.calcState.cellProvider != null) {\r\n
+\t\t\t\t\tnrows = cE.calcState.cellProvider.nrows;\r\n
+\t\t\t\t\tncols = cE.calcState.cellProvider.ncols;\r\n
+\t\t\t\t}\r\n
+\t\t\t\t\r\n
+\t\t\t\t//Cell References Range - Other Tables\r\n
+\t\t\t\tformula = formula.replace(cE.regEx.remoteCellRange, \r\n
+\t\t\t\t\tfunction(ignored, TableStr, tableI, startColStr, startRowStr, endColStr, endRowStr) {\r\n
+\t\t\t\t\t\tvar res = [];\r\n
+\t\t\t\t\t\tvar startCol = cE.columnLabelIndex(startColStr);\r\n
+\t\t\t\t\t\tvar startRow = parseInt(startRowStr);\r\n
+\t\t\t\t\t\tvar endCol   = cE.columnLabelIndex(endColStr);\r\n
+\t\t\t\t\t\tvar endRow   = parseInt(endRowStr);\r\n
+\t\t\t\t\t\tif (ncols != null) {\r\n
+\t\t\t\t\t\t\tendCol = Math.min(endCol, ncols);\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\tif (nrows != null) {\r\n
+\t\t\t\t\t\t\tendRow = Math.min(endRow, nrows);\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\tfor (var r = startRow; r \074= endRow; r++) {\r\n
+\t\t\t\t\t\t\tfor (var c = startCol; c \074= endCol; c++) {\r\n
+\t\t\t\t\t\t\t\tres.push("SHEET" + (tableI) + ":" + cE.columnLabelString(c) + r);\r\n
+\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\treturn "[" + res.join(",") + "]";\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t);\r\n
+\t\t\t\t\r\n
+\t\t\t\t//Cell References Fixed - Other Tables\r\n
+\t\t\t\tformula = formula.replace(cE.regEx.remoteCell, \r\n
+\t\t\t\t\tfunction(ignored, tableStr, tableI, colStr, rowStr) {\r\n
+\t\t\t\t\t\ttableI = parseInt(tableI) - 1;\r\n
+\t\t\t\t\t\tcolStr = colStr.toUpperCase();\r\n
+\t\t\t\t\t\tif (dependencies != null) {\r\n
+\t\t\t\t\t\t\tdependencies[\'SHEET\' + (tableI) + \':\' + colStr + rowStr] = [parseInt(rowStr), cE.columnLabelIndex(colStr), tableI];\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\treturn "(cE.calcState.cellProvider.getCell((" + (tableI) + "),(" + (rowStr) + "),\\"" + (colStr) + "\\").getValue())";\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t);\r\n
+\t\t\t\t\r\n
+\t\t\t\t//Cell References Range\r\n
+\t\t\t\tformula = formula.replace(cE.regEx.range, \r\n
+\t\t\t\t\tfunction(ignored, startColStr, startRowStr, endColStr, endRowStr) {\r\n
+\t\t\t\t\t\tvar res = [];\r\n
+\t\t\t\t\t\tvar startCol = cE.columnLabelIndex(startColStr);\r\n
+\t\t\t\t\t\tvar startRow = parseInt(startRowStr);\r\n
+\t\t\t\t\t\tvar endCol   = cE.columnLabelIndex(endColStr);\r\n
+\t\t\t\t\t\tvar endRow   = parseInt(endRowStr);\r\n
+\t\t\t\t\t\tif (ncols != null) {\r\n
+\t\t\t\t\t\t\tendCol = Math.min(endCol, ncols);\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\tif (nrows != null) {\r\n
+\t\t\t\t\t\t\tendRow = Math.min(endRow, nrows);\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\tfor (var r = startRow; r \074= endRow; r++) {\r\n
+\t\t\t\t\t\t\tfor (var c = startCol; c \074= endCol; c++) {\r\n
+\t\t\t\t\t\t\t\tres.push(cE.columnLabelString(c) + r);\r\n
+\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\treturn "[" + res.join(",") + "]";\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t);\r\n
+\t\t\t\t\r\n
+\t\t\t\t//Cell References Fixed\r\n
+\t\t\t\tformula = formula.replace(cE.regEx.cell, \r\n
+\t\t\t\t\tfunction(ignored, colStr, rowStr) {\r\n
+\t\t\t\t\t\tcolStr = colStr.toUpperCase();\r\n
+\t\t\t\t\t\tif (dependencies != null) {\r\n
+\t\t\t\t\t\t\tdependencies[\'SHEET\' + thisTableI + \':\' + colStr + rowStr] = [parseInt(rowStr), cE.columnLabelIndex(colStr), thisTableI];\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\treturn "(cE.calcState.cellProvider.getCell((" + thisTableI + "),(" + (rowStr) + "),\\"" + (colStr) + "\\").getValue())";\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t);\r\n
+\t\t\t\treturn formula;\r\n
+\t\t\t},\t\r\n
+\t\t\tparseFormulaStatic: function(formula) { // Parse static formula value like "123.0" or "hello" or "\'hello world" into JavaScript value.\r\n
+\t\t\t\tif (formula == null) {\r\n
+\t\t\t\t\treturn null;\r\n
+\t\t\t\t} else {\r\n
+\t\t\t\t\tvar formulaNum = formula.replace(cE.regEx.n, \'\');\r\n
+\t\t\t\t\tvar value = parseFloat(formulaNum);\r\n
+\t\t\t\t\tif (isNaN(value)) {\r\n
+\t\t\t\t\t\tvalue = parseInt(formulaNum);\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\tif (isNaN(value)) {\r\n
+\t\t\t\t\t\tvalue = (formula.charAt(0) == "\\\'" ? formula.substring(1): formula);\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\treturn value;\r\n
+\t\t\t\t}\r\n
+\t\t\t},\r\n
+\t\t\tcalcLoop: function() {\r\n
+\t\t\t\tif (cE.calcState.done == true) {\r\n
+\t\t\t\t\treturn null;\r\n
+\t\t\t\t} else {\r\n
+\t\t\t\t\twhile (cE.calcState.fuel == null || cE.calcState.fuel \076 0) {\r\n
+\t\t\t\t\t\tif (cE.calcState.stack.length \076 0) {\r\n
+\t\t\t\t\t\t\tvar workFunc = cE.calcState.stack.pop();\r\n
+\t\t\t\t\t\t\tif (workFunc != null) {\r\n
+\t\t\t\t\t\t\t\tworkFunc(cE.calcState);\r\n
+\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t} else if (cE.calcState.cellProvider.formulaCells != null) {\r\n
+\t\t\t\t\t\t\tif (cE.calcState.cellProvider.formulaCells.length \076 0) {\r\n
+\t\t\t\t\t\t\t\tvar loc = cE.calcState.cellProvider.formulaCells.shift();\r\n
+\t\t\t\t\t\t\t\tcE.visitCell(cE.calcState.i, loc[0], loc[1]);\r\n
+\t\t\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\t\t\tcE.calcState.done = true;\r\n
+\t\t\t\t\t\t\t\treturn null;\r\n
+\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\t\tif (cE.visitCell(cE.calcState.i, cE.calcState.row, cE.calcState.col) == true) {\r\n
+\t\t\t\t\t\t\t\tcE.calcState.done = true;\r\n
+\t\t\t\t\t\t\t\treturn null;\r\n
+\t\t\t\t\t\t\t}\r\n
+\r\n
+\t\t\t\t\t\t\tif (cE.calcState.col \076= cE.calcState.cellProvider.getNumberOfColumns(cE.calcState.row - 1)) {\r\n
+\t\t\t\t\t\t\t\tcE.calcState.row++;\r\n
+\t\t\t\t\t\t\t\tcE.calcState.col =  1;\r\n
+\t\t\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\t\t\tcE.calcState.col++; // Sweep through columns first.\r\n
+\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\tif (cE.calcState.fuel != null) {\r\n
+\t\t\t\t\t\t\tcE.calcState.fuel -= 1;\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\treturn cE.calcState.calcMore;\r\n
+\t\t\t\t}\r\n
+\t\t\t},\r\n
+\t\t\tformula: null,\r\n
+\t\t\tformulaFunc: null,\r\n
+\t\t\tvisitCell: function(tableI, r, c) { // Returns true if done with all cells.\r\n
+\t\t\t\tvar cell = cE.calcState.cellProvider.getCell(tableI, r, c);\r\n
+\t\t\t\tif (cell == null) {\r\n
+\t\t\t\t\treturn true;\r\n
+\t\t\t\t} else {\r\n
+\t\t\t\t\tvar value = cell.getValue();\r\n
+\t\t\t\t\tif (value == null) {\r\n
+\t\t\t\t\t\tthis.formula = cell.getFormula();\r\n
+\t\t\t\t\t\tif (this.formula) {\r\n
+\t\t\t\t\t\t\tif (this.formula.charAt(0) == \'=\') {\r\n
+\t\t\t\t\t\t\t\tthis.formulaFunc = cell.getFormulaFunc();\r\n
+\t\t\t\t\t\t\t\tif (this.formulaFunc == null ||\r\n
+\t\t\t\t\t\t\t\t\tthis.formulaFunc.formula != this.formula) {\r\n
+\t\t\t\t\t\t\t\t\tthis.formulaFunc = null;\r\n
+\t\t\t\t\t\t\t\t\ttry {\r\n
+\t\t\t\t\t\t\t\t\t\tvar dependencies = {};\r\n
+\t\t\t\t\t\t\t\t\t\tvar body = cE.parseFormula(this.formula.substring(1), dependencies, tableI);\r\n
+\t\t\t\t\t\t\t\t\t\tthis.formulaFunc = function() {\r\n
+\t\t\t\t\t\t\t\t\t\t\twith (cE.fn) {\r\n
+\t\t\t\t\t\t\t\t\t\t\t\treturn eval(body);\r\n
+\t\t\t\t\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\t\t\t\t};\r\n
+\t\t\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\t\t\t\tthis.formulaFunc.formula = this.formula;\r\n
+\t\t\t\t\t\t\t\t\t\tthis.formulaFunc.dependencies = dependencies;\r\n
+\t\t\t\t\t\t\t\t\t\tcell.setFormulaFunc(this.formulaFunc);\r\n
+\t\t\t\t\t\t\t\t\t} catch (e) {\r\n
+\t\t\t\t\t\t\t\t\t\tcell.setValue(cE.ERROR + \': \' + e);\r\n
+\t\t\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\t\tif (this.formulaFunc) {\r\n
+\t\t\t\t\t\t\t\t\tcE.calcState.stack.push(cE.makeFormulaEval(cell, r, c, this.formulaFunc));\r\n
+\r\n
+\t\t\t\t\t\t\t\t\t// Push the cell\'s dependencies, first checking for any cycles. \r\n
+\t\t\t\t\t\t\t\t\tvar dependencies = this.formulaFunc.dependencies;\r\n
+\t\t\t\t\t\t\t\t\tfor (var k in dependencies) {\r\n
+\t\t\t\t\t\t\t\t\t\tif (dependencies[k] instanceof Array \046\046\r\n
+\t\t\t\t\t\t\t\t\t\t\t(cE.checkCycles(dependencies[k][0], dependencies[k][1], dependencies[k][2]) == true) //same cell on same sheet\r\n
+\t\t\t\t\t\t\t\t\t\t) {\r\n
+\t\t\t\t\t\t\t\t\t\t\tcell.setValue(cE.ERROR + \': cycle detected\');\r\n
+\t\t\t\t\t\t\t\t\t\t\tcE.calcState.stack.pop();\r\n
+\t\t\t\t\t\t\t\t\t\t\treturn false;\r\n
+\t\t\t\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\t\t\tfor (var k in dependencies) {\r\n
+\t\t\t\t\t\t\t\t\t\tif (dependencies[k] instanceof Array) {\r\n
+\t\t\t\t\t\t\t\t\t\t\tcE.calcState.stack.push(cE.makeCellVisit(dependencies[k][2], dependencies[k][0], dependencies[k][1]));\r\n
+\t\t\t\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\t\t\tcell.setValue(cE.parseFormulaStatic(this.formula));\r\n
+\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\treturn false;\r\n
+\t\t\t\t}\r\n
+\t\t\t},\r\n
+\t\t\tmakeCellVisit: function(tableI, row, col) {\r\n
+\t\t\t\tvar fn = function() { \r\n
+\t\t\t\t\treturn cE.visitCell(tableI, row, col);\r\n
+\t\t\t\t};\r\n
+\t\t\t\tfn.row = row;\r\n
+\t\t\t\tfn.col = col;\r\n
+\t\t\t\treturn fn;\r\n
+\t\t\t},\r\n
+\t\t\tthisCell: null,\r\n
+\t\t\tmakeFormulaEval: function(cell, row, col, formulaFunc) {\r\n
+\t\t\t\tcE.thisCell = cell;\r\n
+\t\t\t\tvar fn = function() {\r\n
+\t\t\t\t\tvar v = "";\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\ttry {\r\n
+\t\t\t\t\t\tv = formulaFunc();\r\n
+\r\n
+\t\t\t\t\t\tswitch(typeof(v)) {\r\n
+\t\t\t\t\t\t\tcase "string":\r\n
+\t\t\t\t\t\t\t\tv = v\r\n
+\t\t\t\t\t\t\t\t\t.replace(cE.regEx.amp, cE.str.amp)\r\n
+\t\t\t\t\t\t\t\t\t.replace(cE.regEx.lt, cE.str.lt)\r\n
+\t\t\t\t\t\t\t\t\t.replace(cE.regEx.gt, cE.str.gt)\r\n
+\t\t\t\t\t\t\t\t\t.replace(cE.regEx.nbsp, cE.str.nbsp);\r\n
+\t\t\t\t\t\t}\r\n
+\r\n
+\t\t\t\t\t\tcell.setValue(v);\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t} catch (e) {\r\n
+\t\t\t\t\t\tcE.makeError(cell, e);\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t};\r\n
+\t\t\t\tfn.row = row;\r\n
+\t\t\t\tfn.col = col;\r\n
+\t\t\t\treturn fn;\r\n
+\t\t\t},\r\n
+\t\t\tmakeError: function(cell, e) {\r\n
+\t\t\t\tvar msg = cE.ERROR + \': \' + msg;\r\n
+\t\t\t\te.message.replace(/\\d+\\.?\\d*, \\d+\\.?\\d*/, function(v, i) {\r\n
+\t\t\t\t\ttry {\r\n
+\t\t\t\t\t\tv = v.split(\', \');\r\n
+\t\t\t\t\t\tmsg = (\'Cell:\' + cE.columnLabelString(parseInt(v[0]) + 1) + (parseInt(v[1])) + \' not found\');\r\n
+\t\t\t\t\t} catch (e) {}\r\n
+\t\t\t\t});\r\n
+\t\t\t\tcell.setValue(msg);\r\n
+\t\t\t},\r\n
+\t\t\tcheckCycles: function(row, col, tableI) {\r\n
+\t\t\t\tfor (var i = 0; i \074 cE.calcState.stack.length; i++) {\r\n
+\t\t\t\t\tvar item = cE.calcState.stack[i];\r\n
+\t\t\t\t\tif (item.row != null \046\046 \r\n
+\t\t\t\t\t\titem.col != null \046\046\r\n
+\t\t\t\t\t\titem.row == row  \046\046\r\n
+\t\t\t\t\t\titem.col == col \046\046\r\n
+\t\t\t\t\t\ttableI == cE.calcState.i\r\n
+\t\t\t\t\t) {\r\n
+\t\t\t\t\t\treturn true;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t}\r\n
+\t\t\t\treturn false;\r\n
+\t\t\t},\r\n
+\t\t\tfoldPrepare: function(firstArg, theArguments) { // Computes the best array-like arguments for calling fold().\r\n
+\t\t\t\tif (firstArg != null \046\046\r\n
+\t\t\t\t\tfirstArg instanceof Object \046\046\r\n
+\t\t\t\t\tfirstArg["length"] != null) {\r\n
+\t\t\t\t\treturn firstArg;\r\n
+\t\t\t\t} else {\r\n
+\t\t\t\t\treturn theArguments;\r\n
+\t\t\t\t}\r\n
+\t\t\t},\r\n
+\t\t\tfold: function(arr, funcOfTwoArgs, result, castToN) {\r\n
+\t\t\t\tfor (var i = 0; i \074 arr.length; i++) {\r\n
+\t\t\t\t\tresult = funcOfTwoArgs(result, (castToN == true ? cE.fn.N(arr[i]): arr[i]));\r\n
+\t\t\t\t}\r\n
+\t\t\t\treturn result;\r\n
+\t\t\t}\r\n
+\t\t};\r\n
+\t\t\r\n
+\t\tvar $window = jQuery(window);\r\n
+\t\t\r\n
+\t\t//initialize this instance of sheet\r\n
+\t\tjS.s = s;\r\n
+\t\t\r\n
+\t\ts.fnBefore();\r\n
+\t\t\r\n
+\t\tvar o; var emptyFN = function() {};\r\n
+\t\tif (s.buildSheet) {//override urlGet, this has some effect on how the topbar is sized\r\n
+\t\t\tif (typeof(s.buildSheet) == \'object\') {\r\n
+\t\t\t\to = s.buildSheet;\r\n
+\t\t\t} else if (s.buildSheet == true || s.buildSheet == \'true\') {\r\n
+\t\t\t\to = jQuery(s.parent.html());\r\n
+\t\t\t} else if (s.buildSheet.match(/x/i)) {\r\n
+\t\t\t\to = jS.controlFactory.sheet(s.buildSheet);\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t\t\r\n
+\t\t//We need to take the sheet out of the parent in order to get an accurate reading of it\'s height and width\r\n
+\t\t//jQuery(this).html(s.loading);\r\n
+\t\ts.parent.html(\'\');\r\n
+\t\t\r\n
+\t\ts.width = s.parent.width();\r\n
+\t\ts.height = s.parent.height();\r\n
+\t\t\r\n
+\t\t\r\n
+\t\t// Drop functions if they are not needed \046 save time in recursion\r\n
+\t\tif (s.log) {\r\n
+\t\t\ts.parent.after(\'\074textarea id="\' + jS.id.log + \'" class="\' + jS.cl.log + \'" /\076\');\r\n
+\t\t} else {\r\n
+\t\t\tjS.log = emptyFN;\r\n
+\t\t}\r\n
+\t\t\r\n
+\t\tif (!s.showErrors) {\r\n
+\t\t\tcE.makeError = emptyFN;\r\n
+\t\t}\r\n
+\t\t\r\n
+\t\tif (!jQuery.support.boxModel) {\r\n
+\t\t\ts.boxModelCorrection = 0;\r\n
+\t\t}\r\n
+\t\t\r\n
+\t\tif (!jQuery.scrollTo) {\r\n
+\t\t\tjS.followMe = emptyFN;\r\n
+\t\t}\r\n
+\t\t\r\n
+\t\tjS.log(\'Startup\');\r\n
+\t\t\r\n
+\t\t$window.resize(function() {\r\n
+\t\t\ts.width = s.parent.width();\r\n
+\t\t\ts.height = s.parent.height();\r\n
+\t\t\tjS.sheetSyncSize();\r\n
+\t\t});\r\n
+\t\t\r\n
+\t\tcE.fn = jQuery.extend(cE.fn, s.calculations);\r\n
+\t\t\r\n
+\t\t//this makes cells and functions case insensitive\r\n
+\t\tif (s.caseInsensitive) {\r\n
+\t\t\tcE.regEx.cell = cE.regEx.cellInsensitive;\r\n
+\t\t\tcE.regEx.range = cE.regEx.rangeInsensitive;\r\n
+\t\t\tcE.regEx.remoteCell = cE.regEx.remoteCellInsensitive;\r\n
+\t\t\tcE.regEx.remoteCellRange = cE.regEx.remoteCellRangeInsensitive;\r\n
+\t\t\tcE.regEx.sheet = cE.regEx.sheetInsensitive;\r\n
+\t\t\t\r\n
+\t\t\t//Make sheet functions upper and lower case compatible\r\n
+\t\t\tfor (var k in cE.fn) {\r\n
+\t\t\t\tvar kLower = k.toLowerCase();\r\n
+\t\t\t\tif (kLower != k) {\r\n
+\t\t\t\t\tcE.fn[kLower] = cE.fn[k];\r\n
+\t\t\t\t}\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t\t\r\n
+\t\tjS.openSheet(o);\r\n
+\t\t\r\n
+\t\treturn jS;\r\n
+\t},\r\n
+\tmakeTable : {\r\n
+\t\txml: function (data) { //Will not accept CDATA tags\r\n
+\t\t\tvar tables = jQuery(\'\074div /\076\');\r\n
+\t\t\r\n
+\t\t\tjQuery(data).find(\'document\').each(function(i) { //document\r\n
+\t\t\t\tvar table = jQuery(\'\074table /\076\');\r\n
+\t\t\t\tvar tableWidth = 0;\r\n
+\t\t\t\tvar colgroup = jQuery(\'\074colgroup /\076\').appendTo(table);\r\n
+\t\t\t\tvar tbody = jQuery(\'\074tbody /\076\');\r\n
+\t\t\t\r\n
+\t\t\t\tvar metaData = jQuery(this).find(\'metadata\');\r\n
+\t\t\t\tvar columnCount = metaData.find(\'columns\').text();\r\n
+\t\t\t\tvar rowCount = metaData.find(\'rows\').text();\r\n
+\t\t\t\tvar title = jQuery(this).attr(\'title\');\r\n
+\t\t\t\tvar data = jQuery(this).find(\'data\');\r\n
+\t\t\t\tvar col_widths = metaData.find(\'col_widths\').children();\r\n
+\t\t\t\t\r\n
+\t\t\t\t//go ahead and make the cols for colgroup\r\n
+\t\t\t\tfor (var i = 0; i \074 parseInt(jQuery.trim(columnCount)); i++) {\r\n
+\t\t\t\t\tvar w = parseInt(col_widths.eq(i).text().replace(\'px\', \'\'));\r\n
+\t\t\t\t\tw = (w ? w : 120); //if width doesn\'t exist, grab default\r\n
+\t\t\t\t\ttableWidth += w;\r\n
+\t\t\t\t\tcolgroup.append(\'\074col width="\' + w + \'px" style="width: \' + w + \'px;" /\076\');\r\n
+\t\t\t\t}\r\n
+\t\t\t\t\r\n
+\t\t\t\ttable\r\n
+\t\t\t\t\t.width(tableWidth)\r\n
+\t\t\t\t\t.attr(\'title\', title);\r\n
+\t\t\t\t\r\n
+\t\t\t\tfor (var i = 0; i \074 rowCount; i++) { //rows\r\n
+\t\t\t\t\tvar tds = data.find(\'r\' + i);\r\n
+\t\t\t\t\tvar height = (data.attr(\'h\') + \'\').replace(\'px\', \'\');\r\n
+\t\t\t\t\theight = parseInt(height);\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tvar thisRow = jQuery(\'\074tr height="\' + (height ? height : 18) + \'px" /\076\');\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tfor (var j = 0; j \074 columnCount; j++) { //cols, they need to be counted because we don\'t send them all on export\r\n
+\t\t\t\t\t\tvar newTd = \'\074td /\076\'; //we give td a default empty td\r\n
+\t\t\t\t\t\tvar td = tds.find(\'c\' + j);\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\tif (td) {\r\n
+\t\t\t\t\t\t\tvar text = td.text() + \'\';\r\n
+\t\t\t\t\t\t\tvar cl = td.attr(\'class\');\r\n
+\t\t\t\t\t\t\tvar style = td.attr(\'style\');\r\n
+\t\t\t\t\t\t\tvar colSpan = td.attr(\'colspan\');\r\n
+\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\tvar formula = \'\';\r\n
+\t\t\t\t\t\t\tif (text.charAt(0) == \'=\') {\r\n
+\t\t\t\t\t\t\t\tformula = \' formula="\' + text + \'"\';\r\n
+\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t\tnewTd = \'\074td\' + formula + \r\n
+\t\t\t\t\t\t\t\t(style ? \' style=\\"\' + style + \'\\"\' : \'\') + \r\n
+\t\t\t\t\t\t\t\t(cl ? \' class=\\"\' + cl + \'\\"\' : \'\') +\r\n
+\t\t\t\t\t\t\t\t(colSpan ? \' colspan=\\"\' + colSpan + \'\\"\' : \'\') +\r\n
+\t\t\t\t\t\t\t\t(height ? \' height=\\"\' + height + \'px\\"\' : \'\') +\r\n
+\t\t\t\t\t\t\t\'\076\' + text + \'\074/td\076\';\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\tthisRow.append(newTd);\r\n
+\t\t\t\t\t}\t\r\n
+\t\t\t\t\ttbody.append(thisRow);\r\n
+\t\t\t\t}\r\n
+\t\t\t\ttable\r\n
+\t\t\t\t\t.append(tbody)\r\n
+\t\t\t\t\t.appendTo(tables);\r\n
+\t\t\t});\r\n
+\t\t\t\r\n
+\t\t\treturn tables.children();\r\n
+\t\t},\r\n
+\t\tjson: function(data, makeEval) {\r\n
+\t\t\tsheet = (makeEval == true ? eval(\'(\' + data + \')\') : data);\r\n
+\t\t\t\r\n
+\t\t\tvar tables = jQuery(\'\074div /\076\');\r\n
+\t\t\t\r\n
+\t\t\tfor (var i = 0; i \074 sheet.length; i++) {\r\n
+\t\t\t\tvar colCount = parseInt(sheet[i].metadata.columns);\r\n
+\t\t\t\tvar rowCount = parseInt(sheet[i].metadata.rows);\r\n
+\t\t\t\ttitle = sheet[i].metadata.title;\r\n
+\t\t\t\ttitle = (title ? title : "Spreadsheet " + i);\r\n
+\t\t\t\r\n
+\t\t\t\tvar table = jQuery("\074table /\076");\r\n
+\t\t\t\tvar tableWidth = 0;\r\n
+\t\t\t\tvar colgroup = jQuery(\'\074colgroup /\076\').appendTo(table);\r\n
+\t\t\t\tvar tbody = jQuery(\'\074tbody /\076\');\r\n
+\t\t\t\t\r\n
+\t\t\t\t//go ahead and make the cols for colgroup\r\n
+\t\t\t\tif (sheet[i][\'metadata\'][\'col_widths\']) {\r\n
+\t\t\t\t\tfor (var x = 0; x \074 colCount; x++) {\r\n
+\t\t\t\t\t\tvar w = 120;\r\n
+\t\t\t\t\t\tif (sheet[i][\'metadata\'][\'col_widths\'][\'c\' + x]) {\r\n
+\t\t\t\t\t\t\tvar newW = parseInt(sheet[i][\'metadata\'][\'col_widths\'][\'c\' + x].replace(\'px\', \'\'));\r\n
+\t\t\t\t\t\t\tw = (newW ? newW : 120); //if width doesn\'t exist, grab default\r\n
+\t\t\t\t\t\t\ttableWidth += w;\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\tcolgroup.append(\'\074col width="\' + w + \'px" style="width: \' + w + \'px;" /\076\');\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t}\r\n
+\t\t\t\t\r\n
+\t\t\t\ttable\r\n
+\t\t\t\t\t.attr(\'title\', title)\r\n
+\t\t\t\t\t.width(tableWidth);\r\n
+\t\t\t\t\r\n
+\t\t\t\tfor (var x = 0; x \074 rowCount; x++) { //tr\r\n
+\t\t\t\t\tvar tr = jQuery(\'\074tr /\076\').appendTo(table);\r\n
+\t\t\t\t\ttr.attr(\'height\', (sheet[i][\'data\'][\'r\' + x].h ? sheet[i][\'data\'][\'r\' + x].h : 18));\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\tfor (var y = 0; y \074 colCount; y++) { //td\r\n
+\t\t\t\t\t\tvar cell = sheet[i][\'data\'][\'r\' + x][\'c\' + y];\r\n
+\t\t\t\t\t\tvar cur_val;\r\n
+\t\t\t\t\t\tvar colSpan;\r\n
+\t\t\t\t\t\tvar style;\r\n
+\t\t\t\t\t\tvar cl;\r\n
+\t\t\t\t\t\t\r\n
+\t\t\t\t\t\tif (cell) {\r\n
+\t\t\t\t\t\t\tcur_val = cell.value + \'\';\r\n
+\t\t\t\t\t\t\tcolSpan = cell.colSpan + \'\';\r\n
+\t\t\t\t\t\t\tstyle = cell.style + \'\';\r\n
+\t\t\t\t\t\t\tcl = cell.cl + \'\';\r\n
+\t\t\t\t\t\t}\r\n
+\r\n
+\t\t\t\t\t\tvar cur_td = jQuery(\'\074td\' + \r\n
+\t\t\t\t\t\t\t\t(style ? \' style=\\"\' + style + \'\\"\' : \'\' ) + \r\n
+\t\t\t\t\t\t\t\t(cl ? \' class=\\"\' + cl + \'\\"\' : \'\' ) + \r\n
+\t\t\t\t\t\t\t\t(colSpan ? \' colspan=\\"\' + colSpan + \'\\"\' : \'\' ) + \r\n
+\t\t\t\t\t\t\t\' /\076\');\r\n
+\t\t\t\t\t\ttry {\r\n
+\t\t\t\t\t\t\tif(typeof(cur_val) == "number") {\r\n
+\t\t\t\t\t\t\t\tcur_td.html(cur_val);\r\n
+\t\t\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\t\t\tif (cur_val.charAt(0) == \'=\') {\r\n
+\t\t\t\t\t\t\t\t\tcur_td.attr("formula", cur_val);\r\n
+\t\t\t\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\t\t\t\tcur_td.html(cur_val);\r\n
+\t\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t} catch (e) {}\r\n
+\t\t\t\t\t\r\n
+\t\t\t\t\t\ttr.append(cur_td);\r\n
+\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t}\r\n
+\t\t\t\t\r\n
+\t\t\t\ttables.append(table);\r\n
+\t\t\t}\r\n
+\t\t\treturn tables.children();\r\n
+\t\t},\r\n
+\t\tfromSize: function(size, h, w) {\r\n
+\t\t\tif (!size) {\r\n
+\t\t\t\tsize = "5x10";\r\n
+\t\t\t}\r\n
+\t\t\tsize = size.toLowerCase().split(\'x\');\r\n
+\r\n
+\t\t\tvar columnsCount = parseInt(size[0]);\r\n
+\t\t\tvar rowsCount = parseInt(size[1]);\r\n
+\t\t\t\r\n
+\t\t\t//Create elements before loop to make it faster.\r\n
+\t\t\tvar newSheet = jQuery(\'\074table /\076\');\r\n
+\t\t\tvar standardTd = \'\074td\076\074/td\076\';\r\n
+\t\t\tvar tds = \'\';\r\n
+\t\t\t\r\n
+\t\t\t//Using -- is many times faster than ++\r\n
+\t\t\tfor (var i = columnsCount; i \076= 1; i--) {\r\n
+\t\t\t\ttds += standardTd;\r\n
+\t\t\t}\r\n
+\r\n
+\t\t\tvar standardTr = \'\074tr\' + (h ? \' height="\' + h + \'px" style="height: \' + h + \'px;"\' : \'\') + \'\076\' + tds + \'\074/tr\076\';\r\n
+\t\t\tvar trs = \'\';\r\n
+\t\t\tfor (var i = rowsCount; i \076= 1; i--) {\r\n
+\t\t\t\ttrs += standardTr;\r\n
+\t\t\t}\r\n
+\t\t\t\r\n
+\t\t\tnewSheet.html(\'\074tbody\076\' + trs + \'\074/tbody\076\');\r\n
+\t\t\t\r\n
+\t\t\tif (w) {\r\n
+\t\t\t\tnewSheet.width(columnsCount * w);\r\n
+\t\t\t}\r\n
+\t\t\t\r\n
+\t\t\treturn newSheet;\r\n
+\t\t}\r\n
+\t},\r\n
+\tkillAll: function() {\r\n
+\t\tif (jQuery.sheet) {\r\n
+\t\t\tif (jQuery.sheet.instance) {\r\n
+\t\t\t\tfor (var i = 0; i \074 jQuery.sheet.instance.length; i++) {\r\n
+\t\t\t\t\tif (jQuery.sheet.instance[i]) {\r\n
+\t\t\t\t\t\tif (jQuery.sheet.instance[i].kill) {\r\n
+\t\t\t\t\t\t\tjQuery.sheet.instance[i].kill();\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t}\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t}\r\n
+};\r\n
+\r\n
+var key = {\r\n
+\tBACKSPACE: \t\t\t8,\r\n
+\tCAPS_LOCK: \t\t\t20,\r\n
+\tCOMMA: \t\t\t\t188,\r\n
+\tCONTROL: \t\t\t17,\r\n
+\tALT:\t\t\t\t18,\r\n
+\tDELETE: \t\t\t46,\r\n
+\tDOWN: \t\t\t\t40,\r\n
+\tEND: \t\t\t\t35,\r\n
+\tENTER: \t\t\t\t13,\r\n
+\tESCAPE: \t\t\t27,\r\n
+\tHOME: \t\t\t\t36,\r\n
+\tINSERT: \t\t\t45,\r\n
+\tLEFT: \t\t\t\t37,\r\n
+\tNUMPAD_ADD: \t\t107,\r\n
+\tNUMPAD_DECIMAL: \t110,\r\n
+\tNUMPAD_DIVIDE: \t\t111,\r\n
+\tNUMPAD_ENTER: \t\t108,\r\n
+\tNUMPAD_MULTIPLY: \t106,\r\n
+\tNUMPAD_SUBTRACT: \t109,\r\n
+\tPAGE_DOWN: \t\t\t34,\r\n
+\tPAGE_UP: \t\t\t33,\r\n
+\tPERIOD: \t\t\t190,\r\n
+\tRIGHT: \t\t\t\t39,\r\n
+\tSHIFT: \t\t\t\t16,\r\n
+\tSPACE: \t\t\t\t32,\r\n
+\tTAB: \t\t\t\t9,\r\n
+\tUP: \t\t\t\t38,\r\n
+\tF:\t\t\t\t\t70,\r\n
+\tV:\t\t\t\t\t86,\r\n
+\tY:\t\t\t\t\t89,\r\n
+\tZ:\t\t\t\t\t90\r\n
+};</string> </value>
+        </item>
+        <item>
+            <key> <string>next</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
