@@ -633,13 +633,13 @@ class TemplateTool (BaseTool):
       """
       Return list of scripts usable to filter diff
       """
-      # XXX, the or [] should not be there, the preference tool is
+      # XXX, the "or ()" should not be there, the preference tool is
       # inconsistent, the called method should not return None when
       # nothing is selected
-      script_id_list = self.getPortalObject().portal_preferences\
-        .getPreferredDiffFilterScriptIdList() or []
-          
-      return [getattr(self, x) for x in script_id_list]
+      portal = self.getPortalObject()
+      script_id_list = portal.portal_preferences\
+        .getPreferredDiffFilterScriptIdList() or ()
+      return [getattr(portal, x) for x in script_id_list]
 
     def getFilteredDiffAsHTML(self, diff):
       """
@@ -653,11 +653,13 @@ class TemplateTool (BaseTool):
       """
       diff_file_object = DiffFile(diff)
       diff_block_list = diff_file_object.getModifiedBlockList()
-      if len(diff_block_list):
-        for script in self.getDiffFilterScriptList():
-          for block, line_tuple in diff_block_list:
+      if diff_block_list:
+        script_list = self.getDiffFilterScriptList()
+        for block, line_tuple in diff_block_list:
+          for script in script_list:
             if script(line_tuple[0], line_tuple[1]):
               diff_file_object.children.remove(block)
+              break
       # XXX-Aurel : this method should return a text diff but
       # DiffFile does not provide yet such feature
       return diff_file_object
