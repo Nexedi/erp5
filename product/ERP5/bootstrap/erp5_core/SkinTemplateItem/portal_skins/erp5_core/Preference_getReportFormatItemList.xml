@@ -60,12 +60,18 @@ style = request.get(\'your_portal_skin\',\n
 \n
 item_list = [(\'\', \'\')]\n
 \n
-if style == \'ODS\':\n
-  return context.Base_getConversionFormatItemList(\n
-       base_content_type=\'application/vnd.oasis.opendocument.spreadsheet\')\n
-elif style == \'ODT\':\n
-  return context.Base_getConversionFormatItemList(\n
-       base_content_type=\'application/vnd.oasis.opendocument.text\')\n
+from Products.ERP5.Document.Document import ConversionError\n
+\n
+try:\n
+  if style == \'ODS\':\n
+    return context.Base_getConversionFormatItemList(\n
+         base_content_type=\'application/vnd.oasis.opendocument.spreadsheet\')\n
+  elif style == \'ODT\':\n
+    return context.Base_getConversionFormatItemList(\n
+         base_content_type=\'application/vnd.oasis.opendocument.text\')\n
+except ConversionError:\n
+  # OOo server not here, just return empty list\n
+  pass\n
 \n
 return item_list\n
 </string> </value>
@@ -112,6 +118,8 @@ return item_list\n
                             <string>request</string>
                             <string>style</string>
                             <string>item_list</string>
+                            <string>Products.ERP5.Document.Document</string>
+                            <string>ConversionError</string>
                           </tuple>
                         </value>
                     </item>

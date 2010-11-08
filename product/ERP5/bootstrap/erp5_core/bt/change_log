@@ -1,3 +1,6 @@
+2010-11-08 nicolas.dumazet
+* Allow changing preferences even if OOo server is not running
+
 2010-11-04 nicolas.dumazet
 * provide field in BaseType_view to set up interfaces on portal type classes
 
