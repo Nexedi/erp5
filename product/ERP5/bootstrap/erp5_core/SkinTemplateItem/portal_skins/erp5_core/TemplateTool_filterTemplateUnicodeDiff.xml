@@ -50,11 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Log import log\n
-log(\'old_line_list\', old_line_list)\n
-log(\'new_line_list\', new_line_list)\n
-log(\'replace\', new_line_list[0] == old_line_list[0].replace("string encoding","unicode encoding"))\n
-if len(old_line_list) == 1 and len(new_line_list) == 1:\n
+            <value> <string>if len(old_line_list) == 1 and len(new_line_list) == 1:\n
   if new_line_list[0] == old_line_list[0].replace("string encoding","unicode encoding") and \\\n
          old_line_list[0] == \'\074value\076 \074string encoding="cdata"\076\074![CDATA[\':\n
     return True\n
@@ -62,7 +58,14 @@ if len(old_line_list) == 1 and len(new_line_list) == 1:\n
   if new_line_list[0] == old_line_list[0].replace("string","unicode") and \\\n
      old_line_list[0] == "]]\076\074/string\076 \074/value\076":\n
     return True\n
-log("return False")\n
+\n
+elif not old_line_list and \'\\n\'.join(new_line_list) == """\\\n
+\074key\076 \074string\076output_encoding\074/string\076 \074/key\076\n
+\074value\076 \074string\076utf-8\074/string\076 \074/value\076\n
+\074/item\076\n
+\074item\076""":\n
+  return True\n
+\n
 return False\n
 </string> </value>
         </item>
@@ -86,13 +89,19 @@ return False\n
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>This script filter this kind of xml changes :\n
--  \074value\076 \074string encoding="cdata"\076\074![CDATA[\n
-+ \074value\076 \074unicode encoding="cdata"\076\074![CDATA[\n
-\n
-AND also\n
--  ]]\076\074/string\076 \074/value\076\n
-+ ]]\076\074/unicode\076 \074/value\076</string> </value>
+            <value> <string>This script filter the following xml changes :\n
+@@\n
+-            \074value\076 \074string encoding="cdata"\076\074![CDATA[\n
++            \074value\076 \074unicode encoding="cdata"\076\074![CDATA[\n
+@@\n
+-]]\076\074/string\076 \074/value\076\n
++]]\076\074/unicode\076 \074/value\076\n
+@@\n
++            \074key\076 \074string\076output_encoding\074/string\076 \074/key\076\n
++            \074value\076 \074string\076utf-8\074/string\076 \074/value\076\n
++        \074/item\076\n
++        \074item\076\n
+</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -120,11 +129,9 @@ AND also\n
                           <tuple>
                             <string>old_line_list</string>
                             <string>new_line_list</string>
-                            <string>Products.ERP5Type.Log</string>
-                            <string>log</string>
+                            <string>len</string>
                             <string>_getitem_</string>
                             <string>_getattr_</string>
-                            <string>len</string>
                             <string>True</string>
                             <string>False</string>
                           </tuple>

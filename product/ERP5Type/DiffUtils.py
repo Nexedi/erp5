@@ -158,11 +158,13 @@ class DiffFile:
       return []
     block_list = []
     for child in self.children:
-      old_line_list = [x[0].strip() for x in child.getOldCodeList()
-                       if x[0] is not None and x[1] == MODIFIED_DIFF_COLOR]
-      new_line_list = [x[0].strip() for x in child.getNewCodeList()
-                       if x[0] is not None and x[1] == MODIFIED_DIFF_COLOR]
-      if old_line_list and new_line_list:
+      old_line_list = [line.strip() for line, color in child.getOldCodeList()
+                       if line is not None and color in (MODIFIED_DIFF_COLOR,
+                                                         DELETED_DIFF_COLOR)]
+      new_line_list = [line.strip() for line, color in child.getNewCodeList()
+                       if line is not None and color in (MODIFIED_DIFF_COLOR,
+                                                         ADDITION_DIFF_COLOR)]
+      if old_line_list or new_line_list:
         block_list.append((child,(old_line_list, new_line_list)))
     return block_list
 
