@@ -88,14 +88,11 @@ from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 
 PICKLE_CLEANERS = {}
 
-class cleaner_for(object):
-
-    def __init__(self, classdef):
-        self.classdef = classdef
-
-    def __call__(self, callable):
-        PICKLE_CLEANERS[self.classdef] = callable
-        return callable
+def cleaner_for(classdef):
+  def wrapper(func):
+    PICKLE_CLEANERS[classdef] = func
+    return func
+  return wrapper
 
 # BBB: Remove this cleaner when we drop support for Zope 2.8
 @cleaner_for(ZopePageTemplate)

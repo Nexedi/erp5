@@ -41,6 +41,7 @@ from Products.MailHost.MailHost import MailHost
 from email import message_from_string
 import backportUnittest
 from Products.ERP5Type.Globals import PersistentMapping
+from Products.ERP5Type.Utils import simple_decorator
 from Products.ZSQLCatalog.SQLCatalog import Catalog
 
 class FileUpload(file):
@@ -316,23 +317,18 @@ def createZServer(log=os.devnull):
       hs.close()
 
 # decorators
-class reindex(object):
+@simple_decorator
+def reindex(func):
   """Decorator to commit transaction and flush activities after the method is
   called.
   """
-  def __init__(self, func):
-    self._func = func
-
-  def __get__(self, instance, cls=None):
-    self._instance = instance
-    return self
-  
-  def __call__(self, *args, **kw):
-    ret = self._func(self._instance, *args, **kw)
+  def wrapper(self, *args, **kw):
+    ret = func(self, *args, **kw)
     if kw.get('reindex', 1):
       transaction.commit()
-      self._instance.tic()
+      self.tic()
     return ret
+  return wrapper
 
 # Use this as a method or class decorator to tag it as TODO.
 # The test will be skipped:
