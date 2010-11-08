@@ -48,7 +48,8 @@ function clickSaveButton(act) {\n
   // Here we should use an even based approach - and logic in field class\n
   svg_canvas = window.frames["svgframe"].svgCanvas;\n
   svg_canvas.bind("saved", saveToField);\n
-  svg_canvas.save()\n
+  svg_canvas.save();\n
+  document.forms[0].elements[\'field_my_text_content\'].value = $.sheet.instance[0].getSource(true);\n
 } \n
 \n
 function saveToField(window, svg) {\n
