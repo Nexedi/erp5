@@ -1,8 +1,0 @@
-<allowed_content_type_list>
- <portal_type id="Web Illustration">
-  <item>Image</item>
- </portal_type>
- <portal_type id="Web Page Module">
-  <item>Web Illustration</item>
- </portal_type>
-</allowed_content_type_list>
