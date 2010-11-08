@@ -98,6 +98,13 @@ class AccountingPreference:
       'preference'  : 1,
       'write_permission': 'Manage properties',
       'mode'        : 'w'},
+    { 'id'          : 'preferred_accounting_transaction_line_funding_base_category',
+      'description' : 'Base category to use to specify analytics by funding'
+                      ' on accounting lines',
+      'type'        : 'string',
+      'preference'  : 1,
+      'write_permission': 'Manage properties',
+      'mode'        : 'w'},
     { 'id'          :
         'preferred_accounting_transaction_line_analytic_base_category',
       'description' : 'Base categories to use to specify analytics on '
