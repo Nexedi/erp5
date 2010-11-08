@@ -56,17 +56,13 @@ class PythonScriptThroughZMI(XMLObject):
 
     This class needs to be removed as soon as portal_skins is an ERP5 object
     """
-    meta_type = 'ERP5 Python Script Through ZMI'
-    portal_type = 'Python Script Through ZMI'
-    add_permission = Permissions.AddPortalContent
-
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-    constructors =  (manage_addPythonScriptFormThroughZMI, 
+    meta_type = 'ERP5 Python Script'
+    constructors =  (manage_addPythonScriptFormThroughZMI,
                      addPythonScriptThroughZMI)
     icon = None
+
+    def __init__(self, *args, **kw):
+      assert False
 
 class PythonScript(XMLObject, ZopePythonScript):
     """ Script python for ERP5
