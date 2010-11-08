@@ -85,6 +85,7 @@
                     <key> <string>Delete objects</string> </key>
                     <value>
                       <tuple>
+                        <string>Anonymous</string>
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Associate</string>
@@ -98,6 +99,7 @@
                     <key> <string>Modify portal content</string> </key>
                     <value>
                       <tuple>
+                        <string>Anonymous</string>
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Associate</string>
