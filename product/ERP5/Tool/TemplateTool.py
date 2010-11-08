@@ -56,7 +56,7 @@ import cPickle
 import posixpath
 from base64 import b64encode, b64decode
 from Products.ERP5Type.Message import translateString
-from zLOG import LOG, INFO
+from zLOG import LOG, INFO, WARNING
 from base64 import decodestring
 import subprocess
 
@@ -637,9 +637,14 @@ class TemplateTool (BaseTool):
       # inconsistent, the called method should not return None when
       # nothing is selected
       portal = self.getPortalObject()
-      script_id_list = portal.portal_preferences\
-        .getPreferredDiffFilterScriptIdList() or ()
-      return [getattr(portal, x) for x in script_id_list]
+      script_list = []
+      for script_id in portal.portal_preferences\
+         .getPreferredDiffFilterScriptIdList() or ():
+        try:
+          script_list.append(getattr(portal, script_id))
+        except AttributeError:
+          LOG("TemplateTool", WARNING, "Unable to find %r script" % script_id)
+      return script_list
 
     def getFilteredDiffAsHTML(self, diff):
       """
