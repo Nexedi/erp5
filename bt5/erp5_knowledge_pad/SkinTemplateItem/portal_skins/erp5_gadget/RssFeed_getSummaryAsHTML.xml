@@ -57,7 +57,7 @@
          tal:attributes="class python: test(is_read, \'teaser read\', \'teaser unread\');\n
                          onclick string:if(this.className!=\'teaser read\'){this.className=\'teaser read\';;MochiKit.Async.doSimpleXMLHttpRequest(\'Base_setRssItemReadInSelection\', {\'selection_name\':\'${selection_name}\',\'item\':\'${md5}\'})};;toggle(\'${dom_id}\');">\n
       <img class="thumbnail-image"\n
-           tal:condition="python: image not in ((), None,)"\n
+           tal:condition="python: image not in ((), None, [])"\n
            tal:attributes="src python: image[0]" alt="Thumbnail"/>\n
       <span class="document-title"\n
             tal:content="title"/> - \n

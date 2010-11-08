@@ -69,7 +69,7 @@ else:\n
 feed_url = str(preferences.get(\'preferred_rss_feed\',\'\'))\n
 username = str(preferences.get(\'preferred_username\',\'\'))\n
 password = str(preferences.get(\'preferred_password\',\'\'))\n
-results = context.Base_getRssDataAsDict(url = feed_url, username = username, password = password)\n
+results = context.Base_getRssDataAsDict(context, url = feed_url, username = username, password = password)\n
 readItemList = {}\n
 md5_list = []\n
 message_list = []\n
