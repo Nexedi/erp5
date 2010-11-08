@@ -548,7 +548,7 @@ class %s(XMLObject):
         from Products.ERP5Type.Utils import importLocalDocument
         local_product = self.Control_Panel.Products.ERP5Type
         app = local_product._p_jar.root()['Application']
-        importLocalDocument(class_id, document_path=class_path)
+        importLocalDocument(class_id, path=class_path)
 
         # Clear object cache and reset _aq_dynamic after reload
         self._clearCache()
