@@ -40,7 +40,7 @@ import os, re
 from DateTime import DateTime
 from cPickle import dumps, loads
 from App.config import getConfiguration
-from tempfile import gettempdir, mktemp
+from tempfile import gettempdir, mkdtemp
 from Products.CMFCore.utils import getToolByName
 import shutil
 from xml.sax.saxutils import escape
@@ -869,7 +869,7 @@ class SubversionTool(BaseTool):
           # add new file to the tree
           parent.sub_files.append(File(filename, str(status)))
     return something_modified and root
-  
+
   def extractBT(self, business_template):
     """ 
      Extract business template to hard drive
@@ -881,7 +881,7 @@ class SubversionTool(BaseTool):
     business_template.build()
     svn_path = self._getWorkingPath(self.getSubversionPath(business_template) \
     + os.sep)
-    path = mktemp() + os.sep
+    path = mkdtemp()
     try:
       # XXX: Big hack to make export work as expected.
       transaction.commit()
@@ -891,13 +891,9 @@ class SubversionTool(BaseTool):
       # add new files and copy
       self.addNewFiles(svn_path, path)
       self.goToWorkingCopy(business_template)
-    except (pysvn.ClientError, NotFound, AttributeError, \
-    Error), error:
+    finally:
       # Clean up
       shutil.rmtree(path)
-      raise error
-    # Clean up
-    self.activate().removeAllInList([path, ])
     
   def importBT(self, business_template):
     """

@@ -36,10 +36,29 @@ import sys
 from Products.ERP5Type.Utils import convertToUpperCase
 from MethodObject import Method
 from Products.ERP5Type.Globals import InitializeClass
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from AccessControl import ClassSecurityInfo
 from Products.PythonScripts.Utility import allow_class
-from tempfile import mktemp
+from tempfile import mkdtemp
 import shutil
+
+
+class getTransactionalDirectory(str):
+  """Returns a temporary directory that is automatically deleted when
+     transaction ends
+  """
+  def __new__(cls, tv_key):
+    tv = getTransactionalVariable()
+    try:
+      return str(tv[tv_key])
+    except KeyError:
+      path = mkdtemp()
+      tv[tv_key] = str.__new__(cls, path)
+      return path
+
+  def __del__(self):
+    shutil.rmtree(str(self))
+
 
 class SubversionError(Exception):
   """The base exception class for the Subversion interface.
@@ -284,25 +303,14 @@ try:
       status_list.reverse()
       return status_list
     
-    def removeAllInList(self, path_list):
-      """Remove all files and folders in list
-      """
-      for file_path in path_list:
-        shutil.rmtree(file_path)
-      
     def diff(self, path, revision1, revision2):
-      tmp = mktemp()
-      os.makedirs(tmp)
-      if not revision1 or not revision2:
-        diff = self.client.diff(tmp_path=tmp, url_or_path=path, recurse=False)
+      tmp_path = getTransactionalDirectory('SubversionClient.diff:tmp_dir')
+      if revision1 and revision2:
+        return self.client.diff(tmp_path, url_or_path=path, recurse=False,
+          revision1=pysvn.Revision(pysvn.opt_revision_kind.number,revision1),
+          revision2=pysvn.Revision(pysvn.opt_revision_kind.number,revision2))
       else:
-        diff = self.client.diff(tmp_path=tmp, url_or_path=path, \
-        recurse=False, revision1 = pysvn.Revision(pysvn.opt_revision_kind\
-        .number,revision1), revision2=pysvn.Revision(pysvn\
-        .opt_revision_kind.number,revision2))
-      # clean up temp dir
-      self.activate().removeAllInList([tmp, ])
-      return diff
+        return self.client.diff(tmp_path, url_or_path=path, recurse=False)
     
     def revert(self, path, recurse=False):
       try:
