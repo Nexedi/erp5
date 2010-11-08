@@ -90,7 +90,7 @@ class AssertLddLibs(unittest.TestCase):
   """Checks for dynamic libraries"""
 
   def test_ocropus(self):
-    """Senna as an library"""
+    """Ocropus"""
     result = os.system("ldd parts/ocropus/bin/ocropus | grep -q "
         "'parts/ocropus/lib/libocropus.so'")
     self.assertEqual(result, 0)
