@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
-# Copyright (c) 2008 Nexedi SARL and Contributors. All Rights Reserved.
-#          Łukasz Nowak <lukasz.nowak@ventis.com.pl>
+# Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly advised to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -23,21 +21,27 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 ##############################################################################
 
-import unittest
+import sys
+from Products.ERP5Legacy.tests import testLegacySimulationProduction
+sys.modules['Products.ERP5.tests.testProductionOrder'] = \
+sys.modules['Products.ERP5.tests.testProductionPackingList'] = \
+  testLegacySimulationProduction
 
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5.tests.testProductionOrderApparel import TestProductionOrderApparelMixin
-from Products.ERP5.tests.testProductionPackingList import TestProductionDelivery
+test_suite_list = []
+from Products.ERP5.tests.testProductionOrderApparel import *
+test_suite_list.append(test_suite)
+from Products.ERP5.tests.testProductionPackingListApparel import *
+test_suite_list.append(test_suite)
 
-class TestProductionDeliveryApparel(TestProductionOrderApparelMixin,
-    TestProductionDelivery, ERP5TypeTestCase):
-  pass # everything defined in testProductionPackingList shall pass
+from Products.ERP5Legacy.tests import Legacy_getBusinessTemplateList
+Legacy_getBusinessTemplateList(TestProductionOrderApparelMixin)
 
 def test_suite():
-  suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestProductionDeliveryApparel))
+  suite = test_suite_list[0]()
+  for test_suite in test_suite_list[1:]:
+    suite.addTests(test_suite())
   return suite

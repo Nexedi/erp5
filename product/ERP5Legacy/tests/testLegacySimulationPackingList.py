@@ -26,6 +26,10 @@
 #
 ##############################################################################
 
+import sys
+from Products.ERP5Legacy.tests import testLegacyRuleOrder
+sys.modules['Products.ERP5.tests.testOrder'] = testLegacyRuleOrder
+
 import unittest
 import transaction
 
@@ -34,7 +38,7 @@ from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5.Document.BusinessTemplate import getChainByType
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
-from testLegacyRuleOrder import TestOrderMixin
+from Products.ERP5.tests.testOrder import TestOrderMixin
 from DateTime import DateTime
 from Products.ERP5Type.Globals import PersistentMapping
 

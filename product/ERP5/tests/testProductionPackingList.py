@@ -31,8 +31,9 @@ import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
-from testProductionOrder import TestProductionOrderMixin
-from testPackingList import TestPackingListMixin
+from Products.ERP5.tests.testProductionOrder import TestProductionOrderMixin
+from Products.ERP5.tests.testPackingList import TestPackingListMixin
+from Products.ERP5.tests.utils import newSimulationExpectedFailure
 
 class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPackingListMixin, \
                           ERP5TypeTestCase):
@@ -401,6 +402,7 @@ class TestProductionDelivery(TestProductionPackingReportListMixin):
         self.transformation_portal_type,
         self.resource_portal_type,)
 
+  @newSimulationExpectedFailure
   def test_01_sourcingDelivery(self, quiet=0,
                                           run=run_all_test):
     """

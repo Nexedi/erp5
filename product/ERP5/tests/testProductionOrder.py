@@ -37,6 +37,7 @@ from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.CMFCore.utils import getToolByName
 from testOrder import TestOrderMixin
+from Products.ERP5.tests.utils import newSimulationExpectedFailure
 
 class TestProductionOrderMixin(TestOrderMixin):
 
@@ -1316,6 +1317,7 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
   def getTitle(self):
     return "Production Order"
 
+  @newSimulationExpectedFailure
   def test_01_testProductionSimulationExpand(self, quiet=0, run=run_all_test):
     """
       Test generation and update of order applied rule.
@@ -1340,6 +1342,7 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  @newSimulationExpectedFailure
   def test_02_testSourcingSimulationExpand(self, quiet=0, 
                                                      run=run_all_test):
     """
@@ -1366,6 +1369,7 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  @newSimulationExpectedFailure
   def test_03_testIndustrialPhase(self, quiet=0, run=run_all_test):
     """
     """
@@ -1393,6 +1397,7 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  @newSimulationExpectedFailure
   def test_04_testProductionSimulationBuild(self, quiet=0, run=run_all_test):
     """
     Test delivery building.
@@ -1419,6 +1424,7 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  @newSimulationExpectedFailure
   def test_05_testSourcingSimulationBuild(self, quiet=0, 
                                           run=run_all_test):
     """
@@ -1431,6 +1437,7 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
     sequence_list.addSequenceString(self.SOURCING_ORDER_SEQUENCE)
     sequence_list.play(self)
 
+  @newSimulationExpectedFailure
   def test_06_testIndustrialPhase(self, quiet=0, run=run_all_test):
     """
     Test delivery building.
@@ -1570,7 +1577,8 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
 
     sequence_list.play(self)
-    
+
+  @newSimulationExpectedFailure
   def test_08_testTransformationWithEfficiency(self, quiet=0, run=run_all_test):
     """
     Test, that efficiency from transformation applies correctly
@@ -1655,6 +1663,7 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
 
     sequence_list.play(self)
 
+  @newSimulationExpectedFailure
   def test_09_testTransformationWithVariation(self, quiet=0, run=run_all_test):
     """
     Test, that variation from transformation works correctly on order
