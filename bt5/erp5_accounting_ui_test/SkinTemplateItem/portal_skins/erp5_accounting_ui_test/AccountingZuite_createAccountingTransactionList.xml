@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -57,7 +54,7 @@
 \n
 # params\n
 section_title = \'My Organisation\'\n
-\n
+business_process = \'business_process_module/erp5_default_business_process\'\n
 portal = context.getPortalObject()\n
 accounting_module = portal.accounting_module\n
 year = 2005\n
@@ -133,6 +130,7 @@ for i in range(random.randint(5, 10)):\n
         source=section,\n
         destination_section=getOrganisationByTitle(\'Client 1\'),\n
         destination=getOrganisationByTitle(\'Client 1\'),\n
+        specialise=business_process,\n
         start_date=default_date, )\n
   line = pl.newContent(portal_type=\'Sale Packing List Line\',\n
                 resource_value=product,\n
@@ -191,6 +189,7 @@ for month in range(1, month_count + 1):\n
           created_by_builder=1,\n
           start_date=default_date,\n
           stop_date=default_date,\n
+          specialise=business_process,\n
           resource=euro_resource,\n
       )\n
     tr.newContent(portal_type=\'Sale Invoice Transaction Line\',\n
@@ -268,6 +267,7 @@ for month in range(1, month_count + 1):\n
         created_by_builder=1,\n
         start_date=default_date-5, # In purchase invoice transaction, stop_date is accounting operation date.\n
         stop_date=default_date,\n
+        specialise=business_process,\n
         resource=euro_resource,\n
     )\n
   tr.newContent(portal_type=\'Purchase Invoice Transaction Line\',\n
@@ -303,6 +303,7 @@ if add_draft_transactions:\n
           start_date=default_date,\n
           stop_date=default_date,\n
           resource=euro_resource,\n
+          specialise=business_process,\n
       )\n
     tr.newContent(portal_type=\'Sale Invoice Transaction Line\',\n
                   source=getAccountByTitle(\'Receivable\'),\n
@@ -363,6 +364,7 @@ return "Accounting Transactions Created."\n
                             <string>keep_grouping_reference</string>
                             <string>DateTime</string>
                             <string>section_title</string>
+                            <string>business_process</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>

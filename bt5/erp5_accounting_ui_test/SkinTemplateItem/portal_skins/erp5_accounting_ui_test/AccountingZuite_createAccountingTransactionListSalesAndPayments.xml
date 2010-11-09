@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -59,6 +56,7 @@ from DateTime import DateTime\n
 \n
 # params\n
 section_title = \'My Organisation\'\n
+business_process = \'business_process_module/erp5_default_business_process\'\n
 portal = context.getPortalObject()\n
 accounting_module = portal.accounting_module\n
 year = 2005\n
@@ -127,6 +125,7 @@ for month in range(1, month_count + 1):\n
             start_date=DateTime(year, month, day),\n
             stop_date=DateTime(year, month, day),\n
             resource=euro_resource,\n
+            specialise=business_process,\n
         )\n
       receivable_qty = -(amount * (1 + vat_rate))\n
       total_receivable_quantity += receivable_qty\n
@@ -231,6 +230,7 @@ return "Accounting Transactions Created."\n
                             <string>keep_grouping_reference</string>
                             <string>DateTime</string>
                             <string>section_title</string>
+                            <string>business_process</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
