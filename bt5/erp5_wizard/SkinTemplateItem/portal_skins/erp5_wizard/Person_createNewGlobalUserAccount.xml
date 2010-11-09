@@ -54,12 +54,14 @@
 \n
 if person is None:\n
   person = context\n
-kw = person.Person_getDataDict()\n
+\n
+kw = context.Person_getDataDict(person=person)\n
 kw[\'password\'] = password\n
 \n
 # explicitly check if username is unique\n
 if portal.Base_validatePersonReference(kw[\'reference\'], context.REQUEST):\n
   # create user in Authentification Server\n
+  kw[\'start_assignment\'] = len(person.Person_getAvailableAssignmentValueList())\n
   portal.portal_wizard.callRemoteProxyMethod(\n
                          \'WitchTool_createNewGlobalUserAccountFromExpressInstance\', \\\n
                          use_cache = 0, \\\n
@@ -119,6 +121,7 @@ else:\n
                             <string>None</string>
                             <string>_write_</string>
                             <string>_getitem_</string>
+                            <string>len</string>
                             <string>_apply_</string>
                             <string>ValueError</string>
                           </tuple>

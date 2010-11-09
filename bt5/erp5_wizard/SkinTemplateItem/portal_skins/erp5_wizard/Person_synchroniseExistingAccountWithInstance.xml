@@ -55,7 +55,7 @@
 if person is None:\n
   person = context\n
 \n
-kw = person.Person_getDataDict()\n
+kw = context.Person_getDataDict(person=person)\n
 \n
 # explicitly check if username is unique\n
 if portal.WizardTool_isPersonReferencePresent(kw[\'reference\']):\n

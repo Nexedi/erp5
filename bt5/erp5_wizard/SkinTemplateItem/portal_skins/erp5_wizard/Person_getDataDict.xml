@@ -50,13 +50,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if person is None:\n
-  person = context\n
-\n
-kw = {\'reference\': person.getReference(),\n
+            <value> <string>return {\'reference\': person.getReference(),\n
       \'validation_state\': person.getValidationState(),\n
+      \'email\': person.getDefaultEmailText(),\n
       \'erp5_uid\': context.ERP5Site_getExpressInstanceUid()}\n
-return kw\n
 </string> </value>
         </item>
         <item>
@@ -102,10 +99,8 @@ return kw\n
                         <value>
                           <tuple>
                             <string>person</string>
-                            <string>None</string>
-                            <string>context</string>
                             <string>_getattr_</string>
-                            <string>kw</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
