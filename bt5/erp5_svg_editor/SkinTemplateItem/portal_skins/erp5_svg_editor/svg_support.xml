@@ -7,10 +7,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_Cacheable__manager_id</string> </key>
-            <value> <string>http_cache</string> </value>
-        </item>
-        <item>
             <key> <string>_bind_names</string> </key>
             <value>
               <object>
@@ -38,28 +34,18 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <unicode>$(document).ready(function(){\n
-  $("iframe#svgframe").css("border", "0px");\n
-  $("button.save").click(function(){\n
-    svg_canvas = window.frames["svgframe"].svgCanvas;\n
-    $.ajax({\n
-      type: "POST",\n
-      url: "WebIllustration_setTextContent",\n
-      data: "text=" + svg_canvas.getSvgString(),\n
-   });\n
-  });\n
-  svg_canvas = window.frames["svgframe"].svgCanvas;\n
-  var text_content = $.ajax({\n
-               url: "WebIllustration_getTextContent",\n
-               async: false\n
-             }).responseText;\n
-  svg_canvas.setSvgString(text_content);\n
-})\n
-\n
-function clickSaveButton() {\n
-  svg_canvas = window.frames["svgframe"].svgCanvas;\n
-  document.forms[0].elements[\'field_my_text_content\'].value = svg_canvas.getSvgString();\n
-}</unicode> </value>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<script type="text/javascript" src="portal_skins/erp5_jquery/core/jquery.js"></script>\n
+<script type="text/javascript" src="svg-editor.erp5.js"></script>\n
+<iframe name="svgframe" \n
+        id="svgframe" \n
+        src="portal_skins/erp5_jquery/plugin/svg-editor/svg-editor.html" \n
+        width="100%" \n
+        height="570"/>\n
+
+
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -71,7 +57,7 @@ function clickSaveButton() {\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>svg-editor.erp5.js</string> </value>
+            <value> <string>svg_support</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>

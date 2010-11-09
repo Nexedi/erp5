@@ -36,11 +36,6 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<tal:block tal:replace="nothing">\n
-\n
-\n
-\n
-</tal:block>\n
 <tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
            xmlns:metal="http://xml.zope.org/namespaces/metal"\n
            xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
@@ -50,7 +45,7 @@
                                                           \'portal_skins/erp5_jquery/plugin/svg-editor/svg-editor.css\',\n
                                                           \'portal_skins/erp5_jquery/plugin/spinbtn/JQuerySpinBtn.css\',\n
 ];\n
-                         js_list_jquery_template python: [];\n
+                         js_list_jquery_template python: [\'svg-editor.erp5.js\'];\n
                          global css_list css_list | python:[];\n
                          global js_list js_list | python:[];\n
                          dummy  python:css_list.extend(css_list_jquery_template);\n
