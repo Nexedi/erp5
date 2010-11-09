@@ -5,15 +5,17 @@ import os
 # 'compile-directory', which is why the cd .../* would work.
 CMDS = """
 libtoolize -c -f
-aclocal
+aclocal %(aclocal-options)s
 autoheader
-automake -c -a -i
+automake -c -a -f
 autoconf
 touch sql/sql_yacc.yy
 """.strip()
 
 def pre_configure_hook(options, buildout):
-    os.system(CMDS)
+    os.system(CMDS % {
+        'aclocal-options':options.get('aclocal-options', '').strip(),
+    })
 
 def post_make_hook(options, buildout):
     try:
