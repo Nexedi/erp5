@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -68,6 +65,7 @@ source_node_id = "erp5_pdm_ui_test_source_node"\n
 destination_node_id = "erp5_pdm_ui_test_destination_node"\n
 \n
 resource_id = "erp5_pdm_ui_test_product"\n
+business_process = \'business_process_module/erp5_default_business_process\'\n
 \n
 quantity = 1\n
 \n
@@ -82,6 +80,7 @@ if state in [\'planned\', \'ordered\']:\n
     source_section=\'organisation_module/%s\' % source_node_id,\n
     destination=\'organisation_module/%s\' % destination_node_id,\n
     destination_section=\'organisation_module/%s\' % destination_node_id,\n
+    specialise=business_process,\n
     start_date=DateTime(),\n
   )\n
   order_line = order.newContent(\n
@@ -102,6 +101,7 @@ else:\n
     title=delivery_title,\n
     source=\'organisation_module/%s\' % source_node_id,\n
     destination=\'organisation_module/%s\' % destination_node_id,\n
+    specialise=business_process,\n
     start_date=DateTime(),\n
   )\n
   delivery_line = delivery.newContent(\n
@@ -183,6 +183,7 @@ return "Delivery Created."\n
                             <string>source_node_id</string>
                             <string>destination_node_id</string>
                             <string>resource_id</string>
+                            <string>business_process</string>
                             <string>quantity</string>
                             <string>module</string>
                             <string>order</string>
