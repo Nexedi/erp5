@@ -73,12 +73,6 @@ class AssertSoftwareRunable(unittest.TestCase):
     self.assertEqual(stdout, '')
     self.assertTrue(stderr.startswith('varnishd ('))
 
-  def test_Ocropus(self):
-    stdout, stderr = subprocess.Popen(["parts/ocropus/bin/ocropus"],
-        stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
-    self.assertEqual(stdout, '')
-    self.assertTrue('splitting books' in stderr)
-
   def test_TokyoCabinet(self):
     stdout, stderr = subprocess.Popen(["parts/tokyocabinet/bin/tcamgr",
       "version"],
@@ -212,8 +206,8 @@ class AssertMysql50Tritonn(unittest.TestCase):
 class AssertMysql51(unittest.TestCase):
   def test_ld_mysqld(self):
     elf_dict = readElfAsDict('parts/mysql-5.1/libexec/mysqld')
-    self.assertEqual(sorted(['libc', 'libcrypt', 'libdl', 'libgcc_s', 'libm',
-      'libnsl', 'libpthread', 'libstdc++']), elf_dict['library_list'])
+    self.assertEqual(sorted(['libc', 'libcrypt', 'libdl', 'libgcc_s', 'libm', 'libnsl',
+      'libpthread', 'libstdc++', 'libz']), elf_dict['library_list'])
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
         software in ['ncurses', 'zlib', 'readline']]
@@ -223,7 +217,7 @@ class AssertMysql51(unittest.TestCase):
   def test_ld_mysqlmanager(self):
     elf_dict = readElfAsDict('parts/mysql-5.1/libexec/mysqlmanager')
     self.assertEqual(sorted(['libc', 'libcrypt', 'libgcc_s', 'libm', 'libnsl',
-      'libpthread', 'libstdc++']), elf_dict['library_list'])
+      'libpthread', 'libstdc++', 'libz']), elf_dict['library_list'])
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
         software in ['ncurses', 'zlib', 'readline']]
