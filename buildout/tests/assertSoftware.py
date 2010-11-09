@@ -197,6 +197,30 @@ class AssertMysql50Tritonn(unittest.TestCase):
     self.assertEqual(sorted(expected_rpath_list), elf_dict['rpath_list'])
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
+  def test_ld_mysqladmin(self):
+    elf_dict = readElfAsDict('parts/mysql-tritonn-5.0/bin/mysqladmin')
+    self.assertEqual(sorted(['libc', 'libcrypt', 'libcrypto', 'libgcc_s', 'libm',
+      'libmysqlclient', 'libnsl', 'libssl', 'libstdc++', 'libz']), elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['ncurses', 'zlib', 'readline', 'openssl']]
+    expected_rpath_list.append(os.path.join(os.path.abspath(os.curdir),
+      'parts', 'mysql-tritonn-5.0', 'lib', 'mysql'))
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['rpath_list'])
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+  def test_ld_mysqldump(self):
+    elf_dict = readElfAsDict('parts/mysql-tritonn-5.0/bin/mysqldump')
+    self.assertEqual(sorted(['libc', 'libcrypt', 'libcrypto', 'libm',
+      'libmysqlclient', 'libnsl', 'libssl', 'libz']), elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['ncurses', 'zlib', 'readline', 'openssl']]
+    expected_rpath_list.append(os.path.join(os.path.abspath(os.curdir),
+      'parts', 'mysql-tritonn-5.0', 'lib', 'mysql'))
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['rpath_list'])
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
 class AssertMysql51(unittest.TestCase):
   def test_ld_mysqld(self):
     elf_dict = readElfAsDict('parts/mysql-5.1/libexec/mysqld')
