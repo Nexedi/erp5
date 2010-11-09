@@ -50,7 +50,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return context.generatePredicate(criterion_property_list=("start_date",))\n
+            <value> <string>if context.getTypeInfo() is None:\n
+  # Workaround: unit tests don\'t always install all the BT that\n
+  # provide the portal types used by \'erp5_simulation_test\' BT.\n
+  return context\n
+\n
+return context.generatePredicate(criterion_property_list=("start_date",))\n
 </string> </value>
         </item>
         <item>
@@ -89,6 +94,7 @@
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
