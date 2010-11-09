@@ -45,9 +45,9 @@ def readElfAsDict(f):
     if '(NEEDED)' in l:
       library_list.append(l.split(':')[1].strip(' []').split('.so')[0])
     elif '(RPATH)' in l:
-      rpath_list = l.split(':',1)[1].strip(' []').split(':')
+      rpath_list = [q.rstrip('/') for q in l.split(':',1)[1].strip(' []').split(':')]
     elif '(RUNPATH)' in l:
-      runpath_list = l.split(':',1)[1].strip(' []').split(':')
+      runpath_list = [q.rstrip('/') for q in l.split(':',1)[1].strip(' []').split(':')]
   return dict(
     library_list=sorted(library_list),
     rpath_list=sorted(rpath_list),
@@ -234,7 +234,8 @@ class AssertPythonMysql(unittest.TestCase):
           elf_dict['library_list'])
         soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
         expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
-            software in ['mysql-tritonn-5.0', 'zlib', 'openssl']]
+            software in ['zlib', 'openssl']]
+        expected_rpath_list.append(os.path.join(os.path.abspath(os.curdir), 'parts', 'mysql-tritonn-5.0', 'lib', 'mysql'))
         self.assertEqual(sorted(expected_rpath_list), elf_dict['rpath_list'])
         self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
