@@ -81,13 +81,13 @@ print sys.version_info[:2]
       os.unlink(name)
 
   def test_use_generated_python_as_normal_interpreter(self):
-    """Checks behabiour of generated python as interpreter"""
+    """Checks behaviour of generated python as interpreter"""
     stdout, stderr = subprocess.Popen(["bin/python2.4", "-V"],
         stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
     self.assertTrue('Python 2.4' in stderr)
 
   def test_required_libraries(self):
-    """Checks possiblity of importing libraries"""
+    """Checks possibility of importing libraries"""
     ignored_library_list = getCleanList("""
       socks
     """)
