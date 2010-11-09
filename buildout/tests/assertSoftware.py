@@ -203,11 +203,29 @@ class AssertSoftwareRunable(unittest.TestCase):
     self.assertTrue(stdout.startswith('w3m version w3m/0.5.2'))
 
 class AssertMysql50Tritonn(unittest.TestCase):
-  def test_tritonn_senna(self):
-    """Senna as an library"""
-    result = os.system("ldd parts/mysql-tritonn-5.0/libexec/mysqld | grep -q "
-        "'parts/senna/lib/libsenna.so.0'")
-    self.assertEqual(result, 0)
+  def test_ld_mysqld(self):
+    """libexec/mysqld linking"""
+    elf_dict = readElfAsDict('parts/mysql-tritonn-5.0/libexec/mysqld')
+    self.assertEqual(sorted(['libc', 'libcrypt', 'libcrypto', 'libdl',
+      'libgcc_s', 'libm', 'libnsl', 'libpthread', 'librt', 'libsenna',
+      'libssl', 'libstdc++', 'libz']), elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['ncurses', 'zlib', 'senna', 'openssl']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['rpath_list'])
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+  def test_ld_mysqlmanager(self):
+    """libexec/mysqlmanager"""
+    elf_dict = readElfAsDict('parts/mysql-tritonn-5.0/libexec/mysqlmanager')
+    self.assertEqual(sorted(['libc', 'libcrypt', 'libcrypto', 'libgcc_s',
+      'libm', 'libnsl', 'libpthread', 'libssl', 'libstdc++', 'libz']),
+      elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['ncurses', 'zlib', 'openssl']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['rpath_list'])
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
 class AssertMemcached(unittest.TestCase):
   """Tests for built memcached"""
