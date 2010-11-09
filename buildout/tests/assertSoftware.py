@@ -227,6 +227,39 @@ class AssertMysql50Tritonn(unittest.TestCase):
     self.assertEqual(sorted(expected_rpath_list), elf_dict['rpath_list'])
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
+  def test_ld_libmysqlclient_r(self):
+    elf_dict = readElfAsDict('parts/mysql-tritonn-5.0/lib/mysql/libmysqlclient_r.so')
+    self.assertEqual(sorted(['libc', 'libcrypt', 'libcrypto', 'libm', 'libnsl',
+      'libpthread', 'libssl', 'libz']),
+      elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['ncurses', 'zlib', 'openssl']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['rpath_list'])
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+  def test_ld_libmysqlclient(self):
+    elf_dict = readElfAsDict('parts/mysql-tritonn-5.0/lib/mysql/libmysqlclient.so')
+    self.assertEqual(sorted(['libc', 'libcrypt', 'libcrypto', 'libm', 'libnsl',
+      'libssl', 'libz']),
+      elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['ncurses', 'zlib', 'openssl']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['rpath_list'])
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+  def test_ld_sphinx(self):
+    elf_dict = readElfAsDict('parts/mysql-tritonn-5.0/lib/mysql/sphinx.so')
+    self.assertEqual(sorted(['libc', 'libcrypt', 'libgcc_s', 'libm', 'libnsl',
+      'libpthread', 'libstdc++']),
+      elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['ncurses', 'zlib', 'openssl']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['rpath_list'])
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
 class AssertMemcached(unittest.TestCase):
   """Tests for built memcached"""
 
