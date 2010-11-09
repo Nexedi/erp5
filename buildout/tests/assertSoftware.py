@@ -54,18 +54,6 @@ def readElfAsDict(f):
     runpath_list=sorted(runpath_list)
   )
 
-class AssertLddLibs(unittest.TestCase):
-  """Checks for dynamic libraries"""
-
-  def test_ocropus(self):
-    """Ocropus"""
-    result = os.system("ldd parts/ocropus/bin/ocropus | grep -q "
-        "'parts/ocropus/lib/libocropus.so'")
-    self.assertEqual(result, 0)
-    result = os.system("ldd parts/ocropus/bin/ocropus | grep -q "
-        "'parts/.*/lib/libiulib.so'")
-    self.assertEqual(result, 0)
-
 class AssertSoftwareRunable(unittest.TestCase):
   def test_HaProxy(self):
     stdout, stderr = subprocess.Popen(["parts/haproxy/sbin/haproxy", "-v"],
