@@ -54,26 +54,9 @@
   This script returns the blog post that must be displayed in the current section.\n
   The blog post are filtered through the subject parameter that is retrieved through\n
   the GET parameters.\n
-\n
-  TODO: XXX-JPS\n
-  - again, way too slow if this returns 1,000,000 documents\n
-  - appropriate way is to either call context.getDocumentValueList(subject=subject, **kw)\n
-    or context.getDocumentValueList(subject=subject), depending on your goal\n
-    what about ordering ...\n
 """\n
-\n
-request = container.REQUEST\n
-\n
 current_section = context.getWebSectionValue()\n
-result = current_section.WebSection_getDocumentValueList(**kw)\n
-result_with_subject = []\n
-if subject is not None:\n
-  for item in result: # XXX-JPS this could be way too slow\n
-    if subject in item.getSubjectList():\n
-      result_with_subject.append(item)\n
-  return result_with_subject\n
-\n
-return result\n
+return current_section.WebSection_getDocumentValueList(subject=subject, **kw)\n
 </string> </value>
         </item>
         <item>
@@ -84,7 +67,7 @@ return result\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>subject=None, **kw</string> </value>
+            <value> <string>subject=\'\', **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -113,16 +96,9 @@ return result\n
                             <string>subject</string>
                             <string>kw</string>
                             <string>_getattr_</string>
-                            <string>container</string>
-                            <string>request</string>
                             <string>context</string>
                             <string>current_section</string>
                             <string>_apply_</string>
-                            <string>result</string>
-                            <string>result_with_subject</string>
-                            <string>None</string>
-                            <string>_getiter_</string>
-                            <string>item</string>
                           </tuple>
                         </value>
                     </item>
@@ -135,7 +111,7 @@ return result\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <none/>
+                <string></string>
               </tuple>
             </value>
         </item>
