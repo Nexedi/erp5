@@ -56,6 +56,7 @@ class TestZelenium(ERP5TypeTestCase):
                 'erp5_trade', 'erp5_pdm', 'erp5_ooo_import',
                 'erp5_accounting', 'erp5_invoicing',
                 'erp5_simplified_invoicing', 'erp5_project',
+                'erp5_simulation', 'erp5_simulation_test',
                 'erp5_accounting_ui_test',
                 'erp5_pdm_ui_test',
                 'erp5_trade_ui_test',
