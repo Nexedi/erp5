@@ -88,6 +88,7 @@ class TestInvalidationBug(ERP5TypeTestCase):
       transaction.commit()
     finally:
       transaction.Transaction._commitResources = Transaction_commitResources
+    self.tic()
     self.assertEqual(result_list[0], [0,0])
     self.assertEqual(result_list[1], [0,0])  # activity buffer first
     self.assertEqual(result_list[-2], [1,0]) # catalog
