@@ -216,43 +216,43 @@ Test display of Account Module, with at_date parameter\n
 <!-- Check Stat columns {{{ -->\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[2]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[2]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[3]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[3]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[4]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[4]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[5]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[5]</td>\n
   <td>80</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[6]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[6]</td>\n
   <td>267300</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[7]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[7]</td>\n
   <td>267300</td>\n
 </tr>\n
 <!-- XXX Currently no stat for Debit Balance and Credit Balance -->\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[8]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[8]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[9]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[9]</td>\n
   <td></td>\n
 </tr>\n
 <!-- }}} -->\n

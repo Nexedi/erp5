@@ -72,14 +72,14 @@ Accounting Transaction Module Displays empty Transactions\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@class=\'listbox_stat_line\']/td[9]\n
+//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[9]\n
 </td>\n
   <td>33200.00</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@class=\'listbox_stat_line\']/td[10]\n
+//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[10]\n
 </td>\n
   <td>33200.00</td>\n
 </tr>\n
@@ -196,14 +196,14 @@ Accounting Transaction Module Displays empty Transactions\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@class=\'listbox_stat_line\']/td[9]\n
+//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[9]\n
 </td>\n
   <td>33200.00</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@class=\'listbox_stat_line\']/td[10]\n
+//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[10]\n
 </td>\n
   <td>33200.00</td>\n
 </tr>\n
@@ -421,14 +421,14 @@ Accounting Transaction Module Displays empty Transactions\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@class=\'listbox_stat_line\']/td[9]\n
+//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[9]\n
 </td>\n
   <td>33200.00</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@class=\'listbox_stat_line\']/td[10]\n
+//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[10]\n
 </td>\n
   <td>33200.00</td>\n
 </tr>\n

@@ -95,7 +95,7 @@ organisation and no bogus parameters are kept in the selection.\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[12]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[12]</td>\n
   <td>2200</td>\n
 </tr>\n
 <!-- }}} -->\n
@@ -144,7 +144,7 @@ organisation and no bogus parameters are kept in the selection.\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[12]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[12]</td>\n
   <td>3300</td>\n
 </tr>\n
 <!-- }}} -->\n

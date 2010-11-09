@@ -125,17 +125,17 @@ Test Transactions related to an Organisation, with stop date\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[9]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[9]</td>\n
   <td>72600.00</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[10]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[10]</td>\n
   <td>1100.00</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[12]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[12]</td>\n
   <td>71500.0</td>\n
 </tr>\n
 <!-- the last line of running total column shows the same value that the total\n

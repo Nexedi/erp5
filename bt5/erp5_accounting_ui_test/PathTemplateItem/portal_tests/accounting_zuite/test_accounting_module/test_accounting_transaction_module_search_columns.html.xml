@@ -98,14 +98,14 @@ Accounting Transaction Module Search Columns\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@class=\'listbox_stat_line\']/td[9]\n
+//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[9]\n
 </td>\n
   <td>2200.00</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@class=\'listbox_stat_line\']/td[10]\n
+//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[10]\n
 </td>\n
   <td>2200.00</td>\n
 </tr>\n
@@ -203,14 +203,14 @@ as title is a search key -->\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@class=\'listbox_stat_line\']/td[9]\n
+//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[9]\n
 </td>\n
   <td>5500.00</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@class=\'listbox_stat_line\']/td[10]\n
+//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[10]\n
 </td>\n
   <td>5500.00</td>\n
 </tr>\n
@@ -287,14 +287,14 @@ as title is a search key -->\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@class=\'listbox_stat_line\']/td[9]\n
+//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[9]\n
 </td>\n
   <td>5500.00</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@class=\'listbox_stat_line\']/td[10]\n
+//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[10]\n
 </td>\n
   <td>5500.00</td>\n
 </tr>\n
@@ -347,14 +347,14 @@ as title is a search key -->\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@class=\'listbox_stat_line\']/td[9]\n
+//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[9]\n
 </td>\n
   <td>7700.00</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@class=\'listbox_stat_line\']/td[10]\n
+//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[10]\n
 </td>\n
   <td>7700.00</td>\n
 </tr>\n
@@ -428,14 +428,14 @@ as title is a search key -->\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@class=\'listbox_stat_line\']/td[9]\n
+//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[9]\n
 </td>\n
   <td>20000.00</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@class=\'listbox_stat_line\']/td[10]\n
+//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[10]\n
 </td>\n
   <td>20000.00</td>\n
 </tr>\n
@@ -489,14 +489,14 @@ as title is a search key -->\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@class=\'listbox_stat_line\']/td[9]\n
+//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[9]\n
 </td>\n
   <td>2200.00</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@class=\'listbox_stat_line\']/td[10]\n
+//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[10]\n
 </td>\n
   <td>2200.00</td>\n
 </tr>\n
@@ -566,14 +566,14 @@ as title is a search key -->\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@class=\'listbox_stat_line\']/td[9]\n
+//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[9]\n
 </td>\n
   <td>20000.00</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@class=\'listbox_stat_line\']/td[10]\n
+//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[10]\n
 </td>\n
   <td>20000.00</td>\n
 </tr>\n

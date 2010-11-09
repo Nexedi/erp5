@@ -90,17 +90,17 @@ Test Transactions related to an Organisation, with multiple pages and date range
 \n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[9]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[9]</td>\n
   <td>446600.00</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[10]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[10]</td>\n
   <td>446600.00</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[12]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[12]</td>\n
   <td>0.0</td>\n
 </tr>\n
 <!-- }}} -->\n
@@ -187,17 +187,17 @@ Test Transactions related to an Organisation, with multiple pages and date range
 <!-- Stats should not change -->\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[9]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[9]</td>\n
   <td>446600.00</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[10]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[10]</td>\n
   <td>446600.00</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[12]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[12]</td>\n
   <td>0.0</td>\n
 </tr>\n
 <!-- }}} -->\n

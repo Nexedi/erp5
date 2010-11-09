@@ -99,12 +99,12 @@ the group category from their subordination\n
 <!-- check amounts for stats -->\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[9]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[9]</td>\n
   <td>1100.00</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[10]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[10]</td>\n
   <td>1100.00</td>\n
 </tr>\n
 <!-- }}} -->\n

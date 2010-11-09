@@ -145,17 +145,17 @@ from http://localhost:9080/erp5/Entity_viewAccountingTransactionList/listbox?for
 \n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[9]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[9]</td>\n
   <td>3300.0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[10]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[10]</td>\n
   <td>0.0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[12]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[12]</td>\n
   <td>3300.0</td>\n
 </tr>\n
 \n
@@ -208,12 +208,12 @@ from http://localhost:9080/erp5/Entity_viewAccountingTransactionList/listbox?for
 <!-- check amounts for stats -->\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[9]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[9]</td>\n
   <td>3300.00</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[10]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[10]</td>\n
   <td>3300.00</td>\n
 </tr>\n
 <!-- }}} -->\n

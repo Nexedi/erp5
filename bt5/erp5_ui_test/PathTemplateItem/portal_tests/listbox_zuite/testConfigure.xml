@@ -137,17 +137,17 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@class="listbox_stat_line"]/td[2]</td>\n
+  <td>//tr[@class="listbox_stat_line listbox-stat-line"]/td[2]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@class="listbox_stat_line"]/td[3]</td>\n
+  <td>//tr[@class="listbox_stat_line listbox-stat-line"]/td[3]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@class="listbox_stat_line"]/td[4]</td>\n
+  <td>//tr[@class="listbox_stat_line listbox-stat-line"]/td[4]</td>\n
   <td></td>\n
 </tr>\n
 <!-- Go to the configure dialog -->\n
@@ -234,17 +234,17 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@class="listbox_stat_line"]/td[2]</td>\n
+  <td>//tr[@class="listbox_stat_line listbox-stat-line"]/td[2]</td>\n
   <td>10</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@class="listbox_stat_line"]/td[3]</td>\n
+  <td>//tr[@class="listbox_stat_line listbox-stat-line"]/td[3]</td>\n
   <td>10</td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementNotPresent</td>\n
-  <td>//tr[@class="listbox_stat_line"]/td[4]</td>\n
+  <td>//tr[@class="listbox_stat_line listbox-stat-line"]/td[4]</td>\n
   <td></td>\n
 </tr>\n
 </tal:block>\n

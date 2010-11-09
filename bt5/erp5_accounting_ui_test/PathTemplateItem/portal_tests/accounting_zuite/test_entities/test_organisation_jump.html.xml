@@ -109,12 +109,12 @@ section or destination section\n
 <!-- check amounts for stats -->\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[9]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[9]</td>\n
   <td>3300.00</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[10]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[10]</td>\n
   <td>3300.00</td>\n
 </tr>\n
 <!-- }}} -->\n
@@ -200,12 +200,12 @@ We have a purchase with `Supplier` Organisation\n
 <!-- check amounts for stats -->\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[9]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[9]</td>\n
   <td>7700.00</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[10]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[10]</td>\n
   <td>7700.00</td>\n
 </tr>\n
 <!-- }}} -->\n

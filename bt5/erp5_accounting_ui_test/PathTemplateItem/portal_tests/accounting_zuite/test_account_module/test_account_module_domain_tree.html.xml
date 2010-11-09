@@ -100,42 +100,42 @@ Test domain tree of Account Module\n
 <!-- stat -->\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[2]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[2]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[3]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[3]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[4]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[4]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[5]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[5]</td>\n
   <td>12</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[6]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[6]</td>\n
   <td>33200</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[7]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[7]</td>\n
   <td>33200</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[8]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[8]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[9]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[9]</td>\n
   <td></td>\n
 </tr>\n
 <!-- }}} -->\n
@@ -157,42 +157,42 @@ Test domain tree of Account Module\n
 <!-- stat -->\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[2]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[2]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[3]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[3]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[4]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[4]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[5]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[5]</td>\n
   <td>6</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[6]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[6]</td>\n
   <td>6200</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[7]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[7]</td>\n
   <td>8200</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[8]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[8]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[9]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[9]</td>\n
   <td></td>\n
 </tr>\n
 <!--}}}  -->\n
@@ -259,42 +259,42 @@ Test domain tree of Account Module\n
 <!-- stat -->\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[2]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[2]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[3]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[3]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[4]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[4]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[5]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[5]</td>\n
   <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[6]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[6]</td>\n
   <td>0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[7]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[7]</td>\n
   <td>7700</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[8]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[8]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[9]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[9]</td>\n
   <td></td>\n
 </tr>\n
 <!-- }}} -->\n

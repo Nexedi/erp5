@@ -168,12 +168,12 @@ Test Simple view of an Accounting Transaction\n
 <!-- stat is updated -->\n
 <tr>\n
   <td>assertFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[4]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[4]</td>\n
   <td>10</td>\n
 </tr>\n
 <tr>\n
   <td>assertFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[5]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[5]</td>\n
   <td>20</td>\n
 </tr>\n
 <!-- }}} -->\n
@@ -256,12 +256,12 @@ Test Simple view of an Accounting Transaction\n
 <!-- stat -->\n
 <tr>\n
   <td>assertFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[4]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[4]</td>\n
   <td>10</td>\n
 </tr>\n
 <tr>\n
   <td>assertFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[5]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[5]</td>\n
   <td>20</td>\n
 </tr>\n
 <!-- }}} -->\n

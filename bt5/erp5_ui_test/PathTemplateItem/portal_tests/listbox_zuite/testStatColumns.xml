@@ -86,29 +86,29 @@
 <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@class="listbox_stat_line"]/td[2]</td>\n
+  <td>//tr[@class="listbox_stat_line listbox-stat-line"]/td[2]</td>\n
   <td>foo_module</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@class="listbox_stat_line"]/td[3]</td>\n
+  <td>//tr[@class="listbox_stat_line listbox-stat-line"]/td[3]</td>\n
   <td>Foos</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@class="listbox_stat_line"]/td[4]</td>\n
+  <td>//tr[@class="listbox_stat_line listbox-stat-line"]/td[4]</td>\n
   <td></td>\n
 </tr>\n
 </tal:block>\n
 <tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//*[@class="listbox_stat_line"]/div[2]//span[3]</td>\n
+  <td>//*[@class="listbox_stat_line listbox-stat-line"]/div[2]//span[3]</td>\n
   <td>foo_module</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//*[@class="listbox_stat_line"]/div[3]//span[3]</td>\n
+  <td>//*[@class="listbox_stat_line listbox-stat-line"]/div[3]//span[3]</td>\n
   <td>Foos</td>\n
 </tr>\n
 </tal:block>\n
@@ -122,17 +122,17 @@
 <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@class="listbox_stat_line"]/td[2]</td>\n
+  <td>//tr[@class="listbox_stat_line listbox-stat-line"]/td[2]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@class="listbox_stat_line"]/td[4]</td>\n
+  <td>//tr[@class="listbox_stat_line listbox-stat-line"]/td[4]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@class="listbox_stat_line"]/td[3]</td>\n
+  <td>//tr[@class="listbox_stat_line listbox-stat-line"]/td[3]</td>\n
   <td>1 234.5</td>\n
 </tr>\n
 </tal:block>\n

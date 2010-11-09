@@ -177,17 +177,17 @@ client 1 invoice or client 2 invoice will have the first uid. -->\n
 <!-- {{{ stat line -->\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[8]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[8]</td>\n
   <td>1339800.0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[9]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[9]</td>\n
   <td>1339800.0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line\']/td[10]</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[10]</td>\n
   <td>0.0</td>\n
 </tr>\n
 <!-- }}} -->\n
