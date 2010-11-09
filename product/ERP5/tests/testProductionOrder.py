@@ -35,7 +35,6 @@ import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.CMFCore.utils import getToolByName
 from testOrder import TestOrderMixin
 from Products.ERP5.tests.utils import newSimulationExpectedFailure
 
@@ -70,13 +69,9 @@ class TestProductionOrderMixin(TestOrderMixin):
             'erp5_simulation_test')
 
   def setUpPreferences(self):
-    portal = self.getPortal()
-    preferences = getToolByName(portal,'portal_preferences')
-
-    system_preference = preferences.newContent(
+    system_preference = self.portal.portal_preferences.newContent(
       portal_type = 'System Preference'
     )
-
     system_preference.edit(
       preferred_product_individual_variation_base_category = ('variation',),
       preferred_component_individual_variation_base_category = ('variation',),
@@ -84,7 +79,6 @@ class TestProductionOrderMixin(TestOrderMixin):
       preferred_component_variation_base_category = ('colour', 'size'),
       priority = 1,
     )
-
     system_preference.enable()
     transaction.commit()
     self.tic()
@@ -684,7 +678,6 @@ class TestProductionOrderMixin(TestOrderMixin):
       self.failUnless(order_state, \
                       applied_rule.getLastExpandSimulationState())
       # Test if applied rule has a specialise value with default_order_rule
-      portal_rules = getToolByName(order, 'portal_rules')
       # XXX hardcoded value
       self.assertEquals('default_production_order_rule', \
                         applied_rule.getSpecialiseReference())
@@ -743,7 +736,6 @@ class TestProductionOrderMixin(TestOrderMixin):
     self.assertEquals(1, len(applied_rule_list))
     applied_rule = applied_rule_list[0]
     self.assertEquals("Applied Rule", applied_rule.getPortalType())
-    portal_rules = getToolByName(applied_rule, 'portal_rules')
     self.assertEquals('default_delivering_rule', \
                       applied_rule.getSpecialiseReference())
     # Test next applied rule
@@ -754,7 +746,6 @@ class TestProductionOrderMixin(TestOrderMixin):
     self.assertEquals(1, len(applied_rule_list))
     applied_rule = applied_rule_list[0]
     self.assertEquals("Applied Rule", applied_rule.getPortalType())
-    portal_rules = getToolByName(applied_rule, 'portal_rules')
     self.assertEquals('default_transformation_rule', \
                       applied_rule.getSpecialiseReference())
     # Test deeper simulation 
@@ -868,7 +859,6 @@ class TestProductionOrderMixin(TestOrderMixin):
     self.assertEquals(1, len(applied_rule_list))
     applied_rule = applied_rule_list[0]
     self.assertEquals("Applied Rule", applied_rule.getPortalType())
-    portal_rules = getToolByName(applied_rule, 'portal_rules')
     self.assertEquals('default_transformation_rule', \
                       applied_rule.getSpecialiseReference())
     # Test deeper simulation 
@@ -927,7 +917,6 @@ class TestProductionOrderMixin(TestOrderMixin):
     # Test supply applied rule
     applied_rule = component_movement.objectValues()[0]
     self.assertEquals("Applied Rule", applied_rule.getPortalType())
-    portal_rules = getToolByName(applied_rule, 'portal_rules')
     self.assertEquals('default_transformation_sourcing_rule', \
                       applied_rule.getSpecialiseReference())
     # Test supply movement
@@ -1069,7 +1058,6 @@ class TestProductionOrderMixin(TestOrderMixin):
     self.assertEquals(1, len(applied_rule_list))
     applied_rule = applied_rule_list[0]
     self.assertEquals("Applied Rule", applied_rule.getPortalType())
-    portal_rules = getToolByName(applied_rule, 'portal_rules')
     self.assertEquals('default_delivering_rule', \
                       applied_rule.getSpecialiseReference())
     # Test next applied rule
@@ -1080,7 +1068,6 @@ class TestProductionOrderMixin(TestOrderMixin):
     self.assertEquals(1, len(applied_rule_list))
     applied_rule = applied_rule_list[0]
     self.assertEquals("Applied Rule", applied_rule.getPortalType())
-    portal_rules = getToolByName(applied_rule, 'portal_rules')
     self.assertEquals('default_transformation_rule', \
                       applied_rule.getSpecialiseReference())
     # Test deeper simulation 
@@ -1142,7 +1129,6 @@ class TestProductionOrderMixin(TestOrderMixin):
     # Test supply applied rule
     applied_rule = component_movement.objectValues()[0]
     self.assertEquals("Applied Rule", applied_rule.getPortalType())
-    portal_rules = getToolByName(applied_rule, 'portal_rules')
     self.assertEquals('default_transformation_sourcing_rule', \
                       applied_rule.getSpecialiseReference())
     # Test supply movement
@@ -1180,7 +1166,6 @@ class TestProductionOrderMixin(TestOrderMixin):
     applied_rule_list = modified_movement.objectValues()
     applied_rule = applied_rule_list[0]
     self.assertEquals("Applied Rule", applied_rule.getPortalType())
-    portal_rules = getToolByName(applied_rule, 'portal_rules')
     self.assertEquals('default_transformation_sourcing_rule', \
                       applied_rule.getSpecialiseReference())
     # Test deeper simulation 
@@ -1207,7 +1192,6 @@ class TestProductionOrderMixin(TestOrderMixin):
     self.assertEquals(1, len(applied_rule_list))
     applied_rule = applied_rule_list[0]
     self.assertEquals("Applied Rule", applied_rule.getPortalType())
-    portal_rules = getToolByName(applied_rule, 'portal_rules')
     self.assertEquals('default_transformation_rule', \
                       applied_rule.getSpecialiseReference())
     # Test deeper simulation 
@@ -1267,7 +1251,6 @@ class TestProductionOrderMixin(TestOrderMixin):
     # Test supply applied rule
     applied_rule = component_movement.objectValues()[0]
     self.assertEquals("Applied Rule", applied_rule.getPortalType())
-    portal_rules = getToolByName(applied_rule, 'portal_rules')
     self.assertEquals('default_transformation_sourcing_rule', \
                       applied_rule.getSpecialiseReference())
     # Test supply movement
