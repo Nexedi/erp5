@@ -140,11 +140,6 @@ class AssertLddLibs(unittest.TestCase):
         "'parts/.*/lib/libiulib.so'")
     self.assertEqual(result, 0)
 
-  def test_memcached_libevent(self):
-    """Checks proper liunking to libevent from memcached"""
-    result = os.system("ldd parts/memcached/bin/memcached | grep -q 'parts/li"
-        "bevent/lib/libevent'")
-
 class AssertSoftwareRunable(unittest.TestCase):
   def test_HaProxy(self):
     stdout, stderr = subprocess.Popen(["parts/haproxy/sbin/haproxy", "-v"],
@@ -224,6 +219,20 @@ class AssertMysql50Tritonn(unittest.TestCase):
     result = os.system("ldd parts/mysql-tritonn-5.0/libexec/mysqld | grep -q "
         "'parts/senna/lib/libsenna.so.0'")
     self.assertEqual(result, 0)
+
+class AssertMemcached(unittest.TestCase):
+  """Tests for built memcached"""
+
+  def test_ld_memcached(self):
+    """Checks proper liunking to libevent from memcached"""
+    elf_dict = readElfAsDict('parts/memcached/bin/memcached')
+    self.assertEqual(sorted(['libpthread', 'libevent-1.4', 'libc']),
+        elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['libevent']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['rpath_list'])
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
 class AssertApache(unittest.TestCase):
   """Tests for built apache"""
