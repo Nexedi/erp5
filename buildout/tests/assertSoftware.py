@@ -43,15 +43,15 @@ def readElfAsDict(f):
   library_list = []
   for l in result.split('\n'):
     if '(NEEDED)' in l:
-      library_list.append(l.split(':')[1].strip(' []'))
+      library_list.append(l.split(':')[1].strip(' []').split('.so')[0])
     elif '(RPATH)' in l:
       rpath_list = l.split(':',1)[1].strip(' []').split(':')
     elif '(RUNPATH)' in l:
       runpath_list = l.split(':',1)[1].strip(' []').split(':')
   return dict(
-    library_list=library_list,
-    rpath_list=rpath_list,
-    runpath_list=runpath_list
+    library_list=sorted(library_list),
+    rpath_list=sorted(rpath_list),
+    runpath_list=sorted(runpath_list)
   )
 
 class AssertPythonSoftware(unittest.TestCase):
@@ -231,10 +231,13 @@ class AssertApache(unittest.TestCase):
   def test_ld_libaprutil1(self):
     """Checks proper linking"""
     elf_dict = readElfAsDict('parts/apache/lib/libaprutil-1.so')
-    for lib in ['libexpat', 'libapr-1', 'librt',
-        'libcrypt', 'libpthread', 'libdl', 'libc']:
-      self.assertEqual(1, len([q for q in elf_dict['library_list'] if
-        q.startswith(lib+'.')]), 'No %r found' % lib)
+    self.assertEqual(sorted(['libexpat', 'libapr-1', 'librt', 'libcrypt',
+      'libpthread', 'libdl', 'libc']), elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['apache', 'zlib', 'openssl']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['rpath_list'])
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_modules(self):
     """Checks for availability of apache modules"""
