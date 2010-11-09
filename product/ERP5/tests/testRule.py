@@ -32,36 +32,49 @@ import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5.tests.testOrder import TestOrderMixin
-from Products.ERP5.tests.utils import newSimulationExpectedFailure
 
 class TestRuleMixin(TestOrderMixin):
   """
   Test basic rule behaviours
   """
 
+  def createRule(self, base_reference, version, **kw):
+    rule = super(TestRuleMixin, self).getRule(reference=base_reference,
+                                              version='<testRule.')
+    assert rule.getValidationState() == 'draft'
+    parent = rule.getParentValue()
+    rule, = parent.manage_pasteObjects(
+      parent.manage_copyObjects(ids=rule.getId()))
+    rule = parent[rule['new_id']]
+    rule._edit(version='testRule.' + version, **kw)
+    return rule
+
+  def getRule(self, reference):
+    rule = super(TestRuleMixin, self).getRule(reference=reference)
+    assert rule.getVersion().startswith('testRule.')
+    return rule
+
   def afterSetUp(self):
     # delete rules
-    self.getRuleTool().manage_delObjects(
-        ids=list(list(self.getRuleTool().objectIds())))
+    rule_tool = self.portal.portal_rules
+    rule_tool.manage_delObjects(ids=[x.getId() for x in rule_tool.objectValues()
+                                     if x.getVersion().startswith('testRule.')])
     # recreate rules
-    self.getRuleTool().newContent(portal_type="Order Rule",
-        id='default_order_rule',
-        reference='default_order_rule', version='1')
-    delivery_rule = self.getRuleTool().newContent(portal_type="Delivery Rule",
-        id='default_delivery_rule',
-        reference='default_delivery_rule', version='1')
+    self.createRule('default_order_rule', '1')
+    self.createRule('default_delivery_rule', '1')
+    transaction.commit()
+    self.tic()
     # create packing list if necessary
-    pl_module = self.getPortal().getDefaultModule(
-        self.packing_list_portal_type)
+    pl_module = self.portal.getDefaultModule(self.packing_list_portal_type)
     if pl_module.objectCount() == 0:
       # at least one default_delivery_rule should be validated here to
       # confirm Sale Packing List
+      delivery_rule = self.getRule('default_delivery_rule')
       delivery_rule.validate()
       self.pl = self.createPackingList()
       delivery_rule.invalidate()
     else:
-      self.pl = self.getPortal().getDefaultModule(
-          self.packing_list_portal_type).objectValues()[0]
+      self.pl = pl_module.objectValues()[0]
     #delete applied_rule
     self.getSimulationTool().manage_delObjects(
         ids=list(self.getSimulationTool().objectIds()))
@@ -71,8 +84,8 @@ class TestRuleMixin(TestOrderMixin):
 
 
   def beforeTearDown(self):
-    for module in self.getRuleTool(), self.getSimulationTool():
-      module.manage_delObjects(list(module.objectIds()))
+    module = self.getSimulationTool()
+    module.manage_delObjects(list(module.objectIds()))
     transaction.commit()
     self.tic()
 
@@ -92,6 +105,7 @@ class TestRuleMixin(TestOrderMixin):
     pl_module = self.getPortal().getDefaultModule(
         self.packing_list_portal_type)
     pl = pl_module.newContent(portal_type=self.packing_list_portal_type,
+        specialise=self.business_process,
         source_section='group/a', destination_section='group/b')
     pl.newContent(portal_type=self.packing_list_line_portal_type, id='line',
                   quantity=1)
@@ -109,15 +123,13 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
   run_all_test = 1
   quiet = 0
 
-  @newSimulationExpectedFailure
   def test_01_ValidatedRuleWithNoScript(self, quiet=quiet, run=run_all_test):
     """
     test that when a rule is validated, but has no script it will not apply
     """
     if not run: return
 
-    delivery_rule = self.getRuleTool().searchFolder(
-        reference='default_delivery_rule')[0]
+    delivery_rule = self.getRule('default_delivery_rule')
     delivery_rule.validate()
     transaction.commit()
     self.tic()
@@ -126,7 +138,6 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
       validation_state="validated")[0][0], 1)
     self.assertEquals(len(self.getRuleTool().searchRuleList(self.pl)), 0)
 
-  @newSimulationExpectedFailure
   def test_02_WrongTestMethod(self, quiet=quiet, run=run_all_test):
     """
     test that when a rule's test method returns False, it will not apply
@@ -136,8 +147,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     skin_folder = self.getPortal().portal_skins.custom
     skin = createZODBPythonScript(skin_folder, 'wrong_script', 'rule',
         'return False')
-    delivery_rule = self.getRuleTool().searchFolder(
-        reference='default_delivery_rule')[0]
+    delivery_rule = self.getRule('default_delivery_rule')
     delivery_rule.setTestMethodId('wrong_script')
     delivery_rule.validate()
     transaction.commit()
@@ -147,7 +157,6 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
       validation_state="validated")[0][0], 1)
     self.assertEquals(len(self.getRuleTool().searchRuleList(self.pl)), 0)
 
-  @newSimulationExpectedFailure
   def test_03_GoodTestMethod(self, quiet=quiet, run=run_all_test):
     """
     test that when a rule's test method returns True, it will apply
@@ -157,8 +166,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     skin_folder = self.getPortal().portal_skins.custom
     skin = createZODBPythonScript(skin_folder, 'good_script', 'rule',
         'return True')
-    delivery_rule = self.getRuleTool().searchFolder(
-        reference='default_delivery_rule')[0]
+    delivery_rule = self.getRule('default_delivery_rule')
     delivery_rule.setTestMethodId('good_script')
     delivery_rule.validate()
     transaction.commit()
@@ -168,7 +176,6 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
       validation_state="validated")[0][0], 1)
     self.assertEquals(len(self.getRuleTool().searchRuleList(self.pl)), 1)
 
-  @newSimulationExpectedFailure
   def test_04_NotValidatedRule(self, quiet=quiet, run=run_all_test):
     """
     test that when a rule is not validated, it will not apply, even if it has
@@ -179,8 +186,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     skin_folder = self.getPortal().portal_skins.custom
     skin = createZODBPythonScript(skin_folder, 'good_script', 'rule',
         'return True')
-    delivery_rule = self.getRuleTool().searchFolder(
-        reference='default_delivery_rule')[0]
+    delivery_rule = self.getRule('default_delivery_rule')
     delivery_rule.setTestMethodId('good_script')
     delivery_rule.validate()
     delivery_rule.invalidate()
@@ -191,7 +197,6 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
       validation_state="validated")[0][0], 0)
     self.assertEquals(len(self.getRuleTool().searchRuleList(self.pl)), 0)
 
-  @newSimulationExpectedFailure
   def test_06_WrongDateRange(self, quiet=quiet, run=run_all_test):
     """
     test that when a rule is validated but does not have correct date range,
@@ -202,8 +207,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     skin_folder = self.getPortal().portal_skins.custom
     skin = createZODBPythonScript(skin_folder, 'good_script', 'rule',
         'return True')
-    delivery_rule = self.getRuleTool().searchFolder(
-        reference='default_delivery_rule')[0]
+    delivery_rule = self.getRule('default_delivery_rule')
     delivery_rule.setTestMethodId('good_script')
     delivery_rule.setStartDateRangeMin('2007-06-01')
     delivery_rule.setStartDateRangeMax('2007-06-04')
@@ -215,7 +219,6 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
       validation_state="validated")[0][0], 1)
     self.assertEquals(len(self.getRuleTool().searchRuleList(self.pl)), 0)
 
-  @newSimulationExpectedFailure
   def test_07_GoodDateRange(self, quiet=quiet, run=run_all_test):
     """
     test that when a rule is validated and has a correct date range, it will
@@ -226,8 +229,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     skin_folder = self.getPortal().portal_skins.custom
     skin = createZODBPythonScript(skin_folder, 'good_script', 'rule',
         'return True')
-    delivery_rule = self.getRuleTool().searchFolder(
-        reference='default_delivery_rule')[0]
+    delivery_rule = self.getRule('default_delivery_rule')
     delivery_rule.setTestMethodId('good_script')
     delivery_rule.setStartDateRangeMin('2007-06-01')
     delivery_rule.setStartDateRangeMax('2007-08-01')
@@ -239,7 +241,6 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
       validation_state="validated")[0][0], 1)
     self.assertEquals(len(self.getRuleTool().searchRuleList(self.pl)), 1)
 
-  @newSimulationExpectedFailure
   def test_08_updateAppliedRule(self, quiet=quiet, run=run_all_test):
     """
     test that when updateAppliedRule is called, the rule with the correct
@@ -254,20 +255,16 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
         "return False")
 
     # wrong reference
-    order_rule = self.getRuleTool().searchFolder(
-        reference='default_order_rule')[0]
+    order_rule = self.getRule('default_order_rule')
     order_rule.setTestMethodId('rule_script')
     order_rule.validate()
-    
-    delivery_rule_1 = self.getRuleTool().searchFolder(
-        reference='default_delivery_rule')[0]
+
+    delivery_rule_1 = self.getRule('default_delivery_rule')
     delivery_rule_1.setTestMethodId('rule_script')
     delivery_rule_1.validate()
-    
-    delivery_rule_2 = self.getRuleTool().newContent(
-        portal_type="Delivery Rule", reference='default_delivery_rule',
-        version='2')
-    delivery_rule_2.setTestMethodId('rule_script')
+
+    delivery_rule_2 = self.createRule('default_delivery_rule', '2',
+                                      test_method_id='rule_script')
     delivery_rule_2.validate()
     transaction.commit()
     self.tic()
@@ -283,7 +280,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
         ids=[self.pl.getCausalityRelatedId()])
 
     # increase version of delivery_rule_1
-    delivery_rule_1.setVersion("3")
+    delivery_rule_1.setVersion("testRule.3")
     transaction.commit()
     self.tic()
 
@@ -294,7 +291,6 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     self.assertEquals(self.pl.getCausalityRelatedValue().getSpecialise(),
         delivery_rule_1.getRelativeUrl())
 
-  @newSimulationExpectedFailure
   def test_09_expandTwoRules(self, quiet=quiet, run=run_all_test):
     """
     test that when expand is called on a simulation movement, if two rules
@@ -313,20 +309,15 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     skin = createZODBPythonScript(skin_folder, 'invoice_rule_script', 'rule',
         "return context.getParentValue().getSpecialiseReference() == 'default_delivery_rule'")
 
-    delivery_rule = self.getRuleTool().searchFolder(
-        reference='default_delivery_rule')[0]
+    delivery_rule = self.getRule('default_delivery_rule')
     delivery_rule.validate()
-    
-    invoicing_rule_1 = self.getRuleTool().newContent(
-        portal_type="Invoicing Rule", reference='default_invoicing_rule',
-        version='1')
-    invoicing_rule_1.setTestMethodId('invoice_rule_script')
+
+    invoicing_rule_1 = self.createRule('default_invoicing_rule', '1',
+                                       test_method_id='invoice_rule_script')
     invoicing_rule_1.validate()
 
-    invoicing_rule_2 = self.getRuleTool().newContent(
-        portal_type="Invoicing Rule", reference='default_invoicing_rule',
-        version='2')
-    invoicing_rule_2.setTestMethodId('invoice_rule_script')
+    invoicing_rule_2 = self.createRule('default_invoicing_rule', '2',
+                                       test_method_id='invoice_rule_script')
     invoicing_rule_2.validate()
 
     # clear simulation
@@ -354,7 +345,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     # increase version of other rule, clean simulation and check again
     self.getSimulationTool().manage_delObjects(
         ids=[self.pl.getCausalityRelatedId()])
-    invoicing_rule_1.setVersion('3')
+    invoicing_rule_1.setVersion('testRule.3')
     transaction.commit()
     self.tic()
 
@@ -374,7 +365,6 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     self.assertEquals(applied_rule.getSpecialise(),
         invoicing_rule_1.getRelativeUrl())
 
-  @newSimulationExpectedFailure
   def test_10_expandAddsRule(self, quiet=quiet, run=run_all_test):
     """
     test that if a rule didn't match previously, and does now, it should apply
@@ -393,15 +383,12 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     skin = createZODBPythonScript(skin_folder, 'invoice_rule_script', 'rule',
         "return context.getParentValue().getSpecialiseReference() == 'default_delivery_rule'")
 
-    delivery_rule = self.getRuleTool().searchFolder(
-        reference='default_delivery_rule')[0]
+    delivery_rule = self.getRule('default_delivery_rule')
     delivery_rule.validate()
-    
+
     # create rule with a wrong script
-    invoicing_rule_1 = self.getRuleTool().newContent(
-        portal_type="Invoicing Rule", reference='default_invoicing_rule',
-        version='1')
-    invoicing_rule_1.setTestMethodId('delivery_rule_script')
+    invoicing_rule_1 = self.createRule('default_invoicing_rule', '1',
+                                       test_method_id='delivery_rule_script')
     invoicing_rule_1.validate()
 
     # clear simulation
@@ -444,14 +431,13 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
 
     # add more invoicing_rule and test that nothing is changed
     ## same reference, higher version
-    invoicing_rule_n = self.getRuleTool().newContent(
-        portal_type="Invoicing Rule", reference='default_invoicing_rule',
-        version='2', test_method_id='invoice_rule_script')
+    invoicing_rule_n = self.createRule('default_invoicing_rule', '2',
+                                       test_method_id='invoice_rule_script')
     invoicing_rule_n.validate()
     ## different reference, higher version (but version shouldn't matter here)
-    invoicing_rule_2 = self.getRuleTool().newContent(
-        portal_type="Invoicing Rule", reference='default_invoicing_rule_2',
-        version='2', test_method_id='invoice_rule_script')
+    invoicing_rule_2 = self.createRule('default_invoicing_rule', '2',
+                                       reference='default_invoicing_rule_2',
+                                       test_method_id='invoice_rule_script')
     invoicing_rule_2.validate()
     transaction.commit()
     self.tic()
@@ -477,7 +463,6 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
         invoicing_rule_2.getRelativeUrl())
 
 
-  @newSimulationExpectedFailure
   def test_11_expandRemovesRule(self, quiet=quiet, run=run_all_test):
     """
     test that if a rule matched previously and does not anymore, it should be
@@ -495,14 +480,11 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     skin = createZODBPythonScript(skin_folder, 'invoice_rule_script', 'rule',
         "return context.getParentValue().getSpecialiseReference() == 'default_delivery_rule'")
 
-    delivery_rule = self.getRuleTool().searchFolder(
-        reference='default_delivery_rule')[0]
+    delivery_rule = self.getRule('default_delivery_rule')
     delivery_rule.validate()
-    
-    invoicing_rule_1 = self.getRuleTool().newContent(
-        portal_type="Invoicing Rule", reference='default_invoicing_rule',
-        version='1')
-    invoicing_rule_1.setTestMethodId('invoice_rule_script')
+
+    invoicing_rule_1 = self.createRule('default_invoicing_rule', '1',
+                                       test_method_id='invoice_rule_script')
     invoicing_rule_1.validate()
 
     # clear simulation
@@ -608,7 +590,6 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     sub_movement = applied_rule.objectValues()[0]
     self.assertEquals(sub_movement.getDelivery(), self.pl.line.getRelativeUrl())
 
-  @newSimulationExpectedFailure
   def test_12_expandReplacesRule(self, quiet=quiet, run=run_all_test):
     """
     test that if a rule matched previously and does not anymore, and another
@@ -627,20 +608,15 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     skin = createZODBPythonScript(skin_folder, 'invoice_rule_script', 'rule',
         "return context.getParentValue().getSpecialiseReference() == 'default_delivery_rule'")
 
-    delivery_rule = self.getRuleTool().searchFolder(
-        reference='default_delivery_rule')[0]
+    delivery_rule = self.getRule('default_delivery_rule')
     delivery_rule.validate()
-    
-    invoicing_rule_1 = self.getRuleTool().newContent(
-        portal_type="Invoicing Rule", reference='default_invoicing_rule',
-        version='1')
-    invoicing_rule_1.setTestMethodId('invoice_rule_script')
+
+    invoicing_rule_1 = self.createRule('default_invoicing_rule', '1',
+                                       test_method_id='invoice_rule_script')
     invoicing_rule_1.validate()
 
-    invoicing_rule_2 = self.getRuleTool().newContent(
-        portal_type="Invoicing Rule", reference='default_invoicing_rule',
-        version='2')
-    invoicing_rule_2.setTestMethodId('invoice_rule_script')
+    invoicing_rule_2 = self.createRule('default_invoicing_rule', '2',
+                                       test_method_id='invoice_rule_script')
     invoicing_rule_2.validate()
 
     # clear simulation
@@ -711,4 +687,3 @@ def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestRule))
   return suite
-

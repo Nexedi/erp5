@@ -142,7 +142,7 @@ class MovementGeneratorMixin:
     # and potentially use trade phase for that.... as a way to filter out
 
 
-class RuleMixin:
+class RuleMixin(Predicate):
   """
   Provides generic methods and helper methods to implement
   IRule and IMovementCollectionUpdater.
@@ -186,19 +186,18 @@ class RuleMixin:
                          activate_kw=activate_kw)
     return context.get(id)
 
-  def test(self, *args, **kw):
+  if 0: # XXX-JPS - if people are stupid enough not to configfure predicates,
+        # it is not our role to be clever for them
+        # Rules have a workflow - make sure applicable rule system works
+        # if you wish, add a test here on workflow state to prevent using
+        # rules which are no longer applicable
+   def test(self, *args, **kw):
     """
     If no test method is defined, return False, to prevent infinite loop
-
-    XXX-JPS - I do not understand why 
     """
-    #if not self.getTestMethodId():
-    #  return False # XXX-JPS - if people are stupid enough not to configfure predicates, 
-                   # it is not our role to be clever for them
-                   # Rules have a workflow - make sure applicable rule system works
-                   # if you wish, add a test here on workflow state to prevent using 
-                   # rules which are no longer applicable
-    return Predicate.test(self, *args, **kw)
+    if not self.getTestMethodId():
+      return False
+    return super(RuleMixin, self).test(*args, **kw)
 
   def expand(self, applied_rule, **kw):
     """

@@ -29,7 +29,6 @@
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
-from Products.ERP5Type.Core.Predicate import Predicate
 from Products.ERP5.mixin.rule import RuleMixin, MovementGeneratorMixin
 from Products.ERP5.mixin.movement_collection_updater import \
      MovementCollectionUpdaterMixin
@@ -37,7 +36,7 @@ from Products.ERP5.Document.PredicateMatrix import PredicateMatrix
 
 
 class InvoiceTransactionSimulationRule(RuleMixin,
-    MovementCollectionUpdaterMixin, Predicate, PredicateMatrix):
+    MovementCollectionUpdaterMixin, PredicateMatrix):
   """
   Invoice Transaction Rule object generates accounting movements for
   each invoice movement based on category membership and other

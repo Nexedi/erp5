@@ -57,6 +57,7 @@ class TestOrderMixin(SubcontentReindexingWrapper):
   packing_list_cell_portal_type = 'Sale Packing List Cell'
   delivery_builder_id = 'sale_packing_list_builder'
   size_list = ['Baby','Child/32','Child/34','Man','Woman']
+  business_process = None
 
   def getBusinessTemplateList(self):
     """

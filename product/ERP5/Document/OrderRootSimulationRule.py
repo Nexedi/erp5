@@ -29,12 +29,11 @@
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
-from Products.ERP5Type.Core.Predicate import Predicate
 from Products.ERP5.mixin.rule import RuleMixin, MovementGeneratorMixin
 from Products.ERP5.mixin.movement_collection_updater import \
      MovementCollectionUpdaterMixin
 
-class OrderRootSimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate):
+class OrderRootSimulationRule(RuleMixin, MovementCollectionUpdaterMixin):
   """
   Order Rule object make sure an Order in the simulation
   is consistent with the real order
