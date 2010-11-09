@@ -3808,7 +3808,7 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
     line = data_line_list[0]
     self.assertEquals(line.column_id_list,
         [ 'specific_reference', 'date', 'title', 'parent_reference',
-          'project', 'function', 'product_line_translated_title',
+          'function', 'project', 'product_line_translated_title',
           'node_title', 'mirror_section_title', 'debit', 'credit'])
     
     self.checkLineProperties(data_line_list[0],
@@ -3906,7 +3906,7 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
     self.assertEquals(line.column_id_list,
         ['Movement_getSpecificReference', 'date',
          'Movement_getExplanationTitle',
-         'project', 'function', 'product_line_translated_title',
+         'function', 'project', 'product_line_translated_title',
          'Movement_getMirrorSectionTitle',
          'Movement_getExplanationReference',
          'debit_price', 'credit_price', 'running_total_price'])
@@ -3994,7 +3994,7 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
         'Movement_getExplanationTitle', 'date',
         'Movement_getExplanationTranslatedPortalType',
         'Movement_getExplanationReference', 'Movement_getMirrorSectionTitle',
-         'project', 'function', 'product_line_translated_title',
+        'function', 'project', 'product_line_translated_title',
         'debit_price', 'credit_price', 'running_total_price'],
         data_line_list[0].column_id_list)
 
