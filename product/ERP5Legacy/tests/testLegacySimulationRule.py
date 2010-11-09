@@ -26,10 +26,8 @@
 #
 ##############################################################################
 
-import sys
-from Products.ERP5Legacy.tests import testLegacyRuleOrder
-sys.modules['Products.ERP5.tests.testOrder'] = testLegacyRuleOrder
+from Products.ERP5Legacy.tests import testLegacySimulationOrder
+from Products.ERP5.tests.testRule import *
 
 from Products.ERP5Legacy.tests import Legacy_getBusinessTemplateList
-from Products.ERP5.tests.testRule import *
 Legacy_getBusinessTemplateList(TestRuleMixin)

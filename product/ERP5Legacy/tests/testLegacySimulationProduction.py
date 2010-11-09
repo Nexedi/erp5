@@ -25,9 +25,7 @@
 #
 ##############################################################################
 
-import sys
 from Products.ERP5Legacy.tests import testLegacySimulationPackingList
-sys.modules['Products.ERP5.tests.testPackingList'] = testLegacySimulationPackingList
 
 test_suite_list = []
 from Products.ERP5.tests.testProductionOrder import *

@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 # Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
-#          Julien Muchembled <jm@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# guarantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly advised to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -26,10 +25,8 @@
 #
 ##############################################################################
 
-# It has been decided to have fully duplicated tests in ERP5Legacy, rather that
-# monkey-patching everywhere.
-# But waiting that we really start fixing testDivergenceTester for new
-# simulation, this file can be a virtual copy of testDivergenceTester.py
+from Products.ERP5Legacy.tests import Legacy_getBusinessTemplateList
+from Products.ERP5.tests.testOrder import *
 
-from Products.ERP5Legacy.tests import testLegacySimulationPackingList
-from Products.ERP5.tests.testDivergenceTester import *
+TestOrderMixin.business_process = None
+Legacy_getBusinessTemplateList(TestOrderMixin)
