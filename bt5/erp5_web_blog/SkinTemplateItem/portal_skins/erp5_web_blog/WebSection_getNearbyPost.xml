@@ -54,7 +54,7 @@
 
 result = {"previous": None, "next": None}\n
 \n
-items = [x.getReference() for x in context.getWebSectionValue().WebSection_getPostList()]\n
+items = [x.getReference() for x in context.getWebSectionValue().getDocumentValueList()]\n
 \n
 try:\n
   index = items.index(context.getReference())\n

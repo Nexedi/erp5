@@ -483,6 +483,10 @@
                     <value> <string>slider</string> </value>
                 </item>
                 <item>
+                    <key> <string>page_navigation_template</string> </key>
+                    <value> <string>ListBox_viewSliderPageNavigationRenderer</string> </value>
+                </item>
+                <item>
                     <key> <string>page_template</string> </key>
                     <value> <string>ListBox_viewAsBlog</string> </value>
                 </item>
@@ -587,7 +591,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>WebSection_getPostList</string> </value>
+            <value> <string>getDocumentValueList</string> </value>
         </item>
       </dictionary>
     </pickle>
