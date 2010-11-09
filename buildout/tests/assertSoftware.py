@@ -29,10 +29,8 @@
 import unittest
 import sys, os, tempfile, stat, subprocess
 
-def createCleanList(s):
-  """
-    TODO: Add doc string.
-  """
+def getCleanList(s):
+  """Converts free form string separated by whitespaces to python list"""
   return sorted([q.strip() for q in s.split() if len(q.strip()) > 0])
 
 def readElfAsDict(f):
@@ -90,10 +88,10 @@ print sys.version_info[:2]
 
   def test_required_libraries(self):
     """Checks possiblity of importing libraries"""
-    ignored_library_list = createCleanList("""
+    ignored_library_list = getCleanList("""
       socks
     """)
-    required_library_list = createCleanList("""
+    required_library_list = getCleanList("""
       ERP5Diff
       MySQLdb
       SOAPpy
@@ -240,7 +238,7 @@ class AssertApache(unittest.TestCase):
 
   def test_modules(self):
     """Checks for availability of apache modules"""
-    required_module_list = createCleanList("""
+    required_module_list = getCleanList("""
       authn_default_module
       log_config_module
       proxy_http_module
