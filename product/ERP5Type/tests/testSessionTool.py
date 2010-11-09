@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import transaction
 import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -263,6 +264,7 @@ class TestSessionTool(ERP5TypeTestCase):
 
     session = self.portal.portal_sessions[self.session_id]
     self.assertEquals(session.get('key'),  'value')
+    transaction.abort()
 
   def test_01_CheckSessionTool(self):
     """ Checks session tool is present """
