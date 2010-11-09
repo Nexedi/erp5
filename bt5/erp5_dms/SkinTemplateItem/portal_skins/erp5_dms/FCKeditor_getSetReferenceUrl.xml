@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -59,7 +56,8 @@ if brain.getValidationState() == \'embedded\':\n
   reference = brain.getId()\n
 else:\n
   reference = brain.getReference()\n
-return "javascript:SelectFile(\'%s\')" % reference.replace("\'", "\\\\\'")\n
+format = context.getPortalObject().portal_preferences.getPreferredImageFormat()\n
+return "javascript:SelectFile(\'%s?format=%s\')" % (reference.replace("\'", "\\\\\'"), format)\n
 </string> </value>
         </item>
         <item>
@@ -100,6 +98,8 @@ return "javascript:SelectFile(\'%s\')" % reference.replace("\'", "\\\\\'")\n
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>reference</string>
+                            <string>context</string>
+                            <string>format</string>
                           </tuple>
                         </value>
                     </item>
