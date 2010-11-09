@@ -130,7 +130,6 @@ class AssertSoftwareRunable(unittest.TestCase):
 
 class AssertMysql50Tritonn(unittest.TestCase):
   def test_ld_mysqld(self):
-    """libexec/mysqld linking"""
     elf_dict = readElfAsDict('parts/mysql-tritonn-5.0/libexec/mysqld')
     self.assertEqual(sorted(['libc', 'libcrypt', 'libcrypto', 'libdl',
       'libgcc_s', 'libm', 'libnsl', 'libpthread', 'librt', 'libsenna',
@@ -142,7 +141,6 @@ class AssertMysql50Tritonn(unittest.TestCase):
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_ld_mysqlmanager(self):
-    """libexec/mysqlmanager"""
     elf_dict = readElfAsDict('parts/mysql-tritonn-5.0/libexec/mysqlmanager')
     self.assertEqual(sorted(['libc', 'libcrypt', 'libcrypto', 'libgcc_s',
       'libm', 'libnsl', 'libpthread', 'libssl', 'libstdc++', 'libz']),
