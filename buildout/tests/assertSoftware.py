@@ -12,6 +12,27 @@ def createCleanList(s):
   """
   return sorted([q.strip() for q in s.split() if len(q.strip()) > 0])
 
+def readElfAsDict(f):
+  """Reads ELF information from file"""
+  popen = subprocess.Popen(['readelf', '-d', f], stdout=subprocess.PIPE,
+      stderr=subprocess.STDOUT)
+  result = popen.communicate()[0]
+  if popen.returncode != 0:
+    return False
+  library_list = []
+  for l in result.split('\n'):
+    if '(NEEDED)' in l:
+      library_list.append(l.split(':')[1].strip(' []'))
+    elif '(RPATH)' in l:
+      rpath_list = l.split(':',1)[1].strip(' []').split(':')
+    elif '(RUNPATH)' in l:
+      runpath_list = l.split(':',1)[1].strip(' []').split(':')
+  return dict(
+    library_list=library_list,
+    rpath_list=rpath_list,
+    runpath_list=runpath_list
+  )
+
 class AssertPythonSoftware(unittest.TestCase):
   """Asserts that python related software is in good shape."""
 
@@ -185,6 +206,14 @@ class AssertMysql50Tritonn(unittest.TestCase):
 
 class AssertApache(unittest.TestCase):
   """Tests for built apache"""
+
+  def test_ld_libaprutil1(self):
+    """Checks proper linking"""
+    elf_dict = readElfAsDict('parts/apache/lib/libaprutil-1.so')
+    for lib in ['libexpat', 'libapr-1', 'librt',
+        'libcrypt', 'libpthread', 'libdl', 'libc']:
+      self.assertEqual(1, len([q for q in elf_dict['library_list'] if
+        q.startswith(lib+'.')]), 'No %r found' % lib)
 
   def test_modules(self):
     """Checks for availability of apache modules"""
