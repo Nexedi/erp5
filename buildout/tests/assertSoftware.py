@@ -202,17 +202,6 @@ class AssertSoftwareRunable(unittest.TestCase):
     self.assertEqual(stderr, '')
     self.assertTrue(stdout.startswith('w3m version w3m/0.5.2'))
 
-  def test_MySQLdb(self):
-    """Checks proper linking to mysql library from MySQLdb egg"""
-    error_list = []
-    for d in os.listdir('develop-eggs'):
-      if d.startswith('MySQL_python'):
-        path = os.path.join('develop-eggs', d, '_mysql.so')
-        if os.system("ldd %s | grep -q 'parts/mysql-tritonn-5.0/lib/my"
-            "sql/libmysqlclient_r.so'" % path) != 0:
-          error_list.append(path)
-    self.assertEqual(error_list, [])
-
 class AssertMysql50Tritonn(unittest.TestCase):
   def test_tritonn_senna(self):
     """Senna as an library"""
@@ -233,6 +222,21 @@ class AssertMemcached(unittest.TestCase):
         software in ['libevent']]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['rpath_list'])
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+class AssertPythonMysql(unittest.TestCase):
+  def test_ld_mysqlso(self):
+    for d in os.listdir('develop-eggs'):
+      if d.startswith('MySQL_python'):
+        path = os.path.join('develop-eggs', d, '_mysql.so')
+        elf_dict = readElfAsDict(path)
+        self.assertEqual(sorted(['libc', 'libcrypt', 'libcrypto', 'libm',
+          'libmysqlclient_r', 'libnsl', 'libpthread', 'libssl', 'libz']),
+          elf_dict['library_list'])
+        soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+        expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+            software in ['mysql-tritonn-5.0', 'zlib', 'openssl']]
+        self.assertEqual(sorted(expected_rpath_list), elf_dict['rpath_list'])
+        self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
 class AssertApache(unittest.TestCase):
   """Tests for built apache"""
