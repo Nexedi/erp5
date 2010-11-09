@@ -98,23 +98,6 @@ class AssertLddLibs(unittest.TestCase):
         "'parts/.*/lib/libiulib.so'")
     self.assertEqual(result, 0)
 
-  def test_tritonn_senna(self):
-    """Senna as an library"""
-    result = os.system("ldd parts/mysql-tritonn-5.0/libexec/mysqld | grep -q "
-        "'parts/senna/lib/libsenna.so.0'")
-    self.assertEqual(result, 0)
-
-  def test_MySQLdb(self):
-    """Checks proper linking to mysql library from MySQLdb egg"""
-    error_list = []
-    for d in os.listdir('develop-eggs'):
-      if d.startswith('MySQL_python'):
-        path = os.path.join('develop-eggs', d, '_mysql.so')
-        if os.system("ldd %s | grep -q 'parts/mysql-tritonn-5.0/lib/my"
-            "sql/libmysqlclient_r.so'" % path) != 0:
-          error_list.append(path)
-    self.assertEqual(error_list, [])
-
   def test_memcached_libevent(self):
     """Checks proper liunking to libevent from memcached"""
     result = os.system("ldd parts/memcached/bin/memcached | grep -q 'parts/li"
@@ -181,6 +164,24 @@ class AssertSoftwareRunable(unittest.TestCase):
         stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
     self.assertEqual(stderr, '')
     self.assertTrue(stdout.startswith('w3m version w3m/0.5.2'))
+
+  def test_MySQLdb(self):
+    """Checks proper linking to mysql library from MySQLdb egg"""
+    error_list = []
+    for d in os.listdir('develop-eggs'):
+      if d.startswith('MySQL_python'):
+        path = os.path.join('develop-eggs', d, '_mysql.so')
+        if os.system("ldd %s | grep -q 'parts/mysql-tritonn-5.0/lib/my"
+            "sql/libmysqlclient_r.so'" % path) != 0:
+          error_list.append(path)
+    self.assertEqual(error_list, [])
+
+class AssertMysql50Tritonn(unittest.TestCase):
+  def test_tritonn_senna(self):
+    """Senna as an library"""
+    result = os.system("ldd parts/mysql-tritonn-5.0/libexec/mysqld | grep -q "
+        "'parts/senna/lib/libsenna.so.0'")
+    self.assertEqual(result, 0)
 
 class AssertApache(unittest.TestCase):
   """Tests for built apache"""
