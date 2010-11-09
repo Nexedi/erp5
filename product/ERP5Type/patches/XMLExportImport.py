@@ -14,7 +14,7 @@
 
 # Make sure the xml export will be ordered
 
-import re, sys
+import re
 from ZODB.utils import u64, p64
 from Shared.DC.xml import ppml
 from base64 import encodestring
@@ -105,20 +105,6 @@ def cleanup_ZopePageTemplate(state):
 
 def cleanupState(classdef, state):
     classdef = getCleanClass(classdef)
-    # if possible, unmigrate document using portal_type as classes
-    # (in order to preserve forward compatibility)
-    if getattr(classdef, '__module__', None) == 'erp5.portal_type' and \
-       len(classdef.__bases__) == 1:
-      base, = classdef.__bases__
-      portal_type = isinstance(state, dict) and state.get('portal_type') or \
-                    getattr(base, 'portal_type', None)
-      if portal_type == classdef.__name__:
-        class_name = base.__name__
-        try:
-          module = sys.modules['Products.ERP5Type.Document.' + class_name]
-          classdef = getattr(module, class_name)
-        except KeyError:
-          classdef = base
     cleanupState = PICKLE_CLEANERS.get(classdef, lambda state: None)
     cleanupState(state)
     return classdef, state
