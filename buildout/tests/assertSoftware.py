@@ -39,7 +39,7 @@ def readElfAsDict(f):
       stderr=subprocess.STDOUT)
   result = popen.communicate()[0]
   if popen.returncode != 0:
-    return False
+    raise AssertionError('Issue during check:\n%s' % result)
   library_list = []
   for l in result.split('\n'):
     if '(NEEDED)' in l:
@@ -177,6 +177,49 @@ class AssertMysql50Tritonn(unittest.TestCase):
     elf_dict = readElfAsDict('parts/mysql-tritonn-5.0/lib/mysql/sphinx.so')
     self.assertEqual(sorted(['libc', 'libcrypt', 'libgcc_s', 'libm', 'libnsl',
       'libpthread', 'libstdc++']),
+      elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['ncurses', 'zlib', 'readline', 'openssl']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['rpath_list'])
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+class AssertMysql51(unittest.TestCase):
+  def test_ld_mysqld(self):
+    elf_dict = readElfAsDict('parts/mysql-5.1/libexec/mysqld')
+    self.assertEqual(sorted(['libc', 'libcrypt', 'libdl', 'libgcc_s', 'libm',
+      'libnsl', 'libpthread', 'libstdc++']), elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['ncurses', 'zlib', 'readline']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['rpath_list'])
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+  def test_ld_mysqlmanager(self):
+    elf_dict = readElfAsDict('parts/mysql-5.1/libexec/mysqlmanager')
+    self.assertEqual(sorted(['libc', 'libcrypt', 'libgcc_s', 'libm', 'libnsl',
+      'libpthread', 'libstdc++']), elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['ncurses', 'zlib', 'readline']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['rpath_list'])
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+  def test_ld_libmysqlclient_r(self):
+    elf_dict = readElfAsDict('parts/mysql-5.1/lib/mysql/libmysqlclient_r.so')
+    self.assertEqual(sorted(['libc', 'libcrypt', 'libm', 'libnsl',
+      'libpthread', 'libz']),
+      elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['ncurses', 'zlib', 'readline', 'openssl']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['rpath_list'])
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+  def test_ld_libmysqlclient(self):
+    elf_dict = readElfAsDict('parts/mysql-5.1/lib/mysql/libmysqlclient.so')
+    self.assertEqual(sorted(['libc', 'libcrypt', 'libcrypto', 'libm', 'libnsl',
+      'libssl', 'libz']),
       elf_dict['library_list'])
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
