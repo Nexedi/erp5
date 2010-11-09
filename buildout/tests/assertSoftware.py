@@ -39,7 +39,7 @@ def readElfAsDict(f):
       stderr=subprocess.STDOUT)
   result = popen.communicate()[0]
   if popen.returncode != 0:
-    raise AssertionError('Issue during check:\n%s' % result)
+    raise AssertionError(result)
   library_list = []
   for l in result.split('\n'):
     if '(NEEDED)' in l:
