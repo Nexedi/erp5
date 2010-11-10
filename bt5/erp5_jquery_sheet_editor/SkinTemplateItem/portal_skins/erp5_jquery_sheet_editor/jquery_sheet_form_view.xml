@@ -42,19 +42,19 @@
            xmlns:metal="http://xml.zope.org/namespaces/metal"\n
            xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
   <tal:block metal:define-macro="master"\n
-             tal:define="css_list_jquery_template python:[\'jquery.sheet.css\',\n
+             tal:define="css_list_jquery_template python:[\'portal_skins/erp5_jquery/plugin/sheet/jquery.sheet.css\',\n
                                   \'portal_skins/erp5_jquery/plugin/colorpicker/jquery.colorPicker.css\',\n
                                   \'portal_skins/erp5_jquery/plugin/colorpicker/menu.css\',\n
 ];\n
                         js_list_jquery_template python:[\'portal_skins/erp5_jquery/core/jquery.js\',\n
-                                                  \'jquery.sheet.js\',\n
+                                                  \'portal_skins/erp5_jquery/plugin/sheet/jquery.sheet.js\',\n
                                                   \'portal_skins/erp5_jquery/plugin/mbmenu/mbMenu.min.js\',\n
                                                   \'portal_skins/erp5_jquery/ui/jquery-ui.js\',\n
                                                   \'portal_skins/erp5_jquery/plugin/jqcharts/jgcharts.min.js\',\n
                                                   \'portal_skins/erp5_jquery/plugin/colorpicker/jquery.colorPicker.min.js\',\n
                                                   \'http://jqueryui.com/themeroller/themeswitchertool/\',\n
                                                   \'portal_skins/erp5_jquery/plugin/elastic/jquery.elastic.min.js\',\n
-                                                  \'jquery.sheet.erp5.js\',\n
+                                                  \'portal_skins/erp5_jquery/plugin/sheet/jquery.sheet.erp5.js\',\n
 ];\n
                          global css_list css_list | python:[];\n
                          global js_list js_list | python:[];\n

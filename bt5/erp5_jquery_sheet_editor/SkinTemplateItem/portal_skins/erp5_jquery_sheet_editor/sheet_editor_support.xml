@@ -36,19 +36,18 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<link rel="stylesheet" href="jquery.sheet.css" type="text/css"/>\n
+<link rel="stylesheet" href="portal_skins/erp5_jquery/plugin/sheet/jquery.sheet.css" type="text/css"/>\n
 <link rel="stylesheet" href="jquery.sheet.erp5.css" type="text/css"/>\n
 <link rel="stylesheet" href="portal_skins/erp5_jquery/plugin/colorpicker/jquery.colorPicker.css" type="text/css"/>\n
 <link rel="stylesheet" href="portal_skins/erp5_jquery/plugin/colorpicker/menu.css" type="text/css"/>\n
 <script type="text/javascript" src="portal_skins/erp5_jquery/core/jquery.js"></script>\n
-<script type="text/javascript" src="jquery.sheet.js"></script>\n
+<script type="text/javascript" src="portal_skins/erp5_jquery/plugin/sheet/jquery.sheet.js"></script>\n
 <script type="text/javascript" src="portal_skins/erp5_jquery/plugin/mbmenu/mbMenu.min.js"></script>\n
 <script type="text/javascript" src="portal_skins/erp5_jquery/ui/jquery-ui.js"></script>\n
 <script type="text/javascript" src="portal_skins/erp5_jquery/plugin/jqcharts/jgcharts.min.js"></script>\n
 <script type="text/javascript" src="portal_skins/erp5_jquery/plugin/colorpicker/jquery.colorPicker.min.js"></script>\n
 <script type="text/javascript" src="http://jqueryui.com/themeroller/themeswitchertool/"></script>\n
 <script type="text/javascript" src="portal_skins/erp5_jquery/plugin/elastic/jquery.elastic.min.js"></script>\n
-<!--<script type="text/javascript" src="jquery.sheet.erp5.js"></script>-->\n
                         \n
 <script type="text/javascript">\n
  $("button.save").click(function(event){\n
