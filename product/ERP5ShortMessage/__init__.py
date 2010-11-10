@@ -1,7 +1,7 @@
 ##############################################################################
 #                                                                             
 # Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.       
-#                    François-Xavier Algrain <fxalgrain@tiolive.com>                  
+#                    Francois-Xavier Algrain <fxalgrain@tiolive.com>                  
 #                                                                             
 # WARNING: This program as such is intended to be used by professional        
 # programmers who take the whole responsability of assessing all potential    

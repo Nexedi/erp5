@@ -55,7 +55,7 @@ class SMSTool(BaseTool):
               
     gateway = self.find(gateway_reference)
 
-    return gateway.send(text,recipient,sender=None, message_type="text",
+    return gateway.send(text,recipient,sender=sender, message_type="text",
                               test=False, **kw)
 
   security.declareProtected(ManagePortal, 'getMessageStatus')
