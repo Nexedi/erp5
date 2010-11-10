@@ -102,14 +102,17 @@ for line in listbox:\n
                                                 title=product.getTitle(),\n
                                                 )\n
       per_resource_line_dict[key] = trade_document_line\n
-      if len(line["variation_category_list"]):\n
-        trade_document_line.setVariationCategoryList(trade_document_line.getVariationCategoryList()+line["variation_category_list"])\n
+      variation_category_list = line["variation_category_list"]\n
+      if variation_category_list:\n
+        variation_category_list.sort()\n
+        trade_document_line.setVariationCategoryList(trade_document_line.getVariationCategoryList()+variation_category_list)\n
         base_id = \'movement\'\n
         cell_key_list = list(trade_document_line.getCellKeyList(base_id=base_id))\n
-        cell_key_list.sort()\n
         for cell_key in cell_key_list:\n
-          if cell_key == line["variation_category_list"]:\n
-            cell = trade_document_line.newCell(base_id=base_id, \\\n
+          sorted_cell_key = cell_key[:]\n
+          sorted_cell_key.sort()\n
+          if sorted_cell_key == variation_category_list:\n
+            cell = trade_document_line.newCell(base_id=base_id,\n
                                                portal_type=cell_portal_type, *cell_key)\n
             cell.edit(mapped_value_property_list=[\'price\',\'quantity\'],\n
                       price=line[\'price\'], quantity=line[\'quantity\'],\n
@@ -121,7 +124,6 @@ for line in listbox:\n
                                  price = line["price"],\n
                                  quantity_unit=line[\'quantity_unit\']\n
                                  )\n
-\n
 \n
 return context.Base_redirect(kw[\'form_id\'], keep_items=dict(\n
         portal_status_message=translateString(\'%s Created.\' %(line_portal_type,))))\n
@@ -188,11 +190,12 @@ return context.Base_redirect(kw[\'form_id\'], keep_items=dict(\n
                             <string>key</string>
                             <string>trade_document_line</string>
                             <string>_write_</string>
-                            <string>len</string>
+                            <string>variation_category_list</string>
                             <string>base_id</string>
                             <string>list</string>
                             <string>cell_key_list</string>
                             <string>cell_key</string>
+                            <string>sorted_cell_key</string>
                             <string>_apply_</string>
                             <string>cell</string>
                             <string>dict</string>
