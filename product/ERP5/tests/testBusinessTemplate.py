@@ -2356,7 +2356,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     ps_title = 'UnitTest'
     ps_data =  ' \nclass UnitTest: \n  """ \n  Fake property sheet for unit test \n \
-    """ \n  _properties = ( \n  ) \n  _categories = ( \n  ) \n\n'
+    """ \n  _properties = ({"id": "ps_prop1", "type": "string"},) \n  _categories = ( \n  ) \n\n'
     cfg = getConfiguration()
     file_path = os.path.join(cfg.instancehome, 'PropertySheet', ps_title+'.py')
     if os.path.exists(file_path):
@@ -2376,6 +2376,19 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     ps_title = sequence.get('ps_title', None)
     self.failUnless(ps_title is not None)
     bt.edit(template_property_sheet_id_list=[ps_title])
+
+  def stepCheckPropertySheetMigration(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check migration of Property Sheets from the Filesystem to ZODB
+    """
+    property_sheet_tool = self.getPortalObject().portal_property_sheets
+    self.failUnless('UnitTest' in property_sheet_tool)
+
+    property_list = property_sheet_tool.UnitTest.contentValues()
+
+    self.assertEquals(len(property_list), 1)
+    self.failUnless(property_list[0].getReference() == 'ps_prop1')
+    self.failUnless(property_list[0].getElementaryType() == 'string')
 
   def stepRemovePropertySheet(self, sequence=None, sequencer_list=None, **kw):
     """
@@ -2402,11 +2415,22 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
 
   def stepCheckPropertySheetRemoved(self, sequence=None, sequencer_list=None, **kw):
     """
-    Check presence of Property Sheet
+    Check deletion of Property Sheet
     """
     ps_path = sequence.get('ps_path', None)
     self.failUnless(ps_path is not None)
     self.failIf(os.path.exists(ps_path))
+
+  def stepCheckMigratedPropertySheetRemoved(self,
+                                            sequence=None,
+                                            sequencer_list=None,
+                                            **kw):
+    """
+    Check deletion of migrated Property Sheet
+    """
+    ps_id = sequence.get('ps_title', None)
+    self.failIf(ps_id is None)
+    self.failIf(ps_id in self.getPortalObject().portal_property_sheets)
 
   def stepCreateUpdatedPropertySheet(self, sequence=None, sequence_list=None, **kw):
     """
@@ -4230,6 +4254,55 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
                        CheckPropertySheetRemoved \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
+  @expectedFailure
+  def test_151_BusinessTemplateWithPropertySheetMigration(self, quiet=quiet,
+                                                          run=run_all_test):
+    if not run:
+      return
+
+    if not quiet:
+      message = 'Test Business Template With Property Sheet Migration'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreatePropertySheet \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddPropertySheetToBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemovePropertySheet \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckNoTrashBin \
+                       CheckSkinsLayers \
+                       CheckPropertySheetMigration \
+                       CheckPropertySheetRemoved \
+                       UninstallBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckMigratedPropertySheetRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
