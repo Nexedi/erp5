@@ -60,27 +60,31 @@ categories from all available GAP.\n
 display_cache = {}\n
 def display(x):\n
   if x not in display_cache:\n
-    gap_id = x.getReference() or x.getId()\n
-    display_cache[x] = \'%s - %s\' % (gap_id, x.getShortTitle() or x.getTitle())\n
+    gap_id = x.getReference()\n
+    if gap_id:\n
+      display_cache[x] = \'%s - %s\' % (gap_id,\n
+                  x.getShortTitle() or x.getTitle())\n
+    else:\n
+      display_cache[x] = x.getIndentedTitle()\n
+\n
   return display_cache[x]\n
 \n
-def sort(x,y):\n
-  return cmp(display(x), display(y))\n
-\n
-def getGapItemList(only_preferred_gap): \n
+def getGapItemList(only_preferred_gap):\n
   ctool = context.getPortalObject().portal_categories\n
   if only_preferred_gap:\n
     gap_root = context.getPortalObject().portal_preferences\\\n
                     .getPreferredAccountingTransactionGap()\n
     if gap_root:\n
       return ctool.resolveCategory(gap_root).getCategoryChildItemList(\n
-        base=False, is_self_excluded=True, display_method=display, sort_method=sort)\n
+        base=False, is_self_excluded=True, display_method=display,\n
+        local_sort_id=(\'int_index\', \'reference\', \'id\'))\n
 \n
-  result = []  \n
+  result = []\n
   for country in ctool.gap.contentValues():\n
     for gap_root in country.contentValues():\n
       result.extend(gap_root.getCategoryChildItemList(\n
-        base=False, is_self_excluded=True, display_method=display, sort_method=sort))\n
+        base=False, is_self_excluded=True, display_method=display,\n
+        local_sort_id=(\'int_index\', \'reference\', \'id\')))\n
   return result\n
 \n
 from Products.ERP5Type.Cache import CachingMethod\n
@@ -102,6 +106,46 @@ return getGapItemList(only_preferred_gap=only_preferred_gap)\n
             <key> <string>errors</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>only_preferred_gap</string>
+                            <string>display_cache</string>
+                            <string>display</string>
+                            <string>getGapItemList</string>
+                            <string>Products.ERP5Type.Cache</string>
+                            <string>CachingMethod</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>1</int>
+              </tuple>
             </value>
         </item>
         <item>
