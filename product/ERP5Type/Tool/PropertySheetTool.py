@@ -63,7 +63,7 @@ class PropertySheetTool(BaseTool):
             )
 
   @staticmethod
-  def _guessFilesytemPropertyPortalType(attribute_dict):
+  def _guessFilesystemPropertyPortalType(attribute_dict):
     """
     Guess the Portal Type of a filesystem-based Property Sheet from
     the attributes of the given property
@@ -91,7 +91,7 @@ class PropertySheetTool(BaseTool):
     for attribute_dict in getattr(klass, '_properties', []):
       # The property could be either a Standard or an Acquired
       # Property
-      portal_type = self._guessFilesytemPropertyPortalType(attribute_dict)
+      portal_type = self._guessFilesystemPropertyPortalType(attribute_dict)
 
       # Create the new property and set its attributes
       new_property = new_property_sheet.newContent(portal_type=portal_type)
@@ -103,9 +103,7 @@ class PropertySheetTool(BaseTool):
       portal_type = isinstance(category, Expression) and \
         'Dynamic Category Property' or 'Category Property'
 
-      new_category = new_property_sheet.newContent(
-        portal_type=portal_type)
-
+      new_category = new_property_sheet.newContent(portal_type=portal_type)
       new_category.importFromFilesystemDefinition(category)
 
     return new_property_sheet

@@ -79,7 +79,7 @@ class StandardProperty(XMLObject):
       if category.startswith('elementary_type/'):
         return category.split('elementary_type/')[1]
 
-    raise AttributeError("%s: Could not get elementary_type" % self)
+    return None
 
   getStorageId = BaseGetter('getStorageId', 'storage_id', 'string')
 
@@ -131,7 +131,7 @@ class StandardProperty(XMLObject):
             'translatable': self.getTranslatable(),
             'translation_domain': self.getTranslationDomain()}
 
-  def _convertFromFilesytemPropertyDict(self, filesystem_property_dict):
+  def _convertFromFilesystemPropertyDict(self, filesystem_property_dict):
     """
     Convert a property dict coming from a Property Sheet on the
     filesystem to a ZODB property dict
@@ -162,4 +162,5 @@ class StandardProperty(XMLObject):
     """
     Set attributes from the filesystem definition of a property
     """
-    self.edit(**self._convertFromFilesytemPropertyDict(filesystem_property_dict))
+    self.edit(**self._convertFromFilesystemPropertyDict(
+      filesystem_property_dict))
