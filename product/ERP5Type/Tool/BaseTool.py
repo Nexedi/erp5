@@ -59,8 +59,10 @@ class BaseTool (UniqueObject, Folder):
     manage_overview = DTMLFile( 'explainBaseTool', _dtmldir )
 
     # Filter content (ZMI))
-    def __init__(self):
-        return Folder.__init__(self, self.__class__.id)
+    def __init__(self, id=None):
+        if id is None:
+          id = self.__class__.id
+        return Folder.__init__(self, id)
 
     # Filter content (ZMI))
     def filtered_meta_types(self, user=None):
