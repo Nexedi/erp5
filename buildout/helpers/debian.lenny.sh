@@ -34,6 +34,7 @@ libtool
 libxml2-dev
 libxslt1-dev
 make
+openssl
 patch
 python-setuptools
 rpm
