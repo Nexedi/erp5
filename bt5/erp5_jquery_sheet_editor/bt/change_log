@@ -1,2 +1,5 @@
+2010-11-10 gabriel
+* Added svg_editor_support page template. This page template will be used to integrate svg editor with EditorField.
+
 2010-11-08 gabriel
 * The initial commit
