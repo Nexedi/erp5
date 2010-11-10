@@ -50,7 +50,7 @@
   });\n
   svg_canvas = window.frames["svgframe"].svgCanvas;\n
   var text_content = $.ajax({\n
-               url: "Base_getTextContentWrapper",\n
+               url: "getTextContent",\n
                async: false\n
              }).responseText;\n
   svg_canvas.setSvgString(text_content);\n

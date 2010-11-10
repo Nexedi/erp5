@@ -40,15 +40,9 @@
            xmlns:metal="http://xml.zope.org/namespaces/metal"\n
            xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
   <tal:block metal:define-macro="master"\n
-             tal:define="css_list_jquery_template python:[\'portal_skins/erp5_jquery/plugin/jgraduate/css/jPicker-1.0.12.css\',\n
-                                                          \'portal_skins/erp5_jquery/plugin/jgraduate/css/jgraduate.css\',\n
-                                                          \'portal_skins/erp5_jquery/plugin/svg-editor/svg-editor.css\',\n
-                                                          \'portal_skins/erp5_jquery/plugin/spinbtn/JQuerySpinBtn.css\',\n
-];\n
-                         js_list_jquery_template python: [\'svg-editor.erp5.js\'];\n
-                         global css_list css_list | python:[];\n
+             tal:define="js_list_jquery_template python: [\'portal_skins/erp5_jquery/core/jquery.js\',\n
+                                                          \'svg-editor.erp5.js\'];\n
                          global js_list js_list | python:[];\n
-                         dummy  python:css_list.extend(css_list_jquery_template);\n
                          dummy  python:js_list.extend(js_list_jquery_template);">\n
     <tal:block metal:use-macro="here/view_main/macros/master">\n
       <tal:block metal:fill-slot="main">\n
