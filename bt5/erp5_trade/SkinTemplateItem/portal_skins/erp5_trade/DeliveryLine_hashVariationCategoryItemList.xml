@@ -62,6 +62,7 @@ if resource is not None:\n
 else :\n
   not_option_base_category_list = ()\n
 \n
+del default_sub_field_property_dict[\'item_list\']\n
 for item in item_list:\n
   # Get value of the item\n
   item_value = item[int(not is_right_display)]\n
@@ -70,25 +71,16 @@ for item in item_list:\n
   item_key = string.join(item_split[:split_depth] , \'/\' )\n
   base_category = item_split[0]\n
 \n
-  if not sub_field_dict.has_key(item_key):\n
-    # Create property dict\n
-    sub_field_property_dict = default_sub_field_property_dict.copy()\n
-    sub_field_property_dict[\'key\'] = item_key\n
-    required_value = 0\n
-    if base_category in not_option_base_category_list:\n
-      required_value = 1\n
-    sub_field_property_dict[\'required\'] = required_value\n
-    sub_field_property_dict[\'field_type\'] = \'ListField\'\n
-    sub_field_property_dict[\'size\'] = 1\n
-    sub_field_property_dict[\'item_list\'] = [(\'\',\'\')]\n
-    sub_field_property_dict[\'value\'] = []\n
-    sub_field_dict[item_key] = sub_field_property_dict\n
+  sub_field_property_dict = sub_field_dict.setdefault(item_key, default_sub_field_property_dict.copy())\n
 \n
-  sub_field_dict[item_key][\'item_list\'] =\\\n
-     sub_field_dict[item_key][\'item_list\'] + [item]\n
-\n
-  if item in value_list:\n
-    sub_field_dict[item_key][\'value\'] = item\n
+  sub_field_property_dict[\'key\'] = item_key\n
+  sub_field_property_dict[\'required\'] = int(base_category in not_option_base_category_list)\n
+  sub_field_property_dict[\'field_type\'] = \'ListField\'\n
+  sub_field_property_dict[\'size\'] = 1\n
+  sub_field_property_dict.setdefault(\'item_list\', [(\'\', \'\')]).extend([item])\n
+  if item_value in value_list:\n
+    # Only one value per variation\n
+    sub_field_property_dict[\'value\'] = item_value\n
 \n
 return sub_field_dict.values()\n
 </string> </value>
@@ -139,6 +131,7 @@ return sub_field_dict.values()\n
                             <string>resource</string>
                             <string>None</string>
                             <string>not_option_base_category_list</string>
+                            <string>_write_</string>
                             <string>_getiter_</string>
                             <string>item</string>
                             <string>_getitem_</string>
@@ -149,8 +142,6 @@ return sub_field_dict.values()\n
                             <string>item_key</string>
                             <string>base_category</string>
                             <string>sub_field_property_dict</string>
-                            <string>_write_</string>
-                            <string>required_value</string>
                           </tuple>
                         </value>
                     </item>
