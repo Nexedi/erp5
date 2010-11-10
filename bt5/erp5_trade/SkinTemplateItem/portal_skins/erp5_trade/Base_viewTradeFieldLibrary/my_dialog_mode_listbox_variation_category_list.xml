@@ -10,6 +10,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>hash_script_id</string>
                 <string>items</string>
                 <string>title</string>
               </list>
@@ -89,6 +90,10 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>hash_script_id</string> </key>
+                    <value> <string>DeliveryLine_hashVariationCategoryItemList</string> </value>
                 </item>
                 <item>
                     <key> <string>items</string> </key>
