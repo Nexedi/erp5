@@ -43,10 +43,10 @@ def getRssDataAsDict(self, url, username=None, password=None):
     entry_dict['link'] = entry['link']
     entry_dict['other_links'] = [x['href'] for x in entry['links']]
     entry_dict['md5'] = md5.new(entry['link']).hexdigest() 
-    entry_dict['content'] = entry['summary']
-    entry_dict['date'] = entry['updated']
+    entry_dict['content'] = entry.get('summary', '')
+    entry_dict['date'] = entry.get('updated', None)
     entry_dict['img'] = [x['href'] for x in entry.get('enclosures', [])]
-    entry_dict['updated_parsed'] = entry['updated_parsed']
+    entry_dict['updated_parsed'] = entry.get('updated_parsed', None)
     result['items'].append(entry_dict)
   # sort by date
   result['items'] = sorted(result['items'], key=lambda k: k['updated_parsed'])
