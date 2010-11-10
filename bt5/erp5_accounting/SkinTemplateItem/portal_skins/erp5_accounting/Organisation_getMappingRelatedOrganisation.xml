@@ -53,6 +53,10 @@
             <value> <string>"""Returns the main organisation for that group.\n
 """\n
 \n
+if len(context.contentValues(filter=\n
+    dict(portal_type=\'Accounting Period\'))) or context.getMapping():\n
+  return context\n
+\n
 def getOrganisationForSectionCategory(section):\n
   mapping = section.getMappingRelatedValue(portal_type=\'Organisation\',\n
                            checked_permission=\'Access contents information\')\n
@@ -64,7 +68,7 @@ def getOrganisationForSectionCategory(section):\n
                               checked_permission=\'Access contents information\')\n
 \n
   for organisation in organisation_list:\n
-    if organisation.getProperty(\'validation_state\', \'unset\') not in (\'deleted\', \'cancelled\'):\n
+    if organisation.getProperty(\'validation_state\', \'unset\') not in (\'deleted\', \'invalidated\'):\n
       return organisation\n
 \n
 \n
@@ -102,6 +106,48 @@ return context\n
             <key> <string>errors</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>len</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>dict</string>
+                            <string>getOrganisationForSectionCategory</string>
+                            <string>group</string>
+                            <string>None</string>
+                            <string>group_chain</string>
+                            <string>_getiter_</string>
+                            <string>organisation</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
             </value>
         </item>
         <item>
