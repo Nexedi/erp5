@@ -83,15 +83,16 @@ class TrashTool(BaseTool):
         # export object
         object_path = container_path + [object_id]
         obj = self.unrestrictedTraverse(object_path)
-        if obj is None:
-          # object doesn't exist any longer
-          pass
-        else:
+        if obj is not None:
           connection = obj._p_jar
           o = obj
           while connection is None:
             o = o.aq_parent
             connection=o._p_jar
+          if obj._p_oid is None:
+            LOG("Trash Tool backupObject", 100,
+                "Trying to backup uncommitted object %s" % object_path)
+            return {}
           copy = connection.exportFile(obj._p_oid)
           # import object in trash
           connection = backup_object_container._p_jar
@@ -121,7 +122,7 @@ class TrashTool(BaseTool):
             # Folder and not a Form, or a module for the old object is
             # already removed, and we cannot backup the object
             LOG("Trash Tool backupObject", 100, "Can't backup object %s" %(object_id))
-            pass
+            return {}
 
     keep_sub = kw.get('keep_subobjects', 0)
     subobjects_dict = {}
