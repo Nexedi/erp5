@@ -1,0 +1,322 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>jquery.sheet.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>/* Controls styling */\r\n
+.jSheetControls_loc, .jSheetControls_fx\r\n
+{\r\n
+\tborder-width: 0px ! important;\r\n
+\tbackground: none ! important;\r\n
+}\r\n
+\r\n
+.jSheetControls_formula\r\n
+{\r\n
+\twidth: 99%;\r\n
+    height: 17px;\r\n
+}\r\n
+\r\n
+.jSheetLog\r\n
+{\r\n
+\theight: 100px;\r\n
+\twidth: 100%;\r\n
+\toverflow-y: scroll;\r\n
+\tposition: relative;\r\n
+}\r\n
+\r\n
+.jSheetControls, .jSheetControls table\r\n
+{\r\n
+\tpadding: 0px ! important;\r\n
+\tborder: none ! important;\r\n
+\twidth: 100%; \r\n
+\tmargin: 0px; \r\n
+}\r\n
+\r\n
+.jSheetMenu\r\n
+{\r\n
+\tcursor: pointer;\r\n
+\tbackground-color: transparent ! important;\r\n
+\tpadding: 0px ! important;\r\n
+\tmargin: 0px ! important;\r\n
+\tborder: none ! important;\r\n
+}\r\n
+\r\n
+.jSheetMenu *\r\n
+{\r\n
+\tcolor: inherit ! important;\r\n
+\tbackground-color: inherit ! important;\r\n
+}\r\n
+.menu\r\n
+{\r\n
+\tdisplay: none;\r\n
+}\r\n
+#titleHolder\r\n
+{\r\n
+\tpadding-left: 10px;\r\n
+}\r\n
+.jSheetUI\r\n
+{\r\n
+\twidth: inherit ! important;\r\n
+\tborder-color: inherit ! important;\r\n
+}\r\n
+.jSheetTabContainer\r\n
+{\r\n
+\tvertical-align: bottom;\r\n
+\ttext-align: left ! important;\r\n
+}\r\n
+.jSheetTabContainer span\r\n
+{\r\n
+\t\r\n
+\tpadding: 2px 5px 0 5px ! important;\r\n
+\tcursor: pointer;\r\n
+}\r\n
+.jSheetTabContainer *, .menuDiv *\r\n
+{\r\n
+\tfont-size: 1em ! important;\r\n
+}\r\n
+\r\n
+.tableControl\r\n
+{\r\n
+\tborder-collapse: collapse ! important;\r\n
+\tborder: none ! important;\r\n
+\tmargin: none ! important;\r\n
+\tpadding: none ! important;\r\n
+\tposition: absolute ! important;\r\n
+}\r\n
+\r\n
+/* Sheet styling */\r\n
+.jSheet\r\n
+{\r\n
+\tposition: relative ! important;\r\n
+\tmargin-top: -1px ! important;\r\n
+\tmargin-left: -1px ! important;\r\n
+    table-layout: fixed;\r\n
+    empty-cells: show;\r\n
+\tbackground-image: none ! important;\r\n
+\tfont-family: arial, serif;\r\n
+\toverflow: hidden;\r\n
+\theight: auto ! important;\r\n
+\tborder-spacing: 0px ! important;\r\n
+\tborder-width: 1px ! important;\r\n
+\tmargin-bottom: 20px ! important;\r\n
+}\r\n
+.jSheet tbody\r\n
+{\r\n
+\tbackground-color: transparent;\r\n
+\tcolor: inherit ! important;\r\n
+\tborder-color: inherit ! important;\r\n
+}\r\n
+\r\n
+.jSheet tr {\r\n
+\tborder-color: inherit ! important;\r\n
+\tpadding: 0px ! important;\r\n
+\tborder-style: solid ! important;\r\n
+\tbackground-color: transparent;\r\n
+\t-moz-border-radius: 0px 0px 0px 0px;\r\n
+\tcolor:  inherit ! important;\r\n
+\tborder-width: 0px ! important;\r\n
+}\r\n
+.jSheet td {\r\n
+\tborder-width: 1px ! important;\r\n
+\tborder-color: inherit;\r\n
+\tpadding: 0px ! important;\r\n
+\tborder-style: solid ! important;\r\n
+\t-moz-border-radius: 0px 0px 0px 0px;\r\n
+\toverflow: hidden ! important;\r\n
+    text-overflow: ellipsis ! important;\r\n
+    white-space: nowrap ! important;\r\n
+\tmargin: 0px ! important;\r\n
+\tpadding: 0px ! important;\r\n
+\tfont-size: 1em ! important;\r\n
+\theight: inherit ! important;\r\n
+\tcolor:  inherit;\r\n
+\tposition: relative;\r\n
+\tmin-width: 25px ! important;\r\n
+}\r\n
+\r\n
+.jSheet colgroup col\r\n
+{\r\n
+\tborder: none ! important;\r\n
+}\r\n
+\r\n
+/* Containers styleing*/\r\n
+.jSheetBarCorner\r\n
+{\r\n
+\tcursor: pointer;\r\n
+\tborder-width: 1px ! important;\r\n
+}\r\n
+\r\n
+.jSheetBarCornerParent\r\n
+{\r\n
+\tborder: none ! important;\r\n
+}\r\n
+\r\n
+.jSheetBarTopParent\r\n
+{\r\n
+    position: relative ! important;\r\n
+\tbackground-image: none ! important;\r\n
+\tvertical-align: middle;\r\n
+\toverflow: hidden ! important;\r\n
+\tcursor: pointer;\r\n
+\toverflow: hidden ! important;\r\n
+}\r\n
+\r\n
+.jSheetBarLeftParent\r\n
+{\r\n
+    position: relative ! important;\r\n
+\tbackground-image: none ! important;\r\n
+\tvertical-align: middle;\r\n
+\toverflow: hidden ! important;\r\n
+\tcursor: pointer;\r\n
+\toverflow: hidden ! important;\r\n
+}\r\n
+\r\n
+.jSheetEditPane\r\n
+{\r\n
+    overflow: auto ! important;\r\n
+\tbackground-image: none ! important;\r\n
+\tborder-width: 0px;\r\n
+\tposition: relative ! important;\r\n
+}\r\n
+/* Bar item styling */\r\n
+\r\n
+.jSheetBarTop\r\n
+{\r\n
+    position: relative ! important;\r\n
+\tborder-width: 0px ! important;\r\n
+\tmin-width: 100000px;\r\n
+}\r\n
+\r\n
+.jSheetBarLeft\r\n
+{\r\n
+\tposition: relative ! important;\r\n
+\tborder-width: 0px ! important;\r\n
+\tmin-height: 100000px;\r\n
+}\r\n
+.jSheetBarLeft div\r\n
+{\r\n
+\ttext-align: center;\r\n
+\tfont-size: .8em;\r\n
+\theight: inherit;\r\n
+\tborder-left: none ! important;\r\n
+\tborder-right: none ! important;\r\n
+\tposition: relative ! important;\r\n
+\tvertical-align: middle ! important;\r\n
+\tmin-width: 14px ! important;\r\n
+}\r\n
+.jSheetBarTop div\r\n
+{\r\n
+\ttext-align: center ! important;\r\n
+\tfont-size: .8em;\r\n
+\tfloat: left;\r\n
+\tdisplay:block;\r\n
+\theight: inherit ! important;\r\n
+\tpadding-top: 2px;\r\n
+\toverflow: hidden;\r\n
+\tborder-top: none ! important;\r\n
+\tborder-bottom: none ! important;\r\n
+\tmin-width: 25px ! important;\r\n
+}\r\n
+\r\n
+.jSheetControls img\r\n
+{\r\n
+\tborder: none;\r\n
+}\r\n
+\r\n
+.safeImg\r\n
+{\r\n
+\tdisplay: inline;\r\n
+}\r\n
+\r\n
+.jSheetInPlaceEdit\r\n
+{\r\n
+\tposition: absolute;\r\n
+}\r\n
+\r\n
+.colorPickers *\r\n
+{\r\n
+\tdisplay: inline-block;\r\n
+\twidth: 16px ! important;\r\n
+\theight: 16px ! important;\r\n
+\tbackground-color: transparent ! important;\r\n
+}\r\n
+\r\n
+.jSheetFullScreen\r\n
+{\r\n
+\ttop: 5px;\r\n
+\tleft: 5px;\r\n
+\tposition: fixed;\r\n
+\ttop: expression(eval(document.body.scrollTop + 15) + "px");\r\n
+\tleft: expression(eval(document.body.scrollLeft) + "px");\r\n
+}\r\n
+\r\n
+.jSheetFullScreenTabContainer\r\n
+{\r\n
+\tbottom: 10px;\r\n
+\tleft: 10px;\r\n
+\tposition: fixed;\r\n
+\ttop: expression(eval(document.body.scrollTop + 15) + "px");\r\n
+\tleft: expression(eval(document.body.scrollLeft) + "px");\r\n
+}\r\n
+\r\n
+/* Cell styler classes */\r\n
+.styleBold\r\n
+{ font-weight: bold; }\r\n
+.styleItalics\t\r\n
+{ font-style: italic; }\r\n
+.styleUnderline\t\r\n
+{ text-decoration: underline; }\r\n
+.styleLineThrough\r\n
+{ text-decoration: line-through;}\r\n
+.styleLeft\t\t\r\n
+{ text-align: left; }\r\n
+.styleRight\t\t\r\n
+{ text-align: right; }\r\n
+.styleCenter\t\r\n
+{ text-align: center; }\r\n
+.styleTop\t\t\r\n
+{ vertical-align: top; }\r\n
+.styleMiddle\t\r\n
+{ vertical-align: middle; }\r\n
+.styleBottom\t\r\n
+{ vertical-align: bottom; }\r\n
+.styleUpper \t\t\r\n
+{ text-transform: uppercase; }\r\n
+.styleCapital \t\r\n
+{ text-transform: capitalize; }\r\n
+.styleLower \t\t\r\n
+{ text-transform: lowercase; }\r\n
+.styleHidden \t\r\n
+{ display: none; }\r\n
+.styleWrap\r\n
+{ word-wrap: break-word; }</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
