@@ -34,7 +34,7 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
            xmlns:metal="http://xml.zope.org/namespaces/metal">\n
@@ -67,7 +67,7 @@
         </tr>\n
         <tr>\n
           <td>verifyText</td>\n
-          <td tal:content="python: \'//tr[@class=\\\'listbox_stat_line\\\']/td[%s]\' % inventory_tuple[1]">inventory value</td>\n
+          <td tal:content="python: \'//tr[@class=\\\'listbox_stat_line  listbox-stat-line\\\']/td[%s]\' % inventory_tuple[1]">inventory value</td>\n
           <td tal:content="python: inventory_tuple[0]">current inventory</td>\n
         </tr>\n
 \n
@@ -93,7 +93,7 @@
   </tal:block>\n
 </tal:block>
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -108,8 +108,12 @@
             <value> <string>PdmZuite_checkStockBrowser</string> </value>
         </item>
         <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <unicode></unicode> </value>
         </item>
       </dictionary>
     </pickle>
