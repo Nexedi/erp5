@@ -59,12 +59,12 @@
 """\n
 from Products.ERP5Type.Document import newTempBase\n
 request = context.REQUEST\n
+portal = context.getPortalObject()\n
 trade_document = context\n
 result = []\n
-\n
 # Retrieve lines portal type\n
 line_portal_type_list = [x for x in context.getTypeInfo().getTypeAllowedContentTypeList() \\\n
-                         if x in context.getPortalMovementTypeList()]\n
+                         if x in portal.getPortalMovementTypeList()]\n
 line_portal_type = line_portal_type_list[0]\n
 \n
 if read_document_lines:\n
@@ -72,11 +72,11 @@ if read_document_lines:\n
 else:\n
   line_list = []\n
 \n
-if line_portal_type in context.getPortalSaleTypeList():\n
+if line_portal_type in portal.getPortalSaleTypeList():\n
   section_uid = context.getSourceSectionUid()\n
-elif line_portal_type in context.getPortalPurchaseTypeList():\n
+elif line_portal_type in portal.getPortalPurchaseTypeList():\n
   section_uid = context.getDestinationSectionUid()\n
-elif line_portal_type in context.getPortalInternalTypeList() + context.getPortalInventoryMovementTypeList():\n
+elif line_portal_type in portal.getPortalInternalTypeList() + portal.getPortalInventoryMovementTypeList():\n
   section_uid = None\n
 len_line_list = len(line_list)\n
 used_id = [] # list use to make sure we do not generate two line with same id/uid\n
@@ -203,7 +203,7 @@ if read_document_lines is False:\n
      # if a resource is selected, use it\n
      if resource_relative_url not in (\'\',None):\n
        empty_line_cpt -= 1\n
-       resource = context.restrictedTraverse(resource_relative_url)\n
+       resource = portal.restrictedTraverse(resource_relative_url)\n
        obj.setResourceValue(resource)\n
      empty_line_cpt += 1\n
      result_append(obj)\n
@@ -255,6 +255,7 @@ return result\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
+                            <string>portal</string>
                             <string>trade_document</string>
                             <string>result</string>
                             <string>append</string>
