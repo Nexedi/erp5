@@ -44,22 +44,17 @@
     svg_canvas = window.frames["svgframe"].svgCanvas;\n
     $.ajax({\n
       type: "POST",\n
-      url: "WebIllustration_setTextContent",\n
+      url: "Base_setTextContentWrapper",\n
       data: "text=" + svg_canvas.getSvgString(),\n
    });\n
   });\n
   svg_canvas = window.frames["svgframe"].svgCanvas;\n
   var text_content = $.ajax({\n
-               url: "WebIllustration_getTextContent",\n
+               url: "Base_getTextContentWrapper",\n
                async: false\n
              }).responseText;\n
   svg_canvas.setSvgString(text_content);\n
-})\n
-\n
-function clickSaveButton() {\n
-  svg_canvas = window.frames["svgframe"].svgCanvas;\n
-  document.forms[0].elements[\'field_my_text_content\'].value = svg_canvas.getSvgString();\n
-}</unicode> </value>
+})</unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>

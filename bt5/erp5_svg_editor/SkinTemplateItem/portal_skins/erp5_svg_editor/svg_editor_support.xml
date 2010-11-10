@@ -57,7 +57,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>svg_support</string> </value>
+            <value> <string>svg_editor_support</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>

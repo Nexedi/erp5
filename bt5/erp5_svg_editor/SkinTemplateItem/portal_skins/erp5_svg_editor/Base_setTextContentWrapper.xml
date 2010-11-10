@@ -50,7 +50,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>text_content = context.REQUEST.get("text")\n
+            <value> <string>"""\n
+  wrapper to JQuery insert the data in the current document\n
+"""\n
+text_content = context.REQUEST.get("text")\n
 if text_content is not None:\n
   context.edit(text_content=text_content)\n
 </string> </value>
@@ -109,7 +112,7 @@ if text_content is not None:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebIllustration_setTextContent</string> </value>
+            <value> <string>Base_setTextContentWrapper</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

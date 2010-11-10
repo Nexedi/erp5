@@ -50,7 +50,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return context.getTextContent()\n
+            <value> <string>"""\n
+  Script used by JavaScript to get the text of document.\n
+  This way is used to the JavaScript insert the data in SVG Editor.\n
+"""\n
+return context.getTextContent()\n
 </string> </value>
         </item>
         <item>
@@ -105,7 +109,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebIllustration_getTextContent</string> </value>
+            <value> <string>Base_getTextContentWrapper</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
