@@ -68,7 +68,7 @@ Test changing state in accounting module (with custom search)\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>listbox_select</td>\n
+  <td>//input[@class="listbox-select-action"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -167,7 +167,7 @@ Test changing state in accounting module (with custom search)\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>listbox_select</td>\n
+  <td>//input[@class="listbox-select-action"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n

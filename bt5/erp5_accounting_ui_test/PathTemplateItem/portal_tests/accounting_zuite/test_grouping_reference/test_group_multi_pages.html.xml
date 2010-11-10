@@ -66,7 +66,7 @@ Grouping with multiple pages\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>listbox_select</td>\n
+  <td>//input[@class="listbox-select-action"]</td>\n
   <td></td>\n
 </tr>\n
 <!-- }}} -->\n
