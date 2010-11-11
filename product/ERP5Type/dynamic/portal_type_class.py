@@ -129,10 +129,15 @@ def generatePortalTypeClass(portal_type_name):
     mixin_list = []
     interface_list = []
 
-  type_class_path = document_class_registry.get(type_class)
-  if type_class_path is None:
+  if type_class is None:
     raise AttributeError('Document class is not defined on Portal Type %s' \
             % portal_type_name)
+
+  type_class_path = document_class_registry.get(type_class)
+  if type_class_path is None:
+    raise AttributeError('Document class %s has not been registered:' \
+                         ' cannot import it as base of Portal Type %s' \
+                         % (type_class, portal_type_name))
 
   klass = _importClass(type_class_path)
 
