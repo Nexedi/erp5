@@ -1184,11 +1184,14 @@ div.web-toolbar li > a span {\n
 \n
 div.web-toolbar div.menu label{\n
   font-weight: bold;\n
-  padding-left: 0.5em;\n
-  margin-bottom:1em;\n
   margin-top:1em;\n
+  margin-bottom:1em;\n
+  margin-left:0.5em;\n
+  width:100%;\n
 }\n
-\n
+div.web-toolbar div.menu input{\n
+  margin-left:0.5em;\n
+}\n
 div.web-toolbar div.menu button{\n
   color: #FFFFFF!important;\n
   background-color: transparent;\n

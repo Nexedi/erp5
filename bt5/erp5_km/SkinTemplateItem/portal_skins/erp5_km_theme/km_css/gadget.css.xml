@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts88882837.45</string> </value>
+            <value> <string>ts89487891.55</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -563,9 +563,16 @@ div.gadget_advertisement{\n
 }\n
 \n
 /* Gadget Relations  */\n
-div.relations-gadget ul{\n
-  padding: 0em;\n
-  margin-left:0.5em;\n
+div.gadget-relations .listbox-head-title span{\n
+  color: #000;\n
+}\n
+div.gadget-relations .listbox-body{\n
+  padding-left:5px;\n
+}\n
+\n
+div.gadget-relations div.listbox-head-navigation,\n
+div.gadget-relations .listbox-label-line{\n
+  display: none;\n
 }\n
 \n
 /* Latest content  needs no listbox headers*/\n
@@ -608,7 +615,8 @@ div.block fieldset.gadget-profile label{\n
   color: #000;\n
 }\n
 div.block fieldset.gadget-profile div.field{\n
-  margin-bottom:5px;\n
+  margin-top:5px;\n
+  padding-left: 5px;\n
 }
 
 ]]></string> </value>
@@ -619,7 +627,7 @@ div.block fieldset.gadget-profile div.field{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>10492</int> </value>
+            <value> <int>10680</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
