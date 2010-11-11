@@ -136,7 +136,11 @@ class PortalTypeMetaClass(ExtensionClass):
 
 
     # save the old bases to be able to restore a ghost state later
-    klass.__ghostbase__ = klass.__bases__
+    if not hasattr(klass, '__ghostbase__'):
+      # but only do it if we're in the innermost call, otherwise
+      # klass.__bases__ might just be the Document without accessor
+      # holders, and we would override the real ghost class
+      klass.__ghostbase__ = klass.__bases__
     klass.__bases__ = base_list
 
     for key, value in attribute_dict.iteritems():
