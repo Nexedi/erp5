@@ -147,7 +147,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: len([x for x  in in getattr(here, here.getSpecialiseValue().view_form_id).objectIds() if x.startswith(\'listbox\')])</string> </value>
+            <value> <string>python: len([x for x  in getattr(here, here.getSpecialiseValue().view_form_id).objectIds() if x.startswith(\'listbox\')])</string> </value>
         </item>
       </dictionary>
     </pickle>
