@@ -1007,7 +1007,8 @@ button.bt-med span img {\n
 #km_left {\n
 \n
   float: left;\n
-  width:75%;\n
+  min-width:75%;\n
+  width: auto;\n
   padding-top: 0.3em;\n
 \n
 }\n
