@@ -43,40 +43,25 @@
 <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />\n
 <meta http-equiv="X-UA-Compatible" content="chrome=1"/>\n
 <link rel="icon" type="image/png" href="images/logo.png"/>\n
-<link rel="stylesheet" href="jgraduate/css/jPicker-1.0.12.css" type="text/css"/>\n
-<link rel="stylesheet" href="jgraduate/css/jgraduate.css" type="text/css"/>\n
+<link rel="stylesheet" href="portal_skins/erp5_jquery/plugin/jgraduate/css/jPicker-1.0.12.css" type="text/css"/>\n
+<link rel="stylesheet" href="portal_skins/erp5_jquery/plugin/jgraduate/css/jgraduate.css" type="text/css"/>\n
 <link rel="stylesheet" href="svg-editor.css" type="text/css"/>\n
-<link rel="stylesheet" href="spinbtn/JQuerySpinBtn.css" type="text/css"/>\n
+<link rel="stylesheet" href="portal_skins/erp5_jquery/plugin/spinbtn/JQuerySpinBtn.css" type="text/css"/>\n
 \n
 <!-- Release version of script tags: -->\n
-<script type="text/javascript" src="jquery.js"></script>\n
-<script type="text/javascript" src="js-hotkeys/jquery.hotkeys.min.js"></script>\n
-<script type="text/javascript" src="jgraduate/jquery.jgraduate.min.js"></script>\n
-<script type="text/javascript" src="svgicons/jquery.svgicons.min.js"></script>\n
-<script type="text/javascript" src="jquerybbq/jquery.bbq.min.js"></script>\n
-<script type="text/javascript" src="spinbtn/JQuerySpinBtn.min.js"></script>\n
+<script type="text/javascript" src="portal_skins/erp5_jquery/core/jquery.js"></script>\n
+<script type="text/javascript" src="portal_skins/erp5_jquery/plugin/hotkeys/jquery.hotkeys.min.js"></script>\n
+<script type="text/javascript" src="portal_skins/erp5_jquery/plugin/jgraduate/jquery.jgraduate.min.js"></script>\n
+<script type="text/javascript" src="portal_skins/erp5_jquery/plugin/svgicons/jquery.svgicons.min.js"></script>\n
+<script type="text/javascript" src="portal_skins/erp5_jquery/plugin/jquerybbq/jquery.bbq.min.js"></script>\n
+<script type="text/javascript" src="portal_skins/erp5_jquery/plugin/spinbtn/JQuerySpinBtn.min.js"></script>\n
 <script type="text/javascript" src="svgcanvas.js"></script>\n
 <script type="text/javascript" src="svg-editor.js"></script>\n
 <script type="text/javascript" src="locale/locale.min.js"></script>\n
-<!-- you can load extensions here -->\n
-<!-- <script type="text/javascript" src="extensions/ext-helloworld.js"></script> -->\n
-\n
-\n
-<!-- Development version of script tags: \n
-<script type="text/javascript" src="jquery.js"></script>\n
-<script type="text/javascript" src="js-hotkeys/jquery.hotkeys.min.js"></script>\n
-<script type="text/javascript" src="jgraduate/jquery.jgraduate.min.js"></script>\n
-<script type="text/javascript" src="svgicons/jquery.svgicons.min.js"></script>\n
-<script type="text/javascript" src="jquerybbq/jquery.bbq.min.js"></script>\n
-<script type="text/javascript" src="spinbtn/JQuerySpinBtn.js"></script>\n
-<script type="text/javascript" src="svgcanvas.js"></script>\n
-<script type="text/javascript" src="svg-editor.js"></script>\n
-<script type="text/javascript" src="locale/locale.js"></script>\n
--->\n
 \n
 <!-- always minified scripts -->\n
-<script type="text/javascript" src="jquery-ui/jquery-ui-1.8.custom.min.js"></script>\n
-<script type="text/javascript" src="jgraduate/jpicker-1.0.12.min.js"></script>\n
+<script type="text/javascript" src="portal_skins/erp5_jquery/ui/js/jquery-ui.js"></script>\n
+<script type="text/javascript" src="portal_skins/erp5_jquery/plugin/jgraduate/jpicker-1.0.12.min.js"></script>\n
 \n
 <!-- feeds -->\n
 <link rel="alternate" type="application/atom+xml" title="SVG-edit General Discussion" href="http://groups.google.com/group/svg-edit/feed/atom_v1_0_msgs.xml" />\n
@@ -639,28 +624,7 @@
 \t\t<fieldset id="svg_docprops_prefs">\n
 \t\t\t<legend id="svginfo_editor_prefs">Editor Preferences</legend>\n
 \n
-\t\t\t<label><span id="svginfo_lang">Language:</span>\n
-\t\t\t\t<!-- Source: http://en.wikipedia.org/wiki/Language_names -->\n
-\t\t\t\t<select id="lang_select">\n
-\t\t\t\t  <option id="lang_ar" value="ar">العربية</option>\n
-\t\t\t\t\t<option id="lang_cs" value="cs">Čeština</option>\n
-\t\t\t\t\t<option id="lang_de" value="de">Deutsch</option>\n
-\t\t\t\t\t<option id="lang_en" value="en" selected="selected">English</option>\n
-\t\t\t\t\t<option id="lang_es" value="es">Español</option>\n
-\t\t\t\t\t<option id="lang_fa" value="fa">فارسی</option>\n
-\t\t\t\t\t<option id="lang_fr" value="fr">Français</option>\n
-\t\t\t\t\t<option id="lang_fy" value="fy">Frysk</option>\n
-\t\t\t\t\t<option id="lang_hi" value="hi">&#2361;&#2367;&#2344;&#2381;&#2342;&#2368;, &#2361;&#2367;&#2306;&#2342;&#2368;</option>\n
-\t\t\t\t\t<option id="lang_ja" value="ja">日本語</option>\n
-\t\t\t\t\t<option id="lang_nl" value="nl">Nederlands</option>\n
-\t\t\t\t\t<option id="lang_pt-BR" value="pt-BR">Português (BR)</option>\n
-\t\t\t\t\t<option id="lang_ro" value="ro">Româneşte</option>\n
-\t\t\t\t\t<option id="lang_ru" value="ru">Русский</option>\n
-\t\t\t\t\t<option id="lang_sk" value="sk">Slovenčina</option>\n
-\t\t\t\t\t<option id="lang_zh-TW" value="zh-TW">繁體中文</option>\n
-\t\t\t\t</select>\n
-\t\t\t</label>\n
-\n
+\t\t\t\n
 \t\t\t<label><span id="svginfo_icons">Icon size:</span>\n
 \t\t\t\t<select id="iconsize">\n
 \t\t\t\t\t<option id="icon_small" value="s">Small</option>\n
