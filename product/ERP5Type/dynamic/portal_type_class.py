@@ -104,11 +104,22 @@ def generatePortalTypeClass(portal_type_name):
   site = getSite()
 
   accessor_holder_list = []
+  type_class = None
 
   # Do not use __getitem__ (or _getOb) because portal_type may exist in a
   # type provider other than Types Tool.
   portal_type = getattr(site.portal_types, portal_type_name, None)
-  if portal_type is None:
+  if portal_type is not None:
+    # type_class has a compatibility getter that should return
+    # something even if the field is not set (i.e. Base Type object
+    # was not migrated yet). It only works if factory_method_id is set.
+    type_class = portal_type.getTypeClass()
+    mixin_list = portal_type.getTypeMixinList()
+    interface_list = portal_type.getTypeInterfaceList()
+
+  # But if neither factory_init_method_id nor type_class are set on
+  # the portal type, we have to try to guess, for compatibility
+  if type_class is None:
     # Try to figure out a coresponding document class from the document side.
     # This can happen when calling newTempAmount for instance:
     #  Amount has no corresponding Base Type and will never have one
@@ -117,13 +128,6 @@ def generatePortalTypeClass(portal_type_name):
     type_class = portal_type_name.replace(' ', '')
     mixin_list = []
     interface_list = []
-  else:
-    # type_class has a compatibility getter that should return
-    # something even if the field is not set (i.e. Base Type object
-    # was not migrated yet)
-    type_class = portal_type.getTypeClass()
-    mixin_list = portal_type.getTypeMixinList()
-    interface_list = portal_type.getTypeInterfaceList()
 
   type_class_path = document_class_registry.get(type_class)
   if type_class_path is None:
