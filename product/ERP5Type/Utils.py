@@ -1099,6 +1099,9 @@ def initializeProduct( context,
   # Tools initialization
   tools = portal_tools
   if len(tools) > 0:
+    for tool in tools:
+      n = tool.__name__
+      document_class_registry[n] = "%s.%s" % (tool.__module__, n)
     try:
       utils.ToolInit('%s Tool' % product_name,
                       tools=tools,
