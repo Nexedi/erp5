@@ -61,6 +61,7 @@ dec=base64.decodestring
 
 _MARKER = []
 EMBEDDED_FORMAT = '_embedded'
+OOO_SERVER_PROXY_TIMEOUT = 360
 
 class _ProtocolErrorCatcher(object):
   def __init__(self, orig_callable):
@@ -93,7 +94,7 @@ class OOoServerProxy(ServerProxy):
             ' conversion server host and port is not defined in preferences')
 
     uri = 'http://%s:%d' % (address, port)
-    transport = TimeoutTransport(timeout=360, scheme='http')
+    transport = TimeoutTransport(timeout=OOO_SERVER_PROXY_TIMEOUT, scheme='http')
 
     ServerProxy.__init__(self, uri, allow_none=True, transport=transport)
 
