@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts87699145.73</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>live_test.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>$(document).ready(function(){\n
+\n
+\n
+    var my_url_run_test = $(document)[0].baseURI + \'runLiveTest\'\n
+    var my_url_read_test = $(document)[0].baseURI + \'readTestOutput\'\n
+    var test = jQuery("*[name=\'field_your_test\']")[0].defaultValue\n
+    var run_only = jQuery("*[name=\'field_your_run_only\']")[0].defaultValue\n
+    var debug = 0\n
+    var verbose = 0\n
+    if (jQuery("*[name=\'field_your_debug\']")[0].checked == true) {\n
+      debug = 1;\n
+    }\n
+    if (jQuery("*[name=\'field_your_verbose\']")[0].checked == true) {\n
+      verbose = 1;\n
+    }\n
+    jQuery("*[name=\'field_your_text_output\']")[0].defaultValue = "";\n
+   //launch unit test\n
+    var continue_loop = true;\n
+    $.get(my_url_run_test,\n
+         {\'test_list\':test,\n
+          run_only:run_only,\n
+          debug:debug,\n
+          verbose:verbose,\n
+          }, \n
+          function(data) {\n
+        continue_loop = false\n
+    });\n
+    var last_call = false;\n
+    var data_size = 0;\n
+    get_data = function() {\n
+      return $.get(my_url_read_test,\n
+              {position : data_size},\n
+              function(data){\n
+                //$("#" + \'live_test_output\').append(data);\n
+                jQuery("*[name=\'field_your_text_output\']")[0].defaultValue += data ;\n
+                data_size = data_size + data.length;\n
+                if (continue_loop == true) {\n
+                  setTimeout("get_data()",1000);\n
+                }\n
+                if (continue_loop == false) {\n
+                  if (last_call == false) {\n
+                    last_call = true;\n
+                    setTimeout("get_data()",1000);\n
+                  }\n
+                }\n
+                \n
+              });\n
+    }\n
+    var x=0;\n
+    get_data()\n
+\n
+});</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1647</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
