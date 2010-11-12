@@ -51,24 +51,15 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>\'\'\'\n
-  Return the publication_section used in the predicate of the blog web_section is there is any\n
+  Return the list of publication_section used in the predicate.\n
 \'\'\'\n
-\n
-web_site = context.getWebSiteValue()\n
-blog_section_id = web_site.getLayoutProperty(\'layout_blog_section_id\', default=\'blog\')\n
-blog = getattr(web_site, blog_section_id, None)\n
-if blog is None:\n
-  raise ValueError, \'Impossible to find %r blog section id. Please check \'\\\n
-      \'this web_section exists or change layout configuration to set \'\\\n
-      \'an existing one.\' % (blog_section_id)\n
-\n
 publication_section_list=[]\n
-if \'publication_section\' not in blog.getMembershipCriterionBaseCategoryList():\n
+if \'publication_section\' not in context.getMembershipCriterionBaseCategoryList():\n
   return publication_section_list\n
-for category in blog.getMembershipCriterionCategoryList():\n
-  base_category = category.split(\'/\')[0] # Retrieve base category\n
+for category in context.getMembershipCriterionCategoryList():\n
+  base_category, category_id = category.split(\'/\', 2)\n
   if base_category == \'publication_section\':\n
-    publication_section_list.append(category.replace(\'%s/\' % base_category, \'\', 1))\n
+    publication_section_list.append(category_id)\n
 return publication_section_list\n
 </string> </value>
         </item>
@@ -106,19 +97,13 @@ return publication_section_list\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>publication_section_list</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>web_site</string>
-                            <string>blog_section_id</string>
-                            <string>getattr</string>
-                            <string>None</string>
-                            <string>blog</string>
-                            <string>ValueError</string>
-                            <string>publication_section_list</string>
                             <string>_getiter_</string>
                             <string>category</string>
-                            <string>_getitem_</string>
                             <string>base_category</string>
+                            <string>category_id</string>
                           </tuple>
                         </value>
                     </item>
@@ -135,7 +120,7 @@ return publication_section_list\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSection_getBlogPublicationSection</string> </value>
+            <value> <string>WebSection_getPublicationSectionList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

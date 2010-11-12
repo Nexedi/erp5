@@ -301,11 +301,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-python:"<a class=\\"button button-submit\\" href=\\"%s/WebSection_viewAddBlogMessageDialog?cancel_url=%s\\">%s</a>" % (here.absolute_url(), here.absolute_url(), here.Base_translateString(\'Add Blog Message\'))
-
-]]></string> </value>
+            <value> <string>here/WebSection_viewAddBlogMessageButton</string> </value>
         </item>
       </dictionary>
     </pickle>
