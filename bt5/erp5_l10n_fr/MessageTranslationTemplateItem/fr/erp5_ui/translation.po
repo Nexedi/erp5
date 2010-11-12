@@ -9461,6 +9461,12 @@ msgstr "Code source"
 msgid "Source Conversion"
 msgstr "Conversion pour la source"
 
+msgid "Destination Credit"
+msgstr "Crédit"
+
+msgid "Destination Debit"
+msgstr "Débit"
+
 msgid "Source Credit"
 msgstr "Crédit"
 
