@@ -39,6 +39,8 @@ Category Tool | export_category_list
 Category Tool | fast_input
 Category Tool | view
 Category | view
+Class Tool | run_live_test
+Class Tool | view
 Conceptual Id Generator | view
 Contribution Predicate | view
 Contribution Registry Tool | view
