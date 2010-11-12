@@ -56,18 +56,17 @@ from Products.CMFCore.permissions import AccessContentsInformation\n
 \n
 portal = context.getPortalObject()\n
 \n
-def getCurrencyItemList(include_empty=1, portal_path=""):\n
+def getCurrencyItemList(include_empty=1, validation_state=validation_state):\n
   result = []\n
   if include_empty :\n
     result = [[\'\', \'\'],]\n
   currency_module = portal.restrictedTraverse(\n
-                             \'currency_module\', \n
+                             \'currency_module\',\n
                              portal.restrictedTraverse(\'currency\', None))\n
 \n
   if currency_module is not None:\n
     for currency in LazyFilter(currency_module.contentValues(), skip=AccessContentsInformation):\n
-      if not skip_invalidated or \\\n
-            currency.getProperty(\'validation_state\', \'default\') != \'invalidated\':\n
+      if currency.getProperty(\'validation_state\', \'validated\') in validation_state:\n
         # for currency, we intentionaly use reference (EUR) not title (Euros).\n
         result.append((currency.getReference() or currency.getTitleOrId(),\n
                        currency.getRelativeUrl()))\n
@@ -80,9 +79,9 @@ getCurrencyItemList = CachingMethod(\n
                           getCurrencyItemList,\n
                           id=\'CurrencyModule_getCurrencyItemList\',\n
                           cache_factory = \'erp5_ui_short\')\n
-                                      \n
-return getCurrencyItemList( include_empty=include_empty,\n
-                            portal_path=portal.getPath() )\n
+                             \n
+return getCurrencyItemList(include_empty=include_empty,\n
+                           validation_state=validation_state)\n
 </string> </value>
         </item>
         <item>
@@ -93,7 +92,7 @@ return getCurrencyItemList( include_empty=include_empty,\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>include_empty=1, skip_invalidated=1</string> </value>
+            <value> <string>include_empty=1, validation_state=(\'validated\', \'draft\')</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -120,7 +119,7 @@ return getCurrencyItemList( include_empty=include_empty,\n
                         <value>
                           <tuple>
                             <string>include_empty</string>
-                            <string>skip_invalidated</string>
+                            <string>validation_state</string>
                             <string>ZTUtils</string>
                             <string>LazyFilter</string>
                             <string>Products.CMFCore.permissions</string>
@@ -144,7 +143,10 @@ return getCurrencyItemList( include_empty=include_empty,\n
             <value>
               <tuple>
                 <int>1</int>
-                <int>1</int>
+                <tuple>
+                  <string>validated</string>
+                  <string>draft</string>
+                </tuple>
               </tuple>
             </value>
         </item>
