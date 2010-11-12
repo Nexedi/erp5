@@ -86,10 +86,11 @@ class StandardProperty(XMLObject):
   getMultivalued = BaseGetter('getMultivalued', 'multivalued', 'boolean',
                               default=False)
 
-  # Use a tales type here, so the TALES expression instance is created
-  # when actually calling the function
+  # Define as a TALES expression string, use for Expression
+  # instanciation when exporting the property to the filesystem
+  # definition
   getPropertyDefault = BaseGetter('getPropertyDefault', 'property_default',
-                                  'tales')
+                                  'string')
 
   getRange = BaseGetter('getRange', 'range', 'boolean', default=False)
 
@@ -112,18 +113,32 @@ class StandardProperty(XMLObject):
                                     'translation_domain',
                                     'string')
 
+  @staticmethod
+  def _convertValueToTalesExpression(value):
+    """
+    Convert a string value to a TALES expression for attributes listed
+    in '_expression_attribute_tuple'
+    """
+    if value is None:
+      return None
+
+    return Expression(value)
+
   security.declareProtected(Permissions.AccessContentsInformation,
                             'exportToFilesystemDefinition')
   def exportToFilesystemDefinition(self):
     """
     Return the filesystem definition of this ZODB property
     """
+    property_default_value = self._convertValueToTalesExpression(
+      self.getPropertyDefault())
+
     return {'id': self.getReference(),
             'description': self.getDescription(),
             'type': self.getElementaryType(),
             'storage_id': self.getStorageId(),
             'multivalued': self.getMultivalued(),
-            'default': self.getPropertyDefault(),
+            'default': property_default_value,
             'range': self.getRange(),
             'preference': self.getPreference(),
             'read_permission': self.getReadPermission(),

@@ -255,6 +255,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     return self.test_property_sheet.newContent(
       portal_type='Standard Property',
       reference='test_standard_property_' + operation_type,
+      property_default='python: "test_default_value"',
       elementary_type='string')
 
   def _newAcquiredProperty(self, operation_type):
@@ -477,6 +478,9 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
       #
       # Standard Property
       self.assertHasAttribute(new_person, 'setTestStandardPropertyAssign')
+
+      self.assertEquals(new_person.getTestStandardPropertyAssign(),
+                        "test_default_value")
 
       new_person.setTestStandardPropertyAssign('value')
 

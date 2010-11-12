@@ -79,11 +79,12 @@ class AcquiredProperty(StandardProperty):
                                           'acquisition_object_id',
                                           'lines')
 
-  # Use a tales type here, so the TALES expression instance is created
-  # when actually calling the function
+  # Define as a TALES expression string, use for Expression
+  # instanciation when exporting the property to the filesystem
+  # definition
   getAcquisitionPortalType = BaseGetter('getAcquisitionPortalType',
                                         'acquisition_portal_type',
-                                        'tales')
+                                        'string')
 
   getAcquisitionAccessorId = BaseGetter('getAcquisitionAccessorId',
                                         'acquisition_accessor_id',
@@ -103,11 +104,12 @@ class AcquiredProperty(StandardProperty):
                                        'boolean',
                                        default=False)
 
-  # Use a tales type here, so the TALES expression instance is created
-  # when actually calling the function
+  # Define as a TALES expression string, use for Expression
+  # instanciation when exporting the property to the filesystem
+  # definition
   getContentPortalType = BaseGetter('getContentPortalType',
                                     'content_portal_type',
-                                    'tales')
+                                    'string')
 
   getContentAcquiredPropertyIdList = ListGetter(
     'getContentAcquiredPropertyIdList',
@@ -128,15 +130,21 @@ class AcquiredProperty(StandardProperty):
     filesystem_property_dict = \
         StandardProperty.exportToFilesystemDefinition(self)
 
+    acquisition_portal_type_value = self._convertValueToTalesExpression(
+      self.getAcquisitionPortalType())
+
+    portal_type_value = self._convertValueToTalesExpression(
+      self.getContentPortalType())
+
     filesystem_property_dict.update(
       {'acquisition_base_category': self.getAcquisitionBaseCategoryList(),
        'acquisition_object_id': self.getAcquisitionObjectIdList(),
-       'acquisition_portal_type': self.getAcquisitionPortalType(),
+       'acquisition_portal_type': acquisition_portal_type_value,
        'acquisition_accessor_id': self.getAcquisitionAccessorId(),
        'alt_accessor_id': self.getAltAccessorIdList(),
        'acquisition_copy_value': self.getAcquisitionCopyValue(),
        'acquisition_mask_value': self.getAcquisitionMaskValue(),
-       'portal_type': self.getContentPortalType(),
+       'portal_type': portal_type_value,
        'acquired_property_id': self.getContentAcquiredPropertyIdList(),
        'translation_acquired_property_id': self.getContentTranslationAcquiredPropertyIdList()})
 
