@@ -57,7 +57,8 @@ portal = state_change_info.getPortal()\n
 error_message_list = []\n
 language_item_list = portal.Base_getContentTranslationLanguageValueAndLabelList()\n
 \n
-for property_name, original_message in document.Base_getContentTranslationPropertyValueAndLabelList():\n
+for property_name in document.getTypeInfo().getContentTranslationDomainPropertyNameList():\n
+  original_message = document.getProperty(property_name)\n
   for language, language_label in language_item_list:\n
     try:\n
       translation_original_text = document.getPropertyTranslationOriginalText(property_name, language)\n
