@@ -1,0 +1,3 @@
+2010-11-12 Kazuhiko
+* display whole HTML in list mode instead of calling WebSection_getFirstParagraph, that is far from perfect.
+* fix invalid HTML.

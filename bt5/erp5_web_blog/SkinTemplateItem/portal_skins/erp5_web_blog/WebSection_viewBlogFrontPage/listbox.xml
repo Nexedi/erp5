@@ -374,7 +374,7 @@
                           <string>Reference</string>
                         </tuple>
                         <tuple>
-                          <string>WebSection_getFirstParagraph</string>
+                          <string>asStrippedHTML</string>
                           <string>Summary</string>
                         </tuple>
                         <tuple>
