@@ -95,18 +95,6 @@ class CashDeliveryCell(BaobabMixin, DeliveryCell):
     """
     return self.aq_parent.getBaobabDestinationSection(**kw)
 
-  security.declareProtected(Permissions.View, 'getBaobabSourcePayment')
-  def getBaobabSourcePayment(self, **kw):
-    """
-    """
-    return None
-
-  security.declareProtected(Permissions.View, 'getBaobabDestinationPayment')
-  def getBaobabDestinationPayment(self, **kw):
-    """
-    """
-    return None
-
   security.declareProtected(Permissions.View, 'getBaobabSourceFunction')
   def getBaobabSourceFunction(self, **kw):
     """
