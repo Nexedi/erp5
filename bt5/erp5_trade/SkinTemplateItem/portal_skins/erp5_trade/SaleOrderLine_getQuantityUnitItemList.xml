@@ -55,18 +55,27 @@ This script returns only the quantity unit of the resource \n
 entered on the fast input\n
 """\n
 request = context.REQUEST\n
-result = getattr(context.portal_categories[\'quantity_unit\'], \n
-               context.portal_preferences.getPreference(\n
-               \'preferred_category_child_item_list_method_id\', \'getCategoryChildCompactLogicalPathItemList\'))(\n
-                base=0, local_sort_id=(\'int_index\', \'translated_title\'), checked_permission=\'View\')\n
+portal = context.getPortalObject()\n
+\n
+base_category = portal.portal_categories.quantity_unit\n
+list_method_id = portal.portal_preferences.\\\n
+    getPreferredCategoryChildItemListMethodId(\n
+                                  \'getCategoryChildCompactLogicalPathItemList\')\n
+method = getattr(base_category, list_method_id)\n
+item_list = method(base=0, local_sort_id=(\'int_index\', \'translated_title\'),\n
+                   checked_permission=\'View\')\n
 \n
 \n
-pr_title= request.form.get("field_listbox_title_%s"%context.getUid())\n
-if pr_title not in (\'\',None) and context.getResourceValue() is not None:\n
- q_list =  [(x.getLogicalPath(), x.getCategoryRelativeUrl(base=0)) \n
-                 for x in context.getResourceValue().getQuantityUnitValueList()]\n
- result=[]\n
- result = [q_list[0]]\n
+resource_title = request.form.get("field_listbox_title_%s" % context.getUid())\n
+resource_reference = request.form.get("field_listbox_reference_%s" % context.getUid())\n
+resource_value = context.getResourceValue()\n
+result = [(\'\', \'\')]\n
+if (resource_title or resource_reference) and resource_value is not None:\n
+ quantity_unit_list = [(x.getLogicalPath(), x.getCategoryRelativeUrl(base=0))\n
+                for x in resource_value.getQuantityUnitValueList()]\n
+ # return the first quantity_unit item of resource\n
+ result = quantity_unit_list and [quantity_unit_list[0]] or result\n
+\n
 return result\n
 </string> </value>
         </item>
@@ -107,16 +116,23 @@ return result\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
+                            <string>portal</string>
+                            <string>base_category</string>
+                            <string>list_method_id</string>
                             <string>getattr</string>
-                            <string>_getitem_</string>
+                            <string>method</string>
+                            <string>item_list</string>
+                            <string>resource_title</string>
+                            <string>resource_reference</string>
+                            <string>resource_value</string>
                             <string>result</string>
-                            <string>pr_title</string>
                             <string>None</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
                             <string>x</string>
-                            <string>q_list</string>
+                            <string>quantity_unit_list</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
