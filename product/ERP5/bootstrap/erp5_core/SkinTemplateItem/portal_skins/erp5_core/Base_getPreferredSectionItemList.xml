@@ -50,25 +50,19 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>section = context.portal_preferences.getPreferredSectionCategory() or\\\n
-                       context.portal_preferences.getPreferredAccountingTransactionSectionCategory()\n
+            <value> <string>portal = context.getPortalObject()\n
+section_category = portal.portal_preferences.getPreferredSectionCategory() or\\\n
+                       portal.portal_preferences.getPreferredAccountingTransactionSectionCategory()\n
 \n
-if not section:\n
+if not section_category:\n
   return [(\'\', \'\')]\n
 \n
-section_value = context.portal_categories.resolveCategory(section)\n
-value_list = section_value.getGroupRelatedValueList(portal_type=portal_type,\n
-                                                    checked_permission=\'View\')\n
-value_list = [r for r in value_list\n
-              if r.getProperty(\'validation_state\') not in (\'invalidated\', \'deleted\')]\n
-\n
-def sorted(seq, key):\n
-  seq = seq[::]\n
-  seq.sort(key=key)\n
-  return seq\n
-\n
-# convert to ListField format\n
-return [(\'\', \'\')] + sorted([(obj.getTitle(), obj.getRelativeUrl()) for obj in value_list], key=lambda x: x[0])\n
+group_uid = portal.portal_categories.getCategoryUid(section_category)\n
+return [(\'\', \'\')] + [(x.getTitle(), x.getRelativeUrl()) for x in \n
+                      portal.portal_catalog(portal_type=portal_type,\n
+                                            validation_state=validation_state,\n
+                                            default_group_uid=group_uid,\n
+                                            sort_on=(\'title\',))]\n
 </string> </value>
         </item>
         <item>
@@ -79,7 +73,7 @@ return [(\'\', \'\')] + sorted([(obj.getTitle(), obj.getRelativeUrl()) for obj i
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>portal_type=[\'Organisation\']</string> </value>
+            <value> <string>portal_type=[\'Organisation\'], validation_state=(\'validated\', \'draft\')</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -99,23 +93,23 @@ return [(\'\', \'\')] + sorted([(obj.getTitle(), obj.getRelativeUrl()) for obj i
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>portal_type</string>
+                            <string>validation_state</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>section</string>
-                            <string>section_value</string>
-                            <string>value_list</string>
-                            <string>$list0</string>
+                            <string>portal</string>
+                            <string>section_category</string>
+                            <string>group_uid</string>
+                            <string>append</string>
+                            <string>$append0</string>
                             <string>_getiter_</string>
-                            <string>r</string>
-                            <string>sorted</string>
-                            <string>obj</string>
+                            <string>x</string>
                           </tuple>
                         </value>
                     </item>
@@ -131,6 +125,10 @@ return [(\'\', \'\')] + sorted([(obj.getTitle(), obj.getRelativeUrl()) for obj i
                 <list>
                   <string>Organisation</string>
                 </list>
+                <tuple>
+                  <string>validated</string>
+                  <string>draft</string>
+                </tuple>
               </tuple>
             </value>
         </item>
