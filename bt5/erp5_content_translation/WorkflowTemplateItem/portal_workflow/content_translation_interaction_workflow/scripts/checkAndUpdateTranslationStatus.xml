@@ -50,20 +50,22 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>document = state_change_info[\'object\']\n
+            <value> <string>from Products.ERP5Type.Message import translateString\n
+document = state_change_info[\'object\']\n
 portal = state_change_info.getPortal()\n
 \n
 error_message_list = []\n
+language_item_list = portal.Base_getContentTranslationLanguageValueAndLabelList()\n
 \n
 for property_name, original_message in document.Base_getContentTranslationPropertyValueAndLabelList():\n
-  for language, language_label in document.Base_getContentTranslationLanguageValueAndLabelList():\n
+  for language, language_label in language_item_list:\n
     try:\n
       translation_original_text = document.getPropertyTranslationOriginalText(property_name, language)\n
     except KeyError:\n
       translation_original_text = None\n
     if translation_original_text is not None and translation_original_text!=original_message:\n
-      error_message = context.Base_translateString(\n
-        \'property ${property_name} of ${language} is outdated.\', mapping={\'property_name\':property_name, \'language\':language})\n
+      error_message = translateString(\n
+        \'property ${property_name} of ${language} is outdated\', mapping={\'property_name\':property_name, \'language\':language_label})\n
       error_message_list.append(error_message)\n
 \n
 \n
@@ -72,7 +74,7 @@ content_translation_state = portal.portal_workflow.getInfoFor(document, \'conten
 \n
 if error_message_list:\n
   if content_translation_state!=\'outdated\':\n
-    document.invalidateContentTranslation(error_message=\'\\n\'.join(map(str, error_message_list)))\n
+    document.invalidateContentTranslation(error_message=error_message_list)\n
 else:\n
   if content_translation_state!=\'latest\':\n
     document.validateContentTranslation()\n
@@ -121,11 +123,14 @@ else:\n
                         <value>
                           <tuple>
                             <string>state_change_info</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>translateString</string>
                             <string>_getitem_</string>
                             <string>document</string>
                             <string>_getattr_</string>
                             <string>portal</string>
                             <string>error_message_list</string>
+                            <string>language_item_list</string>
                             <string>_getiter_</string>
                             <string>property_name</string>
                             <string>original_message</string>
@@ -134,11 +139,8 @@ else:\n
                             <string>translation_original_text</string>
                             <string>KeyError</string>
                             <string>None</string>
-                            <string>context</string>
                             <string>error_message</string>
                             <string>content_translation_state</string>
-                            <string>map</string>
-                            <string>str</string>
                           </tuple>
                         </value>
                     </item>

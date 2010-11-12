@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -53,8 +50,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>Base_translateString = context.Base_translateString\n
-language_column_list = [(i[\'id\'], Base_translateString(i[\'title\']))\n
+            <value> <string>from Products.ERP5Type.Message import translateString\n
+language_column_list = [(i[\'id\'], translateString(i[\'title\']))\n
                         for i in context.Localizer.get_languages_map()]\n
 language_column_list.sort()\n
 return language_column_list\n
@@ -94,12 +91,13 @@ return language_column_list\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>Base_translateString</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>translateString</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
                             <string>i</string>
                             <string>_getitem_</string>
                             <string>language_column_list</string>
