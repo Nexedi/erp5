@@ -57,7 +57,7 @@ publication_section_list=[]\n
 if \'publication_section\' not in context.getMembershipCriterionBaseCategoryList():\n
   return publication_section_list\n
 for category in context.getMembershipCriterionCategoryList():\n
-  base_category, category_id = category.split(\'/\', 2)\n
+  base_category, category_id = category.split(\'/\', 1)\n
   if base_category == \'publication_section\':\n
     publication_section_list.append(category_id)\n
 return publication_section_list\n
