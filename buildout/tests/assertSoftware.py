@@ -427,5 +427,16 @@ class AssertApache(unittest.TestCase):
     self.assertEqual([], failed_module_list,
         'Apache modules not found:\n'+'\n'.join(failed_module_list))
 
+class AssertItools(unittest.TestCase):
+  def test_ld_parserso(self):
+    elf_dict = readElfAsDict('parts/itools/lib/itools/xml/parser.so')
+    self.assertEqual(sorted(['libc', 'libglib-2.0', 'libpthread']),
+        elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['glib']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['rpath_list'])
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
 if __name__ == '__main__':
   unittest.main()
