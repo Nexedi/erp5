@@ -14,6 +14,7 @@
             <value>
               <list>
                 <string>columns</string>
+                <string>editable_columns</string>
                 <string>list_method</string>
                 <string>page_template</string>
                 <string>portal_types</string>
@@ -85,12 +86,19 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>title</string>
-                          <string>Title</string>
+                          <string>getSummaryAsHTML</string>
+                          <string>Summary</string>
                         </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>editable_columns</string> </key>
+                    <value>
+                      <list>
                         <tuple>
-                          <string>creation_date</string>
-                          <string>Date</string>
+                          <string>getSummaryAsHTML</string>
+                          <string>getSummaryAsHTML</string>
                         </tuple>
                       </list>
                     </value>
@@ -111,7 +119,7 @@
                 </item>
                 <item>
                     <key> <string>page_template</string> </key>
-                    <value> <string>ListBox_asPostStyleHTML</string> </value>
+                    <value> <string>ListBox_asHTML</string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
@@ -126,7 +134,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>discussion_post_selection</string> </value>
+                    <value> <string>discussion_post_selection1</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>

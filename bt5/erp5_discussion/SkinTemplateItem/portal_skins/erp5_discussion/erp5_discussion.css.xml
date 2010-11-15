@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts76262930.91</string> </value>
+            <value> <string>ts89827363.18</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -31,39 +31,25 @@
  ERP5 discussion forum.\n
 */\n
 \n
-/* listbox navigation */\n
-div.discussion-post-listbox-navigation{\n
-  width: 100%; \n
-  text-align: center;\n
-}\n
-div.discussion-post-listbox-navigation a.selected{\n
-  font-weight: bold!important;\n
-}\n
-\n
 div.discussion-post-listbox-row{\n
   padding: 10px; \n
   background-color: #ffffff; \n
-  border-radius: 15px 15px; \n
-  -moz-border-radius: 10px;\n
 }\n
 \n
 div.discussion-post-header{\n
   background-color: #efefef;\n
   color:#000000;\n
   padding: 3px;  \n
-  height: 20px; \n
   margin: 0em; \n
 }\n
 \n
 div.discussion-post-state-container{\n
   float: left;\n
-  height: 20px;\n
   margin-top: 3px;\n
 }\n
 \n
 div.discussion-post-creator-container{\n
   float: right; \n
-  height: 20px; \n
 }\n
 \n
 div.discussion-post-creator-title{\n
@@ -99,9 +85,6 @@ div.discussion-post-author-signature-container{\n
 }\n
 \n
 button.discussion-post-action-button{\n
-  /*border: dashed 1px #3D6474; \n
-  background-color: #eee;\n
-  */\n
   padding: 3px;\n
 }\n
 \n
@@ -119,7 +102,7 @@ blockquote {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1401</int> </value>
+            <value> <int>1040</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -79,15 +79,15 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>my_description</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_getSummaryAsHTML</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -95,20 +95,13 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_reference</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>my_subject_list</string>
-                        <string>my_classification</string>
-                        <string>my_group_list</string>
-                        <string>my_site_list</string>
-                        <string>my_translated_validation_state_title</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
