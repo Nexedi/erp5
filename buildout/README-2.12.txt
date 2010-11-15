@@ -145,6 +145,10 @@ supervisor:
 
 $ bin/supervisord                   # 6
 
+Now it is time to give supervisor few moments (about 10 seconds) to start all
+required services. By running bin/supervisorctl status one can be informed if mysql
+and oood are running.
+
 Also, we need databases in the mysql server that correspond to both the ERP5
 instance we're going to create, and the testrunner we will want to run:
 
