@@ -26,8 +26,9 @@
 #
 ##############################################################################
 
+import os
+import subprocess
 import unittest
-import sys, os, tempfile, stat, subprocess
 
 def getCleanList(s):
   """Converts free form string separated by whitespaces to python list"""
