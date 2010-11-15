@@ -85,7 +85,7 @@ Post-build check
 ----------------
 
 Run:
-  python tests/assertSoftware.py
+  python2.6 tests/assertSoftware.py
 
 Distribution helpers
 --------------------
