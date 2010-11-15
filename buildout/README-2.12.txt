@@ -112,10 +112,12 @@ buildouts from that software.
 Assuming the ERP5 software buildout is available in ~/erp5.buildout the
 following sequence of steps should result in a working "instance" buildout:
 
-$ mkdir ~/instances                     # 0
-$ cd ~/instances                        # 1
-$ ln -s ~/erp5.buildout/*profiles* .    # 2
-$ cat > buildout.cfg                    # 3
+$ mkdir ~/instances                         # 0
+$ cd ~/instances                            # 1
+$ ln -s ~/erp5.buildout/instance-profiles   # 2a
+$ ln -s ~/erp5.buildout/profiles            # 2b
+$ ln -s ~/erp5.buildout/software-profiles   # 2c
+$ cat > buildout.cfg                        # 3
 
 [buildout]
 extends-cache = instance-profiles/extends-cache
