@@ -64,15 +64,18 @@ elif context.hasSourceReference():\n
   file_name = context.getSourceReference()\n
 else:\n
   file_name = context.getTitleOrId()\n
-original_extension = None\n
+extension = None\n
 if \'.\' in file_name:\n
-  file_name, original_extension = file_name.rsplit(\'.\', 1)\n
+  file_name, extension = file_name.rsplit(\'.\', 1)\n
 if context.getVersion():\n
   file_name = \'%s-%s\' % (file_name, context.getVersion(),)\n
 if context.getLanguage():\n
   file_name = \'%s-%s\' % (file_name, context.getLanguage(),)\n
-if format or original_extension:\n
-  extension = (format or original_extension).split(\'.\')[-1]\n
+if format:\n
+  extension = format.rsplit(\'.\')[-1]\n
+elif not extension and context.hasSourceReference():\n
+  extension = context.getSourceReference().rsplit(\'.\')[-1]\n
+if extension:\n
   file_name = \'%s.%s\' % (file_name, extension,)\n
 return file_name\n
 </string> </value>
@@ -116,10 +119,9 @@ return file_name\n
                             <string>context</string>
                             <string>file_name</string>
                             <string>None</string>
-                            <string>original_extension</string>
+                            <string>extension</string>
                             <string>_getiter_</string>
                             <string>_getitem_</string>
-                            <string>extension</string>
                           </tuple>
                         </value>
                     </item>
