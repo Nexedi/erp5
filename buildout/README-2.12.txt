@@ -84,7 +84,8 @@ At the very least, running buildout requires:
 Post-build check
 ----------------
 
-There isn't yet a post-build check for running ERP5 on Zope 2.12.
+Run:
+  python tests/assertSoftware.py
 
 Distribution helpers
 --------------------
