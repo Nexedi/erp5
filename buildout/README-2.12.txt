@@ -159,6 +159,7 @@ mysql> grant all privileges on development_site.* to 'development_user'@'127.0.0
 mysql> create database test212;
 mysql> grant all privileges on test212.* to 'test'@'localhost';
 mysql> grant all privileges on test212.* to 'test'@'127.0.0.1';
+mysql> exit
 
 (there is automated support for creating databases but it's not currently
 working with the Zope 2.12 buildout)
