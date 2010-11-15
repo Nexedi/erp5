@@ -42,6 +42,8 @@ def readElfAsDict(f):
   if popen.returncode != 0:
     raise AssertionError(result)
   library_list = []
+  rpath_list = []
+  runpath_list = []
   for l in result.split('\n'):
     if '(NEEDED)' in l:
       library_list.append(l.split(':')[1].strip(' []').split('.so')[0])
