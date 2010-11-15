@@ -834,12 +834,23 @@ class Base( CopyContainer,
 
   def _propertyMap(self):
     """ Method overload - properties are now defined on the ptype """
+    # Get all the accessor holders for ZODB Property Sheets
+    if hasattr(self.__class__, 'getAccessorHolderPropertyList'):
+      accessor_holder_property_list = \
+          tuple(self.__class__.getAccessorHolderPropertyList())
+    # Temporary portal type (such as 'TempBase' meaningful to display
+    # the objects being created/updated/removed on SVN update) does
+    # not inherit from any class of erp5.portal_type
+    else:
+      accessor_holder_property_list = ()
+
     self._aq_dynamic('id') # Make sure aq_dynamic has been called once
     property_holder = Base.aq_portal_type.get(self._aq_key())
     if property_holder is None:
       return ERP5PropertyManager._propertyMap(self)
     return (tuple(getattr(property_holder, '_properties', ())) +
-            tuple(getattr(self, '_local_properties', ())))
+            tuple(getattr(self, '_local_properties', ())) +
+            accessor_holder_property_list)
 
   def manage_historyCompare(self, rev1, rev2, REQUEST,
                             historyComparisonResults=''):

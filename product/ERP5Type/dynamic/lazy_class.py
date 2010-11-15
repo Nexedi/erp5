@@ -87,6 +87,20 @@ class PortalTypeMetaClass(ExtensionClass):
     """
     return metacls.subclass_register.get(cls, [])
 
+  def getAccessorHolderPropertyList(cls):
+    """
+    Get all the properties as defined in the accessor holders,
+    meaningful for _propertyMap for example
+
+    @see Products.ERP5Type.Base.Base._propertyMap
+    """
+    property_list = []
+    for klass in cls.mro():
+      if klass.__module__ == 'erp5.accessor_holder':
+        property_list.extend(klass._properties)
+
+    return property_list
+
   def resetAcquisitionAndSecurity(cls):
     # First, fill the __get__ slot of the class
     # that has been null'ed after resetting its __bases__
