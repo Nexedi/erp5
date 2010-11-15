@@ -247,7 +247,7 @@ class AssertMysql51(unittest.TestCase):
   def test_ld_mysql(self):
     elf_dict = readElfAsDict('parts/mysql-5.1/bin/mysql')
     self.assertEqual(sorted(['libc', 'libz', 'libcrypt', 'libgcc_s', 'libm',
-      'libmysqlclient', 'libncursesw', 'libnsl', 'libpthread', 'libreadline',
+      'libmysqlclient', 'libncurses', 'libnsl', 'libpthread', 'libreadline',
       'libstdc++']), elf_dict['library_list'])
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
