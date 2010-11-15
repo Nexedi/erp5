@@ -137,3 +137,30 @@ class BudgetCell(Predicate, MetaNode, Movement):
     def getExplanationValue(self, default=None):
       """Explanation has no meaning for a budget cell"""
       return default
+
+    security.declareProtected(Permissions.ModifyPortalContent,
+                              'setSourceCredit')
+    def setSourceCredit(self, source_credit):
+      """Set the quantity.
+      Overloaded from movement, we always set the quantity, if not passed
+      """
+      try:
+        source_credit = float(source_credit)
+      except TypeError:
+        source_credit = 0.0
+      self.setQuantity(source_credit)
+
+    def setSourceDebit(self, source_debit):
+      """Set the quantity.
+      Overloaded from movement, we always set the quantity, if not passed
+      """
+      try:
+        source_debit = float(source_debit)
+      except TypeError:
+        source_debit = 0.0
+      self.setQuantity(source_debit)
+
+    security.declareProtected( Permissions.ModifyPortalContent,
+                               'setDestinationDebit', 'setDestinationCredit' )
+    setDestinationDebit = setSourceCredit
+    setDestinationCredit = setSourceDebit
