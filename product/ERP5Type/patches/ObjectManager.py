@@ -15,8 +15,7 @@
 # Import: add rename feature and make _importObjectFromFile return the object
 from OFS.ObjectManager import ObjectManager, customImporters
 
-def ObjectManager_importObjectFromFile(self, filepath, verify=1, set_owner=1,
-                                       id=None, suppress_events=False):
+def ObjectManager_importObjectFromFile(self, filepath, verify=1, set_owner=1, id=None):
     #LOG('_importObjectFromFile, filepath',0,filepath)
     # locate a valid connection
     connection=self._p_jar
@@ -31,8 +30,7 @@ def ObjectManager_importObjectFromFile(self, filepath, verify=1, set_owner=1,
     if id is None:
       id=ob.id
     if hasattr(id, 'im_func'): id=id()
-    self._setObject(id, ob, set_owner=set_owner,
-                    suppress_events=suppress_events)
+    self._setObject(id, ob, set_owner=set_owner)
 
     # try to make ownership implicit if possible in the context
     # that the object was imported into.
