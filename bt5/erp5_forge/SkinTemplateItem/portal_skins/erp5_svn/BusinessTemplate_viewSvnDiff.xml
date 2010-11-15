@@ -60,7 +60,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 -->\n
 </tal:block>\n
 <tal:block tal:define="portal_path here/portal_url;\n
-                       css_list python: [\'%s/ERP5Subversion_movableMenu.css\' % portal_path,];\n
+                       css_list python: [\'%s/ERP5Subversion_movableMenu.css\' % portal_path,\n
+                                         \'%s/erp5.css\' % portal_path,];\n
                        js_list python: [\'%s/MochiKit/MochiKit.js\' % portal_path,\n
                                         \'%s/erp5.js\' % portal_path,\n
                                         \'%s/ERP5Subversion_menuico.js\' % portal_path,\n
@@ -122,7 +123,8 @@ here/BusinessTemplate_doSvnDiff">diff here</tal:py>\n
 \n
 </tal:block>\n
 </tal:block>\n
-</tal:block>
+</tal:block>\n
+
 
 ]]></unicode> </value>
         </item>
