@@ -86,18 +86,20 @@ class DownloadableMixin:
       mimetype_object_list = mimetypes_registry.lookup(mime)
       for mimetype_object in mimetype_object_list:
         if mimetype_object.extensions:
-          format = mimetype_object.extensions[0]
+          output_format = mimetype_object.extensions[0]
           break
         elif mimetype_object.globs:
-          format = mimetype_object.globs.strip('*.')
+          output_format = mimetype_object.globs.strip('*.')
           break
+    else:
+      output_format = format
 
     RESPONSE.setHeader('Content-Length', len(data))
-    if format in VALID_TEXT_FORMAT_LIST:
+    if output_format in VALID_TEXT_FORMAT_LIST:
       RESPONSE.setHeader('Content-Type', '%s; charset=utf-8' % mime)
     else:
       RESPONSE.setHeader('Content-Type', mime)
-    if format not in (VALID_TEXT_FORMAT_LIST + VALID_IMAGE_FORMAT_LIST):
+    if output_format not in (VALID_TEXT_FORMAT_LIST + VALID_IMAGE_FORMAT_LIST):
       # need to return it as attachment
       filename = self.getStandardFileName(format=format)
       RESPONSE.setHeader('Content-Disposition',
