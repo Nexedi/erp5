@@ -10,8 +10,20 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>Script_magic</string> </key>
             <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -58,8 +70,6 @@
 # check that the amount of `resource` in account `payment` is greater than or equal to `quantity`\n
 # returns a dictionnary like : {\'error_code\', \'balance\'}\n
 \n
-manual_validation_account_category_list = (\'test\',)\n
-\n
 # First check that the payment account is in an acceptable state\n
 payment_value = context.restrictedTraverse(payment)\n
 \n
@@ -72,8 +82,7 @@ if resource is None :\n
   raise AttributeError, \'No currency defined on %s\' % payment\n
 \n
 # Next, check the balance of the account\n
-# We must specify the resource !\n
-account_balance = resource.getAvailableInventory(payment=payment, resource=resource.getRelativeUrl(),src__=src__)\n
+account_balance = resource.getAvailableInventory(payment=payment, src__=src__)\n
 if src__ :\n
   return account_balance \n
 \n
@@ -87,6 +96,12 @@ return {\'error_code\':0, \'balance\':account_balance} # ok\n
         </item>
         <item>
             <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
             <value>
               <none/>
             </value>
@@ -130,7 +145,6 @@ return {\'error_code\':0, \'balance\':account_balance} # ok\n
                             <string>payment</string>
                             <string>quantity</string>
                             <string>src__</string>
-                            <string>manual_validation_account_category_list</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>payment_value</string>
