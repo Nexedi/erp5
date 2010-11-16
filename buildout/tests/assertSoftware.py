@@ -311,7 +311,7 @@ class AssertApache(unittest.TestCase):
       'libpthread', 'libdl', 'libc', 'libuuid']), elf_dict['library_list'])
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
-        software in ['apache', 'zlib', 'openssl', 'libuuid']]
+        software in ['apache', 'zlib', 'openssl', 'libuuid', 'libexpat', 'pcre']]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_ld_libapr1(self):
@@ -321,16 +321,7 @@ class AssertApache(unittest.TestCase):
       'libpthread', 'libdl', 'libc']), elf_dict['library_list'])
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
-        software in ['zlib', 'openssl', 'libuuid']]
-    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
-
-  def test_ld_libexpat(self):
-    """Checks proper linking of libexpat.so"""
-    elf_dict = readElfAsDict('parts/apache/lib/libexpat.so')
-    self.assertEqual(sorted(['libc']), elf_dict['library_list'])
-    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
-    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
-        software in ['zlib', 'openssl']]
+        software in ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre']]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_modules(self):
