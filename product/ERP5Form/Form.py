@@ -202,8 +202,8 @@ class TALESValue(StaticValue):
       # We add this safety exception to make sure we always get
       # something reasonable rather than generate plenty of errors
       LOG('ERP5Form', PROBLEM,
-          'Field.get_value ( %s/%s [%s]), exception on tales_expr: ' %
-          ( form.getId(), field.getId(), id), error=sys.exc_info())
+          'Field.get_value %r [%s], exception on tales_expr: ' %
+          (field, id), error=sys.exc_info())
       # field may be ProxyField
       # here we avoid calling field.get_recursive_orig_value
       # on all fields because it can be acquired from another
