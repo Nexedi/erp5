@@ -269,7 +269,7 @@ class PropertySheetTool(BaseTool):
       'erp5.zodb_accessor_holder')
 
   security.declareProtected(Permissions.ManagePortal,
-                            'getPropertyAccessorPermissionList')
+                            'getPropertyAvailablePermissionList')
   def getPropertyAvailablePermissionList(self):
     """
     Return a sorted set of all the permissions useful for read/write
