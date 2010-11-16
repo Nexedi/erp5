@@ -412,6 +412,222 @@ class AssertApache(unittest.TestCase):
         software in ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre']]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
+  def test_ld_module_mod_alias(self):
+    elf_dict = readElfAsDict('parts/apache/modules/mod_alias.so')
+    self.assertEqual(sorted(['libpthread', 'libc']), elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+  def test_ld_module_mod_asis(self):
+    elf_dict = readElfAsDict('parts/apache/modules/mod_asis.so')
+    self.assertEqual(sorted(['libpthread', 'libc']), elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+  def test_ld_module_mod_auth_basic(self):
+    elf_dict = readElfAsDict('parts/apache/modules/mod_auth_basic.so')
+    self.assertEqual(sorted(['libpthread', 'libc']), elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+  def test_ld_module_mod_auth_digest(self):
+    elf_dict = readElfAsDict('parts/apache/modules/mod_auth_digest.so')
+    self.assertEqual(sorted(['libpthread', 'libc']), elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+  def test_ld_module_mod_authn_alias(self):
+    elf_dict = readElfAsDict('parts/apache/modules/mod_authn_alias.so')
+    self.assertEqual(sorted(['libpthread', 'libc']), elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+  def test_ld_module_mod_authn_anon(self):
+    elf_dict = readElfAsDict('parts/apache/modules/mod_authn_anon.so')
+    self.assertEqual(sorted(['libpthread', 'libc']), elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+  def test_ld_module_mod_authn_dbd(self):
+    elf_dict = readElfAsDict('parts/apache/modules/mod_authn_dbd.so')
+    self.assertEqual(sorted(['libpthread', 'libc']), elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+  def test_ld_module_mod_authn_dbm(self):
+    elf_dict = readElfAsDict('parts/apache/modules/mod_authn_dbm.so')
+    self.assertEqual(sorted(['libpthread', 'libc']), elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+  def test_ld_module_mod_authn_default(self):
+    elf_dict = readElfAsDict('parts/apache/modules/mod_authn_default.so')
+    self.assertEqual(sorted(['libpthread', 'libc']), elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+  def test_ld_module_mod_authn_file(self):
+    elf_dict = readElfAsDict('parts/apache/modules/mod_authn_file.so')
+    self.assertEqual(sorted(['libpthread', 'libc']), elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+  def test_ld_module_mod_authz_dbm(self):
+    elf_dict = readElfAsDict('parts/apache/modules/mod_authz_dbm.so')
+    self.assertEqual(sorted(['libpthread', 'libc']), elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+  def test_ld_module_mod_authz_default(self):
+    elf_dict = readElfAsDict('parts/apache/modules/mod_authz_default.so')
+    self.assertEqual(sorted(['libpthread', 'libc']), elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+  def test_ld_module_mod_authz_groupfile(self):
+    elf_dict = readElfAsDict('parts/apache/modules/mod_authz_groupfile.so')
+    self.assertEqual(sorted(['libpthread', 'libc']), elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+  def test_ld_module_mod_authz_host(self):
+    elf_dict = readElfAsDict('parts/apache/modules/mod_authz_host.so')
+    self.assertEqual(sorted(['libpthread', 'libc']), elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+  def test_ld_module_mod_authz_owner(self):
+    elf_dict = readElfAsDict('parts/apache/modules/mod_authz_owner.so')
+    self.assertEqual(sorted(['libpthread', 'libc']), elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+  def test_ld_module_mod_authz_user(self):
+    elf_dict = readElfAsDict('parts/apache/modules/mod_authz_user.so')
+    self.assertEqual(sorted(['libpthread', 'libc']), elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+  def test_ld_module_mod_autoindex(self):
+    elf_dict = readElfAsDict('parts/apache/modules/mod_autoindex.so')
+    self.assertEqual(sorted(['libpthread', 'libc']), elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+  def test_ld_module_mod_bucketeer(self):
+    elf_dict = readElfAsDict('parts/apache/modules/mod_bucketeer.so')
+    self.assertEqual(sorted(['libpthread', 'libc']), elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+  def test_ld_module_mod_cache(self):
+    elf_dict = readElfAsDict('parts/apache/modules/mod_cache.so')
+    self.assertEqual(sorted(['libpthread', 'libc']), elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+  def test_ld_module_mod_case_filter(self):
+    elf_dict = readElfAsDict('parts/apache/modules/mod_case_filter.so')
+    self.assertEqual(sorted(['libpthread', 'libc']), elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+  def test_ld_module_mod_case_filter_in(self):
+    elf_dict = readElfAsDict('parts/apache/modules/mod_case_filter_in.so')
+    self.assertEqual(sorted(['libpthread', 'libc']), elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+  def test_ld_module_mod_cern_meta(self):
+    elf_dict = readElfAsDict('parts/apache/modules/mod_cern_meta.so')
+    self.assertEqual(sorted(['libpthread', 'libc']), elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+  def test_ld_module_mod_cgi(self):
+    elf_dict = readElfAsDict('parts/apache/modules/mod_cgi.so')
+    self.assertEqual(sorted(['libpthread', 'libc']), elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+  def test_ld_module_mod_cgid(self):
+    elf_dict = readElfAsDict('parts/apache/modules/mod_cgid.so')
+    self.assertEqual(sorted(['libpthread', 'libc']), elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+  def test_ld_module_mod_charset_lite(self):
+    elf_dict = readElfAsDict('parts/apache/modules/mod_charset_lite.so')
+    self.assertEqual(sorted(['libpthread', 'libc']), elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+  def test_ld_module_mod_dav(self):
+    elf_dict = readElfAsDict('parts/apache/modules/mod_dav.so')
+    self.assertEqual(sorted(['libpthread', 'libc']), elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+  def test_ld_module_mod_dav_fs(self):
+    elf_dict = readElfAsDict('parts/apache/modules/mod_dav_fs.so')
+    self.assertEqual(sorted(['libpthread', 'libc']), elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
 class AssertItools(unittest.TestCase):
   def test_ld_parserso(self):
     elf_dict = readElfAsDict('parts/itools/lib/itools/xml/parser.so')
