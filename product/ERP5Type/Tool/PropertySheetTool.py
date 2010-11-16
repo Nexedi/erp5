@@ -267,3 +267,13 @@ class PropertySheetTool(BaseTool):
       property_holder,
       property_sheet.getId(),
       'erp5.zodb_accessor_holder')
+
+  security.declareProtected(Permissions.ManagePortal,
+                            'getPropertyAccessorPermissionList')
+  def getPropertyAvailablePermissionList(self):
+    """
+    Return a sorted set of all the permissions useful for read/write
+    permissions for properties of ZODB Property Sheets
+    """
+    return sorted(set([ value for key, value in Permissions.__dict__.iteritems() \
+                        if key[0].isupper() ]))
