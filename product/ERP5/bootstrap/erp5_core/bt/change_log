@@ -1,3 +1,6 @@
+2010-11-16 arnaud.fontaine
+* read and write permissions of Acquired and Standard Property view now contains the list of available permissions, rather than entering them manually.
+
 2010-11-08 nicolas.dumazet
 * Allow changing preferences even if OOo server is not running
 
