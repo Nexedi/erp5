@@ -89,7 +89,7 @@
 <tr>\n
   <td>waitForCondition</td>\n
   <td>selenium.isTextPresent("Please enter a valid Rss or Atom url in the preference form")</td>\n
-  <td>10000</td> \n
+  <td>30000</td> \n
 </tr>\n
 <!-- Set an URL of ERP5 so test do not depend on external RSS provider (http://www.lemonde.fr/rss/une.xml) -->\n
 <tr>\n
@@ -115,18 +115,18 @@
 <tr>\n
   <td>waitForCondition</td>\n
   <td>selenium.isTextPresent("Le Monde.fr")</td>\n
-  <td>10000</td> \n
+  <td>30000</td> \n
 </tr>\n
 <!-- listbox-container  gadget-rss-reader-logo-->\n
 <tr>\n
   <td>waitForCondition</td>\n
   <td>selenium.isElementPresent(\'//div[@class="listbox-container"]\')</td>\n
-  <td>10000</td> \n
+  <td>30000</td> \n
 </tr>\n
 <tr>\n
   <td>waitForCondition</td>\n
   <td>selenium.isElementPresent(\'//img[@class="hidden_label gadget-rss-reader-logo"]\')</td>\n
-  <td>10000</td> \n
+  <td>30000</td> \n
 </tr>\n
 \n
 <tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/deleteKMWebSite" />\n
