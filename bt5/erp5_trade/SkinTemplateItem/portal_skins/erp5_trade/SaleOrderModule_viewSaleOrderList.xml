@@ -72,7 +72,6 @@
                       <list>
                         <string>listbox_delivery_start_date</string>
                         <string>listbox_delivery_stop_date</string>
-                        <string>listbox_total_net_price</string>
                         <string>listbox_total_price</string>
                       </list>
                     </value>

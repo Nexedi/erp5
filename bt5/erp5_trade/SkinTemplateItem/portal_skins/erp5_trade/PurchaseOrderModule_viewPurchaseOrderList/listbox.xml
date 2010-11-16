@@ -10,17 +10,17 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>editable_columns</string>
-                <string>sort</string>
-                <string>domain_root_list</string>
-                <string>title</string>
-                <string>portal_types</string>
                 <string>all_columns</string>
-                <string>domain_tree</string>
                 <string>columns</string>
-                <string>selection_name</string>
+                <string>domain_root_list</string>
+                <string>domain_tree</string>
+                <string>editable_columns</string>
+                <string>portal_types</string>
                 <string>search_columns</string>
+                <string>selection_name</string>
+                <string>sort</string>
                 <string>sort_columns</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -100,10 +100,6 @@
                         <tuple>
                           <string>total_price</string>
                           <string>Total Price</string>
-                        </tuple>
-                        <tuple>
-                          <string>total_net_price</string>
-                          <string>Net Total Price</string>
                         </tuple>
                         <tuple>
                           <string>creation_date</string>
@@ -198,10 +194,6 @@
                           <string>total_price</string>
                           <string>Total Price</string>
                         </tuple>
-                        <tuple>
-                          <string>total_net_price</string>
-                          <string>Net Total Price</string>
-                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -275,10 +267,6 @@
                         <tuple>
                           <string>total_price</string>
                           <string>Total Price</string>
-                        </tuple>
-                        <tuple>
-                          <string>total_net_price</string>
-                          <string>Net Total Price</string>
                         </tuple>
                         <tuple>
                           <string>creation_date</string>
@@ -361,10 +349,6 @@
                         <tuple>
                           <string>total_price</string>
                           <string>Total Price</string>
-                        </tuple>
-                        <tuple>
-                          <string>total_net_price</string>
-                          <string>Net Total Price</string>
                         </tuple>
                         <tuple>
                           <string>creation_date</string>

@@ -102,10 +102,6 @@
                           <string>Total Price</string>
                         </tuple>
                         <tuple>
-                          <string>total_net_price</string>
-                          <string>Net Total Price</string>
-                        </tuple>
-                        <tuple>
                           <string>creation_date</string>
                           <string>Creation Date</string>
                         </tuple>
@@ -198,10 +194,6 @@
                           <string>total_price</string>
                           <string>Total Price</string>
                         </tuple>
-                        <tuple>
-                          <string>total_net_price</string>
-                          <string>Net Total Price</string>
-                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -275,10 +267,6 @@
                         <tuple>
                           <string>total_price</string>
                           <string>Total Price</string>
-                        </tuple>
-                        <tuple>
-                          <string>total_net_price</string>
-                          <string>Net Total Price</string>
                         </tuple>
                         <tuple>
                           <string>creation_date</string>
@@ -361,10 +349,6 @@
                         <tuple>
                           <string>total_price</string>
                           <string>Total Price</string>
-                        </tuple>
-                        <tuple>
-                          <string>total_net_price</string>
-                          <string>Net Total Price</string>
                         </tuple>
                         <tuple>
                           <string>creation_date</string>
