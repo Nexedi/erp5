@@ -51,9 +51,12 @@ def readElfAsDict(f):
       rpath_list = [q.rstrip('/') for q in l.split(':',1)[1].strip(' []').split(':')]
     elif '(RUNPATH)' in l:
       runpath_list = [q.rstrip('/') for q in l.split(':',1)[1].strip(' []').split(':')]
+  if len(runpath_list) == 0:
+    runpath_list = rpath_list
+  elif len(rpath_list) != 0:
+    raise ValueError(rpath_list != runpath_list)
   return dict(
     library_list=sorted(library_list),
-    rpath_list=sorted(rpath_list),
     runpath_list=sorted(runpath_list)
   )
 
@@ -122,7 +125,6 @@ class AssertMysql50Tritonn(unittest.TestCase):
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
         software in ['ncurses', 'zlib', 'senna', 'readline', 'openssl']]
-    self.assertEqual(sorted(expected_rpath_list), elf_dict['rpath_list'])
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_ld_mysqlmanager(self):
@@ -133,7 +135,6 @@ class AssertMysql50Tritonn(unittest.TestCase):
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
         software in ['ncurses', 'zlib', 'readline', 'openssl']]
-    self.assertEqual(sorted(expected_rpath_list), elf_dict['rpath_list'])
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_ld_libmysqlclient_r(self):
@@ -144,7 +145,6 @@ class AssertMysql50Tritonn(unittest.TestCase):
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
         software in ['ncurses', 'zlib', 'readline', 'openssl']]
-    self.assertEqual(sorted(expected_rpath_list), elf_dict['rpath_list'])
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_ld_libmysqlclient(self):
@@ -155,7 +155,6 @@ class AssertMysql50Tritonn(unittest.TestCase):
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
         software in ['ncurses', 'zlib', 'readline', 'openssl']]
-    self.assertEqual(sorted(expected_rpath_list), elf_dict['rpath_list'])
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_ld_sphinx(self):
@@ -166,7 +165,6 @@ class AssertMysql50Tritonn(unittest.TestCase):
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
         software in ['ncurses', 'zlib', 'readline', 'openssl']]
-    self.assertEqual(sorted(expected_rpath_list), elf_dict['rpath_list'])
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_ld_mysql(self):
@@ -179,7 +177,6 @@ class AssertMysql50Tritonn(unittest.TestCase):
         software in ['ncurses', 'zlib', 'readline', 'openssl']]
     expected_rpath_list.append(os.path.join(os.path.abspath(os.curdir),
       'parts', 'mysql-tritonn-5.0', 'lib', 'mysql'))
-    self.assertEqual(sorted(expected_rpath_list), elf_dict['rpath_list'])
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_ld_mysqladmin(self):
@@ -191,7 +188,6 @@ class AssertMysql50Tritonn(unittest.TestCase):
         software in ['ncurses', 'zlib', 'readline', 'openssl']]
     expected_rpath_list.append(os.path.join(os.path.abspath(os.curdir),
       'parts', 'mysql-tritonn-5.0', 'lib', 'mysql'))
-    self.assertEqual(sorted(expected_rpath_list), elf_dict['rpath_list'])
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_ld_mysqldump(self):
@@ -203,7 +199,6 @@ class AssertMysql50Tritonn(unittest.TestCase):
         software in ['ncurses', 'zlib', 'readline', 'openssl']]
     expected_rpath_list.append(os.path.join(os.path.abspath(os.curdir),
       'parts', 'mysql-tritonn-5.0', 'lib', 'mysql'))
-    self.assertEqual(sorted(expected_rpath_list), elf_dict['rpath_list'])
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
 class AssertMysql51(unittest.TestCase):
@@ -214,7 +209,6 @@ class AssertMysql51(unittest.TestCase):
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
         software in ['ncurses', 'zlib', 'readline']]
-    self.assertEqual(sorted(expected_rpath_list), elf_dict['rpath_list'])
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_ld_mysqlmanager(self):
@@ -224,7 +218,6 @@ class AssertMysql51(unittest.TestCase):
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
         software in ['ncurses', 'zlib', 'readline']]
-    self.assertEqual(sorted(expected_rpath_list), elf_dict['rpath_list'])
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_ld_libmysqlclient_r(self):
@@ -234,7 +227,6 @@ class AssertMysql51(unittest.TestCase):
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
         software in ['ncurses', 'zlib', 'readline']]
-    self.assertEqual(sorted(expected_rpath_list), elf_dict['rpath_list'])
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_ld_libmysqlclient(self):
@@ -244,7 +236,6 @@ class AssertMysql51(unittest.TestCase):
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
         software in ['ncurses', 'readline', 'zlib']]
-    self.assertEqual(sorted(expected_rpath_list), elf_dict['rpath_list'])
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_ld_mysql(self):
@@ -257,7 +248,6 @@ class AssertMysql51(unittest.TestCase):
         software in ['ncurses', 'zlib', 'readline']]
     expected_rpath_list.append(os.path.join(os.path.abspath(os.curdir),
       'parts', 'mysql-5.1', 'lib', 'mysql'))
-    self.assertEqual(sorted(expected_rpath_list), elf_dict['rpath_list'])
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_ld_mysqladmin(self):
@@ -270,7 +260,6 @@ class AssertMysql51(unittest.TestCase):
         software in ['ncurses', 'zlib', 'readline']]
     expected_rpath_list.append(os.path.join(os.path.abspath(os.curdir),
       'parts', 'mysql-5.1', 'lib', 'mysql'))
-    self.assertEqual(sorted(expected_rpath_list), elf_dict['rpath_list'])
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_ld_mysqldump(self):
@@ -282,7 +271,6 @@ class AssertMysql51(unittest.TestCase):
         software in ['ncurses', 'zlib', 'readline']]
     expected_rpath_list.append(os.path.join(os.path.abspath(os.curdir),
       'parts', 'mysql-5.1', 'lib', 'mysql'))
-    self.assertEqual(sorted(expected_rpath_list), elf_dict['rpath_list'])
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
 class AssertMemcached(unittest.TestCase):
@@ -296,7 +284,6 @@ class AssertMemcached(unittest.TestCase):
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
         software in ['libevent']]
-    self.assertEqual(sorted(expected_rpath_list), elf_dict['rpath_list'])
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
 class AssertPythonMysql(unittest.TestCase):
@@ -312,7 +299,6 @@ class AssertPythonMysql(unittest.TestCase):
         expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
             software in ['zlib', 'openssl']]
         expected_rpath_list.append(os.path.join(os.path.abspath(os.curdir), 'parts', 'mysql-tritonn-5.0', 'lib', 'mysql'))
-        self.assertEqual(sorted(expected_rpath_list), elf_dict['rpath_list'])
         self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
 class AssertApache(unittest.TestCase):
@@ -326,7 +312,6 @@ class AssertApache(unittest.TestCase):
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
         software in ['apache', 'zlib', 'openssl', 'libuuid']]
-    self.assertEqual(sorted(expected_rpath_list), elf_dict['rpath_list'])
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_ld_libapr1(self):
@@ -337,7 +322,6 @@ class AssertApache(unittest.TestCase):
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
         software in ['zlib', 'openssl', 'libuuid']]
-    self.assertEqual(sorted(expected_rpath_list), elf_dict['rpath_list'])
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_ld_libexpat(self):
@@ -347,7 +331,6 @@ class AssertApache(unittest.TestCase):
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
         software in ['zlib', 'openssl']]
-    self.assertEqual(sorted(expected_rpath_list), elf_dict['rpath_list'])
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_modules(self):
@@ -438,7 +421,6 @@ class AssertItools(unittest.TestCase):
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
         software in ['glib']]
-    self.assertEqual(sorted(expected_rpath_list), elf_dict['rpath_list'])
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
 if __name__ == '__main__':
