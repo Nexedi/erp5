@@ -93,6 +93,23 @@ def _fillAccessorHolderList(accessor_holder_list,
             "Created accessor holder for %s in %s" % (property_sheet_name,
                                                       accessor_holder_module))
 
+# 'Types Tool' is required to access 'site.portal_types' and the
+# former requires 'Base Type'. Thus, 'generating' is meaningful to
+# avoid infinite recursion, whereas 'type_class' avoids accessing to
+# portal_type
+#
+# For example, loading 'Types Tool' will try to load 'Types Tool' when
+# accessing 'site.portal_types'. Therefore the inner one is just an
+# import of 'Types Tool' class without any mixin, interface or
+# Property Sheet to allow the outer (which will actually be stored in
+# 'erp5.portal_type') to be fully generated.
+core_portal_type_class_dict = {
+  'Base Type': {'type_class': 'ERP5TypeInformation',
+                'generating': False},
+  'Types Tool': {'type_class': 'TypesTool',
+                 'generating': False}
+  }
+
 def generatePortalTypeClass(portal_type_name):
   """
   Given a portal type, look up in Types Tool the corresponding
@@ -103,22 +120,48 @@ def generatePortalTypeClass(portal_type_name):
   from Products.ERP5.ERP5Site import getSite
   site = getSite()
 
-  accessor_holder_list = []
-  type_class = None
+  global core_portal_type_class_dict
+
+  if portal_type_name in core_portal_type_class_dict:
+    if not core_portal_type_class_dict[portal_type_name]['generating']:
+      # Loading the (full) outer portal type class
+      core_portal_type_class_dict[portal_type_name]['generating'] = True
+    else:
+      # Loading the inner portal type class without any mixin,
+      # interface or Property Sheet
+      klass = _importClass(document_class_registry.get(
+        core_portal_type_class_dict[portal_type_name]['type_class']))
+
+      # Don't do anything else, just allow to load fully the outer
+      # portal type class
+      return ((klass,), [], {})
 
   # Do not use __getitem__ (or _getOb) because portal_type may exist in a
   # type provider other than Types Tool.
   portal_type = getattr(site.portal_types, portal_type_name, None)
+
+  type_class = None
+
   if portal_type is not None:
     # type_class has a compatibility getter that should return
     # something even if the field is not set (i.e. Base Type object
     # was not migrated yet). It only works if factory_method_id is set.
     type_class = portal_type.getTypeClass()
+
+    # The Tools used to have 'Folder' or None as type_class instead of
+    # 'NAME Tool', so make sure the type_class is correct
+    #
+    # NOTE: under discussion so might be removed later on
+    if portal_type_name.endswith('Tool') and type_class in ('Folder', None):
+      type_class = portal_type_name.replace(' ', '')
+
     mixin_list = portal_type.getTypeMixinList()
     interface_list = portal_type.getTypeInterfaceList()
 
   # But if neither factory_init_method_id nor type_class are set on
-  # the portal type, we have to try to guess, for compatibility
+  # the portal type, we have to try to guess, for compatibility.
+  # Moreover, some tools, such as 'Activity Tool', don't have any
+  # portal type
   if type_class is None:
     # Try to figure out a coresponding document class from the document side.
     # This can happen when calling newTempAmount for instance:
@@ -140,6 +183,8 @@ def generatePortalTypeClass(portal_type_name):
                          % (type_class, portal_type_name))
 
   klass = _importClass(type_class_path)
+
+  accessor_holder_list = []
 
   ## Disabled because there will be no commit of
   ## type_zodb_property_sheet, only use for testing ATM
@@ -190,6 +235,9 @@ def generatePortalTypeClass(portal_type_name):
     from Products.ERP5Type import interfaces
     interface_class_list = [getattr(interfaces, name)
                             for name in interface_list]
+
+  if portal_type_name in core_portal_type_class_dict:
+    core_portal_type_class_dict[portal_type_name]['generating'] = False
 
   #LOG("ERP5Type.dynamic", INFO,
   #    "Portal type %s loaded with bases %s" \
