@@ -17,6 +17,7 @@
 
 import threading
 from weakref import ref as weakref
+from OFS.Application import Application
 from Products.ERP5Type import Globals
 from Products.ERP5Type.Globals import package_home
 
@@ -258,7 +259,9 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     # Use a transactional variable for performance reason,
     # since ERP5Site.__of__ is called quite often.
     tv = getTransactionalVariable()
-    if 'ERP5Site.__of__' not in tv:
+    # Check 'parent' is the root because some objects like '_components'
+    # store the site in '__parent__'.
+    if 'ERP5Site.__of__' not in tv and type(parent) is Application:
       tv['ERP5Site.__of__'] = None
       setSite(self)
       synchronizeDynamicModules(self)
