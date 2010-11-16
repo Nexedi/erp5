@@ -90,7 +90,7 @@ class CacheCookieMixin:
     try:
       return self.__dict__[cache_name].value
     except KeyError:
-      self.__dict__[cache_name] = ZODBCookie()
+      setattr(self, cache_name, ZODBCookie())
       return ZODBCookie.value
 
   security.declareProtected(Permissions.ModifyPortalContent, 'newCacheCookie')
@@ -100,7 +100,7 @@ class CacheCookieMixin:
     try:
       self.__dict__[cache_name].value += 1
     except KeyError:
-      self.__dict__[cache_name] = ZODBCookie()
+      setattr(self, cache_name, ZODBCookie())
 
 
 class CacheFactory:
