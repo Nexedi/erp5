@@ -327,70 +327,70 @@ class AssertApache(unittest.TestCase):
   def test_modules(self):
     """Checks for availability of apache modules"""
     required_module_list = getCleanList("""
-      authn_default_module
-      log_config_module
-      proxy_http_module
-      authn_alias_module
-      authz_dbm_module
-      case_filter_in_module
-      imagemap_module
-      setenvif_module
-      include_module
-      charset_lite_module
-      info_module
-      cache_module
       actions_module
-      proxy_connect_module
-      auth_digest_module
-      unique_id_module
-      mime_magic_module
-      disk_cache_module
-      mime_module
-      usertrack_module
+      alias_module
       asis_module
-      optional_hook_import_module
-      negotiation_module
-      proxy_module
-      authz_default_module
-      ext_filter_module
       auth_basic_module
-      authz_owner_module
+      auth_digest_module
+      authn_alias_module
       authn_anon_module
-      rewrite_module
-      proxy_balancer_module
-      substitute_module
-      filter_module
-      expires_module
+      authn_dbm_module
+      authn_default_module
+      authn_file_module
+      authz_dbm_module
+      authz_default_module
+      authz_groupfile_module
+      authz_host_module
+      authz_owner_module
+      authz_user_module
       autoindex_module
-      status_module
+      bucketeer_module
+      cache_module
+      case_filter_in_module
+      case_filter_module
+      cern_meta_module
+      cgi_module
       cgid_module
-      version_module
+      charset_lite_module
+      deflate_module
+      dir_module
+      disk_cache_module
+      dumpio_module
       echo_module
+      env_module
+      expires_module
+      ext_filter_module
+      filter_module
+      headers_module
+      ident_module
+      imagemap_module
+      include_module
+      info_module
+      log_config_module
+      log_forensic_module
+      logio_module
+      mime_magic_module
+      mime_module
+      negotiation_module
       optional_fn_export_module
       optional_fn_import_module
-      ident_module
-      cgi_module
-      bucketeer_module
       optional_hook_export_module
-      vhost_alias_module
-      ssl_module
-      authz_user_module
-      env_module
-      logio_module
+      optional_hook_import_module
+      proxy_balancer_module
+      proxy_connect_module
       proxy_ftp_module
-      cern_meta_module
-      authz_groupfile_module
-      dir_module
-      log_forensic_module
-      alias_module
-      deflate_module
-      authn_dbm_module
-      case_filter_module
-      authz_host_module
-      headers_module
-      dumpio_module
+      proxy_http_module
+      proxy_module
+      rewrite_module
+      setenvif_module
       speling_module
-      authn_file_module
+      ssl_module
+      status_module
+      substitute_module
+      unique_id_module
+      usertrack_module
+      version_module
+      vhost_alias_module
     """)
     parts_path_prefix = os.path.join(os.path.dirname(__file__), '../parts')
     result = os.popen("%s/apache/bin/httpd -M" % parts_path_prefix)
