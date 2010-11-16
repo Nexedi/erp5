@@ -404,6 +404,14 @@ class AssertApache(unittest.TestCase):
     self.assertEqual([], failed_module_list,
         'Apache modules not found:\n'+'\n'.join(failed_module_list))
 
+  def test_ld_module_mod_actions(self):
+    elf_dict = readElfAsDict('parts/apache/modules/mod_actions.so')
+    self.assertEqual(sorted(['libpthread', 'libc']), elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
 class AssertItools(unittest.TestCase):
   def test_ld_parserso(self):
     elf_dict = readElfAsDict('parts/itools/lib/itools/xml/parser.so')
