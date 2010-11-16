@@ -53,8 +53,8 @@ def readElfAsDict(f):
       runpath_list = [q.rstrip('/') for q in l.split(':',1)[1].strip(' []').split(':')]
   if len(runpath_list) == 0:
     runpath_list = rpath_list
-  elif len(rpath_list) != 0:
-    raise ValueError(rpath_list != runpath_list)
+  elif len(rpath_list) != 0 and runpath_list != rpath_list:
+    raise ValueError('RPATH and RUNPATH are different.')
   return dict(
     library_list=sorted(library_list),
     runpath_list=sorted(runpath_list)
