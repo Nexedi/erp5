@@ -336,7 +336,7 @@ class ODFStrategy(Implicit):
     # Update the META informations
     ooo_builder.updateManifest()
 
-    ooo = ooo_builder.render(name=odf_template.title or odf_template.id)
+    ooo = ooo_builder.render()
     return ooo
 
   def _replaceContentXml(self, ooo_builder, extra_context):
