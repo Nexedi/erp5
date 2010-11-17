@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts89985850.69</string> </value>
+            <value> <string>ts89995593.36</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -372,89 +372,11 @@ div.block div.hiddenLabel label{\n
 \n
 */\n
 \n
-/* Worklist gadget */\n
-div.block div.list_style a{\n
-  cursor:pointer;\n
-}\n
-\n
-div.block div.list_style .title{\n
-  font-weight: bold;\n
-  text-decoration:underline;\n
-  color:black;\n
-  vertical-align:bottom;\n
-}\n
-\n
-div.block div.list_style div.content{\n
-  background-color:white;\n
-  border:none;\n
-  margin-bottom:5px;\n
-  padding-bottom:1px;\n
-  overflow:auto;\n
-}\n
-\n
-div.block div.list_style div.content div#others_links{\n
-  margin-top:7px;\n
-  margin-bottom:7px;\n
-}\n
-div.block div.list_style div.read span{\n
-  color:#969696;\n
-}\n
-div.block div.list_style div span.transparent{\n
-  color:#C0C0C0;\n
-}\n
-\n
-div.block div.list_style .left{\n
-  float:left;\n
-}\n
-\n
-div.block div.list_style .right{\n
-  float:right;\n
-  margin-left:5px;\n
-}\n
-\n
-div.block div.list_style p.clear{\n
-  clear:both;\n
-  height:0pt;\n
-  margin:0pt;\n
-  padding:0pt;\n
-}\n
-\n
-div.block div.content div.list_style ul{\n
-  margin-top:5px;\n
-  margin-left:7px;\n
-  margin-bottom:13px;\n
-  padding:0px;\n
-}\n
-\n
-div.block div.content div.list_style ul li{\n
-  list-style-image:url(bullet.png);\n
-  margin-bottom:5px;\n
-}\n
-\n
-div.block div.list_style ul li#with_img{\n
-  list-style-type:None;\n
-  list-style-image:None;\n
-  margin-bottom:5px;\n
-}\n
-\n
-div.block div.list_style ul li div#title_img{\n
-  margin-left:90px;\n
-  cursor:pointer;\n
-}\n
-\n
-div.block div.list_style ul li div#title{\n
-  cursor:pointer;\n
-}\n
-\n
-div.block div.list_style input {\n
-  margin-left:15px;\n
-  margin-top:5px;\n
-}\n
-\n
 div.block .right{\n
   float:right;\n
   margin-left:5px;\n
 }\n
+\n
 \n
 div.block div.box_inner_content div.worklist_list ul {\n
   list-style-image:url(bullet.png);\n
@@ -474,15 +396,6 @@ div.block div.worklist_list a{\n
   color:black;\n
   text-decoration:none;\n
   cursor:pointer;\n
-}\n
-\n
-div.block div.worklist_list ul li table.listbox caption{\n
-  display:none;\n
-}\n
-\n
-div.block div.worklist_list ul li table.listbox thead td,div.block div.worklist_list ul li table.listbox thead tr th{\n
-  background-color:white;\n
-  border:none;\n
 }\n
 \n
 div.block div.worklist_list ul li a:hover{\n
@@ -576,7 +489,7 @@ div.gadget-rss-reader .body {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>9564</int> </value>
+            <value> <int>7993</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
