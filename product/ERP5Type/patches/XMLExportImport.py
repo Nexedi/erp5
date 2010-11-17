@@ -160,11 +160,11 @@ def XMLrecord(oid, plen, p, id_mapping):
     f=StringIO(p)
     u=q(f)
     id=u64(oid)
+    u.idprefix=str(id)+'.'
     id = id_mapping[id]
     old_aka = encodestring(oid)[:-1]
     aka=encodestring(p64(long(id)))[:-1]  # Rebuild oid based on mapped id
     id_mapping.setConvertedAka(old_aka, aka)
-    u.idprefix=str(id)+'.'
     p=u.load(id_mapping=id_mapping).__str__(4)
     if f.tell() < plen:
         p=p+u.load(id_mapping=id_mapping).__str__(4)
