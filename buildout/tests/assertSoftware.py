@@ -60,7 +60,30 @@ def readElfAsDict(f):
     runpath_list=sorted(runpath_list)
   )
 
-class AssertSoftwareRunable(unittest.TestCase):
+class AssertSoftwareMixin(unittest.TestCase):
+  def assertEqual(self, first, second, msg=None):
+    try:
+      return unittest.TestCase.assertEqual(self, first, second, msg=msg)
+    except unittest.TestCase.failureException:
+      if (msg is None) and \
+          isinstance(first, list) and \
+          isinstance(second, list):
+        msg = ''
+        for elt in first:
+          if elt not in second:
+            msg += '- %s\n' % elt
+        for elt in second:
+          if elt not in first:
+            msg += '+ %s\n' % elt
+        if msg == '':
+          raise
+        else:
+          msg = 'Lists are different:\n%s' % msg
+          raise unittest.TestCase.failureException, msg
+      else:
+        raise
+
+class AssertSoftwareRunable(AssertSoftwareMixin):
   def test_HaProxy(self):
     stdout, stderr = subprocess.Popen(["parts/haproxy/sbin/haproxy", "-v"],
         stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
@@ -116,7 +139,7 @@ class AssertSoftwareRunable(unittest.TestCase):
     self.assertEqual(stderr, '')
     self.assertTrue(stdout.startswith('w3m version w3m/0.5.2'))
 
-class AssertMysql50Tritonn(unittest.TestCase):
+class AssertMysql50Tritonn(AssertSoftwareMixin):
   def test_ld_mysqld(self):
     elf_dict = readElfAsDict('parts/mysql-tritonn-5.0/libexec/mysqld')
     self.assertEqual(sorted(['libc', 'libcrypt', 'libcrypto', 'libdl',
@@ -201,7 +224,7 @@ class AssertMysql50Tritonn(unittest.TestCase):
       'parts', 'mysql-tritonn-5.0', 'lib', 'mysql'))
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
-class AssertMysql51(unittest.TestCase):
+class AssertMysql51(AssertSoftwareMixin):
   def test_ld_mysqld(self):
     elf_dict = readElfAsDict('parts/mysql-5.1/libexec/mysqld')
     self.assertEqual(sorted(['libc', 'libcrypt', 'libdl', 'libgcc_s', 'libm', 'libnsl',
@@ -273,11 +296,11 @@ class AssertMysql51(unittest.TestCase):
       'parts', 'mysql-5.1', 'lib', 'mysql'))
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
-class AssertMemcached(unittest.TestCase):
+class AssertMemcached(AssertSoftwareMixin):
   """Tests for built memcached"""
 
   def test_ld_memcached(self):
-    """Checks proper liunking to libevent from memcached"""
+    """Checks proper linking to libevent from memcached"""
     elf_dict = readElfAsDict('parts/memcached/bin/memcached')
     self.assertEqual(sorted(['libpthread', 'libevent-1.4', 'libc']),
         elf_dict['library_list'])
@@ -286,7 +309,42 @@ class AssertMemcached(unittest.TestCase):
         software in ['libevent']]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
-class AssertPythonMysql(unittest.TestCase):
+class AssertSubversion(AssertSoftwareMixin):
+  """Tests for built subversion"""
+  def test_ld_svn(self):
+    elf_dict = readElfAsDict('parts/subversion/bin/svn')
+    self.assertEqual(sorted(['libsvn_client-1', 'libsvn_wc-1', 'libsvn_ra-1',
+      'libsvn_diff-1', 'libsvn_ra_local-1', 'libsvn_repos-1', 'libsvn_fs-1',
+      'libsvn_fs_fs-1', 'libsvn_fs_util-1', 'libsvn_ra_svn-1',
+      'libsvn_ra_neon-1', 'libsvn_delta-1', 'libsvn_subr-1', 'libsqlite3',
+      'libaprutil-1', 'libapr-1', 'libuuid', 'librt', 'libneon', 'libexpat',
+      'libz', 'libssl', 'libcrypto', 'libgssapi_krb5', 'libkrb5',
+      'libk5crypto', 'libcom_err', 'libresolv', 'libc', 'libcrypt', 'libdl',
+      'libpthread', 'libm', 'libserf-0', 'libsvn_ra_serf-1',
+      ]),
+        elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['apache', 'libexpat', 'libxml2', 'neon', 'openssl',
+                     'sqlite3', 'subversion', 'zlib', 'libuuid', 'serf']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+class AssertSerf(AssertSoftwareMixin):
+  """Tests for built serf"""
+  def test_ld_libserf(self):
+    elf_dict = readElfAsDict('parts/serf/lib/libserf-0.so.0.0.0')
+    self.assertEqual(sorted([
+      'libapr-1', 'libaprutil-1', 'libc', 'libcrypt', 'libcrypto',
+      'libdl', 'libexpat', 'libm', 'libpthread', 'librt',
+      'libssl', 'libuuid', 'libz',
+      ]),
+        elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['apache', 'openssl', 'libexpat']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+class AssertPythonMysql(AssertSoftwareMixin):
   def test_ld_mysqlso(self):
     for d in os.listdir('develop-eggs'):
       if d.startswith('MySQL_python'):
@@ -301,7 +359,7 @@ class AssertPythonMysql(unittest.TestCase):
         expected_rpath_list.append(os.path.join(os.path.abspath(os.curdir), 'parts', 'mysql-tritonn-5.0', 'lib', 'mysql'))
         self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
-class AssertApache(unittest.TestCase):
+class AssertApache(AssertSoftwareMixin):
   """Tests for built apache"""
 
   def test_ld_libaprutil1(self):
@@ -982,7 +1040,7 @@ class AssertApache(unittest.TestCase):
         software in ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre']]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
-class AssertItools(unittest.TestCase):
+class AssertItools(AssertSoftwareMixin):
   def test_ld_parserso(self):
     elf_dict = readElfAsDict('parts/itools/lib/itools/xml/parser.so')
     self.assertEqual(sorted(['libc', 'libglib-2.0', 'libpthread']),
