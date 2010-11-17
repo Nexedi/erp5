@@ -46,8 +46,6 @@ import shutil
 from xml.sax.saxutils import escape
 from dircache import listdir
 from OFS.Traversable import NotFound
-from Products.ERP5Type.patches.copyTree import copytree, Error
-from Products.ERP5Type.patches.cacheWalk import cacheWalk
 import transaction
 
 try:
@@ -892,20 +890,19 @@ class SubversionTool(BaseTool):
     business_template.build()
     svn_path = self._getWorkingPath(self.getSubversionPath(business_template) \
     + os.sep)
+    old_cwd = os.getcwd()
     path = mkdtemp()
     try:
       # XXX: Big hack to make export work as expected.
       transaction.commit()
       business_template.export(path=path, local=1)
-      # svn del deleted files
-      self.deleteOldFiles(svn_path, path)
-      # add new files and copy
-      self.addNewFiles(svn_path, path)
       self.goToWorkingCopy(business_template)
+      self._reimportTree(path)
     finally:
       # Clean up
       shutil.rmtree(path)
-    
+      os.chdir(old_cwd)
+
   def importBT(self, business_template):
     """
      Import business template from local
@@ -927,88 +924,93 @@ class SubversionTool(BaseTool):
       res = [x for x in res if not x.startswith(path)]
     return res
 
-  # return a set with directories present in the directory
-  def getSetDirsForDir(self, directory):
-    dir_set = set()
-    for root, dirs, _ in cacheWalk(directory):
-      # don't visit SVN directories
-      if '.svn' in dirs:
-        dirs.remove('.svn')
-      # get Directories
-      for name in dirs:
-        i = root.replace(directory, '').count(os.sep)
-        path = os.path.join(root, name)
-        dir_set.add((i, path.replace(directory,'')))
-    return dir_set
-      
-  # return a set with files present in the directory
-  def getSetFilesForDir(self, directory):
-    dir_set = set()
-    for root, dirs, files in cacheWalk(directory):
-      # don't visit SVN directories
-      if '.svn' in dirs:
-        dirs.remove('.svn')
-      # get Files
-      for name in files:
-        i = root.replace(directory, '').count(os.sep)
-        path = os.path.join(root, name)
-        dir_set.add((i, path.replace(directory,'')))
-    return dir_set
-  
-  # return files present in new_dir but not in old_dir
-  # return a set of relative paths
-  def getNewFiles(self, old_dir, new_dir):
-    if old_dir[-1] != os.sep:
-      old_dir += os.sep
-    if new_dir[-1] != os.sep:
-      new_dir += os.sep
-    old_set = self.getSetFilesForDir(old_dir)
-    new_set = self.getSetFilesForDir(new_dir)
-    return new_set.difference(old_set)
+  def _reimportTree(self, path):
+    """Overwrite working copy with the tree pointed to by 'path'
 
-  # return dirs present in new_dir but not in old_dir
-  # return a set of relative paths
-  def getNewDirs(self, old_dir, new_dir):
-    if old_dir[-1] != os.sep:
-      old_dir += os.sep
-    if new_dir[-1] != os.sep:
-      new_dir += os.sep
-    old_set = self.getSetDirsForDir(old_dir)
-    new_set = self.getSetDirsForDir(new_dir)
-    return new_set.difference(old_set)
-    
-  def deleteOldFiles(self, old_dir, new_dir):
-    """ svn del files that have been removed in new dir
+    Current directory must be the destination working copy
     """
-    # detect removed files
-    files_set = self.getNewFiles(new_dir, old_dir)
-    # detect removed directories
-    dirs_set = self.getNewDirs(new_dir, old_dir)
-    # svn del
-    path_list = [x for x in files_set]
-    path_list.sort()
-    self.remove([os.path.join(old_dir, x[1]) for x in path_list])
-    path_list = [x for x in dirs_set]
-    path_list.sort()
-    self.remove([os.path.join(old_dir, x[1]) for x in path_list])
-  
-  def addNewFiles(self, old_dir, new_dir):
-    """ copy files and add new files
-    """
-    # detect created files
-    files_set = self.getNewFiles(old_dir, new_dir)
-    # detect created directories
-    dirs_set = self.getNewDirs(old_dir, new_dir)
-    # Copy files
-    copytree(new_dir, old_dir)
-    # svn add
-    path_list = [x for x in dirs_set]
-    path_list.sort()
-    self.add([os.path.join(old_dir, x[1]) for x in path_list])
-    path_list = [x for x in files_set]
-    path_list.sort()
-    self.add([os.path.join(old_dir, x[1]) for x in path_list])
-  
+    # Sets to track svn status in case it is not consistent with existing
+    # files and directories
+    versioned_set = set(x.getPath() for x in self._getClient().status('.')
+                                    if x.getIsVersioned())
+    versioned_set.remove('.')
+    added_set = set()
+
+    # Walk current tree
+    svn_file_set = set()
+    svn_dir_set = set()
+    prefix_length = len(os.path.join('.', ''))
+    for dirpath, dirnames, filenames in os.walk('.'):
+      dirpath = dirpath[prefix_length:]
+      for i in xrange(len(dirnames) - 1, -1, -1):
+        d = dirnames[i]
+        if d[0] == '.':
+          # Ignore hidden directories (in particular '.svn')
+          del dirnames[i]
+        else:
+          svn_dir_set.add(os.path.join(dirpath, d))
+      for f in filenames:
+        svn_file_set.add(os.path.join(dirpath, f))
+
+    # Copy new files/dirs from 'path' to working copy
+    # Note: we don't use 'copytree' to avoid excessive disk writes
+    prefix_length = len(os.path.join(path, ''))
+    for dirpath, dirnames, filenames in os.walk(path):
+      dirpath = dirpath[prefix_length:]
+      for d in dirnames:
+        d = os.path.join(dirpath, d)
+        if d in versioned_set:
+          versioned_set.remove(d)
+        else:
+          added_set.add(d)
+        if d in svn_dir_set:
+          svn_dir_set.remove(d)
+        else:
+          os.mkdir(d)
+      for f in filenames:
+        f = os.path.join(dirpath, f)
+        if f in versioned_set:
+          versioned_set.remove(f)
+        else:
+          added_set.add(f)
+        # copy file unless unchanged
+        file = open(os.path.join(path, f), 'rb')
+        try:
+          text = file.read()
+        finally:
+          file.close()
+        try:
+          if f in svn_file_set:
+            svn_file_set.remove(f)
+            file = open(f, 'r+b')
+            old_size = os.fstat(file.fileno()).st_size
+            if len(text) == old_size and text == file.read():
+              continue
+            file.seek(0)
+          else:
+            file = open(f, 'wb')
+          file.write(text)
+          file.truncate()
+        finally:
+          file.close()
+
+    # Remove dangling files/dirs
+    svn_file_set -= versioned_set # what is in versioned_set
+    svn_dir_set -= versioned_set  #  is removed after
+    for x in svn_file_set:
+      if os.path.dirname(x) not in svn_dir_set:
+        os.remove(x)
+    for x in svn_dir_set:
+      if os.path.dirname(x) not in svn_dir_set:
+        shutil.rmtree(x)
+
+    # Remove deleted files/dirs
+    self.remove([x for x in versioned_set
+                   if os.path.dirname(x) not in versioned_set])
+    # Add new files/dirs
+    self.add([x for x in added_set
+                if os.path.dirname(x) not in added_set])
+
   def treeToXML(self, item, business_template) :
     """ Convert tree in memory to XML
     """
