@@ -122,16 +122,6 @@ table {\n
 \tborder: 1px solid #ecebe2;\n
 }\n
 \n
-table.table-b { border:none; }\n
-\n
-table tr.thead {\n
-\tbackground-color:#ecebe2;\n
-}\n
-\n
-table.table-b tr.thead {\n
-\tbackground-color:#fff;\n
-}\n
-\n
 table th button {\n
   background-color:inherit;\n
   border-width:0;\n
@@ -145,28 +135,12 @@ table th button {\n
   padding:0 6px 0 0;\n
 }\n
 \n
-table tr.thead th { \n
-  text-align: left; \n
-}\n
-\n
 table tbody tr td {\n
 \tborder-top: 1px solid #ecebe2;\n
 \tbackground-color: #FFFFFF;\n
 \t-webkit-transition-property: background;\n
 \t-webkit-transition-duration: 0.2s;\n
 \t-webkit-transition-timing-function: linear;\n
-}\n
-\n
-table.table-b tbody tr td { \n
-  border:none; \n
-}\n
-\n
-/*table tbody tr:hover td {\n
-\tbackground-color: #f7f6f0;\n
-}*/\n
-\n
-.pnav {\n
-\tbackground-color: #ecebe2;\n
 }\n
 \n
 #km_left .document > .content {\n
@@ -176,11 +150,6 @@ table.table-b tbody tr td { \n
 \n
 .section {\n
 \tborder-bottom: 1px solid #e9e9e9;\n
-}\n
-\n
-p.pub {\n
-\tbackground: url(../km_img/pub.png) no-repeat transparent;\n
-\tpadding: 0 0 0 15px;\n
 }\n
 \n
 #wrapper_footer {\n
@@ -223,26 +192,6 @@ a:hover { \n
 \tcolor:#FFF;\n
 }\n
 \n
-.gadget table thead tr th a, .content table thead tr th a {\n
- \tcolor:#000;\n
- \tpadding-right:10px;\n
- \tbackground: url(../km_img/switch.png) no-repeat transparent;\n
- \tbackground-position: 100% 50%;\n
-}\n
-\n
-a.draft:link, a.draft:active, a.draft:visited { \n
-  color:#4574cb; \n
-}\n
-\n
-a.inactive:link, a.inactive:active, a.inactive:visited, .inactive { \n
-  color:#cb4545; \n
-}\n
-\n
-a.pub:link, a.pub:active, a.pub:visited, .pub { \n
-  color:#45cb45; \n
-}\n
-\n
-\n
 #footer a:link, #footer a:active, #footer a:visited,\n
 #footer ul li a:link, #footer ul li a:active, #footer ul li a:visited { \n
   color:#FFF;\n
@@ -270,26 +219,6 @@ a.pub:link, a.pub:active, a.pub:visited, .pub { \n
 \n
 #menu #login-logout-link:hover {\n
 \tbackground-position: 0 -23px;\n
-}\n
-\n
-.pnav a:link, .pnav a:active, .pnav a:visited {\n
-\tcolor:#828282;\n
-}\n
-\n
-.pnav a:hover {\n
-\tcolor:#000;\n
-}\n
-\n
-.actions ul li a:link, .actions ul li a:active, .actions ul li a:visited {\n
-\tbackground-color: #b7e2b7;\n
-\tborder:1px solid #b7e2b7;\n
-\tcolor:#323232;\n
-}\n
-\n
-.actions ul li.selected a:link, .actions ul li.selected a:active, .actions ul li.selected a:visited, .actions ul li a:hover {\n
-\tbackground: #4bcc4b;\n
-\tborder:1px solid #4bcc4b;\n
-\tcolor:#fff;\n
 }\n
 \n
 /* ## navigation ###################################### end ### */\n
