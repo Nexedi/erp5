@@ -276,6 +276,7 @@ class Reference(Scalar):
     def __init__(self, v, mapping):
         self._v=v
         self.mapping = mapping
+        mapping.mark(v)
     def __str__(self, indent=0):
         v=self._v
         #LOG('Reference', 0, str(v))
@@ -284,7 +285,6 @@ class Reference(Scalar):
         else:
           name = self.__class__.__name__.lower()
           #LOG('noImmutable', 0, "%s mapped to %s" % (v, self.mapping[v]))
-          self.mapping.mark(v)
           value = '<%s id="%s"/>' % (name, self.mapping[v])
         return '%s%s\n' % (' '*indent, value)
 
@@ -315,6 +315,7 @@ ppml.NoBlanks = NoBlanks
 class IdentityMapping:
 
     def __init__(self):
+      self.resetMapping()
       self.immutable = {}
 
     def resetMapping(self):
@@ -348,14 +349,6 @@ class IdentityMapping:
 ppml.IdentityMapping = IdentityMapping
 
 class MinimalMapping(IdentityMapping):
-    def __init__(self):
-      self.mapped_id = {}
-      self.mapped_core_id = {}
-      self.last_sub_id = {}
-      self.last_id = 1
-      self.converted_aka = {}
-      self.marked_reference = {}
-      self.immutable = {}
 
     def resetMapping(self):
       self.mapped_id = {}
@@ -363,7 +356,7 @@ class MinimalMapping(IdentityMapping):
       self.last_sub_id = {}
       self.last_id = 1
       self.converted_aka = {}
-      self.marked_reference = {}
+      self.marked_reference = set()
 
     def __getitem__(self, id):
       id = str(id)
@@ -402,10 +395,10 @@ class MinimalMapping(IdentityMapping):
       self.converted_aka[old] =  new
 
     def mark(self, v):
-      self.marked_reference[v] = 1
+      self.marked_reference.add(v)
 
     def isMarked(self, v):
-      return self.marked_reference.has_key(v)
+      return v in self.marked_reference
 
     def __str__(self, a):
       return "Error here"

@@ -154,17 +154,20 @@ def reorderPickle(jar, p):
       p = p.replace('_','',1)
     return obj, p
 
+def _mapOid(id_mapping, oid):
+    idprefix = str(u64(oid))
+    id = id_mapping[idprefix]
+    old_aka = encodestring(oid)[:-1]
+    aka=encodestring(p64(long(id)))[:-1]  # Rebuild oid based on mapped id
+    id_mapping.setConvertedAka(old_aka, aka)
+    return idprefix+'.', id, aka
+
 def XMLrecord(oid, plen, p, id_mapping):
     # Proceed as usual
     q=ppml.ToXMLUnpickler
     f=StringIO(p)
     u=q(f)
-    id=u64(oid)
-    u.idprefix=str(id)+'.'
-    id = id_mapping[id]
-    old_aka = encodestring(oid)[:-1]
-    aka=encodestring(p64(long(id)))[:-1]  # Rebuild oid based on mapped id
-    id_mapping.setConvertedAka(old_aka, aka)
+    u.idprefix, id, aka = _mapOid(id_mapping, oid)
     p=u.load(id_mapping=id_mapping).__str__(4)
     if f.tell() < plen:
         p=p+u.load(id_mapping=id_mapping).__str__(4)
@@ -174,68 +177,47 @@ def XMLrecord(oid, plen, p, id_mapping):
 XMLExportImport.XMLrecord = XMLrecord
 
 def exportXML(jar, oid, file=None):
-    # XXX: For performance reasons, we should change XMLExportImport/ppml code
-    #      so that we can call reorderPickle and XMLrecord only once.
-    #      This means we should be able to do a real export immediately.
-    #      This would also fix random failures when DemoStorage is used,
-    #      because oids can have values that have a shorter representation
-    #      in 'repr' instead of 'base64' (see ppml.convert) and ppml.String
-    #      does not support this.
+    # For performance reasons, exportXML does not use 'XMLrecord' anymore to map
+    # oids. This requires to initialize MinimalMapping.marked_reference before
+    # any string output, i.e. in ppml.Reference.__init__
+    # This also fixed random failures when DemoStorage is used, because oids
+    # can have values that have a shorter representation in 'repr' instead of
+    # 'base64' (see ppml.convert) and ppml.String does not support this.
+    load = jar._storage.load
+    pickle_dict = {oid: None}
+    max_cache = [1e7] # do not cache more than 10MB of pickle data
+    def getReorderedPickle(oid):
+        p = pickle_dict[oid]
+        if p is None:
+            # Versions are ignored, but some 'load()' implementations require them
+            # FIXME: remove "''" when TmpStore.load() on ZODB stops asking for it.
+            p = load(oid, '')[0]
+            p = reorderPickle(jar, p)[1]
+            if len(p) < max_cache[0]:
+                max_cache[0] -= len(p)
+                pickle_dict[oid] = p
+        return p
 
-    if file is None: file=TemporaryFile()
-    elif type(file) is StringType: file=open(file,'w+b')
+    # Sort records and initialize id_mapping
     id_mapping = ppml.MinimalMapping()
-    #id_mapping = ppml.IdentityMapping()
-    write=file.write
-    write('<?xml version="1.0"?>\012<ZopeData>\012')
-    # Versions are ignored, but some 'load()' implementations require them
-    # FIXME: remove 'version' when TmpStore.load() on ZODB stops asking for it.
-    version=''
-    ref=referencesf
-    oids=[oid]
-    done_oids={}
-    done=done_oids.has_key
-    load=jar._storage.load
-    original_oid = oid
-    reordered_pickle = []
-    # Build mapping for refs
-    while oids:
-        oid=oids[0]
-        del oids[0]
-        if done(oid): continue
-        done_oids[oid]=1
-        try: p, serial = load(oid, version)
-        except:
-            # Ick, a broken reference
-            log.error('exportXML: could not load oid %r' % oid,
-                      exc_info=True)
-        else:
-            o, p = reorderPickle(jar, p)
-            reordered_pickle.append((oid, o, p))
-            XMLrecord(oid,len(p),p, id_mapping)
-            # Determine new oids added to the list after reference calculation
-            old_oids = tuple(oids)
-            ref(p, oids)
-            new_oids = []
-            for i in oids:
-                if i not in old_oids: new_oids.append(i)
-            # Sort new oids based on id of object
-            new_oidict = {}
-            for oid in new_oids:
-                try:
-                    p, serial = load(oid, version)
-                    o, p = reorderPickle(jar, p)
-                    new_oidict[oid] = getattr(o, 'id', None)
-                except:
-                    log.error('exportXML: could not load oid %r' % oid,
-                              exc_info=True)
-                    new_oidict[oid] = None # Ick, a broken reference
-            new_oids.sort(key=lambda x: new_oidict[x])
-            # Build new sorted oids
-            oids = list(old_oids) + new_oids
+    reordered_oid_list = [oid]
+    for oid in reordered_oid_list:
+        _mapOid(id_mapping, oid)
+        for oid in referencesf(getReorderedPickle(oid)):
+            if oid not in pickle_dict:
+                pickle_dict[oid] = None
+                reordered_oid_list.append(oid)
+
     # Do real export
-    for (oid, o, p) in reordered_pickle:
-        write(XMLrecord(oid,len(p),p, id_mapping))
+    if file is None:
+        file = TemporaryFile()
+    elif isinstance(file, basestring):
+        file = open(file, 'w+b')
+    write = file.write
+    write('<?xml version="1.0"?>\n<ZopeData>\n')
+    for oid in reordered_oid_list:
+        p = getReorderedPickle(oid)
+        write(XMLrecord(oid, len(p), p, id_mapping))
     write('</ZopeData>\n')
     return file
 
