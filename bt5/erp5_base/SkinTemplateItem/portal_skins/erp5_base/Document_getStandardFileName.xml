@@ -73,7 +73,7 @@ if context.getLanguage():\n
   file_name = \'%s-%s\' % (file_name, context.getLanguage(),)\n
 if format:\n
   extension = format.rsplit(\'.\')[-1]\n
-elif not extension and context.hasSourceReference():\n
+elif not extension and \'.\' in context.getSourceReference(\'\'):\n
   extension = context.getSourceReference().rsplit(\'.\')[-1]\n
 if extension:\n
   file_name = \'%s.%s\' % (file_name, extension,)\n
