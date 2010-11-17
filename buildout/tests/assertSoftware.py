@@ -320,7 +320,7 @@ class AssertSubversion(AssertSoftwareMixin):
       'libaprutil-1', 'libapr-1', 'libuuid', 'librt', 'libneon', 'libexpat',
       'libz', 'libssl', 'libcrypto', 'libgssapi_krb5', 'libkrb5',
       'libk5crypto', 'libcom_err', 'libresolv', 'libc', 'libcrypt', 'libdl',
-      'libpthread', 'libm', 'libserf-0', 'libsvn_ra_serf-1',
+      'libpthread', 'libm', 'libserf-0', 'libsvn_ra_serf-1', 'libxml2'
       ]),
         elf_dict['library_list'])
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
