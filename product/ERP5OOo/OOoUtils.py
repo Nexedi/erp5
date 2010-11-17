@@ -203,8 +203,8 @@ class OOoBuilder(Implicit):
     """
     returns the OOo document
     """
-    request = get_request()
     if name and not(source):
+      request = get_request()
       request.response.setHeader('Content-Disposition',
                               'attachment; filename=%s.%s' % (name, extension))
 
