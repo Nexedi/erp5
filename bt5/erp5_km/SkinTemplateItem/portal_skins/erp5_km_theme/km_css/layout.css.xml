@@ -88,10 +88,9 @@ div {\n
 }\n
 \n
 .transition_message {background-color:#FF654A;}\n
-.information_area {background-color:#FFAC3D}\n
 \n
-.transition_message,\n
-.information_area{\n
+.transition_message\n
+{\n
   font-weight:bold;\n
   margin-left:10px;\n
   color:white;\n
@@ -144,8 +143,8 @@ fieldset.hidden_fieldset { \n
   padding-top: 5px;\n
 }\n
 \n
-#center,\n
-.document > .content{\n
+#center\n
+{\n
 \n
 \tclear:both;\n
 \tposition: relative;\n
@@ -153,35 +152,9 @@ fieldset.hidden_fieldset { \n
 \n
 }\n
 \n
-div.document div.content fieldset.bottom div.input {\n
-\n
-  margin-left:0;\n
-  margin-top:0.2em;\n
-\n
-}\n
-\n
 .content .field label {\n
 \n
   float:left;\n
-\n
-}\n
-\n
-.content fieldset.left .field .input,\n
-.content fieldset.right .field .input,\n
-.content fieldset.center .field .input,\n
-.content fieldset.bottom .field .input{\n
-\n
-float: left;\n
-\n
-}\n
-\n
-.content .field label, .content fieldset.right .field .input,\n
-.content .field label, .content fieldset.left .field .input,\n
-.content .field label, .content fieldset.center .field .input,\n
-.content .field label, .content fieldset.center_right .field .input,\n
-.content .field label, .content fieldset.center_left .field .input {\n
-\n
-  width: auto;\n
 \n
 }\n
 \n
@@ -198,8 +171,8 @@ width:30%;\n
 \n
 }\n
 \n
-fieldset.left,\n
-fieldset.right {\n
+fieldset.left\n
+{\n
 \toverflow: hidden;\n
 \n
 \n
@@ -223,21 +196,6 @@ fieldset.right {\n
 \n
 }\n
 \n
-.area {\n
-\n
-\twidth:33%;\n
-\tfloat:left;\n
-\n
-}\n
-\n
-fieldset.left h4,\n
-fieldset.right h4,\n
-fieldset.center h4{\n
-\n
-\tmargin:0 0 20px 0;\n
-\tpadding:10px;\n
-\n
-}\n
 \n
 div#main_content fieldset.bottom label {\n
 \n
@@ -245,25 +203,10 @@ div#main_content fieldset.bottom label {\n
 \n
 }\n
 \n
-fieldset.bottom button.right{float: right;}\n
-\n
-\n
-textarea {\n
-\n
-  width: 100%;\n
-\n
-}\n
 \n
 div#wrapper_headline span.header_title {\n
 \n
   margin: 10px;\n
-\n
-}\n
-\n
-div.headline,\n
-fieldset.webcontent_header_bottom{\n
-\n
-  display:none;\n
 \n
 }\n
 \n
@@ -272,25 +215,6 @@ div#wrapper_headline div.header_title {\n
   width: auto;\n
 }\n
 \n
-div#wrapper_headline div.file img, div#wrapper_headline div.file p {\n
-  float:left;\n
-}\n
-\n
-div#wrapper_headline div.file {\n
-  color:#7B7B7B;\n
-  float:right;\n
-  font-size:0.6em;\n
-  margin:0;\n
-  text-align:left;\n
-  width:auto;\n
-  font-size:0.7em;\n
-}\n
-\n
-div#wrapper_headline div.file p{\n
-\n
-  margin: 0;\n
-\n
-}\n
 \n
 div.input > input {\n
   max-width:320px;\n
@@ -304,17 +228,6 @@ button, select, input {\n
 \n
 /* ## navigation ###################################### start # */\n
 \n
-#top-bar{\n
-\theight:61px;\n
-\tleft:0;\n
-\tposition:absolute;\n
-}\n
-#top{\n
-\n
-\ttext-align:right;\n
-\tline-height:30px;\n
-\n
-}\n
 #menu {\n
 \n
 \twidth:100%;\n
@@ -396,10 +309,6 @@ button, select, input {\n
 \tline-height:30px;\n
 \tfloat:left;\n
 \n
-}\n
-\n
-#menu .nav a.workflow_title {\n
-\tcursor: default;\n
 }\n
 \n
 #menu ul li #home-link:link, #menu ul li #home-link:active, #menu ul li #home-link:visited {\n
@@ -512,76 +421,14 @@ ul.widget_management_box{\tpadding: 0 0px 0 0;}\n
 ul.widget_management_box a {float:left;}\n
 \n
 \n
-.pnav {\n
-\n
-\tmargin:0;\n
-\tpadding: 2px;\n
-\twidth:auto;\n
-\ttext-align: center;\n
-\n
-}\n
-\n
-.actions,\n
-.document,\n
-#main_content{\n
-\n
-  float: left;\n
-\n
-}\n
-\n
 .box {\n
 \n
 width: auto;\n
 \n
 }\n
 \n
-.actions ul {\n
-\n
-\tdisplay:block;\n
-\tfloat:left;\n
-\tclear: both;\n
-\tlist-style-type: none;\n
-\tmargin: 10px 0 0 10px;\n
-\tpadding:0;\n
-\tposition: relative;\n
-\tbottom:-10px;\n
-\n
-}\n
-\n
-.actions ul li {\n
-\n
-\tfloat:left;\n
-\tmargin: 0 1px 0 0;\n
-\n
-}\n
-\n
-\n
-.actions ul li a:link, .action ul li a:active, .actions ul li a:visited {\n
-\n
-\tpadding: 5px 10px;\n
-\tdisplay: block;\n
-\theight:100%;\n
-\n
-}\n
-\n
-\n
-\n
 /* ## navigation ###################################### end ### */\n
 \n
-\n
-\n
-/* ## layout elements ################################# start # */\n
-\n
-.float-left {  float:left;  }\n
-\n
-.float-right {  float:right;  }\n
-\n
-.centered {  text-align:center;  }\n
-\n
-.align-right {  text-align:right;  }\n
-\n
-\n
-/* ## layout elements ################################# end ### */\n
 \n
 /* ## element "boxes" ################################# start # */\n
 \n
@@ -598,15 +445,7 @@ div#km_left div#wrapper_bottom{ \n
 }\n
 \n
 \n
-div#mainwrapper div#wrapper_right fieldset.widget iframe {width: 100%;}\n
-div#mainwrapper div#wrapper_right fieldset.widget table.gadget td div {\n
-\tpadding: 0 !important;\n
-\tmargin: 0 !important;\n
-\tborder: 0 !important;\n
-}\n
-\n
 div#mainwrapper div#wrapper_right fieldset.widget div.field label:after {content: ":"}\n
-div#mainwrapper div#wrapper_bottom div.gadget fieldset.widget,\n
 div#mainwrapper div#wrapper_right div.gadget fieldset.widget{\n
   border:0;\n
   margin:0;\n
@@ -616,72 +455,10 @@ div#mainwrapper div.wrapper div.gadget fieldset.widget legend{\n
   display:none;\n
 }\n
 \n
-\n
-.document > .content ul li {\n
-\n
-\tmargin-left:0;\n
-\tpadding-left:0;\n
-\n
-}\n
-\n
-table {\n
-\n
-\twidth:100%;\n
-\tborder-collapse: collapse;\n
-\n
-}\n
-\n
-table.table-b { width:100%; }\n
-\n
-table tr td, table tr.thead th {\n
-\n
-\tpadding:4px;\n
-\tvertical-align: top;\n
-\n
-}\n
-\n
-\n
-table .left {\n
-\n
-  float: left;\n
-\n
-}\n
-\n
-table .right {\n
-\n
-  float: right;\n
-\n
-}\n
-\n
 #km_left .document > .content{\n
 \n
 \tfloat:left;\n
 \tmargin: 10px;\n
-\n
-}\n
-\n
-#km_front .document > .content{\n
-\n
-\tfloat:left;\n
-\tpadding: 10px;\n
-\twidth: auto;\n
-\tmin-width: 98%\n
-\n
-}\n
-\n
-fieldset.left .field,\n
-fieldset.right .field,\n
-fieldset.center .field,\n
-fieldset.bottom .field {\n
-\n
-  width: 98%;\n
-\n
-}\n
-\n
-fieldset.left .gadget,\n
-fieldset.right .gadget {\n
-\n
-  margin-top:10px;\n
 \n
 }\n
 \n
@@ -735,27 +512,12 @@ text-align: right;\n
 /* ## forms ########################################## start # */\n
 \n
 \n
-table tr.thead th input {\n
-\n
-\twidth:90%;\n
-\n
-}\n
-\n
-/*input { width:98%; }*/\n
-\n
 form p,\n
 .bottom_actions{\n
 \n
   margin:5px 0;\n
 \n
 }\n
-\n
-/* ERP5 form listbox bottom */\n
-/*.bottom{\n
-  float:left;\n
-  width:100%;\n
-}\n
-*/\n
 \n
 .meta {\n
 \n
@@ -1265,11 +1027,11 @@ div.download-document-format-list-container span{\n
 \n
 div.download-document-format-list-menu{\n
   width: 200px;\n
-  float:left;\n
+  float:right;\n
   border: 1px solid #A8A799;\n
   background-color: #FFFFFF;\n
-  left:-200px;\n
-  top:0px;\n
+  left:80px;\n
+  top:20px;\n
   position:relative;\n
 }\n
 \n

@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts89487891.55</string> </value>
+            <value> <string>ts89997333.59</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -164,6 +164,13 @@ a#tabs-hide:link, a#tabs-hide:active, a#tabs-hide:visited { padding: 0 10px 0 10
 #navigation_table td {\n
   background: url(../km_img/tabsbg.png) repeat-x transparent;\n
   background-position: 0 100%;\n
+}\n
+\n
+table tr td, table tr.thead th {\n
+\n
+\tpadding:4px;\n
+\tvertical-align: top;\n
+\n
 }\n
 \n
 #tabs ul li{\n
@@ -627,7 +634,7 @@ div.block fieldset.gadget-profile div.field{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>10680</int> </value>
+            <value> <int>10754</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
