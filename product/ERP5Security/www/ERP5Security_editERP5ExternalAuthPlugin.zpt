@@ -1,0 +1,29 @@
+<h1 tal:replace="structure context/manage_page_header">PAGE HEADER</h1>
+<h2 tal:replace="structure here/manage_tabs"> TABS </h2>
+<h2 tal:define="form_title string:Edit ERP5 External Authentification Plugin"
+    tal:replace="structure context/manage_form_title">FORM TITLE</h2>
+
+<p class="form-help">Please input the configuration for the radius host</p>
+
+<form action="manage_editExternalAuthPlugin" method="POST">
+
+<table tal:define="user_id_key request/user_id_key|context/user_id_key|string:;">
+
+<tr>
+   <td>HTTP request header key where the user_id is stored</td>
+   <td>
+     <input type="text" name="user_id_key" value=""
+            tal:attributes="value user_id_key;" />
+   </td>
+</tr>
+<tr>
+   <td colspan="2"> 
+    <input type="submit" value="save"/>
+   </td>
+</tr>
+
+</table>
+
+</form>
+
+<h1 tal:replace="structure context/manage_page_footer">PAGE FOOTER</h1>

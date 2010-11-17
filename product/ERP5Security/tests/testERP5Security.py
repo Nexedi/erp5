@@ -723,6 +723,50 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     self.assertEqual(response.getStatus(), 200)
     self.assertTrue(reference in response.getBody())
 
+  def testERP5ExternalAuthPlugin(self):
+    """
+     Make sure that we can grant security using a ERP5 External Auth Plugin.
+    """
+    user_id_key = 'openAMid'
+    # add key authentication PAS plugin
+    portal = self.portal
+    uf = portal.acl_users
+    uf.manage_addProduct['ERP5Security'].addERP5ExternalAuthPlugin(
+      id='erp5_external_auth_plugin', \
+      title='ERP5 External Auth Plugin',\
+      user_id_key=user_id_key,)
+
+    erp5_external_auth_plugin = getattr(uf, 'erp5_external_auth_plugin')
+    erp5_external_auth_plugin.manage_activateInterfaces(
+      interfaces=['IExtractionPlugin',
+                  'IAuthenticationPlugin'])
+    self.stepTic()
+
+    reference = 'external_auth_person'
+    loginable_person = self.getPersonModule().newContent(portal_type='Person',
+                                                         reference=reference,
+                                                         password='guest')
+    assignment = loginable_person.newContent(portal_type='Assignment',
+                                             function='another_subcat')
+    assignment.open()
+    self.stepTic()
+
+    base_url = '%s/view' %portal.absolute_url(relative=1)
+
+    # without key we are Anonymous User so we should be redirected with proper HTML
+    # status code to login_form
+    response = self.publish(base_url)
+    self.assertEqual(response.getStatus(), 302)
+    # TODO we should not have redirect but output 403 or 404, because
+    # login process should be provided by an external application.
+    # self.assertTrue('location' in response.headers.keys())
+    # self.assertTrue(response.headers['location'].endswith('login_form'))
+
+    # view front page we should be logged in if we use authentication key
+    response = self.publish(base_url, env={user_id_key:reference})
+    self.assertEqual(response.getStatus(), 200)
+    self.assertTrue(reference in response.getBody())
+
   def _createZodbUser(self, login, role_list=None):
     if role_list is None:
       role_list = ['Member', 'Assignee', 'Assignor', 'Author', 'Auditor',

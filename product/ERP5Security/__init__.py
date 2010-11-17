@@ -26,6 +26,7 @@ import ERP5GroupManager
 import ERP5RoleManager
 import ERP5UserFactory
 import ERP5KeyAuthPlugin
+import ERP5ExternalAuthPlugin
 
 def mergedLocalRoles(object):
   """Returns a merging of object and its ancestors'
@@ -60,6 +61,7 @@ registerMultiPlugin(ERP5GroupManager.ERP5GroupManager.meta_type)
 registerMultiPlugin(ERP5RoleManager.ERP5RoleManager.meta_type)
 registerMultiPlugin(ERP5UserFactory.ERP5UserFactory.meta_type)
 registerMultiPlugin(ERP5KeyAuthPlugin.ERP5KeyAuthPlugin.meta_type)
+registerMultiPlugin(ERP5ExternalAuthPlugin.ERP5ExternalAuthPlugin.meta_type)
 
 def initialize(context):
 
@@ -104,6 +106,15 @@ def initialize(context):
                          , constructors=(
                             ERP5KeyAuthPlugin.manage_addERP5KeyAuthPluginForm,
                             ERP5KeyAuthPlugin.addERP5KeyAuthPlugin, )
+                         , visibility=None
+                         , icon='www/portal.gif'
+                         )
+
+    context.registerClass( ERP5ExternalAuthPlugin.ERP5ExternalAuthPlugin
+                         , permission=ManageUsers
+                         , constructors=(
+                            ERP5ExternalAuthPlugin.manage_addERP5ExternalAuthPluginForm,
+                            ERP5ExternalAuthPlugin.addERP5ExternalAuthPlugin, )
                          , visibility=None
                          , icon='www/portal.gif'
                          )
