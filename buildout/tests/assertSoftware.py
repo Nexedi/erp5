@@ -296,6 +296,25 @@ class AssertMysql51(AssertSoftwareMixin):
       'parts', 'mysql-5.1', 'lib', 'mysql'))
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
+class AssertSqlite3(AssertSoftwareMixin):
+  """Tests for built memcached"""
+
+  def test_ld_bin_sqlite3(self):
+    elf_dict = readElfAsDict('parts/sqlite3/bin/sqlite3')
+    self.assertEqual(sorted(['libpthread', 'libc', 'libdl', 'libsqlite3']),
+        elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['sqlite3']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+  def test_ld_libsqlite3(self):
+    elf_dict = readElfAsDict('parts/sqlite3/lib/libsqlite3.so')
+    self.assertEqual(sorted(['libpthread', 'libc', 'libdl']),
+        elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    self.assertEqual([], elf_dict['runpath_list'])
+
 class AssertMemcached(AssertSoftwareMixin):
   """Tests for built memcached"""
 
