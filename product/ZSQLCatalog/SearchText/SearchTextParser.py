@@ -31,7 +31,6 @@
 import threading
 from AdvancedSearchTextDetector import AdvancedSearchTextDetector
 from AdvancedSearchTextParser import AdvancedSearchTextParser
-from FullTextSearchTextParser import FullTextSearchTextParser
 from lexer import ParserOrLexerError
 try:
   from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
@@ -73,7 +72,6 @@ class ParserPool(object):
 parser_pool = ParserPool()
 DETECTOR_ID = parser_pool.register(AdvancedSearchTextDetector)
 PARSER_ID = parser_pool.register(AdvancedSearchTextParser)
-FULLTEXT_PARSER_ID = parser_pool.register(FullTextSearchTextParser)
 
 def safeParsingDecorator(func):
   """
@@ -104,11 +102,6 @@ def parse(input, is_column, *args, **kw):
   else:
     result = None
   return result
-
-@profiler_decorator
-@safeParsingDecorator
-def FullText_parse(input, is_column, *args, **kw):
-  return parser_pool.get(FULLTEXT_PARSER_ID)(input, is_column, *args, **kw)
 
 if __name__ == '__main__':
   class Query:

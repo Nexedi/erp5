@@ -52,7 +52,7 @@ from interfaces.query_catalog import ISearchKeyCatalog
 from zope.interface.verify import verifyClass
 from zope.interface import implements
 
-from SearchText import isAdvancedSearchText
+from SearchText import isAdvancedSearchText, dequote
 
 # Try to import ActiveObject in order to make SQLCatalog active
 try:
@@ -2062,8 +2062,13 @@ class Catalog(Folder,
 
   @profiler_decorator
   def _buildQueryFromAbstractSyntaxTreeNode(self, node, search_key):
+    if search_key.dequoteParsedText():
+      _dequote = dequote
+    else:
+      _dequote = lambda x: x
     if node.isLeaf():
-      result = search_key.buildQuery(node.getValue(), comparison_operator=node.getComparisonOperator())
+      result = search_key.buildQuery(_dequote(node.getValue()),
+        comparison_operator=node.getComparisonOperator())
     elif node.isColumn():
       result = self.buildQueryFromAbstractSyntaxTreeNode(node.getSubNode(), node.getColumnName())
     else:
@@ -2072,7 +2077,8 @@ class Catalog(Folder,
       append = query_list.append
       for subnode in node.getNodeList():
         if subnode.isLeaf():
-          value_dict.setdefault(subnode.getComparisonOperator(), []).append(subnode.getValue())
+          value_dict.setdefault(subnode.getComparisonOperator(),
+            []).append(_dequote(subnode.getValue()))
         else:
           subquery = self._buildQueryFromAbstractSyntaxTreeNode(subnode, search_key)
           if subquery is not None:

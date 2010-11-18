@@ -212,7 +212,8 @@ class TestSQLCatalog(unittest.TestCase):
   def assertCatalogRaises(self, exception, kw):
     self.assertRaises(exception, self._catalog, src__=1, query_table='foo', **kw)
 
-  def catalog(self, reference_tree, kw, check_search_text=True):
+  def catalog(self, reference_tree, kw, check_search_text=True,
+      check_select_expression=True):
     reference_param_dict = self._catalog._queryResults(query_table='foo', **kw)
     query = self._catalog.buildQuery(kw)
     self.assertEqual(reference_tree, query)
@@ -220,6 +221,9 @@ class TestSQLCatalog(unittest.TestCase):
     if check_search_text:
       # XXX: sould "keyword" be always used for search text searches ?
       search_text_param_dict = self._catalog._queryResults(query_table='foo', keyword=search_text)
+      if not check_select_expression:
+        search_text_param_dict.pop('select_expression')
+        reference_param_dict.pop('select_expression')
       self.assertEqual(reference_param_dict, search_text_param_dict,
           'Query: %r\nSearchText: %r\nReference: %r\nSecond rendering: %r' % \
                        (query, search_text, reference_param_dict, search_text_param_dict))
@@ -519,7 +523,7 @@ class TestSQLCatalog(unittest.TestCase):
                  {'fulltext': 'a+b'})
     self.catalog(ReferenceQuery(ReferenceQuery(operator='match_boolean',
       fulltext=MatchList(['a +b', '+b a'])), operator='and'),
-                 {'fulltext': 'a +b'})
+                 {'fulltext': 'a +b'}, check_search_text=False)
     self.catalog(ReferenceQuery(ReferenceQuery(
         ReferenceQuery(operator='=', uid='foo'),
         ReferenceQuery(operator='match_boolean',
@@ -534,6 +538,20 @@ class TestSQLCatalog(unittest.TestCase):
     self.catalog(ReferenceQuery(ReferenceQuery(operator='match',
       fulltext='"foo" bar "baz"'), operator='and'),
       {'fulltext': '"foo" bar "baz"'})
+    # ...But each column must follow rules defined in configured SearchKey for
+    # that column (in this case: quotes must be stripped).
+    ref_query = ReferenceQuery(ReferenceQuery(ReferenceQuery(operator='match',
+      fulltext='"foo" bar'), ReferenceQuery(operator='=',
+      default='hoge \"pon'), operator='and'), operator='and')
+    self.catalog(ref_query, {
+      'keyword': 'default:"hoge \\"pon" AND fulltext:("foo" bar)'})
+    self.catalog(ref_query, {
+      'fulltext': '"foo" bar AND default:"hoge \\"pon"'})
+    ref_query = ReferenceQuery(ReferenceQuery(ReferenceQuery(operator='match',
+      fulltext='"\\"foo\\" bar"'), ReferenceQuery(operator='=',
+      default='hoge \"pon'), operator='and'), operator='and')
+    self.catalog(ref_query, {
+      'keyword': 'default:"hoge \\"pon" AND fulltext:"\\"foo\\" bar"'})
 
   def test_DefaultKeyTextRendering(self):
     self.catalog(ReferenceQuery(ReferenceQuery(operator='like', default='a% b'), operator='and'),

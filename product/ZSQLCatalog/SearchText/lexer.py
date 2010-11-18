@@ -104,22 +104,6 @@ class lexer(object):
 
   def t_STRING(self, t):
     r'"(\\.|[^\\"])*"'
-    # Unescape value and strip surrounding quotes
-    value_list = []
-    append = value_list.append
-    escaped = False
-    for char in t.value[1:-1]:
-      if escaped:
-        escaped = False
-        if char != '"':
-          append('\\')
-      else:
-        if char == '\\':
-          escaped = True
-          continue
-      append(char)
-    assert not escaped
-    t.value = ''.join(value_list)
     return t
 
   def t_COLUMN(self, t):

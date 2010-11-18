@@ -375,5 +375,8 @@ class SearchKey(object):
   def parseSearchText(self, value, is_column):
     return None
 
+  def dequoteParsedText(self):
+    return True
+
 verifyClass(ISearchKey, SearchKey)
 
