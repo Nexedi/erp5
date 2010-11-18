@@ -307,8 +307,7 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
 
       document = document.getObject().__of__(self)
       result = document._getTypeBasedMethod('getPermanentURL',
-                     fallback_script_id='WebSection_getPermanentURL')(document,
-                         view=view)
+                     fallback_script_id='WebSection_getPermanentURL')(document)
 
       if cache is not None:
         cache[key] = result
