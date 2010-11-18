@@ -289,12 +289,13 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
         Return a permanent URL of document in the context
         of the current section.
 
-        If view is True, the url returned point to html content and can be
-        opened in a browser (ie. + '/view' for ooo documents)
-
         This method must be implemented through a
         portal type dependent script:
           WebSection_getPermanentURL
+
+        XXX The following argument is obsoleted because we no longer need /view.
+        If view is True, the url returned point to html content and can be
+        opened in a browser (ie. + '/view' for ooo documents)
       """
       cache = getReadOnlyTransactionCache()
       if cache is not None:

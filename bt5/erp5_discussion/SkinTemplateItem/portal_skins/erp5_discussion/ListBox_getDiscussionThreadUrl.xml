@@ -56,7 +56,7 @@
             <value> <string>"""\n
   Used in listbox to generate proper root link\n
 """\n
-return \'%s/view\' %brain.getParentValue().absolute_url()\n
+return brain.getParentValue().absolute_url()\n
 </string> </value>
         </item>
         <item>

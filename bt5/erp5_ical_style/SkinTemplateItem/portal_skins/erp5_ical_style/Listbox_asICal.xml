@@ -180,7 +180,7 @@ for line in line_list:\n
         else:\n
           ical_item_dict[\'COMPONENT\'] = \'journal\'\n
       elif field_upper == \'URL\' and hasattr(brainObject, \'absolute_url\'):\n
-        ical_item_dict[\'URL\'] = brainObject.absolute_url() + \'/view\'\n
+        ical_item_dict[\'URL\'] = brainObject.absolute_url()\n
       elif field_upper == \'DTSTAMP\':\n
         ical_item_dict[\'DTSTAMP\'] = convertDate(now)\n
       elif field_upper == \'DTSTART\':\n

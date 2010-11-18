@@ -391,11 +391,11 @@ def ERP5Site_createModuleScribus(self,
 
   # manage redirection URL
   if not selection_index:
-    redirect_url = '%s/view?%s' % (portal.absolute_url(),
+    redirect_url = '%s?%s' % (portal.absolute_url(),
                                    'portal_status_message=Module+Created.'
                                   )
   else:
-    redirect_url = '%s/view?selection_index=%s&selection_name=%s&%s' % (
+    redirect_url = '%s?selection_index=%s&selection_name=%s&%s' % (
                             portal.absolute_url(),
                             selection_index,
                             selection_name,

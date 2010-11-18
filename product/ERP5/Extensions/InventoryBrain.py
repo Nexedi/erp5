@@ -173,7 +173,7 @@ class InventoryListBrain(ZSQLBrain):
           # with the inventory's uid. Then they are their own explanation.
           explanation = o
         if explanation is not None:
-          return '%s/%s/view' % (
+          return '%s/%s' % (
                   self.portal_url.getPortalObject().absolute_url(),
                   explanation.getRelativeUrl())
       else:
@@ -193,7 +193,7 @@ class InventoryListBrain(ZSQLBrain):
       query_kw_update = {}
 
       if cname_id in ('transformed_resource_title', ):
-        return '%s/view' % resource.absolute_url()
+        return resource.absolute_url()
       elif cname_id in ('getCurrentInventory', ):
         query_kw_update = {
           'simulation_state': 
@@ -242,7 +242,7 @@ class InventoryListBrain(ZSQLBrain):
     if document.isMovement():
       explanation = document.getExplanationValue()
       if explanation is not None:
-        return '%s/%s/view' % (
+        return '%s/%s' % (
                 self.portal_url.getPortalObject().absolute_url(),
                 explanation.getRelativeUrl())
     return ''

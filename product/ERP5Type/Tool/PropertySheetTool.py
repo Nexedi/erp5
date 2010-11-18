@@ -136,7 +136,7 @@ class PropertySheetTool(BaseTool):
 
     if REQUEST is not None:
       return self.REQUEST.RESPONSE.redirect(
-        '%s/view?portal_status_message=' \
+        '%s?portal_status_message=' \
         'Property Sheets successfully imported from filesystem to ZODB.' % \
         self.absolute_url())
 

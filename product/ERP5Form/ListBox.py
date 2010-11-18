@@ -2427,12 +2427,11 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
                 error = sys.exc_info())
         else:
           try:
-            url = '%s/view' % (
-                      # brain.absolute_url() is slow because it invokes
-                      # _aq_dynamic() every time to get brain.REQUEST,
-                      # so we call request.physicalPathToURL() directly
-                      # instead of brain.absolute_url().
-                      request.physicalPathToURL(brain.getPath()),)
+            # brain.absolute_url() is slow because it invokes
+            # _aq_dynamic() every time to get brain.REQUEST,
+            # so we call request.physicalPathToURL() directly
+            # instead of brain.absolute_url().
+            url = request.physicalPathToURL(brain.getPath())
             params = []
             if ignore_layout:
               params.append('ignore_layout:int=1')

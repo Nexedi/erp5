@@ -104,7 +104,7 @@ class TestPlanningBox(ERP5TypeTestCase):
     for info in bloc.info.values():
       self.assertEquals(info.info,'Title 0')
       self.assertEquals(info.link , 
-                        '%s/foo_module/0/0/view' % self.getPortal().absolute_url())
+                        '%s/foo_module/0/0' % self.getPortal().absolute_url())
     # Check Parent Activities
     parent = bloc.parent_activity
     for info in parent.info.values():

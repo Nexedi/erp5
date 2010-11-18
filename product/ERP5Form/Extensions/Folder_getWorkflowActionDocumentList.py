@@ -41,7 +41,7 @@ def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
   def UrlGetter(doc, state_var):
     """returns an url method."""
     def get_url(*args, **kw):
-      return '%s/view?reset:int=1&%s=%s&portal_type=%s' % (
+      return '%s?reset:int=1&%s=%s&portal_type=%s' % (
             self.absolute_url(), state_var, doc.getProperty(state_var),
             doc.getPortalTypeName())
     return get_url

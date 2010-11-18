@@ -2418,7 +2418,7 @@ class Activity:
       if zone == 1:
         # active
         block_color = self.color
-        block_link = '%s/view' % self.object.absolute_url()
+        block_link = self.object.absolute_url()
       else:
         # passive
         block_color = '#D1E8FF'

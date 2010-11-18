@@ -120,7 +120,7 @@ class TestRSS(ERP5TypeTestCase):
     self.assertEquals(getSubnodeContent(item, 'title'), 'Two')
     self.assertEquals(getSubnodeContent(item, 'description'), 'Person Two')
     self.assertEquals(getSubnodeContent(item, 'author'), 'seb')
-    expected_link = two.absolute_url() + '/view'
+    expected_link = two.absolute_url()
     self.assertEquals(getSubnodeContent(item, 'link'), expected_link)
     self.assertEquals(len(item.getElementsByTagName('pubDate')), 1)
     # is date formatted correctly?
@@ -130,7 +130,7 @@ class TestRSS(ERP5TypeTestCase):
     self.assertEquals(getSubnodeContent(item, 'title'), 'One')
     self.assertEquals(getSubnodeContent(item, 'description'), 'Person One')
     self.assertEquals(getSubnodeContent(item, 'author'), 'seb')
-    expected_link = one.absolute_url() + '/view'
+    expected_link = one.absolute_url()
     self.assertEquals(getSubnodeContent(item, 'link'), expected_link)
     self.assertEquals(len(item.getElementsByTagName('pubDate')), 1)
     # is date formatted correctly?
@@ -173,7 +173,7 @@ class TestRSS(ERP5TypeTestCase):
              selection_name='rss_folder_selection'))
 
     listbox_link.manage_tales_xmlrpc(
-        dict(default="python: cell.absolute_url() + '/view'"))
+        dict(default="python: cell.absolute_url()"))
 
     one = self.portal.person_module.one
     two = self.portal.person_module.two
@@ -193,7 +193,7 @@ class TestRSS(ERP5TypeTestCase):
     self.assertEquals(getSubnodeContent(item, 'title'), 'Two')
     self.assertEquals(getSubnodeContent(item, 'description'), 'Person Two')
     self.assertEquals(getSubnodeContent(item, 'author'), 'seb')
-    expected_link = two.absolute_url() + '/view'
+    expected_link = two.absolute_url()
     self.assertEquals(getSubnodeContent(item, 'link'), expected_link)
     self.assertEquals(len(item.getElementsByTagName('pubDate')), 1)
     # is date formatted correctly?
@@ -203,7 +203,7 @@ class TestRSS(ERP5TypeTestCase):
     self.assertEquals(getSubnodeContent(item, 'title'), 'One')
     self.assertEquals(getSubnodeContent(item, 'description'), 'Person One')
     self.assertEquals(getSubnodeContent(item, 'author'), 'seb')
-    expected_link = one.absolute_url() + '/view'
+    expected_link = one.absolute_url()
     self.assertEquals(getSubnodeContent(item, 'link'), expected_link)
     self.assertEquals(len(item.getElementsByTagName('pubDate')), 1)
     # is date formatted correctly?

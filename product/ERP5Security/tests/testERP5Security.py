@@ -655,7 +655,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     self.tic()
 
     person_module_path = self.getPersonModule().absolute_url(relative=1)
-    response = self.publish('/%s/view' % person_module_path,
+    response = self.publish(person_module_path,
                             basic='guest:guest')
     self.assertEqual(response.getStatus(), 200)
     response = self.publish('/%s/first_last/getFirstName' % person_module_path,
@@ -709,7 +709,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     key = erp5_auth_key_plugin.encrypt(reference)
     self.assertNotEquals(reference, key)
     self.assertEquals(reference, erp5_auth_key_plugin.decrypt(key))
-    base_url = '%s/view' %portal.absolute_url(relative=1)
+    base_url = portal.absolute_url(relative=1)
 
     # without key we are Anonymous User so we should be redirected with proper HTML
     # status code to login_form
@@ -751,7 +751,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     assignment.open()
     self.stepTic()
 
-    base_url = '%s/view' %portal.absolute_url(relative=1)
+    base_url = portal.absolute_url(relative=1)
 
     # without key we are Anonymous User so we should be redirected with proper HTML
     # status code to login_form

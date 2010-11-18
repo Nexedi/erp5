@@ -516,7 +516,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
                                       # is rendered in web_site context
 
     response = self.publish(website.absolute_url_path() + '/' +\
-                            web_page_reference + '/view', credential)
+                            web_page_reference, credential)
     self.assertEquals(response.getHeader('content-type'),
                                          'text/html; charset=utf-8')
     self.assertTrue('<form' in response.getBody()) # means the web_page
@@ -545,7 +545,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     # image is rendered in web_site context
     response = self.publish(website.absolute_url_path() + '/' +\
-                            image_reference+ '/view', credential)
+                            image_reference, credential)
     self.assertEquals(response.getHeader('content-type'),
                                          'text/html; charset=utf-8')
 
@@ -562,7 +562,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
                       'application/vnd.oasis.opendocument.presentation')
     # Document is rendered in web_site context
     response = self.publish(website.absolute_url_path() + '/' +\
-                            document_reference + '/view', credential)
+                            document_reference, credential)
     self.assertEquals(response.getHeader('content-type'),
                                          'text/html; charset=utf-8')
 

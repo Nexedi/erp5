@@ -282,13 +282,13 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
   def test_frontpage(self):
     """Test we can view the front page.
     """
-    response = self.publish('%s/view' % self.portal_id, self.auth)
+    response = self.publish(self.portal_id, self.auth)
     self.assertEquals(HTTP_OK, response.getStatus())
 
   def test_login_form(self):
     """Test anonymous user are redirected to login_form
     """
-    response = self.publish('%s/view' % self.portal_id)
+    response = self.publish(self.portal_id)
     self.assertEquals(HTTP_REDIRECT, response.getStatus())
     self.assertEquals('%s/login_form' % self.portal.absolute_url(),
                       response.getHeader('Location'))
@@ -299,7 +299,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
                  'portal_templates',
                  'portal_rules',
                  'portal_alarms',):
-      response = self.publish('%s/%s/view' % (self.portal_id, tool), self.auth)
+      response = self.publish('%s/%s' % (self.portal_id, tool), self.auth)
       self.assertEquals(HTTP_OK, response.getStatus(),
                         "%s: %s" % (tool, response.getStatus()))
 
@@ -308,7 +308,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     translation_service = DummyTranslationService()
     setGlobalTranslationService(translation_service)
     # assumes that we can add Business Template in template tool
-    response = self.publish('%s/portal_templates/view' %
+    response = self.publish('%s/portal_templates' %
                                 self.portal_id, self.auth)
     self.assertEquals(HTTP_OK, response.getStatus())
     self.failUnless(('Business Template', {})
@@ -328,7 +328,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
                       title='Dummy Jump Action',
                       action_permission='View',
                       action_type='object_jump')
-    response = self.publish('%s/portal_templates/view' %
+    response = self.publish('%s/portal_templates' %
                             self.portal_id, self.auth)
     self.assertEquals(HTTP_OK, response.getStatus())
     self.failUnless(('Dummy Jump Action', {}) in
@@ -410,7 +410,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
       len(portal.portal_catalog(portal_type='Preference',
                                 title='My Test Preference')),
       1)
-    response = self.publish('%s/view' % self.portal_id, self.auth)
+    response = self.publish(self.portal_id, self.auth)
     self.assertEquals(HTTP_OK, response.getStatus())
 
   def test_Folder_delete(self):

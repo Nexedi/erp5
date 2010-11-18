@@ -119,7 +119,7 @@ class TestICal(ERP5TypeTestCase):
     self.assertEquals(feed_dict['DTEND'], event.getCreationDate().HTML4().replace('-','').replace(':',''))
     self.assertEquals(feed_dict['CREATED'], event.getCreationDate().HTML4().replace('-','').replace(':',''))
     self.assertEquals(feed_dict['LAST-MODIFIED'], event.getModificationDate().HTML4().replace('-','').replace(':',''))
-    self.assertEquals(feed_dict['URL'],  event.absolute_url() + '/view')
+    self.assertEquals(feed_dict['URL'],  event.absolute_url())
     self.assertEquals(feed_dict['UID'], 'uuid%s' % event.getUid())
     # there is no description
     self.assertFalse('DESCRIPTION' in feed_dict.keys())

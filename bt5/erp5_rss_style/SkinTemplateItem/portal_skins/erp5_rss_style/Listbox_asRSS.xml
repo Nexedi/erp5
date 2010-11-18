@@ -150,7 +150,7 @@ for line in line_list:\n
       elif required_field == \'link\':\n
         if hasattr(line.getBrain(), \'absolute_url\'):\n
           field_data = unicode(line.getBrain().absolute_url(), \'utf-8\' ) or \'\'\n
-        rss_item_string += (\'\\t\\t\\t<%s>%s/view</%s>\\n\' % (required_field, field_data, required_field))\n
+        rss_item_string += (\'\\t\\t\\t<%s>%s</%s>\\n\' % (required_field, field_data, required_field))\n
       elif required_field == \'description\':\n
         if hasattr(line.getBrain(), \'getDescription\'):\n
           field_data = html_quote(unicode(line.getBrain().getDescription(), \'utf-8\' ) or \'\')\n

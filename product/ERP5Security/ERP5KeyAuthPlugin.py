@@ -89,7 +89,7 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
   """
     Key authentification PAS plugin which support key authentication in URL.
 
-    <ERP5_Root>/web_page_module/1/view?__ac_key=207221200213146153166
+    <ERP5_Root>/web_page_module/1?__ac_key=207221200213146153166
 
     where value of __ac_key contains (encrypted):
     - proxied (i.e. granting user) username

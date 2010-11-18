@@ -1704,6 +1704,7 @@ class Base( CopyContainer,
     """
       Generic edit Method for all ERP5 object
     """
+    self.log('edit:%r' % kw)
     return self._edit(REQUEST=REQUEST, force_update=force_update,
                       reindex_object=reindex_object, restricted=1, **kw)
 
@@ -3057,7 +3058,7 @@ class Base( CopyContainer,
       return method(container, **kw)
 
     # XXX this should not happen, unless the Business Template is broken.
-    return dict(redirect_url=container.absolute_url() + '/view',
+    return dict(redirect_url=container.absolute_url(),
                 selection_index=None, selection_name=None)
 
   # Hash method

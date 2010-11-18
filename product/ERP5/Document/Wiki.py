@@ -137,7 +137,7 @@ class Wiki( Document ):
               append(name[1:])
             else:
               # FIMXE: Create a new wiki instance if not present.
-              append('<a href="%s/%s/view">%s</a>' % (self._getTopLevelUrl(), name, name))
+              append('<a href="%s/%s">%s</a>' % (self._getTopLevelUrl(), name, name))
           elif min_key == 'url':
             url = match.string[match.start(1):match.end(1)]
             if url.startswith('!'):
@@ -159,7 +159,7 @@ class Wiki( Document ):
             label = self._render_text(label)
             if self.wiki_name_expr.search(link):
               # FIXME: Create a new wiki instance if not present
-              append('<a href="%s/%s/view">%s</a>' % (self._getTopLevelUrl(), link, label))
+              append('<a href="%s/%s">%s</a>' % (self._getTopLevelUrl(), link, label))
             else:
               append('<a href="%s">%s</a>' % (link, label))
           else:

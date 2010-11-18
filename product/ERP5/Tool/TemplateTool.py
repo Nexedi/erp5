@@ -367,7 +367,7 @@ class TemplateTool (BaseTool):
       bt = self.download(url, id=id)
 
       if REQUEST is not None:
-        ret_url = bt.absolute_url() + '/view'
+        ret_url = bt.absolute_url()
         psm = translateString("Business template downloaded successfully.")
         REQUEST.RESPONSE.redirect("%s?portal_status_message=%s"
                                     % (ret_url, psm))
@@ -542,7 +542,7 @@ class TemplateTool (BaseTool):
 
       if not batch_mode and \
          (REQUEST is not None):
-        ret_url = bt.absolute_url() + '/view'
+        ret_url = bt.absolute_url()
         psm = translateString("Business templates imported successfully.")
         REQUEST.RESPONSE.redirect("%s?portal_status_message=%s"
                                   % (ret_url, psm))
