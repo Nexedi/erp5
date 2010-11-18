@@ -124,14 +124,16 @@ class RelationStringFieldValidator(
     """
     relation_item_id = field.generate_subfield_key(ITEM_ID,
                                                    key=key)
-    if isinstance(relation_uid_list, (list, tuple)):
+     if isinstance(relation_uid_list, (list, tuple)):
       try:
         relation_uid_list = relation_uid_list[0]
       except IndexError:
         # No object was selected
         return []
+    relation_field_id = field.generate_subfield_key("%s" % \
+                                                    SUB_FIELD_ID, key=key)
     value = self.default_validator_instance.validate(field, 
-                                                     key, REQUEST)
+                                                     relation_field_id, REQUEST)
     return [(relation_item_id, relation_uid_list, value)]
 
   def _generateFieldValueList(self, field, key, 
