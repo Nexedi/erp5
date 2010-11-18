@@ -88,6 +88,9 @@ class File(Document, CMFFile):
                     , PropertySheet.Periodicity
     )
 
+  # OFS.File has an overloaded __str__ that returns the file content
+  __str__ = object.__str__
+
   ### Special edit method
   security.declarePrivate( '_edit' )
   def _edit(self, **kw):
