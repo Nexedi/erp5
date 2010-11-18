@@ -2223,91 +2223,127 @@ return 1
 
   def test_document_publication_workflow_Drawing_publish(self):
     self._test_document_publication_workflow('Drawing', 'publish_action')
+
+  def test_document_publication_workflow_Drawing_publish_alive(self):
     self._test_document_publication_workflow('Drawing',
         'publish_alive_action')
 
   def test_document_publication_workflow_Drawing_release(self):
     self._test_document_publication_workflow('Drawing', 'release_action')
+
+  def test_document_publication_workflow_Drawing_release_alive(self):
     self._test_document_publication_workflow('Drawing',
         'release_alive_action')
 
   def test_document_publication_workflow_Drawing_share(self):
     self._test_document_publication_workflow('Drawing', 'share_action')
+
+  def test_document_publication_workflow_Drawing_share_alive(self):
     self._test_document_publication_workflow('Drawing',
         'share_alive_action')
 
   def test_document_publication_workflow_File_publish(self):
     self._test_document_publication_workflow('File', 'publish_action')
+
+  def test_document_publication_workflow_File_publish_alive(self):
     self._test_document_publication_workflow('File',
         'publish_alive_action')
 
   def test_document_publication_workflow_File_release(self):
     self._test_document_publication_workflow('File', 'release_action')
+
+  def test_document_publication_workflow_File_release_alive(self):
     self._test_document_publication_workflow('File',
         'release_alive_action')
 
   def test_document_publication_workflow_File_share(self):
     self._test_document_publication_workflow('File', 'share_action')
+
+  def test_document_publication_workflow_File_share_alive(self):
     self._test_document_publication_workflow('File',
         'share_alive_action')
 
   def test_document_publication_workflow_PDF_publish(self):
     self._test_document_publication_workflow('PDF', 'publish_action')
+
+  def test_document_publication_workflow_PDF_publish_alive(self):
     self._test_document_publication_workflow('PDF',
         'publish_alive_action')
 
   def test_document_publication_workflow_PDF_release(self):
     self._test_document_publication_workflow('PDF', 'release_action')
+
+  def test_document_publication_workflow_PDF_release_alive(self):
     self._test_document_publication_workflow('PDF',
         'release_alive_action')
 
   def test_document_publication_workflow_PDF_share(self):
     self._test_document_publication_workflow('PDF', 'share_action')
+
+  def test_document_publication_workflow_PDF_share_alive(self):
     self._test_document_publication_workflow('PDF',
         'share_alive_action')
 
   def test_document_publication_workflow_Presentation_publish(self):
     self._test_document_publication_workflow('Presentation', 'publish_action')
+
+  def test_document_publication_workflow_Presentation_publish_alive(self):
     self._test_document_publication_workflow('Presentation',
         'publish_alive_action')
 
   def test_document_publication_workflow_Presentation_release(self):
     self._test_document_publication_workflow('Presentation', 'release_action')
+
+  def test_document_publication_workflow_Presentation_release_alive(self):
     self._test_document_publication_workflow('Presentation',
         'release_alive_action')
 
   def test_document_publication_workflow_Presentation_share(self):
     self._test_document_publication_workflow('Presentation', 'share_action')
+
+  def test_document_publication_workflow_Presentation_share_alive(self):
     self._test_document_publication_workflow('Presentation',
         'share_alive_action')
 
   def test_document_publication_workflow_Spreadsheet_publish(self):
     self._test_document_publication_workflow('Spreadsheet', 'publish_action')
+
+  def test_document_publication_workflow_Spreadsheet_publish_alive(self):
     self._test_document_publication_workflow('Spreadsheet',
         'publish_alive_action')
 
   def test_document_publication_workflow_Spreadsheet_release(self):
     self._test_document_publication_workflow('Spreadsheet', 'release_action')
+
+  def test_document_publication_workflow_Spreadsheet_release_alive(self):
     self._test_document_publication_workflow('Spreadsheet',
         'release_alive_action')
 
   def test_document_publication_workflow_Spreadsheet_share(self):
     self._test_document_publication_workflow('Spreadsheet', 'share_action')
+
+  def test_document_publication_workflow_Spreadsheet_share_alive(self):
     self._test_document_publication_workflow('Spreadsheet',
         'share_alive_action')
 
   def test_document_publication_workflow_Text_publish(self):
     self._test_document_publication_workflow('Text', 'publish_action')
+
+  def test_document_publication_workflow_Text_publish_alive(self):
     self._test_document_publication_workflow('Text',
         'publish_alive_action')
 
   def test_document_publication_workflow_Text_release(self):
     self._test_document_publication_workflow('Text', 'release_action')
+
+  def test_document_publication_workflow_Text_release_alive(self):
     self._test_document_publication_workflow('Text',
         'release_alive_action')
 
   def test_document_publication_workflow_Text_share(self):
     self._test_document_publication_workflow('Text', 'share_action')
+
+  def test_document_publication_workflow_Text_share_alive(self):
     self._test_document_publication_workflow('Text',
         'share_alive_action')
 
