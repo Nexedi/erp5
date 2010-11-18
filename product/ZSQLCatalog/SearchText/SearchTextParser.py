@@ -296,7 +296,7 @@ if __name__ == '__main__':
         result = None
     return result
 
-  original_parse = _parse
+  original_parse = parse
   fake_column_id_set = set(['a', 'b', 'c', 'd', 'title', 'toto', 'titi', 'foo', 'bar'])
 
   def isColumn(value):
