@@ -608,7 +608,7 @@ class TestPreferences(PropertySheetTestCase):
     self.assertEqual(normal_preference_string,
         portal_preferences.getDummystring())
 
-    system_preference = portal_preferences.newContent(portal_type='Preference',
+    system_preference = portal_preferences.newContent(portal_type='System Preference',
                                                dummystring=system_preference_string)
     system_preference.enable()
     transaction.commit()
