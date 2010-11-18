@@ -125,8 +125,11 @@ if params.get(\'period_start_date\', 0) and params.get(\'node_uid\'):\n
   if node.isMemberOf(\'account_type/expense\') or\\\n
         node.isMemberOf(\'account_type/income\'):\n
     # For expense or income accounts, we only take into account transactions\n
-    # from the beginning of the period.\n
-    params[\'from_date\'] = params[\'period_start_date\']\n
+    # from the beginning of the period, unless a from_date prior to this\n
+    # beginning is passed explicitly.\n
+    # if we are in the regular user interface, we only limit\n
+    if \'from_date\' in kw:\n
+      params[\'from_date\'] = min(kw[\'from_date\'], params[\'period_start_date\'])\n
   else:\n
     # for other account, we calculate the initial balance as the "absolute"\n
     # balance at the beginning of the period, plus debit or credit from this\n
@@ -224,6 +227,7 @@ return getInventoryAssetPrice(\n
                             <string>function_uid</string>
                             <string>function_category</string>
                             <string>node</string>
+                            <string>min</string>
                             <string>period_start_date</string>
                             <string>at_date</string>
                             <string>_apply_</string>
