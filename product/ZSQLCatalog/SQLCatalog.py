@@ -1052,9 +1052,9 @@ class Catalog(Folder,
     return result
 
   @profiler_decorator
-  @transactional_cache_decorator('SQLCatalog.getColumnIds')
+  @transactional_cache_decorator('SQLCatalog.getResultColumnIds')
   @profiler_decorator
-  @caching_instance_method(id='SQLCatalog.getColumnIds',
+  @caching_instance_method(id='SQLCatalog.getResultColumnIds',
     cache_factory='erp5_content_long',
     cache_id_generator=generateCatalogCacheId,
   )
