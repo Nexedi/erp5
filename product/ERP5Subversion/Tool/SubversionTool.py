@@ -945,11 +945,12 @@ class SubversionTool(BaseTool):
 
     Current directory must be the destination working copy
     """
-    # Sets to track svn status in case it is not consistent with existing
+    client = self._getClient()
+    # Dicts to track svn status in case it is not consistent with existing
     # files and directories
-    versioned_set = set(x.getPath() for x in self._getClient().status('.')
-                                    if x.getIsVersioned())
-    versioned_set.remove('.')
+    versioned_dict = dict((x.getPath(), x) for x in client.status('.')
+                                           if x.getIsVersioned())
+    del versioned_dict['.']
     added_set = set()
 
     # Walk current tree
@@ -975,20 +976,23 @@ class SubversionTool(BaseTool):
       dirpath = dirpath[prefix_length:]
       for d in dirnames:
         d = os.path.join(dirpath, d)
-        if d in versioned_set:
-          versioned_set.remove(d)
-        else:
+        status = versioned_dict.pop(d, None)
+        if status is None:
           added_set.add(d)
+        elif str(status.getTextStatus()) == 'deleted':
+          client.revert(d)
         if d in svn_dir_set:
           svn_dir_set.remove(d)
         else:
           os.mkdir(d)
       for f in filenames:
         f = os.path.join(dirpath, f)
-        if f in versioned_set:
-          versioned_set.remove(f)
-        else:
+        status = versioned_dict.pop(f, None)
+        if status is None:
           added_set.add(f)
+        elif str(status.getTextStatus()) == 'deleted':
+          client.revert(f)
+          svn_file_set.add(f)
         # copy file unless unchanged
         file = open(os.path.join(path, f), 'rb')
         try:
@@ -1011,8 +1015,8 @@ class SubversionTool(BaseTool):
           file.close()
 
     # Remove dangling files/dirs
-    svn_file_set -= versioned_set # what is in versioned_set
-    svn_dir_set -= versioned_set  #  is removed after
+    svn_file_set.difference_update(versioned_dict) # what is in versioned_dict
+    svn_dir_set.difference_update(versioned_dict)  #  is removed after
     for x in svn_file_set:
       if os.path.dirname(x) not in svn_dir_set:
         os.remove(x)
@@ -1021,11 +1025,11 @@ class SubversionTool(BaseTool):
         shutil.rmtree(x)
 
     # Remove deleted files/dirs
-    self.remove([x for x in versioned_set
-                   if os.path.dirname(x) not in versioned_set])
+    client.remove([x for x in versioned_dict
+                     if os.path.dirname(x) not in versioned_dict])
     # Add new files/dirs
-    self.add([x for x in added_set
-                if os.path.dirname(x) not in added_set])
+    client.add([x for x in added_set
+                  if os.path.dirname(x) not in added_set])
 
   def treeToXML(self, item, business_template) :
     """ Convert tree in memory to XML
