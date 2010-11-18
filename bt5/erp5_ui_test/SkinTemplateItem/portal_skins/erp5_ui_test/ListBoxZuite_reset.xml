@@ -112,6 +112,8 @@ pref.setPreferredListboxViewModeLineCount(None)\n
 pref.setPreferredListboxListModeLineCount(10)\n
 if pref.getPreferenceState() == \'disabled\':\n
   pref.enable()\n
+else:\n
+  context.portal_caches.clearAllCache()\n
 \n
 return \'Reset Successfully.\'\n
 </string> </value>
