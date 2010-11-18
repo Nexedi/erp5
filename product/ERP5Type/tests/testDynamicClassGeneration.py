@@ -462,14 +462,14 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
 
       # The accessor holder will be generated once the new Person will
       # be created as Person type has test Property Sheet
-      self.failIfHasAttribute(erp5.zodb_accessor_holder, 'TestMigration')
+      self.failIfHasAttribute(erp5.accessor_holder, 'TestMigration')
 
       new_person = portal.person_module.newContent(
         id='testAssignZodbPropertySheet', portal_type='Person')
 
-      self.assertHasAttribute(erp5.zodb_accessor_holder, 'TestMigration')
+      self.assertHasAttribute(erp5.accessor_holder, 'TestMigration')
 
-      self.assertTrue(erp5.zodb_accessor_holder.TestMigration in \
+      self.assertTrue(erp5.accessor_holder.TestMigration in \
                       erp5.portal_type.Person.mro())
 
       # Check that the accessors have been properly created for all
@@ -523,7 +523,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
       # workflow and the ID of the interaction and where the value is
       # a boolean stating whether the transition method has already
       # been called before.  Thus, the next statement may not reset
-      # erp5.zodb_accessor_holder as loading Person portal type calls
+      # erp5.accessor_holder as loading Person portal type calls
       # '_setType*'
       transaction.commit()
 
@@ -546,7 +546,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
         id='testAssignZodbPropertySheet', portal_type='Person')
 
       self.failIfHasAttribute(new_person, 'getTestStandardPropertyAssign')
-      self.failIfHasAttribute(erp5.zodb_accessor_holder, 'TestMigration')
+      self.failIfHasAttribute(erp5.accessor_holder, 'TestMigration')
 
     finally:
       if new_person is not None:
@@ -555,15 +555,15 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
   def _checkAddPropertyToZodbPropertySheet(self,
                                           new_property_function,
                                           added_accessor_name):
-    import erp5.zodb_accessor_holder
+    import erp5.accessor_holder
 
-    self.failIfHasAttribute(erp5.zodb_accessor_holder, 'TestMigration')
+    self.failIfHasAttribute(erp5.accessor_holder, 'TestMigration')
 
     new_property_function('add')
     self._forceTestAccessorHolderGeneration()
 
-    self.assertHasAttribute(erp5.zodb_accessor_holder, 'TestMigration')
-    self.assertHasAttribute(erp5.zodb_accessor_holder.TestMigration,
+    self.assertHasAttribute(erp5.accessor_holder, 'TestMigration')
+    self.assertHasAttribute(erp5.accessor_holder.TestMigration,
                             added_accessor_name)
 
   def testAddStandardPropertyToZodbPropertySheet(self):
@@ -606,15 +606,15 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
                                              change_setter_func,
                                              new_value,
                                              changed_accessor_name):
-    import erp5.zodb_accessor_holder
+    import erp5.accessor_holder
 
-    self.failIfHasAttribute(erp5.zodb_accessor_holder, 'TestMigration')
+    self.failIfHasAttribute(erp5.accessor_holder, 'TestMigration')
 
     change_setter_func(new_value)
     self._forceTestAccessorHolderGeneration()
 
-    self.assertHasAttribute(erp5.zodb_accessor_holder, 'TestMigration')
-    self.assertHasAttribute(erp5.zodb_accessor_holder.TestMigration,
+    self.assertHasAttribute(erp5.accessor_holder, 'TestMigration')
+    self.assertHasAttribute(erp5.accessor_holder.TestMigration,
                             changed_accessor_name)
 
   def testChangeStandardPropertyOfZodbPropertySheet(self):
@@ -666,17 +666,17 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     Delete the given property from the test Property Sheet and check
     whether its corresponding accessor is not there anymore
     """
-    import erp5.zodb_accessor_holder
+    import erp5.accessor_holder
 
-    self.failIfHasAttribute(erp5.zodb_accessor_holder, 'TestMigration')
+    self.failIfHasAttribute(erp5.accessor_holder, 'TestMigration')
 
     # Delete the property and force re-generation of TestMigration
     # accessor holder
     self.test_property_sheet.deleteContent(property_id)
     self._forceTestAccessorHolderGeneration()
 
-    self.assertHasAttribute(erp5.zodb_accessor_holder, 'TestMigration')
-    self.failIfHasAttribute(erp5.zodb_accessor_holder.TestMigration,
+    self.assertHasAttribute(erp5.accessor_holder, 'TestMigration')
+    self.failIfHasAttribute(erp5.accessor_holder.TestMigration,
                             accessor_name)
 
   def testDeleteStandardPropertyFromZodbPropertySheet(self):

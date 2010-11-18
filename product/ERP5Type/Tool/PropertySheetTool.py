@@ -266,7 +266,7 @@ class PropertySheetTool(BaseTool):
     return self._createCommonPropertySheetAccessorHolder(
       property_holder,
       property_sheet.getId(),
-      'erp5.zodb_accessor_holder')
+      'erp5.accessor_holder')
 
   security.declareProtected(Permissions.ManagePortal,
                             'getPropertyAvailablePermissionList')

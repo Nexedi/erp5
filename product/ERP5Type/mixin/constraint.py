@@ -96,4 +96,4 @@ class ConstraintMixin(Predicate):
 
     XXX: remove as soon as the code is stable
     """
-    return self.asContext().aq_base
+    return self.asContext()

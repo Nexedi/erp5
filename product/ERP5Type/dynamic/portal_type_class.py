@@ -37,7 +37,6 @@ from Products.ERP5Type.Base import _aq_reset
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Utils import setDefaultClassProperties
 from Products.ERP5Type import document_class_registry, mixin_class_registry
-from Products.ERP5Type import PropertySheet as FilesystemPropertySheet
 
 from zope.interface import classImplements
 from zLOG import LOG, ERROR, INFO
@@ -66,6 +65,9 @@ def _fillAccessorHolderList(accessor_holder_list,
   could be coming either from the filesystem or ZODB)
   """
   for property_sheet_name in property_sheet_name_set:
+    # LOG("ERP5Type.dynamic", INFO,
+    #     "Getting accessor holder for " + property_sheet_name)
+
     try:
       # Get the already generated accessor holder
       accessor_holder_list.append(getattr(accessor_holder_module,
@@ -79,19 +81,31 @@ def _fillAccessorHolderList(accessor_holder_list,
                                               property_sheet_name))
 
       except AttributeError:
-        # Not too critical
         LOG("ERP5Type.dynamic", ERROR,
             "Ignoring missing Property Sheet " + property_sheet_name)
 
-      else:
-        setattr(accessor_holder_module, property_sheet_name,
-                accessor_holder_class)
+        raise
 
-        accessor_holder_list.append(accessor_holder_class)
+      accessor_holder_list.append(accessor_holder_class)
 
-        LOG("ERP5Type.dynamic", INFO,
-            "Created accessor holder for %s in %s" % (property_sheet_name,
-                                                      accessor_holder_module))
+      setattr(accessor_holder_module, property_sheet_name,
+              accessor_holder_class)
+
+    #   LOG("ERP5Type.dynamic", INFO,
+    #       "Created accessor holder for %s in %s" % (property_sheet_name,
+    #                                                 accessor_holder_module))
+
+    # LOG("ERP5Type.dynamic", INFO,
+    #     "Got accessor holder for " + property_sheet_name)
+
+# Loading Cache Factory portal type would generate the accessor holder
+# for Cache Factory, itself defined with Standard Property thus
+# loading the portal type Standard Property, itself defined with
+# Standard Property and so on...
+#
+# NOTE: only the outer Property Sheets is stored in the accessor
+# holder module
+property_sheet_generating_portal_type_set = set()
 
 # 'Types Tool' is required to access 'site.portal_types' and the
 # former requires 'Base Type'. Thus, 'generating' is meaningful to
@@ -120,6 +134,8 @@ def generatePortalTypeClass(portal_type_name):
   from Products.ERP5.ERP5Site import getSite
   site = getSite()
 
+  # LOG("ERP5Type.dynamic", INFO, "Loading portal type " + portal_type_name)
+
   global core_portal_type_class_dict
 
   if portal_type_name in core_portal_type_class_dict:
@@ -131,6 +147,9 @@ def generatePortalTypeClass(portal_type_name):
       # interface or Property Sheet
       klass = _importClass(document_class_registry.get(
         core_portal_type_class_dict[portal_type_name]['type_class']))
+
+      # LOG("ERP5Type.dynamic", INFO,
+      #     "Loaded portal type %s (INNER)" % portal_type_name)
 
       # Don't do anything else, just allow to load fully the outer
       # portal type class
@@ -184,44 +203,57 @@ def generatePortalTypeClass(portal_type_name):
 
   klass = _importClass(type_class_path)
 
+  global property_sheet_generating_portal_type_set
+
   accessor_holder_list = []
 
-  ## Disabled because there will be no commit of
-  ## type_zodb_property_sheet, only use for testing ATM
+  if portal_type_name not in property_sheet_generating_portal_type_set:
+    # LOG("ERP5Type.dynamic", INFO,
+    #     "Filling accessor holder list for portal_type " + portal_type_name)
 
-  # import erp5
+    property_sheet_generating_portal_type_set.add(portal_type_name)
 
-  # # Initialize filesystem Property Sheets accessor holders
-  # _fillAccessorHolderList(
-  #   accessor_holder_list,
-  #   site.portal_property_sheets.createFilesystemPropertySheetAccessorHolder,
-  #   set(portal_type.getTypePropertySheetList() or ()),
-  #   erp5.filesystem_accessor_holder,
-  #   FilesystemPropertySheet)
+    property_sheet_set = set()
 
-  # # Initialize ZODB Property Sheets accessor holders
-  # _fillAccessorHolderList(
-  #   accessor_holder_list,
-  #   site.portal_property_sheets.createZodbPropertySheetAccessorHolder,
-  #   set(portal_type.getTypeZodbPropertySheetList() or ()),
-  #   erp5.zodb_accessor_holder,
-  #   site.portal_property_sheets)
+    #### Waiting for Yoshinori's advice before enabling this code
+    # if portal_type is not None:
+    #   # Get the Property Sheets defined on the portal_type
+    #   property_sheet_set.update(portal_type.getTypeZodbPropertySheetList() \
+    #                             or ())
 
-  # # XXX: for now, we have PropertySheet classes defined in
-  # #      property_sheets attribute of Document, but there will be only
-  # #      string at the end
-  # from Products.ERP5Type.Base import getClassPropertyList
-  # _fillAccessorHolderList(
-  #   accessor_holder_list,
-  #   site.portal_property_sheets.createFilesystemPropertySheetAccessorHolder,
-  #   [ property_sheet.__name__ for property_sheet in \
-  #     getClassPropertyList(klass) ],
-  #   erp5.filesystem_accessor_holder,
-  #   FilesystemPropertySheet)
+    #### The Property Sheets specified in the property_sheets
+    #### attribute of a Document are only filesystem-based, thus for
+    #### now it has to be done in the Portal Types themselves
+    # # Get the Property Sheets defined on the document and its bases
+    # # recursively
+    # from Products.ERP5Type.Base import getClassPropertyList
+    # for property_sheet in getClassPropertyList(klass):
+    #   if isinstance(property_sheet, basestring):
+    #     property_sheet_name = property_sheet
+    #   # FIXME: The Property Sheets of a document should be given as a
+    #   # string from now on, but to avoid changing all the code now, we
+    #   # just get the class name of the filesystem Property Sheet
+    #   else:
+    #     property_sheet_name = property_sheet.__name__
+
+    #   property_sheet_set.add(property_sheet_name)
+
+    import erp5
+
+    if property_sheet_set:
+      # Initialize ZODB Property Sheets accessor holders
+      _fillAccessorHolderList(
+        accessor_holder_list,
+        site.portal_property_sheets.createZodbPropertySheetAccessorHolder,
+        property_sheet_set,
+        erp5.accessor_holder,
+        site.portal_property_sheets)
+
+    property_sheet_generating_portal_type_set.remove(portal_type_name)
 
   # LOG("ERP5Type.dynamic", INFO,
-  #     "%s: accessor_holder_list: %s" % (portal_type_name,
-  #                                       accessor_holder_list))
+  #     "Filled accessor holder list for portal_type %s (%s)" % \
+  #     (portal_type_name, accessor_holder_list))
 
   mixin_path_list = []
   if mixin_list:
@@ -244,8 +276,8 @@ def generatePortalTypeClass(portal_type_name):
   #        % (portal_type_name, repr(baseclasses)))
 
   return (tuple(baseclasses),
-         interface_class_list,
-         dict(portal_type=portal_type_name))
+          interface_class_list,
+          dict(portal_type=portal_type_name))
 
 from lazy_class import generateLazyPortalTypeClass
 def initializeDynamicModules():
@@ -259,23 +291,15 @@ def initializeDynamicModules():
       holds document classes that have no physical import path,
       for example classes created through ClassTool that are in
       $INSTANCE_HOME/Document
-    erp5.zodb_accessor_holder
+    erp5.accessor_holder
       holds accessors of ZODB Property Sheets
-    erp5.filesystem_accessor_holder
-      holds accessors of filesystem Property Sheets
-
-  XXX: there should be only one accessor_holder once the code is
-       stable and all the Property Sheets have been migrated
   """
   erp5 = ModuleType("erp5")
   sys.modules["erp5"] = erp5
   erp5.document = ModuleType("erp5.document")
   sys.modules["erp5.document"] = erp5.document
-
-  erp5.zodb_accessor_holder = ModuleType("erp5.zodb_accessor_holder")
-  sys.modules["erp5.zodb_accessor_holder"] = erp5.zodb_accessor_holder
-  erp5.filesystem_accessor_holder = ModuleType("erp5.filesystem_accessor_holder")
-  sys.modules["erp5.filesystem_accessor_holder"] = erp5.filesystem_accessor_holder
+  erp5.accessor_holder = ModuleType("erp5.accessor_holder")
+  sys.modules["erp5.accessor_holder"] = erp5.accessor_holder
 
   portal_type_container = registerDynamicModule('erp5.portal_type',
                                                 generateLazyPortalTypeClass)
@@ -317,18 +341,6 @@ def initializeDynamicModules():
   erp5.temp_portal_type = registerDynamicModule('erp5.temp_portal_type',
                                                 loadTempPortalTypeClass)
 
-def _clearAccessorHolderModule(module):
-  """
-  Clear the given accessor holder module (either for filesystem or
-  ZODB)
-
-  XXX: Merge into synchronizeDynamicModules as soon as we get rid of
-       these two accessor holder modules
-  """
-  for property_sheet_id in module.__dict__.keys():
-    if not property_sheet_id.startswith('__'):
-      delattr(module, property_sheet_id)
-
 last_sync = 0
 def synchronizeDynamicModules(context, force=False):
   """
@@ -364,10 +376,9 @@ def synchronizeDynamicModules(context, force=False):
     klass.restoreGhostState()
 
   # Clear accessor holders of ZODB Property Sheets
-  _clearAccessorHolderModule(erp5.zodb_accessor_holder)
-
-  # Clear accessor holders of filesystem Property Sheets
-  _clearAccessorHolderModule(erp5.filesystem_accessor_holder)
+  for property_sheet_id in erp5.accessor_holder.__dict__.keys():
+    if not property_sheet_id.startswith('__'):
+      delattr(erp5.accessor_holder, property_sheet_id)
 
   # Necessary because accessors are wrapped in WorkflowMethod by
   # _aq_dynamic (performed in createAccessorHolder)
