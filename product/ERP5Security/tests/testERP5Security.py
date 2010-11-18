@@ -763,7 +763,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     # self.assertTrue(response.headers['location'].endswith('login_form'))
 
     # view front page we should be logged in if we use authentication key
-    response = self.publish(base_url, env={user_id_key:reference})
+    response = self.publish(base_url, env={user_id_key.replace('-', '_').upper():reference})
     self.assertEqual(response.getStatus(), 200)
     self.assertTrue(reference in response.getBody())
 

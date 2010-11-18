@@ -41,7 +41,6 @@ from Products.PluggableAuthService.interfaces import plugins
 from Products.PluggableAuthService.utils import classImplements
 from Products.PluggableAuthService.permissions import ManageUsers
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
-from Products.PluggableAuthService.plugins.CookieAuthHelper import CookieAuthHelper
 
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Security.ERP5UserManager import ERP5UserManager,\
@@ -66,7 +65,7 @@ def addERP5ExternalAuthenticationPlugin(dispatcher, id, title=None, user_id_key=
           'ERP5ExternalAuthenticationPlugin+added.'
           % dispatcher.absolute_url())
 
-class ERP5ExternalAuthenticationPlugin(ERP5UserManager, CookieAuthHelper):
+class ERP5ExternalAuthenticationPlugin(ERP5UserManager):
   """
   External authentification PAS plugin which extracts the user id from HTTP
   request header, like REMOTE_USER, openAMid, etc.
@@ -82,6 +81,15 @@ class ERP5ExternalAuthenticationPlugin(ERP5UserManager, CookieAuthHelper):
                     + BasePlugin.manage_options[:]
                     )
 
+  _properties = (({'id':'user_id_key',
+                   'type':'string',
+                   'mode':'w',
+                   'label':'HTTP request header key where the user_id is stored'
+                   },
+                  )
+                 + BasePlugin._properties[:]
+                 )
+
   def __init__(self, id, title=None, user_id_key=''):
     #Register value
     self._setId(id)
@@ -95,9 +103,9 @@ class ERP5ExternalAuthenticationPlugin(ERP5UserManager, CookieAuthHelper):
   def extractCredentials(self, request):
     """ Extract credentials from the request header. """
     creds = {}
-    user_id = request.getHeader(self.user_id_key, literal=True)
+    user_id = request.getHeader(self.user_id_key)
     if user_id is not None:
-      creds['login'] = user_id
+      creds['external_login'] = user_id
 
     #Complete credential with some informations
     if creds:
@@ -115,7 +123,7 @@ class ERP5ExternalAuthenticationPlugin(ERP5UserManager, CookieAuthHelper):
   security.declarePrivate('authenticateCredentials')
   def authenticateCredentials( self, credentials ):
     """Authentificate with credentials"""
-    login = credentials.get('login', None)
+    login = credentials.get('external_login', None)
     # Forbidden the usage of the super user.
     if login == SUPER_USER:
       return None
