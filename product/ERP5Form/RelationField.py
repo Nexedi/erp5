@@ -124,7 +124,7 @@ class RelationStringFieldValidator(
     """
     relation_item_id = field.generate_subfield_key(ITEM_ID,
                                                    key=key)
-     if isinstance(relation_uid_list, (list, tuple):
+    if isinstance(relation_uid_list, (list, tuple)):
       try:
         relation_uid_list = relation_uid_list[0]
       except IndexError:
