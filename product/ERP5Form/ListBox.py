@@ -2350,6 +2350,7 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
     selection_name = renderer.getSelectionName()
     ignore_layout = int(request.get('ignore_layout', \
                         not request.get('is_web_mode', False) and 1 or 0))
+    editable_mode = int(request.get('editable_mode', 0))
     ui_domain = 'erp5_ui'
     # We need a way to pass the current line object (ie. brain) to the
     # field which is being displayed. Since the render_view API did not
@@ -2435,6 +2436,8 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
             params = []
             if ignore_layout:
               params.append('ignore_layout:int=1')
+            if editable_mode:
+              params.append('editable_mode:int=1')
             if selection_name:
               params.extend(('selection_name=%s' % selection_name,
                              'selection_index=%s' % self.index,
