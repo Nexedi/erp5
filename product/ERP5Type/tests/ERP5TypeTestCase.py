@@ -917,7 +917,7 @@ class ERP5TypeTestCase(ProcessingNodeTestCase, PortalTestCase):
                 from Products import DeadlockDebugger
               except ImportError:
                 pass
-              self.serverhost, self.serverport = self.startZServer()
+              self.serverhost, self.serverport = self.startZServer(verbose=True)
               self._registerNode(distributing=1, processing=1)
 
             self._updateConnectionStrings()

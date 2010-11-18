@@ -85,16 +85,24 @@ class ProcessingNodeTestCase(backportUnittest.TestCase, ZopeTestCase.TestCase):
       pass
     Lifetime.graceful_shutdown_loop()
 
-  def startZServer(self):
+  def startZServer(self, verbose=False):
     """Start HTTP ZServer in background"""
     utils = ZopeTestCase.utils
     if utils._Z2HOST is None:
+      _print = lambda hs: verbose and ZopeTestCase._print(
+        "Running %s server at %s:%s\n" % (
+          hs.server_protocol, hs.server_name, hs.server_port))
       try:
         hs = createZServer()
       except RuntimeError, e:
         ZopeTestCase._print(str(e))
       else:
         utils._Z2HOST, utils._Z2PORT = hs.server_name, hs.server_port
+        _print(hs)
+        try:
+          _print(createZServer(zserver_type='webdav'))
+        except RuntimeError, e:
+          ZopeTestCase._print(str(e))
         t = Thread(target=Lifetime.loop)
         t.setDaemon(1)
         t.start()
