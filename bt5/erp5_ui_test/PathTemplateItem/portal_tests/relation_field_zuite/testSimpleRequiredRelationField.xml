@@ -34,12 +34,12 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <html>\n
 <head>\n
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
-<title>Test Simple Relation Field, using metadata tab to set categories</title>\n
+<title>Test Required Relation Field using the gear to set a category</title>\n
 </head>\n
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
@@ -188,7 +188,7 @@ metal:use-macro="here/RelationFieldZuite_CommonTemplate/macros/init"\n
 </html>\n
 
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -203,8 +203,12 @@ metal:use-macro="here/RelationFieldZuite_CommonTemplate/macros/init"\n
             <value> <string>testSimpleRequiredRelationField</string> </value>
         </item>
         <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <unicode></unicode> </value>
         </item>
       </dictionary>
     </pickle>
