@@ -4,7 +4,7 @@
 
 <p class="form-help">Please input the configuration</p>
 
-<form action="addERP5ExternalAuthPlugin" method="POST">
+<form action="addERP5ExternalAuthicationPlugin" method="POST">
 <table cellspacing="0" cellpadding="2" border="0">
   <tr>
     <td align="left" valign="top">

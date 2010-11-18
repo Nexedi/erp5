@@ -723,7 +723,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     self.assertEqual(response.getStatus(), 200)
     self.assertTrue(reference in response.getBody())
 
-  def testERP5ExternalAuthPlugin(self):
+  def testERP5ExternalAuthicationPlugin(self):
     """
      Make sure that we can grant security using a ERP5 External Auth Plugin.
     """
@@ -731,7 +731,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     # add key authentication PAS plugin
     portal = self.portal
     uf = portal.acl_users
-    uf.manage_addProduct['ERP5Security'].addERP5ExternalAuthPlugin(
+    uf.manage_addProduct['ERP5Security'].addERP5ExternalAuthicationPlugin(
       id='erp5_external_auth_plugin', \
       title='ERP5 External Auth Plugin',\
       user_id_key=user_id_key,)

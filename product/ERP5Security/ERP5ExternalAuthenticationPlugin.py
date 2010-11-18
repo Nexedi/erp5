@@ -48,25 +48,25 @@ from Products.ERP5Security.ERP5UserManager import ERP5UserManager,\
      SUPER_USER, _AuthenticationFailure
 
 #Form for new plugin in ZMI
-manage_addERP5ExternalAuthPluginForm = PageTemplateFile(
-  'www/ERP5Security_addERP5ExternalAuthPlugin', globals(),
-  __name__='manage_addERP5ExternalAuthPluginForm')
+manage_addERP5ExternalAuthicationPluginForm = PageTemplateFile(
+  'www/ERP5Security_addERP5ExternalAuthicationPlugin', globals(),
+  __name__='manage_addERP5ExternalAuthicationPluginForm')
 
-def addERP5ExternalAuthPlugin(dispatcher, id, title=None, user_id_key='',
+def addERP5ExternalAuthicationPlugin(dispatcher, id, title=None, user_id_key='',
                               REQUEST=None):
-  """ Add a ERP5ExternalAuthPlugin to a Pluggable Auth Service. """
+  """ Add a ERP5ExternalAuthicationPlugin to a Pluggable Auth Service. """
 
-  plugin = ERP5ExternalAuthPlugin( id, title, user_id_key)
+  plugin = ERP5ExternalAuthicationPlugin( id, title, user_id_key)
   dispatcher._setObject(plugin.getId(), plugin)
 
   if REQUEST is not None:
       REQUEST['RESPONSE'].redirect(
           '%s/manage_workspace'
           '?manage_tabs_message='
-          'ERP5ExternalAuthPlugin+added.'
+          'ERP5ExternalAuthicationPlugin+added.'
           % dispatcher.absolute_url())
 
-class ERP5ExternalAuthPlugin(ERP5UserManager, CookieAuthHelper):
+class ERP5ExternalAuthicationPlugin(ERP5UserManager, CookieAuthHelper):
   """
   External authentification PAS plugin which extracts the user id from HTTP
   request header, like REMOTE_USER, openAMid, etc.
@@ -77,7 +77,7 @@ class ERP5ExternalAuthPlugin(ERP5UserManager, CookieAuthHelper):
   user_id_key = ''
 
   manage_options = (({'label': 'Edit',
-                      'action': 'manage_editERP5ExternalAuthPluginForm',},
+                      'action': 'manage_editERP5ExternalAuthicationPluginForm',},
                      )
                     + BasePlugin.manage_options[:]
                     )
@@ -162,7 +162,7 @@ class ERP5ExternalAuthPlugin(ERP5UserManager, CookieAuthHelper):
     #Cache Method for best performance
     _authenticateCredentials = CachingMethod(
       _authenticateCredentials,
-      id='ERP5ExternalAuthPlugin_authenticateCredentials',
+      id='ERP5ExternalAuthicationPlugin_authenticateCredentials',
       cache_factory='erp5_content_short')
     try:
       return _authenticateCredentials(login=login)
@@ -170,7 +170,7 @@ class ERP5ExternalAuthPlugin(ERP5UserManager, CookieAuthHelper):
       return None
     except StandardError,e:
       #Log standard error
-      LOG('ERP5ExternalAuthPlugin.authenticateCredentials', PROBLEM, str(e))
+      LOG('ERP5ExternalAuthicationPlugin.authenticateCredentials', PROBLEM, str(e))
       return None
 
   ################################
@@ -178,13 +178,13 @@ class ERP5ExternalAuthPlugin(ERP5UserManager, CookieAuthHelper):
   ################################
 
   #'Edit' option form
-  manage_editERP5ExternalAuthPluginForm = PageTemplateFile(
-      'www/ERP5Security_editERP5ExternalAuthPlugin',
+  manage_editERP5ExternalAuthicationPluginForm = PageTemplateFile(
+      'www/ERP5Security_editERP5ExternalAuthicationPlugin',
       globals(),
-      __name__='manage_editERP5ExternalAuthPluginForm' )
+      __name__='manage_editERP5ExternalAuthicationPluginForm' )
 
-  security.declareProtected( ManageUsers, 'manage_editExternalAuthPlugin' )
-  def manage_editExternalAuthPlugin(self, user_id_key, RESPONSE=None):
+  security.declareProtected( ManageUsers, 'manage_editERP5ExternalAuthenticationPlugin' )
+  def manage_editERP5ExternalAuthenticationPlugin(self, user_id_key, RESPONSE=None):
     """Edit the object"""
     error_message = ''
 
@@ -198,17 +198,17 @@ class ERP5ExternalAuthPlugin(ERP5UserManager, CookieAuthHelper):
     if RESPONSE is not None:
       if error_message != '':
         self.REQUEST.form['manage_tabs_message'] = error_message
-        return self.manage_editERP5ExternalAuthPluginForm(RESPONSE)
+        return self.manage_editERP5ExternalAuthicationPluginForm(RESPONSE)
       else:
         message = "Updated"
-        RESPONSE.redirect('%s/manage_editERP5ExternalAuthPluginForm'
+        RESPONSE.redirect('%s/manage_editERP5ExternalAuthicationPluginForm'
                           '?manage_tabs_message=%s'
                           % ( self.absolute_url(), message )
                           )
 
 #List implementation of class
-classImplements(ERP5ExternalAuthPlugin,
+classImplements(ERP5ExternalAuthicationPlugin,
                 plugins.IAuthenticationPlugin,
                 plugins.ILoginPasswordHostExtractionPlugin)
 
-InitializeClass(ERP5ExternalAuthPlugin)
+InitializeClass(ERP5ExternalAuthicationPlugin)

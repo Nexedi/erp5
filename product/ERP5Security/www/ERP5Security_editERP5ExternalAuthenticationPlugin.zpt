@@ -5,7 +5,7 @@
 
 <p class="form-help">Please input the configuration for the radius host</p>
 
-<form action="manage_editExternalAuthPlugin" method="POST">
+<form action="manage_editERP5ExternalAuthenticationPlugin" method="POST">
 
 <table tal:define="user_id_key request/user_id_key|context/user_id_key|string:;">
 
