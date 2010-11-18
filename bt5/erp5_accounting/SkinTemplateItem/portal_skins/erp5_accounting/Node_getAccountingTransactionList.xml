@@ -63,6 +63,12 @@ if params.get(\'precision\', None) is not None:\n
   # listbox editable float fields uses request/precision to format the value.\n
   request.set(\'precision\', params[\'precision\'])\n
 \n
+if not request.get(\'is_accounting_report\'):\n
+  # if we are in the UI, we use from date from preferences, but in a report we\n
+  # don\'t use any information from preferences, as they are passed by the\n
+  # report dialog\n
+  from_date = portal.portal_preferences.getPreferredAccountingTransactionFromDate()\n
+\n
 # this script can be used for Node, Section or Payment\n
 if kw.get(\'node_uid\'):\n
   params[\'node_uid\'] = kw[\'node_uid\']\n
@@ -129,6 +135,7 @@ if params.get(\'node_uid\'):\n
     node = portal.portal_catalog.getObject(params[\'node_uid\'])\n
     is_pl_account = node.isMemberOf(\'account_type/expense\')\\\n
                  or node.isMemberOf(\'account_type/income\')\n
+\n
 \n
 if is_pl_account and not from_date:\n
   from_date = params.get(\'period_start_date\')\n
