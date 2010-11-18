@@ -604,16 +604,32 @@ class SubversionTool(BaseTool):
   
   security.declareProtected('Import/Export objects', 'revert')
   # path can be absolute or relative
-  def revert(self, path, business_template=None, recurse=False):
+  def revert(self, path, business_template=None,
+                   recurse=False, exclude_list=()):
     """Revert local changes in a file or a directory.
     """
     client = self._getClient()
-    if not isinstance(path, list) :
-      path = [self._getWorkingPath(self.relativeToAbsolute(path, \
-      business_template))]
+    if isinstance(path, basestring):
+      path = path,
     if business_template is not None:
-      path = [self._getWorkingPath(self.relativeToAbsolute(x, \
-      business_template)) for x in path]
+      path = [self._getWorkingPath(self.relativeToAbsolute(x,
+        business_template)) for x in path]
+    if recurse and exclude_list:
+      exclude_list = frozenset(self._getWorkingPath(self.relativeToAbsolute(x,
+        business_template)) for x in exclude_list)
+      added_set = set()
+      other_list = []
+      for path in path:
+        for status in client.status(path):
+          path = status.getPath()
+          if path not in exclude_list:
+            status = str(status.getTextStatus())
+            if status == 'added':
+              added_set.add(path)
+            elif status != 'normal':
+              other_list.append(path)
+      client.revert(other_list, False)
+      path = [x for x in added_set if os.path.dirname(x) not in added_set]
     client.revert(path, recurse)
 
   security.declareProtected('Import/Export objects', 'revertZODB')

@@ -58,7 +58,6 @@ from Products.ERP5Type.Message import translateString\n
 from ZTUtils import make_query\n
 request = container.REQUEST\n
 \n
-\n
 # XXX: To be compatible with commit from diff view\n
 if same_type(added, []):\n
   added = \',\'.join(added)\n
@@ -67,62 +66,44 @@ if same_type(modified, []):\n
 if same_type(removed, []):\n
   removed = \',\'.join(removed)\n
 \n
-commit_non_recurs = added\n
-if commit_non_recurs != \'\' and commit_non_recurs != \'none\':\n
-  if modified != \'\' and modified != \'none\':\n
-    commit_non_recurs = commit_non_recurs+\',\'+modified  \n
-else:\n
-    if modified != \'\' and modified != \'none\':\n
-      commit_non_recurs = modified\n
-\n
-if commit_non_recurs != \'\' and commit_non_recurs != \'none\':\n
-  commit_non_recurs = commit_non_recurs.split(\',\')\n
-if removed != \'\' and removed != \'none\':\n
-  commit_recurs = context.getPortalObject()["portal_subversion"].cleanChildrenInList(removed.split(\',\'))\n
-else:\n
-  commit_recurs = removed\n
-\n
-if changelog is None :\n
-  request.set(\'portal_status_message\', translateString(\'Please set a ChangeLog message.\'))\n
-  request.set(\'cancel_url\', context.absolute_url() + \'/BusinessTemplate_viewSvnStatus?do_extract=False&portal_status_message=Commit%20cancelled.\')\n
-  return context.asContext(added=added, modified=modified, removed=removed).BusinessTemplate_viewSvnChangelog()\n
-\n
-if changelog.strip() == \'\' :\n
-  request.set(\'portal_status_message\', translateString("Error: ChangeLog message can not be empty."))\n
-  request.set(\'cancel_url\', context.absolute_url() + \'/BusinessTemplate_viewSvnStatus?do_extract=False&portal_status_message=Commit%20cancelled.\')\n
-  return context.asContext(added=added, modified=modified, removed=removed).BusinessTemplate_viewSvnChangelog()\n
-\n
 def getRevisionNumber(revision):\n
   """get the revision number from a revision, with backward compatibility support.\n
   """\n
-  if hasattr(revision, \'getNumber\'):\n
+  try:\n
     return revision.getNumber()\n
-  return str(revision)\n
+  except AttributeError:\n
+    return revision\n
 \n
-try:\n
-  revision_string = \'\'\n
-  if commit_non_recurs != \'none\' and commit_non_recurs != \'\':\n
-    revision = context.getPortalObject()["portal_subversion"].checkin(path=commit_non_recurs, business_template=context, recurse=False, log_message=changelog)\n
-    revision_string = \'%s\' % getRevisionNumber(revision)\n
-  if commit_recurs != \'none\' and commit_recurs != \'\':\n
-    revision = context.getPortalObject()["portal_subversion"].checkin(path=commit_recurs, business_template=context, recurse=True, log_message=changelog)\n
-    if revision_string:\n
-      revision_string = \'%s, %s\' % (revision_string, getRevisionNumber(revision))\n
-    else:\n
-      revision_string = \'%s\' % getRevisionNumber(revision)\n
-except SubversionSSLTrustError, error:\n
-  request.set(\'portal_status_message\', \'SSL Certificate was not recognized\')\n
-  request.set(\'cancel_url\', context.absolute_url() + \'/BusinessTemplate_viewSvnStatus?do_extract=False&portal_status_message=Commit%20cancelled.\')\n
-  return context.asContext(added=added, modified=modified, removed=removed, changelog=changelog, trust_dict = error.getTrustDict(), caller=\'commit\').BusinessTemplate_viewSvnSSLTrust()\n
-except SubversionLoginError, error1 :\n
-  request.set(\'portal_status_message\', \'Server needs authentication, no cookie found\')\n
-  request.set(\'cancel_url\', context.absolute_url() + \'/BusinessTemplate_viewSvnStatus?do_extract=False&portal_status_message=Commit%20cancelled.\')\n
-  return context.asContext(added=added, modified=modified, removed=removed, changelog=changelog, caller=\'commit\', realm = error1.getRealm(), username = context.getPortalObject()["portal_subversion"].getPreferredUsername()).BusinessTemplate_viewSvnLogin()\n
+error_kw = {}\n
+if changelog is None or not changelog.strip():\n
+  error_msg = "Please set a ChangeLog message."\n
+else:\n
+  portal_subversion = context.getPortalObject().portal_subversion\n
+  portal_subversion.revert(\'.\', business_template=context, recurse=True,\n
+    exclude_list = added.split(\',\') + modified.split(\',\') + removed.split(\',\'))\n
+  try:\n
+    revision = portal_subversion.checkin(\'.\', business_template=context,\n
+                                              log_message=changelog)\n
+  except SubversionSSLTrustError, e:\n
+    error_msg = "SSL Certificate was not recognized"\n
+    error_kw = dict(caller=\'commit\', trust_dict=e.getTrustDict())\n
+  except SubversionLoginError, e:\n
+    error_msg = "Server needs authentication, no cookie found"\n
+    error_kw = dict(caller=\'commit\', realm=e.getRealm(),\n
+                    username=portal_subversion.getPreferredUsername())\n
+  else:\n
+    return request.RESPONSE.redirect(\'%s/view?%s\' % (\n
+      context.absolute_url(),\n
+      make_query(portal_status_message=translateString(\n
+        \'Files committed successfully in revision ${revision}.\',\n
+        mapping=dict(revision=getRevisionNumber(revision))))))\n
 \n
-return request.RESPONSE.redirect(\'%s/view?%s\' % (\n
-       context.absolute_url(),\n
-       make_query(portal_status_message=translateString(\'Files committed successfully in revision ${revision}.\',\n
-                                                        mapping=dict(revision=revision_string)))))\n
+request.set(\'portal_status_message\', translateString(error_msg))\n
+request.set(\'cancel_url\', context.absolute_url() +\n
+  \'/BusinessTemplate_viewSvnStatus?do_extract=False\'\n
+  \'&portal_status_message=Commit%20cancelled.\')\n
+return context.asContext(added=added, modified=modified, removed=removed,\n
+                         **error_kw).BusinessTemplate_viewSvnChangelog()\n
 
 
 ]]></string> </value>
@@ -177,19 +158,17 @@ return request.RESPONSE.redirect(\'%s/view?%s\' % (\n
                             <string>container</string>
                             <string>request</string>
                             <string>same_type</string>
-                            <string>commit_non_recurs</string>
-                            <string>_getitem_</string>
-                            <string>context</string>
-                            <string>commit_recurs</string>
-                            <string>None</string>
                             <string>getRevisionNumber</string>
-                            <string>revision_string</string>
-                            <string>False</string>
-                            <string>revision</string>
+                            <string>error_kw</string>
+                            <string>None</string>
+                            <string>error_msg</string>
+                            <string>context</string>
+                            <string>portal_subversion</string>
                             <string>True</string>
-                            <string>error</string>
-                            <string>error1</string>
+                            <string>revision</string>
+                            <string>e</string>
                             <string>dict</string>
+                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>
