@@ -72,7 +72,7 @@ class ERP5ExternalAuthicationPlugin(ERP5UserManager, CookieAuthHelper):
   request header, like REMOTE_USER, openAMid, etc.
   """
 
-  meta_type = "ERP5 External Auth Plugin"
+  meta_type = "ERP5 External Authentication Plugin"
   security = ClassSecurityInfo()
   user_id_key = ''
 

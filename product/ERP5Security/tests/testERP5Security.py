@@ -725,19 +725,19 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
 
   def testERP5ExternalAuthicationPlugin(self):
     """
-     Make sure that we can grant security using a ERP5 External Auth Plugin.
+     Make sure that we can grant security using a ERP5 External Authentication Plugin.
     """
     user_id_key = 'openAMid'
     # add key authentication PAS plugin
     portal = self.portal
     uf = portal.acl_users
     uf.manage_addProduct['ERP5Security'].addERP5ExternalAuthicationPlugin(
-      id='erp5_external_auth_plugin', \
-      title='ERP5 External Auth Plugin',\
+      id='erp5_external_authentication_plugin', \
+      title='ERP5 External Authentication Plugin',\
       user_id_key=user_id_key,)
 
-    erp5_external_auth_plugin = getattr(uf, 'erp5_external_auth_plugin')
-    erp5_external_auth_plugin.manage_activateInterfaces(
+    erp5_external_authentication_plugin = getattr(uf, 'erp5_external_authentication_plugin')
+    erp5_external_authentication_plugin.manage_activateInterfaces(
       interfaces=['IExtractionPlugin',
                   'IAuthenticationPlugin'])
     self.stepTic()
