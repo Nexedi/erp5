@@ -40,12 +40,12 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">\n
 <head>\n
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
-<title>Test List Mode Listbox proxy</title>\n
+<title>Test List Mode Listbox proxy (expected failure)</title>\n
 </head>\n
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">Test List Mode Listbox Proxy</td></tr>\n
+<tr><td rowspan="1" colspan="3">Test List Mode Listbox Proxy (expected failure)</td></tr>\n
 </thead><tbody>\n
 <!-- XXX listbox_title is not displayed in mobile mode\n
      So this test is skipped -->\n

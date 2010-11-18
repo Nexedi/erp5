@@ -34,18 +34,18 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
       xmlns:metal="http://xml.zope.org/namespaces/metal">\n
 <head>\n
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
-<title>Test Search and Sort on a Date Column</title>\n
+<title>Test Search and Sort on a Date Column (expected failure)</title>\n
 </head>\n
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">Test Search and Sort on a Date Column</td></tr>\n
+<tr><td rowspan="1" colspan="3">Test Search and Sort on a Date Column (expected failure)</td></tr>\n
 </thead><tbody>\n
 <!-- XXX Mobile listbox columns label are not clickable for quick sorting\n
      So this test is skipped -->\n
@@ -248,7 +248,7 @@
 </html>\n
 
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -263,8 +263,12 @@
             <value> <string>testSearchAndSortOnDateColumn</string> </value>
         </item>
         <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <unicode></unicode> </value>
         </item>
       </dictionary>
     </pickle>
