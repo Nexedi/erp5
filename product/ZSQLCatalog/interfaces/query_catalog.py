@@ -255,3 +255,10 @@ class ISearchKeyCatalog(Interface):
         identifier in SearchText is a valid column.
         If not provided, catalog schema will be used.
     """
+
+  def isValidColumn(column_id):
+    """
+      Returns wether given string is a known column.
+      Note: related keys and scriptable keys are considered columns.
+    """
+
