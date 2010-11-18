@@ -2217,6 +2217,100 @@ return 1
       self.assertEquals(len(subject_result), 1)
       self.assertEquals(subject_result[0].getPath(), document.getPath())
 
+  def _test_document_publication_workflow(self, portal_type, transition):
+    document = self.getDocumentModule().newContent(portal_type=portal_type)
+    self.portal.portal_workflow.doActionFor(document, transition)
+
+  def test_document_publication_workflow_Drawing_publish(self):
+    self._test_document_publication_workflow('Drawing', 'publish_action')
+    self._test_document_publication_workflow('Drawing',
+        'publish_alive_action')
+
+  def test_document_publication_workflow_Drawing_release(self):
+    self._test_document_publication_workflow('Drawing', 'release_action')
+    self._test_document_publication_workflow('Drawing',
+        'release_alive_action')
+
+  def test_document_publication_workflow_Drawing_share(self):
+    self._test_document_publication_workflow('Drawing', 'share_action')
+    self._test_document_publication_workflow('Drawing',
+        'share_alive_action')
+
+  def test_document_publication_workflow_File_publish(self):
+    self._test_document_publication_workflow('File', 'publish_action')
+    self._test_document_publication_workflow('File',
+        'publish_alive_action')
+
+  def test_document_publication_workflow_File_release(self):
+    self._test_document_publication_workflow('File', 'release_action')
+    self._test_document_publication_workflow('File',
+        'release_alive_action')
+
+  def test_document_publication_workflow_File_share(self):
+    self._test_document_publication_workflow('File', 'share_action')
+    self._test_document_publication_workflow('File',
+        'share_alive_action')
+
+  def test_document_publication_workflow_PDF_publish(self):
+    self._test_document_publication_workflow('PDF', 'publish_action')
+    self._test_document_publication_workflow('PDF',
+        'publish_alive_action')
+
+  def test_document_publication_workflow_PDF_release(self):
+    self._test_document_publication_workflow('PDF', 'release_action')
+    self._test_document_publication_workflow('PDF',
+        'release_alive_action')
+
+  def test_document_publication_workflow_PDF_share(self):
+    self._test_document_publication_workflow('PDF', 'share_action')
+    self._test_document_publication_workflow('PDF',
+        'share_alive_action')
+
+  def test_document_publication_workflow_Presentation_publish(self):
+    self._test_document_publication_workflow('Presentation', 'publish_action')
+    self._test_document_publication_workflow('Presentation',
+        'publish_alive_action')
+
+  def test_document_publication_workflow_Presentation_release(self):
+    self._test_document_publication_workflow('Presentation', 'release_action')
+    self._test_document_publication_workflow('Presentation',
+        'release_alive_action')
+
+  def test_document_publication_workflow_Presentation_share(self):
+    self._test_document_publication_workflow('Presentation', 'share_action')
+    self._test_document_publication_workflow('Presentation',
+        'share_alive_action')
+
+  def test_document_publication_workflow_Spreadsheet_publish(self):
+    self._test_document_publication_workflow('Spreadsheet', 'publish_action')
+    self._test_document_publication_workflow('Spreadsheet',
+        'publish_alive_action')
+
+  def test_document_publication_workflow_Spreadsheet_release(self):
+    self._test_document_publication_workflow('Spreadsheet', 'release_action')
+    self._test_document_publication_workflow('Spreadsheet',
+        'release_alive_action')
+
+  def test_document_publication_workflow_Spreadsheet_share(self):
+    self._test_document_publication_workflow('Spreadsheet', 'share_action')
+    self._test_document_publication_workflow('Spreadsheet',
+        'share_alive_action')
+
+  def test_document_publication_workflow_Text_publish(self):
+    self._test_document_publication_workflow('Text', 'publish_action')
+    self._test_document_publication_workflow('Text',
+        'publish_alive_action')
+
+  def test_document_publication_workflow_Text_release(self):
+    self._test_document_publication_workflow('Text', 'release_action')
+    self._test_document_publication_workflow('Text',
+        'release_alive_action')
+
+  def test_document_publication_workflow_Text_share(self):
+    self._test_document_publication_workflow('Text', 'share_action')
+    self._test_document_publication_workflow('Text',
+        'share_alive_action')
+
 class TestDocumentWithSecurity(TestDocumentMixin):
 
   username = 'yusei'
