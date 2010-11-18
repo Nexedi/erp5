@@ -270,7 +270,7 @@ class TestUserManagement(ERP5TypeTestCase):
   def test_MultiplePersonReferenceConcurrentTransaction(self):
     """
     Tests that it's refused to create two Persons with same reference.
-    Check if both persons are created in 2 concurrent transactions. 
+    Check if both persons are created in 2 concurrent transactions.
     For now, just verify that serialize is called on person_module.
     """
     class DummyTestException(Exception):
@@ -705,7 +705,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     assignment.open()
     self.stepTic()
 
-    # encrypt & decrypt works 
+    # encrypt & decrypt works
     key = erp5_auth_key_plugin.encrypt(reference)
     self.assertNotEquals(reference, key)
     self.assertEquals(reference, erp5_auth_key_plugin.decrypt(key))
@@ -717,7 +717,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     self.assertEqual(response.getStatus(), 302)
     self.assertTrue('location' in response.headers.keys())
     self.assertTrue(response.headers['location'].endswith('login_form'))
-     
+
     # view front page we should be logged in if we use authentication key
     response = self.publish('%s?__ac_key=%s' %(base_url, key))
     self.assertEqual(response.getStatus(), 200)

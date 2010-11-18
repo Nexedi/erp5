@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Francois-Xavier Algrain <fxalgrain@tiolive.com>
+# Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly adviced to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -55,7 +54,7 @@ def addERP5ExternalAuthenticationPlugin(dispatcher, id, title=None, user_id_key=
                               REQUEST=None):
   """ Add a ERP5ExternalAuthenticationPlugin to a Pluggable Auth Service. """
 
-  plugin = ERP5ExternalAuthenticationPlugin( id, title, user_id_key)
+  plugin = ERP5ExternalAuthenticationPlugin(id, title, user_id_key)
   dispatcher._setObject(plugin.getId(), plugin)
 
   if REQUEST is not None:
@@ -121,7 +120,7 @@ class ERP5ExternalAuthenticationPlugin(ERP5UserManager):
   #     IAuthenticationPlugin    #
   ################################
   security.declarePrivate('authenticateCredentials')
-  def authenticateCredentials( self, credentials ):
+  def authenticateCredentials(self, credentials):
     """Authentificate with credentials"""
     login = credentials.get('external_login', None)
     # Forbidden the usage of the super user.
@@ -189,9 +188,9 @@ class ERP5ExternalAuthenticationPlugin(ERP5UserManager):
   manage_editERP5ExternalAuthenticationPluginForm = PageTemplateFile(
       'www/ERP5Security_editERP5ExternalAuthenticationPlugin',
       globals(),
-      __name__='manage_editERP5ExternalAuthenticationPluginForm' )
+      __name__='manage_editERP5ExternalAuthenticationPluginForm')
 
-  security.declareProtected( ManageUsers, 'manage_editERP5ExternalAuthenticationPlugin' )
+  security.declareProtected(ManageUsers, 'manage_editERP5ExternalAuthenticationPlugin')
   def manage_editERP5ExternalAuthenticationPlugin(self, user_id_key, RESPONSE=None):
     """Edit the object"""
     error_message = ''
@@ -211,7 +210,7 @@ class ERP5ExternalAuthenticationPlugin(ERP5UserManager):
         message = "Updated"
         RESPONSE.redirect('%s/manage_editERP5ExternalAuthenticationPluginForm'
                           '?manage_tabs_message=%s'
-                          % ( self.absolute_url(), message )
+                          % (self.absolute_url(), message)
                           )
 
 #List implementation of class
