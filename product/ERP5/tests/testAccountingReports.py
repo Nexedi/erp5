@@ -1598,6 +1598,61 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     self.checkLineProperties(line_list[-1], debit_price=0, credit_price=500)
 
 
+  def testAccountStatementOverMultiplePeriodsForExpenseAccounts(self):
+    # Account statement for expense or income account can be used over multiple
+    # periods
+    self.createAccountStatementDataSetOnTwoPeriods()
+    
+    # set request variables and render   
+    request_form = self.portal.REQUEST.form
+    request_form['node'] = \
+                self.portal.account_module.goods_sales.getRelativeUrl()
+    request_form['from_date'] = DateTime(2005, 2, 2)
+    request_form['at_date'] = DateTime(2006, 2, 2)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
+    request_form['simulation_state'] = ['delivered']
+    request_form['hide_analytic'] = False
+    
+    report_section_list = self.getReportSectionList(
+                               self.portal.accounting_module,
+                               'AccountModule_viewAccountStatementReport')
+    self.assertEquals(1, len(report_section_list))
+    
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(3, len(data_line_list))
+    self.checkLineProperties(data_line_list[0],
+                             Movement_getSpecificReference='1',
+                             date=DateTime(2005, 12, 31),
+                             Movement_getExplanationTitle='Transaction 1',
+                             Movement_getMirrorSectionTitle='Client 1',
+                             debit_price=0,
+                             credit_price=100,
+                             running_total_price=-100)
+    
+    self.checkLineProperties(data_line_list[1],
+                             Movement_getSpecificReference='2',
+                             date=DateTime(2006, 1, 1),
+                             Movement_getExplanationTitle='Transaction 2',
+                             Movement_getMirrorSectionTitle='Client 1',
+                             debit_price=0,
+                             credit_price=200,
+                             running_total_price=-300)
+
+    self.checkLineProperties(data_line_list[2],
+                             Movement_getSpecificReference='3',
+                             date=DateTime(2006, 2, 2),
+                             Movement_getExplanationTitle='Transaction 3',
+                             Movement_getMirrorSectionTitle='Client 1',
+                             debit_price=0,
+                             credit_price=300,
+                             running_total_price=-600)
+
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], debit_price=0, credit_price=600)
+
+
   def testAccountStatementMirrorSection(self):
     # 'Mirror Section' parameter is taken into account.
     self.createAccountStatementDataSet()
