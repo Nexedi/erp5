@@ -617,6 +617,13 @@ class TestPreferences(PropertySheetTestCase):
     self.assertEqual(system_preference_string,
         portal_preferences.getDummystring())
 
+  def test_system_preference_value_prefererred_clear_cache_disabled(self):
+    # simulate situation when _clearCache does nothing, for example in case
+    # if memcached or any other non-deleteable cache is used
+    from Products.ERP5Form.Document.Preference import Preference
+    Preference._clearCache = lambda *args,**kwargs: None
+    self.test_system_preference_value_prefererred()
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestPreferences))
