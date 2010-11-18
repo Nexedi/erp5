@@ -39,7 +39,8 @@ from DateTime import DateTime
 from Products.ZSQLCatalog.SQLExpression import MergeConflictError
 
 class MatchList(list):
-  pass
+  def __repr__(self):
+    return '<%s %r>' % (self.__class__.__name__, self[:])
 
 class ReferenceQuery:
   """
@@ -133,8 +134,13 @@ class ReferenceQuery:
       raise TypeError, 'Compared value is not a (known) Query instance: (%s) %r' % (other.__class__.__name__, other)
 
   def __repr__(self):
-    return '<%s column=%r operator=%r value=%r args=%r>' % \
-      (self.__class__.__name__, self.column, self.operator, self.value, self.args)
+    if self.args:
+      # ComplexQuery-ish
+      representation = (' %s ' % (self.operator, )).join(repr(x) for x in self.args)
+    else:
+      # SimpleQuery-ish
+      representation = '%r %r %r' % (self.column, self.operator, self.value)
+    return '<%s %s>' % (self.__class__.__name__, representation)
 
 class RelatedReferenceQuery:
   """
