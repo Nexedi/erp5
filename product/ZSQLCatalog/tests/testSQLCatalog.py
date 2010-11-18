@@ -646,6 +646,15 @@ class TestSQLCatalog(unittest.TestCase):
       order_by_expression = sql_expression.getOrderByExpression()
       self.assertTrue('MATCH' in order_by_expression, (order_by_expression, direction))
 
+  def test_logicalOperators(self):
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='=', default='AN ORB'),
+        operator='and'),
+      {'default': 'AN ORB'})
+    self.catalog(ReferenceQuery(
+        ReferenceQuery(operator='in', default=['AN', 'ORB']),
+        operator='and'),
+      {'default': 'AN OR ORB'})
+
 ##return catalog(title=Query(title='a', operator='not'))
 #return catalog(title={'query': 'a', 'operator': 'not'})
 #return catalog(title={'query': ['a', 'b'], 'operator': 'not'})

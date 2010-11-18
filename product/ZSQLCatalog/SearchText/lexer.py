@@ -112,15 +112,15 @@ class lexer(object):
     return t
 
   def t_OR(self, t):
-    r'OR'
+    r'OR[ ]'
     return t
 
   def t_AND(self, t):
-    r'AND'
+    r'AND[ ]'
     return t
 
   def t_NOT(self, t):
-    r'NOT'
+    r'NOT[ ]'
     return t
 
   def t_WORD(self, t):
