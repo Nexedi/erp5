@@ -405,7 +405,7 @@ class MultiRelationEditor:
 
         for value, uid, display_text, relation_key, item_key in \
                                self.relation_editor_list:
-          value_list.append(value)
+          value_list.append(display_text)
           if uid is not None:
             # Decorate the request so that we can display
             # the select item in a popup
@@ -600,7 +600,7 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
     ####################################
     # User validate the form
     ####################################
-    if need_to_revalidate == 1:
+   if need_to_revalidate == 1:
 #     else:
       ####################################
       # Check the default field
@@ -771,7 +771,7 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
 
     ##################################### 
     # Validate MultiRelation field
-    ##################################### 
+    #####################################
     if raising_error_needed:
       # Raise error
       self.raise_error(raising_error_value, field)
