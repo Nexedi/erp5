@@ -191,6 +191,7 @@ class ParallelListValidator(Validator.MultiSelectionValidator):
       if not isinstance(sub_result_list, (list, tuple)):
         sub_result_list = [sub_result_list]
       result_list.extend(sub_result_list)
+    REQUEST.form[key] = result_list
     return result_list
 
   def validate_sub_field(self, field, id, REQUEST, sub_field_property_dict):
