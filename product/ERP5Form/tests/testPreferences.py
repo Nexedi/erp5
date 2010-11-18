@@ -584,6 +584,39 @@ class TestPreferences(PropertySheetTestCase):
 
     preference_tool.manage_permission(read_permission, ['Manager'], 1)
 
+  def test_system_preference_value_prefererred(self):
+    default_preference_string = 'Default Name'
+    normal_preference_string = 'Normal Preference'
+    system_preference_string = 'System Preference'
+    self._addPropertySheet('Preference', 'DummySystemPreference',
+        '''class DummySystemPreference:
+             _properties= ( {'id': 'dummystring',
+                             'default': '%s',
+                             'preference': True,
+                             'type': 'string',},)''' % default_preference_string)
+    portal_preferences = self.portal.portal_preferences
+    self.assertEqual(default_preference_string,
+        portal_preferences.getDummystring())
+
+    preference = portal_preferences.newContent(portal_type='Preference',
+                                               dummystring=normal_preference_string,
+                                               priority=Priority.SITE)
+    preference.enable()
+    transaction.commit()
+    self.tic()
+
+    self.assertEqual(normal_preference_string,
+        portal_preferences.getDummystring())
+
+    system_preference = portal_preferences.newContent(portal_type='Preference',
+                                               dummystring=system_preference_string)
+    system_preference.enable()
+    transaction.commit()
+    self.tic()
+
+    self.assertEqual(system_preference_string,
+        portal_preferences.getDummystring())
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestPreferences))
