@@ -693,6 +693,31 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     # Resizing works
     self.assertTrue(len(large_image) > len(small_image))
 
+  def _test_document_publication_workflow(self, portal_type, transition):
+    document = self.portal.web_page_module.newContent(portal_type=portal_type)
+    self.portal.portal_workflow.doActionFor(document, transition)
+
+  def test_document_publication_workflow_WebPage_publish(self):
+    self._test_document_publication_workflow('Web Page', 'publish_action')
+
+  def test_document_publication_workflow_WebPage_publish_alive(self):
+    self._test_document_publication_workflow('Web Page',
+        'publish_alive_action')
+
+  def test_document_publication_workflow_WebPage_release(self):
+    self._test_document_publication_workflow('Web Page', 'release_action')
+
+  def test_document_publication_workflow_WebPage_release_alive(self):
+    self._test_document_publication_workflow('Web Page',
+        'release_alive_action')
+
+  def test_document_publication_workflow_WebPage_share(self):
+    self._test_document_publication_workflow('Web Page', 'share_action')
+
+  def test_document_publication_workflow_WebPage_share_alive(self):
+    self._test_document_publication_workflow('Web Page',
+        'share_alive_action')
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5WebWithDms))
