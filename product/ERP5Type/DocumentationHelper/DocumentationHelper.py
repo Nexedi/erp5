@@ -211,6 +211,11 @@ class DocumentationHelper(Implicit):
         documented_object = Products
         for key in module_list[1:]:
           documented_object = getattr(documented_object, key, None)
+      elif base_module == "erp5":
+        import erp5
+        documented_object = erp5
+        for key in module_list[1:]:
+          documented_object = getattr(documented_object, key, None)
       else:
         raise NotImplementedError
         #fp, pathname, description = imp.find_module(base_module)
