@@ -600,7 +600,7 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
     ####################################
     # User validate the form
     ####################################
-   if need_to_revalidate == 1:
+    if need_to_revalidate == 1:
 #     else:
       ####################################
       # Check the default field
