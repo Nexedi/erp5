@@ -234,46 +234,6 @@ class ParallelListField(ZMIField):
     """
     return paralellListFieldGetValue(self, id, REQUEST=REQUEST, **kw)
 
-  def _get_user_input_value(self, key, REQUEST):
-    """
-    Try to get a value of the field from the REQUEST.
-    This method is extended in order to retrive values
-    from REQUEST for each subfield.
-    then a list of values will be returned
-    This is required for parallel listfields inside listbox
-    """
-    value_list = []
-    try:
-      value = REQUEST.form[key]
-    except (KeyError, AttributeError):
-      # Fallback with id of field on rendered form
-      # So try to get the proxy_field if exists
-      # because template field may have a different id.
-      # And configuration of properties
-      # can be different (not delegated)
-      # So the following code works only with original field
-      # ie: proxy_field
-      field = REQUEST.get(
-        'field__proxyfield_%s_%s_%s' % (self.id, self._p_oid, 'default'),
-        self)
-      # call hash_list to iterate over each subfield
-      hash_list = generateSubForm(field, [], REQUEST)
-      for sub_field_property_dict in hash_list:
-        # compute if of each subfield
-        sub_key = field.generate_subfield_key(sub_field_property_dict['key'],
-                                              key=key)
-        # retrieve the user filled value in REQUEST
-        sub_value = REQUEST.get(sub_key, MARKER)
-        if sub_value is not MARKER:
-          value_list.append(sub_value)
-      if not value_list:
-        # Raise KeyError if any value has not been found
-        # This reproduce expected behaviour of
-        # REQUEST.form[key]
-        raise KeyError
-      value = value_list
-    return value
-
 def generateSubForm(self, value, REQUEST):
   item_list = [x for x in self.get_value('items', REQUEST=REQUEST)
                  if x[0] != '' and x[1]]
