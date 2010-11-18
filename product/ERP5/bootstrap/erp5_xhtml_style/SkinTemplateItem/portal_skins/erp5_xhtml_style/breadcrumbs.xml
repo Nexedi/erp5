@@ -170,7 +170,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"Modified version for ERP5 to append the default action (/view) in the URL."\n
+            <value> <string>"Modified version for ERP5 to append the ignore_layout parameter etc. in the URL."\n
 \n
 from Products.CMFCore.utils import getToolByName\n
 ptool = getToolByName(script, \'portal_properties\')\n
@@ -181,7 +181,7 @@ param = int(context.REQUEST.get(\'ignore_layout\', 0)) and \'?ignore_layout:int=
 if include_root:\n
     result.append( { \'id\'      : \'root\'\n
                    , \'title\'   : ptool.title()\n
-                   , \'url\'     : \'%s/view%s\' % (portal_url, param)\n
+                   , \'url\'     : \'%s%s\' % (portal_url, param)\n
                    }\n
                  )\n
 \n
@@ -203,7 +203,7 @@ for name in relative:\n
     if not name == \'talkback\':\n
         result.append( { \'id\'      : name\n
                        , \'title\'   : title\n
-                       , \'url\'     : \'%s/%s/view%s\' % (portal_url, \'/\'.join(now), param)\n
+                       , \'url\'     : \'%s/%s%s\' % (portal_url, \'/\'.join(now), param)\n
                        }\n
                     )\n
 \n

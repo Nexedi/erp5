@@ -61,7 +61,7 @@ request_form.update(keep_items)\n
 # JPS-XXX Why ERP5Site ? not Base ? \n
 \n
 if redirect_url is None:\n
-  redirect_url = \'%s/view\' % (context.getPortalObject().absolute_url())\n
+  redirect_url = context.getPortalObject().absolute_url()\n
 \n
 parameters = make_query(dict([(k, v) for k, v in request_form.items() if k and v is not None]))\n
 if len(parameters):\n

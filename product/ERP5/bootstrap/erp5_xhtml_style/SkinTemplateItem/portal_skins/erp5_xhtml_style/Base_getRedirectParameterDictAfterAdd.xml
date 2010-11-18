@@ -51,7 +51,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string># This is the default method for a redirection after being added.\n
-return dict(redirect_url=context.absolute_url() + \'/view\', selection_index=None, selection_name=None)\n
+return dict(redirect_url=context.absolute_url(), selection_index=None, selection_name=None)\n
 </string> </value>
         </item>
         <item>

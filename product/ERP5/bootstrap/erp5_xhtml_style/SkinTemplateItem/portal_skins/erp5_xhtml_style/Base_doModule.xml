@@ -54,7 +54,7 @@
   select_module = context.REQUEST.form["Base_doModule"]\n
 if select_module == \'\':\n
   return\n
-return context.ERP5Site_redirect(\'%s/view\' % select_module, **kw)\n
+return context.ERP5Site_redirect(select_module, **kw)\n
 </string> </value>
         </item>
         <item>
