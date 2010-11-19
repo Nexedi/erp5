@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -37,7 +34,7 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
       xmlns:metal="http://xml.zope.org/namespaces/metal">\n
@@ -54,7 +51,7 @@ Selected</td></tr>\n
 <tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />\n
 <tr>\n
   <td>open</td>\n
-  <td tal:content="string: ${here/portal_url}/foo_module/1/view">/erp5/foo_module/1/view</td>\n
+  <td>${base_url}/foo_module/1</td>\n
   <td></td>\n
 </tr>\n
 <!-- when clicking on the action button of a drop down when nothing is selected\n
@@ -78,7 +75,7 @@ shouldn\'t do anything. -->\n
   </tr>\n
   <tr>\n
     <td>assertAbsoluteLocation</td>\n
-    <td tal:content="string:glob:${here/portal_url}/foo_module/1/view" />\n
+    <td>regexp:${base_url}/foo_module/1(\\?|$$)</td>\n
     <td/>\n
   </tr>\n
   <tr>\n
@@ -88,11 +85,9 @@ shouldn\'t do anything. -->\n
   </tr>\n
 </tal:block>\n
 </body>\n
-</html>\n
-\n
+</html>
 
-
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -107,8 +102,12 @@ shouldn\'t do anything. -->\n
             <value> <string>testDropDownListActionsNothingSelected</string> </value>
         </item>
         <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <unicode></unicode> </value>
         </item>
       </dictionary>
     </pickle>

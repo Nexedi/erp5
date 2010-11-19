@@ -51,7 +51,7 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
            xmlns:metal="http://xml.zope.org/namespaces/metal">\n
@@ -79,7 +79,7 @@
     </tr>\n
     <tr>\n
       <td>open</td>\n
-      <td>${base_url}/foo_module/view</td>\n
+      <td>${base_url}/foo_module</td>\n
       <td></td>\n
     </tr>\n
   </tal:block>\n
@@ -98,10 +98,9 @@
       <td tal:content="set_page"></td>\n
     </tr>\n
   </tal:block>\n
-</tal:block>\n
+</tal:block>
 
-
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -120,8 +119,12 @@
             <value> <string>ListBoxZuite_CommonTemplate</string> </value>
         </item>
         <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string>Common Template for ListBoxZuite</string> </value>
+            <value> <unicode>Common Template for ListBoxZuite</unicode> </value>
         </item>
       </dictionary>
     </pickle>
