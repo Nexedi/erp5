@@ -74,6 +74,7 @@ considered if id_list is None.\n
 """\n
 from Products.ERP5Type.Log import log\n
 document = context.getPortalObject()\n
+context = document.portal_activities\n
 if relative_url:\n
   document = document.restrictedTraverse(relative_url)\n
   depth = len(relative_url.split(\'/\'))\n
@@ -132,8 +133,9 @@ else:\n
         except (TypeError, IndexError):\n
           pass\n
 \n
+  result = None\n
   if active_process is None:\n
-    active_process = context.newActiveProcess().getPath()\n
+    result = active_process = context.newActiveProcess().getPath()\n
   kw = dict(relative_url=relative_url, active_process=active_process,\n
             tag=tag, full=full, recursive=recursive, packet=packet,\n
             method_id=method_id, method_kw=method_kw)\n
@@ -146,6 +148,8 @@ else:\n
     else:\n
       kw[\'id_list\'] = tuple(id_list[i:i+packet])\n
     activate(priority=4).ERP5Site_checkDataWithScript(**kw)\n
+  # return the active process path if we created one\n
+  return result\n
 
 
 ]]></string> </value>
@@ -220,6 +224,7 @@ else:\n
                             <string>_inplacevar_</string>
                             <string>TypeError</string>
                             <string>IndexError</string>
+                            <string>result</string>
                             <string>dict</string>
                             <string>kw</string>
                             <string>i</string>
