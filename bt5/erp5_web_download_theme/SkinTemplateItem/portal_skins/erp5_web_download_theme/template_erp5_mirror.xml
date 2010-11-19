@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!-- ERP5 WEB INTEGRATION -->\n
+<tal:block metal:define-macro="master">\n
+  <tal:block tal:define="website here/getWebSiteValue;\n
+                        enctype string:multipart/form-data;\n
+                        portal_path website/absolute_url;\n
+                        section here/getWebSectionValue;\n
+                        section_url section/absolute_url;\n
+                        current_main_section here/WebSite_getMainSection;\n
+                        has_no_layout python: layout_form is None;\n
+                        aggregate python: has_no_layout or layout_form.Form_getGroupList(\n
+                                          [\'section\']);\n
+                        aggregate python: ((aggregate is not has_no_layout) and dict(aggregate)) or {};\n
+                        section_area python:aggregate.get(\'section\', []);\n
+                        has_section_area python:len(section_area);\n
+                        global css_list_template python: [];\n
+                        global js_list python: [];">\n
+\n
+    <tal:block metal:use-macro="here/template_erp5_xhtml_style/macros/master">\n
+      <tal:block metal:fill-slot="head">\n
+        <style>\n
+          label,legend,#hidden_fieldset, div.breadcrumb + span{display:none};\n
+        <style>\n
+      </tal:block>\n
+      <tal:block metal:fill-slot="layout">\n
+        <tal:block metal:use-macro="here/aggregate_render/macros/populate_request"/>        \n
+            <!--section here//-->\n
+            <!-- ERP5 layout form rendering code -->                  \n
+            <tal:block tal:condition="has_section_area">\n
+              <tal:block tal:condition="python: layout_form is not None"\n
+                         tal:define="wrapper_class string:section_area">\n
+                <tal:block tal:repeat="aggregate python: [(\'section\', section_area, )]">\n
+                    <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render">\n
+                    </tal:block>\n
+                </tal:block>\n
+              </tal:block>    \n
+            </tal:block>\n
+            <!--section here//-->                                          \n
+      </tal:block>        \n
+    </tal:block>    \n
+  </tal:block>        \n
+</tal:block>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>template_erp5_mirror</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

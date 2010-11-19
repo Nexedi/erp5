@@ -1,0 +1,3 @@
+Use predicate to configure the document what you want to see.
+Don't forget to use the both layout in your web site configuration.
+Standard page template are override to remove spaces else we corrupt original files.
