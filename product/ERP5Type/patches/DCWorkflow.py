@@ -401,15 +401,15 @@ def DCWorkflowDefinition_executeTransition(self, ob, tdef=None, kwargs=None):
     self.updateRoleMappingsFor(ob)
 
     # Execute the "after" script.
-    if tdef is not None and tdef.after_script_name:
+    script = getattr(tdef, 'after_script_name', None)
+    if script:
         # Script can be either script or workflow method
         #LOG('_executeTransition', 0, 'new_sdef.transitions = %s' % (repr(new_sdef.transitions)))
-        if tdef.after_script_name in filter(lambda k: self.transitions[k].trigger_type == TRIGGER_WORKFLOW_METHOD,
-                                                                                  new_sdef.transitions):
-          script = getattr(ob, convertToMixedCase(tdef.after_script_name))
-          script()
+        if script in new_sdef.transitions and  \
+           self.transitions[script].trigger_type == TRIGGER_WORKFLOW_METHOD:
+          getattr(ob, convertToMixedCase(script))()
         else:
-          script = self.scripts[tdef.after_script_name]
+          script = self.scripts[script]
           # Pass lots of info to the script in a single parameter.
           sci = StateChangeInfo(
               ob, self, status, tdef, old_sdef, new_sdef, kwargs)
