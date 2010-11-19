@@ -137,22 +137,23 @@ if memcache is not None:
             delattr(value, MEMCACHED_TOOL_MODIFIED_FLAG_PROPERTY_ID)
             self.scheduled_action_dict[key] = UPDATE_ACTION
         for key, action in self.scheduled_action_dict.iteritems():
+          encoded_key = encodeKey(key)
           if action is UPDATE_ACTION:
-            succeed = self.memcached_connection.set(encodeKey(key),
+            succeed = self.memcached_connection.set(encoded_key,
                                                     self.local_cache[key],
                                                     expiration_time)
             if not succeed:
               self._initialiseConnection()
-              succeed = self.memcached_connection.set(encodeKey(key),
+              succeed = self.memcached_connection.set(encoded_key,
                                                       self.local_cache[key],
                                                       expiration_time)
               if not succeed:
                 LOG('MemcacheTool', 0, 'set command to memcached server (%r) failed' % (self.server_list,))
           elif action is DELETE_ACTION:
-            succeed = self.memcached_connection.delete(encodeKey(key), 0)
+            succeed = self.memcached_connection.delete(encoded_key, 0)
             if not succeed:
               self._initialiseConnection()
-              succeed = self.memcached_connection.delete(encodeKey(key), 0)
+              succeed = self.memcached_connection.delete(encoded_key, 0)
               if not succeed:
                 LOG('MemcacheTool', 0, 'delete command to memcached server (%r) failed' % (self.server_list,))
       except:
@@ -176,9 +177,9 @@ if memcache is not None:
       self._register()
       if self.scheduled_action_dict.get(key) == DELETE_ACTION:
         raise KeyError
-      encoded_key = encodeKey(key)
       result = self.local_cache.get(key, MARKER)
       if result is MARKER:
+        encoded_key = encodeKey(key)
         try:
           result = self.memcached_connection.get(encoded_key)
         except memcache.Client.MemcachedConnectionError:
