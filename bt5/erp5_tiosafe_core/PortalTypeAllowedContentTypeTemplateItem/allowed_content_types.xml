@@ -1,0 +1,30 @@
+<allowed_content_type_list>
+ <portal_type id="Integration Base Category Mapping">
+  <item>Integration Category Mapping</item>
+ </portal_type>
+ <portal_type id="Integration Base Property Mapping">
+  <item>Integration Base Property Mapping</item>
+  <item>Integration Property Mapping</item>
+ </portal_type>
+ <portal_type id="Integration Category Mapping">
+  <item>Integration Category Mapping</item>
+ </portal_type>
+ <portal_type id="Integration Module">
+  <item>Web Service Request</item>
+  <item>Web Service Request Group</item>
+ </portal_type>
+ <portal_type id="Integration Property Mapping">
+  <item>Integration Property Mapping</item>
+ </portal_type>
+ <portal_type id="Integration Site">
+  <item>Integration Base Category Mapping</item>
+  <item>Integration Base Property Mapping</item>
+  <item>Integration Module</item>
+  <item>Web Service Connector</item>
+  <item>Web Service Request</item>
+  <item>Web Service Request Group</item>
+ </portal_type>
+ <portal_type id="Integration Tool">
+  <item>Integration Site</item>
+ </portal_type>
+</allowed_content_type_list>

@@ -1,0 +1,11 @@
+<base_category_list>
+ <portal_type id="Integration Module">
+  <item>destination_section</item>
+  <item>source_section</item>
+ </portal_type>
+ <portal_type id="Synchronization Configurator Item">
+  <item>destination_section</item>
+  <item>source_decision</item>
+  <item>source_section</item>
+ </portal_type>
+</base_category_list>

@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<node xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+  xmlns:metal="http://xml.zope.org/namespaces/metal" tal:attributes="type here/getPortalType"><tal:block\n
+    tal:condition="python: here.getPortalType() == \'Person\'"><tal:block\n
+    tal:condition="python: getattr(here, \'first_name\', None) and here.getFirstName()">\n
+  <firstname tal:content="here/getFirstName" /></tal:block><tal:block\n
+    tal:condition="python: getattr(here, \'last_name\', None) and here.getLastName()">\n
+  <lastname tal:content="here/getLastName" /></tal:block></tal:block><tal:block\n
+    tal:condition="python: here.hasTitle() and here.getPortalType() !=\'Person\'">\n
+  <title tal:content="here/getTitle" /></tal:block><tal:block\n
+    tal:condition="here/getDefaultEmailText">\n
+  <email tal:content="python: here.getDefaultEmailText()" /></tal:block><tal:block\n
+    tal:condition="python: getattr(here, \'start_date\', None) and here.getStartDate()">\n
+  <birthday tal:content="python: here.getStartDate()" /></tal:block><tal:block\n
+    tal:condition="python: getattr(here, \'default_telephone\', None) and here.default_telephone.getTelephoneNumber()">\n
+  <phone tal:content="python: here.default_telephone.getTelephoneNumber()" /></tal:block><tal:block\n
+    tal:condition="python: getattr(here, \'mobile_telephone\', None) and here.mobile_telephone.getTelephoneNumber()">\n
+  <cellphone tal:content="python: here.mobile_telephone.getTelephoneNumber()" /></tal:block><tal:block\n
+    tal:condition="python: getattr(here, \'default_fax\', None) and here.default_fax.getTelephoneNumber()">\n
+  <fax tal:content="python: here.default_fax.getTelephoneNumber()" /></tal:block>\n
+  <address tal:repeat="address here/Node_getAddressList"><tal:block\n
+      tal:condition="address/getTitle">\n
+    <title tal:content="address/getTitle" /></tal:block><tal:block\n
+      tal:condition="address/getStreetAddress">\n
+    <street tal:content="address/getStreetAddress" /></tal:block><tal:block\n
+      tal:condition="address/getZipCode">\n
+    <zip tal:content="address/getZipCode" /></tal:block><tal:block\n
+      tal:condition="address/getCity">\n
+    <city tal:content="address/getCity" /></tal:block><tal:block\n
+      tal:condition="address/getRegion">\n
+    <country tal:content="address/getRegion" /></tal:block>\n
+  </address>\n
+  <category tal:repeat="role here/Node_getRoleList" tal:content="role"/><tal:block\n
+    tal:condition="python: here.getPortalType() == \'Person\' and\n
+    here.getSubordinationTitle()">\n
+  <relation tal:content="here/Node_getRelation"/></tal:block>\n
+</node>\n
+
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/xml</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Node_asTioSafeXML</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

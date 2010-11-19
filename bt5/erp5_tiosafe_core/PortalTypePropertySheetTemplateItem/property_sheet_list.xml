@@ -1,0 +1,12 @@
+<property_sheet_list>
+ <portal_type id="Integration Module">
+  <item>IntegrationModule</item>
+ </portal_type>
+ <portal_type id="Synchronization Configurator Item">
+  <item>SortIndex</item>
+  <item>SynchronizationConfiguratorItem</item>
+ </portal_type>
+ <portal_type id="Web Service Request Group">
+  <item>Arrow</item>
+ </portal_type>
+</property_sheet_list>

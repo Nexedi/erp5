@@ -1,0 +1,14 @@
+Integration Base Category Mapping | Integration Category Mapping
+Integration Base Property Mapping | Integration Base Property Mapping
+Integration Base Property Mapping | Integration Property Mapping
+Integration Category Mapping | Integration Category Mapping
+Integration Module | Web Service Request
+Integration Module | Web Service Request Group
+Integration Property Mapping | Integration Property Mapping
+Integration Site | Integration Base Category Mapping
+Integration Site | Integration Base Property Mapping
+Integration Site | Integration Module
+Integration Site | Web Service Connector
+Integration Site | Web Service Request
+Integration Site | Web Service Request Group
+Integration Tool | Integration Site

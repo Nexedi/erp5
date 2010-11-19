@@ -1,0 +1,11 @@
+<hidden_content_type_list>
+ <portal_type id="Integration Base Category Mapping">
+  <item>Integration Category Mapping</item>
+ </portal_type>
+ <portal_type id="Integration Site">
+  <item>Integration Base Category Mapping</item>
+ </portal_type>
+ <portal_type id="Integration Tool">
+  <item>Integration Site</item>
+ </portal_type>
+</hidden_content_type_list>

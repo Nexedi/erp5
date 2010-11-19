@@ -1,0 +1,177 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>""" Retrieve the arrow list of the transaction. """\n
+transaction = context.getObject()\n
+\n
+# contains the result list\n
+result_list = []\n
+\n
+# set arrow list\n
+arrow_list = [\n
+    [\'getSourceValue\', \'getDestinationValue\', ""],\n
+    [\'getSourceAdministrationValue\', \'getDestinationAdministrationValue\', \'Administration\'],\n
+    [\'getSourceCarrierValue\', \'getDestinationCarrierValue\', \'Carrier\'],\n
+    [\'getSourceDecisionValue\', \'getDestinationDecisionValue\', \'Decision\'],\n
+    [\'getSourceSectionValue\', \'getDestinationSectionValue\', \'Ownership\'],\n
+    [\'getSourcePaymentValue\', \'getDestinationPaymentValue\', \'Payment\'],\n
+]\n
+\n
+# browse and add the arrows if exists a source or a destination\n
+for get_source, get_destination, category in arrow_list:\n
+  source = getattr(transaction, get_source)()\n
+  destination = getattr(transaction, get_destination)()\n
+  if source is not None or destination is not None:\n
+    arrow_dict = {\'source\': None, \'destination\': None, \'category\': category}\n
+    if category == \'Payment\':\n
+      if source is not None:\n
+        arrow_dict[\'source\'] = source.getRelativeUrl()\n
+      if destination is not None:\n
+        arrow_dict[\'destination\'] = source.getRelativeUrl()\n
+    else:\n
+      if source is not None and source.getDefaultEmailText() is not None:\n
+        # FIXME: The NODE GID is render here\n
+        arrow_dict[\'source\'] = \' \'.join([\n
+            "",\n
+            source.getTitle(),\n
+            source.getDefaultEmailText(),\n
+        ])\n
+      if destination is not None and destination.getDefaultEmailText() is not None:\n
+        # FIXME: The NODE GID is render here\n
+        arrow_dict[\'destination\'] = \' \'.join([\n
+            "",\n
+            destination.getTitle(),\n
+            destination.getDefaultEmailText(),\n
+        ])\n
+  \n
+    result_list.append(arrow_dict)\n
+\n
+return result_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>transaction</string>
+                            <string>result_list</string>
+                            <string>arrow_list</string>
+                            <string>_getiter_</string>
+                            <string>get_source</string>
+                            <string>get_destination</string>
+                            <string>category</string>
+                            <string>getattr</string>
+                            <string>source</string>
+                            <string>destination</string>
+                            <string>None</string>
+                            <string>arrow_dict</string>
+                            <string>_write_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Transaction_getArrowList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

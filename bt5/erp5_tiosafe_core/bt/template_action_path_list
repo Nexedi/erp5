@@ -1,0 +1,28 @@
+Integration Base Category Mapping | view
+Integration Base Property Mapping | view
+Integration Category Mapping | view
+Integration Module | generate_sync_objects
+Integration Module | test_create_view
+Integration Module | view
+Integration Module | view_signature_diff
+Integration Module | view_xml_diff
+Integration Property Mapping | view
+Integration Site | category_mapping
+Integration Site | define_mapping_fast_input
+Integration Site | integration_module
+Integration Site | property_mapping
+Integration Site | regenerate_sync
+Integration Site | synchronization_configuration
+Integration Site | synchronize
+Integration Site | view
+Integration Tool | create
+Integration Tool | view
+Synchronization Configurator Item | view
+Web Service Connector | reset
+Web Service Connector | view
+Web Service Request Group | view
+Web Service Request | test_dialog
+Web Service Request | test_result
+Web Service Request | view
+portal_actions | create_integration_site
+portal_actions | integration_site_tool
