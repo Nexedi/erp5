@@ -45,7 +45,8 @@
   <table metal:define-macro="table"\n
          tal:define="max_per_line python: 4;\n
          cell_number python: len(module_category_list);\n
-         row_number python: (cell_number/max_per_line+1)">\n
+         row_number python: (cell_number/max_per_line+1)"\n
+         class="access_tab_table">\n
     <tr tal:repeat="row python: xrange(row_number)">\n
       <tal:block tal:repeat="module_category python: module_category_list[(row*max_per_line):((row+1)*max_per_line)]">\n
         <td>\n

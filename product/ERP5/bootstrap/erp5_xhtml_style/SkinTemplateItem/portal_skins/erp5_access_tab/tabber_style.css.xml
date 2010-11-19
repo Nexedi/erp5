@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts88398269.73</string> </value>
+            <value> <string>ts90176611.32</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -29,8 +29,6 @@
 /*========================================================================================\n
 **  tabber.js default style\n
 **========================================================================================*/\n
-\n
-/* Replace code at erp5.css*/\n
 \n
 #tab_box > li.non_selected a span {\n
   padding: 5px 8px 3px 0px !important;\n
@@ -146,14 +144,13 @@ ul.tabbernav li.tabberactive a:hover\n
  display: none;\n
 }\n
 \n
-table {\n
+table.access_tab_table {\n
   width:100%;\n
 }\n
 \n
 table tr td {\n
   vertical-align:top;\n
 }\n
-\n
 
 
 ]]></string> </value>
@@ -164,7 +161,7 @@ table tr td {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>2673</int> </value>
+            <value> <int>2658</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
