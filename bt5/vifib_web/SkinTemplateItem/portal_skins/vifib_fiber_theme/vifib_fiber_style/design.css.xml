@@ -1,0 +1,383 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/> \n
+/* CSS Document for vifib */\n
+/* Global Declaration */\n
+body {\n
+  font:15px/20px Arial, sans-serif;\n
+  margin:0;\n
+  padding:0;\n
+}\n
+\n
+div, ul, h1, h2, h3, li, p, img{\n
+  margin:0px; padding:0px;\n
+  }\n
+ul{\n
+  list-style-type:none;\n
+  }\n
+fieldset {\n
+  border:none;\n
+  }\n
+fieldset.bottom .field label {\n
+  display: none;\n
+  }\n
+\n
+h1 {\n
+text-decoration : none;\n
+margin-top : 20px;\n
+margin-bottom : 20px;\n
+margin-right : 5px;\n
+font : 28px/28px "Lucida Grande", sans-serif;\n
+font-weight : normal;\n
+color : #aab8dd;\n
+}\n
+\n
+h2 {\n
+text-decoration : none;\n
+margin-top : 20px;\n
+margin-bottom : 20px;\n
+margin-right : 5px;\n
+font : 24px/24px "Lucida Grande", sans-serif;\n
+font-weight : normal;\n
+color : #aab8dd;\n
+}\n
+h2 img {\n
+margin-left : 5px;\n
+}\n
+h4 {\n
+margin-bottom : 10px;\n
+margin-top : 10px;\n
+color : #555;\n
+font-weight : bold;\n
+}\n
+a {\n
+color:blue;\n
+}\n
+select {\n
+max-width:762px;\n
+}\n
+\n
+label {\n
+ padding-right:10px;\n
+}\n
+\n
+/* Global Class */\n
+.widget{\n
+  padding:0px; margin:0px;\n
+}\n
+\n
+.nolabel label{\n
+  display:none;\n
+}\n
+\n
+.required label {\n
+background-image:url(vifib_image/required_mark.png) ;\n
+background-position:right center ;\n
+background-repeat:no-repeat;\n
+}\n
+\n
+.inline label {\n
+  display: inline-block;\n
+  width: 200px;\n
+  float:left;\n
+}\n
+\n
+.inline div {\n
+  display:inline;\n
+}\n
+\n
+.error input {\n
+border-color:red;\n
+border-style:solid;\n
+}\n
+.error {\n
+color:red;\n
+}\n
+.warning {\n
+font-weight: bold;\n
+}\n
+.clear{\n
+clear: both;\n
+}\n
+\n
+#hidden_fieldset{\n
+  display:none;\n
+}\n
+\n
+/* Image == link */\n
+img.imglink {\n
+border : 0 none;\n
+cursor : pointer;\n
+}\n
+\n
+/* CONTAINER */\n
+#main_form {\n
+  background-color:#DDD;\n
+}\n
+\n
+#container {}\n
+\n
+/* MAIN FILDSET */\n
+#fieldset_center{\n
+  margin: auto;\n
+  width:560px;\n
+}\n
+\n
+/* TOP PANEL*/\n
+#topPanel{\n
+  width:100%; \n
+  height:256px;\n
+  position:relative;\n
+  margin:0px auto;\n
+  padding:0px;\n
+  background-color: #transparent;\n
+  }\n
+\n
+/*Header*/\n
+#header {\n
+  width:762px; \n
+  margin: auto;\n
+  background: white;\n
+}\n
+\n
+/* Web site logo */\n
+#logo{\n
+  position:relative;\n
+  border:0 none;\n
+/*  width:762px;  */\n
+}\n
+/* Language */\n
+#language_choice{\n
+float: right;\n
+}\n
+#language_choice li{\n
+  width:20px;\n
+  display: inline;\n
+  opacity: 0.5;\n
+}\n
+#language_choice li.selected{\n
+  width:20px;\n
+  display: inline;\n
+  opacity: 1;\n
+}\n
+\n
+/* Login bar */\n
+#topPanel .login_bar {\n
+  float:right;\n
+  margin-right:5px;\n
+  color:#555;\n
+  font:10px/10px Arial, sans-serif;\n
+}\n
+#topPanel .login_bar a {\n
+  color:#999999;\n
+  font:10px/10px Arial, sans-serif;\n
+  height:20px;\n
+  border:none;\n
+  text-decoration:None;\n
+}\n
+#topPanel .login_bar a:hover{\n
+  color:#555;\n
+  font:10px/10px Arial, sans-serif;\n
+  height:20px;\n
+  font-weight:normal;\n
+  border:none;\n
+  text-decoration:underline;\n
+  cursor:pointer;}\n
+#topPanel .login_bar img{\n
+  border: 0pt none ;\n
+  height:15px ;\n
+}\n
+\n
+/* Navigation */\n
+#site_navigation {\n
+background-color:#116;\n
+color:white;\n
+/*font-family:Comic Sans MS;*/\n
+}\n
+\n
+#site_navigation a {\n
+background-color:transparent;\n
+color:white;\n
+font-size:10pt;\n
+text-decoration:none;\n
+}\n
+\n
+#site_navigation a:hover {\n
+color:red;\n
+}\n
+\n
+/* Main Panel */\n
+#mainPanel {\n
+  margin:0px auto;\n
+  padding:0 0 50px;\n
+  width:762px;\n
+  position:relative;\n
+  min-height: 250px;\n
+  margin-top: 20px;\n
+  border-top: 10px solid;\n
+  border-color: #DDD;\n
+  background-color: #FFFFFF;\n
+  }\n
+/* show status msg if necessary */ \n
+#portal_status{\n
+  text-align:center;\n
+  background:#ff950e;\n
+  color:white;\n
+}\n
+\n
+/* main content of the page */\n
+#main_content {}\n
+\n
+#main_content p {\n
+  margin-top: 5px;\n
+  margin-bottom: 5px;\n
+}\n
+\n
+/* Left fieldset (In order tab choose left)*/\n
+#fieldset_left{\n
+    margin: 0;\n
+    padding: 0;\n
+}\n
+\n
+/* Hidde \'Web Page\' title */\n
+#fieldset_webcontent_header_bottom{\n
+  display: none;\n
+}\n
+\n
+/* Title for section */\n
+.sectionTitle h1 {\n
+  background:#fff; \n
+  display:block; \n
+  margin:0 0 12px 0; \n
+  font:24px/24px "Gill Sans", sans-serif; \n
+  font-weight:normal; \n
+  padding:0;\n
+  color:#ff950e;\n
+  text-decoration:none;\n
+}\n
+\n
+/* Description block for a page */\n
+.description {\n
+font-size : 14px;\n
+color : #555;\n
+text-align : justify;\n
+margin-bottom:15px;\n
+max-width: 762px;\n
+}\n
+\n
+\n
+/* Action button of dialog */\n
+#dialog_submit_button{\n
+float:right;\n
+position:relative;\n
+right:170px;\n
+}\n
+\n
+/* Bottom Panel */\n
+#bottomPanel{\n
+  position:relative;\n
+  width: 100%;\n
+  padding:0;\n
+  background-color: #FFFFFF;\n
+  }\n
+\n
+/* FOOTER BOX*/\n
+\n
+#footerBox{\n
+  background-color: #4C4C4C;\n
+  color:#FFFFFF;\n
+  font-size:12px;\n
+  font-weight:normal;\n
+  position:relative;\n
+  width:100%;\n
+  height:20px; \n
+  padding:0px;\n
+}\n
+#footerBox a{\n
+  color:#FFFFFF; \n
+  text-decoration:none;\n
+  }\n
+\n
+#footerBox a:hover{\n
+  text-decoration:underline;\n
+  color:#DCDCDC; \n
+  }\n
+\n
+#footerBox div {\n
+margin:auto;\n
+width:351px;\n
+}\n
+\n
+#footerBox ul{position:relative; left:127px; top:-19px; }\n
+#footerBox li{display:inline; font:12px/15px Helvetica, sans-serif; }\n
+#footerBox ul li a{padding:0 6px; }\n
+\n
+\n
+#footerBox p.copyright{position:relative; top:1px; left:15px; color:#FFFFFF;}
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>design.css</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="StateDefinition" module="Products.DCWorkflow.States"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>draft</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Draft</string> </value>
+        </item>
+        <item>
+            <key> <string>transitions</string> </key>
+            <value>
+              <tuple>
+                <string>destroy_computer_partition</string>
+                <string>report_computer_partition_error</string>
+                <string>request_computer_partition</string>
+                <string>request_destroy_computer_partition</string>
+                <string>request_destroy_computer_partition_action</string>
+                <string>request_software_instance</string>
+                <string>request_start_computer_partition</string>
+                <string>request_start_computer_partition_action</string>
+                <string>request_stop_computer_partition</string>
+                <string>request_stop_computer_partition_action</string>
+                <string>start_computer_partition</string>
+                <string>start_computer_partition_installation</string>
+                <string>stop_computer_partition</string>
+                <string>stop_computer_partition_installation</string>
+                <string>update_slave_partition_list</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

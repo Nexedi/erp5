@@ -1,0 +1,171 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/>\n
+<tal:block tal:define="portal_path python:here.aq_parent.getWebSiteValue().absolute_url();">\n
+\n
+/****************************/\n
+/*   Listbox  VIFIB style   */\n
+/****************************/\n
+div.listbox-head{\n
+  display: none;\n
+}\n
+.maximal-width table{\n
+  width: 100%;\n
+}\n
+table.listbox input[type=text]{\n
+  width: 97%;\n
+}\n
+table.listbox {margin:30px auto;border:1px solid #CCCCCC;border-collapse:collapse;}\n
+table.listbox button.sort-button{color: #BAE2E9}\n
+table.listbox button.sort-button span{font-size:1.2em;}\n
+table.listbox th,table.listbox td {padding:5px 10px;color:#555555}\n
+table.listbox thead th{repeat-x top left;color:#BAE2E9;\n
+border-style:none;font-size:1.2em;}\n
+\n
+table.listbox tr{background: #FFFFFF;}\n
+table.listbox tr:nth-child(even) {background: #D2E7F4;}\n
+table.listbox tbody td a{color:#1D6598}\n
+table.listbox tbody td a:hover{color:#164F75;cursor:pointer;}\n
+\n
+table.listbox tr.listbox-search-line{background-color:#DBE9E8;}\n
+table.listbox tr.listbox-label-line{background:url(<tal:block tal:replace="portal_path"/>/vifib_image/menu_bg.png)}\n
+\n
+table.listbox th button {\n
+  background:url(<tal:block tal:replace="portal_path"/>/vifib_image/switch.png) no-repeat scroll 100% 50% transparent;\n
+  border-width:0;\n
+  color:inherit;\n
+  cursor:pointer;\n
+  float:left;\n
+  font-weight:bold;\n
+  padding:0 6px 0 0;\n
+  text-align:left;\n
+  vertical-align:middle;\n
+}\n
+\n
+\n
+table.listbox th button.sort-button-desc {\n
+background-image:url(<tal:block tal:replace="portal_path"/>/vifib_image/switch_desc.png);\n
+}\n
+table.listbox th button.sort_button-asc {\n
+background-image:url(<tal:block tal:replace="portal_path"/>/vifib_image/switch_asc.png);\n
+}\n
+\n
+\n
+table.listbox tbody tr:hover {\n
+background-color: #EEEEEE\n
+}\n
+table.listbox th input  {\n
+height:17px;\n
+}\n
+\n
+\n
+\n
+/********************************/\n
+/*   ListBox as Unordered List   */\n
+/********************************/\n
+/*Last Element Widget */\n
+.last_element li {\n
+margin-top : 10px;\n
+margin-bottom : 10px;\n
+font-size : 15px;\n
+list-style: none;\n
+}\n
+\n
+.last_element .main a{\n
+color: black;\n
+font-weight : bold;\n
+text-decoration: none;\n
+}\n
+\n
+.last_element .second a{\n
+color : #555;\n
+text-decoration: none;\n
+}\n
+\n
+.last_element .main a:hover{\n
+text-decoration: underline;\n
+}\n
+\n
+.last_element label {\n
+float:left;\n
+text-decoration: none;\n
+color:#3E95A5;\n
+font-size:1.5em;\n
+}\n
+.last_element img{\n
+height: 20px; \n
+padding-top: 3px;\n
+} \n
+\n
+.last_element .warning{\n
+color: #555555;\n
+}\n
+</tal:block>\n
+
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>listbox.css</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

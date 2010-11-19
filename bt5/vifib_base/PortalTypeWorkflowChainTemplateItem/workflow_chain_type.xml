@@ -1,0 +1,6 @@
+<workflow_chain>
+ <chain>
+  <type>Software Instance</type>
+  <workflow>edit_workflow, software_instance_slap_interface_workflow</workflow>
+ </chain>
+</workflow_chain>

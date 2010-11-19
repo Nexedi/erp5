@@ -1,0 +1,183 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<tal:block tal:define="shopping_cart here/SaleOrder_getShoppingCart;\n
+                       web_site here/getWebSiteValue;\n
+                       currency_code web_site/WebSite_getShoppingCartDefaultCurrencyCode;\n
+                       shopping_cart_item_list shopping_cart/SaleOrder_getShoppingCartItemList;\n
+                       empty_cart shopping_cart/SaleOrder_isShoppingCartEmpty;\n
+                       shipping here/SaleOrder_getSelectedShippingResource;\n
+                       shipping_price python: shipping and shipping.getPrice() or 0;\n
+                       total_price python: shopping_cart.SaleOrder_getShoppingCartTotalPrice(include_currency=False,include_shipping=False);">\n
+\n
+<tal:block tal:condition = "empty_cart"> \n
+    <h3><span tal:replace="python: here.Base_translateString(\'Your shopping cart is empty.\')"/></h3><br/>\n
+</tal:block>\n
+\n
+<div id="shopping_cart_renderer" class="maximal-width"  tal:condition = "not: empty_cart">\n
+  <table class="listbox">\n
+  <thead>\n
+  <tr class="listbox-label-line">\n
+    <th tal:content="python: here.Base_translateString(\'Product\')"/>\n
+    <th tal:content="python: here.Base_translateString(\'Quantity\')"/>\n
+    <th tal:content="python: here.Base_translateString(\'Unit Price\')"/>\n
+    <th tal:content="python: here.Base_translateString(\'Total\')"/>\n
+  </tr>\n
+  </thead>\n
+  <tbody>\n
+  <tal:block tal:repeat="order_line shopping_cart_item_list">\n
+    <tr tal:define="service python: order_line.getResourceValue();\n
+                    resource python: order_line.getAggregateValue(portal_type=\'Software Product\');\n
+                    resource_release python: order_line.getAggregateValue(portal_type=\'Software Release\');\n
+                    quantity python: int(order_line.getQuantity());\n
+                    price    python: order_line.getPrice() or 0.;\n
+                    order_line_id python: order_line.getId();">\n
+        <td>\n
+            <div tal:attributes="class string: shopping-cart-renderer-title">\n
+                <p tal:content="resource/getTitle"/>\n
+                <p tal:content="string:---- ${resource_release/getTitle} (${resource_release/getVersion})" />                            \n
+            </div>\n
+        </td>\n
+        <td>\n
+          <div tal:attributes="class string: shopping-cart-renderer-quantity">           \n
+              <span tal:replace="quantity"/>           \n
+          </div>\n
+        </td>\n
+        <td>\n
+          <span tal:replace="python: \'%.2f\' % price"/> <span tal:replace="currency_code"/>\n
+        </td>\n
+        <td>\n
+          <span tal:replace="python: \'%.2f\' % price*quantity"/> <span tal:replace="currency_code"/>\n
+        </td>\n
+    </tr>\n
+  </tal:block>\n
+  </tbody>\n
+  <tfoot>\n
+    <!-- Sub total if shipping-->\n
+    <tr class="shopping-cart-end-lines"\n
+        tal:condition="python: shipping is not None">\n
+      <td></td>\n
+      <td></td>\n
+      <td class="used"><span tal:replace="python: here.Base_translateString(\'Sub Total\')"/></td>\n
+      <td class="used" style="vertical-align=middle;">\n
+          <span tal:replace="python: \'%s %s\' % (total_price, currency_code)"/>\n
+        </td>\n
+    </tr>\n
+    <!-- Shipping price if shipping-->\n
+    <tr class="shopping-cart-end-lines"\n
+        tal:condition="python: shipping is not None">\n
+      <td></td>\n
+      <td></td>\n
+      <td class="used"><span tal:replace="python: here.Base_translateString(\'Shipping Price\')"/></td>\n
+      <td class="used" style="vertical-align=middle;">\n
+            <span tal:replace="python: \'%s %s\' % (shipping_price, currency_code)"/>\n
+        </td>\n
+    </tr>\n
+    <!-- Total HT-->\n
+    <tr class="shopping-cart-end-lines">\n
+      <td></td>\n
+      <td></td>\n
+      <td class="used"><span tal:replace="python: here.Base_translateString(\'Total HT\')"/></td>\n
+      <td class="used" style="vertical-align=middle;">\n
+          <tal:block>\n
+            <span tal:replace="python: \'%.2f %s\' % (float(total_price)+shipping_price, currency_code)"/>\n
+          </tal:block>\n
+        </td>\n
+    </tr>\n
+    <!-- Taxes -->\n
+    <tr class="shopping-cart-end-lines" tal:define="tax_info here/Person_getApplicableTaxList" \n
+        tal:repeat="tax tax_info/values">\n
+      <td></td>\n
+      <td></td>\n
+      <td class="used"><span tal:replace="tax/translated_title"/></td>\n
+      <td class="used" style="vertical-align=middle;">\n
+          <tal:block>\n
+            <span tal:replace="python: \'%.2f %s\' % (tax[\'percent\'], \'%\')"/>\n
+          </tal:block>\n
+        </td>\n
+    </tr>\n
+    <!-- Total TTC-->\n
+    <tr class="shopping-cart-end-lines"\n
+        tal:define="total_ttc_price python: here.SaleOrder_getShoppingCartTotalPrice(include_shipping=True,\n
+                                                 include_taxes=True,\n
+                                                 include_currency=False);">\n
+      <td></td>\n
+      <td></td>\n
+      <td class="used">\n
+        <div>\n
+          <b><span tal:replace="python: here.Base_translateString(\'Total TTC\')"/></b>\n
+        </div>\n
+      </td>\n
+      <td class="used" style="vertical-align=middle;">\n
+        <b>\n
+            <span tal:replace="python: \'%.2f %s\' % (float(total_ttc_price),currency_code)"/>\n
+        </b>\n
+        </td>\n
+    </tr>\n
+  </tfoot>\n
+  </table>\n
+</div>\n
+</tal:block>\n
+
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>SaleOrder_viewSummaryRender</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

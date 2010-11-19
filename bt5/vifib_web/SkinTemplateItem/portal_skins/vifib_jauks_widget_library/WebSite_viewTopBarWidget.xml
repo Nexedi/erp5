@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<tal:comment replace="nothing">\n
+  This widget displays the top bar of Web Site\n
+</tal:comment>\n
+\n
+<tal:block tal:define="current_web_site_url python:request.get(\'current_web_site_url\', \'\');\n
+                       current_web_site python:request.get(\'current_web_site\', here);\n
+                       logout_form_id python:current_web_site.getLayoutProperty(\'layout_logout_form_id\',\'WebSite_logout\');\n
+                       login_form_id python:current_web_site.getLayoutProperty(\'layout_login_form_id\',\'login_form\')">\n
+\n
+<a tal:attributes="href current_web_site_url"><div id="vifib_logo"></div></a>\n
+\n
+<div id="login_menu">\n
+  <ul>\n
+    <li class="before"></li><li>\n
+\n
+<span\n
+   tal:condition="here/portal_membership/isAnonymousUser"><a href="#" id="link-login"  \n
+   tal:attributes="href string:${current_web_site_url}/${login_form_id}"\n
+   i18n:translate="" i18n:domain="ui">Login</a></span>\n
+\n
+<span\n
+   tal:condition="not:here/portal_membership/isAnonymousUser">\n
+<a id="link-login"  \n
+   tal:attributes="href string:${current_web_site_url}/myspace"\n
+   i18n:translate="" i18n:domain="ui">My Space</a> /\n
+<a id="link-login"  \n
+   tal:attributes="href string:${current_web_site_url}/${logout_form_id}"\n
+   i18n:translate="" i18n:domain="ui">Logout</a>\n
+</span>\n
+\n
+      </li>\n
+    <li class="after"></li>\n
+  </ul>\n
+</div>\n
+\n
+<div id="menu">\n
+  <ul>\n
+    <li><a href="http://www.vifib.org">Vifib Internet</a></li>\n
+    <li><a href="http://www.vifib.net">Vifib Hosting</a></li>\n
+    <li><a href="http://www.vifib.com">Vifib Cash</a></li>\n
+    <li>&nbsp;</li>\n
+  </ul>\n
+</div>\n
+\n
+</tal:block>\n
+
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSite_viewTopBarWidget</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

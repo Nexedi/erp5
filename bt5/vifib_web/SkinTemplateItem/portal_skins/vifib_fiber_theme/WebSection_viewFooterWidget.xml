@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<tal:comment replace="nothing">Display footer for all web page.</tal:comment>\n
+<div id="footerBox" tal:define="website_url python: request.get(\'current_web_site\', here).getAbsoluteUrl();" i18n:domain="ui">\n
+  <div>\n
+  <p class="copyright" i18n:translate="">&copy; 2010 ViFiB SARL&nbsp;-&nbsp;</p>   \n
+  <ul>\n
+    <li>\n
+      &nbsp;<a tal:attributes="href python: \'%s/vifib.legalInformation\' % website_url" i18n:translate="">Legal Information</a> | \n
+    </li>\n
+    <li>\n
+      <a tal:attributes="href python: \'%s/vifib.aboutus\' % website_url" i18n:translate="">About us</a> | \n
+    </li>\n
+    <li>\n
+      <a tal:attributes="href python: \'%s/contact\' % website_url" i18n:translate="">Contact</a>\n
+    </li> \n
+  </ul>\n
+  </div> \n
+</div>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSection_viewFooterWidget</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

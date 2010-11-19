@@ -1,0 +1,6 @@
+Purchase Packing List Line | VifibPurchasePackingListLineConstraint
+Sale Packing List Line | VifibSalePackingListLineConstraint
+Software Instance | Reference
+Software Instance | SoftwareInstance
+Software Instance | SoftwareInstanceConstraint
+Software Instance | TextDocument

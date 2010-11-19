@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<tal:comment replace="nothing">\\n\n
+  Generate HTML for menu bar.\n
+</tal:comment>\n
+\n
+\n
+<tal:block tal:define="web_site_url python:request.get(\'current_web_site_url\',here.getAbsoluteUrl());\n
+                      current_web_site  python:request.get(\'current_web_site\', here);\n
+                      current_web_section python:request.get(\'current_web_section\', here);"\n
+                     i18n:domain="ui">\n
+    <ul tal:define="main_section python: context.WebSite_getMainSection();\n
+                    subsection_list python: (main_section or current_web_section ).WebSection_getSiteMapTree(property_mapping=(\'translated_title\',\'id\',),depth=1)"\n
+  tal:condition="python:current_web_site != current_web_section and subsection_list" \n
+  tal:attributes="class python:\'subsection_navigation\';" >\n
+  <!-- Link to main section -->\n
+  <li tal:define="is_active python: current_web_section == main_section;">     \n
+         <img tal:attributes="src python: \'%s/vifib_%s_image/%s%s.png\' % (web_site_url,current_web_site.getId(),main_section.getId(),is_active and \'_active\' or \'\');\n
+                             alt main_section/getId;" />\n
+          <a tal:attributes="href python: main_section.WebSection_getPermanentURL(document=main_section, view=False);\n
+                             class python:is_active and \'active\' or \'\';" \n
+             tal:content="main_section/getTranslatedTitle">Main Section</a>\n
+  </li>\n
+  <!-- Link to sub section -->\n
+  <li tal:repeat="sub_item subsection_list" >\n
+    <tal:block tal:define="is_active python: current_web_section.getTranslatedTitle()==sub_item[\'translated_title\']">\n
+    <img tal:attributes="src python: \'%s/vifib_%s_image/%s%s.png\' % (web_site_url,current_web_site.getId(),sub_item[\'id\'],is_active and \'_active\' or \'\');\n
+                         alt sub_item/id;" />\n
+    <a i18n:translate="" \n
+       tal:attributes="href sub_item/url ;\n
+                       class python: is_active and \'active\' or \'\';" \n
+       tal:content="sub_item/translated_title">Menu subitem 1</a>\n
+    </tal:block>\n
+  </li>\n
+    </ul>\n
+</tal:block>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSection_viewMenuWidget</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

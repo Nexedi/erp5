@@ -1,0 +1,10 @@
+<allowed_content_type_list>
+ <portal_type id="Free Fiber Request">
+  <item>Address</item>
+  <item>Email</item>
+  <item>Telephone</item>
+ </portal_type>
+ <portal_type id="Free Fiber Request Module">
+  <item>Free Fiber Request</item>
+ </portal_type>
+</allowed_content_type_list>

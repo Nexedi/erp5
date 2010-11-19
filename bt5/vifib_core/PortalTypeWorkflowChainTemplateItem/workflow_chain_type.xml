@@ -1,0 +1,6 @@
+<workflow_chain>
+ <chain>
+  <type>Free Fiber Request</type>
+  <workflow>free_fiber_request_workflow</workflow>
+ </chain>
+</workflow_chain>

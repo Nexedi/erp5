@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<tal:comment replace="nothing">\n
+Default template for all innov24 page. Set default block of the generated web page.\n
+</tal:comment>\n
+\n
+\n
+<!-- Use template_erp5_xhtml_style -->\n
+<tal:block metal:define-macro="master">\n
+  <!-- ERP5 WEB INTEGRATION -->\n
+  <tal:block tal:define="website here/getWebSiteValue;\n
+        enctype string:multipart/form-data;\n
+        portal_path python:website.absolute_url();\n
+        section here/getWebSectionValue;\n
+        section_url section/absolute_url;\n
+        current_main_section here/WebSite_getMainSection;\n
+        title title | python: \'\' ;\n
+        stitle python: title.split(\'-\') ;\n
+        ftitle python: stitle[0]==\'Page web \' and stitle[1] or stitle[0] ;\n
+        header_title python: title==\'\' and website.getTitle() or website.getTitle() + \' - %s\' % (ftitle);\n
+        editable request/editable_mode | python: 0;\n
+        list_mode list_mode | nothing;\n
+        dialog_mode dialog_mode | nothing;\n
+        has_no_layout python: layout_form is None;\n
+        dummy python: request.set(\'dialog_mode\', dialog_mode);\n
+        dummy python: request.set(\'list_mode\', list_mode);\n
+        aggregate python: has_no_layout or layout_form.Form_getGroupList(\n
+              [\'header\', \'action\', \'footer\', \'selection_navigation\']);\n
+        aggregate python: ((aggregate is not has_no_layout) and dict(aggregate)) or {};\n
+        header_area python:aggregate.get(\'header\', []);\n
+        action_area python:aggregate.get(\'action\', []);\n
+        footer_area python:aggregate.get(\'footer\', []);\n
+                          selection_navigation_area python:aggregate.get(\'selection_navigation\', []);\n
+        global css_list_template python:[\n
+        \'%s/vifib_fiber_style/design.css\' % portal_path,];\n
+        global js_list python:[\n
+]">\n
+\n
+    <tal:block metal:use-macro="here/template_erp5_xhtml_style/macros/master">\n
+      <tal:block metal:fill-slot="head">\n
+       <meta name="author" content="Francois-Xavier ALGRAIN" />\n
+       <meta name="publisher" content="Nexedi"/>\n
+       <meta name="copyright" content="Nexedi-2010" />\n
+      </tal:block>\n
+      <tal:block metal:fill-slot="layout">\n
+  <tal:block metal:use-macro="here/aggregate_render/macros/populate_request"/>\n
+\n
+<!-- GLOBAL CONTAINER -->\n
+<div class="container">\n
+\n
+  <!-- TOP SECTION -->            \n
+  <div id="topPanel" >\n
+    <!-- Layout form rendering -->\n
+    <tal:block tal:condition="python: layout_form is not None">\n
+      <tal:block tal:repeat="aggregate python: [(\'header\', header_area)]">\n
+        <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>\n
+      </tal:block>\n
+    </tal:block>\n
+   </div>  \n
+\n
+\n
+  <!-- MAIN SECTION  -->       \n
+  <div id="mainPanel">\n
+    <div id="portal_status" tal:content="structure python:context.REQUEST.get(\'portal_status_message\')"/>\n
+    <div id="main_content">\n
+      <tal:block metal:define-slot="main"/>\n
+    </div>                  \n
+  </div>\n
+\n
+  <!-- BOTTOM SECTION -->   \n
+  <div id="bottomPanel">\n
+   <!-- SELECTION NAVIGATION -->\n
+    <tal:block tal:condition="python: layout_form is not None">\n
+      <tal:block tal:repeat="aggregate python: [(\'selection_navigation\', selection_navigation_area)]">\n
+        <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>\n
+      </tal:block>\n
+    </tal:block> \n
+\n
+    <!-- ACTION -->\n
+    <tal:block tal:condition="python: layout_form is not None">\n
+      <tal:block tal:repeat="aggregate python: [(\'action\', action_area)]">\n
+        <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>\n
+      </tal:block>\n
+    </tal:block> \n
+\n
+    <!-- FOOTER -->      \n
+    <tal:block tal:condition="python: layout_form is not None">\n
+      <tal:block tal:repeat="aggregate python: [(\'footer\', footer_area)]">\n
+        <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>\n
+      </tal:block>\n
+    </tal:block>     \n
+  </div> \n
+\n
+      </tal:block>\n
+    </tal:block>\n
+  </tal:block>\n
+</tal:block>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>template_erp5_vifib</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

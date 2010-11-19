@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<tal:comment replace="nothing">\n
+  This widget displays the breadcrumbs of the current context.\n
+</tal:comment>\n
+\n
+<tal:block tal:define="website here/getWebSiteValue;\n
+                       portal_path website/absolute_url;\n
+                       current_web_section python:request.get(\'current_web_section\', here);\n
+                       current_web_section_url current_web_section/getAbsoluteUrl; \n
+                       breadcrumb_list python: context.WebSite_getMainSection().WebSection_getSiteMapTree(property_mapping=(\'translated_title\',\'id\',));">\n
+\n
+<ul id="order_breadcrump" class="center"\n
+    tal:define="global time string:past">\n
+<tal:block tal:repeat="breadcrumb breadcrumb_list">\n
+<tal:block tal:define="is_active python: current_web_section_url == breadcrumb[\'url\']">\n
+ <tal:if tal:condition=\'is_active\'>\n
+   <tal:block tal:define="global time string:next"/>\n
+ </tal:if>\n
+ <li   tal:attributes="class python: is_active and \'active\' or time">\n
+\n
+  <img tal:define="img_name python: (is_active or time==\'past\')  and breadcrumb[\'id\'] + \'_active\' or breadcrumb[\'id\'];"\n
+       tal:attributes="src python: \'%s/vifib_hosting_image/%s.png\' % (portal_path, img_name);\n
+                       alt breadcrumb/id" />\n
+\n
+  <a tal:attributes="href python: (is_active or time==\'past\') and breadcrumb[\'url\'] or None"\n
+     tal:content="breadcrumb/translated_title"/>\n
+</li>\n
+<span class="arrow" tal:condition="not:repeat/breadcrumb/end">\n
+  <img alt="arrow" tal:attributes="src python: \'%s/vifib_hosting_image/arrow%s.png\' % (portal_path, (time==\'past\' and \'_active\' or \'\'));" />\n
+</span>\n
+</tal:block>\n
+</tal:block>\n
+</ul>\n
+</tal:block>\n
+
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>SaleOrder_viewBreadcrumbWidget</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

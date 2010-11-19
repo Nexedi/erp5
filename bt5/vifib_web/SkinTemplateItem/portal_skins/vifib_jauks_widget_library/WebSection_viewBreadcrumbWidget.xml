@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<tal:comment replace="nothing">\n
+  This widget displays the breadcrumbs of the current context.\n
+</tal:comment>\n
+\n
+<tal:block tal:define="current_web_site python:request.get(\'current_web_site\',here);\n
+                       current_web_section python:request.get(\'current_web_section\', here);\n
+                       current_web_document python:request.get(\'current_web_document\', here);\n
+                       is_web_section_default_document python:request.get(\'is_web_section_default_document\',False);\n
+                       breadcrumb_list python: current_web_section.getBreadcrumbItemList(current_web_document);\n
+                       breadcrumb_list python: [(\'Home\',current_web_site,\'Go to the home page\')] + breadcrumb_list[1:]">\n
+<ul class="breadcrump">\n
+  <li tal:repeat="breadcrumb python:breadcrumb_list[:(is_web_section_default_document and -1 or None)]">\n
+    <a href="#" tal:attributes="href python:breadcrumb[1].absolute_url();\n
+                                title python:breadcrumb[2];"      \n
+                tal:content="python:breadcrumb[0]">Title</a>\n
+       <tal:block tal:condition="not:repeat/breadcrumb/end"> &gt;</tal:block>\n
+  </li>\n
+</ul>\n
+<br />\n
+</tal:block>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSection_viewBreadcrumbWidget</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

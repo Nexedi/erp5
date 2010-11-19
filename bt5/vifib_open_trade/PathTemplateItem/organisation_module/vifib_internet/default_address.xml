@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="GeographicAddress" module="Products.ERP5Type.Document.GeographicAddress"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>region/europe/western_europe/france</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>city</string> </key>
+            <value> <string>Paris</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>default_address</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Address</string> </value>
+        </item>
+        <item>
+            <key> <string>sid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>street_address</string> </key>
+            <value> <string>59 rue Erlanger</string> </value>
+        </item>
+        <item>
+            <key> <string>zip_code</string> </key>
+            <value> <string>75016</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

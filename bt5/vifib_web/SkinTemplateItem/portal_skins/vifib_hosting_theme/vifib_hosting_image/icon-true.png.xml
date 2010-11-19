@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Image" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts34471273.95</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>icon-true.png</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/png</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAIAAAAmdTLBAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJ
+bWFnZVJlYWR5ccllPAAAAk9JREFUeNp0lL1u2lAUgM89Rg1tISiJZVopaqUOLqo6e7ZYkPIKXhhY
+8gAMeYIMeYAsGVh4hShZIs+e+jdQD5VaMRTkKjIBGuqf23N98R9yro48+J7v/J/LOOdQPreLW/vB
+dv46k81kFs3atXZnr2O8MMyG2Wv2dpRZkb97uBt5o/H9OMYYGACC+ErhgBytltU/6Hcb3Qr+yru6
++H3h/nMFJkUp8VL0mj48Gg4OByWe4LPpmRd5gpGkklop8rEQFdRz7VyaEDyFffrz1N24udta2YQ8
+CQyREF3RL19fUiLiknJ2H90kmpTPrJRF29PkrRu6o/uRIG78mxP3JCbLWdg7GG7j5xpnU9aKW0EQ
+rIM1hnj99hrthS3gvKCpIBQLSTBd8mPug8+QkULMYntpo7Nyyg0F/p4LPjOHwA/zHvM3fMVX0oez
+dnDyOCni/EPi510K8BIsDP5iWS9pwHAWzuSFWlPnH+dFP5SWDDuHp0zkmvLEIo1n5kr7qpViOa6C
+pSR8W2ljp96R117o0S/2mUHVEWGHICRKpyAG2gs0XhqZf2mYfdk1wX4wCCDno62m8dxAc9/EbMTS
+CS2aYN9TzxIOocEbYlxiNJsm9vZ71pGV+0ozlImwbwU4kRa0luGSFKwDi1jhua/29bpeMpFEyD4x
+6XAbfAQa0/zAF/P/TCcK5HJ0m93hqyH1r1D6fFWKMt/Mxf4pKukTVbX/cpGePhQpwQN18PT782dc
+2oj0UJmpUhS29FzB5+/fwqa9oNGmCRPvX71DbaZOUcF2lP8LMAATCTmtPQ3O6wAAAABJRU5ErkJg
+gg==</string> </value>
+        </item>
+        <item>
+            <key> <string>height</string> </key>
+            <value> <int>21</int> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>685</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>width</string> </key>
+            <value> <int>21</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

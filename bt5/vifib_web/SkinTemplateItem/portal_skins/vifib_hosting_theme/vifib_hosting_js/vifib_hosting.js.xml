@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLDocument" module="OFS.DTMLDocument"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>vifib_hosting.js</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>function selectCell(uid,additionnalClass,baseClass,listbox_id){\n
+  \n
+  var checkbox = $("#"+listbox_id+"_cb_"+uid);\n
+  var isChecked = checkbox.is(":checked");\n
+  //Uncheck all\n
+  $("."+listbox_id+"-table :checked").attr("checked", false);\n
+  $("."+listbox_id+"-table ."+baseClass).removeClass(additionnalClass);\n
+ \n
+  if (isChecked == false){\n
+    //check the box which call the function\n
+    var cell = $("#"+listbox_id+"_cell_"+uid);\n
+    cell.addClass(additionnalClass);\n
+    checkbox.attr("checked", true)\n
+\n
+  }\n
+  return isChecked == false;\n
+\n
+}\n
+\n
+function selectSoftwareProduct(uid,additionnalClass,baseClass,listbox_id,product_url,from){\n
+  var isCallingBoxChecked = selectCell(uid,additionnalClass,baseClass,listbox_id);\n
+  if (isCallingBoxChecked == true){\n
+    release_listbox_url = product_url + "/SoftwareProduct_viewAsWeb/release_listbox?came_from=" + from ;\n
+  \n
+    $("#release_listbox_container").load(release_listbox_url);\n
+  }\n
+\n
+}\n
+\n
+String.prototype.startsWith = function(str)\n
+{return (this.match("^"+str)==str)}\n
+\n
+function initCellSelction(additionnalClass,listbox_id)\n
+{\n
+  $("."+listbox_id+"-table :checked").each(function(){\n
+    var id = $(this).attr("id");\n
+    var id_prefix = listbox_id+"_cb_";\n
+    if (id.startsWith(id_prefix))\n
+    {\n
+      uid = id.substring(id_prefix.length,id.length);\n
+      //set the addtional css class\n
+      $("#listbox_cell_"+uid).addClass(additionnalClass);\n
+      \n
+    }\n
+  });\n
+}\n
+\n
+function initSoftwareProductList(product_additionnal_class, product_listbox_id){\n
+  \n
+  //Select items\n
+  initCellSelction(product_additionnal_class,product_listbox_id)\n
+  //Show release selection\n
+  $("."+product_additionnal_class+":last").click()\n
+}\n
+\n
+function clearField(selector,default_value)\n
+{\n
+  var field = $(selector)\n
+  if (field.val() == default_value){\n
+    field.val(\'\');\n
+  }\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

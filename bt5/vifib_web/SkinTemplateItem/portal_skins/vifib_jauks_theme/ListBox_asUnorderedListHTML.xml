@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<tal:block\n
+  xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+  xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"\n
+  tal:define="field_id here/getId;\n
+              form_id python: here.getForm().id;             \n
+              portal_url_string request/current_web_site_url;\n
+              real_context here/getContext;\n
+              context_url real_context/absolute_url;\n
+              line_list here/query;"\n
+   i18n:domain="ui">\n
+\n
+  <tal:comment replace="nothing">\n
+  Docstring: Display listbox as ul with RSS link\n
+  Interest: create box to display last element with rss feature\n
+  </tal:comment>\n
+\n
+  <tal:block tal:define="max_lines  python: int(here.getMaxLineNumber());\n
+                         total_line python: int(here.total_size);\n
+                         label_list here/getLabelValueList ;">\n
+    <tal:comment replace="nothing">\n
+    Info :  for list in label_list\n
+    sql        python: list[0];\n
+    title      python: list[1];\n
+    sort_order python: list[2]">\n
+    </tal:comment>\n
+    <a tal:attributes="href python: \'WebSite_redirectToPermanentRss?object_url=%s/%s/%s\' % (context_url, form_id, field_id)">\n
+      <img src="./vifib_image/rss.png" tal:attributes="src python: \'%s/vifib_image/rss.png\' % portal_url_string"/>\n
+    </a>\n
+\n
+    <div tal:condition="python: total_line == 0" id="result" class="warning clear" i18n:translate="">No results.</div>\n
+\n
+    <ul tal:condition="line_list" class="clear">\n
+\n
+      <li tal:repeat="line line_list">\n
+\n
+        <tal:block tal:repeat="value line/render">\n
+        <div tal:define="html               python: value[0];\n
+                         original_value     python: value[1];\n
+                         empty              python: original_value in (\'\', None) and not request.get(\'editable_mode\')"\n
+          tal:attributes="class python: repeat[\'value\'].index==0 and \'main\' or not repeat[\'value\'].index==0 and \'second\'">\n
+        <span tal:condition="not: empty" class=\'title\' i18n:translate="" tal:content="python: label_list[repeat[\'value\'].index][1]" />\n
+        <span tal:condition="not: empty" tal:replace="structure html">value</span>\n
+        </div>\n
+        </tal:block>\n
+      \n
+      </li>\n
+\n
+    </ul>\n
+\n
+  </tal:block>\n
+\n
+<!-- ListBox ends here -->\n
+</tal:block>\n
+
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ListBox_asUnorderedListHTML</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
