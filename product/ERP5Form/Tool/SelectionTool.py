@@ -644,7 +644,11 @@ class SelectionTool( BaseTool, SimpleItem ):
       else:
         url = REQUEST.getURL()
       ignore_layout = int(REQUEST.get('ignore_layout', 0))
-      url = '%s/%s?selection_index=%s&selection_name=%s&ignore_layout:int=%s' % (url, form_id, 0, selection_name, ignore_layout)
+      if form_id != 'view':
+        url += '/%s' % form_id
+      url += '?selection_index=%s&selection_name=%s' % (0, selection_name)
+      if ignore_layout:
+        url += '&ignore_layout:int=1'
       REQUEST.RESPONSE.redirect(url)
 
     security.declareProtected(ERP5Permissions.View, 'viewLast')
@@ -667,7 +671,11 @@ class SelectionTool( BaseTool, SimpleItem ):
       else:
         url = REQUEST.getURL()
       ignore_layout = int(REQUEST.get('ignore_layout', 0))
-      url = '%s/%s?selection_index=%s&selection_name=%s&ignore_layout:int=%s' % (url, form_id, -1, selection_name, ignore_layout)
+      if form_id != 'view':
+        url += '/%s' % form_id
+      url += '?selection_index=%s&selection_name=%s' % (-1, selection_name)
+      if ignore_layout:
+        url += '&ignore_layout:int=1'
       REQUEST.RESPONSE.redirect(url)
 
     security.declareProtected(ERP5Permissions.View, 'viewNext')
@@ -690,7 +698,12 @@ class SelectionTool( BaseTool, SimpleItem ):
       else:
         url = REQUEST.getURL()
       ignore_layout = int(REQUEST.get('ignore_layout', 0))
-      url = '%s/%s?selection_index=%s&selection_name=%s&ignore_layout:int=%s' % (url, form_id, int(selection_index) + 1, selection_name, ignore_layout)
+      if form_id != 'view':
+        url += '/%s' % form_id
+      url += '?selection_index=%s&selection_name=%s' % (int(selection_index)+1,
+                                                        selection_name)
+      if ignore_layout:
+        url += '&ignore_layout:int=1'
       REQUEST.RESPONSE.redirect(url)
 
     security.declareProtected(ERP5Permissions.View, 'viewPrevious')
@@ -713,7 +726,12 @@ class SelectionTool( BaseTool, SimpleItem ):
       else:
         url = REQUEST.getURL()
       ignore_layout = int(REQUEST.get('ignore_layout', 0))
-      url = '%s/%s?selection_index=%s&selection_name=%s&ignore_layout:int=%s' % (url, form_id, int(selection_index) - 1, selection_name, ignore_layout)
+      if form_id != 'view':
+        url += '/%s' % form_id
+      url += '?selection_index=%s&selection_name=%s' % (int(selection_index)-1,
+                                                        selection_name)
+      if ignore_layout:
+        url += '&ignore_layout:int=1'
       REQUEST.RESPONSE.redirect(url)
 
 
