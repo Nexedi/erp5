@@ -62,9 +62,6 @@ class CacheTool(BaseTool):
   security.declareProtected( Permissions.ManagePortal, 'cache_tool_statistics')
   cache_tool_statistics = DTMLFile('cache_tool_statistics', _dtmldir)
 
-  def __init__(self):
-    BaseTool.__init__(self)
-
   security.declareProtected(Permissions.AccessContentsInformation, 'getCacheFactoryList')
   def getCacheFactoryList(self):
     """ Return available cache factories """
