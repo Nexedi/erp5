@@ -192,10 +192,11 @@ class PeriodicityMixin:
     periodicity_stop_date = self.getPeriodicityStopDate()
     if next_start_date is None:
       next_start_date = current_date
-    if next_start_date > current_date \
-          or (periodicity_stop_date is not None \
-              and next_start_date >= periodicity_stop_date):
+    if periodicity_stop_date is not None \
+        and next_start_date >= periodicity_stop_date:
       return None
+    elif next_start_date > current_date:
+      return next_start_date
 
     timezone = self._getTimezone(next_start_date)
     previous_date = next_start_date

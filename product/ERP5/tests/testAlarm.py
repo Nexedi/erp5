@@ -150,6 +150,9 @@ class TestAlarm(ERP5TypeTestCase):
     alarm.setNextAlarmDate(current_date=now)
     next_date = addToDate(next_date,hour=1)
     self.assertEquals(alarm.getAlarmDate(),next_date)
+    # check if manual invoking does not break getAlarmDate() result.
+    alarm.activeSense()
+    self.assertEquals(alarm.getAlarmDate(),next_date)
 
   def test_04_Every3Hours(self, quiet=0, run=run_all_test):
     if not run: return
