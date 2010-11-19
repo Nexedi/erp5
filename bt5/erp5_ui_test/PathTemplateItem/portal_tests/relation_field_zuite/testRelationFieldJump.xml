@@ -176,7 +176,7 @@ will be shown\n
 </tr>\n
 <tr>\n
   <td>assertAbsoluteLocation</td>\n
-  <td tal:content="string:glob:${here/portal_url}/foo_module/1/view*"/>\n
+  <td tal:content="string:glob:${here/portal_url}/foo_module/1*"/>\n
   <td></td>\n
   <td></td>\n
 </tr>\n
