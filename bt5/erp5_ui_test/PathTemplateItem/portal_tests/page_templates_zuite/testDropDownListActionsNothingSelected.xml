@@ -75,7 +75,7 @@ shouldn\'t do anything. -->\n
   </tr>\n
   <tr>\n
     <td>assertAbsoluteLocation</td>\n
-    <td>regexp:${base_url}/foo_module/1(\\?|$$)</td>\n
+    <td>${base_url}/foo_module/1</td>\n
     <td/>\n
   </tr>\n
   <tr>\n
