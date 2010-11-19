@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -37,7 +34,7 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
       xmlns:metal="http://xml.zope.org/namespaces/metal">\n
@@ -67,7 +64,7 @@
 have id "2". This is probably a bit too stupid. -->\n
 <tr>\n
   <td>assertAbsoluteLocation</td>\n
-  <td tal:content="string:glob:${here/portal_url}/foo_module/2*" />\n
+  <td tal:content="string:regexp:${here/portal_url}/foo_module/2(\\?|$$)" />\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -88,7 +85,7 @@ have id "2". This is probably a bit too stupid. -->\n
 </tr>\n
 <tr>\n
   <td>assertAbsoluteLocation</td>\n
-  <td tal:content="string:glob:${here/portal_url}/foo_module/2/1*" />\n
+  <td tal:content="string:regexp:${here/portal_url}/foo_module/2/1(\\?|$$)" />\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -116,7 +113,7 @@ have id "2". This is probably a bit too stupid. -->\n
 </tr>\n
 <tr>\n
   <td>assertAbsoluteLocation</td>\n
-  <td tal:content="string:glob:${here/portal_url}/foo_module/3*" />\n
+  <td tal:content="string:regexp:${here/portal_url}/foo_module/3(\\?|$$)" />\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -153,10 +150,9 @@ another object of the same type. -->\n
 </tr>\n
 \n
 </body>\n
-</html>\n
+</html>
 
-
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -171,8 +167,12 @@ another object of the same type. -->\n
             <value> <string>testAddObject</string> </value>
         </item>
         <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <unicode></unicode> </value>
         </item>
       </dictionary>
     </pickle>

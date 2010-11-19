@@ -34,7 +34,7 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
       xmlns:metal="http://xml.zope.org/namespaces/metal">\n
@@ -176,7 +176,7 @@ will be shown\n
 </tr>\n
 <tr>\n
   <td>assertAbsoluteLocation</td>\n
-  <td tal:content="string:glob:${here/portal_url}/foo_module/1*"/>\n
+  <td tal:content="string:regexp:${here/portal_url}/foo_module/1(\\?|$$)"/>\n
   <td></td>\n
   <td></td>\n
 </tr>\n
@@ -220,10 +220,9 @@ will be shown\n
 </tr>\n
 </tbody></table>\n
 </body>\n
-</html>\n
+</html>
 
-
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -238,8 +237,12 @@ will be shown\n
             <value> <string>testRelationFieldJump</string> </value>
         </item>
         <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <unicode></unicode> </value>
         </item>
       </dictionary>
     </pickle>
