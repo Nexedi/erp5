@@ -36,6 +36,9 @@ class TestConflictResolution(ERP5TypeTestCase):
   def getTitle(self):
     return "Conflict Resolution"
 
+  def getBusinessTemplateList(self):
+    return ('erp5_base',)
+
   def afterSetUp(self):
     other_node = self.getOtherZEOClientNode()
     self.other_node = self.portal.portal_web_services.connect(
