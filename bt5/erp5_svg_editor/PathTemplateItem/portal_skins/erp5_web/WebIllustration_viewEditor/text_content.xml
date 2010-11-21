@@ -134,9 +134,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -219,11 +217,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string encoding="cdata"><![CDATA[
-
-<iframe name="svgframe" id="svgframe" src="portal_skins/erp5_jquery/plugin/svg-editor/svg-editor.html" width="750" height="600"/>
-
-]]></string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -231,7 +225,7 @@
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
@@ -271,7 +265,7 @@
                 </item>
                 <item>
                     <key> <string>text_editor</string> </key>
-                    <value> <string>text_area</string> </value>
+                    <value> <string>svg_editor</string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
@@ -291,19 +285,6 @@
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>here/WebIllustration_renderSVGEditor</string> </value>
         </item>
       </dictionary>
     </pickle>
