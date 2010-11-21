@@ -1,3 +1,6 @@
+2010-11-21 gabriel
+* Clear the text_content field to use Spreadsheet Editor from EditorField
+
 2010-11-10 gabriel
 * Added svg_editor_support page template. This page template will be used to integrate svg editor with EditorField.
 
