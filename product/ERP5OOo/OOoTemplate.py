@@ -590,10 +590,11 @@ class OOoTemplate(ZopePageTemplate):
 
     format = opts.get('format', request.get('format', None))
     if format:
-      # Performance improvement: 
-      # Call convertToBaseFormat only if user
-      # ask a particular output format
-      tmp_ooo.convertToBaseFormat()
+      # Performance improvement:
+      # We already have OOo format data, so we do not need to call
+      # convertToBaseFormat(), but just copy it into base_data property.
+      tmp_ooo.setBaseData(ooo)
+      tmp_ooo.setBaseContentType(self.content_type)
 
     if request is not None and not batch_mode:
       return tmp_ooo.index_html(REQUEST=request,
