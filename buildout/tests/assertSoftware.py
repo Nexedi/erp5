@@ -1519,6 +1519,21 @@ class AssertOpenssl(AssertSoftwareMixin):
         software in ['openssl']]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
+class AssertCyrusSasl(AssertSoftwareMixin):
+  def test_ld_libsasl2(self):
+    elf_dict = readElfAsDict('parts/cyrus-sasl/lib/libsasl2.so')
+    self.assertEqual(sorted([
+      'libc',
+      'libdl',
+      'libresolv',
+      ]),
+        elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in [
+          ]]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
 class AssertElfLinkedInternally(AssertSoftwareMixin):
   def test(self):
     result_dict = {}
