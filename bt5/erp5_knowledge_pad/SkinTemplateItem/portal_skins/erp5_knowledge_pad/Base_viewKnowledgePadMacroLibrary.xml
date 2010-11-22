@@ -246,17 +246,15 @@
                 <li class="tab"\n
                     tal:condition="not: isKnowledgePadTemplateUsed"\n
                     onclick="toggleElementById(\'add_new_tab_dialog\');"\n
-                    i18n:translate="" i18n:domain="ui"\n
+                    i18n:translate="title" i18n:domain="ui"\n
+                    title="Add new tab"\n
                     id="add_new_tab_dialog_link">Add tab</li>\n
                 <li class="tab"\n
                     tal:condition="isKnowledgePadTemplateUsed"\n
                     onclick="showCreateDefaultKnowledgePadWarningMessage();"\n
-                    i18n:translate="" i18n:domain="ui"\n
-                    id="add_new_tab_dialog_link">\n
-                    <img src="images/configure.png" \n
-                         style="width:15px;"\n
-                         alt="images/configure.png"/>\n
-                </li>\n
+                    i18n:translate="title" i18n:domain="ui"\n
+                    title="Create your own tab"\n
+                    id="create_own_pad_dialog_link"></li>\n
               </ul>\n
             </div>\n
           </td>\n
