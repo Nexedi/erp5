@@ -106,6 +106,8 @@ def readLddInfoList(f):
       else:
         # linux-vdso.so.1 =>  (0x00007fffa7fff000)
         a(lib)
+    elif 'warning: you do not have execution permission for' in line:
+      pass
     elif line:
       # /lib64/ld-linux-x86-64.so.2 (0x00007f77fd400000)
       a(line.split()[0])
