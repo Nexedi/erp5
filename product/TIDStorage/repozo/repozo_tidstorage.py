@@ -40,12 +40,18 @@ Usage: %(program)s [-h|--help] [-c|--config configuration_file]
   -R
   --recover
     Instead of saving existing Data.fs, perform an automated recovery from
-    backups + timestamp file with optionally cutting file at found transaction.
+    backups + timestamp file with optionally cutting files at the last coherent
+    transaction.
 
   --recover_check
     Similar to above, except that it restores file to temp folder and compares
     with existing file.
     Files restored this way are automaticaly deleted after check.
+
+  --recover_inplace
+    Like 'recover' above, but doesn't actually restore from repozo files,
+    instead it just cuts existing FileStorage files at the last coherent
+    transaction.
   
   -t tid_log_file
   --tid_log tid_log_file
@@ -139,7 +145,12 @@ def get_md5_diggest(file_instance, length):
   return md5sum.hexdigest()
 
 def recover(known_tid_storage_identifier_dict, repozo_formated_command, check=False, last_tid_dict=None):
-  """Recovers all ZODB files, when last_tid_dict is passed cut them at proper byte"""
+  """Recovers all ZODB files, when last_tid_dict is passed cut them at proper
+     byte. If repozo_formated_command is None, assume we only need to trim the
+     files to the last registered coherent transaction."""
+  if repozo_formated_command is None and last_tid_dict is None:
+    log('Error: we need the Status File for trimming the ZODB files')
+    return 1
   recovered_count = 0
   total_count = len(known_tid_storage_identifier_dict)
   result = 0
@@ -154,15 +165,23 @@ def recover(known_tid_storage_identifier_dict, repozo_formated_command, check=Fa
   if result:
     return result
   for key, (file_path, storage_path, object_path) in known_tid_storage_identifier_dict.iteritems():
-    if not os.access(storage_path, os.R_OK):
+    if repozo_formated_command is not None and not os.access(storage_path, os.R_OK):
       log('Warning: unable to recover %s because %s is missing/unreadable.' % (file_path, storage_path))
+      continue
+    elif repozo_formated_command is None and not (os.path.isfile(file_path) and
+                                                  os.access(file_path, os.W_OK)):
+      log('Warning: unable to trim %s because it is missing/unwritable' % (file_path,))
       continue
     if check:
       original_file_path = file_path
       file_path = os.path.join(tempfile.gettempdir(), os.path.basename(file_path))
-    repozo_command = repozo_formated_command % (storage_path, file_path)
-    status = os.system(repozo_command)
-    status = os.WEXITSTATUS(status)
+    if repozo_formated_command is not None:
+      repozo_command = repozo_formated_command % (storage_path, file_path)
+      status = os.system(repozo_command)
+      status = os.WEXITSTATUS(status)
+    else:
+      # we're being asked to cut only, so assume successful restore
+      status = 0
     if status == 0:
       recovered_count += 1
       if last_tid_dict is not None:
@@ -227,7 +246,7 @@ def parseargs():
                                ['help', 'verbose', 'quick', 'full',
                                 'gzip', 'repository', 'repozo=',
                                 'config=','recover', 'recover_check',
-                                'tid_log=', 'cleanup'])
+                                'recover_inplace', 'tid_log=', 'cleanup'])
   except getopt.error, msg:
     usage(1, msg)
 
@@ -239,6 +258,7 @@ def parseargs():
     known_tid_storage_identifier_dict = {}
     action = None
     dry_run = False
+    inplace = False
     status_file = None
     status_file_backup_dir = None
     recover_status_file = None
@@ -256,13 +276,15 @@ def parseargs():
       options.configuration_file_name = arg
     elif opt == '--repozo':
       options.repozo_file_name = arg
-    elif opt in ('-R', '--recover', '--recover_check'):
+    elif opt in ('-R', '--recover', '--recover_check', '--recover_inplace'):
       options.repozo_opts[0] = '-R'
       if options.action:
         usage(1, 'Only 1 command allowed.')
       options.action = 'recover'
       if opt == '--recover_check':
         options.dry_run = True
+      if opt == '--recover_inplace':
+        options.inplace = True
     elif opt in ('--cleanup'):
       if options.action:
         usage(1, 'Only 1 command allowed.')
@@ -332,6 +354,9 @@ def main():
     timestamp = timestamp.strip('\r\n \t')
     if timestamp is not None:
       repozo_formated_command += ' -o "%%s" -D %s' % (timestamp, )
+    if options.inplace:
+      # use the Data.fs files themselves, instead of restoring them with repozo
+      repozo_formated_command = None
     result = recover(
       known_tid_storage_identifier_dict=options.known_tid_storage_identifier_dict,
       repozo_formated_command=repozo_formated_command,
