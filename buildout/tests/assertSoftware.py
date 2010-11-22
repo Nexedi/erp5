@@ -60,6 +60,11 @@ ACCEPTABLE_GLOBAL_LIB_LIST = (
   'linux-vdso.so',
 )
 
+SKIP_PART_LIST = (
+  'parts/boost-lib-download',
+  'parts/openoffice-bin',
+  'parts/openoffice-bin__unpack__',
+)
 def getCleanList(s):
   """Converts free form string separated by whitespaces to python list"""
   return sorted([q.strip() for q in s.split() if len(q.strip()) > 0])
@@ -1417,6 +1422,9 @@ class AssertElfLinkedInternally(AssertSoftwareMixin):
     root = os.path.join(os.path.abspath(os.curdir), 'parts')
     for dirpath, dirlist, filelist in os.walk(root):
       for filename in filelist:
+        # skip some not needed places
+        if any([q in dirpath for q in SKIP_PART_LIST]):
+          continue
         filename = os.path.join(dirpath, filename)
         link_list = readLddInfoList(filename)
         bad_link_list = [q for q in link_list if not q.startswith(root) \
