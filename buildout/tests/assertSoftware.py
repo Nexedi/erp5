@@ -1140,6 +1140,16 @@ class AssertItools(AssertSoftwareMixin):
         software in ['glib']]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
+class AssertOpenssl(AssertSoftwareMixin):
+  def test_ls_openssl(self):
+    elf_dict = readElfAsDict('parts/openssl/bin/openssl')
+    self.assertEqual(sorted(['libc', 'libcrypto', 'libdl', 'libssl', 'libz']),
+        elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in ['zlib', 'openssl']]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
 class AssertElfLinkedInternally(AssertSoftwareMixin):
   def test(self):
     result_dict = {}
