@@ -411,15 +411,15 @@ class AssertSubversion(AssertSoftwareMixin):
       'libsvn_fs_fs-1', 'libsvn_fs_util-1', 'libsvn_ra_svn-1',
       'libsvn_delta-1', 'libsvn_subr-1', 'libsqlite3',
       'libaprutil-1', 'libapr-1', 'libuuid', 'librt', 'libexpat',
-      'libz', 'libssl', 'libcrypto',
+      'libz', 'libssl', 'libcrypto', 'libsvn_ra_neon-1',
       'libc', 'libcrypt', 'libdl',
-      'libpthread', 'libm', 'libserf-0', 'libsvn_ra_serf-1',
+      'libpthread', 'libneon'
       ]),
         elf_dict['library_list'])
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
-        software in ['apache', 'libexpat', 'openssl',
-                     'sqlite3', 'subversion', 'zlib', 'libuuid', 'serf']]
+        software in ['apache', 'libexpat', 'openssl', 'neon',
+                     'sqlite3', 'subversion', 'zlib', 'libuuid']]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_ld_svnadmin(self):
@@ -432,8 +432,8 @@ class AssertSubversion(AssertSoftwareMixin):
         elf_dict['library_list'])
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
-        software in ['apache', 'libexpat', 'openssl',
-                     'sqlite3', 'subversion', 'zlib', 'libuuid', 'serf']]
+        software in ['apache', 'libexpat',
+                     'sqlite3', 'subversion', 'zlib', 'libuuid', 'neon']]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_ld_svndumpfilter(self):
@@ -446,8 +446,8 @@ class AssertSubversion(AssertSoftwareMixin):
         elf_dict['library_list'])
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
-        software in ['apache', 'libexpat', 'openssl',
-                     'sqlite3', 'subversion', 'zlib', 'libuuid', 'serf']]
+        software in ['apache', 'libexpat',
+                     'sqlite3', 'subversion', 'zlib', 'libuuid', 'neon']]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_ld_svnlook(self):
@@ -460,8 +460,8 @@ class AssertSubversion(AssertSoftwareMixin):
         elf_dict['library_list'])
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
-        software in ['apache', 'libexpat', 'openssl',
-                     'sqlite3', 'subversion', 'zlib', 'libuuid', 'serf']]
+        software in ['apache', 'libexpat',
+                     'sqlite3', 'subversion', 'zlib', 'libuuid', 'neon']]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_ld_svnserve(self):
@@ -474,8 +474,8 @@ class AssertSubversion(AssertSoftwareMixin):
         elf_dict['library_list'])
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
-        software in ['apache', 'libexpat', 'openssl',
-                     'sqlite3', 'subversion', 'zlib', 'libuuid', 'serf']]
+        software in ['apache', 'libexpat',
+                     'sqlite3', 'subversion', 'zlib', 'libuuid', 'neon']]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_ld_svnsync(self):
@@ -486,13 +486,13 @@ class AssertSubversion(AssertSoftwareMixin):
       'libaprutil-1', 'libapr-1', 'libuuid', 'librt', 'libexpat',
       'libz', 'libssl', 'libcrypto',
       'libc', 'libcrypt', 'libdl',
-      'libpthread', 'libm', 'libserf-0', 'libsvn_ra_serf-1',
+      'libpthread', 'libm', 'libneon', 'libsvn_ra_neon-1',
       ]),
         elf_dict['library_list'])
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
         software in ['apache', 'libexpat', 'openssl',
-                     'sqlite3', 'subversion', 'zlib', 'libuuid', 'serf']]
+                     'sqlite3', 'subversion', 'zlib', 'libuuid', 'neon']]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_ld_svnversion(self):
@@ -505,8 +505,8 @@ class AssertSubversion(AssertSoftwareMixin):
         elf_dict['library_list'])
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
-        software in ['apache', 'libexpat', 'openssl',
-                     'sqlite3', 'subversion', 'zlib', 'libuuid', 'serf']]
+        software in ['apache', 'libexpat',
+                     'sqlite3', 'subversion', 'zlib', 'libuuid', 'neon']]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_ld_libsvn_client(self):
@@ -519,8 +519,8 @@ class AssertSubversion(AssertSoftwareMixin):
         elf_dict['library_list'])
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
-        software in ['apache', 'libexpat', 'openssl',
-                     'sqlite3', 'subversion', 'zlib', 'libuuid', 'serf']]
+        software in ['apache', 'libexpat', 'sqlite3', 'subversion', 'zlib',
+          'libuuid', 'neon']]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_ld_libsvn_delta(self):
@@ -533,8 +533,8 @@ class AssertSubversion(AssertSoftwareMixin):
         elf_dict['library_list'])
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
-        software in ['apache', 'libexpat', 'openssl',
-                     'sqlite3', 'subversion', 'zlib', 'libuuid', 'serf']]
+        software in ['apache', 'libexpat', 'sqlite3', 'subversion', 'zlib',
+          'libuuid', 'neon']]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_ld_libsvn_diff(self):
@@ -546,8 +546,8 @@ class AssertSubversion(AssertSoftwareMixin):
         elf_dict['library_list'])
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
-        software in ['apache', 'libexpat', 'openssl',
-                     'sqlite3', 'subversion', 'zlib', 'libuuid', 'serf']]
+        software in ['apache', 'libexpat', 'sqlite3', 'subversion', 'zlib',
+          'libuuid', 'neon']]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_ld_libsvn_fs(self):
@@ -559,8 +559,8 @@ class AssertSubversion(AssertSoftwareMixin):
         elf_dict['library_list'])
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
-        software in ['apache', 'openssl',
-                     'sqlite3', 'subversion', 'zlib', 'libuuid', 'serf']]
+        software in ['apache', 'sqlite3', 'subversion', 'zlib', 'libuuid',
+          'neon']]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_ld_libsvn_fs_fs(self):
@@ -572,8 +572,8 @@ class AssertSubversion(AssertSoftwareMixin):
         elf_dict['library_list'])
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
-        software in ['apache', 'openssl', 'libexpat',
-                     'sqlite3', 'subversion', 'zlib', 'libuuid', 'serf']]
+        software in ['apache', 'libexpat', 'sqlite3', 'subversion', 'zlib',
+          'libuuid', 'neon']]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_ld_libsvn_fs_util(self):
@@ -585,22 +585,22 @@ class AssertSubversion(AssertSoftwareMixin):
         elf_dict['library_list'])
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
-        software in ['apache', 'openssl', 'libexpat',
-                     'sqlite3', 'subversion', 'zlib', 'libuuid', 'serf']]
+        software in ['apache', 'libexpat', 'sqlite3', 'subversion', 'zlib',
+          'libuuid', 'neon']]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_ld_libsvn_ra(self):
     elf_dict = readElfAsDict('parts/subversion/lib/libsvn_ra-1.so')
     self.assertEqual(sorted(['libaprutil-1', 'libsvn_delta-1', 'libsvn_fs-1',
-      'libsvn_ra_local-1', 'libsvn_ra_serf-1', 'libsvn_ra_svn-1',
+      'libsvn_ra_local-1', 'libsvn_ra_neon-1', 'libsvn_ra_svn-1',
       'libsvn_repos-1', 'libexpat', 'libsvn_subr-1', 'libapr-1', 'libuuid',
       'librt', 'libc', 'libcrypt', 'libdl', 'libpthread',
       ]),
         elf_dict['library_list'])
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
-        software in ['apache', 'openssl', 'libexpat',
-                     'sqlite3', 'subversion', 'zlib', 'libuuid', 'serf']]
+        software in ['apache', 'libexpat',
+                     'sqlite3', 'subversion', 'zlib', 'libuuid', 'neon']]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_ld_libsvn_ra_local(self):
@@ -612,21 +612,21 @@ class AssertSubversion(AssertSoftwareMixin):
         elf_dict['library_list'])
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
-        software in ['apache', 'openssl', 'libexpat',
-                     'sqlite3', 'subversion', 'zlib', 'libuuid', 'serf']]
+        software in ['apache', 'libexpat',
+                     'sqlite3', 'subversion', 'zlib', 'libuuid', 'neon']]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
-  def test_ld_libsvn_ra_serf(self):
-    elf_dict = readElfAsDict('parts/subversion/lib/libsvn_ra_serf-1.so')
+  def test_ld_libsvn_ra_neon(self):
+    elf_dict = readElfAsDict('parts/subversion/lib/libsvn_ra_neon-1.so')
     self.assertEqual(sorted(['libaprutil-1', 'libsvn_delta-1',
       'libexpat', 'libsvn_subr-1', 'libapr-1', 'libuuid',
-      'librt', 'libc', 'libcrypt', 'libdl', 'libpthread', 'libserf-0',
+      'librt', 'libc', 'libcrypt', 'libdl', 'libpthread',
       ]),
         elf_dict['library_list'])
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
-        software in ['apache', 'openssl', 'libexpat',
-                     'sqlite3', 'subversion', 'zlib', 'libuuid', 'serf']]
+        software in ['apache', 'libexpat',
+                     'sqlite3', 'subversion', 'zlib', 'libuuid', 'neon']]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_ld_libsvn_ra_svn(self):
@@ -638,8 +638,8 @@ class AssertSubversion(AssertSoftwareMixin):
         elf_dict['library_list'])
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
-        software in ['apache', 'openssl', 'libexpat',
-                     'sqlite3', 'subversion', 'zlib', 'libuuid', 'serf']]
+        software in ['apache', 'libexpat',
+                     'sqlite3', 'subversion', 'zlib', 'libuuid', 'neon']]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_ld_libsvn_repos(self):
@@ -651,8 +651,8 @@ class AssertSubversion(AssertSoftwareMixin):
         elf_dict['library_list'])
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
-        software in ['apache', 'openssl', 'libexpat',
-                     'sqlite3', 'subversion', 'zlib', 'libuuid', 'serf']]
+        software in ['apache', 'libexpat',
+                     'sqlite3', 'subversion', 'zlib', 'libuuid', 'neon']]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_ld_libsvn_subr(self):
@@ -664,8 +664,8 @@ class AssertSubversion(AssertSoftwareMixin):
         elf_dict['library_list'])
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
-        software in ['apache', 'openssl', 'libexpat',
-                     'sqlite3', 'zlib', 'libuuid', 'serf']]
+        software in ['apache', 'libexpat',
+                     'sqlite3', 'zlib', 'libuuid', 'neon']]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_ld_libsvn_wc(self):
@@ -677,8 +677,8 @@ class AssertSubversion(AssertSoftwareMixin):
         elf_dict['library_list'])
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
-        software in ['apache', 'openssl', 'libexpat', 'subversion',
-                     'sqlite3', 'zlib', 'libuuid', 'serf']]
+        software in ['apache', 'libexpat', 'subversion',
+                     'sqlite3', 'zlib', 'libuuid', 'neon']]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
 class AssertSerf(AssertSoftwareMixin):
