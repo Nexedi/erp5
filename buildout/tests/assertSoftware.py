@@ -30,6 +30,30 @@ import os
 import subprocess
 import unittest
 
+# List of libraries which are acceptable to be linked in globally
+ACCEPTABLE_GLOBAL_LIB_LIST = (
+  # 32 bit Linux
+  '/lib/ld-linux.so',
+  '/lib/libc.so',
+  '/lib/libcrypt.so',
+  '/lib/libdl.so',
+  '/lib/libm.so',
+  '/lib/libnsl.so',
+  '/lib/libpthread.so',
+  '/lib/libutil.so',
+  # 64 bit Linux
+  '/lib64/ld-linux-x86-64.so',
+  '/lib64/libc.so',
+  '/lib64/libcrypt.so',
+  '/lib64/libdl.so',
+  '/lib64/libm.so',
+  '/lib64/libnsl.so',
+  '/lib64/libpthread.so',
+  '/lib64/libutil.so',
+  # Arch independed Linux
+  'linux-vdso.so',
+)
+
 def getCleanList(s):
   """Converts free form string separated by whitespaces to python list"""
   return sorted([q.strip() for q in s.split() if len(q.strip()) > 0])
@@ -60,6 +84,31 @@ def readElfAsDict(f):
     runpath_list=sorted(runpath_list)
   )
 
+def readLddInfoList(f):
+  popen = subprocess.Popen(['ldd', f], stdout=subprocess.PIPE,
+      stderr=subprocess.STDOUT)
+  link_list = []
+  a = link_list.append
+  result = popen.communicate()[0]
+  if 'not a dynamic executable' in result:
+    return link_list
+  for line in result.split('\n'):
+    line = line.strip()
+    if '=>' in line:
+      lib, path = line.split('=>')
+      lib = lib.strip()
+      path = path.strip()
+      if lib in path:
+        # libpthread.so.0 => /lib64/libpthread.so.0 (0x00007f77fcebf000)
+        a(path.split()[0])
+      else:
+        # linux-vdso.so.1 =>  (0x00007fffa7fff000)
+        a(lib)
+    elif line:
+      # /lib64/ld-linux-x86-64.so.2 (0x00007f77fd400000)
+      a(line.split()[0])
+  return link_list
+
 class AssertSoftwareMixin(unittest.TestCase):
   def assertEqual(self, first, second, msg=None):
     try:
@@ -80,6 +129,20 @@ class AssertSoftwareMixin(unittest.TestCase):
         else:
           msg = 'Lists are different:\n%s' % msg
           raise unittest.TestCase.failureException, msg
+      else:
+        raise
+
+  def assertSoftwareDictEmpty(self, first, msg=None):
+    try:
+      return unittest.TestCase.assertEqual(self, first, {}, msg)
+    except unittest.TestCase.failureException:
+      if msg is None:
+        msg = ''
+        for path, wrong_link_list in first.iteritems():
+          msg += '%s:\n' % path
+          msg += '\n'.join(['\t' + q for q in sorted(wrong_link_list)]) + '\n'
+        msg = 'Bad linked software:\n%s' % msg
+        raise unittest.TestCase.failureException, msg
       else:
         raise
 
@@ -1068,6 +1131,21 @@ class AssertItools(AssertSoftwareMixin):
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
         software in ['glib']]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+class AssertElfLinkedInternally(AssertSoftwareMixin):
+  def test(self):
+    result_dict = {}
+    root = os.path.join(os.path.abspath(os.curdir), 'parts')
+    for dirpath, dirlist, filelist in os.walk(root):
+      for filename in filelist:
+        filename = os.path.join(dirpath, filename)
+        link_list = readLddInfoList(filename)
+        bad_link_list = [q for q in link_list if not q.startswith(root) \
+                          and not any([q.startswith(k) for k in ACCEPTABLE_GLOBAL_LIB_LIST])]
+        if len(bad_link_list):
+          result_dict[filename] = bad_link_list
+    self.assertSoftwareDictEmpty(result_dict)
+
 
 if __name__ == '__main__':
   unittest.main()
