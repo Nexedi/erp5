@@ -29,7 +29,8 @@
 
 import unittest
 import transaction
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase, \
+     _getConversionServerDict
 from Products.ERP5Form.Selection import Selection
 from Testing import ZopeTestCase
 from Products.ERP5OOo.tests.utils import Validator
@@ -51,7 +52,9 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
   def afterSetUp(self):
     if not self.skin:
       raise NotImplementedError('Subclasses must define skin')
-    
+
+    self.setDefaultSitePreference()
+
     gender = self.portal.portal_categories.gender
     if 'male' not in gender.objectIds():
       gender.newContent(id='male')
@@ -82,6 +85,15 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     # make sure selections are empty
     self.portal.portal_selections.setSelectionFor(
                         'person_module_selection', Selection())
+
+  def setDefaultSitePreference(self):
+    default_pref = self.portal.portal_preferences.default_site_preference
+    conversion_dict = _getConversionServerDict()
+    default_pref.setPreferredOoodocServerAddress(conversion_dict['hostname'])
+    default_pref.setPreferredOoodocServerPortNumber(conversion_dict['port'])
+    if self.portal.portal_workflow.isTransitionPossible(default_pref, 'enable'):
+      default_pref.enable()
+    return default_pref
 
   def publish(self, *args, **kw):
     kw['handle_errors'] = not debug
@@ -177,7 +189,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     self._validate(response.getBody())
 
   def test_form_view_format(self):
-    # empty format= does not uses oood for conversion
+    # empty format= does not use oood for conversion
     response = self.publish(
                    '/%s/person_module/pers/Person_view?format='
                    % self.portal.getId(), self.auth)
@@ -187,6 +199,15 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     content_disposition = response.getHeader('content-disposition')
     self.assertEquals('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
+    # format=pdf uses oood for conversion
+    response = self.publish(
+                   '/%s/person_module/pers/Person_view?format=pdf'
+                   % self.portal.getId(), self.auth)
+    self.assertEquals(HTTP_OK, response.getStatus())
+    content_type = response.getHeader('content-type')
+    self.assertEquals(content_type, 'application/pdf')
+    content_disposition = response.getHeader('content-disposition')
+    self.assertEquals('attachment', content_disposition.split(';')[0])
 
   def test_report_view_form_view(self):
     # Test report view rendering forms using form_view
