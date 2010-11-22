@@ -42,7 +42,7 @@ ACCEPTABLE_GLOBAL_LIB_LIST = (
   '/lib/libm.so',
   '/lib/libnsl.so',
   '/lib/libpthread.so',
-  '/lib/libresolv.so'
+  '/lib/libresolv.so',
   '/lib/librt.so',
   '/lib/libutil.so',
   # 64 bit Linux
@@ -55,7 +55,7 @@ ACCEPTABLE_GLOBAL_LIB_LIST = (
   '/lib64/libm.so',
   '/lib64/libnsl.so',
   '/lib64/libpthread.so',
-  '/lib64/libresolv.so'
+  '/lib64/libresolv.so',
   '/lib64/librt.so',
   '/lib64/libutil.so',
   # Arch independed Linux
