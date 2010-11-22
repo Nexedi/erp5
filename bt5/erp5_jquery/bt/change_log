@@ -1,3 +1,6 @@
+2010-11-22 kazuhiko
+* change the location of the folder : portal_skins/erp5_jquery/core -> portal_skins/erp5_jquery/jquery/core.
+
 2010-11-03 nicolas.dumazet
 * add empty plugin folder so plugin bts can use it
 
