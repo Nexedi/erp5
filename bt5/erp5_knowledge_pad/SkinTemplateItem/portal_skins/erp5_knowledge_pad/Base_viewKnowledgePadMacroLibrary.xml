@@ -250,7 +250,7 @@
                     title="Add new tab"\n
                     id="add_new_tab_dialog_link">Add tab</li>\n
                 <li class="tab"\n
-                    tal:condition="isKnowledgePadTemplateUsed"\n
+                    tal:condition="python: isKnowledgePadTemplateUsed and isUserAllowedToCreateKnowledgePads"\n
                     onclick="showCreateDefaultKnowledgePadWarningMessage();"\n
                     i18n:translate="title" i18n:domain="ui"\n
                     title="Create your own tab"\n
