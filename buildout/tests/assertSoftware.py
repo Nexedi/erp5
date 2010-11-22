@@ -40,6 +40,7 @@ ACCEPTABLE_GLOBAL_LIB_LIST = (
   '/lib/libm.so',
   '/lib/libnsl.so',
   '/lib/libpthread.so',
+  '/lib/librt.so',
   '/lib/libutil.so',
   # 64 bit Linux
   '/lib64/ld-linux-x86-64.so',
@@ -49,6 +50,7 @@ ACCEPTABLE_GLOBAL_LIB_LIST = (
   '/lib64/libm.so',
   '/lib64/libnsl.so',
   '/lib64/libpthread.so',
+  '/lib64/librt.so',
   '/lib64/libutil.so',
   # Arch independed Linux
   'linux-vdso.so',
