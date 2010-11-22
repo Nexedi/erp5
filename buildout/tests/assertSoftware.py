@@ -1403,7 +1403,7 @@ class AssertItools(AssertSoftwareMixin):
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
 class AssertOpenssl(AssertSoftwareMixin):
-  def test_ls_openssl(self):
+  def test_ld_openssl(self):
     elf_dict = readElfAsDict('parts/openssl/bin/openssl')
     self.assertEqual(sorted(['libc', 'libcrypto', 'libdl', 'libssl', 'libz']),
         elf_dict['library_list'])
