@@ -86,6 +86,7 @@
                         <string>my_preferred_time_zone</string>
                         <string>my_preferred_ooodoc_server_address</string>
                         <string>my_preferred_ooodoc_server_port_number</string>
+                        <string>my_preferred_ooodoc_server_timeout</string>
                         <string>my_preferred_hide_rows_on_no_search_criterion</string>
                         <string>my_translated_preference_state_title</string>
                       </list>

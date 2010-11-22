@@ -46,6 +46,13 @@ class DocumentPreference:
       'preference'  : 1,
       'write_permission': Permissions.ManageProperties,
       'mode'        : '' },
+    { 'id'          : 'preferred_ooodoc_server_timeout',
+      'description' : 'Timeout when connecting to the document conversion'
+                      ' server (in seconds)',
+      'type'        : 'int',
+      'preference'  : 1,
+      'write_permission': Permissions.ManageProperties,
+      'mode'        : '' },
     { 'id'          : 'preferred_document_reference_regular_expression',
       'description' : 'A regular expression to find and verify doc references',
       'type'        : 'string',
