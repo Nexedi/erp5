@@ -97,7 +97,9 @@ class OOoServerProxy(ServerProxy):
             ' conversion server host and port is not defined in preferences')
 
     uri = 'http://%s:%d' % (address, port)
-    transport = TimeoutTransport(timeout=OOO_SERVER_PROXY_TIMEOUT, scheme='http')
+    timeout = preference_tool.getPreferredOoodocServerTimeout() \
+                    or OOO_SERVER_PROXY_TIMEOUT
+    transport = TimeoutTransport(timeout=timeout, scheme='http')
 
     ServerProxy.__init__(self, uri, allow_none=True, transport=transport)
 
