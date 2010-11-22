@@ -77,8 +77,11 @@ class _ProtocolErrorCatcher(object):
     try:
       return self.__callable(*args, **kw)
     except ProtocolError, e:
-      raise ConversionError("Network error while contacting OOo conversion"
-                            " server: server might be unreachable")
+      message = "%s %s" % (e.errcode, e.errmsg)
+      if e.errcode == -1:
+        message = "Connection refused"
+      raise ConversionError("Protocol error while contacting OOo conversion"
+                            " server: %s" % (message))
 
 class OOoServerProxy(ServerProxy):
   """
