@@ -1704,7 +1704,6 @@ class Base( CopyContainer,
     """
       Generic edit Method for all ERP5 object
     """
-    self.log('edit:%r' % kw)
     return self._edit(REQUEST=REQUEST, force_update=force_update,
                       reindex_object=reindex_object, restricted=1, **kw)
 
