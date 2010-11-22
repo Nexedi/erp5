@@ -112,6 +112,9 @@ def readLddInfoList(f):
         a(lib)
     elif 'warning: you do not have execution permission for' in line:
       pass
+    elif 'No such file or directory' in line:
+      # ignore broken links
+      pass
     elif line:
       # /lib64/ld-linux-x86-64.so.2 (0x00007f77fd400000)
       a(line.split()[0])
