@@ -1086,6 +1086,47 @@ div.pdf-preview-navigation img.next{\n
 div.pdf-preview-navigation img.last{\n
   background-image:url("km_img/2rightarrowv.png");\n
   width: 5px;\n
+}\n
+\n
+/* Editable mode actions */\n
+.actions{\n
+  float:left;\n
+}\n
+\n
+.actions ul {\n
+  display:block;\n
+  float:left;\n
+  clear: both;\n
+  list-style-type: none;\n
+  margin: 10px 0 0 10px;\n
+  padding:0;\n
+  position: relative;\n
+  bottom:-10px;\n
+}\n
+\n
+.actions ul li {\n
+  float:left;\n
+  margin: 0 1px 0 0;\n
+}\n
+\n
+.actions ul li a:link, \n
+.actions ul li a:active, \n
+.actions ul li a:visited {\n
+  background-color: #b7e2b7;\n
+  border:1px solid #b7e2b7;\n
+  color:#323232;\n
+  padding: 5px 10px;\n
+  display: block;\n
+  height:100%;\n
+}\n
+\n
+.actions ul li.selected a:link, \n
+.actions ul li.selected a:active, \n
+.actions ul li.selected a:visited, \n
+.actions ul li a:hover {\n
+  background: #4bcc4b;\n
+  border:1px solid #4bcc4b;\n
+  color:#fff;\n
 }
 
 ]]></unicode> </value>
