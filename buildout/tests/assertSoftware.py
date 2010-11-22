@@ -33,6 +33,8 @@ import unittest
 # List of libraries which are acceptable to be linked in globally
 ACCEPTABLE_GLOBAL_LIB_LIST = (
   # 32 bit Linux
+	'/usr/lib/libstdc++.so',
+ 	'/lib/libgcc_s.so',
   '/lib/ld-linux.so',
   '/lib/libc.so',
   '/lib/libcrypt.so',
@@ -43,6 +45,8 @@ ACCEPTABLE_GLOBAL_LIB_LIST = (
   '/lib/librt.so',
   '/lib/libutil.so',
   # 64 bit Linux
+	'/lib64/libgcc_s.so',
+	'/usr/lib64/libstdc++.so',
   '/lib64/ld-linux-x86-64.so',
   '/lib64/libc.so',
   '/lib64/libcrypt.so',
