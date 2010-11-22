@@ -567,13 +567,28 @@ class OOoTemplate(ZopePageTemplate):
         LOG('ERP5OOo', PROBLEM,
             'Validation of %s failed:\n%s' % (self.getId(), ''.join(err_list)))
 
-    format = opts.get('format', request.get('format', None))
+    extension = None
+    mimetypes_registry = self.getPortalObject().mimetypes_registry
+    mimetype_object_list = mimetypes_registry.lookup(self.content_type)
+    for mimetype_object in mimetype_object_list:
+      if mimetype_object.extensions:
+        extension = mimetype_object.extensions[0]
+        break
+      elif mimetype_object.globs:
+        extension = mimetype_object.globs.strip('*.')
+        break
+    if extension:
+      filename = '%s.%s' % (self._getFileName(), extension)
+    else:
+      filename = self._getFileName()
 
     from Products.ERP5Type.Document import newTempOOoDocument
     tmp_ooo = newTempOOoDocument(self, self.title_or_id())
     tmp_ooo.edit(data=ooo,
-                 source_reference='%s.%s' % (self._getFileName(), format),
+                 source_reference=filename,
                  content_type=self.content_type,)
+
+    format = opts.get('format', request.get('format', None))
     if format:
       # Performance improvement: 
       # Call convertToBaseFormat only if user
