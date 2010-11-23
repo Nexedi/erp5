@@ -30,6 +30,16 @@ import os
 import subprocess
 import unittest
 
+try:
+  any([True])
+except NameError:
+  # there is no any in python2.4
+  def any(l):
+    for q in l:
+      if q:
+        return True
+    return False
+
 # List of libraries which are acceptable to be linked in globally
 ACCEPTABLE_GLOBAL_LIB_LIST = (
   # 32 bit Linux
