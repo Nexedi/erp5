@@ -2,16 +2,13 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="RadioField" module="Products.Formulator.StandardFields"/>
-        <tuple/>
-      </tuple>
+      <global name="RadioField" module="Products.Formulator.StandardFields"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_layout_display_content_widget</string> </value>
+            <value> <string>my_layout_member_navigation_menu</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -149,7 +146,9 @@
                 </item>
                 <item>
                     <key> <string>items</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>orientation</string> </key>
@@ -192,7 +191,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>XXX-JPS What is this. Without explanation no way to know. And is this about a widget or a gadget ?</string> </value>
+                    <value> <string>It is possible to provide section navigation to users so that the KM site looks like a usual web site to the public.</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -221,20 +220,7 @@
                 <item>
                     <key> <string>items</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>Acquire</string>
-                          <string></string>
-                        </tuple>
-                        <tuple>
-                          <string>Display</string>
-                          <string>display</string>
-                        </tuple>
-                        <tuple>
-                          <string>Hide</string>
-                          <string>hide</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -247,7 +233,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Content Widget</string> </value>
+                    <value> <string>Member Navigation Menu</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -259,6 +245,19 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: [(\'Acquire\', \'\'), (\'Sections\', True), (\'Browser\', False)]</string> </value>
         </item>
       </dictionary>
     </pickle>

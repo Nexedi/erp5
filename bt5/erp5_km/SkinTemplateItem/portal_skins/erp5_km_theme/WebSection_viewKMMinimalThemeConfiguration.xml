@@ -100,12 +100,14 @@
                     <value>
                       <list>
                         <string>my_layout_anonymous_navigation_menu</string>
+                        <string>my_layout_member_navigation_menu</string>
                         <string>my_layout_navigation_menu_width</string>
                         <string>my_layout_navigation_menu_indent</string>
                         <string>my_layout_navigation_menu_opacity</string>
                         <string>my_layout_all_languages</string>
                         <string>my_layout_display_language_icons</string>
                         <string>my_layout_all_versions</string>
+                        <string>my_layout_display_breadcrumb_widget</string>
                         <string>my_layout_max_breadcrumb_length</string>
                       </list>
                     </value>
@@ -114,7 +116,12 @@
                     <key> <string>right (Gadgets)</string> </key>
                     <value>
                       <list>
-                        <string>my_layout_display_content_widget</string>
+                        <string>my_layout_force_anonymous_gadget</string>
+                        <string>my_layout_display_user_widget</string>
+                        <string>my_layout_display_header_title_widget</string>
+                        <string>my_layout_display_toolbar_widget</string>
+                        <string>my_layout_display_search_widget</string>
+                        <string>my_layout_search_portal_type</string>
                       </list>
                     </value>
                 </item>
