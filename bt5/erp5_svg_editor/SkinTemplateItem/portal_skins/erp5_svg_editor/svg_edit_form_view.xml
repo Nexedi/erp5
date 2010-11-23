@@ -40,7 +40,7 @@
            xmlns:metal="http://xml.zope.org/namespaces/metal"\n
            xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
   <tal:block metal:define-macro="master"\n
-             tal:define="js_list_jquery_template python: [\'portal_skins/erp5_jquery/core/jquery.js\',\n
+             tal:define="js_list_jquery_template python: [\'jquery/core/jquery.js\',\n
                                                           \'svg-editor.erp5.js\'];\n
                          global js_list js_list | python:[];\n
                          dummy  python:js_list.extend(js_list_jquery_template);">\n

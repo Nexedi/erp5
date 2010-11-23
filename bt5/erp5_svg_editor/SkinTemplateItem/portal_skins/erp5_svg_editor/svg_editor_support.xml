@@ -36,11 +36,11 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<script type="text/javascript" src="portal_skins/erp5_jquery/core/jquery.js"></script>\n
+<script type="text/javascript" src="jquery/core/jquery.js"></script>\n
 <script type="text/javascript" src="svg-editor.erp5.js"></script>\n
 <iframe name="svgframe" \n
         id="svgframe" \n
-        src="portal_skins/erp5_jquery/plugin/svg-editor/svg-editor.html" \n
+        src="jquery/plugin/svg-editor/svg-editor.html" \n
         width="100%" \n
         height="570"/>\n
 
