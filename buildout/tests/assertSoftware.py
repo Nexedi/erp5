@@ -1630,6 +1630,29 @@ class AssertCyrusSasl(AssertSoftwareMixin):
           ]]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
+class AssertPython26(AssertSoftwareMixin):
+  def test_ld_dyn_locale(self):
+    elf_dict = readElfAsDict('parts/python2.6/lib/python2.6/lib-dynload/_locale.so')
+    self.assertEqual(sorted([
+      'libc',
+      'libintl',
+      'libpthread',
+      ]),
+        elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in [
+          'bzip2',
+          'gdbm',
+          'gettext',
+          'libdb',
+          'ncurses',
+          'openssl',
+          'readline',
+          'sqlite3',
+          'zlib',
+          ]]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
 class AssertElfLinkedInternally(AssertSoftwareMixin):
   def test(self):
