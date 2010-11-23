@@ -189,7 +189,8 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item, PropertyManager):
     self.filename = filename
 
   security.declareProtected('View', 'index_html')
-  def index_html(self, REQUEST, RESPONSE=None, format=None, batch_mode=False):
+  def index_html(self, REQUEST, RESPONSE=None, template_relative_url=None,
+                 format=None, batch_mode=False):
     """Render and view a printout document.
 
     format: conversion format requested by User.
@@ -205,9 +206,13 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item, PropertyManager):
       else:
         container = None
     form = getattr(obj, self.form_name)
-    if self.template is None or self.template == '':
+    if template_relative_url:
+      printout_template = obj.getPortalObject().\
+                                      restrictedTraverse(template_relative_url)
+    elif self.template:
+      printout_template = getattr(obj, self.template)
+    else:
       raise ValueError, 'Can not create a ODF Document without a printout template'
-    printout_template = getattr(obj, self.template)
 
     report_method = None
     if hasattr(form, 'report_method'):
