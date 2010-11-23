@@ -795,12 +795,23 @@ class AssertNeon(AssertSoftwareMixin):
   def test_ld_libneon(self):
     elf_dict = readElfAsDict('parts/neon/lib/libneon.so')
     self.assertEqual(sorted([
-      'libc', 'libcrypto', 'libxml2', 'libdl', 'libm', 'libssl', 'libz',
+      'libc',
+      'libcrypto',
+      'libdl',
+      'libm',
+      'libpthread',
+      'libssl',
+      'libxml2',
+      'libz',
       ]),
         elf_dict['library_list'])
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
-        software in ['openssl', 'libxml2', 'zlib']]
+        software in [
+          'libxml2',
+          'openssl',
+          'zlib',
+          ]]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
 class AssertPythonMysql(AssertSoftwareMixin):
