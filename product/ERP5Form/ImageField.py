@@ -154,7 +154,9 @@ class ImageFieldWidget(Widget.TextWidget):
 
       format = content_type.split('/')[-1]
       # add the image to the odg document
-      picture_path = ooo_builder.addImage(image=image_data, format=format)
+      picture_path = ooo_builder.addImage(image=image_data,
+                                          format=format,
+                                          content_type=content_type)
 
       # create the xml nodes related to the image
       draw_frame_tag_name = '{%s}%s' % (DRAW_URI, 'frame')
