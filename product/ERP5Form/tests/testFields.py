@@ -275,6 +275,13 @@ class TestDateTimeField(ERP5TypeTestCase):
     self.assertEquals('2010/01/01   00:00',
             self.field.render_odt(as_string=False).text)
 
+  def test_render_odg(self):
+    self.field.values['default'] = DateTime('2010/01/01 00:00:01 UTC')
+    self.field.render_odg(as_string=False)
+    self.assertEquals('2010/01/01   00:00',
+                      self.field.render_odg(as_string=False)\
+             .xpath('%s/text()' % ODG_XML_WRAPPING_XPATH, namespaces=NSMAP)[0])
+
 class TestTextAreaField(ERP5TypeTestCase):
   """Tests TextArea field
   """
