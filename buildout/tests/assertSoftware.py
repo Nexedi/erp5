@@ -892,6 +892,39 @@ class AssertNeon(AssertSoftwareMixin):
           ]]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
+  def test_neonconfig(self):
+    popen = subprocess.Popen([os.path.join('parts', 'neon', 'bin', 'neon-config'),
+      '--libs'],
+    stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    result = popen.communicate()[0]
+    self.assertEqual(0, popen.returncode, result)
+    result_left = []
+    for l in result.split():
+      # let's remove acceptable parameters
+      if l in (
+          '-Wl,-rpath',
+          '-lcrypto',
+          '-ldl',
+          '-lm',
+          '-lneon',
+          '-lpthread',
+          '-lssl',
+          '-lxml2',
+          '-lz',
+          ):
+        continue
+      if 'parts/neon/lib' in l:
+        continue
+      if 'parts/zlib/lib' in l:
+        continue
+      if 'parts/libxml2/lib' in l:
+        continue
+      if 'parts/openssl/lib' in l:
+        continue
+      result_left.append(l)
+    # whatever left is wrong
+    self.assertEqual([], result_left)
+
 class AssertPythonMysql(AssertSoftwareMixin):
   def test_ld_mysqlso(self):
     for d in os.listdir('develop-eggs'):
