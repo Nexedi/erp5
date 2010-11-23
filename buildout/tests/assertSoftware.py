@@ -877,7 +877,6 @@ class AssertNeon(AssertSoftwareMixin):
       'libcrypto',
       'libdl',
       'libm',
-      'libpthread',
       'libssl',
       'libxml2',
       'libz',
