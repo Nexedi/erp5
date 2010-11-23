@@ -53,7 +53,7 @@
             <value> <string>if context.portal_membership.isAnonymousUser():\n
   return False\n
 \n
-choice = context.getLayoutProperty(\'layout_display_toolbar_widget\',\'restricted\')\n
+choice = context.getLayoutProperty(\'layout_display_toolbar_widget\',\'display\')\n
 \n
 if choice == \'display\':\n
   return True\n
