@@ -36,11 +36,11 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-\n
 <tal:block \n
-  tal:define="isAnon python: context.portal_membership.isAnonymousUser();\n
-              mode python: \'web_section\';\n
+  tal:define="mode python: \'web_section\';\n
               default_pad_group python: options.get(\'default_pad_group\', None);\n
+              isAnonymousKnowledgePadUsed python: options.get(\'use_anonymous_knowledge_pad\', False);\n
+              dummy python: request.set(\'is_anonymous_knowledge_pad_used\', isAnonymousKnowledgePadUsed);\n
               knowledge_pads python: here.ERP5Site_getKnowledgePadListForUser(\n
                                           mode=mode,\n
                                           default_pad_group=default_pad_group);\n
@@ -77,7 +77,7 @@
 \n
       <div class="portal-column" \n
            id="portal-column-0"\n
-           tal:attributes="class python: test(isAnon, \n
+           tal:attributes="class python: test(isAnon or isAnonymousKnowledgePadUsed, \n
                                               \'portal-column-undraggable\', \n
                                               \'portal-column\')"\n
            tal:define="layout active_knowledge_pad/KnowledgePad_getBoxColumnLayout;">\n
@@ -91,7 +91,7 @@
 \n
     </tal:block>\n
 \n
-    <div tal:condition="python: not isAnon and\n
+    <div tal:condition="python: not (isAnon or isAnonymousKnowledgePadUsed) and\n
                                 createDefaultPadForUser and  \n
                                 isUserAllowedToCreateKnowledgePads">\n
 \n

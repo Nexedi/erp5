@@ -39,7 +39,7 @@
 <tal:block \n
      tal:repeat="box_id python: options[\'section_layout\']"\n
      tal:define="real_context python: options.get(\'real_context\', None);\n
-                 cancel_url python: options.get(\'cancel_url\', None)">\n
+                 cancel_url python: options.get(\'cancel_url\', None);">\n
   <tal:block \n
         tal:condition="python: getattr(here, box_id, None) is not None"\n
         tal:define="box python: getattr(here, box_id);\n
@@ -64,7 +64,9 @@
                        test(real_context.getPortalType() in (\'ERP5 Site\', \'Web Site\',),\n
                                                      real_context, current_web_section); \n
                     isKnowledgePadTemplateUsed python:\n
-                       request.get(\'is_knowledge_pad_template_used\', 0);">\n
+                       request.get(\'is_knowledge_pad_template_used\', 0);\n
+                    isAnonymousKnowledgePadUsed python:\n
+                       request.get(\'is_anonymous_knowledge_pad_used\', 0);">\n
 \n
     <div class="block" \n
       tal:condition="python: gadget is not None"\n
@@ -72,7 +74,7 @@
 \n
       <h3 class="handle">\n
         <span class="handle">\n
-        <tal:block tal:condition="not: isAnon">\n
+        <tal:block tal:condition="python: not (isAnon or isAnonymousKnowledgePadUsed)">\n
           <a class="clickable-block block-remove" \n
              i18n:translate="" \n
              i18n:domain="ui"\n
@@ -101,7 +103,8 @@
 \n
           <!-- Edit form -->\n
           <div class="edit-form" \n
-               tal:condition="python: not isAnon and edit_form_id is not None and box is not None and not isKnowledgePadTemplateUsed"\n
+               tal:condition="python: not isAnon and edit_form_id is not None and box is not None and\n
+                                      not isAnonymousKnowledgePadUsed and not isKnowledgePadTemplateUsed"\n
                tal:attributes="id edit_form_dom_id"\n
                style="display: none;">\n
 \n

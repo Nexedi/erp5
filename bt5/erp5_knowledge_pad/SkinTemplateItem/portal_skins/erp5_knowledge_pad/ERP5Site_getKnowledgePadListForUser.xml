@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -79,10 +76,11 @@
 \n
 request = context.REQUEST\n
 isAnon = context.portal_membership.isAnonymousUser()\n
+isAnonymousKnowledgePadUsed = request.get(\'is_anonymous_knowledge_pad_used\', 0);\n
 kw = {\'portal_type\': \'Knowledge Pad\',\n
       \'sort_on\': ((\'creation_date\', \'ascending\',),),\n
       \'limit\': 50,}\n
-if isAnon:\n
+if isAnon or isAnonymousKnowledgePadUsed:\n
   results = context.knowledge_pad_module.searchFolder(\n
                                 validation_state = (\'public\',),\n
                                 **kw)\n
@@ -170,6 +168,7 @@ return results\n
                             <string>context</string>
                             <string>request</string>
                             <string>isAnon</string>
+                            <string>isAnonymousKnowledgePadUsed</string>
                             <string>kw</string>
                             <string>_apply_</string>
                             <string>results</string>

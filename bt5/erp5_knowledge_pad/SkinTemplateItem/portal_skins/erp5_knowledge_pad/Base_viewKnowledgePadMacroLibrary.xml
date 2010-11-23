@@ -51,7 +51,7 @@
 \n
 <tal:block metal:define-macro="knowledge_pad_security_check">\n
 \n
-  <div tal:condition="python: not isUserAllowedToCreateKnowledgePads and not isAnon">\n
+  <div tal:condition="python: not ( isUserAllowedToCreateKnowledgePads or isAnon or isAnonymousKnowledgePadUsed)">\n
     <div class="wait_block">\n
       <p i18n:translate="" i18n:domain="ui"> \n
         You are not allowed to use knowledge pad system due to security restrictions.\n
