@@ -41,7 +41,7 @@ from Products.Formulator.FieldRegistry import FieldRegistry
 from Products.Formulator.Validator import ValidationError
 from Products.Formulator.StandardFields import FloatField, StringField,\
 DateTimeField, TextAreaField, CheckBoxField, ListField, LinesField, \
-MultiListField
+MultiListField, IntegerField
 from Products.Formulator.MethodField import Method, BoundMethod
 from Products.Formulator.TALESField import TALESMethod
 
@@ -229,6 +229,22 @@ class TestFloatField(ERP5TypeTestCase):
     test_value = self.field.render_odg(as_string=False)\
       .xpath('%s/text()' % ODG_XML_WRAPPING_XPATH, namespaces=NSMAP)[0]
     self.assertEquals('1 000.0', test_value)
+
+class TestIntegerField(ERP5TypeTestCase):
+  """Tests integer field
+  """
+
+  def getTitle(self):
+    return "Integer Field"
+
+  def afterSetUp(self):
+    self.field = IntegerField('test_field')
+    self.widget = self.field.widget
+
+  def test_render_odt(self):
+    self.field.values['default'] = 34
+    self.assertEquals('34', self.field.render_odt(as_string=False).text)
+
 
 class TestStringField(ERP5TypeTestCase):
   """Tests string field
@@ -882,6 +898,7 @@ def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestRenderViewAPI))
   suite.addTest(unittest.makeSuite(TestFloatField))
+  suite.addTest(unittest.makeSuite(TestIntegerField))
   suite.addTest(unittest.makeSuite(TestStringField))
   suite.addTest(unittest.makeSuite(TestDateTimeField))
   suite.addTest(unittest.makeSuite(TestTextAreaField))
