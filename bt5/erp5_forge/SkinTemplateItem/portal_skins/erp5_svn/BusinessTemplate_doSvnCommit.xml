@@ -74,9 +74,10 @@ def getRevisionNumber(revision):\n
   except AttributeError:\n
     return revision\n
 \n
-error_kw = {}\n
 if changelog is None or not changelog.strip():\n
   error_msg = "Please set a ChangeLog message."\n
+  error_kw = {}\n
+  method = \'BusinessTemplate_viewSvnChangelog\'\n
 else:\n
   portal_subversion = context.getPortalObject().portal_subversion\n
   exclude_list = added.split(\',\') + modified.split(\',\') + removed.split(\',\')\n
@@ -88,10 +89,12 @@ else:\n
   except SubversionSSLTrustError, e:\n
     error_msg = "SSL Certificate was not recognized"\n
     error_kw = dict(caller=\'commit\', trust_dict=e.getTrustDict())\n
+    method = \'BusinessTemplate_viewSvnSSLTrust\'\n
   except SubversionLoginError, e:\n
     error_msg = "Server needs authentication, no cookie found"\n
     error_kw = dict(caller=\'commit\', realm=e.getRealm(),\n
                     username=portal_subversion.getPreferredUsername())\n
+    method = \'BusinessTemplate_viewSvnLogin\'\n
   else:\n
     return request.RESPONSE.redirect(\'%s/view?%s\' % (\n
       context.absolute_url(),\n
@@ -103,8 +106,9 @@ request.set(\'portal_status_message\', translateString(error_msg))\n
 request.set(\'cancel_url\', context.absolute_url() +\n
   \'/BusinessTemplate_viewSvnStatus?do_extract=False\'\n
   \'&portal_status_message=Commit%20cancelled.\')\n
-return context.asContext(added=added, modified=modified, removed=removed,\n
-                         **error_kw).BusinessTemplate_viewSvnChangelog()\n
+context = context.asContext(added=added, modified=modified, removed=removed,\n
+                            **error_kw)\n
+return getattr(context, method)()\n
 
 
 ]]></string> </value>
@@ -160,9 +164,10 @@ return context.asContext(added=added, modified=modified, removed=removed,\n
                             <string>request</string>
                             <string>same_type</string>
                             <string>getRevisionNumber</string>
-                            <string>error_kw</string>
                             <string>None</string>
                             <string>error_msg</string>
+                            <string>error_kw</string>
+                            <string>method</string>
                             <string>context</string>
                             <string>portal_subversion</string>
                             <string>exclude_list</string>
@@ -172,6 +177,7 @@ return context.asContext(added=added, modified=modified, removed=removed,\n
                             <string>e</string>
                             <string>dict</string>
                             <string>_apply_</string>
+                            <string>getattr</string>
                           </tuple>
                         </value>
                     </item>
