@@ -274,7 +274,7 @@ class Widget:
     text_p_node = Element(text_p_tag_name, nsmap=NSMAP)
     text_p_attribute_list = attr_dict.get(text_p_tag_name)
     if text_p_attribute_list:
-      text_p_node.attrib.update(text_p_attribute_dict)
+      text_p_node.attrib.update(text_p_attribute_list[0])
 
     text_span_tag_name = '{%s}%s' % (TEXT_URI, 'span')
     text_span_node =  Element(text_span_tag_name, nsmap=NSMAP)
