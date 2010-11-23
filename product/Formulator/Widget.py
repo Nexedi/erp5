@@ -260,23 +260,27 @@ class Widget:
       value = value.decode('utf-8')
     draw_frame_tag_name = '{%s}%s' % (DRAW_URI, 'frame')
     draw_frame_node = Element(draw_frame_tag_name, nsmap=NSMAP)
-    if len(attr_dict.get(draw_frame_tag_name, {})) > 0:
-      draw_frame_node.attrib.update(attr_dict.get(draw_frame_tag_name, {}).pop(0))
+    draw_frame_attribute_dict = attr_dict.get(draw_frame_tag_name)
+    if draw_frame_attribute_dict:
+      draw_frame_node.attrib.update(draw_frame_attribute_dict)
 
     draw_tag_name = '{%s}%s' % (DRAW_URI, 'text-box')
     draw_node = Element(draw_tag_name, nsmap=NSMAP)
-    if len(attr_dict.get(draw_tag_name, {})) > 0:
-      draw_node.attrib.update(attr_dict.get(draw_tag_name, {}).pop(0))
+    fraw_tag_attribute_dict = attr_dict.get(draw_tag_name)
+    if fraw_tag_attribute_dict:
+      draw_node.attrib.update(fraw_tag_attribute_dict)
 
     text_p_tag_name = '{%s}%s' % (TEXT_URI, 'p')
     text_p_node = Element(text_p_tag_name, nsmap=NSMAP)
-    if len(attr_dict.get(text_p_tag_name, {})) > 0:
-      text_p_node.attrib.update(attr_dict.get(text_p_tag_name, {}).pop(0))
+    text_p_attribute_dict = attr_dict.get(text_p_tag_name)
+    if text_p_attribute_dict:
+      text_p_node.attrib.update(text_p_attribute_dict)
 
     text_span_tag_name = '{%s}%s' % (TEXT_URI, 'span')
     text_span_node =  Element(text_span_tag_name, nsmap=NSMAP)
-    if len(attr_dict.get(text_span_tag_name, {})) > 0:
-      text_span_node.attrib.update(attr_dict.get(text_span_tag_name, {}).pop(0))
+    text_span_attribute_dict = attr_dict.get(text_span_tag_name)
+    if text_span_attribute_dict:
+      text_span_node.attrib.update(text_span_attribute_dict)
 
     text_p_node.append(text_span_node)
     draw_node.append(text_p_node)
