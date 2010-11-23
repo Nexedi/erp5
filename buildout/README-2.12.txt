@@ -44,7 +44,7 @@ Download the newest bootstrap.py file from:
 
 And run it:
 
-  $ python2.6 -S bootstrap.py -c buildout-2.12.cfg
+  $ python -S bootstrap.py -c buildout-2.12.cfg
 
 WARNING: please read "Troubleshooting" section bellow, you may need to
 unset environment variables in your GNU/Linux distribution
@@ -52,10 +52,10 @@ unset environment variables in your GNU/Linux distribution
 If curl or wget are available, it can be done in one line:
 
 in case of curl:
-  $ curl -s http://svn.zope.org/*checkout*/zc.buildout/trunk/bootstrap/bootstrap.py | python2.6 -S - -c buildout-2.12.cfg
+  $ curl -s http://svn.zope.org/*checkout*/zc.buildout/trunk/bootstrap/bootstrap.py | python -S - -c buildout-2.12.cfg
 
 in case of wget:
-  $ wget -q  -O - http://svn.zope.org/*checkout*/zc.buildout/trunk/bootstrap/bootstrap.py | python2.6 -S - -c buildout-2.12.cfg
+  $ wget -q  -O - http://svn.zope.org/*checkout*/zc.buildout/trunk/bootstrap/bootstrap.py | python -S - -c buildout-2.12.cfg
 
 Run the Zope 2.12 buildout
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -85,7 +85,7 @@ Post-build check
 ----------------
 
 Run:
-  python2.6 tests/assertSoftware.py
+  python tests/assertSoftware.py
 
 Distribution helpers
 --------------------
