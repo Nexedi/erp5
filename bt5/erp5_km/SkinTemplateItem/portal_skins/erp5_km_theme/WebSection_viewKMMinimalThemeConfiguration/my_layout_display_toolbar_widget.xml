@@ -96,16 +96,16 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>Display</string>
+                          <string>display</string>
+                        </tuple>
+                        <tuple>
                           <string>Webmaster</string>
                           <string>webmaster</string>
                         </tuple>
                         <tuple>
                           <string>Context</string>
                           <string>context</string>
-                        </tuple>
-                        <tuple>
-                          <string>Display</string>
-                          <string>display</string>
                         </tuple>
                         <tuple>
                           <string>Hide</string>

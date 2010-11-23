@@ -148,7 +148,9 @@
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
@@ -300,6 +302,19 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <string>python: here.WebSite_viewWidgetManagementButtonsWidget(default_pad_group=\'default_content_pad\')</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: not here.getLayoutProperty(\'layout_force_anonymous_gadget\')</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="EditorField" module="Products.ERP5Form.EditorField"/>
-        <tuple/>
-      </tuple>
+      <global name="EditorField" module="Products.ERP5Form.EditorField"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -298,26 +295,20 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.WebSection_viewColumnOne(default_pad_group=\'default_content_pad\')</string> </value>
+            <value> <string>python: here.WebSection_viewColumnOne(default_pad_group=\'default_content_pad\', use_anonymous_knowledge_pad=context.getLayoutProperty(\'layout_force_anonymous_gadget\',False))</string> </value>
         </item>
       </dictionary>
     </pickle>
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
     </pickle>
     <pickle>
       <dictionary>
