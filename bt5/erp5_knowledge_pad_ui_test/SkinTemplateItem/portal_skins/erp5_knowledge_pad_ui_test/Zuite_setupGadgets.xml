@@ -56,6 +56,18 @@ for gadget in context.portal_gadgets.objectValues():\n
     gadget.visible()\n
     gadget.public()\n
 \n
+# add to preference a template pad\n
+active_preference = context.portal_preferences.getActivePreference()\n
+knowledge_pad = active_preference.newContent(portal_type="Knowledge Pad",\n
+                                             title="Template Pad")\n
+\n
+knowledge_pad.visible()\n
+knowledge_pad.public()\n
+\n
+# XXX: add some gadgets\n
+\n
+\n
+\n
 print "Done"\n
 return printed\n
 </string> </value>
@@ -104,6 +116,8 @@ return printed\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>gadget</string>
+                            <string>active_preference</string>
+                            <string>knowledge_pad</string>
                           </tuple>
                         </value>
                     </item>
