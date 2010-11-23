@@ -54,13 +54,14 @@
                        current_web_section_url python:request.get(\'current_web_section_url\', portal_path);\n
                        search_area_url python: \'%s%s\' % (portal_path, current_web_site.getLayoutProperty(\'layout_search_area_web_section_id\', default=\'\'));\n
                        is_anonymous here/portal_membership/isAnonymousUser;\n
-                       anonymous_navigation_menu python:is_anonymous and current_web_site.getLayoutProperty(\'layout_anonymous_navigation_menu\');">\n
+                       anonymous_navigation_menu python:is_anonymous and current_web_site.getLayoutProperty(\'layout_anonymous_navigation_menu\');\n
+                       static_navigation_menu python: anonymous_navigation_menu or  current_web_site.getLayoutProperty(\'layout_member_navigation_menu\');">\n
 \n
 <ul class="nav">\n
   <li class="home-link"><a href="#" tal:attributes="href portal_path" id="home-link">Home</a></li>\n
 \n
   <tal:block tal:replace="structure here/WebSite_viewBrowseNavigationMenuWidget"/>\n
-\n
+  <tal:block tal:condition="not: static_navigation_menu">\n
   <li class="collapse-menu" \n
       tal:condition="not:anonymous_navigation_menu">\n
     <a href="#" tal:attributes="href string:${search_area_url}/ERP5Site_viewSearchResult">\n
@@ -166,10 +167,10 @@
       </li>\n
     </ul>\n
   </li>\n
+  </tal:block>\n
 </ul>\n
 \n
-</tal:block>\n
-
+</tal:block>
 
 ]]></unicode> </value>
         </item>
