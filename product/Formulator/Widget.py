@@ -1490,15 +1490,16 @@ class DateTimeWidget(Widget):
       return etree.tostring(text_node)
     return text_node
 
-  def render_odg(self, field, value, as_string, ooo_builder, REQUEST,
-      render_prefix, attr_dict, local_name):
+  def render_odg_view(self, field, value, as_string, ooo_builder, REQUEST,
+                      render_prefix, attr_dict, local_name):
+    """Transform DateTime into string then call default renderer
     """
-      Return a field value rendered in odt format.
-      - as_string return value as string or as xml object
-      - attr_dict can be used for additional attributes (like style).
-    """
-    return self.render_odt(field, value, as_string, ooo_builder, REQUEST,
-                           render_prefix, attr_dict, local_name)
+    if not value and field.get_value('default_now'):
+      value = DateTime()
+    value_as_text = self.format_value(field, value, mode='pdf').decode('utf-8')
+    return Widget.render_odg_view(self, field, value_as_text, as_string,
+                                      ooo_builder, REQUEST, render_prefix,
+                                      attr_dict, local_name)
 
 DateTimeWidgetInstance = DateTimeWidget()
 
