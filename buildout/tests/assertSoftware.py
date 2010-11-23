@@ -718,7 +718,6 @@ class AssertSubversion(AssertSoftwareMixin):
         software in [
           'apache',
           'libuuid',
-          'libexpat',
           'neon',
           'sqlite3',
           'subversion',
