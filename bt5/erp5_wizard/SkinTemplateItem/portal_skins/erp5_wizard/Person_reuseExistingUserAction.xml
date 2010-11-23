@@ -51,7 +51,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  XXX\n
+  Allow to reuse an existing user from another instance.\n
 """\n
 translateString = context.Base_translateString\n
 portal = context.getPortalObject()\n
