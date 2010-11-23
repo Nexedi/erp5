@@ -52,6 +52,7 @@ from OFS.Image import Pdata
 from lxml import etree
 from lxml.etree import Element, XMLSyntaxError
 from copy import deepcopy
+from warnings import warn
 
 class CorruptedOOoFile(Exception): pass
 
@@ -188,13 +189,18 @@ class OOoBuilder(Implicit):
     self.replace(MANIFEST_FILENAME, meta_infos)
     self._manifest_additions_list = []
 
-  def addImage(self, image, format='png'):
+  def addImage(self, image, format='png', content_type=None):
     """
     Add an image to the current document and return its id
     """
     count = self._image_count
     self._image_count += 1
     name = "Pictures/%s.%s" % (count, format)
+    if not content_type:
+      import mimetypes
+      warn('content_type argument must be passed explicitely', FutureWarning)
+      content_type = mimetypes.guess_type(name)[0]
+    self.addManifest(name, content_type)
     self.replace(name, image)
     is_legacy = ('oasis.opendocument' not in self.getMimeType())
     return "%s%s" % (is_legacy and '#' or '', name,)
