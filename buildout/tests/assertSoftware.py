@@ -1773,6 +1773,7 @@ class AssertGettext(AssertSoftwareMixin):
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
         software in [
+          'libxml2',
           ]]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
