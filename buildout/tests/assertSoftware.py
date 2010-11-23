@@ -670,15 +670,31 @@ class AssertSubversion(AssertSoftwareMixin):
 
   def test_ld_libsvn_fs(self):
     elf_dict = readElfAsDict('parts/subversion/lib/libsvn_fs-1.so')
-    self.assertEqual(sorted(['libsvn_delta-1', 'libsvn_fs_fs-1',
-      'libsvn_fs_util-1', 'libsvn_subr-1', 'libapr-1', 'libuuid', 'librt',
-      'libc', 'libcrypt', 'libdl', 'libpthread',
+    self.assertEqual(sorted([
+      'libapr-1',
+      'libc',
+      'libcrypt',
+      'libdl',
+      'libpthread',
+      'librt',
+      'libsvn_delta-1',
+      'libsvn_fs_fs-1',
+      'libsvn_fs_util-1',
+      'libsvn_subr-1',
+      'libuuid',
       ]),
         elf_dict['library_list'])
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
-        software in ['apache', 'sqlite3', 'subversion', 'zlib', 'libuuid',
-          'neon']]
+        software in [
+          'apache',
+          'libuuid',
+          'libexpat',
+          'neon',
+          'sqlite3',
+          'subversion',
+          'zlib',
+          ]]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_ld_libsvn_fs_fs(self):
