@@ -781,16 +781,39 @@ class AssertSubversion(AssertSoftwareMixin):
 
   def test_ld_libsvn_ra_neon(self):
     elf_dict = readElfAsDict('parts/subversion/lib/libsvn_ra_neon-1.so')
-    self.assertEqual(sorted(['libaprutil-1', 'libsvn_delta-1', 'libcrypto',
-      'libexpat', 'libsvn_subr-1', 'libapr-1', 'libuuid', 'libssl', 'libneon',
-      'librt', 'libc', 'libcrypt', 'libdl', 'libpthread', 'libm', 'libxml2',
+    self.assertEqual(sorted([
+      'libapr-1',
+      'libaprutil-1',
+      'libc',
+      'libcrypt',
+      'libcrypto',
+      'libdl',
+      'libexpat',
+      'libm',
+      'libneon',
+      'libpthread',
+      'librt',
+      'libssl',
+      'libsvn_delta-1',
+      'libsvn_subr-1',
+      'libuuid',
+      'libxml2',
       'libz',
       ]),
         elf_dict['library_list'])
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
-        software in ['apache', 'libexpat', 'openssl', 'libxml2',
-                     'sqlite3', 'subversion', 'zlib', 'libuuid', 'neon']]
+        software in [
+          'apache',
+          'libexpat',
+          'libuuid',
+          'libxml2',
+          'neon',
+          'openssl',
+          'sqlite3',
+          'subversion',
+          'zlib',
+          ]]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_ld_libsvn_ra_svn(self):
