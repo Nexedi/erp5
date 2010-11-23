@@ -79,8 +79,9 @@ if changelog is None or not changelog.strip():\n
   error_msg = "Please set a ChangeLog message."\n
 else:\n
   portal_subversion = context.getPortalObject().portal_subversion\n
+  exclude_list = added.split(\',\') + modified.split(\',\') + removed.split(\',\')\n
   portal_subversion.revert(\'.\', business_template=context, recurse=True,\n
-    exclude_list = added.split(\',\') + modified.split(\',\') + removed.split(\',\'))\n
+                           exclude_list=filter(None, exclude_list))\n
   try:\n
     revision = portal_subversion.checkin(\'.\', business_template=context,\n
                                               log_message=changelog)\n
@@ -164,7 +165,9 @@ return context.asContext(added=added, modified=modified, removed=removed,\n
                             <string>error_msg</string>
                             <string>context</string>
                             <string>portal_subversion</string>
+                            <string>exclude_list</string>
                             <string>True</string>
+                            <string>filter</string>
                             <string>revision</string>
                             <string>e</string>
                             <string>dict</string>

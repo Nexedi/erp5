@@ -610,7 +610,7 @@ class SubversionTool(BaseTool):
     """
     client = self._getClient()
     if isinstance(path, basestring):
-      path = path,
+      path = [path]
     if business_template is not None:
       path = [self._getWorkingPath(self.relativeToAbsolute(x,
         business_template)) for x in path]
