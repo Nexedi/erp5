@@ -114,8 +114,8 @@ class ImageFieldWidget(Widget.TextWidget):
             extra=extra,
         )
 
-    def render_odg(self, field, value, as_string, ooo_builder, REQUEST,
-        render_prefix, attr_dict, local_name):
+    def render_odg_view(self, field, value, as_string, ooo_builder, REQUEST,
+                        render_prefix, attr_dict, local_name):
       """
         return an image xml node rendered in odg format
         if as_string is True (default) the returned value is a string (xml
