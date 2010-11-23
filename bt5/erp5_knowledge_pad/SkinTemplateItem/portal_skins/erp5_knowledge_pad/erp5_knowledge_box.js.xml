@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts87651539.15</string> </value>
+            <value> <string>ts90516068.0</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -45,7 +45,7 @@ function createCustomKnowledgePadOnServer(){\n
 }\n
 \n
 function showCreateDefaultKnowledgePadWarningMessage(){\n
-  user_choice = confirm("In order to complete operation you must have your own tab on server instead of the default one which you are currently using and which you can not change.\\nIs it OK to create new one for you now?");\n
+  user_choice = confirm("In order to complete operation you must have your own tab on server instead of the default one which you are currently using and which you can not change.Is it OK to create new one for you now?");\n
   if (user_choice==true){\n
     createCustomKnowledgePadOnServer();\n
   }\n
@@ -406,7 +406,7 @@ MochiKit.DOM.addLoadEvent(initialize);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>15083</int> </value>
+            <value> <int>15081</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
