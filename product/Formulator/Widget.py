@@ -225,7 +225,16 @@ class Widget:
     return text_node
 
   def render_odg(self, field, value, as_string, ooo_builder, REQUEST,
-      render_prefix, attr_dict, local_name):
+                 render_prefix, attr_dict, local_name):
+    """This render dedicated to render fields inside OOo document
+      (eg. editable mode)
+    """
+    # XXX By default fallback to render_odg_view
+    return self.render_odg_view(field, value, as_string, ooo_builder, REQUEST,
+                                render_prefix, attr_dict, local_name)
+
+  def render_odg_view(self, field, value, as_string, ooo_builder, REQUEST,
+                      render_prefix, attr_dict, local_name):
     """
       Default render odg for widget - to be overwritten in field classes.
       Return a field node rendered in odg format.
@@ -233,6 +242,16 @@ class Widget:
       - attr_dict can be used for additional attributes (like style).
       - ooo_builder wrapper of ODF zipped archive usefull to insert images
       - local_name local-name of the node returned by this render
+    <draw:frame draw:name="my_string_field" draw:style-name="gr11"
+                draw:text-style-name="P5" draw:layer="layout"
+                svg:width="5cm" svg:height="0.725cm"
+                svg:x="6.5cm" svg:y="2.5cm">
+      <draw:text-box>
+        <text:p text:style-name="P5">
+          <text:span text:style-name="T4">my_string_field value</text:span>
+        </text:p>
+      </draw:text-box>
+    </draw:frame>
     """
     if attr_dict is None:
       attr_dict = {}
