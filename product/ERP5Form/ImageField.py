@@ -164,22 +164,22 @@ class ImageFieldWidget(Widget.TextWidget):
 
       # set the size of the image
       if display is not None:
-	# if the image width and height are not on defined, use current
-	# width and height
-	if (image_object.getWidth(), image_object.getHeight()) not in \
-	    ((-1, -1), (0,0)):
-	  width, height = image_object._getAspectRatioSize(width, height)
-        if draw_frame_node.attrib.get('{%s}width' % SVG_URI, {}) != {} and \
-        draw_frame_node.attrib.get('{%s}height' % SVG_URI, {}) != {}:
-          # if a size already exist from attr_dict, try to resize the image to
-          # fit this size (image should not be biger than size from attr_dict)
-          # devide the value by 20 to have cm instead of px
-          width, height = self._getPictureSize(width/20., height/20.,
-              target_width=draw_frame_node.attrib.get('{%s}width' % SVG_URI, {}),
-              target_height=draw_frame_node.attrib.get('{%s}height' % SVG_URI, {}))
+        # if the image width and height are not on defined, use current
+        # width and height
+        if (image_object.getWidth(), image_object.getHeight()) not in \
+          ((-1, -1), (0,0)):
+          width, height = image_object._getAspectRatioSize(width, height)
+          if draw_frame_node.attrib.get('{%s}width' % SVG_URI, {}) != {} and \
+          draw_frame_node.attrib.get('{%s}height' % SVG_URI, {}) != {}:
+            # if a size already exist from attr_dict, try to resize the image to
+            # fit this size (image should not be biger than size from attr_dict)
+            # devide the value by 20 to have cm instead of px
+            width, height = self._getPictureSize(width/20., height/20.,
+                target_width=draw_frame_node.attrib.get('{%s}width' % SVG_URI, {}),
+                target_height=draw_frame_node.attrib.get('{%s}height' % SVG_URI, {}))
 
-        draw_frame_node.set('{%s}width' % SVG_URI, str(width))
-        draw_frame_node.set('{%s}height' % SVG_URI, str(height))
+          draw_frame_node.set('{%s}width' % SVG_URI, str(width))
+          draw_frame_node.set('{%s}height' % SVG_URI, str(height))
 
       image_tag_name = '{%s}%s' % (DRAW_URI, 'image')
       image_node = Element(image_tag_name, nsmap=NSMAP)
