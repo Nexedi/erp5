@@ -1654,6 +1654,19 @@ class AssertPython26(AssertSoftwareMixin):
           ]]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
+class AssertGettext(AssertSoftwareMixin):
+  def test_ld_libintl(self):
+    elf_dict = readElfAsDict('parts/gettext/lib/libintl.so')
+    self.assertEqual(sorted([
+      'libc',
+      ]),
+        elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in [
+          ]]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
 class AssertElfLinkedInternally(AssertSoftwareMixin):
   def test(self):
     result_dict = {}
