@@ -1606,6 +1606,18 @@ class IntegerWidget(TextWidget) :
       value = int(value)
     return TextWidget.render_view(self, field, value, REQUEST=REQUEST)
 
+  def render_odt_view(self, field, value, as_string, ooo_builder, REQUEST,
+                      render_prefix, attr_dict, local_name):
+    """This renderer is dedicated to render values inside OOo document
+    It renderer convert explicitely numeric values into strings
+    """
+    if isinstance(value, (int, float)):
+      # convert into string
+      value = '%s' % value
+    return TextWidget.render_odt_view(self, field, value, as_string,
+                                      ooo_builder, REQUEST, render_prefix, 
+                                      attr_dict, local_name)
+
 IntegerWidgetInstance = IntegerWidget()
 class FloatWidget(TextWidget):
 
