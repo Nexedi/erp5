@@ -50,21 +50,49 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>translateString = context.Base_translateString\n
+            <value> <string>"""\n
+  XXX\n
+"""\n
+translateString = context.Base_translateString\n
+portal = context.getPortalObject()\n
+request = context.REQUEST\n
+\n
+kw = {}\n
+kw[\'start_date\'] = request.get(\'start_date\', None)\n
+kw[\'stop_date\'] = request.get(\'stop_date\', None)\n
+kw[\'group\'] = request.get(\'field_my_group\', None)\n
+kw[\'function\'] = request.get(\'field_my_function\', None)\n
+kw[\'activity\'] = request.get(\'field_my_activity\', None)\n
+kw[\'title\'] = request.get(\'field_my_title\', None)\n
+kw[\'description\'] = request.get(\'field_my_description\', None)\n
+\n
+# XXX(lucas): Remove DateTime, because XML-RPC can not handle it.\n
+request.form[\'start_date\'] = ""\n
+request.REQUEST.form[\'stop_date\'] = ""\n
+\n
 if context.getReference():\n
   portal_status_message = translateString(\'User has login already.\')\n
 elif not context.WizardTool_isPersonReferencePresent(reference):\n
   portal_status_message = translateString(\'User does not exist yet.\')\n
 else:\n
   # create a local copy\n
-  context.edit(reference = reference)\n
+  context.edit(reference=reference)\n
+\n
+  # create local assignment\n
+  tag = \'%s_reuse_create_assignment\' % context.getId()\n
+  context.activate(tag=tag).Person_createAssignment(**kw)\n
+\n
+  # create a global account\n
+  if 1:#portal.portal_wizard.isSingleSignOnEnabled():\n
+    context.activate(after_tag=tag).Person_synchroniseExistingAccountWithInstance()\n
+\n
   # create a global account\n
   context.Person_synchroniseExistingAccountWithInstance()\n
   portal_status_message = translateString(\'Status changed.\')\n
 \n
 # redirect appropriately\n
 context.Base_redirect(form_id=form_id,\n
-                      keep_items={\'portal_status_message\':portal_status_message})\n
+                      keep_items={\'portal_status_message\': portal_status_message})\n
 </string> </value>
         </item>
         <item>
@@ -75,7 +103,7 @@ context.Base_redirect(form_id=form_id,\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>reference, form_id = \'view\'</string> </value>
+            <value> <string>reference, form_id=\'view\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -106,7 +134,14 @@ context.Base_redirect(form_id=form_id,\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>translateString</string>
+                            <string>portal</string>
+                            <string>request</string>
+                            <string>kw</string>
+                            <string>None</string>
+                            <string>_write_</string>
                             <string>portal_status_message</string>
+                            <string>tag</string>
+                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>
