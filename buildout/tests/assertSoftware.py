@@ -1778,7 +1778,7 @@ class AssertGettext(AssertSoftwareMixin):
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
 class AssertLibxslt(AssertSoftwareMixin):
-  def test_ld_libintl(self):
+  def test_ld_xsltproc(self):
     elf_dict = readElfAsDict('parts/libxslt/bin/xsltproc')
     self.assertEqual(sorted([
       'libc',
@@ -1800,7 +1800,7 @@ class AssertLibxslt(AssertSoftwareMixin):
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
 class AssertW3m(AssertSoftwareMixin):
-  def test_ld_libintl(self):
+  def test_ld_w3m(self):
     elf_dict = readElfAsDict('parts/w3m/bin/w3m')
     self.assertEqual(sorted([
       'libc',
