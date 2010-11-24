@@ -1036,8 +1036,7 @@ class AssertApache(AssertSoftwareMixin):
     for module in required_module_list:
       if module not in loaded_module_list:
         failed_module_list.append(module)
-    self.assertEqual([], failed_module_list,
-        'Apache modules not found:\n'+'\n'.join(failed_module_list))
+    self.assertEqual([], failed_module_list)
 
   def test_ld_module_mod_actions(self):
     elf_dict = readElfAsDict('parts/apache/modules/mod_actions.so')
