@@ -1397,6 +1397,33 @@ class AssertVarnish(AssertSoftwareMixin):
       'varnish-2.1',
       ])
 
+class AssertLibrsync(AssertSoftwareMixin):
+  def test_ld_rdiff(self):
+    self.assertLibraryList('parts/librsync/bin/rdiff', [
+      'libbz2',
+      'libc',
+      'libpopt',
+      'librsync',
+      'libz',
+      ], [
+      'bzip2',
+      'librsync',
+      'popt',
+      'zlib',
+      ])
+
+  def test_ld_librsync(self):
+    self.assertLibraryList('parts/librsync/lib/librsync.so', [
+      'libbz2',
+      'libc',
+      'libpopt',
+      'libz',
+      ], [
+      'bzip2',
+      'popt',
+      'zlib',
+      ])
+
 class AssertElfLinkedInternally(AssertSoftwareMixin):
   def test(self):
     return
