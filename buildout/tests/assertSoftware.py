@@ -1777,6 +1777,53 @@ class AssertGettext(AssertSoftwareMixin):
           ]]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
+class AssertLibxslt(AssertSoftwareMixin):
+  def test_ld_libintl(self):
+    elf_dict = readElfAsDict('parts/libxslt/bin/xsltproc')
+    self.assertEqual(sorted([
+      'libc',
+      'libdl',
+      'libexslt',
+      'libm',
+      'libxml2',
+      'libxslt',
+      'libz',
+      ]),
+        elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in [
+          'libxml2',
+          'libxslt',
+          'zlib',
+          ]]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+class AssertW3m(AssertSoftwareMixin):
+  def test_ld_libintl(self):
+    elf_dict = readElfAsDict('parts/w3m/bin/w3m')
+    self.assertEqual(sorted([
+      'libc',
+      'libdl',
+      'libcrypto',
+      'libgc',
+      'libm',
+      'libncurses',
+      'libnsl',
+      'libpthread',
+      'libssl',
+      ]),
+        elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in [
+          'garbage-collector',
+          'ncurses',
+          'openssl',
+          'zlib',
+          ]]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
 class AssertElfLinkedInternally(AssertSoftwareMixin):
   def test(self):
     result_dict = {}
