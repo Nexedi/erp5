@@ -55,7 +55,7 @@
 """\n
 text_content = context.REQUEST.get("text")\n
 if text_content is not None:\n
-  context.edit(text_content=text_content)\n
+  context.setTextContent(text_content)\n
 </string> </value>
         </item>
         <item>

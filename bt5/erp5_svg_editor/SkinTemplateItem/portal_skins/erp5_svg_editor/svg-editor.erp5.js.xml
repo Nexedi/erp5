@@ -39,7 +39,6 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <unicode>$(document).ready(function(){\n
-  $("iframe#svgframe").css("border", "0px");\n
   $("button.save").click(function(){\n
     svg_canvas = window.frames["svgframe"].svgCanvas;\n
     $.ajax({\n
@@ -54,6 +53,7 @@
                async: false\n
              }).responseText;\n
   svg_canvas.setSvgString(text_content);\n
+  $("iframe#svgframe").css("border", "0px");\n
 })</unicode> </value>
         </item>
         <item>
