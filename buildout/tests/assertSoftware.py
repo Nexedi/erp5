@@ -1800,6 +1800,47 @@ class AssertW3m(AssertSoftwareMixin):
           ]]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
+class AssertVarnish(AssertSoftwareMixin):
+  def test_ld_varnishd(self):
+    elf_dict = readElfAsDict('parts/varnish-2.1/sbin/varnishd')
+    self.assertEqual(sorted([
+      'libc',
+      'libdl',
+      'libm',
+      'libnsl',
+      'libpthread',
+      'libvarnish',
+      'libvarnishcompat',
+      'libvcl',
+      ]),
+        elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in [
+          'ncurses',
+          'varnish-2.1',
+          ]]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+  def test_ld_varnishtop(self):
+    elf_dict = readElfAsDict('parts/varnish-2.1/bin/varnishtop')
+    self.assertEqual(sorted([
+      'libc',
+      'libncurses',
+      'libpthread',
+      'libvarnish',
+      'libvarnishapi',
+      'libvarnishcompat',
+      ]),
+        elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in [
+          'ncurses',
+          'varnish-2.1',
+          ]]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
 class AssertElfLinkedInternally(AssertSoftwareMixin):
   def test(self):
     return
