@@ -217,7 +217,11 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string encoding="cdata"><![CDATA[
+
+<iframe name="svgframe" id="svgframe" src="jquery/plugin/svg-editor/svg-editor.html" width="750" height="600"/>
+
+]]></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -225,7 +229,7 @@
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
@@ -265,7 +269,7 @@
                 </item>
                 <item>
                     <key> <string>text_editor</string> </key>
-                    <value> <string>svg_editor</string> </value>
+                    <value> <string>text_area</string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
