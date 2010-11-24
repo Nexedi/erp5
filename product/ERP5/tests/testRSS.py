@@ -120,7 +120,7 @@ class TestRSS(ERP5TypeTestCase):
     self.assertEquals(getSubnodeContent(item, 'title'), 'Two')
     self.assertEquals(getSubnodeContent(item, 'description'), 'Person Two')
     self.assertEquals(getSubnodeContent(item, 'author'), 'seb')
-    expected_link = two.absolute_url()
+    expected_link = '%s/view' %two.absolute_url()
     self.assertEquals(getSubnodeContent(item, 'link'), expected_link)
     self.assertEquals(len(item.getElementsByTagName('pubDate')), 1)
     # is date formatted correctly?
@@ -130,7 +130,7 @@ class TestRSS(ERP5TypeTestCase):
     self.assertEquals(getSubnodeContent(item, 'title'), 'One')
     self.assertEquals(getSubnodeContent(item, 'description'), 'Person One')
     self.assertEquals(getSubnodeContent(item, 'author'), 'seb')
-    expected_link = one.absolute_url()
+    expected_link = '%s/view' %one.absolute_url()
     self.assertEquals(getSubnodeContent(item, 'link'), expected_link)
     self.assertEquals(len(item.getElementsByTagName('pubDate')), 1)
     # is date formatted correctly?
