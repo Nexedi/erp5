@@ -139,20 +139,22 @@ class AssertSoftwareMixin(unittest.TestCase):
     try:
       return unittest.TestCase.assertEqual(self, first, second, msg=msg)
     except unittest.TestCase.failureException:
-      if (msg is None) and \
-          isinstance(first, list) and \
+      if isinstance(first, list) and \
           isinstance(second, list):
-        msg = ''
+        err = ''
         for elt in first:
           if elt not in second:
-            msg += '- %s\n' % elt
+            err += '- %s\n' % elt
         for elt in second:
           if elt not in first:
-            msg += '+ %s\n' % elt
-        if msg == '':
+            err += '+ %s\n' % elt
+        if err == '':
           raise
         else:
-          msg = 'Lists are different:\n%s' % msg
+          if msg:
+            msg = '%s: Lists are different:\n%s' % (msg, err)
+          else:
+            msg = 'Lists are different:\n%s' % err
           raise unittest.TestCase.failureException, msg
       else:
         raise
