@@ -35,9 +35,9 @@ class PropertyExistenceConstraint:
             'type': 'lines',
             'description' : 'Properties to check the existence for' },
         {   'id': 'message_no_such_property',
-            'type': 'lines',
+            'type': 'string',
             'description' : 'Error message when there is no such property' },
         {   'id': 'message_property_not_set',
-            'type': 'lines',
+            'type': 'string',
             'description' : 'Error message when the property is not set' },
         )
