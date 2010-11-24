@@ -49,7 +49,7 @@
                         js_list_jquery_template python:[\'jquery/core/jquery.js\',\n
                                                   \'jquery/plugin/sheet/jquery.sheet.js\',\n
                                                   \'jquery/plugin/mbmenu/mbMenu.min.js\',\n
-                                                  \'portal_skins/erp5_jquery/ui/js/jquery-ui.js\',\n
+                                                  \'jquery/ui/js/jquery-ui.js\',\n
                                                   \'jquery/plugin/jqcharts/jgcharts.min.js\',\n
                                                   \'jquery/plugin/colorpicker/jquery.colorPicker.min.js\',\n
                                                   \'http://jqueryui.com/themeroller/themeswitchertool/\',\n
