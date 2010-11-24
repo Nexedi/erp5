@@ -74,6 +74,7 @@ ACCEPTABLE_GLOBAL_LIB_LIST = (
 
 SKIP_PART_LIST = (
   'parts/boost-lib-download',
+  'parts/mysql-5.1__compile__',
   'parts/openoffice-bin',
   'parts/openoffice-bin__unpack__',
 )
@@ -1446,7 +1447,6 @@ class AssertBzip2(AssertSoftwareMixin):
 
 class AssertElfLinkedInternally(AssertSoftwareMixin):
   def test(self):
-    return
     result_dict = {}
     root = os.path.join(os.path.abspath(os.curdir), 'parts')
     for dirpath, dirlist, filelist in os.walk(root):
