@@ -129,7 +129,27 @@ class PortalTypeMetaClass(ExtensionClass):
       cls.__ghostbase__ = None
       cls.resetAcquisitionAndSecurity()
 
+  def __getattr__(cls, name):
+    """
+    Load the class before trying to access a class attribute (for
+    example, Standard Property document defines a class method to
+    import a filesystem property)
+    """
+    # Perform the loadClass only on erp5.portal_type classes
+    if cls.__module__ != 'erp5.portal_type':
+      return getattr(cls.__bases__[0], name)
+
+    if not name.startswith('__') and cls.__ghostbase__ is None:
+      cls.loadClass()
+      return getattr(cls, name)
+
+    raise AttributeError
+
   def loadClass(cls):
+    # Do not load the class again if it has already been loaded
+    if cls.__ghostbase__ is not None:
+      return
+
     # cls might be a subclass of a portal type class
     # we need to find the right class to change
     for klass in cls.__mro__:
