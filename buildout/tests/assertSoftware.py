@@ -77,9 +77,6 @@ SKIP_PART_LIST = (
   'parts/openoffice-bin',
   'parts/openoffice-bin__unpack__',
 )
-def getCleanList(s):
-  """Converts free form string separated by whitespaces to python list"""
-  return sorted([q.strip() for q in s.split() if len(q.strip()) > 0])
 
 def readElfAsDict(f):
   """Reads ELF information from file"""
@@ -504,7 +501,6 @@ class AssertSqlite3(AssertSoftwareMixin):
     elf_dict = readElfAsDict('parts/sqlite3/lib/libsqlite3.so')
     self.assertEqual(sorted(['libpthread', 'libc', 'libdl']),
         elf_dict['library_list'])
-    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     self.assertEqual([], elf_dict['runpath_list'])
 
 class AssertMemcached(AssertSoftwareMixin):
@@ -962,7 +958,7 @@ class AssertApache(AssertSoftwareMixin):
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
   def test_modules(self):
-    required_module_list = getCleanList("""
+    required_module_list = sorted([q.strip() for q in """
       actions_module
       alias_module
       asis_module
@@ -970,6 +966,7 @@ class AssertApache(AssertSoftwareMixin):
       auth_digest_module
       authn_alias_module
       authn_anon_module
+      authn_dbd_module
       authn_dbm_module
       authn_default_module
       authn_file_module
@@ -978,6 +975,7 @@ class AssertApache(AssertSoftwareMixin):
       authz_groupfile_module
       authz_host_module
       authz_owner_module
+      authz_svn_module
       authz_user_module
       autoindex_module
       bucketeer_module
@@ -988,6 +986,11 @@ class AssertApache(AssertSoftwareMixin):
       cgi_module
       cgid_module
       charset_lite_module
+      core_module
+      dav_fs_module
+      dav_module
+      dav_svn_module
+      dbd_module
       deflate_module
       dir_module
       disk_cache_module
@@ -998,6 +1001,7 @@ class AssertApache(AssertSoftwareMixin):
       ext_filter_module
       filter_module
       headers_module
+      http_module
       ident_module
       imagemap_module
       include_module
@@ -1007,36 +1011,39 @@ class AssertApache(AssertSoftwareMixin):
       logio_module
       mime_magic_module
       mime_module
+      mpm_prefork_module
       negotiation_module
       optional_fn_export_module
       optional_fn_import_module
       optional_hook_export_module
       optional_hook_import_module
+      proxy_ajp_module
       proxy_balancer_module
       proxy_connect_module
       proxy_ftp_module
       proxy_http_module
       proxy_module
+      proxy_scgi_module
+      reqtimeout_module
       rewrite_module
       setenvif_module
+      so_module
       speling_module
       ssl_module
       status_module
       substitute_module
       unique_id_module
+      userdir_module
       usertrack_module
       version_module
       vhost_alias_module
-    """)
-    result = os.popen("parts/apache/bin/httpd -M")
-    loaded_module_list = [module_name for module_name in result.read().split()
-                          if module_name.endswith('module')]
-    result.close()
-    failed_module_list = []
-    for module in required_module_list:
-      if module not in loaded_module_list:
-        failed_module_list.append(module)
-    self.assertEqual([], failed_module_list)
+    """.split() if len(q.strip()) > 0])
+    popen = subprocess.Popen(['parts/apache/bin/httpd', '-M'],
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    result = popen.communicate()[0]
+    loaded_module_list = sorted([module_name for module_name in result.split()
+                          if module_name.endswith('module')])
+    self.assertEqual(loaded_module_list, required_module_list)
 
   def test_ld_module_mod_actions(self):
     elf_dict = readElfAsDict('parts/apache/modules/mod_actions.so')
