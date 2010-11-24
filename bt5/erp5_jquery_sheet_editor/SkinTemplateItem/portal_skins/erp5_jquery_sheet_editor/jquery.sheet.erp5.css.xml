@@ -31,183 +31,191 @@
             <value> <string>.document div.page {\n
   background-color: #E3EAFA;\n
 }\n
-body{\n
-font-family:sans-serif;\n
-font-size:13px;\n
-color:black;\n
+\n
+body div.content{\n
+  font-family:sans-serif;\n
+  font-size:13px;\n
+  color:black;\n
 }\n
 .mbmenu{\n
   display:none;\n
 }\n
 .rootVoices{\n
-background-color:#f3f3f3;\n
-padding:5px;\n
-padding-bottom:0;\n
+  background-color:#f3f3f3;\n
+  padding:5px;\n
+  padding-bottom:0;\n
 }\n
 .rootVoices td.rootVoice {\n
-background-color:transparent;\n
-width:120px;\n
-line-height:18px;\n
-font-family:Arial,Helvetica,sans-serif;\n
-color: gray;\n
-font-size:12px;\n
-padding:8px;\n
-padding-left:10px;\n
-cursor: pointer;\n
+  background-color:transparent;\n
+  width:120px;\n
+  line-height:18px;\n
+  font-family:Arial,Helvetica,sans-serif;\n
+  color: gray;\n
+  font-size:12px;\n
+  padding:8px;\n
+  padding-left:10px;\n
+  cursor: pointer;\n
 }\n
 .rootVoices td.selected{\n
-background-color:gray;\n
-color:#ffffff;\n
-cursor: pointer;\n
-font-size:14px;\n
+  background-color:gray;\n
+  color:#ffffff;\n
+  cursor: pointer;\n
+  font-size:14px;\n
 }\n
+\n
 .menuShadow{\n
-padding:2px;\n
-padding-bottom:0px;\n
-left:-2;\n
-top:1px;\n
+  padding:2px;\n
+  padding-bottom:0px;\n
+  left:-2;\n
+  top:1px;\n
 }\n
+\n
 .menuContainer{\n
-background-color:gray;\n
+  background-color:gray;\n
 }\n
+\n
 .menuContainer .line{\n
-background-color:white;\n
-width:100%;\n
-padding-left:-5;\n
+  background-color:white;\n
+  width:100%;\n
+  padding-left:-5;\n
 }\n
+\n
 .menuContainer .line.title {\n
-text-align:right;\n
+  text-align:right;\n
 }\n
+\n
 .menuContainer .line.title a{\n
-color:dimgray;\n
-font-size:14px;\n
+  color:dimgray;\n
+  font-size:14px;\n
 }\n
+\n
 .menuContainer td a{\n
-text-decoration:none;\n
-color: #000000;\n
+  text-decoration:none;\n
+  color: #000000;\n
 }\n
+\n
 .menuContainer td.voice{\n
-border-top:1px solid #f3f3f3;\n
-font-family:Arial,Helvetica,sans-serif;\n
-font-size:12px;\n
-padding:5px;\n
+  border-top:1px solid #f3f3f3;\n
+  font-family:Arial,Helvetica,sans-serif;\n
+  font-size:12px;\n
+  padding:5px;\n
 }\n
 .menuContainer .separator{\n
-background-color:#f1f1f1;\n
-height:1px;\n
+  background-color:#f1f1f1;\n
+  height:1px;\n
 }\n
 .menuContainer td.img{\n
-border-top:1px solid #f3f3f3;\n
-font-family:Arial,Helvetica,sans-serif;\n
-text-align:center;\n
-font-size:12px;\n
-color: #c3c3c3;\n
-background-color:#f9f9f9;\n
-width:24px;\n
-padding:5px;\n
+  border-top:1px solid #f3f3f3;\n
+  font-family:Arial,Helvetica,sans-serif;\n
+  text-align:center;\n
+  font-size:12px;\n
+  color: #c3c3c3;\n
+  background-color:#f9f9f9;\n
+  width:24px;\n
+  padding:5px;\n
 }\n
 .menuContainer td.img img{\n
-width:20px;\n
+  width:20px;\n
 }\n
 .menuContainer .textBox{\n
-padding: 5px;\n
-font-family:Arial,Helvetica,sans-serif;\n
-font-size:12px;\n
-background-color:#ffffff;\n
-color: #c3c3c3;\n
+  padding: 5px;\n
+  font-family:Arial,Helvetica,sans-serif;\n
+  font-size:12px;\n
+  background-color:#ffffff;\n
+  color: #c3c3c3;\n
 }\n
 .menuContainer .selected td{\n
-background-color:#f3f3f3;\n
-background-image:url("../images/bgnd_sel_2.jpg")\n
+  background-color:#f3f3f3;\n
+  background-image:url("../images/bgnd_sel_2.jpg")\n
 }\n
 .menuContainer .selected td a{\n
-color:#000;\n
-display:block;\n
+  color:#000;\n
+  display:block;\n
 }\n
 .menuContainer .disabled td, .menuContainer .disabled td a {\n
-color: #cccccc;\n
+  color: #cccccc;\n
 }\n
 .menuContainer .subMenuOpener{\n
-background-image:url("../images/menuArrow.gif");\n
-background-repeat:no-repeat;\n
-background-position:right;\n
+  background-image:url("../images/menuArrow.gif");\n
+  background-repeat:no-repeat;\n
+  background-position:right;\n
 }\n
 \n
 .rootVerticalVoices{\n
-background-color:#333;\n
-padding:0px;\n
+  background-color:#333;\n
+  padding:0px;\n
 }\n
 .rootVerticalVoices td.rootVoice {\n
-width:130px;\n
-font-family:Arial,Helvetica,sans-serif;\n
-color: gray;\n
-font-size:13px;\n
-padding:7px;\n
-cursor: pointer;\n
+  width:130px;\n
+  font-family:Arial,Helvetica,sans-serif;\n
+  color: gray;\n
+  font-size:13px;\n
+  padding:7px;\n
+  cursor: pointer;\n
 }\n
 .rootVerticalVoices td.selected{\n
-background-image:url("../images/bgnd_sel_4.png");\n
-color:#ffffff;\n
-cursor: pointer;\n
+  background-image:url("../images/bgnd_sel_4.png");\n
+  color:#ffffff;\n
+  cursor: pointer;\n
 }\n
 .verticalMenu{\n
-background-color:#000;\n
+  background-color:#000;\n
 }\n
 .verticalMenu .line{\n
-background-color:#333;\n
-width:100%;\n
-padding-left:-5px;\n
+  background-color:#333;\n
+  width:100%;\n
+  padding-left:-5px;\n
 }\n
 .verticalMenu td a{\n
-text-decoration:none;\n
-color: #d3d3d3;\n
+  text-decoration:none;\n
+  color: #d3d3d3;\n
 }\n
 .verticalMenu td.voice{\n
-border-top:0px solid #666;\n
-font-family:Arial,Helvetica,sans-serif;\n
-font-size:12px;\n
-padding:5px;\n
+  border-top:0px solid #666;\n
+  font-family:Arial,Helvetica,sans-serif;\n
+  font-size:12px;\n
+  padding:5px;\n
 }\n
 .verticalMenu .separator{\n
-background-color:#666;\n
-height:1px;\n
+  background-color:#666;\n
+  height:1px;\n
 }\n
 .verticalMenu td.img{\n
-border-top:0px solid #666;\n
-font-family:Arial,Helvetica,sans-serif;\n
-text-align:center;\n
-font-size:12px;\n
-color: #c3c3c3;\n
-background-color:#333;\n
-width:24px;\n
-padding:5px;\n
+  border-top:0px solid #666;\n
+  font-family:Arial,Helvetica,sans-serif;\n
+  text-align:center;\n
+  font-size:12px;\n
+  color: #c3c3c3;\n
+  background-color:#333;\n
+  width:24px;\n
+  padding:5px;\n
 }\n
 .verticalMenu td.img img{\n
-width:20px;\n
+  width:20px;\n
 }\n
 .verticalMenu .textBox{\n
-padding: 10px;\n
-font-family:Arial,Helvetica,sans-serif;\n
-font-size:12px;\n
-color: #c3c3c3;\n
+  padding: 10px;\n
+  font-family:Arial,Helvetica,sans-serif;\n
+  font-size:12px;\n
+  color: #c3c3c3;\n
 }\n
 .verticalMenu .selected td{\\n\n
-background-image:url("../images/bgnd_sel_4.png");\n
+  background-image:url("../images/bgnd_sel_4.png");\n
 }\n
 .verticalMenu .selected td a{\n
-color:#fff;\n
+  color:#fff;\n
 }\n
 .verticalMenu .disabled td, .verticalMenu .disabled td a {\n
-color: #666;\n
+  color: #666;\n
 }\n
 .verticalMenu .subMenuOpener{\n
-background-image:url("../images/menuArrow_w.gif");\n
-background-repeat:no-repeat;\n
-background-position:right;\n
+  background-image:url("../images/menuArrow_w.gif");\n
+  background-repeat:no-repeat;\n
+  background-position:right;\n
 }\n
 .verticalMenu .menuShadow{\n
- background:black;\n
- padding:5px;\n
+  background:black;\n
+  padding:5px;\n
 }</string> </value>
         </item>
         <item>

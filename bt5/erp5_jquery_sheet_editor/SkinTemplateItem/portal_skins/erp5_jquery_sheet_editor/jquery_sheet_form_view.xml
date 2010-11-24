@@ -44,7 +44,6 @@
   <tal:block metal:define-macro="master"\n
              tal:define="css_list_jquery_template python:[\'jquery/plugin/sheet/jquery.sheet.css\',\n
                                   \'jquery/plugin/colorpicker/jquery.colorPicker.css\',\n
-                                  \'jquery/plugin/colorpicker/menu.css\',\n
 ];\n
                         js_list_jquery_template python:[\'jquery/core/jquery.js\',\n
                                                   \'jquery/plugin/sheet/jquery.sheet.js\',\n
@@ -66,8 +65,7 @@
       </tal:block>\n
     </tal:block>\n
   </tal:block>\n
-</tal:block>\n
-
+</tal:block>
 
 ]]></unicode> </value>
         </item>
