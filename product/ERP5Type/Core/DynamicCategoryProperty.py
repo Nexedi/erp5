@@ -59,8 +59,10 @@ class DynamicCategoryProperty(XMLObject):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'importFromFilesystemDefinition')
-  def importFromFilesystemDefinition(self, category_expression):
+  @classmethod
+  def importFromFilesystemDefinition(cls, context, category_expression):
     """
     Set the Expression text from a filesystem definition of a property
     """
-    self.setCategoryExpression(category_expression.text)
+    return context.newContent(portal_type=cls.portal_type,
+                              category_expression=category_expression.text)

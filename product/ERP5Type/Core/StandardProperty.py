@@ -146,7 +146,8 @@ class StandardProperty(XMLObject):
             'translatable': self.getTranslatable(),
             'translation_domain': self.getTranslationDomain()}
 
-  def _convertFromFilesystemPropertyDict(self, filesystem_property_dict):
+  @classmethod
+  def _convertFromFilesystemPropertyDict(cls, filesystem_property_dict):
     """
     Convert a property dict coming from a Property Sheet on the
     filesystem to a ZODB property dict
@@ -157,13 +158,13 @@ class StandardProperty(XMLObject):
     for fs_property_name, value in filesystem_property_dict.iteritems():
       # Convert filesystem property name to ZODB if necessary
       zodb_property_name = \
-          fs_property_name in self._name_mapping_filesystem_to_zodb_dict and \
-          self._name_mapping_filesystem_to_zodb_dict[fs_property_name] or \
+          fs_property_name in cls._name_mapping_filesystem_to_zodb_dict and \
+          cls._name_mapping_filesystem_to_zodb_dict[fs_property_name] or \
           fs_property_name
 
       # Convert existing TALES expression class or primitive type to a
       # TALES expression string
-      if zodb_property_name in self._expression_attribute_tuple:
+      if zodb_property_name in cls._expression_attribute_tuple:
         value = isinstance(value, Expression) and \
             value.text or 'python: ' + repr(value)
 
@@ -173,9 +174,11 @@ class StandardProperty(XMLObject):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'importFromFilesystemDefinition')
-  def importFromFilesystemDefinition(self, filesystem_property_dict):
+  @classmethod
+  def importFromFilesystemDefinition(cls, context, filesystem_property_dict):
     """
     Set attributes from the filesystem definition of a property
     """
-    self.edit(**self._convertFromFilesystemPropertyDict(
-      filesystem_property_dict))
+    return context.newContent(
+      portal_type=cls.portal_type,
+      **cls._convertFromFilesystemPropertyDict(filesystem_property_dict))

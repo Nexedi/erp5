@@ -58,8 +58,10 @@ class CategoryProperty(XMLObject):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'importFromFilesystemDefinition')
-  def importFromFilesystemDefinition(self, category_name):
+  @classmethod
+  def importFromFilesystemDefinition(cls, context, category_name):
     """
     Set the Reference from a filesystem definition of a property
     """
-    self.setReference(category_name)
+    return context.newContent(portal_type=cls.portal_type,
+                              reference=category_name)

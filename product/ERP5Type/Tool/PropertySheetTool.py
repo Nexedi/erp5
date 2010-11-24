@@ -88,14 +88,17 @@ class PropertySheetTool(BaseTool):
     new_property_sheet = self.newContent(id=klass.__name__,
                                          portal_type='Property Sheet')
 
+    types_tool = self.getPortalObject().portal_types
+
     for attribute_dict in getattr(klass, '_properties', []):
       # The property could be either a Standard or an Acquired
       # Property
-      portal_type = self._guessFilesystemPropertyPortalType(attribute_dict)
+      portal_type_class = types_tool.getPortalTypeClass(
+        self._guessFilesystemPropertyPortalType(attribute_dict))
 
       # Create the new property and set its attributes
-      new_property = new_property_sheet.newContent(portal_type=portal_type)
-      new_property.importFromFilesystemDefinition(attribute_dict)
+      portal_type_class.importFromFilesystemDefinition(new_property_sheet,
+                                                       attribute_dict)
 
     for category in getattr(klass, '_categories', []):
       # A category may be a TALES Expression rather than a plain
@@ -103,8 +106,11 @@ class PropertySheetTool(BaseTool):
       portal_type = isinstance(category, Expression) and \
         'Dynamic Category Property' or 'Category Property'
 
-      new_category = new_property_sheet.newContent(portal_type=portal_type)
-      new_category.importFromFilesystemDefinition(category)
+      portal_type_class = types_tool.getPortalTypeClass(portal_type)
+
+      # Create the new category
+      portal_type_class.importFromFilesystemDefinition(new_property_sheet,
+                                                       category)
 
     return new_property_sheet
 
