@@ -252,7 +252,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     """
     Create a new Standard Property within test Property Sheet
     """
-    return self.test_property_sheet.newContent(
+    self.test_property_sheet.newContent(
       portal_type='Standard Property',
       reference='test_standard_property_' + operation_type,
       property_default='python: "test_default_value"',
@@ -262,7 +262,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     """
     Create a new Acquired Property within test Property Sheet
     """
-    return self.test_property_sheet.newContent(
+    self.test_property_sheet.newContent(
       portal_type='Acquired Property',
       reference='test_acquired_property_' + operation_type,
       elementary_type='content',
@@ -300,7 +300,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
 
     self._newCategoryTree(category_id, operation_type)
 
-    return self.test_property_sheet.newContent(
+    self.test_property_sheet.newContent(
       reference=category_id,
       portal_type='Category Property')
 
@@ -314,7 +314,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
 
     expression = "python: ('%s',)" % category_id
 
-    return self.test_property_sheet.newContent(
+    self.test_property_sheet.newContent(
       portal_type='Dynamic Category Property',
       category_expression=expression,
       reference=category_id)
@@ -324,7 +324,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     Create a new Property Existence Constraint within test Property
     Sheet
     """
-    return self.test_property_sheet.newContent(
+    self.test_property_sheet.newContent(
       reference='test_property_existence_constraint',
       portal_type='Property Existence Constraint',
       constraint_property_list=('test_standard_property_constraint',))
@@ -336,7 +336,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     """
     self._newCategoryProperty('constraint')
 
-    return self.test_property_sheet.newContent(
+    self.test_property_sheet.newContent(
       reference='test_category_existence_constraint',
       portal_type='Category Existence Constraint',
       constraint_base_category_list=('test_category_property_constraint',))
@@ -725,23 +725,32 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
 
     return None
 
+  def _checkConstraint(self,
+                       constraint_reference,
+                       setter_function,
+                       value):
+    """
+    Check whether the given constraint has been properly defined and
+    checkConsistency() is correct
+    """
+    constraint = self._getConstraintByReference(constraint_reference)
+    self.failIfEqual(None, constraint)
+    self.assertEquals(1, len(constraint.checkConsistency(self.test_module)))
+
+    setter_function(value)
+    self.assertEquals([], constraint.checkConsistency(self.test_module))
+
   def testPropertyExistenceConstraint(self):
     """
     Take the test module and check whether the Property Existence
     Constraint is available. Until the property has been set to a
     value, the constraint should fail
+
+    @see ERP5Type.Base.Base.hasProperty
     """
-    constraint = self._getConstraintByReference(
-      'test_property_existence_constraint')
-
-    self.failIfEqual(None, constraint)
-
-    self.assertEquals(1, len(constraint.checkConsistency(self.test_module)))
-
-    # See ERP5Type.Base.Base.hasProperty()
-    self.test_module.setTestStandardPropertyConstraint('foobar')
-
-    self.assertEquals([], constraint.checkConsistency(self.test_module))
+    self._checkConstraint('test_property_existence_constraint',
+                          self.test_module.setTestStandardPropertyConstraint,
+                          'foobar')
 
   def testCategoryExistenceConstraint(self):
     """
@@ -749,16 +758,9 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     Constraint is available. Until the category has been set to an
     existing category, the constraint should fail
     """
-    constraint = self._getConstraintByReference(
-      'test_category_existence_constraint')
-
-    self.failIfEqual(None, constraint)
-
-    self.assertEquals(1, len(constraint.checkConsistency(self.test_module)))
-
-    self.test_module.setTestCategoryPropertyConstraint('sub_category')
-
-    self.assertEquals([], constraint.checkConsistency(self.test_module))
+    self._checkConstraint('test_category_existence_constraint',
+                          self.test_module.setTestCategoryPropertyConstraint,
+                          'sub_category')
 
 TestZodbPropertySheet = skip("ZODB Property Sheets code is not enabled yet")(
   TestZodbPropertySheet)
