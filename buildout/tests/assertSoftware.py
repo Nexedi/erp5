@@ -1752,6 +1752,88 @@ class AssertGettext(AssertSoftwareMixin):
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
         software in [
           'libxml2',
+          'ncurses',
+          'zlib',
+          ]]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+  def test_ld_libasprintf(self):
+    elf_dict = readElfAsDict('parts/gettext/lib/libasprintf.so')
+    self.assertEqual(sorted([
+      'libc',
+      'libgcc_s',
+      'libm',
+      'libstdc++',
+      ]),
+        elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in [
+          'libxml2',
+          'ncurses',
+          'zlib',
+          ]]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+  def test_ld_libgettextlib(self):
+    elf_dict = readElfAsDict('parts/gettext/lib/libgettextlib.so')
+    self.assertEqual(sorted([
+      'libc',
+      'libdl',
+      'libintl',
+      'libm',
+      'libncurses',
+      'libxml2',
+      'libz',
+      ]),
+        elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in [
+          'gettext',
+          'libxml2',
+          'ncurses',
+          'zlib',
+          ]]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+  def test_ld_libgettextpo(self):
+    elf_dict = readElfAsDict('parts/gettext/lib/libgettextpo.so')
+    self.assertEqual(sorted([
+      'libc',
+      'libintl',
+      ]),
+        elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in [
+          'gettext',
+          'libxml2',
+          'ncurses',
+          'zlib',
+          ]]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
+  def test_ld_libgettextsrc(self):
+    elf_dict = readElfAsDict('parts/gettext/lib/libgettextsrc.so')
+    self.assertEqual(sorted([
+      'libc',
+      'libdl',
+      'libgettextlib-0.18.1',
+      'libintl',
+      'libm',
+      'libncurses',
+      'libxml2',
+      'libz',
+      ]),
+        elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in [
+          'gettext',
+          'libxml2',
+          'ncurses',
+          'zlib',
           ]]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
