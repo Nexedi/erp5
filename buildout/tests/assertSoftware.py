@@ -1175,6 +1175,164 @@ class AssertGettext(AssertSoftwareMixin):
       'zlib',
       ])
 
+  def _test_ld_gettext_bin(self, bin):
+    self.assertLibraryList(bin, [
+      'libc',
+      'libdl',
+      'libgettextlib-0.18.1',
+      'libgettextsrc-0.18.1',
+      'libintl',
+      'libm',
+      'libncurses',
+      'libxml2',
+      'libz',
+      ], [
+      'gettext',
+      'libxml2',
+      'ncurses',
+      'zlib',
+      ])
+
+  def test_ld_envsubst(self):
+    self.assertLibraryList('parts/gettext/bin/envsubst', [
+      'libc',
+      'libintl',
+      ], [
+      'gettext',
+      'libxml2',
+      'ncurses',
+      'zlib',
+      ])
+
+  def test_ld_gettext(self):
+    self.assertLibraryList('parts/gettext/bin/gettext', [
+      'libc',
+      'libintl',
+      ], [
+      'gettext',
+      'libxml2',
+      'ncurses',
+      'zlib',
+      ])
+
+  def test_ld_msgattrib(self):
+    self._test_ld_gettext_bin('parts/gettext/bin/msgattrib')
+
+  def test_ld_msgcat(self):
+    self._test_ld_gettext_bin('parts/gettext/bin/msgcat')
+
+  def test_ld_msgcmp(self):
+    self._test_ld_gettext_bin('parts/gettext/bin/msgcmp')
+
+  def test_ld_msgcomm(self):
+    self._test_ld_gettext_bin('parts/gettext/bin/msgcomm')
+
+  def test_ld_msgconv(self):
+    self._test_ld_gettext_bin('parts/gettext/bin/msgconv')
+
+  def test_ld_msgen(self):
+    self._test_ld_gettext_bin('parts/gettext/bin/msgen')
+
+  def test_ld_msgexec(self):
+    self._test_ld_gettext_bin('parts/gettext/bin/msgexec')
+
+  def test_ld_msgfilter(self):
+    self._test_ld_gettext_bin('parts/gettext/bin/msgfilter')
+
+  def test_ld_msgfmt(self):
+    self._test_ld_gettext_bin('parts/gettext/bin/msgfmt')
+
+  def test_ld_msggrep(self):
+    self.assertLibraryList('parts/gettext/bin/msggrep', [
+      'libc',
+      'libdl',
+      'libgettextlib-0.18.1',
+      'libgettextsrc-0.18.1',
+      'libintl',
+      'libm',
+      'libncurses',
+      'libxml2',
+      'libz',
+      ], [
+      'gettext',
+      'libxml2',
+      'ncurses',
+      'zlib',
+      ])
+
+  def test_ld_msginit(self):
+    self.assertLibraryList('parts/gettext/bin/msginit', [
+      'libc',
+      'libdl',
+      'libgettextlib-0.18.1',
+      'libgettextsrc-0.18.1',
+      'libintl',
+      'libm',
+      'libncurses',
+      'libxml2',
+      'libz',
+      ], [
+      'gettext',
+      'libxml2',
+      'ncurses',
+      'zlib',
+      ])
+
+  def test_ld_msgmerge(self):
+    self.assertLibraryList('parts/gettext/bin/msgmerge', [
+      'libc',
+      'libdl',
+      'libgettextlib-0.18.1',
+      'libgettextsrc-0.18.1',
+      'libintl',
+      'libm',
+      'libncurses',
+      'libxml2',
+      'libz',
+      ], [
+      'gettext',
+      'libxml2',
+      'ncurses',
+      'zlib',
+      ])
+
+  def test_ld_msgunfmt(self):
+    self._test_ld_gettext_bin('parts/gettext/bin/msgunfmt')
+
+  def test_ld_msguniq(self):
+    self._test_ld_gettext_bin('parts/gettext/bin/msguniq')
+
+  def test_ld_ngettext(self):
+    self.assertLibraryList('parts/gettext/bin/ngettext', [
+      'libc',
+      'libintl',
+      ], [
+      'gettext',
+      'libxml2',
+      'ncurses',
+      'zlib',
+      ])
+
+  def test_ld_recode_sr_latin(self):
+    self.assertLibraryList('parts/gettext/bin/recode-sr-latin', [
+      'libc',
+      'libdl',
+      'libgettextlib-0.18.1',
+      'libintl',
+      'libm',
+      'libncurses',
+      'libxml2',
+      'libz',
+      ], [
+      'gettext',
+      'libxml2',
+      'ncurses',
+      'zlib',
+      ])
+
+  def test_ld_xgettext(self):
+    self._test_ld_gettext_bin('parts/gettext/bin/xgettext')
+
 class AssertLibxslt(AssertSoftwareMixin):
   def test_ld_xsltproc(self):
     self.assertLibraryList('parts/libxslt/bin/xsltproc', [
