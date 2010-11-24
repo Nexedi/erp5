@@ -48,11 +48,15 @@
 <tr><td rowspan="1" colspan="3" tal:content="template/getId"></td></tr>\n
 </thead><tbody>\n
 \n
+<!--\n
+  This is a desctructive test which will delete all pads for current user.\n
+-->\n
+\n
 <span metal:use-macro="container/Zuite_CommonTemplate/macros/init"> init</span>\n
 \n
 <tr>\n
   <td>openAndWait</td>\n
-  <td>${base_url}/Zuite_setupGadgets</td>\n
+  <td>${base_url}/Zuite_setupGadgets?remove_existing_pads=1&amp;mode=erp5_front</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n

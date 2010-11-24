@@ -60,13 +60,14 @@ for gadget in context.portal_gadgets.objectValues():\n
 active_preference = context.portal_preferences.getActivePreference()\n
 knowledge_pad = active_preference.newContent(portal_type="Knowledge Pad",\n
                                              title="Template Pad")\n
-\n
 knowledge_pad.visible()\n
 knowledge_pad.public()\n
 \n
-# XXX: add some gadgets\n
 \n
-\n
+if remove_existing_pads:\n
+  # delete existing pads\n
+  user_knowledge_pad_list = context.ERP5Site_getKnowledgePadListForUser(mode = mode)\n
+  context.knowledge_pad_module.manage_delObjects([x.getId() for x in user_knowledge_pad_list])\n
 \n
 print "Done"\n
 return printed\n
@@ -77,6 +78,10 @@ return printed\n
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>remove_existing_pads=0, mode=\'erp5_front\'</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -104,12 +109,14 @@ return printed\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>remove_existing_pads</string>
+                            <string>mode</string>
                             <string>_print_</string>
                             <string>_print</string>
                             <string>_getiter_</string>
@@ -118,6 +125,10 @@ return printed\n
                             <string>gadget</string>
                             <string>active_preference</string>
                             <string>knowledge_pad</string>
+                            <string>user_knowledge_pad_list</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
                           </tuple>
                         </value>
                     </item>
@@ -129,7 +140,10 @@ return printed\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <int>0</int>
+                <string>erp5_front</string>
+              </tuple>
             </value>
         </item>
         <item>
