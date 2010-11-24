@@ -50,6 +50,7 @@ class GhostPortalType(ERP5Base): #SimpleItem
                 '__module__',
                 '__name__',
                 '__repr__',
+                '__ghostbase__',
                 '__str__') or attr[:3] in ('_p_', '_v_'):
       return super(GhostPortalType, self).__getattribute__(attr)
     #LOG("ERP5Type.Dynamic", BLATHER,
@@ -78,6 +79,7 @@ class PortalTypeMetaClass(ExtensionClass):
       if issubclass(type(parent), PortalTypeMetaClass):
         PortalTypeMetaClass.subclass_register.setdefault(parent, []).append(cls)
 
+    cls.__ghostbase__ = None
     super(PortalTypeMetaClass, cls).__init__(name, bases, dictionary)
 
   @classmethod
@@ -116,12 +118,15 @@ class PortalTypeMetaClass(ExtensionClass):
       InitializeClass(subclass)
 
   def restoreGhostState(cls):
-    ghostbase = getattr(cls, '__ghostbase__', None)
-    if ghostbase is not None:
+    if cls.__ghostbase__ is not None:
       for attr in cls.__dict__.keys():
-        if attr not in ('__module__', '__doc__',):
+        if attr not in ('__module__',
+                        '__doc__',
+                        '__ghostbase__',
+                        'portal_type'):
           delattr(cls, attr)
-      cls.__bases__ = ghostbase
+      cls.__bases__ = cls.__ghostbase__
+      cls.__ghostbase__ = None
       cls.resetAcquisitionAndSecurity()
 
   def loadClass(cls):
@@ -150,7 +155,7 @@ class PortalTypeMetaClass(ExtensionClass):
 
 
     # save the old bases to be able to restore a ghost state later
-    if not hasattr(klass, '__ghostbase__'):
+    if klass.__ghostbase__ is None:
       # but only do it if we're in the innermost call, otherwise
       # klass.__bases__ might just be the Document without accessor
       # holders, and we would override the real ghost class
