@@ -1424,6 +1424,13 @@ class AssertLibrsync(AssertSoftwareMixin):
       'zlib',
       ])
 
+class AssertPopt(AssertSoftwareMixin):
+  def test_ld_libpopt(self):
+    self.assertLibraryList('parts/popt/lib/libpopt.so', [
+      'libc',
+      ], [
+      ])
+
 class AssertElfLinkedInternally(AssertSoftwareMixin):
   def test(self):
     return
