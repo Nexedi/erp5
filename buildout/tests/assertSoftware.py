@@ -1431,6 +1431,19 @@ class AssertPopt(AssertSoftwareMixin):
       ], [
       ])
 
+class AssertBzip2(AssertSoftwareMixin):
+  def test_ld_bzip2(self):
+    self.assertLibraryList('parts/bzip2/bin/bzip2', [
+      'libc',
+      ], [
+      ])
+
+  def test_ld_libbz2(self):
+    self.assertLibraryList('parts/bzip2/lib/libbz2.so', [
+      'libc',
+      ], [
+      ])
+
 class AssertElfLinkedInternally(AssertSoftwareMixin):
   def test(self):
     return
