@@ -43,7 +43,7 @@
 <script type="text/javascript" src="jquery/core/jquery.js"></script>\n
 <script type="text/javascript" src="jquery/plugin/sheet/jquery.sheet.js"></script>\n
 <script type="text/javascript" src="jquery/plugin/mbmenu/mbMenu.min.js"></script>\n
-<script type="text/javascript" src="jquery/ui/jquery-ui.js"></script>\n
+<script type="text/javascript" src="portal_skins/erp5_jquery/ui/jquery-ui.js"></script>\n
 <script type="text/javascript" src="jquery/plugin/jqcharts/jgcharts.min.js"></script>\n
 <script type="text/javascript" src="jquery/plugin/colorpicker/jquery.colorPicker.min.js"></script>\n
 <script type="text/javascript" src="http://jqueryui.com/themeroller/themeswitchertool/"></script>\n
