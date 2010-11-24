@@ -29,6 +29,7 @@
 import os
 import subprocess
 import unittest
+from distutils import util
 
 try:
   any([True])
@@ -1443,6 +1444,31 @@ class AssertBzip2(AssertSoftwareMixin):
     self.assertLibraryList('parts/bzip2/lib/libbz2.so', [
       'libc',
       ], [
+      ])
+
+class AssertPysvn(AssertSoftwareMixin):
+  def test_ld_pysvn(self):
+    python_version_major, python_version_minor = util.sys.version_info[0:2]
+    self.assertLibraryList('develop-eggs/pysvn-1.7.4-py%s.%s-%s.egg/pysvn/_pysvn_%s_%s.so' % (
+      python_version_major, python_version_minor, util.get_platform(),
+      python_version_major, python_version_minor), [
+      'libc',
+      'libcom_err',
+      'libexpat',
+      'libgcc_s',
+      'libm',
+      'libneon',
+      'libresolv',
+      'libssl',
+      'libstdc++',
+      'libsvn_client-1',
+      'libsvn_diff-1',
+      'libsvn_repos-1',
+      ], [
+      'libexpat',
+      'neon',
+      'openssl',
+      'subversion'
       ])
 
 class AssertElfLinkedInternally(AssertSoftwareMixin):
