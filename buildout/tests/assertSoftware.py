@@ -1640,6 +1640,23 @@ class AssertOpenssl(AssertSoftwareMixin):
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
 class AssertCyrusSasl(AssertSoftwareMixin):
+  def test_ld_pluginviewer(self):
+    elf_dict = readElfAsDict('parts/cyrus-sasl/sbin/pluginviewer')
+    self.assertEqual(sorted([
+      'libc',
+      'libdl',
+      'libresolv',
+      'libsasl2',
+      ]),
+        elf_dict['library_list'])
+    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
+        software in [
+          'cyrus-sasl',
+          'zlib',
+          ]]
+    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
+
   def test_ld_libsasl2(self):
     elf_dict = readElfAsDict('parts/cyrus-sasl/lib/libsasl2.so')
     self.assertEqual(sorted([
@@ -1680,36 +1697,6 @@ class AssertCyrusSasl(AssertSoftwareMixin):
           ]]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
-  def test_ld_sasl2_libdigestmd5(self):
-    elf_dict = readElfAsDict('parts/cyrus-sasl/lib/sasl2/libdigestmd5.so')
-    self.assertEqual(sorted([
-      'libc',
-      'libcrypto',
-      'libresolv',
-      ]),
-        elf_dict['library_list'])
-    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
-    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
-        software in [
-          'openssl',
-          ]]
-    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
-
-  def test_ld_sasl2_libotp(self):
-    elf_dict = readElfAsDict('parts/cyrus-sasl/lib/sasl2/libotp.so')
-    self.assertEqual(sorted([
-      'libc',
-      'libcrypto',
-      'libresolv',
-      ]),
-        elf_dict['library_list'])
-    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
-    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
-        software in [
-          'openssl',
-          ]]
-    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
-
   def test_ld_sasl2_libplain(self):
     elf_dict = readElfAsDict('parts/cyrus-sasl/lib/sasl2/libplain.so')
     self.assertEqual(sorted([
@@ -1721,21 +1708,6 @@ class AssertCyrusSasl(AssertSoftwareMixin):
     soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
         software in [
-          ]]
-    self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
-
-  def test_ld_sasl2_libsasldb(self):
-    elf_dict = readElfAsDict('parts/cyrus-sasl/lib/sasl2/libsasldb.so')
-    self.assertEqual(sorted([
-      'libc',
-      'libdb-4.5',
-      'libresolv',
-      ]),
-        elf_dict['library_list'])
-    soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
-    expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
-        software in [
-          'libdb',
           ]]
     self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
