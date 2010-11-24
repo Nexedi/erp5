@@ -58,6 +58,7 @@
                   context/Base_isUserAllowedToUseKnowledgePad;\n
               isKnowledgePadTemplateUsed python:  \n
                   request.get(\'is_knowledge_pad_template_used\', 0);\n
+              isAnonymousKnowledgePadUsed python: request.get(\'use_anonymous_knowledge_pad\', False);\n
               cancel_url here/absolute_url;">\n
 \n
     <tal:block tal:condition="python: not createDefaultPadForUser and \n
