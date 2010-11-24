@@ -729,7 +729,7 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
                                      gadget_view_form_id)
 
     # no related docs should exist
-    self.failUnless('No related documents found.' in relation_form_renderer())
+    self.failUnless('No result.' in relation_form_renderer())
 
     # set related docs
     similar_doc = portal.web_page_module.newContent(
