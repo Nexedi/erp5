@@ -101,7 +101,8 @@ else:\n
       restrictedTraverse(\'quantity_unit/\' + default_quantity_unit).getTitle()\n
 \n
 column_list = [(\'reference\', \'Reference\'), (\'title\', \'Title\'), \\\n
-    (\'stop_date\', \'Stop Date\'), (\'per_line_total_price\', \'Total Price\')]\n
+    (\'description\', \'Description\'), (\'start_date\', \'Shipping Date\'), \\\n
+    (\'stop_date\', \'Delivery Date\'), (\'per_line_total_price\', \'Total Price\')]\n
 if error is None:\n
   for line in line_list:\n
     if error is not None:\n
@@ -286,8 +287,7 @@ return context.Order_viewODSSummary(format=format)\n
                             <string>context_relative_url</string>
                             <string>sortMovement</string>
                             <string>movement_type_list</string>
-                            <string>append</string>
-                            <string>$append0</string>
+                            <string>$list0</string>
                             <string>_getiter_</string>
                             <string>x</string>
                             <string>line_list</string>
