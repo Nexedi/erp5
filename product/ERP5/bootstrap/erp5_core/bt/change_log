@@ -1,3 +1,7 @@
+2010-11-25 arnaud.fontaine
+* Add Attribute Equality Constraint portal type and its views.
+* Set Property Existence Constraint action_type for predicate view to object_view.
+
 2010-11-16 arnaud.fontaine
 * read and write permissions of Acquired and Standard Property view now contains the list of available permissions, rather than entering them manually.
 

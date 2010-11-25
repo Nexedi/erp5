@@ -7,33 +7,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_local_properties</string> </key>
-            <value>
-              <tuple>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>is_indexable</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>reindex_kw</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>action</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -70,12 +43,6 @@
             <value> <string>predicate</string> </value>
         </item>
         <item>
-            <key> <string>is_indexable</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>permissions</string> </key>
             <value>
               <tuple>
@@ -90,12 +57,6 @@
         <item>
             <key> <string>priority</string> </key>
             <value> <float>2.0</float> </value>
-        </item>
-        <item>
-            <key> <string>reindex_kw</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>title</string> </key>

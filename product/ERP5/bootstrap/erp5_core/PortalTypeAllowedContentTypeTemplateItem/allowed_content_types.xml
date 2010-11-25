@@ -54,6 +54,7 @@
  </portal_type>
  <portal_type id="Property Sheet">
   <item>Acquired Property</item>
+  <item>Attribute Equality Constraint</item>
   <item>Category Existence Constraint</item>
   <item>Category Property</item>
   <item>Dynamic Category Property</item>

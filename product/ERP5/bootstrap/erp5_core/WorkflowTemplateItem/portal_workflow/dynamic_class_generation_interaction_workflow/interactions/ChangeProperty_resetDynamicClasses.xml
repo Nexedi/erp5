@@ -69,6 +69,7 @@
             <value>
               <list>
                 <string>Acquired Property</string>
+                <string>Attribute Equality Constraint</string>
                 <string>Category Existence Constraint</string>
                 <string>Category Property</string>
                 <string>Dynamic Category Property</string>

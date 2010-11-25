@@ -11,6 +11,8 @@ Alarm | standard_report
 Alarm | view
 Application Id Generator | view
 Applied Rule | view
+Attribute Equality Constraint | predicate
+Attribute Equality Constraint | view
 Base Category | view
 Base Domain | view
 Base Type | action_view
