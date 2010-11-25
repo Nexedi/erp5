@@ -1766,6 +1766,15 @@ class AssertJasper(AssertSoftwareMixin):
       'libjpeg',
       ])
 
+class AssertFreetype(AssertSoftwareMixin):
+  def test_ld_libfreetype(self):
+    self.assertLibraryList('parts/freetype/lib/libfreetype.so',[
+      'libc',
+      'libz',
+      ], [
+      'zlib',
+      ])
+
 class AssertElfLinkedInternally(AssertSoftwareMixin):
   def test(self):
     result_dict = {}
