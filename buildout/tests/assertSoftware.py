@@ -1784,8 +1784,11 @@ class AssertGhostscript(AssertSoftwareMixin):
       'libm',
       'libpthread',
       'libstdc++',
+      'libtiff',
       ], [
       'fontconfig',
+      'libjpeg',
+      'libtiff',
       ])
 
 class AssertFontconfig(AssertSoftwareMixin):
