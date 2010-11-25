@@ -1744,6 +1744,25 @@ class AssertLibjpeg(AssertSoftwareMixin):
       'libc',
       ], [])
 
+class AssertLibpng(AssertSoftwareMixin):
+  def test_ld_libpng14(self):
+    self.assertLibraryList('parts/libpng/lib/libpng14.so',[
+      'libc',
+      'libm',
+      'libz',
+      ], [
+      'zlib',
+      ])
+
+  def test_ld_libpng(self):
+    self.assertLibraryList('parts/libpng/lib/libpng.so',[
+      'libc',
+      'libm',
+      'libz',
+      ], [
+      'zlib',
+      ])
+
 class AssertElfLinkedInternally(AssertSoftwareMixin):
   def test(self):
     result_dict = {}
