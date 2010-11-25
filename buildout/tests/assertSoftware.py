@@ -1788,6 +1788,51 @@ class AssertGhostscript(AssertSoftwareMixin):
       'fontconfig',
       ])
 
+class AssertFontconfig(AssertSoftwareMixin):
+  core_lib_list = [
+      'libc',
+      'libexpat',
+      'libfreetype',
+      'libz',
+      ]
+  core_rpath_list = [
+      'freetype',
+      'libexpat',
+      'zlib',
+      ]
+
+  def test_ld_libfontconfig(self):
+    self.assertLibraryList('parts/fontconfig/lib/libfontconfig.so',
+        self.core_lib_list, self.core_rpath_list)
+
+  lib_list = core_lib_list + ['libfontconfig']
+  rpath_list = core_rpath_list + ['fontconfig']
+
+  def test_ld_fccache(self):
+    self.assertLibraryList('parts/fontconfig/bin/fc-cache', self.lib_list,
+        self.rpath_list)
+
+  def test_ld_fccat(self):
+    self.assertLibraryList('parts/fontconfig/bin/fc-cat', self.lib_list,
+        self.rpath_list)
+
+  def test_ld_fclist(self):
+    self.assertLibraryList('parts/fontconfig/bin/fc-list', self.lib_list,
+        self.rpath_list)
+
+  def test_ld_fcmatch(self):
+    self.assertLibraryList('parts/fontconfig/bin/fc-match', self.lib_list,
+        self.rpath_list)
+
+  def test_ld_fcquery(self):
+    self.assertLibraryList('parts/fontconfig/bin/fc-query', self.lib_list,
+        self.rpath_list)
+
+  def test_ld_fcscan(self):
+    self.assertLibraryList('parts/fontconfig/bin/fc-scan', self.lib_list,
+        self.rpath_list)
+
+
 class AssertElfLinkedInternally(AssertSoftwareMixin):
   def test(self):
     result_dict = {}
