@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts90671860.93</string> </value>
+            <value> <string>ts90684440.87</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -32,6 +32,7 @@
 /*     - add dynamic properties                                 */\n
 /****************************************************************/\n
 \n
+<tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\');"/>\n
 \n
 /* CSS Web layout (one column) for Gadgets */\n
 \n
@@ -295,6 +296,7 @@ a#tabs-hide:link, a#tabs-hide:active, a#tabs-hide:visited { padding: 0 10px 0 10
 #navigation_table td {\n
   background: url(../km_img/tabsbg.png) repeat-x transparent;\n
   background-position: 0 100%;\n
+  font-size: 8pt;\n
 }\n
 \n
 table tr td, table tr.thead th {\n
@@ -318,6 +320,10 @@ table tr td, table tr.thead th {\n
 #tabs ul li.last a.tabs-add {\n
   background: url(../km_img/tabs-add.png) no-repeat transparent;\n
   background-position: 0 2px;\n
+}\n
+#tabs ul li.first a, \n
+#tabs ul li.last a { \n
+  font-weight: normal; \n
 }\n
 \n
 #tabs ul li.first a.tabs-hide:hover, #tabs ul li.last a.tabs-add:hover {\n
@@ -765,7 +771,7 @@ div.block fieldset.gadget-profile div.field{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>12501</int> </value>
+            <value> <int>12697</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
