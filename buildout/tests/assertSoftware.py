@@ -746,13 +746,11 @@ class AssertApache(AssertSoftwareMixin):
   ]
 
   def test_ld_libaprutil1(self):
-    """Checks proper linking of libaprutil-1.so"""
     self.assertLibraryList('parts/apache/lib/libaprutil-1.so', ['libexpat', 'libapr-1', 'librt', 'libcrypt',
       'libpthread', 'libdl', 'libc', 'libuuid'],
       self.apache_rpath)
 
   def test_ld_libapr1(self):
-    """Checks proper linking of libapr-1.so"""
     self.assertLibraryList('parts/apache/lib/libapr-1.so', ['librt', 'libcrypt', 'libuuid',
       'libpthread', 'libdl', 'libc'], self.apache_rpath)
 
