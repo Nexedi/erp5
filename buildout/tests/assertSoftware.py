@@ -1409,6 +1409,19 @@ class AssertW3m(AssertSoftwareMixin):
 
 class AssertVarnish(AssertSoftwareMixin):
   def test_ld_varnishd(self):
+    self.assertLibraryList('parts/varnish/sbin/varnishd', [
+      'libc',
+      'libdl',
+      'libm',
+      'libnsl',
+      'libpthread',
+      'libvarnish',
+      'libvarnishcompat',
+      'libvcl',
+      ], [
+      'ncurses',
+      'varnish',
+      ])
     self.assertLibraryList('parts/varnish-2.1/sbin/varnishd', [
       'libc',
       'libdl',
@@ -1424,6 +1437,17 @@ class AssertVarnish(AssertSoftwareMixin):
       ])
 
   def test_ld_varnishtop(self):
+    self.assertLibraryList('parts/varnish/bin/varnishtop', [
+      'libc',
+      'libncurses',
+      'libpthread',
+      'libvarnish',
+      'libvarnishapi',
+      'libvarnishcompat',
+      ], [
+      'ncurses',
+      'varnish',
+      ])
     self.assertLibraryList('parts/varnish-2.1/bin/varnishtop', [
       'libc',
       'libncurses',
@@ -1434,6 +1458,26 @@ class AssertVarnish(AssertSoftwareMixin):
       ], [
       'ncurses',
       'varnish-2.1',
+      ])
+
+  def test_ld_libvarnish(self):
+    self.assertLibraryList('parts/varnish/lib/libvarnish.so', [
+      'libc',
+      'libm',
+      'libnsl',
+      'librt',
+      ], [
+      'ncurses',
+      ])
+    self.assertLibraryList('parts/varnish-2.1/lib/libvarnish.so', [
+      'libc',
+      'libm',
+      'libnsl',
+      'libpcre',
+      'librt',
+      ], [
+      'ncurses',
+      'pcre',
       ])
 
 class AssertLibrsync(AssertSoftwareMixin):
