@@ -1,4 +1,8 @@
 2010-11-25 arnaud.fontaine
+* Reset the dynamic documents at the end of the transaction.
+* Merge BaseCategory_resetDynamicClasses into ChangeProperty_resetDynamicClasses.
+
+2010-11-25 arnaud.fontaine
 * Add Attribute Equality Constraint portal type and its views.
 * Set Property Existence Constraint action_type for predicate view to object_view.
 
