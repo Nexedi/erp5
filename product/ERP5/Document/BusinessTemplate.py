@@ -1896,6 +1896,8 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
         else:
           portal_type = klass.__name__
         depend = path_dict.get(portal_type)
+        # Prevent infinite recursion
+        assert depend != path
         cache[path] = score = depend and 1 + solveDependency(depend)[0] or 0
       return score, path
     PersistentMigrationMixin._no_migration += 1
