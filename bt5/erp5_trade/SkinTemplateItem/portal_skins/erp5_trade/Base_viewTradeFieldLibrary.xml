@@ -302,6 +302,7 @@
                         <string>my_view_mode_movement_listbox_price</string>
                         <string>my_view_mode_movement_listbox_quantity</string>
                         <string>my_view_mode_target_delivery</string>
+                        <string>my_view_mode_internal_trade_condition_specialise_title</string>
                       </list>
                     </value>
                 </item>
