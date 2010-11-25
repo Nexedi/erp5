@@ -1707,6 +1707,37 @@ class AssertJbigkit(AssertSoftwareMixin):
       'libc',
       ], [])
 
+class AssertLibtiff(AssertSoftwareMixin):
+  def test_ld_libtiff(self):
+    self.assertLibraryList('parts/libtiff/lib/libtiff.so', [
+      'libc',
+      'libjbig',
+      'libjpeg',
+      'libm',
+      'libz',
+      ], [
+      'jbigkit',
+      'libjpeg',
+      'zlib',
+      ])
+
+  def test_ld_libtiffxx(self):
+    self.assertLibraryList('parts/libtiff/lib/libtiffxx.so', [
+      'libc',
+      'libgcc_s',
+      'libjbig',
+      'libjpeg',
+      'libm',
+      'libstdc++',
+      'libtiff',
+      'libz',
+      ], [
+      'jbigkit',
+      'libjpeg',
+      'libtiff',
+      'zlib',
+      ])
+
 class AssertLibjpeg(AssertSoftwareMixin):
   def test_ld_libjpeg(self):
     self.assertLibraryList('parts/libjpeg/lib/libjpeg.so',[
