@@ -1542,18 +1542,21 @@ class AssertFile(AssertSoftwareMixin):
 class AssertElfLinkedInternally(AssertSoftwareMixin):
   def test(self):
     result_dict = {}
-    root = os.path.join(os.path.abspath(os.curdir), 'parts')
-    for dirpath, dirlist, filelist in os.walk(root):
-      for filename in filelist:
-        # skip some not needed places
-        if any([q in dirpath for q in SKIP_PART_LIST]):
-          continue
-        filename = os.path.join(dirpath, filename)
-        link_list = readLddInfoList(filename)
-        bad_link_list = [q for q in link_list if not q.startswith(root) \
-                          and not any([q.startswith(k) for k in ACCEPTABLE_GLOBAL_LIB_LIST])]
-        if len(bad_link_list):
-          result_dict[filename] = bad_link_list
+    parts_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+    develop_eggs_dir = os.path.join(os.path.abspath(os.curdir), 'develop-eggs')
+    for root in (parts_dir, develop_eggs_dir):
+    for root in (develop_eggs_dir,):
+      for dirpath, dirlist, filelist in os.walk(root):
+        for filename in filelist:
+          # skip some not needed places
+          if any([q in dirpath for q in SKIP_PART_LIST]):
+            continue
+          filename = os.path.join(dirpath, filename)
+          link_list = readLddInfoList(filename)
+          bad_link_list = [q for q in link_list if not q.startswith(parts_dir) \
+                            and not any([q.startswith(k) for k in ACCEPTABLE_GLOBAL_LIB_LIST])]
+          if len(bad_link_list):
+            result_dict[filename] = bad_link_list
     self.assertSoftwareDictEmpty(result_dict)
 
 
