@@ -1832,6 +1832,30 @@ class AssertFontconfig(AssertSoftwareMixin):
     self.assertLibraryList('parts/fontconfig/bin/fc-scan', self.lib_list,
         self.rpath_list)
 
+class AssertSphinx(AssertSoftwareMixin):
+  core_lib_list = [
+      'libc',
+      'libexpat',
+      'libgcc_s',
+      'libm',
+      'libmysqlclient',
+      'libpthread',
+      'librt',
+      'libstdc++',
+      'libz',
+      ]
+  core_rpath_list = [
+      'libexpat',
+      'zlib'
+      ]
+  core_additional_rpath_list = [
+      os.path.join(os.path.abspath(os.curdir), 'parts', 'mysql-5.1', 'lib', 'mysql')
+      ]
+
+  def test_ld_sphinx(self):
+    for i in ('indexer', 'indextool', 'search', 'searchd', 'spelldump'):
+      self.assertLibraryList('parts/sphinx/bin/%s' % i,
+        self.core_lib_list, self.core_rpath_list, self.core_additional_rpath_list)
 
 class AssertElfLinkedInternally(AssertSoftwareMixin):
   def test(self):
