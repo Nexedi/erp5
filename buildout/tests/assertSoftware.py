@@ -1037,8 +1037,14 @@ class AssertApache(AssertSoftwareMixin):
         self.apache_rpath)
 
   def test_ld_module_mod_ssl(self):
-    self.assertLibraryList('parts/apache/modules/mod_ssl.so', ['libpthread', 'libc', 'libcrypto', 'libdl',
-      'libssl', 'libz'], self.apache_rpath)
+    self.assertLibraryList('parts/apache/modules/mod_ssl.so',[
+      'libc',
+      'libcrypto',
+      'libdl',
+      'libpthread',
+      'libssl',
+      'libz',
+      ], self.apache_rpath)
 
   def test_ld_module_mod_status(self):
     self.assertLibraryList('parts/apache/modules/mod_status.so', ['libpthread', 'libc'],
