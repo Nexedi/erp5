@@ -18,12 +18,20 @@ Software
 Software part shall be system independent. In perfect world it shall depend
 only on:
 
- * C compiler
- * standard C and C++ library
- * operating system kernel
+ * C and C++ compiler
+ * standard C and C++ library with development headers
+ * make
+ * patch
+ * python (>=2.4) with development headers (to run buildout)
+ * tool to download bootstrap (wget, curl or web browser)
+ * subversion client (XXX: It will be removed some day)
 
 As world is not perfect some additional build time requirements are added,
 please look below for a way to acquire list of dependencies and system helpers.
+
+Note: We are working hard on removing system depending helpers. Please try to
+use ERP5 Appliance 2.8 without helpers and extend buildout profiles to depend
+only on above list.
 
 How to run
 ----------
