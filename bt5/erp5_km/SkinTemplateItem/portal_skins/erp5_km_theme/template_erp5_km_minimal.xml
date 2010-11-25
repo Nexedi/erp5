@@ -110,7 +110,6 @@
                                     \'%s/erp5_listbox.css\' % portal_path,\n
                                     \'%s/erp5_web_toolbar.css\' % portal_path,\n
                                     \'%s/erp5_knowledge_box.css\' % portal_path,\n
-                                    \'%s/erp5_knowledge_box_web.css\' % portal_path,\n
                                     \'%s/km_css/km.css\' % portal_path,\n
                                     \'%s/km_css/gadget.css\' % portal_path,\n
                                     \'%s/km_css/km_listbox.css\' % portal_path,\n
