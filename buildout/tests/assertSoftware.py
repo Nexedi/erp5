@@ -1398,7 +1398,6 @@ class AssertW3m(AssertSoftwareMixin):
       'libm',
       'libncurses',
       'libnsl',
-      'libpthread',
       'libssl',
       ], [
       'garbage-collector',
