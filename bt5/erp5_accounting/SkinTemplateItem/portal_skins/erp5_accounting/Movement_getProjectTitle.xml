@@ -59,8 +59,15 @@ if project_uid in title_dict:\n
 \n
 movement = context.getObject()\n
 if movement.getSourceProjectUid() == project_uid:\n
-  return movement.getSourceProjectTitle()\n
-return movement.getDestinationProjectTitle()\n
+  reference = movement.getSourceProjectReference()\n
+  if reference:\n
+    return \'%s - %s\' % (reference, movement.getSourceProjectTranslatedTitle())\n
+  return movement.getSourceProjectTranslatedTitle()\n
+\n
+reference = movement.getDestinationProjectReference()\n
+if reference:\n
+  return \'%s - %s\' % (reference, movement.getDestinationProjectTranslatedTitle())\n
+return movement.getDestinationProjectTranslatedTitle()\n
 </string> </value>
         </item>
         <item>
@@ -77,6 +84,47 @@ return movement.getDestinationProjectTitle()\n
             <key> <string>errors</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>project_uid</string>
+                            <string>container</string>
+                            <string>dict</string>
+                            <string>title_dict</string>
+                            <string>_getitem_</string>
+                            <string>movement</string>
+                            <string>reference</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
             </value>
         </item>
         <item>

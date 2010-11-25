@@ -168,8 +168,12 @@ def getAnalyticTitleFromUid(uid):\n
   try:\n
     return analytic_title_dict[uid]\n
   except KeyError:\n
-    return analytic_title_dict.setdefault(uid,\n
-        getObject(uid).getTranslatedTitle())\n
+    node = getObject(uid)\n
+    title = node.getTranslatedTitle()\n
+    reference = node.getReference()\n
+    if reference:\n
+      title = \'%s - %s\' % (reference, title)\n
+    return analytic_title_dict.setdefault(uid, title)\n
 \n
 # standards accounts {{{\n
 for node in getInventoryList(\n

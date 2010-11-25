@@ -59,8 +59,15 @@ if funding_uid in title_dict:\n
   return title_dict[funding_uid]\n
 \n
 if movement.getSourceFundingUid() == funding_uid:\n
-  return movement.getSourceFundingTitle()\n
-return movement.getDestinationFundingTitle()\n
+  reference = movement.getSourceFundingReference()\n
+  if reference:\n
+    return \'%s - %s\' % (reference, movement.getSourceFundingTranslatedTitle())\n
+  return movement.getSourceFundingTranslatedTitle()\n
+\n
+reference = movement.getDestinationFundingReference()\n
+if reference:\n
+  return \'%s - %s\' % (reference, movement.getDestinationFundingTranslatedTitle())\n
+return movement.getDestinationFundingTranslatedTitle()\n
 </string> </value>
         </item>
         <item>
@@ -105,6 +112,7 @@ return movement.getDestinationFundingTitle()\n
                             <string>dict</string>
                             <string>title_dict</string>
                             <string>_getitem_</string>
+                            <string>reference</string>
                           </tuple>
                         </value>
                     </item>
