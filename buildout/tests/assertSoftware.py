@@ -1473,7 +1473,6 @@ class AssertPysvn(AssertSoftwareMixin):
       getDevelopEggName('pysvn', '1.7.4'),
       getPythonVersion().replace('.', '_')), [
       'libc',
-      'libcom_err',
       'libgcc_s',
       'libm',
       'libresolv',
