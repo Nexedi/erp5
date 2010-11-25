@@ -1756,6 +1756,16 @@ class AssertLibpng(AssertSoftwareMixin):
       'zlib',
       ])
 
+class AssertJasper(AssertSoftwareMixin):
+  def test_ld_libjasper(self):
+    self.assertLibraryList('parts/jasper/lib/libjasper.so',[
+      'libc',
+      'libjpeg',
+      'libm',
+      ], [
+      'libjpeg',
+      ])
+
 class AssertElfLinkedInternally(AssertSoftwareMixin):
   def test(self):
     result_dict = {}
