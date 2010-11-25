@@ -1626,7 +1626,7 @@ class AssertImagemagick(AssertSoftwareMixin):
       'jasper',
       'jbigkit',
       'libjpeg',
-      'libpng12',
+      'libpng',
       'libtiff',
       'openexr',
       'zlib',
