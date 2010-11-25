@@ -284,7 +284,10 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
       id=base_category_id, portal_type='Base Category')
 
     # Create a dummy sub-category
-    new_base_category.newContent(reference='sub_category',
+    new_base_category.newContent(reference='sub_category1',
+                                 portal_type='Category')
+
+    new_base_category.newContent(reference='sub_category2',
                                  portal_type='Category')
 
     if operation_type == 'change':
@@ -343,6 +346,25 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
       # XXX
       # constraint_portal_type=('TODO',))
 
+  def _newAttributeEqualityConstraint(self):
+    """
+    Create a new Attribute Equality Constraint within test Property
+    Sheet
+    """
+    # For testing primitive type as attribute value
+    self.test_property_sheet.newContent(
+      reference='test_attribute_equality_constraint',
+      portal_type='Attribute Equality Constraint',
+      constraint_attribute_name='title',
+      constraint_attribute_value='python: "my_valid_title"')
+
+    # For testing list type as attribute value
+    self.test_property_sheet.newContent(
+      reference='test_attribute_list_equality_constraint',
+      portal_type='Attribute Equality Constraint',
+      constraint_attribute_name='categories_list',
+      constraint_attribute_value='python: ("sub_category1", "sub_category2")')
+
   def afterSetUp(self):
     """
     Create a test Property Sheet (and its properties)
@@ -368,6 +390,10 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
       # Create a Category Existence Constraint in the test Property
       # Sheet
       self._newCategoryExistenceConstraint()
+
+      # Create an Attribute Equality Constraint in the test Property
+      # Sheet
+      self._newAttributeEqualityConstraint()
 
       # Create all the test Properties
       for operation_type in ('change', 'delete', 'assign'):
@@ -503,19 +529,19 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
       # Category Property
       self.assertHasAttribute(new_person, 'setTestCategoryPropertyAssign')
 
-      new_person.setTestCategoryPropertyAssign('sub_category')
+      new_person.setTestCategoryPropertyAssign('sub_category1')
 
       self.assertEquals(new_person.getTestCategoryPropertyAssign(),
-                        'sub_category')
+                        'sub_category1')
 
       # Dynamic Category Property
       self.assertHasAttribute(new_person,
                               'setTestDynamicCategoryPropertyAssign')
 
-      new_person.setTestDynamicCategoryPropertyAssign('sub_category')
+      new_person.setTestDynamicCategoryPropertyAssign('sub_category1')
 
       self.assertEquals(new_person.getTestDynamicCategoryPropertyAssign(),
-                        'sub_category')
+                        'sub_category1')
 
     finally:
       # Perform a commit here because Workflow interactions keeps a
@@ -729,10 +755,6 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
                        constraint_reference,
                        setter_function,
                        value):
-    """
-    Check whether the given constraint has been properly defined and
-    checkConsistency() is correct
-    """
     constraint = self._getConstraintByReference(constraint_reference)
     self.failIfEqual(None, constraint)
     self.assertEquals(1, len(constraint.checkConsistency(self.test_module)))
@@ -745,9 +767,8 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     Take the test module and check whether the Property Existence
     Constraint is available. Until the property has been set to a
     value, the constraint should fail
-
-    @see ERP5Type.Base.Base.hasProperty
     """
+    # See ERP5Type.Base.Base.hasProperty()
     self._checkConstraint('test_property_existence_constraint',
                           self.test_module.setTestStandardPropertyConstraint,
                           'foobar')
@@ -760,7 +781,38 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     """
     self._checkConstraint('test_category_existence_constraint',
                           self.test_module.setTestCategoryPropertyConstraint,
-                          'sub_category')
+                          'sub_category1')
+
+  def testAttributeEqualityConstraint(self):
+    """
+    Take the test module and check whether the Attribute Equality
+    Constraint is available. Until the attribute to be checked has
+    been set to its expected value, the constraint should fail. The
+    purpose is to test only primitive types (e.g. not list)
+    """
+    # As checkConsistency calls hasProperty before checking the value,
+    # the property to be tested has to be set at least once (whatever
+    # the value)
+    self.test_module.setTitle('invalid_value')
+
+    self._checkConstraint('test_attribute_equality_constraint',
+                          self.test_module.setTitle,
+                          'my_valid_title')
+
+  def testAttributeListEqualityConstraint(self):
+    """
+    Take the test module and check whether the Attribute Equality
+    Constraint is available. Until the attribute to be checked has
+    been set to its expected value (a list of categories), the
+    constraint should fail. The purpose is to test only list types
+
+    @see testAttributeEqualityConstraint
+    """
+    self.test_module.setCategoryList(('sub_category1',))
+
+    self._checkConstraint('test_attribute_list_equality_constraint',
+                          self.test_module.setCategoryList,
+                          ('sub_category1', 'sub_category2'))
 
 TestZodbPropertySheet = skip("ZODB Property Sheets code is not enabled yet")(
   TestZodbPropertySheet)

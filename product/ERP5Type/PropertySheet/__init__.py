@@ -19,3 +19,4 @@ from AcquiredProperty import AcquiredProperty
 from DynamicCategoryProperty import DynamicCategoryProperty
 from CategoryExistenceConstraint import CategoryExistenceConstraint
 from PropertyExistenceConstraint import PropertyExistenceConstraint
+from AttributeEqualityConstraint import AttributeEqualityConstraint

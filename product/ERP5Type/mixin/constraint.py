@@ -42,6 +42,10 @@ class ConstraintMixin(Predicate):
   Mixin Constraint implementation (only relevant for ZODB Property
   sheets, use Products.ERP5Type.Constraint instead for filesystem
   Property Sheets) relying on Predicate
+
+  @todo: Add code to import constraints requiring a new TALES
+         Expression field in predicate to be able to import
+         'condition' properly
   """
   # Declarative security
   security = ClassSecurityInfo()
