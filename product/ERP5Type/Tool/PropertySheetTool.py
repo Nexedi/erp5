@@ -130,7 +130,7 @@ class PropertySheetTool(BaseTool):
       if name[0] == '_':
         continue
 
-      if name in self.portal_property_sheets:
+      if name in self.portal_property_sheets.objectIds():
         self.portal_property_sheets.deleteContent(name)
         transaction.commit()
 
