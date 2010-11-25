@@ -46,8 +46,6 @@
 /*     - add dynamic properties                                 */\n
 /****************************************************************/\n
 \n
-<tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\');"/>\n
-\n
 /*\n
 ##  dreikelvin CSS Framework 3.5\n
 ##\n
@@ -58,7 +56,11 @@
 ##\n
 ##\n
 */\n
-/* ## XHTML basis elements ############################ start # */\n
+\n
+<tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\');\n
+                   menu_opacity python:here.getLayoutProperty(\'layout_navigation_menu_opacity\', \'0.80\');\n
+                   menu_width python:here.getLayoutProperty(\'layout_navigation_menu_width\', \'145px\');\n
+                   menu_indent python:here.getLayoutProperty(\'layout_navigation_menu_indent\', \'155px\');" >\n
 \n
 body,html {\n
 \n
@@ -1127,7 +1129,668 @@ div.pdf-preview-navigation img.last{\n
   background: #4bcc4b;\n
   border:1px solid #4bcc4b;\n
   color:#fff;\n
-}
+}\n
+\n
+\n
+\n
+/* splash.css */\n
+/* ## home banner #################################### start ## */\n
+\n
+.homebanner {\n
+\n
+\tbackground: url(../community_img/homebanner.jpg) no-repeat transparent;\n
+\tcolor:#fff;\n
+\ttext-shadow: 0 1px 0 #006686;\n
+\n
+}\n
+\n
+.homebanner h2 {\n
+\n
+\ttext-shadow: 0 3px 0 #0d7dab;\n
+\n
+}\n
+\n
+.homebanner ul li {\n
+\t\n
+\tlist-style-image: none;\n
+\tlist-style-type: none;\n
+\tbackground: url(../community_img/bannerbullet.png) no-repeat transparent;\n
+\n
+}\n
+\n
+.button-why:link, .button-why:active, .button-why:visited {\n
+\n
+\tbackground: url(../community_img/bannerbuttons.png) no-repeat transparent;\n
+\n
+}\n
+.button-why:hover {\n
+\n
+\tbackground-position: 0 100%;\n
+\n
+}\n
+\n
+.button-try:link, .button-try:active, .button-try:visited {\n
+\n
+\tbackground: url(../community_img/bannerbuttons.png) no-repeat transparent;\n
+\tbackground-position: -158px 0;\n
+\n
+}\n
+.button-try:hover {\n
+\n
+\tbackground-position: -158px 100%;\n
+\n
+}\n
+\n
+/* ## home banner ##################################### end ### */\n
+\n
+\n
+\n
+/* ## home banner #################################### start ## */\n
+\n
+.homebanner {\n
+\n
+\tdisplay: block;\n
+\twidth: 924px;\n
+\theight: 283px;\n
+        margin:10px 14px 10px;\n
+\n
+}\n
+\n
+.homebanner h2 {\n
+\n
+\tpadding:25px;\n
+\tmargin:0;\n
+\n
+}\n
+\n
+.homebanner h4 {\n
+\n
+\tposition: absolute;\n
+\tbottom: 20px;\n
+\tright:25px;\n
+\tpadding:0;\n
+\tmargin:0;\n
+\n
+}\n
+\n
+.homebanner img {\n
+\n
+\tposition: absolute;\n
+\ttop: 89px;\n
+\tright:1px;\n
+\n
+}\n
+\n
+.homebanner ul {\n
+\n
+\tposition: absolute;\n
+\ttop:101px;\n
+\tleft:5px;\n
+\tmargin:0;\n
+\tpadding:0 30px;\n
+\twidth: 200px;\n
+\n
+}\n
+\n
+.homebanner ul li {\n
+\n
+\tmargin:0;\n
+\tpadding: 7px 10px 7px 30px;\n
+\tdisplay: block;\n
+\t\n
+}\n
+\n
+.button-why:link, .button-why:active, .button-why:visited, .button-try:link, .button-try:active, .button-try:visited {\n
+\n
+\twidth:158px;\n
+\theight:47px;\n
+\tdisplay: block;\n
+\tposition: absolute;\n
+\tbottom:0;\n
+\tleft:25px;\n
+\ttext-indent: -999999px;\n
+\n
+}\n
+\n
+.button-try:link, .button-try:active, .button-try:visited  {\n
+\n
+\tleft: 180px;\n
+\n
+}\n
+\n
+/* ## home banner ##################################### end ### */\n
+\n
+/* color.css  */\n
+\n
+body {\n
+  background:#E9E9E9 url(../km_img/bg.png) repeat-x scroll 0 0;\n
+}\n
+\n
+.content .error .input {border:2px solid #FF4400;}\n
+.content .field .error {\n
+  background-color:inherit;\n
+  color:#FF4400;\n
+}\n
+\n
+#header {\n
+        color:#a8a799;\n
+}\n
+\n
+.breadcrumb li {\n
+\tcolor:#686868;\n
+}\n
+\n
+::selection {\n
+\tbackground:#aaa;\n
+\tcolor:#000;\n
+}\n
+\n
+::-moz-selection{\n
+\tbackground:#aaa;\n
+\tcolor:#000;\n
+}\n
+\n
+.breadcrumb_separator {\n
+  margin-bottom:2px;\n
+}\n
+\n
+.block h3.handle{\n
+\tbackground: url(../km_img/widgethead.png) repeat-x scroll 0 -2px #c1c0b4;\n
+\tborder-color:#C0BFB3 #C0BFB3 #9C9479;\n
+\tborder-style:solid;\n
+\tborder-width:1px;\n
+\tcolor:#776D61;\n
+\tfont-size:10pt;\n
+\n
+}\n
+\n
+fieldset.left h4,\n
+fieldset.center h4,\n
+fieldset.right h4 {\n
+\tbackground-color:#efeee8;\n
+}\n
+\n
+.document > .content ul li {\n
+  background:transparent url(../km_img/bg_bullet_square.gif) no-repeat scroll 0 0.5em;\n
+  margin:0 0 0.3em 2px;\n
+  padding:0 0 0 12px;\n
+  list-style-image:none;\n
+  list-style-position:outside;\n
+  list-style-type:none;\n
+}\n
+\n
+table {\n
+\tborder: 1px solid #ecebe2;\n
+}\n
+\n
+table th button {\n
+  background-color:inherit;\n
+  border-width:0;\n
+  color:inherit;\n
+  cursor:pointer;\n
+  float:left;\n
+  vertical-align:middle;\n
+  font-weight:bold;\n
+  text-align:left;\n
+  background:transparent url(../km_img/switch.png) no-repeat scroll 100% 50%;\n
+  padding:0 6px 0 0;\n
+}\n
+\n
+table tbody tr td {\n
+\tborder-top: 1px solid #ecebe2;\n
+\tbackground-color: #FFFFFF;\n
+\t-webkit-transition-property: background;\n
+\t-webkit-transition-duration: 0.2s;\n
+\t-webkit-transition-timing-function: linear;\n
+}\n
+\n
+#km_left .document > .content {\n
+\tbackground-color: #fff;\n
+\tborder:1px solid #c0bfb3;\n
+}\n
+\n
+.section {\n
+\tborder-bottom: 1px solid #e9e9e9;\n
+}\n
+\n
+#wrapper_footer {\n
+\tborder-top:1px solid #fcfbfb;\n
+\tbackground-color:#9d968d;\n
+\tcolor:#eae9df;\n
+}\n
+\n
+\n
+/* ## link styling ################################### start # */\n
+\n
+a:link, a:active, a:visited { \n
+  color: #9d968d; \n
+  font-weight:bold; \n
+}\n
+\n
+a:hover { \n
+  color: #000; \n
+}\n
+\n
+#header a:link, #header a:active, #header a:visited {\n
+\tcolor:#fff;\n
+\tfont-weight:bold;\n
+\ttext-shadow: 0 1px 0 #a8a799;\n
+}\n
+\n
+#header .meta div a:link, #header .meta div a:active, #header .meta div a:visited {\n
+  font-weight: normal;\n
+}\n
+\n
+#header .meta div a:hover{\n
+  font-weight: bold;\n
+}\n
+\n
+#header ul.breadcrumb li a:link, #header ul.breadcrumb li a:active, #header ul.breadcrumb li a:visited {\n
+\tcolor:#686868;\n
+}\n
+\n
+#header ul.breadcrumb li a:hover {\n
+\tcolor:#FFF;\n
+}\n
+\n
+#footer a:link, #footer a:active, #footer a:visited,\n
+#footer ul li a:link, #footer ul li a:active, #footer ul li a:visited { \n
+  color:#FFF;\n
+  font-weight:bold;\n
+}\n
+\n
+#footer a:hover, #footer ul li a:hover { color:#fff; }\n
+\n
+/* ## link styling ################################### end ### */\n
+\n
+#menu ul li #home-link:link, \n
+#menu ul li #home-link:active, \n
+#menu ul li #home-link:visited {\n
+\tbackground: url(../km_img/home.gif) no-repeat transparent;\n
+}\n
+\n
+#menu ul li #home-link:hover {\n
+\tbackground-position: 0 100%;\n
+}\n
+\n
+#menu #login-logout-link:link, #menu #login-logout-link:active, #menu #login-logout-link:visited {\n
+  background: url(../km_img/login.gif) no-repeat transparent;\n
+  background-position: 0 -3px;\n
+}\n
+\n
+#menu #login-logout-link:hover {\n
+\tbackground-position: 0 -23px;\n
+}\n
+\n
+/* ## navigation ###################################### end ### */\n
+\n
+a.bt-download:link, a.bt-download:active, a.bt-download:visited {\n
+\tbackground: url(../km_img/icon-save.png) no-repeat transparent;\n
+}\n
+\n
+a.bt-rss:link, a.bt-rss:active, a.bt-rss:visited {\n
+\tbackground: url(../km_img/icon-rss.png) no-repeat transparent;\n
+}\n
+\n
+a.bt-download:link, a.bt-download:active, a.bt-download:visited,\n
+a.bt-rss:link, a.bt-rss:active, a.bt-rss:visited {\n
+\tbackground-position: 100% 50%;\n
+\tcolor:#000;\n
+}\n
+\n
+/* ## buttons ######################################### start # */\n
+\n
+a.block-refresh { background-position: 0 0; }\n
+\n
+a.block-minimize { background-position: -17px 0 !important; }\n
+\n
+a.block-remove { background-position: -34px 0 !important; }\n
+\n
+a.block-edit-form { background-position: -51px 0 !important; }\n
+\n
+a.block-refresh:hover { background-position: 0 100% !important; }\n
+\n
+a.block-minimize:hover { background-position: -17px 100% !important; }\n
+\n
+a.block-remove:hover { background-position: -34px 100% !important; }\n
+\n
+a.block-edit-form:hover { background-position: -51px 100% !important; }\n
+\n
+a.bt-edit:link, a.bt-edit:active, a.bt-edit:visited {\n
+\tbackground: url(../km_img/bt-edit.png) no-repeat transparent;\n
+}\n
+\n
+a.bt-edit:link strong, a.bt-edit:active strong,\n
+a.bt-edit:visited strong {\n
+\tbackground: url(../km_img/bt-edit.png) no-repeat transparent;\n
+\tbackground-position: 100% 0;\n
+\tcolor:#828282;\n
+}\n
+\n
+a.bt-edit:hover {\n
+\tbackground-position: 0 100%;\n
+}\n
+\n
+a.bt-edit:hover strong {\n
+\tcolor:#4f4f4f;\n
+\tbackground-position: 100% 100%;\n
+}\n
+\n
+button.formbt, button.bt-med span, .bt-small span { color:#828282; }\n
+button.formbt:hover span, button.bt-med:hover span, .bt-small:hover span { color:#4f4f4f; }\n
+\n
+button.formbt, button.formbt > span { background: url(../km_img/formbt.png) no-repeat transparent; }\n
+\n
+button.bt-med, button.bt-med span { \n
+  background: url(../km_img/button-med.png) no-repeat transparent; \n
+  background-color: #E9E9E9;\n
+}\n
+\n
+.bt-small, .bt-small span { background: url(../km_img/button-small.png) no-repeat transparent; }\n
+\n
+button.formbt, button.bt-med, .bt-small { background-position: 100% 0; }\n
+\n
+button.formbt:hover, button.bt-med:hover, .bt-small:hover { background-position: 100% 100%; }\n
+\n
+button.formbt:hover span, button.bt-med:hover span, .bt-small:hover span { background-position: 0 100%; }\n
+\n
+button#input-save-view span.image {background: url(../km_img/bt-save2.png) no-repeat transparent;}\n
+button#input-save-edit span.image {background: url(../km_img/bt-save.png) no-repeat transparent;}\n
+\n
+button#input-save-edit span.image,\n
+button#input-save-view span.image {\n
+  position: relative;\n
+  margin:8px;\n
+  float: left;\n
+  width: 19px;\n
+  height: 18px;\n
+}\n
+\n
+/* ## buttons ######################################### end ### */\n
+\n
+\n
+/* ## form styling #################################### start # */\n
+.meta input.search_button:hover,\n
+.search_button:hover {\n
+\tbackground-position: 0 100%;\n
+}\n
+\n
+label {\n
+\tcolor:#9d968d;\n
+}\n
+\n
+\n
+/* ## form styling #################################### end ### */\n
+\n
+/* Search pop up styling */\n
+div.popup_row .reference{\n
+  color: inherit;\n
+}\n
+\n
+/* Search listbox styling */\n
+span.search_result_title{\n
+  color: #1111CC;\n
+}\n
+\n
+span.search_result_portal_type{\n
+  color: inherit;\n
+}\n
+\n
+span.found{\n
+  color: #000000;\n
+}\n
+\n
+span.found em{\n
+  font-weight: bold;\n
+}\n
+\n
+div.searchDetails a.section-link{\n
+  color: inherit;\n
+}\n
+\n
+div.searchDetails a.reference-link{\n
+  color: #228822;\n
+}\n
+\n
+div.searchDetails a.owner-link{\n
+  color: inherit;\n
+}\n
+\n
+div.searchDetails a.modification-date-link{\n
+  color: inherit;\n
+}\n
+\n
+/* workflow states  colors*/\n
+ .draft-state { \n
+  color:#4574cb; \n
+}\n
+ .published-state, .released-state, .shared-state { \n
+  color: green; \n
+}\n
+.hidden-state{\n
+  color:red;\n
+}\n
+.archived-state{\n
+  color:gray;\n
+}\n
+\n
+\n
+/* pulldown.css */\n
+\n
+#menu {\n
+\n
+  z-index:100;\n
+}\n
+\n
+#menu ul.nav li{\n
+  z-index:110;\n
+}\n
+\n
+#menu ul.nav li a, #menu ul.nav li a:visited {\n
+\n
+  display:block;\n
+  text-decoration:none;\n
+  text-align:center;\n
+  padding: 0 8px;\n
+}\n
+\n
+\n
+#menu ul.nav {\n
+\n
+  padding:0;\n
+  margin:0;\n
+  list-style: none;\n
+}\n
+\n
+#menu ul.nav li {\n
+\n
+  float:left;\n
+  position:relative;\n
+\n
+}\n
+\n
+#menu ul.nav li ul {\n
+\n
+  display: none;\n
+\n
+}\n
+\n
+#menu ul.nav li:hover a {\n
+\n
+  background-color: #a8a799;\n
+  color:#fff;\n
+  text-shadow: 0 1px 0 #7a7964;\n
+\n
+}\n
+\n
+#menu ul.nav li:hover ul {\n
+\n
+  display:block;\n
+  position:absolute;\n
+  top:0;\n
+  padding-top:30px;\n
+  left:0;\n
+  width:205px;\n
+  opacity: <tal:block tal:replace="menu_opacity">0.80</tal:block>;\n
+\n
+}\n
+\n
+#menu ul.nav li:hover ul li a {\n
+\n
+  text-align:left;\n
+  display:block;\n
+  background:#818363;\n
+  color:#fff;\n
+  width:<tal:block tal:replace="menu_width">145px</tal:block>;\n
+  font-weight:normal;\n
+  line-height:15px;\n
+  padding: 5px 5px 10px 5px;\n
+  -webkit-transition-property: background;\n
+    -webkit-transition-duration: 0.1s;\n
+    -webkit-transition-timing-function: ease-in;\n
+\n
+}\n
+\n
+#menu ul.nav li:hover ul li a:hover { background:#37391e; }\n
+#menu ul.nav li:hover ul li a.workflow_title:hover { background:#818363; }\n
+\n
+#menu ul.nav li:hover ul li:hover ul {\n
+\n
+  display:block;\n
+  position:absolute;\n
+  left:<tal:block tal:replace="menu_indent">155px</tal:block>;\n
+  top:0;\n
+  margin:0;\n
+  padding:0;\n
+  opacity: <tal:block tal:replace="menu_opacity">0.80</tal:block>;\n
+\n
+}\n
+\n
+#menu ul.nav li:hover ul li:hover ul.left { left:-105px; }\n
+\n
+#menu ul.nav li ul,\n
+#menu ul.nav li:hover ul li ul,\n
+#menu ul.nav li:hover ul li:hover ul li ul,\n
+#menu ul.nav li:hover ul li:hover ul li:hover ul li ul,\n
+#menu ul.nav li:hover ul li:hover ul li:hover ul li:hover ul li ul,\n
+#menu ul.nav li:hover ul li:hover ul li:hover ul li:hover ul li:hover ul li ul,\n
+#menu ul.nav li:hover ul li:hover ul li:hover ul li:hover ul li:hover ul li:hover ul li ul {\n
+\n
+  display:none;\n
+\n
+}\n
+\n
+#menu ul.nav li:hover ul,\n
+#menu ul.nav li:hover ul li:hover ul,\n
+#menu ul.nav li:hover ul li:hover ul li:hover ul,\n
+#menu ul.nav li:hover ul li:hover ul li:hover ul li:hover ul,\n
+#menu ul.nav li:hover ul li:hover ul li:hover ul li:hover ul li:hover ul,\n
+#menu ul.nav li:hover ul li:hover ul li:hover ul li:hover ul li:hover ul li:hover ul\n
+\n
+{\n
+\n
+  display:block;\n
+\n
+}\n
+\n
+\n
+/* type.css */\n
+body {\n
+\n
+\tfont-family: Arial, Verdana, Helvetica, Sans;\n
+\tcolor:#000;\n
+\tfont-size:10pt;\n
+\n
+}\n
+\n
+button {\n
+\tfont-family: Arial, Verdana, Helvetica, Sans;\n
+}\n
+\n
+.gadget h2 {\n
+\n
+\tfont-size: 10pt;\n
+\n
+}\n
+\n
+.gadget h3 {\n
+\n
+\tfont-size: 10pt;\n
+\n
+}\n
+\n
+\n
+.gadget .post small {\n
+\n
+\tfont-size:10pt;\n
+\tfont-style: italic;\n
+\n
+}\n
+\n
+table tr td, table tr th, table tr th button {\n
+\n
+\tfont-size:9pt;\n
+\n
+}\n
+\n
+#wrapper_footer { font-size:8pt; }\n
+\n
+#menu { font-size: 9pt; }\n
+\n
+\n
+label {\n
+\n
+\tfont-weight:bold;\n
+\n
+}\n
+\n
+.saveView, .saveEdit { text-indent:15px; font-size:10pt; }\n
+\n
+#tabs ul li.first a, #tabs ul li.last a { font-weight: normal; }\n
+\n
+div#km_front div#main_content .box_inner_content .text .list_style span{\n
+  font-size:0.8em;\n
+}\n
+\n
+#navigation_table td{ font-size: 8pt; }\n
+\n
+/* ## link styling ################################### start # */\n
+\n
+a:link, a:visited, a:active {\n
+\n
+\ttext-decoration: none;\n
+\n
+}\n
+\n
+.pnav a {\n
+\n
+\tfont-size:9pt;\n
+\n
+}\n
+\n
+a.bt-edit strong { font-size:8pt; }\n
+\n
+a.status:link, a.status:active, a.status:visited, .status { font-weight:normal; }\n
+\n
+a.bt-download:link, a.bt-download:active, a.bt-download:visited,\n
+a.bt-rss:link, a.bt-rss:active, a.bt-rss:visited { font-weight: normal; font-size:9pt; }\n
+\n
+.bt-small { font-weight:normal; font-size:7pt; }\n
+\n
+/* ## link styling ################################### end ### */\n
+\n
+\n
+\n
+div#wrapper_headline span.header_title {\n
+\n
+  font-size:1.2em;\n
+\tfont-weight:bold;\n
+\n
+}\n
+\n
+\n
+\n
+</tal:block>
 
 ]]></unicode> </value>
         </item>
@@ -1141,7 +1804,7 @@ div.pdf-preview-navigation img.last{\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>layout.css</string> </value>
+            <value> <string>km.css</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
@@ -1149,7 +1812,7 @@ div.pdf-preview-navigation img.last{\n
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <unicode></unicode> </value>
+            <value> <unicode>KM Theme CSS file</unicode> </value>
         </item>
       </dictionary>
     </pickle>

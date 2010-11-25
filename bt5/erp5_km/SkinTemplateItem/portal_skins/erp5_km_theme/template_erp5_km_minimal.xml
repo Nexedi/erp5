@@ -111,15 +111,10 @@
                                     \'%s/erp5_web_toolbar.css\' % portal_path,\n
                                     \'%s/erp5_knowledge_box.css\' % portal_path,\n
                                     \'%s/erp5_knowledge_box_web.css\' % portal_path,\n
-                                    \'%s/km_css/layout.css\' % portal_path,\n
-                                    \'%s/km_css/splash.css\' % portal_path,\n
-                                    \'%s/km_css/color.css\' % portal_path,\n
-                                    \'%s/km_css/pulldown.css\' % portal_path,\n
-                                    \'%s/km_css/type.css\' % portal_path,\n
+                                    \'%s/km_css/km.css\' % portal_path,\n
                                     \'%s/km_css/gadget.css\' % portal_path,\n
                                     \'%s/km_css/km_listbox.css\' % portal_path,\n
-                                    \'%s/km_custom.css\' % portal_path,\n
-];\n
+                                    \'%s/km_custom.css\' % portal_path,];\n
                              global js_list python:[\n
                                    \'%s/km_js/erp5_km.js\' % portal_path,\n
 ]">\n
