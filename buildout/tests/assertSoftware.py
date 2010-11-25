@@ -1545,7 +1545,6 @@ class AssertElfLinkedInternally(AssertSoftwareMixin):
     parts_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     develop_eggs_dir = os.path.join(os.path.abspath(os.curdir), 'develop-eggs')
     for root in (parts_dir, develop_eggs_dir):
-    for root in (develop_eggs_dir,):
       for dirpath, dirlist, filelist in os.walk(root):
         for filename in filelist:
           # skip some not needed places
