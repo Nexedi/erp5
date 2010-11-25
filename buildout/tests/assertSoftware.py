@@ -1514,6 +1514,7 @@ class AssertFile(AssertSoftwareMixin):
       'libz',
       ], [
       'file',
+      'zlib',
       ])
 
   def test_ld_libmagic(self):
