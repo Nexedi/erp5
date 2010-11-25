@@ -748,7 +748,7 @@ class AssertApache(AssertSoftwareMixin):
   def test_ld_libaprutil1(self):
     self.assertLibraryList('parts/apache/lib/libaprutil-1.so', ['libexpat', 'libapr-1', 'librt', 'libcrypt',
       'libpthread', 'libdl', 'libc', 'libuuid'],
-      self.apache_rpath)
+      self.apache_rpath + ['apache'])
 
   def test_ld_libapr1(self):
     self.assertLibraryList('parts/apache/lib/libapr-1.so', ['librt', 'libcrypt', 'libuuid',
