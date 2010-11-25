@@ -1613,7 +1613,7 @@ class AssertImagemagick(AssertSoftwareMixin):
       'libjbig',
       'libjpeg',
       'libm',
-      'libpng12',
+      'libpng14',
       'libpthread',
       'libtiff',
       'libz',
