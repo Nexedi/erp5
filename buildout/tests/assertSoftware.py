@@ -1072,14 +1072,7 @@ class AssertApache(AssertSoftwareMixin):
       'libc',
       'libpthread',
       'libsqlite3',
-      ], [
-      'libexpat',
-      'libuuid',
-      'openssl',
-      'pcre',
-      'sqlite3',
-      'zlib',
-      ])
+      ], self.apache_rpath)
 
 class AssertItools(AssertSoftwareMixin):
   def test_ld_parserso(self):
