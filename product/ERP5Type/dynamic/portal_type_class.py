@@ -260,7 +260,7 @@ def generatePortalTypeClass(portal_type_name):
     mixin_path_list = map(mixin_class_registry.__getitem__, mixin_list)
   mixin_class_list = map(_importClass, mixin_path_list)
 
-  baseclasses = [klass] + accessor_holder_list + mixin_class_list
+  base_class_list = [klass] + accessor_holder_list + mixin_class_list
 
   interface_class_list = []
   if interface_list:
@@ -275,7 +275,7 @@ def generatePortalTypeClass(portal_type_name):
   #    "Portal type %s loaded with bases %s" \
   #        % (portal_type_name, repr(baseclasses)))
 
-  return (tuple(baseclasses),
+  return (tuple(base_class_list),
           interface_class_list,
           dict(portal_type=portal_type_name))
 
