@@ -1598,6 +1598,29 @@ class AssertFile(AssertSoftwareMixin):
       'zlib',
       ])
 
+class AssertImagemagick(AssertSoftwareMixin):
+  lib_lib_list = [
+      'libbz2',
+      'libc',
+      'libdl',
+      'libm',
+      'libpthread',
+      'libz',
+      ]
+
+  lib_rpath_list = [
+      'zlib',
+      'bzip2',
+      ]
+
+  def test_ld_libMagickCore(self):
+    self.assertLibraryList('parts/imagemagick/lib/libMagickCore.so',
+      self.lib_lib_list, self.lib_rpath_list)
+
+  def test_ld_libMagickWand(self):
+    self.assertLibraryList('parts/imagemagick/lib/libMagickWand.so',
+      self.lib_lib_list, self.lib_rpath_list)
+
 class AssertElfLinkedInternally(AssertSoftwareMixin):
   def test(self):
     result_dict = {}
