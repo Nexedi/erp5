@@ -1600,11 +1600,6 @@ class AssertFile(AssertSoftwareMixin):
 
 class AssertImagemagick(AssertSoftwareMixin):
   core_lib_list = [
-      'libHalf',
-      'libIex',
-      'libIlmImf',
-      'libIlmThread',
-      'libImath',
       'libbz2',
       'libc',
       'libdl',
@@ -1622,13 +1617,11 @@ class AssertImagemagick(AssertSoftwareMixin):
   core_rpath_list = [
       'bzip2',
       'freetype',
-      'ilmbase',
       'jasper',
       'jbigkit',
       'libjpeg',
       'libpng',
       'libtiff',
-      'openexr',
       'zlib',
       ]
 
