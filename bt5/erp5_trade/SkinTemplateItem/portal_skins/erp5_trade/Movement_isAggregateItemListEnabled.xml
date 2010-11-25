@@ -54,7 +54,7 @@
 for Base_viewTradeFieldLibrary/my_view_mode_aggregate_title_list.enable\n
 """\n
 \n
-if context.getResource() and context.getResourceValue().getAggregatedPortalTypeList():\n
+if context.getResource() and context.getResourceValue().getAggregatedPortalTypeList() and context.isMovement() and not context.getVariationCategoryList():\n
   return True\n
 if context.getAggregate():\n
   return True\n
