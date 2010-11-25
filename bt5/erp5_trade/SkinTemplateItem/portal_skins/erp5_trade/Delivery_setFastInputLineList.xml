@@ -100,7 +100,6 @@ for line in listbox:\n
                                                 resource_value=product,\n
                                                 reference=product.getReference(),\n
                                                 title=product.getTitle(),\n
-                                                use_list=product.getUseList(),\n
                                                 )\n
       per_resource_line_dict[key] = trade_document_line\n
       variation_category_list = line["variation_category_list"]\n
