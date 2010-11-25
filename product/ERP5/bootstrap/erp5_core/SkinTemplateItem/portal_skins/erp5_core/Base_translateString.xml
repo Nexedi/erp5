@@ -62,9 +62,13 @@ if translation_service is not None :\n
   try:\n
     if not encoding:\n
       return translation_service.translate(catalog, msg, lang=lang, **kw)\n
-    return translation_service.translate(catalog, msg, lang=lang, **kw).encode(encoding)\n
+    msg = translation_service.translate(catalog, msg, lang=lang, **kw)\n
+    if same_type(msg, u\'\'):\n
+      msg = msg.encode(encoding)\n
+    return msg\n
   except AttributeError: # This happens in unit testing, because it is not able to find something with get_context()\n
     pass\n
+\n
 return msg\n
 </string> </value>
         </item>
@@ -114,6 +118,7 @@ return msg\n
                             <string>translation_service</string>
                             <string>_apply_</string>
                             <string>_getattr_</string>
+                            <string>same_type</string>
                             <string>AttributeError</string>
                           </tuple>
                         </value>
