@@ -1,0 +1,8 @@
+2010-11-02 gabriel
+* Update path of jquery plugins
+
+2010-10-15 gabriel
+* Remove erp5_jquery folder and added erp5_jquery bt5 as dependency.
+
+2010-10-13 gabriel
+* The initial version.

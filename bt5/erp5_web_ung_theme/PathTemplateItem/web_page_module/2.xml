@@ -1,0 +1,196 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="TextDocument" module="Products.ERP5Type.Document.TextDocument"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>2</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Table</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<TABLE cellspacing="0" cellpadding="0" border="1px" style="width: 590px;" id="jSheet_0_0" class="jSheet ui-widget-content">\n
+<COLGROUP>\n
+<COL width="120px" style="width: 120px;"/>\n
+<COL width="120px" style="width: 120px;"/>\n
+<COL width="120px" style="width: 120px;"/>\n
+<COL width="120px" style="width: 120px;"/>\n
+<COL width="120px" style="width: 120px;"/>\n
+</COLGROUP>\n
+<TBODY>\n
+<TR height="18px" style="height: 18px;">\n
+<TD id="0_table0_cell_c0_r0" style="background-color: rgb(192, 192, 192);">a</TD>\n
+<TD id="0_table0_cell_c1_r0" style="background-color: rgb(192, 192, 192);">1</TD>\n
+<TD id="0_table0_cell_c2_r0"/>\n
+<TD id="0_table0_cell_c3_r0"/>\n
+<TD id="0_table0_cell_c4_r0"/>\n
+</TR>\n
+<TR height="18px" style="height: 18px;">\n
+<TD id="0_table0_cell_c0_r1" style="background-color: rgb(192, 192, 192);">b</TD>\n
+<TD id="0_table0_cell_c1_r1" style="background-color: rgb(192, 192, 192);">2</TD>\n
+<TD id="0_table0_cell_c2_r1"/>\n
+<TD id="0_table0_cell_c3_r1"/>\n
+<TD id="0_table0_cell_c4_r1"/>\n
+</TR>\n
+<TR height="18px" style="height: 18px;">\n
+<TD id="0_table0_cell_c0_r2" style="background-color: rgb(192, 192, 192);">c</TD>\n
+<TD id="0_table0_cell_c1_r2" style="background-color: rgb(192, 192, 192);">3</TD>\n
+<TD id="0_table0_cell_c2_r2"/>\n
+<TD id="0_table0_cell_c3_r2"/>\n
+<TD id="0_table0_cell_c4_r2"/>\n
+</TR>\n
+<TR height="18px" style="height: 18px;">\n
+<TD id="0_table0_cell_c0_r3"/>\n
+<TD id="0_table0_cell_c1_r3"/>\n
+<TD id="0_table0_cell_c2_r3"/>\n
+<TD id="0_table0_cell_c3_r3"/>\n
+<TD id="0_table0_cell_c4_r3"/>\n
+</TR>\n
+<TR height="18px" style="height: 18px;">\n
+<TD id="0_table0_cell_c0_r4"/>\n
+<TD id="0_table0_cell_c1_r4"/>\n
+<TD id="0_table0_cell_c2_r4">coucou</TD>\n
+<TD id="0_table0_cell_c3_r4"/>\n
+<TD id="0_table0_cell_c4_r4"/>\n
+</TR>\n
+<TR height="18px" style="height: 18px;">\n
+<TD id="0_table0_cell_c0_r5"/>\n
+<TD id="0_table0_cell_c1_r5"/>\n
+<TD id="0_table0_cell_c2_r5">tutu</TD>\n
+<TD id="0_table0_cell_c3_r5"/>\n
+<TD id="0_table0_cell_c4_r5"/>\n
+</TR>\n
+<TR height="18px" style="height: 18px;">\n
+<TD id="0_table0_cell_c0_r6"/>\n
+<TD id="0_table0_cell_c1_r6"/>\n
+<TD id="0_table0_cell_c2_r6"/>\n
+<TD id="0_table0_cell_c3_r6"/>\n
+<TD id="0_table0_cell_c4_r6"/>\n
+</TR>\n
+<TR height="18px" style="height: 18px;">\n
+<TD id="0_table0_cell_c0_r7"/>\n
+<TD id="0_table0_cell_c1_r7"/>\n
+<TD id="0_table0_cell_c2_r7"/>\n
+<TD id="0_table0_cell_c3_r7"/>\n
+<TD id="0_table0_cell_c4_r7"/>\n
+</TR>\n
+<TR height="18px" style="height: 18px;">\n
+<TD id="0_table0_cell_c0_r8"/>\n
+<TD id="0_table0_cell_c1_r8"/>\n
+<TD id="0_table0_cell_c2_r8"/>\n
+<TD id="0_table0_cell_c3_r8"/>\n
+<TD id="0_table0_cell_c4_r8"/>\n
+</TR>\n
+<TR height="18px" style="height: 18px;">\n
+<TD id="0_table0_cell_c0_r9"/>\n
+<TD id="0_table0_cell_c1_r9"/>\n
+<TD id="0_table0_cell_c2_r9"/>\n
+<TD id="0_table0_cell_c3_r9"/>\n
+<TD id="0_table0_cell_c4_r9"/>\n
+</TR>\n
+</TBODY>\n
+</TABLE>\n
+<TABLE cellspacing="0" cellpadding="0" border="1px" style="width: 590px;" class="jSheet ui-widget-content" id="jSheet_0_1">\n
+<COLGROUP>\n
+<COL width="120px" style="width: 120px;"/>\n
+<COL width="120px" style="width: 120px;"/>\n
+<COL width="120px" style="width: 120px;"/>\n
+<COL width="120px" style="width: 120px;"/>\n
+<COL width="120px" style="width: 120px;"/>\n
+</COLGROUP>\n
+<TBODY>\n
+<TR height="18px" style="height: 18px;">\n
+<TD id="0_table1_cell_c0_r0">zee</TD>\n
+<TD id="0_table1_cell_c1_r0"/>\n
+<TD id="0_table1_cell_c2_r0"/>\n
+<TD id="0_table1_cell_c3_r0"/>\n
+<TD id="0_table1_cell_c4_r0"/>\n
+</TR>\n
+<TR height="18px" style="height: 18px;">\n
+<TD id="0_table1_cell_c0_r1"/>\n
+<TD id="0_table1_cell_c1_r1"/>\n
+<TD id="0_table1_cell_c2_r1"/>\n
+<TD id="0_table1_cell_c3_r1"/>\n
+<TD id="0_table1_cell_c4_r1"/>\n
+</TR>\n
+<TR height="18px" style="height: 18px;">\n
+<TD id="0_table1_cell_c0_r2"/>\n
+<TD id="0_table1_cell_c1_r2">1</TD>\n
+<TD id="0_table1_cell_c2_r2"/>\n
+<TD id="0_table1_cell_c3_r2"/>\n
+<TD id="0_table1_cell_c4_r2"/>\n
+</TR>\n
+<TR height="18px" style="height: 18px;">\n
+<TD id="0_table1_cell_c0_r3"/>\n
+<TD id="0_table1_cell_c1_r3">2</TD>\n
+<TD id="0_table1_cell_c2_r3"/>\n
+<TD id="0_table1_cell_c3_r3">a</TD>\n
+<TD id="0_table1_cell_c4_r3"/>\n
+</TR>\n
+<TR height="18px" style="height: 18px;">\n
+<TD id="0_table1_cell_c0_r4"/>\n
+<TD id="0_table1_cell_c1_r4">3</TD>\n
+<TD id="0_table1_cell_c2_r4"/>\n
+<TD id="0_table1_cell_c3_r4">a</TD>\n
+<TD id="0_table1_cell_c4_r4"/>\n
+</TR>\n
+<TR height="18px" style="height: 18px;">\n
+<TD id="0_table1_cell_c0_r5"/>\n
+<TD id="0_table1_cell_c1_r5" formula="=sum(B2:B4)">3</TD>\n
+<TD id="0_table1_cell_c2_r5"/>\n
+<TD id="0_table1_cell_c3_r5">a</TD>\n
+<TD id="0_table1_cell_c4_r5"/>\n
+</TR>\n
+<TR height="18px" style="height: 18px;">\n
+<TD id="0_table1_cell_c0_r6"/>\n
+<TD id="0_table1_cell_c1_r6"/>\n
+<TD id="0_table1_cell_c2_r6"/>\n
+<TD id="0_table1_cell_c3_r6"/>\n
+<TD id="0_table1_cell_c4_r6"/>\n
+</TR>\n
+<TR height="18px" style="height: 18px;">\n
+<TD id="0_table1_cell_c0_r7"/>\n
+<TD id="0_table1_cell_c1_r7"/>\n
+<TD id="0_table1_cell_c2_r7"/>\n
+<TD id="0_table1_cell_c3_r7"/>\n
+<TD id="0_table1_cell_c4_r7"/>\n
+</TR>\n
+<TR height="18px" style="height: 18px;">\n
+<TD id="0_table1_cell_c0_r8"/>\n
+<TD id="0_table1_cell_c1_r8"/>\n
+<TD id="0_table1_cell_c2_r8"/>\n
+<TD id="0_table1_cell_c3_r8"/>\n
+<TD id="0_table1_cell_c4_r8"/>\n
+</TR>\n
+<TR height="18px" style="height: 18px;">\n
+<TD id="0_table1_cell_c0_r9"/>\n
+<TD id="0_table1_cell_c1_r9"/>\n
+<TD id="0_table1_cell_c2_r9"/>\n
+<TD id="0_table1_cell_c3_r9"/>\n
+<TD id="0_table1_cell_c4_r9"/>\n
+</TR>\n
+</TBODY>\n
+</TABLE>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>text_format</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

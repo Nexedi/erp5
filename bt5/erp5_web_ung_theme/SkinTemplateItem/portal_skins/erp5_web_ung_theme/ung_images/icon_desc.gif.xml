@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Image" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts88363060.96</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>icon_desc.gif</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/png</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAA8AAAAOCAYAAADwikbvAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A
+/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9oKHQ4lCHsEd9UAAAAZdEVYdENv
+bW1lbnQAQ3JlYXRlZCB3aXRoIEdJTVBXgQ4XAAABOUlEQVQoz5WSsUoDQRCGv3+zWlwOIyKIlZ0p
+gw8TUokSBIkPEAvL+BqCliJoYWMlgjHByrcQbCQcd+HUmLO4vXicl4ADw8x+szsz7Ize3iM21qpU
+fZ9GY4eb2zvmiIAkD6wkAMZRxO5em+xcIkkR2OuryzSSJDSbLf4jdjjoA7BSqy2qWirm4vwszVKx
+koQkI8lK2jw6Pk0cQ5KX85GEeXgcIomq7ycyIINkmHS6vVeATreX8bEM1vnIAKMwZr99AM4fhfFq
+6/AkGYUxeXv/9LLl4jMlCGO263WMMQRhnOly4B7lmHI+QRino/I8D8/zsg+rAJ+z4aZMpaOSEf3B
+c559O7sOICMDTEu3Joq/imzJVZm6LrJuPv5smEFZS5nNZ8sqTkratla/MFmwD2WxiZVRcfmLlzUv
+yQ8xm4Xz0FczZgAAAABJRU5ErkJggg==</string> </value>
+        </item>
+        <item>
+            <key> <string>height</string> </key>
+            <value> <int>14</int> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>478</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>icon_desc.gif</string> </value>
+        </item>
+        <item>
+            <key> <string>width</string> </key>
+            <value> <int>15</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

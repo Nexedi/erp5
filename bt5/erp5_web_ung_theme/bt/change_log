@@ -1,0 +1,26 @@
+2010-11-12 gabriel
+* clean up css to show records number of listbox in toolbar
+
+2010-11-11 gabriel
+* Added page navigation to listbox
+
+2010-11-05 gabriel
+* Implemented action to rename document and added script to do it.
+
+2010-10-29 gabriel
+* added dropdown menu to create new documents and css style for it
+
+2010-10-26 gabriel
+* Remove not used attributes in ung template and added Jquery to change the content width dynamically
+
+2010-10-25 gabriel
+* Added feature to search documents by text and change 'Refresh' button to reset the query
+
+2010-10-21 gabriel
+* Added action to create new Web documents
+
+2010-10-19 gabriel
+* Added ERP5 Form to show contents allowed in UNG WebSite and added new styles to listbox
+
+2010-10-14 gabriel
+* Clean up the bt5 because all fields were moved to erp5_web_ung_core

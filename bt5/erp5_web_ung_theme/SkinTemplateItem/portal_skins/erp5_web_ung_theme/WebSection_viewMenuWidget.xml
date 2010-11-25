@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<div class="gadget-column">\n
+  <div class="gadget-action">\n
+   <div class="menu_create_object">\n
+        <tal:block tal:define="portal_path here/absolute_url;\n
+                               url_suffix python: \'/ERP5Site_createNewWebDocument?select_action=\'">\n
+        <li><a id="current">Create New<img tal:attributes="src python: portal_path + \'/ung_images/arrow.png\'"></a>\n
+            <ul>\n
+          <li>\n
+            <a tal:attributes="href python: portal_path + url_suffix + \'Web Illustration\'">\n
+             <img tal:attributes="src python: portal_path + \'/ung_images/svg.png\'">\n
+             Web Illustration\n
+            </a>\n
+          </li>\n
+          <li>\n
+            <a tal:attributes="href python: portal_path + url_suffix +\'Web Table\'">\n
+             <img tal:attributes="src python: portal_path + \'/ung_images/table.jpg\'">\n
+              Web Table\n
+            </a>\n
+          </li>\n
+          <li>\n
+            <a tal:attributes="href python: portal_path + url_suffix + \'Web Page\'">\n
+             <img tal:attributes="src python: portal_path + \'/ung_images/document.gif\'">\n
+              Web Page\n
+            </a>\n
+          </li>\n
+</ul>\n
+    </li> \n
+        </tal:block>\n
+  </div>\n
+  <input type="submit" name="Upload" value="Upload..."/>\n
+  </div> \n
+   <div class="file-selection">\n
+   <div class="file-quick-search">\n
+   <div class="quick-search-item">All Items</div>\n
+   <div class="quick-search-item">Owned by me</div>\n
+   <div class="quick-search-item">Opened by me</div>\n
+   <div class="quick-search-item">Shared by me</div>\n
+   <div class="quick-search-item">Starred</div>\n
+   <div class="quick-search-item">Hidden</div>\n
+   <div class="quick-search-item">Trash</div>\n
+   <div class="quick-search-item">Items by type</div>\n
+   <div class="quick-search-item">More searches</div>\n
+  </div>\n
+  <div class="file-quick-browser">\n
+  <div class="quick-search-item">ERP5</div>\n
+  <div class="quick-search-item">SANEF</div>\n
+  <div class="quick-search-item">New</div>\n
+  </div>\n
+  </div>\n
+  <div class="gadget-container">\n
+       Here go the gadgets\n
+  </div>\n
+</div>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSection_viewMenuWidget</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

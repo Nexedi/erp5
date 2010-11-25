@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ung.js</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+$(document).ready(function(){\n
+ navigation_html = $("div.listbox-footer div.listbox-page-navigation").html();\n
+ $("div.listbox-footer div.listbox-page-navigation").remove();\n
+ navigation_div = "<div class=\'listbox-navigation\'>" + navigation_html + "</div>"\n
+ $("div.toolbar").append(navigation_div);\n
+ if ($("div.gadget-column").length == 1) {\n
+    var tr_length = $("div.main-right tbody tr").length;\n
+    if (tr_length < 16){\n
+      var height = tr_length * 1.5;\n
+      $("div.main-right tbody").css("height", height + "em");\n
+    }\n
+ }\n
+ $("#edit_document").dialog({\n
+    autoOpen: false,\n
+    height: 146,\n
+    width: 389,\n
+    modal: true,\n
+    buttons: {\n
+      "Save": function(){\n
+       var new_title = $("input#name.title").attr("value");\n
+       $.ajax({\n
+           type: "POST",\n
+           url: "WebSection_renameDocument",\n
+           data: "new_title="+ new_title,\n
+           success: function(msg){\n
+             location.reload();\n
+        }\n
+       });\n
+       },\n
+       Cancel: function() {\n
+         $(this).dialog("close");\n
+       },\n
+    }\n
+ });\n
+ $("a[name=\'document_title\']")\n
+    .click(function() {\n
+        var document_title = $(this).html();\n
+        $("input#name.title").attr("value", document_title);\n
+        $("#edit_document").dialog("open");\n
+        \n
+    });\n
+ return false;\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<html>\n
+<body>\n
+  <tal:block metal:define-macro="master">\n
+     <tal:block tal:define="website here/getWebSiteValue;\n
+                            portal_path python:website.absolute_url();\n
+                            has_no_layout python: layout_form is None;\n
+                            has_editor python: here.absolute_url() != portal_path;\n
+                            aggregate python: has_no_layout or layout_form.Form_getGroupList(\n
+                                             [\'header\', \'navigation\', \'main\']);\n
+                            aggregate python: ((aggregate is not has_no_layout) and dict(aggregate)) or {};\n
+                            navigation_area python:aggregate.get(\'navigation\', []);\n
+                            header_area python:aggregate.get(\'header\', []);\n
+                            main_area python:aggregate.get(\'main\', []);\n
+                            has_no_layout python: layout_form is None;\n
+                            global css_list_template css_list_template | python: [];\n
+                            global css_list_ung_template python:css_list_template + [\n
+                                  \'ung_theme.css\',\n
+                                  \'jquery/ui/css/erp5-theme/jquery-ui.css\'];\n
+                            global js_list js_list | python:[];\n
+                            global css_list css_list | python:[];\n
+                            dummy  python:css_list.extend(css_list_ung_template);\n
+                            js_url_list python:[\'jquery/core/jquery.js\',\n
+                                                \'jquery/ui/js/jquery-ui.js\',\n
+                                                \'ung_js/ung.js\'];\n
+                            dummy python:js_list.extend([item for item in js_url_list if item not in js_list]);">\n
+        <tal:block metal:use-macro="here/template_erp5_xhtml_style/macros/master">\n
+        <tal:block metal:fill-slot="layout">\n
+    <div class="container">\n
+     <div class="navigation">  \n
+        <tal:block tal:condition="python: layout_form is not None">\n
+          <tal:block tal:repeat="aggregate python: [(\'navigation\', navigation_area)]">\n
+              <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>\n
+          </tal:block>\n
+        </tal:block>\n
+     </div>\n
+     <div class="header">  \n
+        <tal:block tal:condition="python: layout_form is not None">\n
+          <tal:block tal:repeat="aggregate python: [(\'header\', header_area)]">\n
+              <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>\n
+          </tal:block>\n
+        </tal:block>\n
+     </div>\n
+      <div class="main">\n
+       <tal:block tal:condition="python: layout_form is not None">\n
+        <tal:block tal:repeat="aggregate python: [(\'main\', main_area)]">\n
+            <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>\n
+         </tal:block>\n
+        </tal:block>\n
+          <tal:block tal:condition="python: has_editor">\n
+            <tal:block metal:define-slot="main"/>\n
+          </tal:block>\n
+          <p class="clear"></p>\n
+      </div>\n
+    </div>\n
+          </tal:block>\n
+        </tal:block>\n
+     </tal:block>\n
+</tal:block>\n
+</body>\n
+</html>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>template_erp5_web_ung</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
