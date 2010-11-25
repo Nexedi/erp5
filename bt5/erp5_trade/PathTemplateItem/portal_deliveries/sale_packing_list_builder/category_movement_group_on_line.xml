@@ -42,6 +42,8 @@
               <tuple>
                 <string>resource</string>
                 <string>aggregate</string>
+                <string>base_application</string>
+                <string>base_contribution</string>
                 <string>quantity_unit</string>
                 <string>source_account</string>
                 <string>destination_account</string>
