@@ -7037,6 +7037,9 @@ msgstr "Appel téléphonique"
 msgid "Physical location where the task is being performed"
 msgstr "Le lieu physique où la tâche est en train d'être exécutée"
 
+msgid "Picture"
+msgstr "Photo"
+
 msgid "Place Order"
 msgstr "Passer la commande"
 
