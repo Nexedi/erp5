@@ -1696,6 +1696,17 @@ class AssertImagemagick(AssertSoftwareMixin):
     self.assertLibraryList('parts/imagemagick/bin/stream',
       self.bin_lib_list, self.lib_rpath_list)
 
+class AssertJbigkit(AssertSoftwareMixin):
+  def test_ld_libjbig(self):
+    self.assertLibraryList('parts/jbigkit/lib/libjbig.so',[
+      'libc',
+      ], [])
+
+  def test_ld_libjbig85(self):
+    self.assertLibraryList('parts/jbigkit/lib/libjbig85.so',[
+      'libc',
+      ], [])
+
 class AssertElfLinkedInternally(AssertSoftwareMixin):
   def test(self):
     result_dict = {}
