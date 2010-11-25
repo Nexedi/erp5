@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts90687468.68</string> </value>
+            <value> <string>ts90693119.36</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -443,6 +443,7 @@ div.block-hover {\n
 \tborder:none;\n
 }\n
 \n
+/*\n
 .gadget .inner .table-b{\n
   table-layout: fixed;\n
   overflow: scroll;\n
@@ -487,6 +488,7 @@ div.block-hover {\n
 .gadget p { \n
   margin:0; \n
 }\n
+*/\n
 \n
 /* eof gadgets */\n
 \n
@@ -771,7 +773,7 @@ div.block fieldset.gadget-profile div.field{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>12695</int> </value>
+            <value> <int>12701</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
