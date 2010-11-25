@@ -1050,6 +1050,20 @@ class AssertApache(AssertSoftwareMixin):
   def test_ld_module_mod_vhost_alias(self):
     self.assertLibraryList('parts/apache/modules/mod_vhost_alias.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
 
+  def test_ld_apr_dbd_sqlite3(self):
+    self.assertLibraryList('parts/apache/lib/apr-util-1/apr_dbd_sqlite3.so', [
+      'libc',
+      'libpthread',
+      'libsqlite3',
+      ], [
+      'libexpat',
+      'libuuid',
+      'openssl',
+      'pcre',
+      'sqlite3',
+      'zlib',
+      ])
+
 class AssertItools(AssertSoftwareMixin):
   def test_ld_parserso(self):
     self.assertLibraryList('parts/itools/lib/itools/xml/parser.so', ['libc', 'libglib-2.0', 'libpthread'], ['glib'])
