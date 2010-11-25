@@ -5293,6 +5293,12 @@ msgstr "Dépôt sur compte d'ordre"
 msgid "Internal Money Deposit Module"
 msgstr "Dépôt sur compte d'ordre"
 
+msgid "Internal Orders"
+msgstr "Commandes internes"
+
+msgid "Internal Order Lines"
+msgstr "Lignes de commande interne"
+
 msgid "Internal Packing List"
 msgstr "Livraison interne"
 
