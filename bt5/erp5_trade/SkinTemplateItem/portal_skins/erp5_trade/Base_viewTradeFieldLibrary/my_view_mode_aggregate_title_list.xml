@@ -85,6 +85,10 @@
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -154,7 +158,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: (here.getResource() and here.getResourceValue().getAggregatedPortalTypeList()) or (here.getAggregate()) or (here.getResource() is None and here.getPortalItemTypeList())</string> </value>
+            <value> <string>here/Movement_isAggregateItemListEnabled</string> </value>
         </item>
       </dictionary>
     </pickle>
