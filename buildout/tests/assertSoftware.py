@@ -1472,7 +1472,7 @@ class AssertPysvn(AssertSoftwareMixin):
       ])
 
 class AssertElfLinkedInternally(AssertSoftwareMixin):
-  def _xxtest(self):
+  def test(self):
     result_dict = {}
     root = os.path.join(os.path.abspath(os.curdir), 'parts')
     for dirpath, dirlist, filelist in os.walk(root):
