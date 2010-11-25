@@ -1632,12 +1632,16 @@ class AssertImagemagick(AssertSoftwareMixin):
       'zlib',
       ]
 
+  lib_rpath_list = core_rpath_list + [
+      'imagemagick',
+      ]
+
   lib_lib_list = core_lib_list + [
       'libMagickCore',
       ]
 
-  lib_rpath_list = core_lib_list + [
-      'imagemagick',
+  bin_lib_list = lib_lib_list + [
+      'libMagickWand',
       ]
 
   def test_ld_libMagickCore(self):
@@ -1647,6 +1651,50 @@ class AssertImagemagick(AssertSoftwareMixin):
   def test_ld_libMagickWand(self):
     self.assertLibraryList('parts/imagemagick/lib/libMagickWand.so',
       self.lib_lib_list, self.lib_rpath_list)
+
+  def test_ld_animate(self):
+    self.assertLibraryList('parts/imagemagick/bin/animate',
+      self.bin_lib_list, self.lib_rpath_list)
+
+  def test_ld_compare(self):
+    self.assertLibraryList('parts/imagemagick/bin/compare',
+      self.bin_lib_list, self.lib_rpath_list)
+
+  def test_ld_composite(self):
+    self.assertLibraryList('parts/imagemagick/bin/composite',
+      self.bin_lib_list, self.lib_rpath_list)
+
+  def test_ld_conjure(self):
+    self.assertLibraryList('parts/imagemagick/bin/conjure',
+      self.bin_lib_list, self.lib_rpath_list)
+
+  def test_ld_convert(self):
+    self.assertLibraryList('parts/imagemagick/bin/convert',
+      self.bin_lib_list, self.lib_rpath_list)
+
+  def test_ld_display(self):
+    self.assertLibraryList('parts/imagemagick/bin/display',
+      self.bin_lib_list, self.lib_rpath_list)
+
+  def test_ld_identify(self):
+    self.assertLibraryList('parts/imagemagick/bin/identify',
+      self.bin_lib_list, self.lib_rpath_list)
+
+  def test_ld_import(self):
+    self.assertLibraryList('parts/imagemagick/bin/import',
+      self.bin_lib_list, self.lib_rpath_list)
+
+  def test_ld_mogrify(self):
+    self.assertLibraryList('parts/imagemagick/bin/mogrify',
+      self.bin_lib_list, self.lib_rpath_list)
+
+  def test_ld_montage(self):
+    self.assertLibraryList('parts/imagemagick/bin/montage',
+      self.bin_lib_list, self.lib_rpath_list)
+
+  def test_ld_stream(self):
+    self.assertLibraryList('parts/imagemagick/bin/stream',
+      self.bin_lib_list, self.lib_rpath_list)
 
 class AssertElfLinkedInternally(AssertSoftwareMixin):
   def test(self):
