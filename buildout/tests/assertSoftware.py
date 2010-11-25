@@ -1454,20 +1454,14 @@ class AssertPysvn(AssertSoftwareMixin):
       python_version_major, python_version_minor), [
       'libc',
       'libcom_err',
-      'libexpat',
       'libgcc_s',
       'libm',
-      'libneon',
       'libresolv',
-      'libssl',
       'libstdc++',
       'libsvn_client-1',
       'libsvn_diff-1',
       'libsvn_repos-1',
       ], [
-      'libexpat',
-      'neon',
-      'openssl',
       'subversion'
       ])
 
