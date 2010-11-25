@@ -735,15 +735,26 @@ class AssertPythonMysql(AssertSoftwareMixin):
 class AssertApache(AssertSoftwareMixin):
   """Tests for built apache"""
 
+  apache_rpath = [
+      'gdbm',
+      'libexpat',
+      'libuuid',
+      'openssl',
+      'pcre',
+      'sqlite3',
+      'zlib',
+  ]
+
   def test_ld_libaprutil1(self):
     """Checks proper linking of libaprutil-1.so"""
     self.assertLibraryList('parts/apache/lib/libaprutil-1.so', ['libexpat', 'libapr-1', 'librt', 'libcrypt',
-      'libpthread', 'libdl', 'libc', 'libuuid'], ['apache', 'zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+      'libpthread', 'libdl', 'libc', 'libuuid'],
+      self.apache_rpath)
 
   def test_ld_libapr1(self):
     """Checks proper linking of libapr-1.so"""
     self.assertLibraryList('parts/apache/lib/libapr-1.so', ['librt', 'libcrypt', 'libuuid',
-      'libpthread', 'libdl', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+      'libpthread', 'libdl', 'libc'], self.apache_rpath)
 
   def test_modules(self):
     required_module_list = sorted([q.strip() for q in """
@@ -834,221 +845,229 @@ class AssertApache(AssertSoftwareMixin):
     self.assertEqual(loaded_module_list, required_module_list)
 
   def test_ld_module_mod_actions(self):
-    self.assertLibraryList('parts/apache/modules/mod_actions.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_actions.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_alias(self):
-    self.assertLibraryList('parts/apache/modules/mod_alias.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_alias.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_asis(self):
-    self.assertLibraryList('parts/apache/modules/mod_asis.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_asis.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_auth_basic(self):
-    self.assertLibraryList('parts/apache/modules/mod_auth_basic.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_auth_basic.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_auth_digest(self):
-    self.assertLibraryList('parts/apache/modules/mod_auth_digest.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_auth_digest.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_authn_alias(self):
-    self.assertLibraryList('parts/apache/modules/mod_authn_alias.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_authn_alias.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_authn_anon(self):
-    self.assertLibraryList('parts/apache/modules/mod_authn_anon.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_authn_anon.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_authn_dbd(self):
-    self.assertLibraryList('parts/apache/modules/mod_authn_dbd.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_authn_dbd.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_authn_dbm(self):
-    self.assertLibraryList('parts/apache/modules/mod_authn_dbm.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_authn_dbm.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_authn_default(self):
-    self.assertLibraryList('parts/apache/modules/mod_authn_default.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_authn_default.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_authn_file(self):
-    self.assertLibraryList('parts/apache/modules/mod_authn_file.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_authn_file.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_authz_dbm(self):
-    self.assertLibraryList('parts/apache/modules/mod_authz_dbm.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_authz_dbm.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_authz_default(self):
-    self.assertLibraryList('parts/apache/modules/mod_authz_default.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_authz_default.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_authz_groupfile(self):
-    self.assertLibraryList('parts/apache/modules/mod_authz_groupfile.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_authz_groupfile.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_authz_host(self):
-    self.assertLibraryList('parts/apache/modules/mod_authz_host.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_authz_host.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_authz_owner(self):
-    self.assertLibraryList('parts/apache/modules/mod_authz_owner.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_authz_owner.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_authz_user(self):
-    self.assertLibraryList('parts/apache/modules/mod_authz_user.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_authz_user.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_autoindex(self):
-    self.assertLibraryList('parts/apache/modules/mod_autoindex.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_autoindex.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_bucketeer(self):
-    self.assertLibraryList('parts/apache/modules/mod_bucketeer.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_bucketeer.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_cache(self):
-    self.assertLibraryList('parts/apache/modules/mod_cache.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_cache.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_case_filter(self):
-    self.assertLibraryList('parts/apache/modules/mod_case_filter.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_case_filter.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_case_filter_in(self):
-    self.assertLibraryList('parts/apache/modules/mod_case_filter_in.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_case_filter_in.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_cern_meta(self):
-    self.assertLibraryList('parts/apache/modules/mod_cern_meta.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_cern_meta.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_cgi(self):
-    self.assertLibraryList('parts/apache/modules/mod_cgi.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_cgi.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_cgid(self):
-    self.assertLibraryList('parts/apache/modules/mod_cgid.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_cgid.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_charset_lite(self):
-    self.assertLibraryList('parts/apache/modules/mod_charset_lite.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_charset_lite.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_dav(self):
-    self.assertLibraryList('parts/apache/modules/mod_dav.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_dav.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_dav_fs(self):
-    self.assertLibraryList('parts/apache/modules/mod_dav_fs.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_dav_fs.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_dbd(self):
-    self.assertLibraryList('parts/apache/modules/mod_dbd.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_dbd.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_deflate(self):
-    self.assertLibraryList('parts/apache/modules/mod_deflate.so', ['libpthread', 'libc', 'libz'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_deflate.so', ['libpthread', 'libc', 'libz'], self.apache_rpath)
 
   def test_ld_module_mod_dir(self):
-    self.assertLibraryList('parts/apache/modules/mod_dir.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_dir.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_disk_cache(self):
-    self.assertLibraryList('parts/apache/modules/mod_disk_cache.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_disk_cache.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_dumpio(self):
-    self.assertLibraryList('parts/apache/modules/mod_dumpio.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_dumpio.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_echo(self):
-    self.assertLibraryList('parts/apache/modules/mod_echo.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_echo.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_env(self):
-    self.assertLibraryList('parts/apache/modules/mod_env.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_env.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_expires(self):
-    self.assertLibraryList('parts/apache/modules/mod_expires.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_expires.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_ext_filter(self):
-    self.assertLibraryList('parts/apache/modules/mod_ext_filter.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_ext_filter.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_filter(self):
-    self.assertLibraryList('parts/apache/modules/mod_filter.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_filter.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_headers(self):
-    self.assertLibraryList('parts/apache/modules/mod_headers.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_headers.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_ident(self):
-    self.assertLibraryList('parts/apache/modules/mod_ident.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_ident.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_imagemap(self):
-    self.assertLibraryList('parts/apache/modules/mod_imagemap.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_imagemap.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_include(self):
-    self.assertLibraryList('parts/apache/modules/mod_include.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_include.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_info(self):
-    self.assertLibraryList('parts/apache/modules/mod_info.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_info.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_log_config(self):
-    self.assertLibraryList('parts/apache/modules/mod_log_config.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_log_config.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_log_forensic(self):
-    self.assertLibraryList('parts/apache/modules/mod_log_forensic.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_log_forensic.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_logio(self):
-    self.assertLibraryList('parts/apache/modules/mod_logio.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_logio.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_mime(self):
-    self.assertLibraryList('parts/apache/modules/mod_mime.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_mime.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_mime_magic(self):
-    self.assertLibraryList('parts/apache/modules/mod_mime_magic.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_mime_magic.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_negotiation(self):
-    self.assertLibraryList('parts/apache/modules/mod_negotiation.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_negotiation.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_optional_fn_export(self):
-    self.assertLibraryList('parts/apache/modules/mod_optional_fn_export.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_optional_fn_export.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_optional_fn_import(self):
-    self.assertLibraryList('parts/apache/modules/mod_optional_fn_import.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_optional_fn_import.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_optional_hook_export(self):
-    self.assertLibraryList('parts/apache/modules/mod_optional_hook_export.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_optional_hook_export.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_optional_hook_import(self):
-    self.assertLibraryList('parts/apache/modules/mod_optional_hook_import.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_optional_hook_import.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_proxy(self):
-    self.assertLibraryList('parts/apache/modules/mod_proxy.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_proxy.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_proxy_ajp(self):
-    self.assertLibraryList('parts/apache/modules/mod_proxy_ajp.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_proxy_ajp.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_proxy_balancer(self):
-    self.assertLibraryList('parts/apache/modules/mod_proxy_balancer.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_proxy_balancer.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_proxy_connect(self):
-    self.assertLibraryList('parts/apache/modules/mod_proxy_connect.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_proxy_connect.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_proxy_ftp(self):
-    self.assertLibraryList('parts/apache/modules/mod_proxy_ftp.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_proxy_ftp.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_proxy_http(self):
-    self.assertLibraryList('parts/apache/modules/mod_proxy_http.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_proxy_http.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_proxy_scgi(self):
-    self.assertLibraryList('parts/apache/modules/mod_proxy_scgi.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_proxy_scgi.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_reqtimeout(self):
-    self.assertLibraryList('parts/apache/modules/mod_reqtimeout.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_reqtimeout.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_rewrite(self):
-    self.assertLibraryList('parts/apache/modules/mod_rewrite.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_rewrite.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_module_mod_setenvif(self):
-    self.assertLibraryList('parts/apache/modules/mod_setenvif.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_setenvif.so', ['libpthread', 'libc'],
+        self.apache_rpath)
 
   def test_ld_module_mod_speling(self):
-    self.assertLibraryList('parts/apache/modules/mod_speling.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_speling.so', ['libpthread', 'libc'],
+        self.apache_rpath)
 
   def test_ld_module_mod_ssl(self):
     self.assertLibraryList('parts/apache/modules/mod_ssl.so', ['libpthread', 'libc', 'libcrypto', 'libdl',
-      'libssl', 'libz'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+      'libssl', 'libz'], self.apache_rpath)
 
   def test_ld_module_mod_status(self):
-    self.assertLibraryList('parts/apache/modules/mod_status.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_status.so', ['libpthread', 'libc'],
+        self.apache_rpath)
 
   def test_ld_module_mod_substitute(self):
-    self.assertLibraryList('parts/apache/modules/mod_substitute.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_substitute.so', ['libpthread', 'libc'],
+        self.apache_rpath)
 
   def test_ld_module_mod_unique_id(self):
-    self.assertLibraryList('parts/apache/modules/mod_unique_id.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_unique_id.so', ['libpthread', 'libc'],
+        self.apache_rpath)
 
   def test_ld_module_mod_userdir(self):
-    self.assertLibraryList('parts/apache/modules/mod_userdir.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_userdir.so', ['libpthread', 'libc'],
+        self.apache_rpath)
 
   def test_ld_module_mod_usertrack(self):
-    self.assertLibraryList('parts/apache/modules/mod_usertrack.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_usertrack.so', ['libpthread', 'libc'],
+        self.apache_rpath)
 
   def test_ld_module_mod_version(self):
-    self.assertLibraryList('parts/apache/modules/mod_version.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_version.so', ['libpthread', 'libc'],
+        self.apache_rpath)
 
   def test_ld_module_mod_vhost_alias(self):
-    self.assertLibraryList('parts/apache/modules/mod_vhost_alias.so', ['libpthread', 'libc'], ['zlib', 'openssl', 'libuuid', 'libexpat', 'pcre'])
+    self.assertLibraryList('parts/apache/modules/mod_vhost_alias.so', ['libpthread', 'libc'], self.apache_rpath)
 
   def test_ld_apr_dbd_sqlite3(self):
     self.assertLibraryList('parts/apache/lib/apr-util-1/apr_dbd_sqlite3.so', [
