@@ -1775,6 +1775,19 @@ class AssertFreetype(AssertSoftwareMixin):
       'zlib',
       ])
 
+class AssertGhostscript(AssertSoftwareMixin):
+  def test_ld_gs(self):
+    self.assertLibraryList('parts/ghostscript/bin/gs',[
+      'libc',
+      'libdl',
+      'libfontconfig',
+      'libm',
+      'libpthread',
+      'libstdc++',
+      ], [
+      'fontconfig',
+      ])
+
 class AssertElfLinkedInternally(AssertSoftwareMixin):
   def test(self):
     result_dict = {}
