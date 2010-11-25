@@ -15,16 +15,19 @@ single location, allowing for easy component upgrade.
 Software
 ========
 
-Software part shall be system independent. In perfect world it shall depend
-only on:
+Software part is system independent.
 
- * C compiler
- * standard C and C++ library
- * operating system kernel
+Requirements to build ERP5 Appliance 2.12 are:
 
-As the world is not yet perfect, some additional build time requirements are
-needed. See below for a way to acquire the list of system dependencies through
-helpers.
+ * C and C++ compiler
+ * standard C and C++ library with development headers
+ * make
+ * patch
+ * python (>=2.4) with development headers (to run buildout)
+ * tool to download bootstrap (wget, curl or web browser)
+ * subversion client (XXX: It will be removed some day)
+
+** WARNING ** DO __NOT__ use helpers, they are only for ERP5 Appliance 2.8 flavour. ** WARNING **
 
 Setup
 -----
@@ -86,19 +89,6 @@ Post-build check
 
 Run:
   python tests/assertSoftware.py
-
-Distribution helpers
---------------------
-
-In the 'helpers' directory there are shell scripts to prepare different
-GNU/Linux distributions to run this buildout.
-
-For instance, to prepare Mandriva 2010.0 please type the following with root
-privileges:
-
-  helpers/mandriva2010.0.sh
-
-Please refer to the 'helpers' directory for other distributions.
 
 Instances
 =========
