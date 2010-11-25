@@ -175,7 +175,6 @@
                   </tal:block>\n
                 </tal:block>\n
 \n
-                <div id="content_back_km">\n
                   <!-- Headline Box -->\n
                   <!-- Layout form rendering -->\n
                   <div id="km_left" \n
@@ -214,12 +213,10 @@
                     </tal:block>\n
                   </tal:block>\n
                 </div>\n
-                <br/><br/>\n
                 <!-- Top Bar: navigation and search -->\n
                 <!-- Layout form rendering -->\n
               </div>\n
 \n
-            </div>\n
 \n
                 <tal:block tal:condition="python: layout_form is not None">\n
                   <tal:block tal:repeat="aggregate python: [(\'footer\', footer_area)]">\n
