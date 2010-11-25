@@ -1603,16 +1603,16 @@ class AssertImagemagick(AssertSoftwareMixin):
       'libbz2',
       'libc',
       'libdl',
-      'libm',
       'libfreetype',
+      'libm',
       'libpthread',
       'libz',
       ]
 
   core_rpath_list = [
-      'zlib',
       'bzip2',
       'freetype',
+      'zlib',
       ]
 
   lib_lib_list = core_lib_list + [
