@@ -50,7 +50,6 @@ class GhostPortalType(ERP5Base): #SimpleItem
                 '__module__',
                 '__name__',
                 '__repr__',
-                '__ghostbase__',
                 '__str__') or attr[:3] in ('_p_', '_v_'):
       return super(GhostPortalType, self).__getattribute__(attr)
     #LOG("ERP5Type.Dynamic", BLATHER,
