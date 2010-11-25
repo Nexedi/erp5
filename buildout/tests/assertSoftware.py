@@ -1473,6 +1473,10 @@ class AssertPysvn(AssertSoftwareMixin):
 
 class AssertElfLinkedInternally(AssertSoftwareMixin):
   def test(self):
+    if os.environ.get('SKIP_ASSERT_LINKED_INTERNALLY', '0') != '0':
+      # allows developers to skip long test (portable way to being able run on
+      # ancient pythons)
+      return
     result_dict = {}
     root = os.path.join(os.path.abspath(os.curdir), 'parts')
     for dirpath, dirlist, filelist in os.walk(root):
