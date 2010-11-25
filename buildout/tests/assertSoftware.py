@@ -1599,7 +1599,7 @@ class AssertFile(AssertSoftwareMixin):
       ])
 
 class AssertImagemagick(AssertSoftwareMixin):
-  lib_lib_list = [
+  core_lib_list = [
       'libbz2',
       'libc',
       'libdl',
@@ -1608,14 +1608,22 @@ class AssertImagemagick(AssertSoftwareMixin):
       'libz',
       ]
 
-  lib_rpath_list = [
+  core_rpath_list = [
       'zlib',
       'bzip2',
       ]
 
+  lib_lib_list = core_lib_list + [
+      'libMagickCore',
+      ]
+
+  lib_rpath_list = core_lib_list + [
+      'imagemagick',
+      ]
+
   def test_ld_libMagickCore(self):
     self.assertLibraryList('parts/imagemagick/lib/libMagickCore.so',
-      self.lib_lib_list, self.lib_rpath_list)
+      self.core_lib_list, self.core_rpath_list)
 
   def test_ld_libMagickWand(self):
     self.assertLibraryList('parts/imagemagick/lib/libMagickWand.so',
