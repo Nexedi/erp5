@@ -106,6 +106,13 @@ def readElfAsDict(f):
     runpath_list=sorted(runpath_list)
   )
 
+def getPythonVersion():
+  return '%s.%s' % util.sys.version_info[0:2]
+
+def getDevelopEggName(name, version):
+  return '%s-%s-py%s-%s.egg' % (name, version, getPythonVersion(),
+                                util.get_platform())
+
 def readLddInfoList(f):
   popen = subprocess.Popen(['ldd', f], stdout=subprocess.PIPE,
       stderr=subprocess.STDOUT)
@@ -1448,10 +1455,9 @@ class AssertBzip2(AssertSoftwareMixin):
 
 class AssertPysvn(AssertSoftwareMixin):
   def test_ld_pysvn(self):
-    python_version_major, python_version_minor = util.sys.version_info[0:2]
-    self.assertLibraryList('develop-eggs/pysvn-1.7.4-py%s.%s-%s.egg/pysvn/_pysvn_%s_%s.so' % (
-      python_version_major, python_version_minor, util.get_platform(),
-      python_version_major, python_version_minor), [
+    self.assertLibraryList('develop-eggs/%s/pysvn/_pysvn_%s.so' % (
+      getDevelopEggName('pysvn', '1.7.4'),
+      getPythonVersion().replace('.', '_')), [
       'libc',
       'libcom_err',
       'libgcc_s',
@@ -1463,6 +1469,41 @@ class AssertPysvn(AssertSoftwareMixin):
       'libsvn_repos-1',
       ], [
       'subversion'
+      ])
+
+class AssertLxml(AssertSoftwareMixin):
+  def test_ld_etree_so(self):
+    egg_name = getDevelopEggName('lxml', '2.2.8')
+    python_version_major, python_version_minor = util.sys.version_info[0:2]
+    self.assertLibraryList('develop-eggs/%s/lxml/etree.so' % (egg_name), [
+      'libc',
+      'libexslt',
+      'libm',
+      'libpthread',
+      'libxml2',
+      'libxslt',
+      'libz',
+      ], [
+      'libxml2',
+      'libxslt',
+      'zlib',
+      ])
+
+  def test_ld_objectify_so(self):
+    egg_name = getDevelopEggName('lxml', '2.2.8')
+    python_version_major, python_version_minor = util.sys.version_info[0:2]
+    self.assertLibraryList('develop-eggs/%s/lxml/objectify.so' % (egg_name), [
+      'libc',
+      'libexslt',
+      'libm',
+      'libpthread',
+      'libxml2',
+      'libxslt',
+      'libz',
+      ], [
+      'libxml2',
+      'libxslt',
+      'zlib',
       ])
 
 class AssertElfLinkedInternally(AssertSoftwareMixin):
