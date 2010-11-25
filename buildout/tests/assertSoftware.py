@@ -1707,6 +1707,12 @@ class AssertJbigkit(AssertSoftwareMixin):
       'libc',
       ], [])
 
+class AssertLibjpeg(AssertSoftwareMixin):
+  def test_ld_libjpeg(self):
+    self.assertLibraryList('parts/libjpeg/lib/libjpeg.so',[
+      'libc',
+      ], [])
+
 class AssertElfLinkedInternally(AssertSoftwareMixin):
   def test(self):
     result_dict = {}
