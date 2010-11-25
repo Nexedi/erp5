@@ -1506,6 +1506,24 @@ class AssertLxml(AssertSoftwareMixin):
       'zlib',
       ])
 
+class AssertFile(AssertSoftwareMixin):
+  def test_ld_file(self):
+    self.assertLibraryList('parts/file/bin/file', [
+      'libc',
+      'libmagic',
+      'libz',
+      ], [
+      'file',
+      ])
+
+  def test_ld_libmagic(self):
+    self.assertLibraryList('parts/file/lib/libmagic.so', [
+      'libc',
+      'libz',
+      ], [
+      'zlib',
+      ])
+
 class AssertElfLinkedInternally(AssertSoftwareMixin):
   def test(self):
     result_dict = {}
