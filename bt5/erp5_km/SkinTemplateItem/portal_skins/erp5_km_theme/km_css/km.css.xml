@@ -106,6 +106,10 @@ button {\n
   font-family: Arial, Verdana, Helvetica, Sans;\n
 }\n
 \n
+table {\n
+\tborder: 1px solid #ecebe2;\n
+}\n
+\n
 a:link, \n
 a:active, \n
 a:visited { \n
@@ -209,7 +213,6 @@ div#main_content fieldset.bottom label {\n
   display:none;\n
 }\n
 \n
-\n
 div#wrapper_headline span.header_title {\n
   margin: 10px;\n
 }\n
@@ -219,11 +222,8 @@ div#wrapper_headline div.header_title {\n
   width: auto;\n
 }\n
 \n
-.content .field label {\n
-  float:left;\n
-}\n
-\n
-.content .field label, .content .field .input {\n
+.content .field label, \n
+.content .field .input {\n
   width: 100%;\n
   padding-left:10px;\n
 }\n
@@ -231,6 +231,16 @@ div#wrapper_headline div.header_title {\n
 \n
 .content .field label {\n
   width:30%;\n
+  float:left;\n
+}\n
+\n
+.content .error .input {\n
+  border:2px solid #FF4400;\n
+}\n
+\n
+.content .field .error {\n
+  background-color:inherit;\n
+  color:#FF4400;\n
 }\n
 \n
 fieldset.left{\n
@@ -251,7 +261,7 @@ div.input > input {\n
 \tmargin:0em;\n
 \tpadding:0px;\n
         padding-top: 4px;\n
-\tz-index: 1;\n
+        z-index:100;\n
 \tborder-style: none;\n
 \tborder-width:1px 1px 0;\n
         font-size: 9pt;\n
@@ -344,9 +354,10 @@ ul.breadcrumb {\n
 }\n
 \n
 ul.breadcrumb li {\n
-\tfloat:left;\n
-\tmargin-left:5px;\n
-\theight:100%;\n
+  float:left;\n
+  margin-left:5px;\n
+  height:100%;\n
+  color:#686868;\n
 }\n
 \n
 div.breadcrumb{\n
@@ -492,33 +503,24 @@ div#mainwrapper div.wrapper div.gadget fieldset.widget legend{\n
 \n
 /* ## forms ########################################## start # */\n
 \n
-\n
 form p,\n
 .bottom_actions{\n
-\n
   margin:5px 0;\n
-\n
 }\n
 \n
 .meta {\n
-\n
   line-height:30px;\n
-\n
 }\n
 \n
 .meta div{\n
-\n
   display: inline;\n
   width: auto;\n
   float: left;\n
-\n
 }\n
 \n
 .meta input {\n
-\n
   width:100px;\n
   vertical-align: middle;\n
-\n
 }\n
 \n
 .meta .search_button {\n
@@ -536,24 +538,23 @@ form p,\n
 }\n
 \n
 .meta input.search_text {\n
-\n
   color:#777777;\n
   font-size:1em;\n
   border: none;\n
   width: 120px;\n
   margin-left: 10px;\n
   height: 18px\n
-\n
 }\n
 \n
 div.search_text{\n
   margin-right: 4px;\n
 }\n
 \n
-.meta input.search_text:focus {color:#000000;}\n
+.meta input.search_text:focus{\n
+  color:#000000;\n
+}\n
 \n
 .meta input.search_button {\n
-\n
 \tborder:none;\n
 \tmargin:0;\n
 \tpadding:0;\n
@@ -566,64 +567,53 @@ div.search_text{\n
 \n
 #menu .navbar fieldset,\n
 #menu .meta fieldset {\n
-\n
   float: left;\n
-\n
 }\n
 \n
 fieldset.left .field,\n
 fieldset.right .field {\n
-\n
   margin: 5px 0;\n
   float: left;\n
-\n
 }\n
 \n
 .date_field {\n
-\n
   width: auto;\n
-\n
 }\n
 \n
 /* ## forms ########################################## end ### */\n
 \n
 /* ## buttons ######################################### start # */\n
 \n
-a.bt-edit:link, a.bt-edit:active, a.bt-edit:visited {\n
-\n
+a.bt-edit:link, \n
+a.bt-edit:active, \n
+a.bt-edit:visited {\n
 \theight:24px;\n
 \twidth:auto;\n
 \tdisplay:block;\n
 \tpadding-left:10px;\n
 \tmargin: 0 0 5px 0;\n
-\n
 }\n
 \n
-a.bt-edit:link strong, a.bt-edit:active strong, a.bt-edit:visited strong {\n
-\n
+a.bt-edit:link strong, \n
+a.bt-edit:active strong, \n
+a.bt-edit:visited strong {\n
 \theight:100%;\n
 \twidth:auto;\n
 \tdisplay:block;\n
 \tline-height:24px;\n
 \twhite-space: nowrap;\n
-\n
 }\n
 \n
 a.bt-edit strong img {\n
-\n
 \tposition: relative;\n
 \ttop:2px;\n
-\n
 }\n
 \n
 button#bt-clone {\n
-\n
   margin-top: 1em;\n
-\n
 }\n
 \n
 button.formbt {\n
-\n
 \twidth: auto;\n
 \theight:35px;\n
 \tcursor: pointer;\n
@@ -632,13 +622,13 @@ button.formbt {\n
 \tmargin: 0 5px 0 0;\n
 \tposition: relative;\n
 \toverflow: visible;\n
-\n
 }\n
 \n
-button::-moz-focus-inner { border:none; }\n
+button::-moz-focus-inner{\n
+  border:none;\n
+}\n
 \n
 button.formbt > span {\n
-\n
 \tdisplay:block;\n
 \twidth:100%;\n
 \theight:35px;\n
@@ -648,21 +638,21 @@ button.formbt > span {\n
 \tposition: relative;\n
 \tleft:-2px;\n
 \twhite-space: nowrap;\n
-\n
 }\n
 \n
-a.bt-download:link, a.bt-download:active, a.bt-download:visited,\n
-a.bt-rss:link, a.bt-rss:active, a.bt-rss:visited {\n
-\n
+a.bt-download:link, \n
+a.bt-download:active, \n
+a.bt-download:visited,\n
+a.bt-rss:link, \n
+a.bt-rss:active, \n
+a.bt-rss:visited {\n
 \tpadding-right:15px;\n
 \tposition: absolute;\n
 \tright:10px;\n
 \ttop:10px;\n
-\n
 }\n
 \n
 button.bt-med {\n
-\n
 \twidth: auto;\n
 \theight:24px;\n
 \tcursor: pointer;\n
@@ -671,11 +661,9 @@ button.bt-med {\n
 \tmargin: 0 5px 0 0;\n
 \tposition: relative;\n
 \toverflow: visible;\n
-\n
 }\n
 \n
 button.bt-med span {\n
-\n
 \tdisplay:block;\n
 \twidth:100%;\n
 \theight:24px;\n
@@ -685,20 +673,16 @@ button.bt-med span {\n
 \tposition: relative;\n
 \tleft:-2px;\n
 \twhite-space: nowrap;\n
-\n
 }\n
 \n
 button.bt-med span img {\n
-\n
 \tdisplay:inline;\n
 \tposition: relative;\n
 \ttop:3px;\n
 \tmargin-right:5px;\n
-\n
 }\n
 \n
 .bt-small {\n
-\n
 \tdisplay:block;\n
 \twidth: auto;\n
 \theight:18px;\n
@@ -708,11 +692,9 @@ button.bt-med span img {\n
 \tmargin: -2px 2px 0 2px;\n
 \tposition: relative;\n
 \toverflow: visible;\n
-\n
 }\n
 \n
 .bt-small span {\n
-\n
 \tdisplay:block;\n
 \twidth:100%;\n
 \theight:18px;\n
@@ -722,23 +704,18 @@ button.bt-med span img {\n
 \tposition: relative;\n
 \tleft:-2px;\n
 \twhite-space: nowrap;\n
-\n
 }\n
 \n
 .bt-small span img {\n
-\n
 \tdisplay:inline;\n
 \tmargin-right:2px;\n
-\n
 }\n
 \n
 /* ## buttons ######################################### end ### */\n
 \n
 \n
 .input input[type=image] {\n
-\n
   width: auto !important;\n
-\n
 }\n
 \n
 .bottom_actions {\n
@@ -816,23 +793,6 @@ fieldset.right_registration select {\n
   line-height:1.5em;\n
   width: auto;\n
 }\n
-\n
-/* ## screen sizes #################################### start # */\n
-\n
-.screen_small #mainwrapper {\n
-\n
-\twidth:780px;\n
-\n
-}\n
-\n
-.screen_small #mainwrapper .content .gadget .box,\n
-.screen_small #mainwrapper .content .gadget .box table tr td {\n
-\n
-\tfont-size:9px;\n
-\n
-}\n
-\n
-/* ## screen sizes #################################### end ### */\n
 \n
 /* Splash section */\n
 #wrapper_splash .input img{\n
@@ -1094,111 +1054,85 @@ div.pdf-preview-navigation img.last{\n
 /* ## home banner #################################### start ## */\n
 \n
 .homebanner {\n
-\n
 \tbackground: url(../community_img/homebanner.jpg) no-repeat transparent;\n
 \tcolor:#fff;\n
 \ttext-shadow: 0 1px 0 #006686;\n
-\n
 }\n
 \n
 .homebanner h2 {\n
-\n
 \ttext-shadow: 0 3px 0 #0d7dab;\n
-\n
 }\n
 \n
 .homebanner ul li {\n
-\t\n
 \tlist-style-image: none;\n
 \tlist-style-type: none;\n
 \tbackground: url(../community_img/bannerbullet.png) no-repeat transparent;\n
-\n
 }\n
 \n
 .button-why:link, .button-why:active, .button-why:visited {\n
-\n
 \tbackground: url(../community_img/bannerbuttons.png) no-repeat transparent;\n
-\n
 }\n
 .button-why:hover {\n
-\n
 \tbackground-position: 0 100%;\n
-\n
 }\n
 \n
 .button-try:link, .button-try:active, .button-try:visited {\n
-\n
 \tbackground: url(../community_img/bannerbuttons.png) no-repeat transparent;\n
 \tbackground-position: -158px 0;\n
-\n
 }\n
 .button-try:hover {\n
-\n
 \tbackground-position: -158px 100%;\n
-\n
 }\n
-\n
-/* ## home banner ##################################### end ### */\n
-\n
-\n
 \n
 /* ## home banner #################################### start ## */\n
 \n
 .homebanner {\n
-\n
 \tdisplay: block;\n
 \twidth: 924px;\n
 \theight: 283px;\n
         margin:10px 14px 10px;\n
-\n
 }\n
 \n
 .homebanner h2 {\n
-\n
 \tpadding:25px;\n
 \tmargin:0;\n
-\n
 }\n
 \n
 .homebanner h4 {\n
-\n
 \tposition: absolute;\n
 \tbottom: 20px;\n
 \tright:25px;\n
 \tpadding:0;\n
 \tmargin:0;\n
-\n
 }\n
 \n
 .homebanner img {\n
-\n
 \tposition: absolute;\n
 \ttop: 89px;\n
 \tright:1px;\n
-\n
 }\n
 \n
 .homebanner ul {\n
-\n
 \tposition: absolute;\n
 \ttop:101px;\n
 \tleft:5px;\n
 \tmargin:0;\n
 \tpadding:0 30px;\n
 \twidth: 200px;\n
-\n
 }\n
 \n
 .homebanner ul li {\n
-\n
 \tmargin:0;\n
 \tpadding: 7px 10px 7px 30px;\n
 \tdisplay: block;\n
-\t\n
 }\n
 \n
-.button-why:link, .button-why:active, .button-why:visited, .button-try:link, .button-try:active, .button-try:visited {\n
-\n
+.button-why:link, \n
+.button-why:active, \n
+.button-why:visited, \n
+.button-try:link, \n
+.button-try:active, \n
+.button-try:visited {\n
 \twidth:158px;\n
 \theight:47px;\n
 \tdisplay: block;\n
@@ -1210,7 +1144,6 @@ div.pdf-preview-navigation img.last{\n
 }\n
 \n
 .button-try:link, .button-try:active, .button-try:visited  {\n
-\n
 \tleft: 180px;\n
 \n
 }\n
@@ -1219,15 +1152,7 @@ div.pdf-preview-navigation img.last{\n
 \n
 /* color.css  */\n
 \n
-.content .error .input {border:2px solid #FF4400;}\n
-.content .field .error {\n
-  background-color:inherit;\n
-  color:#FF4400;\n
-}\n
 \n
-.breadcrumb li {\n
-\tcolor:#686868;\n
-}\n
 \n
 ::selection {\n
 \tbackground:#aaa;\n
@@ -1239,19 +1164,9 @@ div.pdf-preview-navigation img.last{\n
 \tcolor:#000;\n
 }\n
 \n
-.breadcrumb_separator {\n
+/*.breadcrumb_separator {\n
   margin-bottom:2px;\n
-}\n
-\n
-.block h3.handle{\n
-\tbackground: url(../km_img/widgethead.png) repeat-x scroll 0 -2px #c1c0b4;\n
-\tborder-color:#C0BFB3 #C0BFB3 #9C9479;\n
-\tborder-style:solid;\n
-\tborder-width:1px;\n
-\tcolor:#776D61;\n
-\tfont-size:10pt;\n
-\n
-}\n
+}*/\n
 \n
 fieldset.left h4,\n
 fieldset.center h4,\n
@@ -1266,10 +1181,6 @@ fieldset.right h4 {\n
   list-style-image:none;\n
   list-style-position:outside;\n
   list-style-type:none;\n
-}\n
-\n
-table {\n
-\tborder: 1px solid #ecebe2;\n
 }\n
 \n
 table th button {\n
@@ -1502,11 +1413,6 @@ div.searchDetails a.modification-date-link{\n
 \n
 /* pulldown.css */\n
 \n
-#menu {\n
-\n
-  z-index:100;\n
-}\n
-\n
 #menu ul.nav li{\n
   z-index:110;\n
 }\n
@@ -1622,9 +1528,7 @@ table tr td, table tr th, table tr th button {\n
 \n
 }\n
 \n
-\n
 .saveView, .saveEdit { text-indent:15px; font-size:10pt; }\n
-\n
 \n
 /* ## link styling ################################### start # */\n
 \n
