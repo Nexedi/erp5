@@ -1938,6 +1938,141 @@ class AssertOpenldap(AssertSoftwareMixin):
     self.assertLibraryList('parts/openldap/bin/ldapwhoami',
       self.bin_lib_list, self.bin_rpath_list)
 
+class AssertGlib(AssertSoftwareMixin):
+  core_lib_list = [
+      'libc',
+      'libintl',
+      ]
+
+  core_rpath_list = [
+      'gettext',
+      'zlib',
+      ]
+
+  rpath_list = [
+      'gettext',
+      'glib',
+      'zlib',
+      ]
+
+  def test_ld_libglib(self):
+    self.assertLibraryList('parts/glib/lib/libglib-2.0.so',
+        self.core_lib_list, self.core_rpath_list)
+
+  def test_ld_libgmodule(self):
+    self.assertLibraryList('parts/glib/lib/libgmodule-2.0.so',
+      self.core_lib_list + [
+      'libdl',
+      'libglib-2.0',
+      ], self.rpath_list)
+
+  def test_ld_libgobject(self):
+    self.assertLibraryList('parts/glib/lib/libgobject-2.0.so',
+      self.core_lib_list + [
+      'libglib-2.0',
+      'libgthread-2.0',
+      'libpthread',
+      'librt',
+      ], self.rpath_list)
+
+  def test_ld_libgthread(self):
+    self.assertLibraryList('parts/glib/lib/libgthread-2.0.so',
+      self.core_lib_list + [
+      'libglib-2.0',
+      'libpthread',
+      'librt',
+      ], self.rpath_list)
+
+  def test_ld_libgio(self):
+    self.assertLibraryList('parts/glib/lib/libgio-2.0.so',
+      self.core_lib_list + [
+      'libdl',
+      'libglib-2.0',
+      'libgmodule-2.0',
+      'libgobject-2.0',
+      'libgthread-2.0',
+      'libpthread',
+      'libresolv',
+      'librt',
+      'libz',
+      ], self.rpath_list)
+
+  def test_ld_gdbus(self):
+    self.assertLibraryList('parts/glib/bin/gdbus',
+      self.core_lib_list + [
+      'libdl',
+      'libgio-2.0',
+      'libglib-2.0',
+      'libgmodule-2.0',
+      'libgobject-2.0',
+      'libgthread-2.0',
+      'libpthread',
+      'libresolv',
+      'librt',
+      'libz',
+      ], self.rpath_list)
+
+  def test_ld_gioquerymodules(self):
+    self.assertLibraryList('parts/glib/bin/gio-querymodules',
+      self.core_lib_list + [
+      'libdl',
+      'libgio-2.0',
+      'libglib-2.0',
+      'libgmodule-2.0',
+      'libgobject-2.0',
+      'libgthread-2.0',
+      'libpthread',
+      'libresolv',
+      'librt',
+      'libz',
+      ], self.rpath_list)
+
+  def test_ld_glibcompileschemas(self):
+    self.assertLibraryList('parts/glib/bin/glib-compile-schemas',
+      self.core_lib_list + [
+      'libglib-2.0',
+      ], self.rpath_list)
+
+  def test_ld_glibgenmarshal(self):
+    self.assertLibraryList('parts/glib/bin/glib-genmarshal',
+      self.core_lib_list + [
+      'libglib-2.0',
+      'libgthread-2.0',
+      'libpthread',
+      'librt',
+      ], self.rpath_list)
+
+  def test_ld_gobjectquery(self):
+    self.assertLibraryList('parts/glib/bin/gobject-query',
+      self.core_lib_list + [
+      'libglib-2.0',
+      'libgobject-2.0',
+      'libgthread-2.0',
+      'libpthread',
+      'librt',
+      ], self.rpath_list)
+
+  def test_ld_gsettings(self):
+    self.assertLibraryList('parts/glib/bin/gsettings',
+      self.core_lib_list + [
+      'libdl',
+      'libgio-2.0',
+      'libglib-2.0',
+      'libgmodule-2.0',
+      'libgobject-2.0',
+      'libgthread-2.0',
+      'libpthread',
+      'libresolv',
+      'librt',
+      'libz',
+      ], self.rpath_list)
+
+  def test_ld_gtester(self):
+    self.assertLibraryList('parts/glib/bin/gtester',
+      self.core_lib_list + [
+      'libglib-2.0',
+      ], self.rpath_list)
+
 class AssertElfLinkedInternally(AssertSoftwareMixin):
   def test(self):
     result_dict = {}
