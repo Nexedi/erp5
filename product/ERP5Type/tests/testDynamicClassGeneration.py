@@ -366,10 +366,32 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
       constraint_attribute_value='python: ("sub_category1", "sub_category2")')
 
   def _newContentExistenceConstraint(self):
+    """
+    Create a new Content Existence Constraint within test Property
+    Sheet
+    """
     self.test_property_sheet.newContent(
       reference='test_content_existence_constraint',
       portal_type='Content Existence Constraint',
-      constraint_portal_type='python: ("Folder")')
+      constraint_portal_type='python: ("Content Existence Constraint")')
+
+  def _newCategoryMembershipArityConstraint(self):
+    """
+    Create a new Category Membership Arity Constraint within test
+    Property Sheet
+    """
+    reference = 'test_category_membership_arity_constraint'
+
+    self.getPortal().portal_categories.newContent(
+      id=reference, portal_type='Base Category')
+
+    self.test_property_sheet.newContent(
+      reference=reference,
+      portal_type='Category Membership Arity Constraint',
+      min_arity=1,
+      max_arity=1,
+      constraint_portal_type=('Test Migration',),
+      constraint_base_category=(reference,))
 
   def afterSetUp(self):
     """
@@ -405,6 +427,10 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
       # Sheet
       self._newContentExistenceConstraint()
 
+      # Create a Category Membership Arity Constraint in the test
+      # Property Sheet
+      self._newCategoryMembershipArityConstraint()
+
       # Create all the test Properties
       for operation_type in ('change', 'delete', 'assign'):
         self._newStandardProperty(operation_type)
@@ -430,7 +456,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
         #      the migration has been finished
         type_zodb_property_sheet_list=('TestMigration',),
         type_base_category_list=('test_category_existence_constraint',),
-        type_allowed_content_type_list=('Folder',))
+        type_allowed_content_type_list=('Content Existence Constraint',))
 
     # Create a test module, meaningful to force generation of
     # TestMigration accessor holders and check the constraints
@@ -836,7 +862,18 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     self._checkConstraint('test_content_existence_constraint',
                           self.test_module.newContent,
                           id='Test Content Existence Constraint',
-                          portal_type='Folder')
+                          portal_type='Content Existence Constraint')
+
+  def testCategoryMembershipArityConstraint(self):
+    """
+    Take the test module and check whether the Category Membership
+    Arity Constraint is there. Until a Base Category is set on the
+    Test Module, the constraint should fail
+    """
+    self._checkConstraint('test_category_membership_arity_constraint',
+                          self.test_module.setCategoryList,
+                          ('test_category_membership_arity_constraint/'\
+                           'Test Migration',))
 
 TestZodbPropertySheet = skip("ZODB Property Sheets code is not enabled yet")(
   TestZodbPropertySheet)
