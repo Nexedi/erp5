@@ -840,7 +840,7 @@ class AssertApache(AssertSoftwareMixin):
     result = popen.communicate()[0]
     loaded_module_list = sorted([module_name for module_name in result.split()
                           if module_name.endswith('module')])
-    self.assertEqual(loaded_module_list, required_module_list)
+    self.assertEqual(required_module_list, loaded_module_list)
 
   def test_ld_module_mod_actions(self):
     self.assertLibraryList('parts/apache/modules/mod_actions.so', ['libpthread', 'libc'], self.apache_rpath)
