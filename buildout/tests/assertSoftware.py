@@ -772,7 +772,6 @@ class AssertApache(AssertSoftwareMixin):
       authz_groupfile_module
       authz_host_module
       authz_owner_module
-      authz_svn_module
       authz_user_module
       autoindex_module
       bucketeer_module
@@ -786,7 +785,6 @@ class AssertApache(AssertSoftwareMixin):
       core_module
       dav_fs_module
       dav_module
-      dav_svn_module
       dbd_module
       deflate_module
       dir_module
