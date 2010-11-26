@@ -1606,6 +1606,7 @@ class AssertImagemagick(AssertSoftwareMixin):
       'libjasper',
       'libjbig',
       'libjpeg',
+      'libltdl',
       'libm',
       'libpng14',
       'libpthread',
@@ -1621,6 +1622,7 @@ class AssertImagemagick(AssertSoftwareMixin):
       'libjpeg',
       'libpng',
       'libtiff',
+      'libtool',
       'zlib',
       ]
 
