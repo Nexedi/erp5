@@ -1379,6 +1379,27 @@ class AssertLibxslt(AssertSoftwareMixin):
       'zlib',
       ])
 
+class AssertNcurses(AssertSoftwareMixin):
+  def test_ld_ncurses(self):
+    self.assertLibraryList('parts/ncurses/lib/libncurses.so', [
+      'libc',
+      ], [
+      'ncurses',
+      ])
+  def test_ld_ncursesw(self):
+    self.assertLibraryList('parts/ncurses/lib/libncursesw.so', [
+      'libc',
+      ], [
+      'ncurses',
+      ])
+  def test_ld_reset(self):
+    self.assertLibraryList('parts/ncurses/bin/reset', [
+      'libc',
+      'libncursesw',
+      ], [
+      'ncurses',
+      ])
+
 class AssertW3m(AssertSoftwareMixin):
   def test_ld_w3m(self):
     self.assertLibraryList('parts/w3m/bin/w3m', [
