@@ -1858,6 +1858,86 @@ class AssertSphinx(AssertSoftwareMixin):
       self.assertLibraryList('parts/sphinx/bin/%s' % i,
         self.core_lib_list, self.core_rpath_list, self.core_additional_rpath_list)
 
+class AssertOpenldap(AssertSoftwareMixin):
+  core_lib_list = [
+      'libc',
+      'libresolv',
+      ]
+
+  core_rpath_list = [
+      'cyrus-sasl',
+      'openssl',
+      ]
+
+  lib_lib_list = core_lib_list + [
+      'libcrypto',
+      'liblber-2.4',
+      'libsasl2',
+      'libssl',
+      ]
+
+  lib_rpath_list = core_rpath_list + [
+      'openldap',
+      ]
+
+  bin_lib_list = core_lib_list + [
+      'libcrypto',
+      'libdl',
+      'libsasl2',
+      'libssl',
+      ]
+
+  bin_rpath_list = core_rpath_list
+
+  def test_ld_liblber(self):
+    self.assertLibraryList('parts/openldap/lib/liblber.so',
+        self.core_lib_list,
+        self.core_rpath_list)
+
+  def test_ld_libldap(self):
+    self.assertLibraryList('parts/openldap/lib/libldap.so',
+      self.lib_lib_list, self.lib_rpath_list)
+
+  def test_ld_libldap_r(self):
+    self.assertLibraryList('parts/openldap/lib/libldap_r.so',
+      self.lib_lib_list + ['libpthread'], self.lib_rpath_list)
+
+  def test_ld_ldapcompare(self):
+    self.assertLibraryList('parts/openldap/bin/ldapcompare',
+      self.bin_lib_list, self.bin_rpath_list)
+
+  def test_ld_ldapdelete(self):
+    self.assertLibraryList('parts/openldap/bin/ldapdelete',
+      self.bin_lib_list, self.bin_rpath_list)
+
+  def test_ld_ldapexop(self):
+    self.assertLibraryList('parts/openldap/bin/ldapexop',
+      self.bin_lib_list, self.bin_rpath_list)
+
+  def test_ld_ldapmodify(self):
+    self.assertLibraryList('parts/openldap/bin/ldapmodify',
+      self.bin_lib_list, self.bin_rpath_list)
+
+  def test_ld_ldapmodrdn(self):
+    self.assertLibraryList('parts/openldap/bin/ldapmodrdn',
+      self.bin_lib_list, self.bin_rpath_list)
+
+  def test_ld_ldappasswd(self):
+    self.assertLibraryList('parts/openldap/bin/ldappasswd',
+      self.bin_lib_list, self.bin_rpath_list)
+
+  def test_ld_ldapsearch(self):
+    self.assertLibraryList('parts/openldap/bin/ldapsearch',
+      self.bin_lib_list, self.bin_rpath_list)
+
+  def test_ld_ldapurl(self):
+    self.assertLibraryList('parts/openldap/bin/ldapurl',
+      self.bin_lib_list, self.bin_rpath_list)
+
+  def test_ld_ldapwhoami(self):
+    self.assertLibraryList('parts/openldap/bin/ldapwhoami',
+      self.bin_lib_list, self.bin_rpath_list)
+
 class AssertElfLinkedInternally(AssertSoftwareMixin):
   def test(self):
     result_dict = {}
