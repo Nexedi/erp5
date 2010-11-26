@@ -11,6 +11,15 @@
             <value>
               <list>
                 <string>enabled</string>
+                <string>external_validator</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>delegated_message_list</string> </key>
+            <value>
+              <list>
+                <string>external_validator_failed</string>
               </list>
             </value>
         </item>
@@ -24,7 +33,7 @@
               <dictionary>
                 <item>
                     <key> <string>external_validator_failed</string> </key>
-                    <value> <string>The input failed the external validator.</string> </value>
+                    <value> <string>Email is already used into the system. Please try new one.</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -82,6 +91,12 @@
                     <value> <int>1</int> </value>
                 </item>
                 <item>
+                    <key> <string>external_validator</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>your_default_email_text</string> </value>
                 </item>
@@ -108,6 +123,19 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <string>python: context.getLayoutProperty(\'layout_display_anonymous_user_registration\',True)</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="Method" module="Products.Formulator.MethodField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>Base_isReferenceUnique</string> </value>
         </item>
       </dictionary>
     </pickle>
