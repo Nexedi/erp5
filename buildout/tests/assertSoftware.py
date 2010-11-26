@@ -221,12 +221,6 @@ class AssertSoftwareRunable(AssertSoftwareMixin):
     self.assertEqual(stderr, '')
     self.assertTrue(stdout.startswith('Tokyo Cabinet'))
 
-  def test_Flare(self):
-    stdout, stderr = subprocess.Popen(["parts/flare/bin/flarei", "-v"],
-        stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
-    self.assertEqual(stderr, '')
-    self.assertTrue(stdout.startswith('flare'))
-
   def test_rdiff_backup(self):
     stdout, stderr = subprocess.Popen(["bin/rdiff-backup", "-V"],
         stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
