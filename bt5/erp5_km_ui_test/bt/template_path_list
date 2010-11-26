@@ -6,6 +6,7 @@ portal_categories/group/test_zuite
 portal_categories/group/test_zuite/**
 portal_categories/publication_section/**
 portal_categories/region/**
+portal_categories/role/**
 portal_categories/site/**
 portal_tests/erp5_km_zuite
 portal_tests/erp5_km_zuite/**
