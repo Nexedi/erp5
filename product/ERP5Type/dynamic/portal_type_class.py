@@ -33,7 +33,7 @@ from types import ModuleType
 
 from dynamic_module import registerDynamicModule
 
-from Products.ERP5Type.Base import _aq_reset
+from Products.ERP5Type.Base import _aq_reset, Base
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Utils import setDefaultClassProperties
 from Products.ERP5Type import document_class_registry, mixin_class_registry
@@ -371,9 +371,13 @@ def synchronizeDynamicModules(context, force=False):
 
   import erp5
 
-  for class_name, klass in inspect.getmembers(erp5.portal_type,
-                                              inspect.isclass):
-    klass.restoreGhostState()
+  Base.aq_method_lock.acquire()
+  try:
+    for class_name, klass in inspect.getmembers(erp5.portal_type,
+                                                inspect.isclass):
+      klass.restoreGhostState()
+  finally:
+    Base.aq_method_lock.release()
 
   # Clear accessor holders of ZODB Property Sheets
   for property_sheet_id in erp5.accessor_holder.__dict__.keys():

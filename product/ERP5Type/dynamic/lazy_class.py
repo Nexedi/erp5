@@ -159,34 +159,38 @@ class PortalTypeMetaClass(ExtensionClass):
       raise AttributeError("Could not find a portal type class in"
                            " class hierarchy")
 
+    ERP5Base.aq_method_lock.acquire()
     portal_type = klass.__name__
     try:
-      class_definition = generatePortalTypeClass(portal_type)
-    except AttributeError:
-      LOG("ERP5Type.Dynamic", WARNING,
-          "Could not access Portal Type Object for type %r"
-          % portal_type, error=sys.exc_info())
-      base_list = (ERP5BaseBroken, )
-      attribute_dict = {}
-      interface_list = []
-    else:
-      base_list, interface_list, attribute_dict = class_definition
+      try:
+        class_definition = generatePortalTypeClass(portal_type)
+      except AttributeError:
+        LOG("ERP5Type.Dynamic", WARNING,
+            "Could not access Portal Type Object for type %r"
+            % portal_type, error=sys.exc_info())
+        base_list = (ERP5BaseBroken, )
+        attribute_dict = {}
+        interface_list = []
+      else:
+        base_list, interface_list, attribute_dict = class_definition
 
 
-    # save the old bases to be able to restore a ghost state later
-    if klass.__ghostbase__ is None:
-      # but only do it if we're in the innermost call, otherwise
-      # klass.__bases__ might just be the Document without accessor
-      # holders, and we would override the real ghost class
-      klass.__ghostbase__ = klass.__bases__
-    klass.__bases__ = base_list
+      # save the old bases to be able to restore a ghost state later
+      if klass.__ghostbase__ is None:
+        # but only do it if we're in the innermost call, otherwise
+        # klass.__bases__ might just be the Document without accessor
+        # holders, and we would override the real ghost class
+        klass.__ghostbase__ = klass.__bases__
+      klass.__bases__ = base_list
 
-    for key, value in attribute_dict.iteritems():
-      setattr(klass, key, value)
+      for key, value in attribute_dict.iteritems():
+        setattr(klass, key, value)
 
-    klass.resetAcquisitionAndSecurity()
-    for interface in interface_list:
-      classImplements(klass, interface)
+      klass.resetAcquisitionAndSecurity()
+      for interface in interface_list:
+        classImplements(klass, interface)
+    finally:
+      ERP5Base.aq_method_lock.release()
 
 def generateLazyPortalTypeClass(portal_type_name):
   return PortalTypeMetaClass(portal_type_name, (GhostPortalType,), {})
