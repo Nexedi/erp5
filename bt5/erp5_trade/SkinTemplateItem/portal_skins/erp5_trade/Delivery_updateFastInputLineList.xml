@@ -115,7 +115,6 @@ for line in listbox:\n
     if resource_relative_url:\n
       product = portal.restrictedTraverse(resource_relative_url)\n
     else:\n
-      continue\n
       use_uid_list = [portal.portal_categories.resolveCategory(use).getUid()\n
                                               for use in use_list]\n
       product_list = portal.portal_catalog(\n
