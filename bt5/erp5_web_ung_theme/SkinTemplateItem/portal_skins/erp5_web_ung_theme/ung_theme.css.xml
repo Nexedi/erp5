@@ -758,11 +758,11 @@ div.listbox-header-box {\n
 }\n
 \n
 div.listbox-number-of-records{\n
-  float:left;\n
-  font-size:12px;\n
-  margin-left:48em;\n
-  margin-top:-18px;\n
-  width:24%;\n
+  float: right;\n
+  font-size: 12px;\n
+  margin-right: 12em;\n
+  margin-top: -18px;\n
+  width: 28%;\n
 }\n
 \n
 div.listbox-navigation button.listbox_last_page,\n
