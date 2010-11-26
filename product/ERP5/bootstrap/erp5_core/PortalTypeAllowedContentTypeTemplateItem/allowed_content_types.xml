@@ -57,6 +57,7 @@
   <item>Attribute Equality Constraint</item>
   <item>Category Existence Constraint</item>
   <item>Category Property</item>
+  <item>Content Existence Constraint</item>
   <item>Dynamic Category Property</item>
   <item>Property Existence Constraint</item>
   <item>Standard Property</item>

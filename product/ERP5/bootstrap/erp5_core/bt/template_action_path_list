@@ -44,6 +44,8 @@ Category | view
 Class Tool | run_live_test
 Class Tool | view
 Conceptual Id Generator | view
+Content Existence Constraint | predicate
+Content Existence Constraint | view
 Contribution Predicate | view
 Contribution Registry Tool | view
 Distributed Ram Cache | view

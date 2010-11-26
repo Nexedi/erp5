@@ -73,6 +73,7 @@
                 <string>Base Category</string>
                 <string>Category Existence Constraint</string>
                 <string>Category Property</string>
+                <string>Content Existence Constraint</string>
                 <string>Dynamic Category Property</string>
                 <string>Property Existence Constraint</string>
                 <string>Standard Property</string>

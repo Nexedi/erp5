@@ -1,3 +1,6 @@
+2010-11-26 arnaud.fontaine
+* Add Content Existence Constraint portal type and its views.
+
 2010-11-25 arnaud.fontaine
 * Reset the dynamic documents at the end of the transaction.
 * Merge BaseCategory_resetDynamicClasses into ChangeProperty_resetDynamicClasses.

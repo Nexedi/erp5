@@ -10,6 +10,7 @@ Category Existence Constraint | dynamic_class_generation_interaction_workflow
 Category Property | dynamic_class_generation_interaction_workflow
 Category Tool | dynamic_class_generation_interaction_workflow
 Category | edit_workflow
+Content Existence Constraint | dynamic_class_generation_interaction_workflow
 Distributed Ram Cache | distributed_ram_cache_interaction_workflow
 Document | edit_workflow
 Dynamic Category Property | dynamic_class_generation_interaction_workflow
