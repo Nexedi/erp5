@@ -564,6 +564,9 @@ msgstr "Ajouter un document avec des spécificités"
 msgid "Add Gadgets"
 msgstr "Ajouter des gadgets"
 
+msgid "Add Lines"
+msgstr "Ajouter des lignes"
+
 msgid "Add Requirements"
 msgstr "Ajouter des spécificités"
 
@@ -11456,6 +11459,9 @@ msgstr "Champs de mise à jour"
 
 msgid "Update Fields by English Glossary"
 msgstr "Mettre à jour les champs à partir du glossaire anglais"
+
+msgid "Update Lines"
+msgstr "Mettre à jour des lignes"
 
 msgid "Update File Metadata [transition in processing_status_workflow]"
 msgstr "Mettre à jour les méta données"
