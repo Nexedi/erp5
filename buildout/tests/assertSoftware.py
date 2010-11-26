@@ -401,7 +401,7 @@ class AssertMysql51(AssertSoftwareMixin):
 
   def test_ld_mysql(self):
     self.assertLibraryList('parts/mysql-5.1/bin/mysql', ['libc', 'libz', 'libcrypt', 'libgcc_s', 'libm',
-      'libmysqlclient', 'libncurses', 'libnsl', 'libpthread', 'libreadline',
+      'libmysqlclient', 'libncursesw', 'libnsl', 'libpthread', 'libreadline',
       'libstdc++'], ['ncurses', 'zlib', 'readline'],
                            [os.path.join(os.path.abspath(os.curdir),
       'parts', 'mysql-5.1', 'lib', 'mysql')])
