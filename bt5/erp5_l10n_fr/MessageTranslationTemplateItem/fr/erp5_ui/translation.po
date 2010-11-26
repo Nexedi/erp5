@@ -1294,7 +1294,7 @@ msgid "Begin"
 msgstr "Début"
 
 msgid "Begin Date"
-msgstr "Date de début "
+msgstr "Date de début"
 
 msgid "Beginning of this career step"
 msgstr "Début de carrière"
