@@ -182,12 +182,19 @@ def generatePortalTypeClass(portal_type_name):
   # Moreover, some tools, such as 'Activity Tool', don't have any
   # portal type
   if type_class is None:
-    # Try to figure out a coresponding document class from the document side.
-    # This can happen when calling newTempAmount for instance:
-    #  Amount has no corresponding Base Type and will never have one
-    #  But the semantic of newTempXXX requires us to create an
-    #  object using the Amount Document, so we promptly do it:
-    type_class = portal_type_name.replace(' ', '')
+    if portal_type_name in core_portal_type_class_dict:
+      # Only happen when portal_types is empty (e.g. when creating a
+      # new ERP5Site)
+      type_class = core_portal_type_class_dict[portal_type_name]['type_class']
+    else:
+      # Try to figure out a coresponding document class from the
+      # document side.  This can happen when calling newTempAmount for
+      # instance:
+      #  Amount has no corresponding Base Type and will never have one
+      #  But the semantic of newTempXXX requires us to create an
+      #  object using the Amount Document, so we promptly do it:
+      type_class = portal_type_name.replace(' ', '')
+
     mixin_list = []
     interface_list = []
 
