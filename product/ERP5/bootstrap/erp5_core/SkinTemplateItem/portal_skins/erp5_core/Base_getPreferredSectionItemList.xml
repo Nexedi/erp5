@@ -50,19 +50,46 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-section_category = portal.portal_preferences.getPreferredSectionCategory() or\\\n
+            <value> <string>""" Return the preferred sections.\n
+The sections are of portal type `portal_type` and in state `validation_state`\n
+and are member of the preferred section category (from preferences).\n
+\n
+An optional "base_category" can be passed to make sure the currently used\n
+section is returned even if it\'s not in the list.\n
+"""\n
+\n
+from Products.ERP5Type.Cache import CachingMethod\n
+from AccessControl import getSecurityManager\n
+\n
+def getPreferredSectionItemList(portal_type, validation_state):\n
+  portal = context.getPortalObject()\n
+  section_category = portal.portal_preferences.getPreferredSectionCategory() or\\\n
                        portal.portal_preferences.getPreferredAccountingTransactionSectionCategory()\n
 \n
-if not section_category:\n
-  return [(\'\', \'\')]\n
+  if not section_category:\n
+    return [(\'\', \'\')]\n
 \n
-group_uid = portal.portal_categories.getCategoryUid(section_category)\n
-return [(\'\', \'\')] + [(x.getTitle(), x.getRelativeUrl()) for x in \n
+  group_uid = portal.portal_categories.getCategoryUid(section_category)\n
+  return [(\'\', \'\')] + [(x.getTitle(), x.getRelativeUrl()) for x in \n
                       portal.portal_catalog(portal_type=portal_type,\n
                                             validation_state=validation_state,\n
                                             default_group_uid=group_uid,\n
                                             sort_on=(\'title\',))]\n
+\n
+getPreferredSectionItemList = CachingMethod(getPreferredSectionItemList,\n
+                                            \'%s.%s\' % (script.getId(),\n
+                                              getSecurityManager().getUser()),\n
+                                            cache_factory=\'erp5_ui_short\')\n
+section_item_list = getPreferredSectionItemList(portal_type, validation_state)\n
+\n
+if base_category:\n
+  current_category = context.getProperty(base_category)\n
+  if current_category and current_category not in zip(*section_item_list)[1]:\n
+    section_item_list.append(\n
+        (context.getProperty(\'%s_title\' % base_category),\n
+         context.getProperty(base_category)))\n
+\n
+return section_item_list\n
 </string> </value>
         </item>
         <item>
@@ -73,7 +100,7 @@ return [(\'\', \'\')] + [(x.getTitle(), x.getRelativeUrl()) for x in \n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>portal_type=[\'Organisation\'], validation_state=(\'validated\', \'draft\')</string> </value>
+            <value> <string>portal_type=[\'Organisation\'], validation_state=(\'validated\', \'draft\'), base_category=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -93,7 +120,7 @@ return [(\'\', \'\')] + [(x.getTitle(), x.getRelativeUrl()) for x in \n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -101,15 +128,20 @@ return [(\'\', \'\')] + [(x.getTitle(), x.getRelativeUrl()) for x in \n
                           <tuple>
                             <string>portal_type</string>
                             <string>validation_state</string>
+                            <string>base_category</string>
+                            <string>Products.ERP5Type.Cache</string>
+                            <string>CachingMethod</string>
+                            <string>AccessControl</string>
+                            <string>getSecurityManager</string>
+                            <string>getPreferredSectionItemList</string>
                             <string>_getattr_</string>
+                            <string>script</string>
+                            <string>section_item_list</string>
                             <string>context</string>
-                            <string>portal</string>
-                            <string>section_category</string>
-                            <string>group_uid</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>x</string>
+                            <string>current_category</string>
+                            <string>_getitem_</string>
+                            <string>_apply_</string>
+                            <string>zip</string>
                           </tuple>
                         </value>
                     </item>
@@ -129,6 +161,7 @@ return [(\'\', \'\')] + [(x.getTitle(), x.getRelativeUrl()) for x in \n
                   <string>validated</string>
                   <string>draft</string>
                 </tuple>
+                <none/>
               </tuple>
             </value>
         </item>
