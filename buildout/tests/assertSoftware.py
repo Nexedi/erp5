@@ -1383,12 +1383,14 @@ class AssertNcurses(AssertSoftwareMixin):
   def test_ld_ncurses(self):
     self.assertLibraryList('parts/ncurses/lib/libncurses.so', [
       'libc',
+      'libdl',
       ], [
       'ncurses',
       ])
   def test_ld_ncursesw(self):
     self.assertLibraryList('parts/ncurses/lib/libncursesw.so', [
       'libc',
+      'libdl',
       ], [
       'ncurses',
       ])
