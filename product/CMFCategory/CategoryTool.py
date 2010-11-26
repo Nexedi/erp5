@@ -557,6 +557,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
         category_list = base_category
       if not isinstance(spec, (tuple, list)):
         spec = [spec]
+      spec_len = len(spec)
       for path in self._getCategoryList(context):
         # LOG('getCategoryMembershipList',0,str(path))
         my_base_category = path.split('/', 1)[0]
@@ -566,7 +567,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
           else:
             category = my_category.getRelativeUrl()
           if my_base_category == category:
-            if spec is ():
+            if spec_len == 0:
               if base:
                 membership.append(path)
               else:
@@ -653,6 +654,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
       new_category_list = []
       default_dict = {}
+      spec_len = len(spec)
       for path in self._getCategoryList(context):
         my_base_id = self.getBaseCategoryId(path)
         if my_base_id not in base_category_list:
@@ -661,10 +663,10 @@ class CategoryTool( UniqueObject, Folder, Base ):
           new_category_list.append(path)
         else:
           keep_it = 0
-          if (spec is not ()) or (checked_permission is not None):
+          if spec_len != 0 or (checked_permission is not None):
             obj = self.unrestrictedTraverse(path, None)
             if obj is not None:
-              if spec is not ():
+              if spec_len != 0:
                 # If spec is (), then we should keep nothing
                 # Everything will be replaced
                 # If spec is not (), Only keep this if not in our spec
@@ -816,6 +818,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       # Make sure spec is a list or tuple
       if isinstance(spec, str):
         spec = [spec]
+      spec_len = len(spec)
       # Filter categories
       if getattr(aq_base(context), 'categories', _marker) is not _marker:
 
@@ -830,7 +833,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
             #                  my_base_category, base_category, category_url))
             if (checked_permission is None) or \
                 (permissionFilter(category_url) is not None):
-              if spec is ():
+              if spec_len == 0:
                 if base:
                   append(category_url)
                 else:
