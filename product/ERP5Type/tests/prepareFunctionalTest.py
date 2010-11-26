@@ -64,6 +64,7 @@ class TestZelenium(ERP5TypeTestCase):
                 'erp5_ingestion', 'erp5_ingestion_mysql_innodb_catalog',
                 'erp5_web', 'erp5_dms', 'erp5_dms_ui_test',
                 'erp5_knowledge_pad_ui_test',
+                'erp5_credential',		
                 'erp5_km', 'erp5_km_ui_test',
                 # erp5_web_ui_test must run at the last, because it logs out
                 # manager user and continue other tests as a user created in
