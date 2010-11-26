@@ -70,7 +70,7 @@ resource_title = request.form.get("field_listbox_title_%s" % context.getUid())\n
 resource_reference = request.form.get("field_listbox_reference_%s" % context.getUid())\n
 resource_value = context.getResourceValue()\n
 result = [(\'\', \'\')]\n
-if (resource_title or resource_reference) and resource_value is not None:\n
+if (resource_title or resource_reference) or resource_value is not None:\n
  quantity_unit_list = [(x.getLogicalPath(), x.getCategoryRelativeUrl(base=0))\n
                 for x in resource_value.getQuantityUnitValueList()]\n
  # return the first quantity_unit item of resource\n
