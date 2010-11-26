@@ -72,6 +72,7 @@
                 <string>Attribute Equality Constraint</string>
                 <string>Base Category</string>
                 <string>Category Existence Constraint</string>
+                <string>Category Membership Arity Constraint</string>
                 <string>Category Property</string>
                 <string>Content Existence Constraint</string>
                 <string>Dynamic Category Property</string>

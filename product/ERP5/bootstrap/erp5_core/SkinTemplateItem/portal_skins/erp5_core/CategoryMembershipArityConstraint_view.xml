@@ -97,6 +97,8 @@
                       <list>
                         <string>my_id</string>
                         <string>my_reference</string>
+                        <string>my_min_arity</string>
+                        <string>my_max_arity</string>
                         <string>my_constraint_base_category_list</string>
                         <string>my_constraint_portal_type_list</string>
                       </list>
@@ -106,8 +108,10 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_message_category_not_associated_with_portal_type</string>
-                        <string>my_message_category_not_set</string>
+                        <string>my_message_arity_too_small</string>
+                        <string>my_message_arity_not_in_range</string>
+                        <string>my_message_arity_with_portal_type_too_small</string>
+                        <string>my_message_arity_with_portal_type_not_in_range</string>
                       </list>
                     </value>
                 </item>
@@ -116,7 +120,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>CategoryExistenceConstraint_view</string> </value>
+            <value> <string>CategoryMembershipArityConstraint_view</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -124,7 +128,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>CategoryExistenceConstraint_view</string> </value>
+            <value> <string>CategoryMembershipArityConstraint_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -140,7 +144,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Category Existence Constraint</string> </value>
+            <value> <string>Category Membership Arity Constraint</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

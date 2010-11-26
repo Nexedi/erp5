@@ -36,6 +36,8 @@ Cache Tool | statistics
 Cache Tool | view
 Category Existence Constraint | predicate
 Category Existence Constraint | view
+Category Membership Arity Constraint | predicate
+Category Membership Arity Constraint | view
 Category Property | view
 Category Tool | export_category_list
 Category Tool | fast_input
