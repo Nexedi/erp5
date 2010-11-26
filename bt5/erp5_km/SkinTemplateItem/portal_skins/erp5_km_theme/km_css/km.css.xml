@@ -60,7 +60,8 @@
 <tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\');\n
                    menu_opacity python:here.getLayoutProperty(\'layout_navigation_menu_opacity\', \'0.80\');\n
                    menu_width python:here.getLayoutProperty(\'layout_navigation_menu_width\', \'145px\');\n
-                   menu_indent python:here.getLayoutProperty(\'layout_navigation_menu_indent\', \'155px\');" >\n
+                   menu_indent python:here.getLayoutProperty(\'layout_navigation_menu_indent\', \'155px\');\n
+                   display_anonymous_user_registration python: context.getLayoutProperty(\'layout_display_anonymous_user_registration\',True);" >\n
 \n
 body, html {\n
   margin:0;\n
@@ -340,6 +341,11 @@ div.input > input {\n
 \tposition: relative;\n
 \tline-height: 20px;\n
 \tpadding-left:25px;\n
+}\n
+\n
+/* Login & Logout links */\n
+div.user-information{\n
+  margin-right:1em;\n
 }\n
 \n
 ul.breadcrumb {\n
@@ -725,7 +731,7 @@ button.bt-med span img {\n
   margin-top: 0.5em;\n
 }\n
 \n
-/* Login form  CSS */\n
+/* Login & Registration form  CSS */\n
 fieldset.registration {\n
   float:left;\n
   width:49.5%;\n
@@ -734,65 +740,17 @@ fieldset.registration {\n
   height: 775px;\n
 }\n
 \n
-fieldset.left_registration, \n
-fieldset.right_registration {\n
-  width:50%;\n
-  float: left;\n
-  background-color: #D1D1D1;\n
-}\n
 \n
-fieldset.left_registration {\n
-  width: 49%;\n
-  margin-right: 0.5em;\n
+<tal:block tal:condition="not:display_anonymous_user_registration">\n
+/* We hide registration form fieldset and expand login fieldset*/\n
+fieldset.right{\n
+  display:none;\n
 }\n
-\n
-fieldset.left_registration h4, \n
-fieldset.right_registration h4 {\n
-  margin: 0 0 10px 0;\n
-  font-weight: bold;\n
-  padding: 0.1em 0.5em;\n
-  background: #5B7C9B none repeat scroll 0% ;\n
-  color: white !important;\n
-  display: block;\n
-  font-size: 1.2em;\n
+fieldset.left{\n
+  width:100%;\n
+  height:auto;\n
 }\n
-\n
-fieldset.left_registration > div,\n
-fieldset.right_registration > div {\n
-  clear:both;\n
-  margin:0.1em 0pt;\n
-  position:relative;\n
-}\n
-\n
-fieldset.left_registration div.input, \n
-fieldset.right_registration div.input {\n
-  display:block;\n
-  width: auto;\n
-}\n
- \n
-fieldset.left_registration label, \n
-fieldset.right_registration label {\n
-  display:block;\n
-  float:left;\n
-  margin:0pt;\n
-  text-align:right;\n
-  width:11.5em;\n
-  padding-right: 0.1em;\n
-}\n
-\n
-fieldset.left_registration input,\n
-fieldset.left_registration textarea,\n
-fieldset.left_registration select,\n
-fieldset.right_registration input,\n
-fieldset.right_registration textarea,\n
-fieldset.right_registration select {\n
-  border:1px solid #999999;\n
-  color:#333333;\n
-  font-family:Sans,Verdana,Tahoma,Georgia,Geneva,Arial,sans-serif;\n
-  font-size:8pt;\n
-  line-height:1.5em;\n
-  width: auto;\n
-}\n
+</tal:block>\n
 \n
 /* Splash section */\n
 #wrapper_splash .input img{\n
