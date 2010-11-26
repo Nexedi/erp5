@@ -2088,6 +2088,15 @@ class AssertGlib(AssertSoftwareMixin):
       'libglib-2.0',
       ], self.rpath_list)
 
+class AssertLibuuid(AssertSoftwareMixin):
+  def test_ld_libuuid(self):
+    self.assertLibraryList('parts/libuuid/lib/libuuid.so',
+      [
+      'libc',
+      ],
+      [])
+
+
 class AssertElfLinkedInternally(AssertSoftwareMixin):
   def test(self):
     result_dict = {}
