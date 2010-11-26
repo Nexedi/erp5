@@ -71,6 +71,7 @@ if reference is not None and  assignment_len == 0:\n
                      ignore_exceptions = 0, \\\n
                      **kw)\n
 else:\n
+  from Products.ERP5Type.Log import log\n
   log("Unable to invalidate remote global account for "\\\n
       "%s (reference=%s , len(assignment_list)=%s)" % (person.getRelativeUrl(), \n
                                                        reference, assignment_len))\n
@@ -125,6 +126,7 @@ else:\n
                             <string>len</string>
                             <string>assignment_len</string>
                             <string>_apply_</string>
+                            <string>Products.ERP5Type.Log</string>
                             <string>log</string>
                           </tuple>
                         </value>
