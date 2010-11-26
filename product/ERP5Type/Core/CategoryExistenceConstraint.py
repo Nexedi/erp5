@@ -35,9 +35,11 @@ from Products.ERP5Type import Permissions, PropertySheet
 class CategoryExistenceConstraint(ConstraintMixin):
   """
   This constraint checks whether a category has been defined on this
-  object (without acquisition). This is only relevant for ZODB
-  Property Sheets (filesystem Property Sheets rely on
-  Products.ERP5Type.Constraint.CategoryExistence instead).
+  object (without acquisition).
+
+  This is only relevant for ZODB Property Sheets (filesystem Property
+  Sheets rely on Products.ERP5Type.Constraint.CategoryExistence
+  instead).
   """
   meta_type = 'ERP5 Category Existence Constraint'
   portal_type = 'Category Existence Constraint'

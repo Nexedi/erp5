@@ -26,22 +26,20 @@
 #
 ##############################################################################
 
-class AttributeEqualityConstraint:
+class ContentExistenceConstraint:
     """
-    Define an Attribute Equality Constraint for ZODB Property Sheets
+    Define a Content Existence Constraint for ZODB Property Sheets
     """
     _properties = (
-        {   'id': 'constraint_attribute_name',
-            'type': 'string',
-            'description' : 'Attribute name whose values are checked' },
         # TALES Expression
-        {   'id': 'constraint_attribute_value',
+        {   'id': 'constraint_portal_type',
             'type': 'string',
-            'description' : 'Valid values of the Attribute' },
-        {   'id': 'message_invalid_attribute_value',
+            'description' : 'Portal type',
+            'default': 'python: ()' },
+        {   'id': 'message_no_subobject',
             'type': 'string',
-            'description' : 'Error message when the attribute value is invalid' },
-        {   'id': 'message_invalid_attribute_value_fixed',
+            'description' : 'Error message when there is no subobject' },
+        {   'id': 'message_no_subobject_portal_type',
             'type': 'string',
-            'description' : 'Error message when the attribute value is invalid but has been fixed' },
+            'description' : 'Error message when there is no subobject of the given portal type' },
         )

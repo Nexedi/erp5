@@ -35,8 +35,10 @@ from Products.ERP5Type import Permissions, PropertySheet
 class PropertyExistenceConstraint(ConstraintMixin):
   """
   This constraint checks whether a property has been defined on this
-  object. This is only relevant for ZODB Property Sheets (filesystem
-  Property Sheets rely on Products.ERP5Type.Constraint.PropertyExistence
+  object.
+
+  This is only relevant for ZODB Property Sheets (filesystem Property
+  Sheets rely on Products.ERP5Type.Constraint.PropertyExistence
   instead).
 
   For example, if we would like to check whether an invoice line has a

@@ -20,3 +20,4 @@ from DynamicCategoryProperty import DynamicCategoryProperty
 from CategoryExistenceConstraint import CategoryExistenceConstraint
 from PropertyExistenceConstraint import PropertyExistenceConstraint
 from AttributeEqualityConstraint import AttributeEqualityConstraint
+from ContentExistenceConstraint import ContentExistenceConstraint

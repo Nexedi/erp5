@@ -38,13 +38,17 @@ from Products.ERP5Type.Utils import createExpressionContext
 class AttributeEqualityConstraint(ConstraintMixin):
   """
   This constraint checks the values of a given attribute name on this
-  object. This is only relevant for ZODB Property Sheets (filesystem
-  Property Sheets rely on Products.ERP5Type.Constraint.PropertyExistence
-  instead). Note that the attribute expected value is now a TALES
-  Expression to be able to use any Python type and not only strings.
+  object.
+
+  This is only relevant for ZODB Property Sheets (filesystem Property
+  Sheets rely on Products.ERP5Type.Constraint.AttributeEquality
+  instead).
+
+  Note that the attribute expected value is now a TALES Expression to
+  be able to use any Python type and not only strings.
 
   For example, if we would like to check whether the attribute 'title'
-  has 'ObjectTitle' as its value, we would create a 'Attribute
+  has 'ObjectTitle' as its value, we would create an 'Attribute
   Equality Constraint' within that Property Sheet and set 'title' as
   the 'Attribute Name' and 'python: "ObjectTitle"' as the 'Attribute
   Value', then set the 'Predicate' if necessary (known as 'condition'
@@ -121,7 +125,7 @@ class AttributeEqualityConstraint(ConstraintMixin):
         error = self._generateError(
           obj, self._getMessage(message_id),
           dict(attribute_name=attribute_name,
-               attribute_value=attribute_value,
+               current_value=attribute_value,
                expected_value=attribute_expected_value))
 
         return [error]
