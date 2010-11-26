@@ -134,7 +134,9 @@
 </tr>\n
 \n
 <span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities"> Wait for activities</span>\n
-<!-- Login as new user -->\n
+<!-- Login as new user is now longer possible to test as by default it requires to manually \n
+or through an alarm to "accept" created Credential Request. -->\n
+<!--\n
 <tr>\n
 \t<td>openAndWait</td>\n
 \t<td>${base_url}/web_site_module/km_test_web_site</td>\n
@@ -176,8 +178,14 @@
 \t<td>login-logout-link</td>\n
 \t<td></td>\n
 </tr>\n
+-->\n
 \n
 <!-- Try to register again same account, should not be possible -->\n
+<tr>\n
+\t<td>openAndWait</td>\n
+\t<td>${base_url}/web_site_module/km_test_web_site</td>\n
+\t<td></td>\n
+</tr>\n
 <tr>\n
 \t<td>clickAndWait</td>\n
 \t<td>login-logout-link</td>\n
@@ -215,10 +223,9 @@
 </tr>\n
 <tr>\n
 \t<td>verifyTextPresent</td>\n
-\t<td>This account already exists. Please provide another email address.</td>\n
+\t<td>Email is already used into the system. Please try new one.</td>\n
 \t<td></td>\n
 </tr>\n
-\n
 \n
 \n
 <!-- Login Again as test runner user -->\n
