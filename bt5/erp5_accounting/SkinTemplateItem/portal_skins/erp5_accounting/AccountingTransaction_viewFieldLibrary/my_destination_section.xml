@@ -269,7 +269,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/AccountingTransaction_getDestinationSectionItemList</string> </value>
+            <value> <string>python: context.Base_getPreferredSectionItemList(portal_type=\'Organisation\', validation_state=\'validated\', base_category=\'destination_section\')</string> </value>
         </item>
       </dictionary>
     </pickle>
