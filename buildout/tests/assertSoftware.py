@@ -1041,7 +1041,6 @@ class AssertApache(AssertSoftwareMixin):
       'libdl',
       'libpthread',
       'libssl',
-      'libz',
       ], self.apache_rpath)
 
   def test_ld_module_mod_status(self):
