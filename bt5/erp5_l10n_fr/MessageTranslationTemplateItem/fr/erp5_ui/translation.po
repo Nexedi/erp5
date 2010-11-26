@@ -8981,6 +8981,9 @@ msgstr "Type d'action"
 msgid "Select Exchange"
 msgstr "Type d'import/export"
 
+msgid "Select Fast Input"
+msgstr "Sélectionnez le formulaire de saisie rapide"
+
 msgid "Select Favorite"
 msgstr "Sélectionner un favori"
 
