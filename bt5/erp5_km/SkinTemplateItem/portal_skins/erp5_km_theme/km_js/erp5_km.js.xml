@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts84965188.86</string> </value>
+            <value> <string>ts90783596.78</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -75,10 +75,19 @@ function toggleHiddenFormatDialogSelection(){\n
 MochiKit.DOM.addLoadEvent(setScreenClass);\n
 connect(window, "onresize", setScreenClass);\n
 \n
-function setScreenClass(){\n
-  var fmt = document.documentElement.clientWidth;\n
-  var cls = (fmt<=800)?\'screen_small\':(fmt>800)?\'screen_wide\':\'screen_small\';\n
-  document.body.className=cls;\n
+// function setScreenClass(){\n
+//   var fmt = document.documentElement.clientWidth;\n
+//   var cls = (fmt<=800)?\'screen_small\':(fmt>800)?\'screen_wide\':\'screen_small\';\n
+//   document.body.className=cls;\n
+// };\n
+\n
+function requestPasswordReset(script_name){\n
+  MochiKit.DOM.getElement(\'reference\').value = MochiKit.DOM.getElement(\'__ac_name\').value;\n
+  /* reset __ac_name & __ac_password in case they have been filled by browser */\n
+  MochiKit.DOM.getElement(\'__ac_name\').value = "";\n
+  MochiKit.DOM.getElement(\'__ac_password\').value = "";\n
+  /* Submit request password */\n
+  submitAction(MochiKit.DOM.getElement(\'main_form\'), script_name);  \n
 };\n
 
 
@@ -90,7 +99,7 @@ function setScreenClass(){\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1787</int> </value>
+            <value> <int>2229</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

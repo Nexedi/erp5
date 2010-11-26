@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ERP5Form" module="Products.ERP5Form.Form"/>
-        <tuple/>
-      </tuple>
+      <global name="ERP5Form" module="Products.ERP5Form.Form"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -80,6 +77,7 @@
                         <string>ac_password</string>
                         <string>came_from</string>
                         <string>login</string>
+                        <string>reset_password</string>
                       </list>
                     </value>
                 </item>
