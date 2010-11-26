@@ -1,7 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Romain Courteaud <romain@nexedi.com>
+# Copyright (c) 2006-2010 Nexedi SARL and Contributors. All Rights Reserved.
+#                         Romain Courteaud <romain@nexedi.com>
+#                         Arnaud Fontaine <arnaud.fontaine@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -29,8 +30,6 @@
 from Products.ERP5Type.mixin.constraint import ConstraintMixin
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.CMFCore.Expression import Expression
-from Products.ERP5Type.Utils import createExpressionContext
 
 class ContentExistenceConstraint(ConstraintMixin):
   """
@@ -63,14 +62,6 @@ class ContentExistenceConstraint(ConstraintMixin):
                      PropertySheet.Reference,
                      PropertySheet.ContentExistenceConstraint)
 
-  # Define by default error messages
-  _message_id_list = [ 'message_no_subobject',
-                       'message_no_subobject_portal_type' ]
-
-  message_no_subobject = "The document does not contain any subobject"
-  message_no_subobject_portal_type = "The document does not contain any"\
-                   " subobject of portal portal type ${portal_type}"
-
   def checkConsistency(self, obj, fixit=0):
     """
     Checks that object contains at least one subobject and, if a list
@@ -79,8 +70,8 @@ class ContentExistenceConstraint(ConstraintMixin):
     if not self.test(obj):
       return []
 
-    portal_type = Expression(self.getConstraintPortalType())(
-      createExpressionContext(obj))
+    portal_type = self._getExpressionValue(obj,
+                                           self.getConstraintPortalType())
 
     # If there is at least one subobject with the given Portal Type,
     # then return now

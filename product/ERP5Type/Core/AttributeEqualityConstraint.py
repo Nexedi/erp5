@@ -32,8 +32,6 @@
 from Products.ERP5Type.mixin.constraint import ConstraintMixin
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.CMFCore.Expression import Expression
-from Products.ERP5Type.Utils import createExpressionContext
 
 class AttributeEqualityConstraint(ConstraintMixin):
   """
@@ -66,14 +64,6 @@ class AttributeEqualityConstraint(ConstraintMixin):
                      PropertySheet.Reference,
                      PropertySheet.AttributeEqualityConstraint)
 
-  # Define by default error messages
-  _message_id_list = ['message_invalid_attribute_value',
-                      'message_invalid_attribute_value_fixed']
-  message_invalid_attribute_value = "Attribute ${attribute_name} "\
-       "value is ${current_value} but should be ${expected_value}"
-  message_invalid_attribute_value_fixed = "Attribute ${attribute_name} "\
-       "value is ${current_value} but should be ${expected_value} (Fixed)"
-
   security.declareProtected(Permissions.AccessContentsInformation,
                             'checkConsistency')
   def checkConsistency(self, obj, fixit=False):
@@ -93,11 +83,8 @@ class AttributeEqualityConstraint(ConstraintMixin):
       identical = True
 
       # The expected value of the attribute is a TALES Expression
-      attribute_expected_value_expression = Expression(
-        self.getConstraintAttributeValue())
-
-      attribute_expected_value = attribute_expected_value_expression(
-        createExpressionContext(obj))
+      attribute_expected_value = self._getExpressionValue(
+        obj, self.getConstraintAttributeValue())
 
       attribute_value = obj.getProperty(attribute_name)
 

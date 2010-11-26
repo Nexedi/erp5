@@ -53,17 +53,9 @@ class CategoryExistenceConstraint(ConstraintMixin):
                      PropertySheet.Reference,
                      PropertySheet.CategoryExistenceConstraint)
 
-  _message_id_list = [ 'message_category_not_set',
-                       'message_category_not_associated_with_portal_type' ]
-  message_category_not_set = "Category existence error for base"\
-      " category ${base_category}, this category is not defined"
-  message_category_not_associated_with_portal_type = "Category existence"\
-      " error for base category ${base_category}, this"\
-      " document has no such category"
-
-  def _calculateArity(self, obj, base_category, portal_type):
+  def _calculateArity(self, obj, base_category, portal_type_list):
     return len(obj.getCategoryMembershipList(base_category,
-                                             portal_type=portal_type))
+                                             portal_type=portal_type_list))
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'checkConsistency')
@@ -71,18 +63,18 @@ class CategoryExistenceConstraint(ConstraintMixin):
     """
     Check the object's consistency.
     """
-    error_list = []
     if not self.test(obj):
       return []
 
-    portal_type = self.getConstraintPortalTypeList() or ()
+    error_list = []
+    portal_type_list = self.getConstraintPortalTypeList()
     # For each attribute name, we check if defined
-    for base_category in self.getConstraintBaseCategoryList() or ():
+    for base_category in self.getConstraintBaseCategoryList():
       mapping = dict(base_category=base_category)
       # Check existence of base category
       if base_category not in obj.getBaseCategoryList():
         error_message = 'message_category_not_associated_with_portal_type'
-      elif self._calculateArity(obj, base_category, portal_type) == 0:
+      elif self._calculateArity(obj, base_category, portal_type_list) == 0:
         error_message = 'message_category_not_set'
       else:
         error_message = None
@@ -91,7 +83,9 @@ class CategoryExistenceConstraint(ConstraintMixin):
       if error_message:
         error_list.append(
           self._generateError(obj,
-                              self._getMessage(error_message), mapping))
+                              self._getMessage(error_message),
+                              mapping))
+
     return error_list
 
 class CategoryAcquiredExistenceConstraint(CategoryExistenceConstraint):
@@ -101,6 +95,6 @@ class CategoryAcquiredExistenceConstraint(CategoryExistenceConstraint):
   Sheets (filesystem Property Sheets rely on
   Products.ERP5Type.Constraint.CategoryExistence instead).
   """
-  def _calculateArity(self, obj, base_category, portal_type):
-    return len(obj.getAcquiredCategoryMembershipList(base_category,
-                                             portal_type=portal_type))
+  def _calculateArity(self, obj, base_category, portal_type_list):
+    return len(obj.getAcquiredCategoryMembershipList(
+      base_category, portal_type=portal_type_list))

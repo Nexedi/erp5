@@ -33,14 +33,20 @@ class CategoryExistenceConstraint:
     _properties = (
         {   'id': 'constraint_base_category',
             'type': 'lines',
-            'description' : 'Categories to check the existence for' },
+            'description' : 'Categories to check the existence for',
+            'default': () },
         {   'id': 'constraint_portal_type',
             'type': 'lines',
-            'description' : 'Portal type' },
+            'description' : 'Portal types',
+            'default': () },
         {   'id': 'message_category_not_set',
             'type': 'string',
-            'description' : 'Error message when the category is not defined' },
+            'description' : 'Error message when the category is not defined',
+            'default': 'Category existence error for base category '\
+                       '${base_category}, this category is not defined' },
         {   'id': 'message_category_not_associated_with_portal_type',
             'type': 'string',
-            'description' : 'Error message when there is no such category' },
+            'description' : 'Error message when there is no such category',
+            'default': 'Category existence error for base category '\
+                       '${base_category}, this document has no such category' },
         )

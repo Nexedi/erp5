@@ -59,26 +59,18 @@ class PropertyExistenceConstraint(ConstraintMixin):
                      PropertySheet.Reference,
                      PropertySheet.PropertyExistenceConstraint)
 
-  # Define by default error messages
-  _message_id_list = ['message_no_such_property',
-                      'message_property_not_set']
-  message_no_such_property =  "Property existence error for property "\
-            "${property_id}, this document has no such property"
-  message_property_not_set = "Property existence error for property "\
-            "${property_id}, this property is not defined"
-
   security.declareProtected(Permissions.AccessContentsInformation,
                             'checkConsistency')
   def checkConsistency(self, obj, fixit=0):
     """
     Check the object's consistency.
     """
-    error_list = []
     if not self.test(obj):
       return []
 
+    error_list = []
     # For each attribute name, we check if defined
-    for property_id in self.getConstraintPropertyList() or ():
+    for property_id in self.getConstraintPropertyList():
       # Check existence of property
       mapping = dict(property_id=property_id)
       if not obj.hasProperty(property_id):
@@ -91,6 +83,7 @@ class PropertyExistenceConstraint(ConstraintMixin):
         error_message_id = None
 
       if error_message_id:
-        error_list.append(self._generateError(obj,
-                     self._getMessage(error_message_id), mapping))
+        error_list.append(self._generateError(
+          obj, self._getMessage(error_message_id), mapping))
+
     return error_list

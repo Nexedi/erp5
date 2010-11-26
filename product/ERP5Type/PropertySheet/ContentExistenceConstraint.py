@@ -34,12 +34,16 @@ class ContentExistenceConstraint:
         # TALES Expression
         {   'id': 'constraint_portal_type',
             'type': 'string',
-            'description' : 'Portal type',
+            'description' : 'Portal types',
             'default': 'python: ()' },
         {   'id': 'message_no_subobject',
             'type': 'string',
-            'description' : 'Error message when there is no subobject' },
+            'description' : 'Error message when there is no subobject',
+            'default': 'The document does not contain any subobject' },
         {   'id': 'message_no_subobject_portal_type',
             'type': 'string',
-            'description' : 'Error message when there is no subobject of the given portal type' },
+            'description' : 'Error message when there is no subobject of the '\
+                            'given portal type',
+            'default': 'The document does not contain any subobject of portal '\
+                       'portal type ${portal_type}' },
         )

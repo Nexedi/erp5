@@ -40,8 +40,13 @@ class AttributeEqualityConstraint:
             'description' : 'Valid values of the Attribute' },
         {   'id': 'message_invalid_attribute_value',
             'type': 'string',
-            'description' : 'Error message when the attribute value is invalid' },
+            'description' : 'Error message when the attribute value is invalid',
+            'default': 'Attribute ${attribute_name} value is ${current_value} '\
+                       'but should be ${expected_value}' },
         {   'id': 'message_invalid_attribute_value_fixed',
             'type': 'string',
-            'description' : 'Error message when the attribute value is invalid but has been fixed' },
+            'description' : 'Error message when the attribute value is '\
+                            'invalid but has been fixed',
+            'default': 'Attribute ${attribute_name} value is ${current_value} '\
+                       'but should be ${expected_value} (Fixed)'},
         )

@@ -33,11 +33,16 @@ class PropertyExistenceConstraint:
     _properties = (
         {   'id': 'constraint_property',
             'type': 'lines',
-            'description' : 'Properties to check the existence for' },
+            'description' : 'Properties to check the existence for',
+            'default': () },
         {   'id': 'message_no_such_property',
             'type': 'string',
-            'description' : 'Error message when there is no such property' },
+            'description' : 'Error message when there is no such property',
+            'default': 'Property existence error for property ${property_id}, '\
+                       'this document has no such property' },
         {   'id': 'message_property_not_set',
             'type': 'string',
-            'description' : 'Error message when the property is not set' },
+            'description' : 'Error message when the property is not set',
+            'default': 'Property existence error for property ${property_id}, '\
+                       'this property is not defined' },
         )

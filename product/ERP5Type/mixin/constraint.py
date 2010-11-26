@@ -35,7 +35,8 @@ from zope.interface import implements
 from Products.ERP5Type.Core.Predicate import Predicate
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.Utils import UpperCase
+from Products.ERP5Type.Utils import UpperCase, createExpressionContext
+from Products.CMFCore.Expression import Expression
 
 class ConstraintMixin(Predicate):
   """
@@ -53,8 +54,6 @@ class ConstraintMixin(Predicate):
 
   __allow_access_to_unprotected_subobjects__ = 1
   implements( IConstraint, )
-
-  _message_id_list = []
 
   def _getMessage(self, message_id):
     """
@@ -101,3 +100,14 @@ class ConstraintMixin(Predicate):
     XXX: remove as soon as the code is stable
     """
     return self.asContext()
+
+  def _getExpressionValue(self, obj, expression_string):
+    """
+    Get the Python value from an Expression string, but check before
+    whether it is None as a getter may returns the default value which
+    could be None
+    """
+    if expression_string is None:
+      return None
+
+    return Expression(expression_string)(createExpressionContext(obj))
