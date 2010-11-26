@@ -2096,6 +2096,54 @@ class AssertLibuuid(AssertSoftwareMixin):
       ],
       [])
 
+class AssertCurl(AssertSoftwareMixin):
+  def test_ld_curl(self):
+    self.assertLibraryList('parts/curl/bin/curl', [
+      'libc',
+      'libcurl',
+      'librt',
+      'libz',
+      ], [
+      'curl',
+      'openssl',
+      'zlib',
+      ])
+  def test_ld_libcurl(self):
+    self.assertLibraryList('parts/curl/lib/libcurl.so', [
+      'libc',
+      'libcrypto',
+      'libdl',
+      'librt',
+      'libssl',
+      'libz',
+      ], [
+      'openssl',
+      'zlib',
+      ])
+
+class AssertGit(AssertSoftwareMixin):
+  def test_ld_git(self):
+    self.assertLibraryList('parts/git/bin/git', [
+      'libc',
+      'libcrypto',
+      'libpthread',
+      'libz',
+      ], [
+      'openssl',
+      'zlib',
+      ])
+  def test_ld_git_http_fetch(self):
+    self.assertLibraryList('parts/git/libexec/git-core/git-http-fetch', [
+      'libc',
+      'libcrypto',
+      'libcurl',
+      'libpthread',
+      'libz',
+      ], [
+      'curl',
+      'openssl',
+      'zlib',
+      ])
 
 class AssertElfLinkedInternally(AssertSoftwareMixin):
   def test(self):
