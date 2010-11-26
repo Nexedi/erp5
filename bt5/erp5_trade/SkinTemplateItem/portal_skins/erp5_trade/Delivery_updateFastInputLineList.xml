@@ -97,7 +97,7 @@ else:\n
 request= context.REQUEST\n
 \n
 total_price = 0.0\n
-status_message_list = []\n
+status_message_dict = {}\n
 \n
 for line in listbox:\n
   if \'listbox_key\' in line and (line[\'title\'] not in (\'\', None)\n
@@ -193,15 +193,22 @@ for line in listbox:\n
 \n
         # Check if quantity is available\n
         if available_inv < line["quantity"]:\n
-          message = \'Quantity Asked For Line ${line_id} : ${product_title}\'\\\n
-                    \'- ${product_reference} Not Available In Inventory\'\n
-          mapping = {\'line_id\': line[\'listbox_key\'],\n
-                     \'product_title\': product.getTitle(\'\'),\n
-                     \'product_reference\': product.getReference(\'\')}\n
-          status_message_list.append(Base_translateString(message,\n
-                                                          mapping=mapping))\n
-\n
-if status_message_list:\n
+          status_message_dict.setdefault(product.getRelativeUrl(), []).append(line[\'listbox_key\'])\n
+          \n
+status_message_list = []\n
+if status_message_dict:\n
+  for product_relative_url, line_id_list in status_message_dict.items():\n
+    product = portal.restrictedTraverse(product_relative_url)\n
+    mapping = {\'product_title\': product.getTitle(\'\'),\n
+               \'product_reference\': product.getReference(\'\')}\n
+    if len(line_id_list) > 1:\n
+      line_id_list.sort()\n
+      message = \'Asked quantity of "${product_title} - ${product_reference}" is not available in inventory for lines ${line_id}\'\n
+      mapping[\'line_id\'] = \', \'.join(line_id_list)\n
+    else:\n
+      message = \'Asked quantity of "${product_title} - ${product_reference}" is not available in inventory for line ${line_id}\'\n
+      mapping[\'line_id\'] = line_id_list[0]\n
+    status_message_list.append(Base_translateString(message, mapping=mapping))\n
   request.set(\'portal_status_message\', \' -- \'.join(status_message_list))\n
 \n
 request.form["field_my_total_price"] = total_price\n
@@ -270,7 +277,7 @@ return getattr(context, request.form[\'dialog_id\'])(listbox=listbox, kw=kw)\n
                             <string>dict</string>
                             <string>request</string>
                             <string>total_price</string>
-                            <string>status_message_list</string>
+                            <string>status_message_dict</string>
                             <string>line</string>
                             <string>line_id</string>
                             <string>product</string>
@@ -287,6 +294,9 @@ return getattr(context, request.form[\'dialog_id\'])(listbox=listbox, kw=kw)\n
                             <string>supply_line</string>
                             <string>_inplacevar_</string>
                             <string>available_inv</string>
+                            <string>status_message_list</string>
+                            <string>product_relative_url</string>
+                            <string>line_id_list</string>
                             <string>mapping</string>
                             <string>getattr</string>
                           </tuple>
