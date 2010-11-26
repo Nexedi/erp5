@@ -1404,12 +1404,10 @@ class AssertW3m(AssertSoftwareMixin):
   def test_ld_w3m(self):
     self.assertLibraryList('parts/w3m/bin/w3m', [
       'libc',
-      'libdl',
       'libcrypto',
       'libgc',
       'libm',
       'libncurses',
-      'libnsl',
       'libssl',
       ], [
       'garbage-collector',
