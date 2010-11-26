@@ -96,15 +96,15 @@ for line in line_list:\n
       while line_id in used_id:\n
         # do not used an id from previously generated lines\n
         line_id+=1\n
-      context.log("inventory values a = %s, c = %s, f = %s" %(resource.getAvailableInventory(\n
-        section_uid=section_uid,\n
-        variation_text=cell.getVariationText()),\n
-                                                              resource.getCurrentInventory(\n
-        section_uid=section_uid,\n
-        variation_text=cell.getVariationText()),\n
-                                                              resource.getInventory(\n
-        section_uid=section_uid,\n
-        variation_text=cell.getVariationText())))\n
+      #context.log("inventory values a = %s, c = %s, f = %s" %(resource.getAvailableInventory(\n
+      #  section_uid=section_uid,\n
+      #  variation_text=cell.getVariationText()),\n
+      #                                                        resource.getCurrentInventory(\n
+      #  section_uid=section_uid,\n
+      #  variation_text=cell.getVariationText()),\n
+      #                                                        resource.getInventory(\n
+      #  section_uid=section_uid,\n
+      #  variation_text=cell.getVariationText())))\n
 \n
       obj = trade_document.newContent(portal_type=line_portal_type,\n
                                       id=line_id,\n
@@ -134,15 +134,15 @@ for line in line_list:\n
     while line_id in used_id:\n
       # do not used an id from previously generated lines\n
       line_id+=1\n
-    context.log("inventory values a = %s, c = %s, f = %s" %(resource.getAvailableInventory(\n
-        section_uid=section_uid,\n
-        variation_text=line.getVariationText()),\n
-                                                              resource.getCurrentInventory(\n
-        section_uid=section_uid,\n
-        variation_text=line.getVariationText()),\n
-                                                              resource.getInventory(\n
-        section_uid=section_uid,\n
-        variation_text=line.getVariationText())))\n
+    #context.log("inventory values a = %s, c = %s, f = %s" %(resource.getAvailableInventory(\n
+    #    section_uid=section_uid,\n
+    #    variation_text=line.getVariationText()),\n
+    #                                                          resource.getCurrentInventory(\n
+    #    section_uid=section_uid,\n
+    #    variation_text=line.getVariationText()),\n
+    #                                                          resource.getInventory(\n
+    #    section_uid=section_uid,\n
+    #    variation_text=line.getVariationText())))\n
 \n
     obj = trade_document.newContent(portal_type=line_portal_type,\n
                                     id=line_id,\n
