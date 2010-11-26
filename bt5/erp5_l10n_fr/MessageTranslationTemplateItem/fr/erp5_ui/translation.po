@@ -7835,6 +7835,12 @@ msgstr "Quantité"
 msgid "Quantity < ${max_quantity}"
 msgstr "Quantité < ${max_quantity}"
 
+msgid "Asked quantity of \"${product_title} - ${product_reference}\" is not available in inventory for lines ${line_id}"
+msgstr "La quantité demandée de \"${product_title} - ${product_reference}\" n'est pas disponible pour les lignes ${line_id}"
+
+msgid "Asked quantity of \"${product_title} - ${product_reference}\" is not available in inventory for line ${line_id}"
+msgstr "La quantité demandée de \"${product_title} - ${product_reference}\" n'est pas disponible pour la ligne ${line_id}"
+
 msgid "Quantity Divergence Tester"
 msgstr "Test de divergence sur la quantité"
 
