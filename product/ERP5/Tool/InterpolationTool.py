@@ -69,7 +69,7 @@ class InterpolationTool (UniqueObject):
                      ) + ZCatalog.manage_options
 
 
-    def __init__(self):
+    def __init__(self, id=None):
         ZCatalog.__init__(self, self.getId())
 
     # Explicite Inheritance

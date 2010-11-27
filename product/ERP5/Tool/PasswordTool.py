@@ -62,8 +62,12 @@ class PasswordTool(BaseTool):
   _expiration_day = 1
   _password_request_dict = {}
 
-  def __init__(self):
+  def __init__(self, id=None):
+    if id is None:
+      id = self.__class__.id
     self._password_request_dict = PersistentMapping()
+    # XXX no call to BaseTool.__init__ ?
+    # BaseTool.__init__(self, id)
 
 
   security.declareProtected('Manage users', 'getResetPasswordUrl')
