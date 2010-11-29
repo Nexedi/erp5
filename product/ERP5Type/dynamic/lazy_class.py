@@ -78,6 +78,12 @@ class PortalTypeMetaClass(GhostBaseMetaClass):
 
   - Tracks subclasses of portal type classes
   - Takes care of ghosting/unghosting
+
+  Instances of this metaclass have __isghost__ class attributes.
+  - If True, this attribute marks classes awaiting a load from the
+    ZODB. An instance of GhostBaseMetaClass should be in the mro()
+    and will be removed after loading.
+  - If False, the class is fully-loaded and functional.
   """
 
   # register which classes subclass portal type classes
@@ -93,7 +99,7 @@ class PortalTypeMetaClass(GhostBaseMetaClass):
       if issubclass(type(parent), PortalTypeMetaClass):
         PortalTypeMetaClass.subclass_register.setdefault(parent, []).append(cls)
 
-    cls.__ghostbase__ = None
+    cls.__isghost__ = True
     super(GhostBaseMetaClass, cls).__init__(name, bases, dictionary)
 
   @classmethod
@@ -132,17 +138,25 @@ class PortalTypeMetaClass(GhostBaseMetaClass):
       InitializeClass(subclass)
 
   def restoreGhostState(cls):
-    if cls.__ghostbase__ is not None:
+    """
+    Insert in the __bases__ hierarchy an instance of GhostBaseMetaClass
+    that will force reloading the class.
+    - mro before reset:
+       erp5.portal_type.XXX, *TAIL
+    - after reset:
+       erp5.portal_type.XXX, GhostBaseMetaClass instance, *TAIL
+    """
+    if not cls.__isghost__:
       for attr in cls.__dict__.keys():
         if attr not in ('__module__',
                         '__doc__',
-                        '__ghostbase__',
+                        '__isghost__',
                         'portal_type'):
           delattr(cls, attr)
       # generate a ghostbase that derives from all previous bases
       ghostbase = GhostBaseMetaClass('GhostBase', cls.__bases__, {})
       cls.__bases__ = (ghostbase,)
-      cls.__ghostbase__ = None
+      cls.__isghost__ = True
       cls.resetAcquisitionAndSecurity()
 
   def __getattr__(cls, name):
@@ -155,15 +169,21 @@ class PortalTypeMetaClass(GhostBaseMetaClass):
     if cls.__module__ != 'erp5.portal_type':
       return getattr(cls.__bases__[0], name)
 
-    if not name.startswith('__') and cls.__ghostbase__ is None:
+    if not name.startswith('__') and cls.__isghost__:
       cls.loadClass()
       return getattr(cls, name)
 
     raise AttributeError
 
   def loadClass(cls):
+    """
+    - mro before load:
+      erp5.portal_type.XXX, GhostBaseMetaClass instance, *TAIL
+    - mro after:
+      erp5.portal_type.XXX, *new_bases_fetched_from_ZODB
+    """
     # Do not load the class again if it has already been loaded
-    if cls.__ghostbase__ is not None:
+    if not cls.__isghost__:
       return
 
     # cls might be a subclass of a portal type class
@@ -191,13 +211,7 @@ class PortalTypeMetaClass(GhostBaseMetaClass):
       else:
         base_list, interface_list, attribute_dict = class_definition
 
-
-      # save the old bases to be able to restore a ghost state later
-      if klass.__ghostbase__ is None:
-        # but only do it if we're in the innermost call, otherwise
-        # klass.__bases__ might just be the Document without accessor
-        # holders, and we would override the real ghost class
-        klass.__ghostbase__ = klass.__bases__
+      klass.__isghost__ = False
       klass.__bases__ = base_list
 
       for key, value in attribute_dict.iteritems():
