@@ -202,6 +202,7 @@ class PortalTypeMetaClass(GhostBaseMetaClass):
       try:
         class_definition = generatePortalTypeClass(portal_type)
       except AttributeError:
+        import traceback; traceback.print_exc()
         LOG("ERP5Type.Dynamic", WARNING,
             "Could not access Portal Type Object for type %r"
             % portal_type, error=sys.exc_info())
