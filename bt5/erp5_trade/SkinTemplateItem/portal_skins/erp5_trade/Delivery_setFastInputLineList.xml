@@ -86,8 +86,14 @@ for line in listbox:\n
 \n
     # update original line/cell if given\n
     if source_document is not None:\n
-      source_document.edit(quantity=line["quantity"],\n
-                           price=line["price"])\n
+      edit_kw = {}\n
+      if \'quantity\' in line:\n
+        # if quantity is editable field\n
+        edit_kw[\'quantity\'] = line[\'quantity\']\n
+      if \'price\' in line:\n
+        # if price is editable field\n
+        edit_kw[\'price\'] = line[\'price\']\n
+      source_document.edit(**edit_kw)\n
     else:\n
       # if there was no document line already defined\n
       # for the document, add a new document line\n
@@ -187,16 +193,17 @@ return context.Base_redirect(kw[\'form_id\'], keep_items=dict(\n
                             <string>line_id</string>
                             <string>product</string>
                             <string>source_document</string>
+                            <string>edit_kw</string>
+                            <string>_write_</string>
+                            <string>_apply_</string>
                             <string>key</string>
                             <string>trade_document_line</string>
-                            <string>_write_</string>
                             <string>variation_category_list</string>
                             <string>base_id</string>
                             <string>list</string>
                             <string>cell_key_list</string>
                             <string>cell_key</string>
                             <string>sorted_cell_key</string>
-                            <string>_apply_</string>
                             <string>cell</string>
                             <string>dict</string>
                           </tuple>
