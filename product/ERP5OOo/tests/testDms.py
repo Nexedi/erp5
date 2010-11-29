@@ -1532,7 +1532,7 @@ class TestDocument(TestDocumentMixin):
         <style type="text/css">
           a {color: #FFAA44;}
         </style>
-        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
       </head>
       <body>
         <div>
@@ -1741,7 +1741,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
         <style type="text/css">
           a {color: #FFAA44;}
         </style>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
      </head>
       <body>
         <div>
