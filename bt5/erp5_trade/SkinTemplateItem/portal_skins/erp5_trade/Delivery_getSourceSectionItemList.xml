@@ -50,7 +50,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>section_cat = context.portal_preferences.getPreferredSectionCategory()\n
+            <value> <string>from Products.ERP5Type.Log import log\n
+log(\'Deprecated: use Base_getPreferredSectionItemList instead.\')\n
+\n
+section_cat = context.portal_preferences.getPreferredSectionCategory()\n
 if section_cat in (None, \'\') : \n
   section_cat = context.getPortalDefaultSectionCategory()\n
 \n
@@ -109,6 +112,8 @@ return [(\'\', \'\')] + [(i.getTitle(), i.getRelativeUrl()) for i in result]\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>Products.ERP5Type.Log</string>
+                            <string>log</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>section_cat</string>

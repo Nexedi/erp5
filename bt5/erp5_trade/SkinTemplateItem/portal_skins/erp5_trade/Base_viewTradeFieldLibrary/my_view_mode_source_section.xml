@@ -11,8 +11,8 @@
             <value>
               <list>
                 <string>description</string>
-                <string>title</string>
                 <string>items</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -55,6 +55,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -70,6 +74,10 @@
                 </item>
                 <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -90,6 +98,12 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -113,7 +127,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/Delivery_getSourceSectionItemList</string> </value>
+            <value> <string>python:here.Base_getPreferredSectionItemList(portal_type=\'Organisation\', validation_state=\'validated\', base_category=\'source_section\')</string> </value>
         </item>
       </dictionary>
     </pickle>
