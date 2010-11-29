@@ -175,7 +175,6 @@ class TestPortalTypeClass(ERP5TypeTestCase):
       obj.newContent('file', portal_type)
       obj.file.aq_base
 
-  @expectedFailure
   def testBoundMethodCaching(self):
     """Test that it is safe to cache a bound method during a transaction
 
@@ -188,8 +187,8 @@ class TestPortalTypeClass(ERP5TypeTestCase):
     Or do we need to reset the fewest classes as possible ?
     """
     newDocument = self.portal.newContent(self.id(), 'Folder').newContent
-    self.portal.portal_type.newContent(portal_type='Base Type',
-                                       type_class='Folder')
+    self.portal.portal_types.newContent(portal_type='Base Type',
+                                        type_class='Folder')
     newDocument(portal_type='Folder')
 
   def testPropertyGenerationOnTempPortalType(self):
