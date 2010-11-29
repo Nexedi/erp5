@@ -579,7 +579,7 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
 
     # check that gadgets are added to web section page view
     self.changeSkin('KM')
-    response = self.publish('%s/WebSection_viewColumnOne' %self.web_section_url, self.auth)
+    response = self.publish('%s/WebSection_viewKnowledgePadColumn' %self.web_section_url, self.auth)
     for gadget in web_section_gadgets:
       self.failUnless(gadget.getTitle() in response.getBody())     
 
@@ -695,7 +695,7 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
     self.stepTic()
 
     # check that gadgets are added to web section page view
-    response = self.publish('%s/WebSection_viewColumnOne' %self.web_page_url, self.auth)
+    response = self.publish('%s/WebSection_viewKnowledgePadColumn' %self.web_page_url, self.auth)
 
     for gadget in web_section_content_gadgets:
       self.failUnless(gadget.getTitle() in response.getBody())
