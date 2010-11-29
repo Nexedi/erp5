@@ -24,3 +24,4 @@ from ContentExistenceConstraint import ContentExistenceConstraint
 from CategoryMembershipArityConstraint import CategoryMembershipArityConstraint
 from CategoryRelatedMembershipArityConstraint import \
      CategoryRelatedMembershipArityConstraint
+from TALESConstraint import TALESConstraint

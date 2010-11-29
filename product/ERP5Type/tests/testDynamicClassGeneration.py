@@ -450,6 +450,15 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
       constraint_portal_type=('Test Migration',),
       constraint_base_category=('gender',))
 
+  def _newTALESConstraint(self):
+    """
+    Create a new TALES Constraint within test Property Sheet
+    """
+    self.test_property_sheet.newContent(
+      reference='test_tales_constraint',
+      portal_type='TALES Constraint',
+      expression='python: object.getTitle() == "my_tales_constraint_title"')
+
   def afterSetUp(self):
     """
     Create a test Property Sheet (and its properties)
@@ -499,6 +508,9 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
       # Create a Category Related Membership Arity Constraint in the
       # test Property Sheet
       self._newCategoryRelatedMembershipArityConstraint()
+
+      # Create a TALES Constraint in the test Property Sheet
+      self._newTALESConstraint()
 
       # Create all the test Properties
       for operation_type in ('change', 'delete', 'assign'):
@@ -971,6 +983,16 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     self.tic()
 
     self.assertEquals([], constraint.checkConsistency(self.test_module))
+
+  def testTALESConstraint(self):
+    """
+    Take the test module and check whether the TALES Constraint is
+    there. Until the title of Test Module has been set to the expected
+    value, the constraint should fail
+    """
+    self._checkConstraint('test_tales_constraint',
+                          self.test_module.setTitle,
+                          'my_tales_constraint_title')
 
 TestZodbPropertySheet = skip("ZODB Property Sheets code is not enabled yet")(
   TestZodbPropertySheet)
