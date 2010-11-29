@@ -427,35 +427,26 @@ class BusinessTemplateTarball(BusinessTemplateArchive):
     return self.fobj
 
   def _initImport(self, file=None, **kw):
-    self.f = file
+    self.tar = tarfile.TarFile(fileobj=StringIO(GzipFile(fileobj=file).read()))
+    self.item_dict = {}
+    setdefault = self.item_dict.setdefault
+    for info in self.tar.getmembers():
+      if info.isreg():
+        path = info.name.split('/')
+        if path[0] == '.':
+          del path[0]
+        file_name = '/'.join(path[2:])
+        if '%' in file_name:
+          file_name = unquote(file_name)
+        setdefault(path[1], []).append((file_name, info))
 
   def importFiles(self, item, **kw):
     """
       Import all file from the archive to the site
     """
-    class_name = item.__class__.__name__
-    self.f.seek(0)
-    data = GzipFile(fileobj=self.f).read()
-    io = StringIO(data)
-    tar = tarfile.TarFile(fileobj=io)
-    for info in tar.getmembers():
-      if 'CVS' in info.name.split('/'):
-        continue
-      if '.svn' in info.name.split('/'):
-        continue
-      if class_name in info.name.split('/'):
-        if info.isreg():
-          file = tar.extractfile(info)
-          tar_file_name = info.name.startswith('./') and info.name[2:] or \
-              info.name
-          folders = tar_file_name.split('/')
-          file_name = ('/').join(folders[2:])
-          if '%' in file_name:
-            file_name = unquote(file_name)
-          item._importFile(file_name, file)
-          file.close()
-    tar.close()
-    io.close()
+    extractfile = self.tar.extractfile
+    for file_name, info in self.item_dict.get(item.__class__.__name__, ()):
+      item._importFile(file_name, extractfile(info))
 
 class TemplateConditionError(Exception): pass
 class TemplateConflictError(Exception): pass
