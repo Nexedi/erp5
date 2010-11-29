@@ -1,3 +1,6 @@
+2010-11-29 lucas
+* Added proxy role in reindex_object_interaction_workflow/scripts/callRecursiveReindexObject to avoid security issues.
+
 2010-11-15 Kazuhiko
 * improve Document_getStandardFileName so that the extention in the original filename will be used as the fallback.
 
