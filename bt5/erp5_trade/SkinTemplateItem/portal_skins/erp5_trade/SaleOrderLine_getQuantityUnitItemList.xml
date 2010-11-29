@@ -65,18 +65,50 @@ method = getattr(base_category, list_method_id)\n
 item_list = method(base=0, local_sort_id=(\'int_index\', \'translated_title\'),\n
                    checked_permission=\'View\')\n
 \n
+result_item_list = [(\'\', \'\')]\n
 \n
-resource_title = request.form.get("field_listbox_title_%s" % context.getUid())\n
-resource_reference = request.form.get("field_listbox_reference_%s" % context.getUid())\n
 resource_value = context.getResourceValue()\n
-result = [(\'\', \'\')]\n
-if (resource_title or resource_reference) or resource_value is not None:\n
- quantity_unit_list = [(x.getLogicalPath(), x.getCategoryRelativeUrl(base=0))\n
-                for x in resource_value.getQuantityUnitValueList()]\n
- # return the first quantity_unit item of resource\n
- result = quantity_unit_list and [quantity_unit_list[0]] or result\n
+if resource_value is None:\n
+  # Lookup for expected resource according parameters in REQUEST\n
+  resource_relative_url = request.form.get("field_listbox_resource_relative_url_%s" % context.getUid())\n
+  if resource_relative_url:\n
+    resource_value = portal.restrictedTraverse(resource_relative_url)\n
+  resource_title = request.form.get("field_listbox_title_%s" % context.getUid())\n
+  resource_reference = request.form.get("field_listbox_reference_%s" % context.getUid())\n
+  if resource_value is None and (resource_title or resource_reference):\n
+    # Querying catalog to find a resource according title and reference parameters\n
+    # like Delivery_updateFastInputLineList does.\n
+    line_portal_type_list = [x for x in context.getTypeInfo().getTypeAllowedContentTypeList() \\\n
+                             if x in portal.getPortalMovementTypeList()]\n
+    line_portal_type = line_portal_type_list[0]\n
 \n
-return result\n
+    if line_portal_type in portal.getPortalSaleTypeList():\n
+      use_list = portal.portal_preferences.getPreferredSaleUseList()\n
+    elif line_portal_type in portal.getPortalPurchaseTypeList():\n
+      use_list = portal.portal_preferences.getPreferredPurchaseUseList()\n
+    elif line_portal_type in portal.getPortalInternalTypeList():\n
+      use_list = portal.portal_preferences.getPreferredPurchaseUseList() \\\n
+               + portal.portal_preferences.getPreferredSaleUseList()\n
+    elif line_portal_type in portal.getPortalInventoryMovementTypeList():\n
+      use_list = portal.portal_preferences.getPreferredPurchaseUseList() \\\n
+                 + portal.portal_preferences.getPreferredSaleUseList()\n
+    else:\n
+      raise NotImplementedError(\'Line portal type not found %s\' % (line_portal_type,))\n
+    use_uid_list = [portal.portal_categories.getCategoryUid(use) for use in use_list]\n
+    resource_list = portal.portal_catalog(portal_type=portal.getPortalResourceTypeList(),\n
+                                          title=resource_title,\n
+                                          default_use_uid=use_uid_list,\n
+                                          reference=resource_reference)\n
+    if len(resource_list):\n
+      resource_value = resource_list[0]\n
+\n
+if resource_value is not None:\n
+ quantity_unit_list = [(x.getLogicalPath(), x.getCategoryRelativeUrl(base=0))\n
+                       for x in resource_value.getQuantityUnitValueList()]\n
+ # return the first quantity_unit item of resource\n
+ result_item_list.extend(quantity_unit_list)\n
+\n
+return result_item_list\n
 </string> </value>
         </item>
         <item>
@@ -122,17 +154,26 @@ return result\n
                             <string>getattr</string>
                             <string>method</string>
                             <string>item_list</string>
+                            <string>result_item_list</string>
+                            <string>resource_value</string>
+                            <string>None</string>
+                            <string>resource_relative_url</string>
                             <string>resource_title</string>
                             <string>resource_reference</string>
-                            <string>resource_value</string>
-                            <string>result</string>
-                            <string>None</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
                             <string>x</string>
-                            <string>quantity_unit_list</string>
+                            <string>line_portal_type_list</string>
                             <string>_getitem_</string>
+                            <string>line_portal_type</string>
+                            <string>use_list</string>
+                            <string>NotImplementedError</string>
+                            <string>use</string>
+                            <string>use_uid_list</string>
+                            <string>resource_list</string>
+                            <string>len</string>
+                            <string>quantity_unit_list</string>
                           </tuple>
                         </value>
                     </item>
