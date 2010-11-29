@@ -226,8 +226,13 @@
                       <a tal:attributes="href python:\n
                                           \'ERP5Site_toggleActiveKnowledgePad?knowledge_pad_url=%s&mode=%s\'\n
                                           %(knowledge_pad.getRelativeUrl(), mode)">\n
-                        <span tal:content="knowledge_pad/getTitle"/>\n
+                             <span tal:content="knowledge_pad/getTitle"/>\n
                       </a>\n
+<!-- XXX: instant switch\n
+                        <span tal:attributes="onclick string:loadPadFromServer(\'${knowledge_pad.getRelativeUrl()}\', \'page_wrapper\', \'${mode}\')" \n
+                               tal:content="knowledge_pad/getTitle"/>\n
+-->\n
+\n
                     </li>\n
                   </tal:block>\n
                 </tal:block>\n

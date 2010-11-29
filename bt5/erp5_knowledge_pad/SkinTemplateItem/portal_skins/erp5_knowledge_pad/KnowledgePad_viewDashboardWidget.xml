@@ -41,7 +41,9 @@
                  real_context python: options.get(\'real_context\', None);\n
                  cancel_url python: options.get(\'cancel_url\', None);\n
                  is_tab_empty python: (len(layout)==1 and len(layout[0])==0) or\n
-                                     (len(layout)==3 and len(layout[0]+layout[1]+layout[2])==0) ">\n
+                                     (len(layout)==3 and len(layout[0]+layout[1]+layout[2])==0);\n
+                 page_wrapper_id python:  options.get(\'page_wrapper_id\', \'page_wrapper\');"\n
+     tal:attributes="id page_wrapper_id">\n
     <div tal:condition="is_tab_empty">\n
       <h3 i18n:translate="" \n
           i18n:domain="ui"> \n

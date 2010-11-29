@@ -36,7 +36,7 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<tal:block \n
+<tal:block\n
      tal:repeat="box_id python: options[\'section_layout\']"\n
      tal:define="real_context python: options.get(\'real_context\', None);\n
                  cancel_url python: options.get(\'cancel_url\', None);">\n
@@ -55,6 +55,7 @@
                     view_form_id gadget/getViewFormId;\n
                     render_type gadget/getRenderType;\n
                     is_asynchronous_gadget python: render_type == \'asynchronous\';\n
+                    force_synchronous_gadget_rendering python: request.get(\'force_synchronous_gadget_rendering\', False);\n
                     current_web_section python: context.REQUEST.get(\'current_web_section\',\n
                                                                     here);\n
                     current_web_section python:  \n
@@ -177,13 +178,13 @@
                    tal:define="view_form_object python: getattr(real_context, view_form_id);">\n
 \n
                 <!-- Synchronous Gadget -->\n
-                <div tal:condition="not: is_asynchronous_gadget"\n
+                <div tal:condition="python: not is_asynchronous_gadget or force_synchronous_gadget_rendering"\n
                      tal:attributes="id view_form_dom_id"\n
                      class="box_inner_content" \n
                      tal:content="structure python: view_form_object(box=box)"/>\n
  \n
                 <!-- Asynchronous Gadget -->\n
-                <tal:block tal:condition="is_asynchronous_gadget">\n
+                <tal:block tal:condition="python: is_asynchronous_gadget and not force_synchronous_gadget_rendering">\n
                   <div tal:attributes="id view_form_dom_id" \n
                        class="box_inner_content"\n
                        i18n:translate="" \n

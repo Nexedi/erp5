@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts91031570.14</string> </value>
+            <value> <string>ts91040808.94</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -259,6 +259,22 @@ function showAddNewPadPopup(popup_id, input_id){\n
 //   MochiKit.DOM.getElement(\'new_pad_title\').focus();\n
 }\n
 \n
+function loadPadFromServer(pad_relative_url, wrapper_dom_id, mode){\n
+  /* Load Pad from server */\n
+  d = MochiKit.Async.doSimpleXMLHttpRequest(\'A\', \n
+                                            {\'pad_relative_url\':pad_relative_url,\n
+                                             \'mode\':mode});\n
+  d.addCallback(handleServerSuccess);\n
+  function handleServerSuccess(res){\n
+    response = res.responseText;\n
+//     removeElement(wrapper_dom_id);\n
+//     div = document.createElement("div")\n
+   dom = getElement(wrapper_dom_id);\n
+    dom.innerHTML = response;\n
+//     alert(div);\n
+  }\n
+}\n
+\n
 function addPadOnServerOnEnter(event, create_url, mode, cancel_url){\n
   /* Catch and submit form when ENTER is pressed */\n
   if(event.keyCode == 13){\n
@@ -417,7 +433,7 @@ MochiKit.DOM.addLoadEvent(initialize);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>15402</int> </value>
+            <value> <int>15973</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
