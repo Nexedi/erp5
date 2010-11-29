@@ -1,3 +1,6 @@
+2010-11-29 arnaud.fontaine
+* Add Category Acquired Membership Arity Constraint portal type.
+
 2010-11-26 arnaud.fontaine
 * Add Category Membership Arity Constraint portal type and its views.
 * Add missing form action to ZODB Constraints.

@@ -71,6 +71,7 @@
                 <string>Acquired Property</string>
                 <string>Attribute Equality Constraint</string>
                 <string>Base Category</string>
+                <string>Category Acquired Membership Arity Constraint</string>
                 <string>Category Existence Constraint</string>
                 <string>Category Membership Arity Constraint</string>
                 <string>Category Property</string>
