@@ -336,7 +336,7 @@ div.header-right {\n
 \n
 div.main-left, div.main-right, div.main {\n
   margin-top: -0.5em;\n
-  height:29.7em;;\n
+  height:45em;\n
 }\n
 \n
 div.main {\n
@@ -417,10 +417,9 @@ div.main-right div.content {\n
 \n
 \n
 div.main-right tbody {\n
-  height: 24em;\n
-  -moz-box-sizing:border-box;\n
-  overflow-y:scroll;\n
+  height:25.35em;\n
   overflow-x:hidden;\n
+  overflow-y:auto;\n
 }\n
 \n
 div.header-left {\n

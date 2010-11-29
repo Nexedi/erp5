@@ -31,11 +31,12 @@
             <value> <string encoding="cdata"><![CDATA[
 
 $(document).ready(function(){\n
- navigation_html = $("div.listbox-footer div.listbox-page-navigation").html();\n
- $("div.listbox-footer div.listbox-page-navigation").remove();\n
- navigation_div = "<div class=\'listbox-navigation\'>" + navigation_html + "</div>"\n
- $("div.toolbar").append(navigation_div);\n
  if ($("div.gadget-column").length == 1) {\n
+    $("body").css("overflow", "hidden");\n
+    navigation_html = $("div.listbox-footer div.listbox-page-navigation").html();\n
+    $("div.listbox-footer div.listbox-page-navigation").remove();\n
+    navigation_div = "<div class=\'listbox-navigation\'>" + navigation_html + "</div>";\n
+    $("div.toolbar").append(navigation_div);\n
     var tr_length = $("div.main-right tbody tr").length;\n
     if (tr_length < 16){\n
       var height = tr_length * 1.5;\n
