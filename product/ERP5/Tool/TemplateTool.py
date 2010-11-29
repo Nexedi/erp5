@@ -276,6 +276,7 @@ class TemplateTool (BaseTool):
         return export_string.getvalue()
       finally:
         export_string.close()
+        shutil.rmtree(tmpdir_path)
 
     security.declareProtected( 'Import/Export objects', 'publish' )
     def publish(self, business_template, url, username=None, password=None):
