@@ -240,6 +240,51 @@ class TestPortalTypeClass(ERP5TypeTestCase):
     implemented_by = list(implementedBy(InterfaceTestType))
     self.failIf(IForTest in implemented_by)
 
+  def testClassHierarchyAfterReset(self):
+    """
+    Check that after a class reset, the class hierarchy is unchanged until
+    un-ghostification happens. This is very important for multithreaded
+    environments:
+      Thread A. reset dynamic classes
+      Thread B. in Folder code for instance: CMFBTreeFolder.method(self)
+
+    If a reset happens before the B) method call, and does not keep the
+    correct hierarchy (for instance Folder superclass is removed from
+    the mro()), a TypeError might be raised:
+      "method expected CMFBTreeFolder instance, got erp5.portal_type.xxx
+      instead"
+
+    This used to be broken because the ghost state was only what is called
+    lazy_class.InitGhostBase: a "simple" subclass of ERP5Type.Base
+    """
+    name = "testClassHierarchyAfterReset Module"
+    types_tool = self.portal.portal_types
+
+    ptype = types_tool.newContent(id=name, type_class="Folder")
+    transaction.commit()
+    module_class = types_tool.getPortalTypeClass(name)
+    module_class.loadClass()
+
+    # first manually reset and check that everything works
+    from Products.ERP5Type.Core.Folder import Folder
+    self.assertTrue(issubclass(module_class, Folder))
+    synchronizeDynamicModules(self.portal, force=True)
+    self.assertTrue(issubclass(module_class, Folder))
+
+    # then change the type value to something not descending from Folder
+    # and check behavior
+    ptype.setTypeClass('Address')
+
+    # while the class has not been reset is should still descend from Folder
+    self.assertTrue(issubclass(module_class, Folder))
+    # finish transaction and trigger workflow/DynamicModule reset
+    transaction.commit()
+    # while the class has not been unghosted it's still a Folder
+    self.assertTrue(issubclass(module_class, Folder))
+    # but it changes as soon as the class is loaded
+    module_class.loadClass()
+    self.assertFalse(issubclass(module_class, Folder))
+
 class TestZodbPropertySheet(ERP5TypeTestCase):
   """
   XXX: WORK IN PROGRESS

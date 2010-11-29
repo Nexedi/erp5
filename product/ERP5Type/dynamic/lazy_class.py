@@ -18,8 +18,14 @@ ERP5BaseBroken = type('ERP5BaseBroken', (Broken, ERP5Base), dict(x
   for x in PersistentBroken.__dict__.iteritems()
   if x[0] not in ('__dict__', '__module__', '__weakref__')))
 
-class GhostPortalType(ERP5Base): #SimpleItem
+
+class GhostBaseMetaClass(ExtensionClass):
   """
+  Generate classes that will be used as bases of portal types to
+  mark portal types as non-loaded and to force loading it.
+  """
+
+  ghost_doc = """\
   Ghost state for a portal type class that is not loaded.
 
   When an instance of this portal type class is loaded (a new object is
@@ -31,33 +37,42 @@ class GhostPortalType(ERP5Base): #SimpleItem
   load, a portal type class does not use GhostPortalType in its __bases__
   anymore.
   """
-  def __init__(self, *args, **kw):
-    self.__class__.loadClass()
-    getattr(self, '__init__')(*args, **kw)
+  def __init__(cls, name, bases, dictionary):
+    super(GhostBaseMetaClass, cls).__init__(name, bases, dictionary)
 
-  def __getattribute__(self, attr):
-    """
-    This is only called once to load the class.
-    Because __bases__ is changed, the behavior of this object
-    will change after the first call.
-    """
-    # Class must be loaded if '__of__' is requested because otherwise,
-    # next call to __getattribute__ would lose any acquisition wrapper.
-    if attr in ('__class__',
-                '__getnewargs__',
-                '__getstate__',
-                '__dict__',
-                '__module__',
-                '__name__',
-                '__repr__',
-                '__str__') or attr[:3] in ('_p_', '_v_'):
-      return super(GhostPortalType, self).__getattribute__(attr)
-    #LOG("ERP5Type.Dynamic", BLATHER,
-    #    "loading attribute %s.%s..." % (name, attr))
-    self.__class__.loadClass()
-    return getattr(self, attr)
+    def __init__(self, *args, **kw):
+      self.__class__.loadClass()
+      getattr(self, '__init__')(*args, **kw)
 
-class PortalTypeMetaClass(ExtensionClass):
+    def __getattribute__(self, attr):
+      """
+      This is only called once to load the class.
+      Because __bases__ is changed, the behavior of this object
+      will change after the first call.
+      """
+      # Class must be loaded if '__of__' is requested because otherwise,
+      # next call to __getattribute__ would lose any acquisition wrapper.
+      if attr in ('__class__',
+                  '__getnewargs__',
+                  '__getstate__',
+                  '__dict__',
+                  '__module__',
+                  '__name__',
+                  '__repr__',
+                  '__str__') or attr[:3] in ('_p_', '_v_'):
+        return super(cls, self).__getattribute__(attr)
+      #LOG("ERP5Type.Dynamic", BLATHER,
+      #    "loading attribute %s.%s..." % (name, attr))
+      self.__class__.loadClass()
+      return getattr(self, attr)
+
+    cls.__getattribute__ = __getattribute__
+    cls.__init__ = __init__
+    cls.__doc__ = GhostBaseMetaClass.ghost_doc
+
+InitGhostBase = GhostBaseMetaClass('InitGhostBase', (ERP5Base,), {})
+
+class PortalTypeMetaClass(GhostBaseMetaClass):
   """
   Meta class that is used by portal type classes
 
@@ -79,7 +94,7 @@ class PortalTypeMetaClass(ExtensionClass):
         PortalTypeMetaClass.subclass_register.setdefault(parent, []).append(cls)
 
     cls.__ghostbase__ = None
-    super(PortalTypeMetaClass, cls).__init__(name, bases, dictionary)
+    super(GhostBaseMetaClass, cls).__init__(name, bases, dictionary)
 
   @classmethod
   def getSubclassList(metacls, cls):
@@ -124,7 +139,9 @@ class PortalTypeMetaClass(ExtensionClass):
                         '__ghostbase__',
                         'portal_type'):
           delattr(cls, attr)
-      cls.__bases__ = cls.__ghostbase__
+      # generate a ghostbase that derives from all previous bases
+      ghostbase = GhostBaseMetaClass('GhostBase', cls.__bases__, {})
+      cls.__bases__ = (ghostbase,)
       cls.__ghostbase__ = None
       cls.resetAcquisitionAndSecurity()
 
@@ -193,4 +210,4 @@ class PortalTypeMetaClass(ExtensionClass):
       ERP5Base.aq_method_lock.release()
 
 def generateLazyPortalTypeClass(portal_type_name):
-  return PortalTypeMetaClass(portal_type_name, (GhostPortalType,), {})
+  return PortalTypeMetaClass(portal_type_name, (InitGhostBase,), {})
