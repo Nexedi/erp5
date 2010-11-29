@@ -95,6 +95,7 @@
                         <string>listbox_quantity_unit</string>
                         <string>matrixbox_quantity</string>
                         <string>listbox_variation_category_list</string>
+                        <string>listbox_resource</string>
                       </list>
                     </value>
                 </item>
