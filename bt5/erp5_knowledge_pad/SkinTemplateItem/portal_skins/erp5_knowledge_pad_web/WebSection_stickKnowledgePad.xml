@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -82,11 +79,6 @@ url = "%s?portal_status_message=%s&active_pad_url=%s"   %(cancel_url, \n
          context.Base_translateString(\'Sticked.\'), \n
          new_knowledge_pad.getRelativeUrl())\n
 context.REQUEST.RESPONSE.redirect(url)\n
-#context.Base_redirect(cancel_url,\n
-#                     keep_items= {\'active_pad_url\':\n
-#                                    new_knowledge_pad.getRelativeUrl(),\n
-#                                  \'portal_status_message\': \n
-#                                    context.Base_translateString(\'Sticked.\')})\n
 
 
 ]]></string> </value>

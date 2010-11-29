@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -55,7 +52,7 @@
             <key> <string>_body</string> </key>
             <value> <string>"""\n
   Can user add a gadget on context. \n
-  This script is usefull to determine if respective "Add gadget" link should be show.\n
+  This script is useful to determine if respective "Add gadget" link should be show.\n
 """\n
 request = context.REQUEST\n
 portal = context.getPortalObject()\n
@@ -66,7 +63,6 @@ if portal.portal_membership.isAnonymousUser() or \\\n
   list_mode == True or \\\n
   dialog_mode == True:\n
   return False\n
-\n
 return True\n
 </string> </value>
         </item>

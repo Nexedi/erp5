@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="Folder" module="OFS.Folder"/>
-        <tuple/>
-      </tuple>
+      <global name="Folder" module="OFS.Folder"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -21,7 +18,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Gadgets for ERP5 Web Mode</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -54,9 +51,6 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>toggable_pad = None\n
-method_mapping = {\'erp5_front\': \'view\',\n
-                  \'web_front\': \'view\',\n
-                  \'web_section\': \'view\'}\n
 all_knowledge_pads = context.ERP5Site_getKnowledgePadListForUser(mode=mode)\n
 if isinstance(knowledge_pad_url, basestring):\n
   toggable_pad = context.restrictedTraverse(knowledge_pad_url)\n
@@ -71,7 +65,7 @@ if toggable_pad is not None:\n
     if pad.getObject()!=toggable_pad and pad.getValidationState()==\'visible\':\n
       pad.invisible()\n
 if redirect:\n
-  context.Base_redirect(method_mapping.get(mode, \'view\'))\n
+  context.Base_redirect(\'view\')\n
 </string> </value>
         </item>
         <item>
@@ -113,7 +107,6 @@ if redirect:\n
                             <string>redirect</string>
                             <string>None</string>
                             <string>toggable_pad</string>
-                            <string>method_mapping</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>all_knowledge_pads</string>
