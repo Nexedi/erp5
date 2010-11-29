@@ -1896,8 +1896,12 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
         else:
           portal_type = klass.__name__
         depend = path_dict.get(portal_type)
-        # Prevent infinite recursion
-        assert depend != path
+        # Prevent infinite recursion for 'portal_types/Base Type',
+        # only relevant with Portal Types classes because 'Base Type'
+        # is an 'erp5.portal_type.Base Type' class
+        if depend == path:
+          assert depend == 'portal_types/Base Type'
+          return 0, path
         cache[path] = score = depend and 1 + solveDependency(depend)[0] or 0
       return score, path
     PersistentMigrationMixin._no_migration += 1
