@@ -734,6 +734,9 @@ def writeLocalExtension(class_id, text, create=1, instance_home=None):
   if instance_home is None:
     instance_home = getConfiguration().instancehome
   path = os.path.join(instance_home, "Extensions")
+  if not os.path.exists(path):
+    os.mkdir(path)
+    LOG('ERP5Type', WARNING, 'Created missing but required directory: %s' %path)
   path = os.path.join(path, "%s.py" % class_id)
   if create:
     if os.path.exists(path):
