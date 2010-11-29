@@ -618,11 +618,41 @@ class TestPreferences(PropertySheetTestCase):
         portal_preferences.getDummystring())
 
   def test_system_preference_value_prefererred_clear_cache_disabled(self):
+    default_preference_string = 'Default Name'
+    normal_preference_string = 'Normal Preference'
+    system_preference_string = 'System Preference'
+    self._addPropertySheet('Preference', 'DummySystemPreference',
+        '''class DummySystemPreference:
+             _properties= ( {'id': 'dummystring',
+                             'default': '%s',
+                             'preference': True,
+                             'type': 'string',},)''' % default_preference_string)
+    portal_preferences = self.portal.portal_preferences
+    self.assertEqual(default_preference_string,
+        portal_preferences.getDummystring())
+
+    preference = portal_preferences.newContent(portal_type='Preference',
+                                               dummystring=normal_preference_string,
+                                               priority=Priority.SITE)
+    preference.enable()
+    transaction.commit()
+    self.tic()
+
+    self.assertEqual(normal_preference_string,
+        portal_preferences.getDummystring())
+
     # simulate situation when _clearCache does nothing, for example in case
     # if memcached or any other non-deleteable cache is used
     from Products.ERP5Form.Document.Preference import Preference
     Preference._clearCache = lambda *args,**kwargs: None
-    self.test_system_preference_value_prefererred()
+    system_preference = portal_preferences.newContent(portal_type='System Preference',
+                                               dummystring=system_preference_string)
+    system_preference.enable()
+    transaction.commit()
+    self.tic()
+
+    self.assertEqual(system_preference_string,
+        portal_preferences.getDummystring())
 
 def test_suite():
   suite = unittest.TestSuite()
