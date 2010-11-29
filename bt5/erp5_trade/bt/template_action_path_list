@@ -20,6 +20,7 @@ Internal Order | fast_input
 Internal Order | fast_input_update
 Internal Order | jump_to_related_internal_packing_list
 Internal Order | order_print
+Internal Order | profile_view
 Internal Order | view
 Internal Order | view_stock
 Internal Packing List Cell | view
