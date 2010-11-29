@@ -79,6 +79,38 @@ selection_tool.updateSelectionCheckedUidList(\n
     list_selection_name, uids=uids, listbox_uid=listbox_uid, REQUEST=None)\n
 uids = selection_tool.getSelectionCheckedUidsFor(list_selection_name)\n
 \n
+resource_uid_list = []\n
+message = None\n
+if not context.getResource():\n
+  # Delivery line doesn\'t have resource defined yet.\n
+  # Iterate over all selected items then check if they all\n
+  # share the same resource. If not return to the dialog with warning message\n
+  # otherwise edit the Delivery Line (context) with resource of all items.\n
+  for item_uid in uids:\n
+    item = getObject(item_uid)\n
+    resource_item = item.Item_getResourceValue()\n
+    if resource_item is None:\n
+      message = portal.Base_translateString(\'Selected ${translated_portal_type} has no resource defined\',\n
+                                            mapping={\'translated_portal_type\': item.getTranslatedPortalType().lower()})\n
+      break\n
+    if not resource_uid_list:\n
+      # first item\n
+      resource_uid_list.append(resource_item.getUid())\n
+    elif resource_item.getUid() not in resource_uid_list:\n
+      message = portal.Base_translateString(\'Selected ${translated_portal_type} does not share the same resource\',\n
+                                            mapping={\'translated_portal_type\': item.getTranslatedPortalType().lower()})\n
+      break\n
+  if resource_uid_list and not message:\n
+    # set resource on Delivery Line\n
+    context.setResourceUid(resource_uid_list[0])\n
+if message:\n
+  # means that resource consistency fails.\n
+  # One of Items does not have resource or Items does not share same resource\n
+  # Script stop here\n
+  context.Base_updateDialogForm(listbox=listbox,update=1, kw=kw)\n
+  REQUEST = portal.REQUEST\n
+  REQUEST.set(\'portal_status_message\', message)\n
+  return getattr(context, REQUEST.form[\'dialog_id\'])(listbox=listbox, kw=kw)\n
 \n
 for item_uid in uids:\n
   item = getObject(item_uid)\n
@@ -193,9 +225,15 @@ return context.Base_redirect(form_id, keep_items=dict(\n
                             <string>cell_portal_type</string>
                             <string>NotImplementedError</string>
                             <string>None</string>
+                            <string>resource_uid_list</string>
+                            <string>message</string>
                             <string>_getiter_</string>
                             <string>item_uid</string>
                             <string>item</string>
+                            <string>resource_item</string>
+                            <string>_getitem_</string>
+                            <string>REQUEST</string>
+                            <string>getattr</string>
                             <string>item_variation</string>
                             <string>cell_found</string>
                             <string>cell</string>
