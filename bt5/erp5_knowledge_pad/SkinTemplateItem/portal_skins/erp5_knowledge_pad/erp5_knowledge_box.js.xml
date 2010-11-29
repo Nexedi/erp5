@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts90516068.0</string> </value>
+            <value> <string>ts91031570.14</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -254,8 +254,19 @@ function addBoxToServer(url, dom_id, gadget_relative_url){\n
     button.disabled = true;}\n
 }\n
 \n
+function showAddNewPadPopup(popup_id, input_id){\n
+  toggleElementById(\'add_new_tab_dialog\'); \n
+//   MochiKit.DOM.getElement(\'new_pad_title\').focus();\n
+}\n
+\n
+function addPadOnServerOnEnter(event, create_url, mode, cancel_url){\n
+  /* Catch and submit form when ENTER is pressed */\n
+  if(event.keyCode == 13){\n
+    addPadOnServer(create_url, mode, cancel_url);\n
+  }\n
+}\n
+\n
 function addPadOnServer(create_url,\n
-                        base_path,\n
                         mode,\n
                         cancel_url){\n
   /* add pad on server and set cookie as its relative url this way we \n
@@ -406,7 +417,7 @@ MochiKit.DOM.addLoadEvent(initialize);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>15081</int> </value>
+            <value> <int>15402</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

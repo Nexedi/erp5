@@ -107,31 +107,19 @@
       class="toggable_dialog">\n
     <h3 i18n:translate="" i18n:domain="ui"> Add new tab </h3>\n
       <span i18n:translate="" i18n:domain="ui">Tab name</span>: \n
-      <input type="text" value="" name="pad_title" id="new_pad_title"/><br/><br/>\n
+      <input type="text" \n
+             value="" \n
+             name="pad_title" \n
+             id="new_pad_title"\n
+             tal:attributes="onkeypress string:addPadOnServerOnEnter(event, \'ERP5Site_addNewKnowledgePad\', \'${mode}\', \'view\')"/>\n
+      <br/>\n
+      <br/>\n
       <button type="button"\n
               onclick="toggleElementById(\'add_new_tab_dialog\');"\n
               i18n:translate="" \n
               i18n:domain="ui">Cancel</button>\n
       <button type="button"\n
-              tal:condition="python: mode==\'erp5_front\'"\n
-              tal:attributes="onclick python: \n
-              \'\'\'addPadOnServer(\'ERP5Site_addNewKnowledgePad\', \n
-                                \'/%s\', \'%s\',\n
-                                \'view\')\'\'\'\n
-                %(context.getPortalObject().getId(),\n
-                  mode)" \n
-              i18n:translate="" \n
-              i18n:domain="ui"\n
-              id="add_new_tab_dialog_add_button">Add</button>\n
-      <button type="button"\n
-              tal:condition="python: mode==\'web_front\'"\n
-              tal:attributes="onclick python: \n
-              \'\'\'addPadOnServer(\'ERP5Site_addNewKnowledgePad\', \n
-                                 \'/%s/%s\', \'%s\', \n
-                                 \'view\')\'\'\'\n
-                 %(context.getPortalObject().getId(), \n
-                   context.getRelativeUrl(),\n
-                   mode)" \n
+              tal:attributes="onclick string:addPadOnServer(\'ERP5Site_addNewKnowledgePad\', \'${mode}\', \'view\')" \n
               i18n:translate="" \n
               i18n:domain="ui"\n
               id="add_new_tab_dialog_add_button">Add</button>\n
@@ -245,7 +233,7 @@
                 </tal:block>\n
                 <li class="tab"\n
                     tal:condition="not: isKnowledgePadTemplateUsed"\n
-                    onclick="toggleElementById(\'add_new_tab_dialog\');"\n
+                    onclick="showAddNewPadPopup(\'add_new_tab_dialog\', \'new_pad_title\');"\n
                     i18n:translate="title" i18n:domain="ui"\n
                     title="Add new tab"\n
                     id="add_new_tab_dialog_link">Add tab</li>\n
