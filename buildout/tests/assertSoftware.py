@@ -2145,6 +2145,37 @@ class AssertGit(AssertSoftwareMixin):
       'zlib',
       ])
 
+class AssertGraphviz(AssertSoftwareMixin):
+  def test_ld_dot(self):
+    self.assertLibraryList('parts/graphviz/bin/dot', [
+      'libc',
+      'libcdt',
+      'libdl',
+      'libgraph',
+      'libgvc',
+      'libm',
+      'libpathplan',
+      'libxdot',
+      'libz',
+      ], [
+      'zlib',
+      'graphviz',
+      ])
+  def test_ld_libgvc(self):
+    self.assertLibraryList('parts/graphviz/lib/libgvc.so', [
+      'libc',
+      'libcdt',
+      'libdl',
+      'libgraph',
+      'libm',
+      'libpathplan',
+      'libxdot',
+      'libz',
+      ], [
+      'zlib',
+      'graphviz',
+      ])
+
 class AssertElfLinkedInternally(AssertSoftwareMixin):
   def test(self):
     result_dict = {}
