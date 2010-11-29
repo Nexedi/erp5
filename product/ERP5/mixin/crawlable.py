@@ -30,7 +30,7 @@
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Products.ERP5Type import Permissions
 
-class CrawableMixin:
+class CrawlableMixin:
   """
   Generic implementation of ICrawlable interface
   """

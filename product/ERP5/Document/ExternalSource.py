@@ -29,9 +29,9 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.Url import UrlMixIn
-from Products.ERP5.mixin.crawable import CrawableMixin
+from Products.ERP5.mixin.crawlable import CrawlableMixin
 
-class ExternalSource(XMLObject, UrlMixIn, CrawableMixin):
+class ExternalSource(XMLObject, UrlMixIn, CrawlableMixin):
   """
   An External Source consists of single URL which defines the
   root of a collection of documents, each of which can be accessed

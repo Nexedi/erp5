@@ -59,7 +59,7 @@ from Products.ERP5.mixin.text_convertable import TextConvertableMixin
 from Products.ERP5.mixin.downloadable import DownloadableMixin
 from Products.ERP5.mixin.document import DocumentMixin
 from Products.ERP5.mixin.extensible_traversable import DocumentExtensibleTraversableMixin
-from Products.ERP5.mixin.crawable import CrawableMixin
+from Products.ERP5.mixin.crawlable import CrawlableMixin
 
 _MARKER = []
 VALID_ORDER_KEY_LIST = ('user_login', 'content', 'file_name', 'input')
@@ -89,7 +89,7 @@ class NotConvertedError(Exception):pass
 allow_class(NotConvertedError)
 
 class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixIn, CachedConvertableMixin,
-               CrawableMixin, TextConvertableMixin, DownloadableMixin, DocumentMixin):
+               CrawlableMixin, TextConvertableMixin, DownloadableMixin, DocumentMixin):
   """Document is an abstract class with all methods related to document
   management in ERP5. This includes searchable text, explicit relations,
   implicit relations, metadata, versions, languages, etc.
