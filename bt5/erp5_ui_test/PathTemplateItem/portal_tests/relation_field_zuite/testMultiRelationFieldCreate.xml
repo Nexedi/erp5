@@ -110,7 +110,6 @@
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>field_my_successor_title</td>\n
   <td>field_my_bar_category_title_list</td>\n
   <td>A new foo<br/>Another new foo</td>\n
   <td></td>\n
@@ -125,7 +124,6 @@
 \n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>field_my_successor_title</td>\n
   <td>field_my_bar_category_title_list</td>\n
   <td>A new foo<br/>Another new foo</td>\n
   <td></td>\n
