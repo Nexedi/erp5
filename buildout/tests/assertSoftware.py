@@ -28,6 +28,7 @@
 
 import os
 import subprocess
+from glob import glob
 import unittest
 from distutils import util
 
@@ -1122,12 +1123,7 @@ class AssertCyrusSasl(AssertSoftwareMixin):
       ])
 
 class AssertPython26(AssertSoftwareMixin):
-  def test_ld_dyn_locale(self):
-    self.assertLibraryList('parts/python2.6/lib/python2.6/lib-dynload/_locale.so', [
-      'libc',
-      'libintl',
-      'libpthread',
-      ], [
+  rpath_list = [
       'bzip2',
       'gdbm',
       'gettext',
@@ -1137,7 +1133,49 @@ class AssertPython26(AssertSoftwareMixin):
       'readline',
       'sqlite3',
       'zlib',
-      ])
+      ]
+  def test_ld_dyn_bsddb(self):
+    self.assertLibraryList('parts/python2.6/lib/python2.6/lib-dynload/_bsddb.so', [
+      'libc',
+      'libdb-4.5',
+      'libpthread',
+      ], self.rpath_list)
+  def test_ld_dyn_dbm(self):
+    self.assertLibraryList('parts/python2.6/lib/python2.6/lib-dynload/dbm.so', [
+      'libc',
+      'libgdbm',
+      'libgdbm_compat',
+      'libpthread',
+      ], self.rpath_list)
+  def test_ld_dyn_locale(self):
+    self.assertLibraryList('parts/python2.6/lib/python2.6/lib-dynload/_locale.so', [
+      'libc',
+      'libintl',
+      'libpthread',
+      ], self.rpath_list)
+  def test_ld_dyn_readline(self):
+    self.assertLibraryList('parts/python2.6/lib/python2.6/lib-dynload/readline.so', [
+      'libc',
+      'libncursesw',
+      'libreadline',
+      'libpthread',
+      ], self.rpath_list)
+  def test_ld_dyn_sqlite3(self):
+    self.assertLibraryList('parts/python2.6/lib/python2.6/lib-dynload/_sqlite3.so', [
+      'libc',
+      'libsqlite3',
+      'libpthread',
+      ], self.rpath_list)
+  def test_ld_dyn_ssl(self):
+    self.assertLibraryList('parts/python2.6/lib/python2.6/lib-dynload/_ssl.so', [
+      'libc',
+      'libssl',
+      'libcrypto',
+      'libpthread',
+      ], self.rpath_list)
+  def test_no_failed_ext_lib(self):
+    self.assertEquals([],
+                      glob('parts/python2.6/lib/python2.6/lib-dynload/*_failed.so'))
 
 class AssertGettext(AssertSoftwareMixin):
   def test_ld_libintl(self):
