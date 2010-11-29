@@ -80,6 +80,7 @@
                 <string>Dynamic Category Property</string>
                 <string>Property Existence Constraint</string>
                 <string>Standard Property</string>
+                <string>TALES Constraint</string>
               </list>
             </value>
         </item>
