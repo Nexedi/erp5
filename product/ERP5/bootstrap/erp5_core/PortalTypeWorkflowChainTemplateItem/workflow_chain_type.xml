@@ -44,6 +44,10 @@
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
+  <type>Category Related Membership Arity Constraint</type>
+  <workflow>dynamic_class_generation_interaction_workflow</workflow>
+ </chain>
+ <chain>
   <type>Category Tool</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>

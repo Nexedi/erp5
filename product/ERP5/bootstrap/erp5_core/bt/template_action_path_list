@@ -41,6 +41,8 @@ Category Existence Constraint | view
 Category Membership Arity Constraint | predicate
 Category Membership Arity Constraint | view
 Category Property | view
+Category Related Membership Arity Constraint | predicate
+Category Related Membership Arity Constraint | view
 Category Tool | export_category_list
 Category Tool | fast_input
 Category Tool | view

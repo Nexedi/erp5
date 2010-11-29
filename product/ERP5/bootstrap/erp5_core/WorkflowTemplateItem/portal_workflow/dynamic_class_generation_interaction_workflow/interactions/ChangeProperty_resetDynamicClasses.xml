@@ -75,6 +75,7 @@
                 <string>Category Existence Constraint</string>
                 <string>Category Membership Arity Constraint</string>
                 <string>Category Property</string>
+                <string>Category Related Membership Arity Constraint</string>
                 <string>Content Existence Constraint</string>
                 <string>Dynamic Category Property</string>
                 <string>Property Existence Constraint</string>
