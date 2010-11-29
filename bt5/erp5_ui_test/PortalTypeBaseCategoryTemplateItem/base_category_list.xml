@@ -3,6 +3,7 @@
   <item>bar_category</item>
   <item>foo_big_category</item>
   <item>foo_category</item>
+  <item>successor</item>
  </portal_type>
  <portal_type id="Foo Bar Module">
   <item>business_application</item>
