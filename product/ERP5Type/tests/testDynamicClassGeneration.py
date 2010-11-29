@@ -436,6 +436,20 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
       constraint_portal_type=('Test Migration',),
       constraint_base_category=(reference,))
 
+  def _newCategoryRelatedMembershipArityConstraint(self):
+    """
+    Create a new Category Related Membership Arity Constraint within
+    test Property Sheet, using an existing Base Category because
+    creating a new Base Category would involve clearing up the cache
+    """
+    self.test_property_sheet.newContent(
+      reference='test_category_related_membership_arity_constraint',
+      portal_type='Category Related Membership Arity Constraint',
+      min_arity=1,
+      max_arity=1,
+      constraint_portal_type=('Test Migration',),
+      constraint_base_category=('gender',))
+
   def afterSetUp(self):
     """
     Create a test Property Sheet (and its properties)
@@ -482,6 +496,10 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
         'test_category_acquired_membership_arity_constraint',
         'Category Acquired Membership Arity Constraint')
 
+      # Create a Category Related Membership Arity Constraint in the
+      # test Property Sheet
+      self._newCategoryRelatedMembershipArityConstraint()
+
       # Create all the test Properties
       for operation_type in ('change', 'delete', 'assign'):
         self._newStandardProperty(operation_type)
@@ -524,11 +542,6 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
 
     # Ensure that erp5.acessor_holder is empty
     synchronizeDynamicModules(portal, force=True)
-
-    # Make sure there is no pending transaction which could interfere
-    # with the tests
-    transaction.commit()
-    self.tic()
 
   def _forceTestAccessorHolderGeneration(self):
     """
@@ -931,11 +944,33 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     Take the test module and check whether the Category Acquired
     Membership Arity Constraint is there. Until a Base Category is set
     on the Test Module, the constraint should fail
+
+    XXX: Test with acquisition?
     """
     self._checkConstraint(
       'test_category_acquired_membership_arity_constraint',
       self.test_module.setCategoryList,
       ('test_category_acquired_membership_arity_constraint/Test Migration',))
+
+  def testCategoryRelatedMembershipArityConstraint(self):
+    """
+    Take the test module and check whether the Category Related
+    Membership Arity Constraint is there. Until a Base Category is set
+    on the Test Module, the constraint should fail
+
+    XXX: Test filter_parameter
+    """
+    constraint = self._getConstraintByReference(
+      'test_category_related_membership_arity_constraint')
+
+    self.failIfEqual(None, constraint)
+    self.assertEquals(1, len(constraint.checkConsistency(self.test_module)))
+
+    self.test_module.setCategoryList(('gender/Test Migration',))
+    transaction.commit()
+    self.tic()
+
+    self.assertEquals([], constraint.checkConsistency(self.test_module))
 
 TestZodbPropertySheet = skip("ZODB Property Sheets code is not enabled yet")(
   TestZodbPropertySheet)

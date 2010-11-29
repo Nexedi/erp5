@@ -22,3 +22,5 @@ from PropertyExistenceConstraint import PropertyExistenceConstraint
 from AttributeEqualityConstraint import AttributeEqualityConstraint
 from ContentExistenceConstraint import ContentExistenceConstraint
 from CategoryMembershipArityConstraint import CategoryMembershipArityConstraint
+from CategoryRelatedMembershipArityConstraint import \
+     CategoryRelatedMembershipArityConstraint
