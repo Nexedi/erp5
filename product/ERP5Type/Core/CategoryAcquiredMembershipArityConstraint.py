@@ -54,4 +54,4 @@ class CategoryAcquiredMembershipArityConstraint(CategoryMembershipArityConstrain
 
   def _calculateArity(self, obj, base_category_list, portal_type_list):
     return len(obj.getAcquiredCategoryMembershipList(
-      base_category, portal_type=portal_type))
+      base_category_list, portal_type=portal_type_list))
