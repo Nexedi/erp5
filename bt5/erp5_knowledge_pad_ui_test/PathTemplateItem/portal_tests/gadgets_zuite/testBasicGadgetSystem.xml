@@ -86,7 +86,35 @@
   <td>Add gadgets</td>\n
   <td></td>\n
 </tr>\n
-<!-- check adding gadgets -->\n
+<!-- check adding gadgets by pressing enter -->\n
+<tr>\n
+  <td>click</td>\n
+  <td>add_new_tab_dialog_link</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>new_pad_title</td>\n
+  <td>test tab ENTER</td>\n
+</tr>\n
+<tr>\n
+  <td>keyPressAndWait</td>\n
+  <td>new_pad_title</td>\n
+  <td>\\13</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>test tab ENTER</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<!-- check adding gadgets  By clicking -->\n
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities"> Wait for activities</span>\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/view</td>\n
+  <td></td>\n
+</tr>\n
 <tr>\n
   <td>click</td>\n
   <td>add_new_tab_dialog_link</td>\n
