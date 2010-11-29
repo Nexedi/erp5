@@ -59,7 +59,7 @@
         </item>
         <item>
             <key> <string>type_class</string> </key>
-            <value> <string>CategoryMembershipArityConstraint</string> </value>
+            <value> <string>CategoryAcquiredMembershipArityConstraint</string> </value>
         </item>
         <item>
             <key> <string>type_interface</string> </key>
