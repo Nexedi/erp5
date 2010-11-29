@@ -241,7 +241,7 @@ or through an alarm to "accept" created Credential Request. -->\n
 </tr>\n
 <tr>\n
 \t<td>type</td>\n
-\t<td>password</td>\n
+\t<td>__ac_password</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
