@@ -83,6 +83,7 @@
                 <string>Resource Measures Consistency Constraint</string>
                 <string>Standard Property</string>
                 <string>TALES Constraint</string>
+                <string>Trade Model Line Cell Consistency Constraint</string>
               </list>
             </value>
         </item>
