@@ -40,46 +40,51 @@
      tal:define="layout here/KnowledgePad_getBoxColumnLayout;\n
                  real_context python: options.get(\'real_context\', None);\n
                  cancel_url python: options.get(\'cancel_url\', None);\n
+                 isAnon python: here.portal_membership.isAnonymousUser();\n
                  is_tab_empty python: (len(layout)==1 and len(layout[0])==0) or\n
                                      (len(layout)==3 and len(layout[0]+layout[1]+layout[2])==0);\n
-                 page_wrapper_id python:  options.get(\'page_wrapper_id\', \'page_wrapper\');"\n
+                 page_wrapper_id python:  options.get(\'page_wrapper_id\', \'page_wrapper\');\n
+                 columns python: options.get(\'columns\', 3);\n
+                 column_css_class python: test(isAnon, \n
+                                            \'portal-column portal-column-undraggable\', \n
+                                            \'portal-column\');"\n
      tal:attributes="id page_wrapper_id">\n
 \n
     <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/add_new_gadget_message"/> \n
 \n
-    <table id="table_column_layout">\n
-    <tr>\n
-      <td>\n
-        <div class="portal-column" id="portal-column-0">\n
-          <tal:block tal:condition="python: len(layout)>=1">\n
-            <span tal:replace="structure python: here.KnowledgePad_viewColumnWidget(section_layout=layout[0],\n
-                                               real_context=real_context,\n
-                                               cancel_url=cancel_url)"/>\n
-          </tal:block> \n
-        </div>\n
-      </td>\n
+    <div id="portal-column-0"\n
+         tal:attributes="class column_css_class"\n
+         tal:condition="python: columns>=1">\n
 \n
-      <td>\n
-        <div class="portal-column" id="portal-column-1">\n
-          <tal:block tal:condition="python: len(layout)>=2">\n
-            <span tal:replace="structure python: here.KnowledgePad_viewColumnWidget(section_layout=layout[1],\n
-                                               real_context=real_context,\n
-                                               cancel_url=cancel_url)"/>\n
-          </tal:block>\n
-        </div>\n
-      </td>\n
+      <tal:block tal:condition="python: len(layout)>=1">\n
+        <span tal:replace="structure python:\n
+                             here.KnowledgePad_viewColumnWidget(section_layout=layout[0],\n
+                                                                real_context=real_context,\n
+                                                                cancel_url=cancel_url)"/>\n
+      </tal:block> \n
+    </div>\n
 \n
-    <td>\n
-      <div class="portal-column" id="portal-column-2">\n
-        <tal:block tal:condition="python: len(layout)>=3">\n
-          <span tal:replace="structure python: here.KnowledgePad_viewColumnWidget(section_layout=layout[2],\n
-                                             real_context=real_context,\n
-                                             cancel_url=cancel_url)"/>\n
-        </tal:block>\n
-      </div>\n
-    </td>\n
-    </tr>\n
-    </table>\n
+    <div id="portal-column-1"\n
+         tal:attributes="class column_css_class"\n
+         tal:condition="python: columns>=2">\n
+      <tal:block tal:condition="python: len(layout)>=2">\n
+        <span tal:replace="structure python:\n
+                          here.KnowledgePad_viewColumnWidget(section_layout=layout[1],\n
+                                                             real_context=real_context,\n
+                                                             cancel_url=cancel_url)"/>\n
+      </tal:block>\n
+    </div>\n
+\n
+    <div id="portal-column-2"\n
+         tal:attributes="class column_css_class"\n
+         tal:condition="python: columns>=3">\n
+      <tal:block tal:condition="python: len(layout)>=3">\n
+        <span tal:replace="structure python:\n
+                          here.KnowledgePad_viewColumnWidget(section_layout=layout[2],\n
+                                                             real_context=real_context,\n
+                                                             cancel_url=cancel_url)"/>\n
+      </tal:block>\n
+    </div>\n
 \n
 </div>\n
 

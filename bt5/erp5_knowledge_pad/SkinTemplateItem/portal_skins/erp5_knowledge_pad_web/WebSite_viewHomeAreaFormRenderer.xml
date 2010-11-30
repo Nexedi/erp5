@@ -73,7 +73,7 @@
           Dialogs</span>\n
       </tal:block>\n
       <div tal:condition="active_knowledge_pad"\n
-          tal:content="structure python: active_knowledge_pad.WebSection_viewDashboardWidget(columns=columns,\n
+          tal:content="structure python: active_knowledge_pad.KnowledgePad_viewDashboardWidget(columns=columns,\n
                                                               real_context=here,\n
                                                               cancel_url=cancel_url)"/> \n
     </tal:block>\n
