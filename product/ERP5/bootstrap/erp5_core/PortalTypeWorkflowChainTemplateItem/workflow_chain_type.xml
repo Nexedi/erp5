@@ -123,4 +123,8 @@
   <type>Transaction Quantity Value Feasability Constraint</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
+ <chain>
+  <type>Transaction Quantity Value Validity Constraint</type>
+  <workflow>dynamic_class_generation_interaction_workflow</workflow>
+ </chain>
 </workflow_chain>

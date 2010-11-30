@@ -1,4 +1,7 @@
 2010-11-30 arnaud.fontaine
+* Add Transaction Quantity Value Validity Constraint portal type and its view for ZODB Property Sheets.
+
+2010-11-30 arnaud.fontaine
 * Add Transaction Quantity Value Feasability Constraint portal type and its view.
 
 2010-11-30 arnaud.fontaine
