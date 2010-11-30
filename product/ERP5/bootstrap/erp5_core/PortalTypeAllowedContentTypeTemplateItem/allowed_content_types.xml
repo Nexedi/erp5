@@ -53,6 +53,7 @@
   <item>System Preference</item>
  </portal_type>
  <portal_type id="Property Sheet">
+  <item>Accounting Transaction Balance Constraint</item>
   <item>Acquired Property</item>
   <item>Attribute Equality Constraint</item>
   <item>Category Acquired Membership Arity Constraint</item>

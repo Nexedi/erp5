@@ -22,6 +22,7 @@ Memcached Tool | Memcached Plugin
 Preference Tool | Preference
 Preference Tool | System Preference
 Property Sheet Tool | Property Sheet
+Property Sheet | Accounting Transaction Balance Constraint
 Property Sheet | Acquired Property
 Property Sheet | Attribute Equality Constraint
 Property Sheet | Category Acquired Membership Arity Constraint

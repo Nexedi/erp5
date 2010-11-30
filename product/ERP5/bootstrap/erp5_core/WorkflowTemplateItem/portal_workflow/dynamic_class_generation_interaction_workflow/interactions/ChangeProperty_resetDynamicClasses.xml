@@ -68,6 +68,7 @@
             <key> <string>portal_type_filter</string> </key>
             <value>
               <list>
+                <string>AccountingTransactionBalanceConstraint</string>
                 <string>Acquired Property</string>
                 <string>Attribute Equality Constraint</string>
                 <string>Base Category</string>
