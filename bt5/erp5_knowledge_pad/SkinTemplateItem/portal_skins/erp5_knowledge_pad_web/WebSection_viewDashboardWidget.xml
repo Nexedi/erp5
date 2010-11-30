@@ -48,13 +48,7 @@
                                             \'portal-column portal-column-undraggable\', \n
                                             \'portal-column\')">\n
 \n
-    <div tal:condition="python: is_tab_empty and not isAnon">\n
-      <h4 i18n:translate="" \n
-          i18n:domain="ui"> Your tab is empty.</h4>\n
-      <p  i18n:translate="" \n
-          i18n:domain="ui"> Please  use link (<b>Add gadgets</b>) to prepare it yourself.\n
-      </p>\n
-    </div>\n
+    <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/add_new_gadget_message"/> \n
 \n
     <div id="portal-column-0"\n
          tal:attributes="class column_css_class"\n

@@ -44,16 +44,8 @@
                                      (len(layout)==3 and len(layout[0]+layout[1]+layout[2])==0);\n
                  page_wrapper_id python:  options.get(\'page_wrapper_id\', \'page_wrapper\');"\n
      tal:attributes="id page_wrapper_id">\n
-    <div tal:condition="is_tab_empty">\n
-      <h3 i18n:translate="" \n
-          i18n:domain="ui"> \n
-        Your tab is empty.\n
-      </h3>\n
-      <h4 i18n:translate="" \n
-          i18n:domain="ui"> \n
-        Please  use link above (\'Add gadget\') to prepare it yourself.\n
-      </h4>\n
-    </div>\n
+\n
+    <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/add_new_gadget_message"/> \n
 \n
     <table id="table_column_layout">\n
     <tr>\n
