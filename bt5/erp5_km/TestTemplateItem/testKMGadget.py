@@ -214,7 +214,7 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
                         mode='web_section',
                         default_pad_group = pad_group)
     base_websection_pad, websection_pads = \
-             websection.WebSite_getActiveKnowledgePadForUser(websection_pads,
+             websection.ERP5Site_getActiveKnowledgePadForUser(websection_pads,
                                                              default_pad_group = pad_group)
    
     # Check stick
@@ -225,7 +225,7 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
                         mode='web_section',
                         default_pad_group = pad_group)
     current_websection_pad, websection_pads = \
-             websection.WebSite_getActiveKnowledgePadForUser(websection_pads,
+             websection.ERP5Site_getActiveKnowledgePadForUser(websection_pads,
                                                              default_pad_group = pad_group)
     self.assertNotEqual(base_websection_pad.getObject(),
                      current_websection_pad.getObject())
@@ -237,7 +237,7 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
                         mode='web_section',
                         default_pad_group = pad_group)
     current_websection_pad, websection_pads = \
-             websection.WebSite_getActiveKnowledgePadForUser(websection_pads,
+             websection.ERP5Site_getActiveKnowledgePadForUser(websection_pads,
                                                              default_pad_group = pad_group)
     self.assertEqual(base_websection_pad.getObject(),
                      current_websection_pad.getObject())
