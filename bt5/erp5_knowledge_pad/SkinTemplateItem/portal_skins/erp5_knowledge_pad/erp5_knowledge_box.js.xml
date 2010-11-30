@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts91040808.94</string> </value>
+            <value> <string>ts91117034.62</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -151,7 +151,7 @@ function createDefaultPadOnServer(timeout, create_url,\n
             \'mode\': mode});\n
   d.addCallbacks(handleServerSuccess, handleServerError);\n
   function handleServerSuccess(res){\n
-      checkForActivitiesOnServer(timeout, return_url);};\n
+      checkForActivitiesOnServer(timeout, return_url, mode, default_pad_group);};\n
 };\n
 \n
 // This function can be used to submit gadget preferences form whenever\n
@@ -433,7 +433,7 @@ MochiKit.DOM.addLoadEvent(initialize);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>15973</int> </value>
+            <value> <int>15998</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

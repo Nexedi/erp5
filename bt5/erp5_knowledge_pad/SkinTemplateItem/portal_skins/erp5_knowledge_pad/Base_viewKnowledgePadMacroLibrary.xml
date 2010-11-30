@@ -277,8 +277,41 @@
         Please  use link (<b>Add gadgets</b>) to prepare it yourself.\n
     </h4>\n
   </div>\n
+</tal:block>\n
 \n
-</tal:block>
+\n
+<tal:block metal:define-macro="create_default_pad">\n
+  <!-- Create (asynch) default pad. -->\n
+  <div tal:condition="python: not waitForActivitiesOnServer and \n
+                              isUserAllowedToCreateKnowledgePads and\n
+                              createDefaultPadForUser">\n
+    <div class="wait_block">\n
+      <h2 i18n:translate="" i18n:domain="ui"> \n
+        Please wait until your tab is being prepared.\n
+      </h2>\n
+      <p i18n:translate="" i18n:domain="ui"> You\'ll be automatically redirected.</p>\n
+      <script type="text/javascript"\n
+              tal:content="string: createDefaultPadOnServer(5000, \'ERP5Site_createDefaultKnowledgePadListForUser\',\n
+                                                            \'${default_pad_group}\', \'view\', \'${mode}\');"/>\n
+      </div>\n
+  </div>\n
+</tal:block>\n
+\n
+\n
+<tal:block metal:define-macro="create_default_pad_started">\n
+\n
+  <!-- Show message that default pad is being prepared. -->\n
+  <div tal:condition="python: waitForActivitiesOnServer and isUserAllowedToCreateKnowledgePads">\n
+    <div class="wait_block">\n
+      <h2 i18n:translate="" i18n:domain="ui"> \n
+        Please wait until your home is being updated.</h2>\n
+      <p i18n:translate="" i18n:domain="ui"> You\'ll be automatically redirected.</p>\n
+      <script type="text/javascript" \n
+              tal:content="string: checkForActivitiesOnServer(5000, \'view\', \'${mode}\', \'\');"/>\n
+      </div>\n
+  </div>\n
+</tal:block>\n
+
 
 ]]></unicode> </value>
         </item>

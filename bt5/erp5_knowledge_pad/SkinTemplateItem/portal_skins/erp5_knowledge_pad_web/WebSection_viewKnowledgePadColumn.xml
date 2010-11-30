@@ -39,22 +39,17 @@
 <tal:block \n
   tal:define="mode python: options.get(\'mode\', \'web_section\');\n
               default_pad_group python: options.get(\'default_pad_group\', None);\n
+              kw python: dict(mode=mode, default_pad_group=default_pad_group);\n
               isAnonymousKnowledgePadUsed python: options.get(\'use_anonymous_knowledge_pad\', False);\n
               pad_column python: options.get(\'pad_column\', 0);\n
               create_default_pad python: options.get(\'create_default_pad\', False);\n
               make_security_check python: options.get(\'make_security_check\', False);\n
               dummy python: request.set(\'is_anonymous_knowledge_pad_used\', isAnonymousKnowledgePadUsed);\n
-              knowledge_pads python: here.ERP5Site_getKnowledgePadListForUser(\n
-                                            mode=mode,\n
-                                            default_pad_group=default_pad_group);\n
-              struct python:  here.ERP5Site_getActiveKnowledgePadForUser(knowledge_pads, \n
-                                                                        default_pad_group);\n
+              knowledge_pads python:  here.ERP5Site_getKnowledgePadListForUser(**kw);\n
+              struct python: here.ERP5Site_getActiveKnowledgePadForUser(knowledge_pads, **kw);\n
               active_knowledge_pad python: struct[0];\n
               knowledge_pads python: struct[1];\n
-              hasUserActivity python: here.ERP5Site_hasUserActivity(\n
-                                             active_knowledge_pad,\n
-                                             mode=mode,\n
-                                             default_pad_group=default_pad_group);\n
+              hasUserActivity python:  here.ERP5Site_hasUserActivity(active_knowledge_pad, **kw);\n
               isAnon python: context.portal_membership.isAnonymousUser();\n
               createDefaultPadForUser python: len(knowledge_pads)==0 and\n
                                               not hasUserActivity and create_default_pad;\n
@@ -76,7 +71,7 @@
                                       not waitForActivitiesOnServer and\n
                                       active_knowledge_pad is not None">\n
 \n
-      <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/disable_server_integration"> Disable slot</span>\n
+      <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/disable_server_integration"/>\n
 \n
       <div class="portal-column" \n
            tal:attributes="class python: test(isAnon or isAnonymousKnowledgePadUsed, \n
@@ -94,28 +89,8 @@
 \n
     </tal:block>\n
 \n
-    <div tal:condition="python: not (isAnon or isAnonymousKnowledgePadUsed) and\n
-                                createDefaultPadForUser and  \n
-                                isUserAllowedToCreateKnowledgePads">\n
-\n
-      <div class="wait_block">\n
-        <h6 i18n:translate="" i18n:domain="ui"> \n
-          Please wait until your area is being prepared.\n
-        </h6>\n
-        <p i18n:translate="" i18n:domain="ui"> \n
-          You\'ll be automatically redirected in few seconds.\n
-        </p>\n
-\n
-        <script type="text/javascript"\n
-          tal:content="structure python: \n
-          \'\'\'createDefaultPadOnServer(5000,\n
-          \'%s/ERP5Site_createDefaultKnowledgePadListForUser\', \n
-          \'%s\', \'%s/view\', \'%s\');\'\'\' \n
-           %(current_web_section_url, default_pad_group, current_web_section_url, mode)">\n
-        </script>\n
-      </div>\n
-\n
-    </div>\n
+    <!-- Create (asynch) default pad. -->\n
+    <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/create_default_pad"/>\n
 \n
      <tal:block tal:condition="make_security_check">\n
        <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/knowledge_pad_security_check"/>\n

@@ -52,7 +52,10 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+MARKER = (\'\', None,)\n
+visible_state_list = [\'visible\', \'public\']\n
 isAnon = context.portal_membership.isAnonymousUser()\n
+\n
 if isAnon and len(knowledge_pads)>=1:\n
   # for anonymous we return the first one found \n
   return knowledge_pads[0], knowledge_pads\n
@@ -61,7 +64,7 @@ if isAnon and len(knowledge_pads)>=1:\n
 active_pad, knowledge_pads = \\\n
     context.ERP5Site_getActiveKnowledgePadForUserFromRequest(knowledge_pads,\n
                                                              \'active_pad_url\')\n
-if active_pad is not None and active_pad.getValidationState() in (\'visible\', \'public\',):\n
+if active_pad is not None and active_pad.getValidationState() in visible_state_list:\n
   return active_pad, knowledge_pads\n
 \n
 # use info from REQUEST\n
@@ -73,47 +76,29 @@ if active_knowledge_pad is not None:\n
 \n
 # first filter if we have a custom Pad for the context\n
 for knowledge_pad in knowledge_pads:\n
-  if knowledge_pad.getPublicationSectionValue() == context and \\\n
-    knowledge_pad.getValidationState() in (\'visible\', \'public\',):\n
-    if (knowledge_pad.getPublicationSectionValue().getPortalType() == \'Web Site\' and \\\n
-            default_pad_group is None):\n
-      # return default active front page pad\n
+  pad_state = knowledge_pad.getValidationState()\n
+  publication_section = knowledge_pad.getPublicationSectionValue()\n
+  if publication_section == context and pad_state in visible_state_list:\n
+    if publication_section.getPortalType() == \'Web Site\' and default_pad_group in MARKER:\n
+      # ERP5 Web Site front gadget\n
       return knowledge_pad, knowledge_pads\n
-    elif (knowledge_pad.getPublicationSectionValue() == context and \\\n
-          knowledge_pad.getGroup() == default_pad_group):\n
+    elif publication_section == context and knowledge_pad.getGroup() == default_pad_group:\n
       # some Web Section can have a customized EXPLICILY "sticked" Pad\n
       return knowledge_pad, knowledge_pads\n
+  elif publication_section == None and default_pad_group in MARKER and pad_state in visible_state_list:\n
+    # ERP5 Site front gadget \n
+    \n
+    return knowledge_pad, knowledge_pads    \n
+\n
 \n
 # no customized version found for this context so\n
 # try finding pad by group\n
 for knowledge_pad in knowledge_pads:\n
   if knowledge_pad.getGroup() == default_pad_group and \\\n
-    knowledge_pad.getValidationState() in (\'visible\', \'public\',):\n
+    knowledge_pad.getValidationState() in visible_state_list:\n
     return knowledge_pad, knowledge_pads\n
 \n
 return None, knowledge_pads\n
-\n
-"""\n
-# REQUEST can be used to get active pad\n
-active_knowledge_pad, knowledge_pads = \\\n
-     context.ERP5Site_getActiveKnowledgePadForUserFromRequest(knowledge_pads,\n
-                                                             \'override_catalog\')\n
-if active_knowledge_pad is not None:\n
-  return active_knowledge_pad, knowledge_pads\n
-\n
-# get visible one\n
-for knowledge_pad in knowledge_pads:\n
-  if knowledge_pad.getValidationState() in (\'visible\', \'public\',):\n
-    active_knowledge_pad = knowledge_pad\n
-    break\n
-\n
-# REQUEST can be used to get active pad\n
-if active_knowledge_pad is None:\n
-  active_knowledge_pad, knowledge_pads = \\\n
-    context.ERP5Site_getActiveKnowledgePadForUserFromRequest(knowledge_pads,\n
-                                                             \'active_pad_url\')\n
-return active_knowledge_pad, knowledge_pads\n
-"""\n
 
 
 ]]></string> </value>
@@ -126,7 +111,7 @@ return active_knowledge_pad, knowledge_pads\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>knowledge_pads = [], default_pad_group=None</string> </value>
+            <value> <string>knowledge_pads = [], mode = None, default_pad_group=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -146,14 +131,18 @@ return active_knowledge_pad, knowledge_pads\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>knowledge_pads</string>
+                            <string>mode</string>
                             <string>default_pad_group</string>
+                            <string>None</string>
+                            <string>MARKER</string>
+                            <string>visible_state_list</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>isAnon</string>
@@ -161,9 +150,10 @@ return active_knowledge_pad, knowledge_pads\n
                             <string>_getitem_</string>
                             <string>_getiter_</string>
                             <string>active_pad</string>
-                            <string>None</string>
                             <string>active_knowledge_pad</string>
                             <string>knowledge_pad</string>
+                            <string>pad_state</string>
+                            <string>publication_section</string>
                           </tuple>
                         </value>
                     </item>
@@ -177,6 +167,7 @@ return active_knowledge_pad, knowledge_pads\n
             <value>
               <tuple>
                 <list/>
+                <none/>
                 <none/>
               </tuple>
             </value>

@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -57,9 +54,11 @@
 \n
 if active_knowledge_pad is None and js_call:\n
   # only for asynchronous checks\n
-  knowledge_pads = context.ERP5Site_getKnowledgePadListForUser(mode=mode)\n
-  active_knowledge_pad, knowledge_pads = \\\n
-       context.ERP5Site_getActiveKnowledgePadForUser(knowledge_pads)\n
+  kw = dict(mode=mode, \n
+            default_pad_group=default_pad_group)\n
+  knowledge_pads = context.ERP5Site_getKnowledgePadListForUser(**kw)\n
+  active_knowledge_pad, knowledge_pads = context.ERP5Site_getActiveKnowledgePadForUser(\n
+                                                   knowledge_pads, **kw)\n
 \n
 if active_knowledge_pad is None:\n
   # no pad but it may be reindexed in an activity now, check by tag\n
@@ -74,6 +73,7 @@ if active_knowledge_pad is None:\n
 \n
 # we have an active pad, check if it has pending activities\n
 is_pending_create_activities = active_knowledge_pad.hasActivity()\n
+\n
 if js_call:\n
   return str(is_pending_create_activities)\n
 return is_pending_create_activities\n
@@ -87,7 +87,7 @@ return is_pending_create_activities\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>active_knowledge_pad=None, mode=None, default_pad_group=\'\', js_call=0</string> </value>
+            <value> <string>active_knowledge_pad=None, mode=None, default_pad_group=None, js_call=0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -121,6 +121,9 @@ return is_pending_create_activities\n
                             <string>context</string>
                             <string>portal</string>
                             <string>None</string>
+                            <string>dict</string>
+                            <string>kw</string>
+                            <string>_apply_</string>
                             <string>knowledge_pads</string>
                             <string>_getiter_</string>
                             <string>tag</string>
@@ -140,7 +143,7 @@ return is_pending_create_activities\n
               <tuple>
                 <none/>
                 <none/>
-                <string></string>
+                <none/>
                 <int>0</int>
               </tuple>
             </value>
