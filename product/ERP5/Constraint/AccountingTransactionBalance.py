@@ -44,6 +44,9 @@ class AccountingTransactionBalance(Constraint):
   def checkConsistency(self, obj, fixit=0):
     """Implement here the consistency checker
     """
+    if not self._checkConstraintCondition(obj):
+      return []
+
     error_list = []
     source_sum = dict()
     destination_sum = dict()
