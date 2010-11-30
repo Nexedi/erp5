@@ -53,7 +53,7 @@
                 default_pad_group python: options.get(\'default_pad_group\', None);\n
                 knowledge_pads python: here.ERP5Site_getKnowledgePadListForUser(mode=mode,\n
                                                          default_pad_group=default_pad_group);\n
-                struct python: here.WebSite_getActiveKnowledgePadForUser(knowledge_pads, default_pad_group);\n
+                struct python: here.ERP5Site_getActiveKnowledgePadForUser(knowledge_pads, default_pad_group);\n
                 active_knowledge_pad python: struct[0];\n
                 current_web_section python:\n
                     context.REQUEST.get(\'current_web_section\', here);\n
