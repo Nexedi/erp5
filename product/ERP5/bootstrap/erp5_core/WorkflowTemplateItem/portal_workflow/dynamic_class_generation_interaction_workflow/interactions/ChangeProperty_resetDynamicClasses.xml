@@ -68,7 +68,7 @@
             <key> <string>portal_type_filter</string> </key>
             <value>
               <list>
-                <string>AccountingTransactionBalanceConstraint</string>
+                <string>Accounting Transaction Balance Constraint</string>
                 <string>Acquired Property</string>
                 <string>Attribute Equality Constraint</string>
                 <string>Base Category</string>
@@ -80,6 +80,7 @@
                 <string>Content Existence Constraint</string>
                 <string>Dynamic Category Property</string>
                 <string>Property Existence Constraint</string>
+                <string>Resource Measures Consistency Constraint</string>
                 <string>Standard Property</string>
                 <string>TALES Constraint</string>
               </list>
