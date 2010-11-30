@@ -103,13 +103,7 @@
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>my_message_measure_no_quantity_unit</string>
-                        <string>my_message_measure_no_quantity</string>
-                        <string>my_message_duplicate_metric_type</string>
-                        <string>my_message_duplicate_default_measure</string>
-                        <string>my_message_missing_metric_type</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -117,7 +111,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ResourceMeasuresConsistencyConstraint_view</string> </value>
+            <value> <string>TransactionQuantityValueFeasabilityConstraint_view</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -125,7 +119,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>ResourceMeasuresConsistencyConstraint_view</string> </value>
+            <value> <string>TransactionQuantityValueFeasabilityConstraint_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -141,7 +135,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Resource Measures Consistency Constraint</string> </value>
+            <value> <string>Transaction Quantity Value Feasability Constraint</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

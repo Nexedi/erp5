@@ -84,6 +84,7 @@
                 <string>Standard Property</string>
                 <string>TALES Constraint</string>
                 <string>Trade Model Line Cell Consistency Constraint</string>
+                <string>Transaction Quantity Value Feasability Constraint</string>
               </list>
             </value>
         </item>

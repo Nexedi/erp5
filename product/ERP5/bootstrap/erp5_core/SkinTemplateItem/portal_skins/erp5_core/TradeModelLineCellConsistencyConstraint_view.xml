@@ -122,7 +122,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Trade Model Line Cell ConsistencyConstraint_view</string> </value>
+            <value> <string>TradeModelLineCellConsistencyConstraint_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
