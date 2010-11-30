@@ -36,8 +36,7 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<div id="page_wrapper"  \n
-     tal:define="layout here/KnowledgePad_getBoxColumnLayout;\n
+<div tal:define="layout here/KnowledgePad_getBoxColumnLayout;\n
                  real_context python: options.get(\'real_context\', None);\n
                  cancel_url python: options.get(\'cancel_url\', None);\n
                  isAnon python: here.portal_membership.isAnonymousUser();\n
@@ -50,41 +49,23 @@
                                             \'portal-column\');"\n
      tal:attributes="id page_wrapper_id">\n
 \n
+    <!-- No gadgets message -->\n
     <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/add_new_gadget_message"/> \n
 \n
-    <div id="portal-column-0"\n
-         tal:attributes="class column_css_class"\n
-         tal:condition="python: columns>=1">\n
+    <!-- Render pad columns -->\n
+    <tal:block tal:repeat="column_index python: range(0, columns)">\n
+      <div tal:attributes="class column_css_class;\n
+                          id string:portal-column-${column_index}"\n
+           tal:condition="python: columns>=1+column_index">\n
 \n
-      <tal:block tal:condition="python: len(layout)>=1">\n
-        <span tal:replace="structure python:\n
-                             here.KnowledgePad_viewColumnWidget(section_layout=layout[0],\n
+        <tal:block tal:condition="python: len(layout)>=1+column_index"\n
+                   tal:replace="structure python:\n
+                               here.KnowledgePad_viewColumnWidget(section_layout=layout[column_index],\n
                                                                 real_context=real_context,\n
                                                                 cancel_url=cancel_url)"/>\n
-      </tal:block> \n
-    </div>\n
 \n
-    <div id="portal-column-1"\n
-         tal:attributes="class column_css_class"\n
-         tal:condition="python: columns>=2">\n
-      <tal:block tal:condition="python: len(layout)>=2">\n
-        <span tal:replace="structure python:\n
-                          here.KnowledgePad_viewColumnWidget(section_layout=layout[1],\n
-                                                             real_context=real_context,\n
-                                                             cancel_url=cancel_url)"/>\n
-      </tal:block>\n
-    </div>\n
-\n
-    <div id="portal-column-2"\n
-         tal:attributes="class column_css_class"\n
-         tal:condition="python: columns>=3">\n
-      <tal:block tal:condition="python: len(layout)>=3">\n
-        <span tal:replace="structure python:\n
-                          here.KnowledgePad_viewColumnWidget(section_layout=layout[2],\n
-                                                             real_context=real_context,\n
-                                                             cancel_url=cancel_url)"/>\n
-      </tal:block>\n
-    </div>\n
+      </div>\n
+    </tal:block>\n
 \n
 </div>\n
 
