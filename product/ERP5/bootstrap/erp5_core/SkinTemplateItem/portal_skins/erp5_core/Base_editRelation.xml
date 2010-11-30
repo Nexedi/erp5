@@ -55,10 +55,7 @@
 # Updates relation of an ERP5 document\n
 from Products.ERP5Type.Message import Message\n
 from Products.Formulator.Errors import ValidationError\n
-\n
-# XXX: Harcoded value, which must be taken from RelationField.py\n
-# XXX why not import it then ???\n
-SUB_FIELD_ID = \'relation\'\n
+from Products.ERP5Form.MultiRelationField import SUB_FIELD_ID\n
 \n
 if listbox_uid is not None:\n
   selection_tool = context.getPortalObject().portal_selections\n
@@ -79,7 +76,7 @@ else:\n
   # XXX Not very dynamic...\n
   sub_field_key = field.generate_subfield_key(SUB_FIELD_ID, key=field_key)\n
   old_request[sub_field_key] = uids\n
-\n
+  old_request[field_key] = uids\n
 \n
 request = container.REQUEST\n
 request_form = request.form\n
@@ -143,6 +140,7 @@ return edit_method(form_id,\n
                             <string>Message</string>
                             <string>Products.Formulator.Errors</string>
                             <string>ValidationError</string>
+                            <string>Products.ERP5Form.MultiRelationField</string>
                             <string>SUB_FIELD_ID</string>
                             <string>None</string>
                             <string>_getattr_</string>
