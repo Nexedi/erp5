@@ -1,6 +1,7 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2008 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2008-2010 Nexedi SA and Contributors. All Rights Reserved.
 #                    Rafael Monnerat <rafael@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -27,12 +28,13 @@
 ##############################################################################
 
 from Products.PortalTransforms.interfaces import itransform
-from Products.PortalTransforms.libtransforms.commandtransform import popentransform
+from Products.PortalTransforms.libtransforms.commandtransform import\
+                                                            subprocesstransform
 from zope.interface import implements
 
 # Conversor using w3m to replace lynx at PortalTransforms...
 
-class w3m_dump(popentransform):
+class w3m_dump(subprocesstransform):
   implements(itransform)
 
   __name__ = "w3m_dump"
@@ -44,15 +46,7 @@ class w3m_dump(popentransform):
   binaryName = "w3m"
   binaryArgs = "-dump -T text/html -o document_charset=utf-8 -o display_charset=utf-8 -o ignore_null_img_alt=0 "
   useStdin = True
-  
-  def getData(self, couterr):
-    lines = [ line for line in couterr.readlines()]
-    if len(lines) > 0:
-      # This prevent this message be showed
-      # -> "Can't open config directory (/root/.w3m)!"
-      if ".w3m" in lines[0]:
-        lines[0] = "".join(lines[0].split("!")[1:])
-    return "".join(lines)
+
 
 def register():
   return w3m_dump()
