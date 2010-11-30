@@ -307,7 +307,7 @@
         Please wait until your home is being updated.</h2>\n
       <p i18n:translate="" i18n:domain="ui"> You\'ll be automatically redirected.</p>\n
       <script type="text/javascript" \n
-              tal:content="string: checkForActivitiesOnServer(5000, \'view\', \'${mode}\', \'\');"/>\n
+              tal:content="string: checkForActivitiesOnServer(5000, \'view\', \'${mode}\', \'${default_pad_group}\');"/>\n
       </div>\n
   </div>\n
 </tal:block>\n
