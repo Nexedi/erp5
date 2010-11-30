@@ -130,10 +130,8 @@ class RelationStringFieldValidator(
       except IndexError:
         # No object was selected
         return []
-    relation_field_id = field.generate_subfield_key("%s" % \
-                                                    SUB_FIELD_ID, key=key)
-    value = self.default_validator_instance.validate(field, 
-                                                     relation_field_id, REQUEST)
+
+    value = self.default_validator_instance.validate(field, key, REQUEST)
     return [(relation_item_id, relation_uid_list, value)]
 
   def _generateFieldValueList(self, field, key, 
