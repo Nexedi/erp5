@@ -111,6 +111,7 @@ $ cat > buildout.cfg                        # 3
 
 [buildout]
 extends-cache = instance-profiles/extends-cache
+offline = true                              # !!
 extends =
   profiles/development-2.12.cfg
   instance-profiles/software-home.inc
@@ -123,10 +124,12 @@ parts =
 $ ~/erp5.buildout/bin/bootstrap2.6      # 4
 $ bin/buildout -ov         # 5
 
-Notice how we managed to run buildout in "offline-mode" (-o). The software-home
-configuration (along with the 'extends-cache' in the 'instance-profiles'
-symlink) provides all the information and components that would otherwise have
-to be downloaded.
+Notice how we managed to run buildout in "offline-mode" (offline statement with
+!! above).
+
+The software-home configuration (along with the 'extends-cache' in the
+'instance-profiles' symlink) provides all the information and components that
+would otherwise have to be downloaded.
 
 The steps above generate instance configurations for mysql and the
 OpenOffice.org document conversion daemon. We need mysql, in particular,
