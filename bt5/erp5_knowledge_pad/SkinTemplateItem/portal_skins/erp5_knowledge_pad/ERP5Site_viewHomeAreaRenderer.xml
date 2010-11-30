@@ -37,15 +37,14 @@
             <value> <unicode encoding="cdata"><![CDATA[
 
 <tal:block  \n
-  tal:define="mode python: \'erp5_front\';\n
-              default_pad_group python: \'\';\n
-              knowledge_pads python:\n
-                 here.ERP5Site_getKnowledgePadListForUser(mode=mode);\n
+  tal:define="mode python: options.get(\'mode\', \'erp5_front\');\n
+              default_pad_group python: options.get(\'default_pad_group\', \'\');\n
+              knowledge_pads python:  here.ERP5Site_getKnowledgePadListForUser(mode=mode);\n
               struct python: here.ERP5Site_getActiveKnowledgePadForUser(knowledge_pads);\n
               global active_knowledge_pad python: struct[0];\n
               knowledge_pads python: struct[1];\n
-              hasUserActivity python:\n
-                      here.ERP5Site_hasUserActivity(active_knowledge_pad,\n
+              columns python: options.get(\'columns\', 3);\n
+              hasUserActivity python:  here.ERP5Site_hasUserActivity(active_knowledge_pad,\n
                                                     mode=mode,\n
                                                     default_pad_group=default_pad_group);\n
               isAnon python: here.portal_membership.isAnonymousUser();\n
@@ -62,46 +61,44 @@
 \n
   <div id="gadget_area_wrapper">\n
 \n
-    <div tal:condition="isAnon">\n
-      <h3 i18n:translate="" i18n:domain="ui"> You are not logged in.</h3>\n
-      <h5><a href="login_form" i18n:translate="" i18n:domain="ui">Log in</a></h5>\n
-    </div>\n
+    <tal:block tal:condition="python: not createDefaultPadForUser and \n
+                                      not waitForActivitiesOnServer and\n
+                                      active_knowledge_pad is not None">\n
 \n
-   <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/knowledge_pad_security_check"> Security check\n
-   </span>\n
-   \n
-   <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/disable_server_integration"> Disable slot</span>\n
-   \n
-    <tal:block tal:condition="python: not isAnon and \n
-                                      not createDefaultPadForUser and \n
-                                      not waitForActivitiesOnServer">\n
+      <!-- Pad navigation -->\n
+      <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/navigation"/>\n
 \n
-      <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/navigation"> Navigation\n
-      </span>\n
+    <tal:block tal:condition="not: isAnon"> \n
+      <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/knowledge_pad_security_check"/> \n
+      <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/disable_server_integration"/>\n
+      <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/disable_server_integration"/> \n
+    </tal:block>\n
 \n
       <!-- Render active Knowledge pad -->\n
       <span tal:condition="active_knowledge_pad"\n
-          tal:replace="structure python: active_knowledge_pad.KnowledgePad_viewDashboardWidget(real_context=here,\n
-                                                                cancel_url=cancel_url)"/>\n
+            tal:replace="structure python: active_knowledge_pad.KnowledgePad_viewDashboardWidget(\n
+                                                                  columns=columns,\n
+                                                                  real_context=here,\n
+                                                                  cancel_url=cancel_url)"/>\n
       \n
-      <!-- Dialogs -->\n
-      <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/hidden_dialogs"> Dialogs\n
-      </span>\n
+      <!-- Hidden dialogs -->\n
+      <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/hidden_dialogs"/>\n
       \n
     </tal:block>\n
      \n
+    <!-- Show message that default pad is being prepared. -->\n
     <div tal:condition="python: waitForActivitiesOnServer and \n
                                 isUserAllowedToCreateKnowledgePads">\n
       <div class="wait_block">\n
         <h2 i18n:translate="" i18n:domain="ui"> \n
           Please wait until your home is being updated.</h2>\n
         <p i18n:translate="" i18n:domain="ui"> You\'ll be automatically redirected.</p>\n
-        <script type="text/javascript">\n
-          checkForActivitiesOnServer(5000, \'view\', \'erp5_front\', \'\');\n
-        </script>\n
-      </div>\n
+        <script type="text/javascript" \n
+                tal:content="string: checkForActivitiesOnServer(5000, \'view\', \'${mode}\', \'\');"/>\n
+        </div>\n
     </div>\n
 \n
+    <!-- Create (asynch) default pad. -->\n
     <div tal:condition="python: not waitForActivitiesOnServer and \n
                                 isUserAllowedToCreateKnowledgePads and\n
                                 createDefaultPadForUser">\n
@@ -110,12 +107,9 @@
           Please wait until your tab is being prepared.\n
         </h2>\n
         <p i18n:translate="" i18n:domain="ui"> You\'ll be automatically redirected.</p>\n
-        <script type="text/javascript">\n
-          createDefaultPadOnServer(5000,\n
-          \'ERP5Site_createDefaultKnowledgePadListForUser\',\n
-          \'\',\n
-          \'view\', \'erp5_front\');\n
-        </script>\n
+        <script type="text/javascript"\n
+                tal:content="string: createDefaultPadOnServer(5000, \'ERP5Site_createDefaultKnowledgePadListForUser\',\n
+                                                              \'\', \'view\', \'${mode}\');"/>\n
       </div>\n
   </div>\n
 \n
