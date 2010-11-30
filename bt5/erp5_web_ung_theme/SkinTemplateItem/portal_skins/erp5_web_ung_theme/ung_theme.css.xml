@@ -761,7 +761,7 @@ div.listbox-number-of-records{\n
   font-size: 12px;\n
   margin-right: 12em;\n
   margin-top: -18px;\n
-  width: 28%;\n
+  width: 30%;\n
 }\n
 \n
 div.listbox-navigation button.listbox_last_page,\n
