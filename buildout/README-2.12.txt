@@ -122,7 +122,7 @@ parts =
   supervisor-instance
 ^D
 $ ~/erp5.buildout/bin/bootstrap2.6      # 4
-$ bin/buildout -ov         # 5
+$ bin/buildout -v         # 5
 
 Notice how we managed to run buildout in "offline-mode" (offline statement with
 !! above).
