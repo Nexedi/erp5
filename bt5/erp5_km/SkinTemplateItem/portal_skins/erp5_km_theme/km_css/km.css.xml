@@ -88,7 +88,7 @@ div {\n
 }\n
 \n
 body{\n
-  background:#E9E9E9 url(../km_img/bg.png) repeat-x scroll 0 0;\n
+  background:#E9E9E9 url(km_img/bg.png) repeat-x scroll 0 0;\n
   font-family: Arial, Verdana, Helvetica, Sans;\n
   color:#000;\n
   font-size:10pt;\n
@@ -295,7 +295,7 @@ div.input > input {\n
 \n
 /* Top menu collapse root element */\n
 #menu ul li.collapse-menu{\n
-  background: url(../km_img/collapse-down-arrow.gif) no-repeat transparent right 10px;\n
+  background: url(km_img/collapse-down-arrow.gif) no-repeat transparent right 10px;\n
   padding-right: 0px;\n
 }\n
 \n
@@ -566,7 +566,7 @@ div.search_text{\n
 \tpadding:0;\n
 \twidth:20px;\n
 \theight:20px;\n
-\tbackground: url(../km_img/bt-qsearch.gif) no-repeat transparent;\n
+\tbackground: url(km_img/bt-qsearch.gif) no-repeat transparent;\n
 \tdisplay:block;\n
 \ttext-indent:-999999px;\n
 }\n
@@ -1012,7 +1012,7 @@ div.pdf-preview-navigation img.last{\n
 /* ## home banner #################################### start ## */\n
 \n
 .homebanner {\n
-\tbackground: url(../community_img/homebanner.jpg) no-repeat transparent;\n
+\tbackground: url(community_img/homebanner.jpg) no-repeat transparent;\n
 \tcolor:#fff;\n
 \ttext-shadow: 0 1px 0 #006686;\n
 }\n
@@ -1024,18 +1024,18 @@ div.pdf-preview-navigation img.last{\n
 .homebanner ul li {\n
 \tlist-style-image: none;\n
 \tlist-style-type: none;\n
-\tbackground: url(../community_img/bannerbullet.png) no-repeat transparent;\n
+\tbackground: url(community_img/bannerbullet.png) no-repeat transparent;\n
 }\n
 \n
 .button-why:link, .button-why:active, .button-why:visited {\n
-\tbackground: url(../community_img/bannerbuttons.png) no-repeat transparent;\n
+\tbackground: url(community_img/bannerbuttons.png) no-repeat transparent;\n
 }\n
 .button-why:hover {\n
 \tbackground-position: 0 100%;\n
 }\n
 \n
 .button-try:link, .button-try:active, .button-try:visited {\n
-\tbackground: url(../community_img/bannerbuttons.png) no-repeat transparent;\n
+\tbackground: url(community_img/bannerbuttons.png) no-repeat transparent;\n
 \tbackground-position: -158px 0;\n
 }\n
 .button-try:hover {\n
@@ -1133,7 +1133,7 @@ fieldset.right h4 {\n
 }\n
 \n
 .document > .content ul li {\n
-  background:transparent url(../km_img/bg_bullet_square.gif) no-repeat scroll 0 0.5em;\n
+  background:transparent url(km_img/bg_bullet_square.gif) no-repeat scroll 0 0.5em;\n
   margin:0 0 0.3em 2px;\n
   padding:0 0 0 12px;\n
   list-style-image:none;\n
@@ -1150,7 +1150,7 @@ table th button {\n
   vertical-align:middle;\n
   font-weight:bold;\n
   text-align:left;\n
-  background:transparent url(../km_img/switch.png) no-repeat scroll 100% 50%;\n
+  background:transparent url(km_img/switch.png) no-repeat scroll 100% 50%;\n
   padding:0 6px 0 0;\n
 }\n
 \n
@@ -1204,7 +1204,7 @@ table tbody tr td {\n
 #menu ul li #home-link:link, \n
 #menu ul li #home-link:active, \n
 #menu ul li #home-link:visited {\n
-\tbackground: url(../km_img/home.gif) no-repeat transparent;\n
+\tbackground: url(km_img/home.gif) no-repeat transparent;\n
 }\n
 \n
 #menu ul li #home-link:hover {\n
@@ -1212,7 +1212,7 @@ table tbody tr td {\n
 }\n
 \n
 #menu #login-logout-link:link, #menu #login-logout-link:active, #menu #login-logout-link:visited {\n
-  background: url(../km_img/login.gif) no-repeat transparent;\n
+  background: url(km_img/login.gif) no-repeat transparent;\n
   background-position: 0 -3px;\n
 }\n
 \n
@@ -1223,11 +1223,11 @@ table tbody tr td {\n
 /* ## navigation ###################################### end ### */\n
 \n
 a.bt-download:link, a.bt-download:active, a.bt-download:visited {\n
-\tbackground: url(../km_img/icon-save.png) no-repeat transparent;\n
+\tbackground: url(km_img/icon-save.png) no-repeat transparent;\n
 }\n
 \n
 a.bt-rss:link, a.bt-rss:active, a.bt-rss:visited {\n
-\tbackground: url(../km_img/icon-rss.png) no-repeat transparent;\n
+\tbackground: url(km_img/icon-rss.png) no-repeat transparent;\n
 }\n
 \n
 a.bt-download:link, a.bt-download:active, a.bt-download:visited,\n
@@ -1255,12 +1255,12 @@ a.block-remove:hover { background-position: -34px 100% !important; }\n
 a.block-edit-form:hover { background-position: -51px 100% !important; }\n
 \n
 a.bt-edit:link, a.bt-edit:active, a.bt-edit:visited {\n
-\tbackground: url(../km_img/bt-edit.png) no-repeat transparent;\n
+\tbackground: url(km_img/bt-edit.png) no-repeat transparent;\n
 }\n
 \n
 a.bt-edit:link strong, a.bt-edit:active strong,\n
 a.bt-edit:visited strong {\n
-\tbackground: url(../km_img/bt-edit.png) no-repeat transparent;\n
+\tbackground: url(km_img/bt-edit.png) no-repeat transparent;\n
 \tbackground-position: 100% 0;\n
 \tcolor:#828282;\n
 }\n
@@ -1277,14 +1277,14 @@ a.bt-edit:hover strong {\n
 button.formbt, button.bt-med span, .bt-small span { color:#828282; }\n
 button.formbt:hover span, button.bt-med:hover span, .bt-small:hover span { color:#4f4f4f; }\n
 \n
-button.formbt, button.formbt > span { background: url(../km_img/formbt.png) no-repeat transparent; }\n
+button.formbt, button.formbt > span { background: url(km_img/formbt.png) no-repeat transparent; }\n
 \n
 button.bt-med, button.bt-med span { \n
-  background: url(../km_img/button-med.png) no-repeat transparent; \n
+  background: url(km_img/button-med.png) no-repeat transparent; \n
   background-color: #E9E9E9;\n
 }\n
 \n
-.bt-small, .bt-small span { background: url(../km_img/button-small.png) no-repeat transparent; }\n
+.bt-small, .bt-small span { background: url(km_img/button-small.png) no-repeat transparent; }\n
 \n
 button.formbt, button.bt-med, .bt-small { background-position: 100% 0; }\n
 \n
@@ -1292,8 +1292,8 @@ button.formbt:hover, button.bt-med:hover, .bt-small:hover { background-position:
 \n
 button.formbt:hover span, button.bt-med:hover span, .bt-small:hover span { background-position: 0 100%; }\n
 \n
-button#input-save-view span.image {background: url(../km_img/bt-save2.png) no-repeat transparent;}\n
-button#input-save-edit span.image {background: url(../km_img/bt-save.png) no-repeat transparent;}\n
+button#input-save-view span.image {background: url(km_img/bt-save2.png) no-repeat transparent;}\n
+button#input-save-edit span.image {background: url(km_img/bt-save.png) no-repeat transparent;}\n
 \n
 button#input-save-edit span.image,\n
 button#input-save-view span.image {\n

@@ -75,7 +75,7 @@ div.buttons_group {\n
 /* Buttons */\n
 div.listbox-action-widget button, \n
 div.listbox-action-widget a.button {\n
-  background-image: url(\'./km_img/button_background.png\') ;\n
+  background-image: url(km_img/button_background.png) ;\n
   background-position: 100% 0;\n
   background-color: inherit;\n
   border:0 none;\n
@@ -122,7 +122,7 @@ div.listbox-action-widget button > span, \n
 div.listbox-action-widget a > span{\n
   display:block;\n
   background-color:inherit;\n
-  background-image:url(\'./km_img/button_background.png\');\n
+  background-image:url(km_img/button_background.png);\n
   background-position:0 0;\n
   display:block;\n
   height:27px;\n
@@ -150,7 +150,7 @@ div.listbox-action-widget span.description span {\n
   <tal:block tal:repeat ="button buttons">\n
   <tal:block tal:content="python: \'\'\'\n
     button.%(button)s_button span.image{\n
-    background-image:url(\'./km_img/%(button)s.png\');\n
+    background-image:url(km_img/%(button)s.png);\n
     }\'\'\' % {\'button\':button}"\n
 />\n
 </tal:block>\n
@@ -229,7 +229,7 @@ table.listbox tr.listbox-search-line th.listbox-table-filter-cell input{\n
 /* Sort buttons */\n
 table.listbox th button.sort-button {\n
   text-decoration: none;\n
-  background:transparent url("./km_img/switch.png") no-repeat scroll 100% 50%;\n
+  background:transparent url(km_img/switch.png) no-repeat scroll 100% 50%;\n
   padding-right:6px;\n
 }\n
 table.listbox th button.sort-button:hover{\n
@@ -249,10 +249,10 @@ table.listbox th img.sort-button-asc{\n
   margin: 0;\n
 }\n
 table.listbox th img.sort-button-desc{\n
-  background: url(\'./km_img/switch_asc.png\') no-repeat scroll 100% 50%;\n
+  background: url(km_img/switch_asc.png) no-repeat scroll 100% 50%;\n
 }\n
 table.listbox th img.sort-button-asc{\n
-  background: url(\'./km_img/switch_desc.png\') no-repeat scroll 100% 50%;\n
+  background: url(km_img/switch_desc.png) no-repeat scroll 100% 50%;\n
 }\n
 table.listbox th button.sort-button-asc,\n
 table.listbox th button.sort-button-desc{\n
@@ -266,19 +266,19 @@ div.listbox-page-navigation button{\n
 }\n
 \n
 div.listbox-page-navigation button.listbox_first_page span.image {\n
-  background-image:url("km_img/2leftarrowv.png");\n
+  background-image:url(km_img/2leftarrowv.png);\n
 }\n
 \n
 div.listbox-page-navigation button.listbox_previous_page span.image {\n
-  background-image:url("km_img/1leftarrowv.png");\n
+  background-image:url(km_img/1leftarrowv.png);\n
 }\n
 \n
 div.listbox-page-navigation button.listbox_next_page span.image {\n
-  background-image:url("km_img/1rightarrowv.png");\n
+  background-image:url(km_img/1rightarrowv.png);\n
 }\n
 \n
 div.listbox-page-navigation button.listbox_last_page span.image {\n
-  background-image:url("km_img/2rightarrowv.png");\n
+  background-image:url(km_img/2rightarrowv.png);\n
 }\n
 
 
