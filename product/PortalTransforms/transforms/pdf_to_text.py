@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Uses the xpdf (www.foolabs.com/xpdf)
 """
@@ -6,10 +7,11 @@ from Products.PortalTransforms.interfaces import itransform
 from Products.PortalTransforms.libtransforms.utils import bin_search, sansext
 from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
 from Products.PortalTransforms.libtransforms.commandtransform import popentransform
+from Products.PortalTransforms.libtransforms.commandtransform import subprocesstransform
 import os
 from zope.interface import implements
 
-class pdf_to_text(popentransform):
+class pdf_to_text(subprocesstransform):
     implements(itransform)
 
     __name__ = "pdf_to_text"
@@ -20,8 +22,8 @@ class pdf_to_text(popentransform):
     __version__ = '2004-07-02.01'
 
     binaryName = "pdftotext"
-    binaryArgs = "%(infile)s -enc UTF-8 -"
-    useStdin = False
+    binaryArgs = "-layout -nopgbrk %(infile)s -"
+    useStdin = True
 
 class old_pdf_to_text(commandtransform):
     implements(itransform)
