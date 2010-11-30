@@ -57,6 +57,9 @@ class ResourceMeasuresConsistency(Constraint):
   def checkConsistency(self, obj, fixit=0):
     """Implement here the consistency checker
     """
+    if not self._checkConstraintCondition(obj):
+      return []
+
     error_list = []
     portal = obj.getPortalObject()
 

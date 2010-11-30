@@ -39,6 +39,9 @@ class TransactionQuantityValueFeasability(Constraint):
       Check if the quantity of the transaction is possible
       for the source and the destination
       """
+      if not self._checkConstraintCondition(object):
+          return []
+
       errors = []
       source_cell = object.getSourceValue()
       destination_cell = object.getDestinationValue()

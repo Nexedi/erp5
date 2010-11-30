@@ -58,6 +58,9 @@ class DocumentReferenceConstraint(Constraint):
     """
       Implement here the consistency checker
     """
+    if not self._checkConstraintCondition(document):
+      return []
+
     # XXX we probably could check reference syntax here, based on regexp in
     # preferences?
     error_list = []

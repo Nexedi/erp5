@@ -38,6 +38,9 @@ class TransactionQuantityValueValidity(Constraint):
       Check if the quantity of the transaction is greater than the 
       balance of the source.
       """
+      if not self._checkConstraintCondition(object):
+        return []
+
       errors = []
 
       source_cell = object.getSourceValue()

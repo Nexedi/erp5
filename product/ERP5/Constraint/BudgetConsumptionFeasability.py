@@ -37,6 +37,9 @@ class BudgetConsumptionFeasability(Constraint):
       """
       Check if there is enough budget to consumed.
       """
+      if not self._checkConstraintCondition(object):
+        return []
+
       errors = []
 
       new_category_list = []

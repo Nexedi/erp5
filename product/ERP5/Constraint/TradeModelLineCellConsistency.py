@@ -45,6 +45,9 @@ class TradeModelLineCellConsistency(Constraint):
     """
       Implement here the consistency checker
     """
+    if not self._checkConstraintCondition(document):
+      return []
+
     error_list = []
     base_id = self.constraint_definition['base_id']
     for cell_coordinates in document.getCellKeyList(base_id=base_id):

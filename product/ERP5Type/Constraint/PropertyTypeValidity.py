@@ -78,6 +78,9 @@ class PropertyTypeValidity(Constraint):
   def checkConsistency(self, obj, fixit=0):
     """Check the object's consistency.
     """
+    if not self._checkConstraintCondition(obj):
+      return []
+
     error_list = []
     # For each attribute name, we check type
     for prop in obj.propertyMap():
