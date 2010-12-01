@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -68,12 +65,12 @@ from the contribute form.\n
 \n
  * \'content\' - metadata available in document content itself\n
 \n
- * \'file_name\' - file name of the ingested document\n
+ * \'filename\' - filename of the ingested document\n
 \n
  * \'user_login\' - user login of the logged in user\n
 \n
 """\n
-order = [\'input\', \'content\', \'file_name\', \'user_login\']\n
+order = [\'input\', \'content\', \'filename\', \'user_login\']\n
 return order\n
 </string> </value>
         </item>

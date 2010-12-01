@@ -124,7 +124,7 @@ class TestIngestion(ERP5TypeLiveTestCase):
     transaction.commit()
     self.tic()
     self.assertEquals(document.getPortalType(), 'Text')
-    self.assertEquals(document.getSourceReference(), filename)
+    self.assertEquals(document.getFilename(), filename)
     self.assertEquals(document.getContentType(), 'text/plain')
     self.assertTrue(document.hasData())
 
@@ -138,7 +138,7 @@ class TestIngestion(ERP5TypeLiveTestCase):
     transaction.commit()
     self.tic()
     self.assertEquals(document.getPortalType(), 'Text')
-    self.assertEquals(document.getSourceReference(), script_id)
+    self.assertEquals(document.getFilename(), script_id)
     self.assertEquals(document.getContentType(), 'text/plain')
     self.assertTrue(document.hasData())
 
@@ -151,7 +151,7 @@ class TestIngestion(ERP5TypeLiveTestCase):
     transaction.commit()
     self.tic()
     self.assertEquals(document.getPortalType(), 'Text')
-    self.assertEquals(document.getSourceReference(), script_id)
+    self.assertEquals(document.getFilename(), script_id)
     self.assertEquals(document.getContentType(), 'text/plain')
     self.assertTrue(document.hasData())
 
@@ -165,7 +165,7 @@ class TestIngestion(ERP5TypeLiveTestCase):
     transaction.commit()
     self.tic()
     self.assertEquals(document.getPortalType(), 'Text')
-    self.assertEquals(document.getSourceReference(), filename)
+    self.assertEquals(document.getFilename(), filename)
     self.assertEquals(document.getContentType(), 'text/plain')
     self.assertTrue(document.hasData())
 
@@ -179,7 +179,7 @@ class TestIngestion(ERP5TypeLiveTestCase):
     transaction.commit()
     self.tic()
     self.assertEquals(document.getPortalType(), 'Web Page')
-    self.assertEquals(document.getSourceReference(), script_id)
+    self.assertEquals(document.getFilename(), script_id)
     self.assertEquals(document.getContentType(), 'text/html')
     self.assertTrue(document.hasData())
 

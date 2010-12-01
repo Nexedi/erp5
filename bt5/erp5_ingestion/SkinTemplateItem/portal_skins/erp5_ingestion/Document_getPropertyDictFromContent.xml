@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -54,7 +51,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-This script analyzes the document content (text_content) to find properties that might\n
+This script analyzes the document content to find properties that might\n
 be somehow encoded in the text. It is called by Document.getPropertyDictFromContent\n
 method.\n
 \n
@@ -62,7 +59,6 @@ To use, write your own method (probably External Method, since it is most likely
 to use re) that would analyze text content of the doc\n
 and return a dictionary of properties.\n
 """\n
-\n
 information = context.getContentInformation()\n
 \n
 result = {}\n
@@ -82,15 +78,6 @@ for k, v in information.items():  \n
         result[\'contributor\'] = p.getRelativeUrl()\n
     elif key == \'keywords\':\n
       result[\'subject_list\'] = v.split()\n
-\n
-object = object or context\n
-\n
-#try:\n
-#  content = content or context.asText()\n
-#except AttributeError:\n
-#  return result\n
-\n
-ptype = ptype or context.getPortalType()\n
 \n
 # Erase titles which are meaningless\n
 title = result.get(\'title\', None)\n
@@ -113,7 +100,7 @@ return result\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>object=None, content=None, ptype=None</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -133,15 +120,12 @@ return result\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>object</string>
-                            <string>content</string>
-                            <string>ptype</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>information</string>
@@ -168,11 +152,7 @@ return result\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <none/>
-                <none/>
-                <none/>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>

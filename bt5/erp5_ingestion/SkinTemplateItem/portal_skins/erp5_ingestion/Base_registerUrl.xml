@@ -50,9 +50,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Log import log\n
-log(\'DepracationWarning: Please use ContributionTool_getPropertyDictFromFilename\')\n
-return context.ContributionTool_getPropertyDictFromFilename(file_name, property_dict)\n
+            <value> <string>if context.hasUrlString():\n
+  portal = context.getPortalObject()\n
+  portal_url_registry = portal.portal_url_registry\n
+  portal_url_registry.registerURL(context.asNormalisedURL(), context.getReference(), context=context)\n
 </string> </value>
         </item>
         <item>
@@ -63,7 +64,7 @@ return context.ContributionTool_getPropertyDictFromFilename(file_name, property_
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>file_name, property_dict</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -83,18 +84,16 @@ return context.ContributionTool_getPropertyDictFromFilename(file_name, property_
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>file_name</string>
-                            <string>property_dict</string>
-                            <string>Products.ERP5Type.Log</string>
-                            <string>log</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal</string>
+                            <string>portal_url_registry</string>
                           </tuple>
                         </value>
                     </item>
@@ -111,7 +110,7 @@ return context.ContributionTool_getPropertyDictFromFilename(file_name, property_
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ContributionTool_getPropertyDictFromFileName</string> </value>
+            <value> <string>Base_registerUrl</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -50,9 +50,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Log import log\n
-log(\'DepracationWarning: Please use ContributionTool_getPropertyDictFromFilename\')\n
-return context.ContributionTool_getPropertyDictFromFilename(file_name, property_dict)\n
+            <value> <string>return_dict = {}\n
+\n
+# All properties that portal_contributions.newContent expose\n
+# in its signature that shouldn\'t be stored on document itself\n
+technical_argument_list = (\'url\', \'container\', \'container_path\', \'discover_metadata\', \'user_login\',)\n
+for key, value in argument_dict.items():\n
+  if key not in technical_argument_list and value not in (None, \'\'):\n
+    return_dict[key] = value\n
+\n
+return return_dict\n
 </string> </value>
         </item>
         <item>
@@ -63,7 +70,7 @@ return context.ContributionTool_getPropertyDictFromFilename(file_name, property_
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>file_name, property_dict</string> </value>
+            <value> <string>argument_dict</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -83,18 +90,21 @@ return context.ContributionTool_getPropertyDictFromFilename(file_name, property_
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>file_name</string>
-                            <string>property_dict</string>
-                            <string>Products.ERP5Type.Log</string>
-                            <string>log</string>
+                            <string>argument_dict</string>
+                            <string>return_dict</string>
+                            <string>technical_argument_list</string>
+                            <string>_getiter_</string>
                             <string>_getattr_</string>
-                            <string>context</string>
+                            <string>key</string>
+                            <string>value</string>
+                            <string>None</string>
+                            <string>_write_</string>
                           </tuple>
                         </value>
                     </item>
@@ -111,7 +121,7 @@ return context.ContributionTool_getPropertyDictFromFilename(file_name, property_
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ContributionTool_getPropertyDictFromFileName</string> </value>
+            <value> <string>Document_getPropertyDictFromInput</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
