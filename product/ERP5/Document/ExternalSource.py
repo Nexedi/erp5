@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002-2007 Nexedi SARL and Contributors. All Rights Reserved.
@@ -28,10 +29,10 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5.Document.Url import UrlMixIn
+from Products.ERP5.mixin.url import UrlMixin
 from Products.ERP5.mixin.crawlable import CrawlableMixin
 
-class ExternalSource(XMLObject, UrlMixIn, CrawlableMixin):
+class ExternalSource(XMLObject, UrlMixin, CrawlableMixin):
   """
   An External Source consists of single URL which defines the
   root of a collection of documents, each of which can be accessed
