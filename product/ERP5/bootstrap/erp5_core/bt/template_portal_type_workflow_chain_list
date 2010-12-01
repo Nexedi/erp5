@@ -25,6 +25,7 @@ Preference | preference_workflow
 Property Existence Constraint | dynamic_class_generation_interaction_workflow
 Property Sheet Tool | dynamic_class_generation_interaction_workflow
 Property Sheet | dynamic_class_generation_interaction_workflow
+Property Type Validity Constraint | dynamic_class_generation_interaction_workflow
 Resource Measures Consistency Constraint | dynamic_class_generation_interaction_workflow
 Standard Property | dynamic_class_generation_interaction_workflow
 System Preference | preference_workflow

@@ -80,6 +80,7 @@
                 <string>Content Existence Constraint</string>
                 <string>Dynamic Category Property</string>
                 <string>Property Existence Constraint</string>
+                <string>Property Type Validity Constraint</string>
                 <string>Resource Measures Consistency Constraint</string>
                 <string>Standard Property</string>
                 <string>TALES Constraint</string>

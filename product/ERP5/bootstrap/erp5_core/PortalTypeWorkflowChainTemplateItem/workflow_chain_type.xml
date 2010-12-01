@@ -100,6 +100,10 @@
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
+  <type>Property Type Validity Constraint</type>
+  <workflow>dynamic_class_generation_interaction_workflow</workflow>
+ </chain>
+ <chain>
   <type>Resource Measures Consistency Constraint</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
