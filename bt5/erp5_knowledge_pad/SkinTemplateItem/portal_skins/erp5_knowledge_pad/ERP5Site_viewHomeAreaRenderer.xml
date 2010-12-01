@@ -60,10 +60,8 @@
                                       not waitForActivitiesOnServer and\n
                                       active_knowledge_pad is not None">\n
 \n
-      <!-- Pad navigation -->\n
-      <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/navigation"/>\n
-\n
       <tal:block tal:condition="not: isAnon"> \n
+        <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/navigation"/>\n
         <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/knowledge_pad_security_check"/> \n
         <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/disable_server_integration"/>\n
         <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/disable_server_integration"/> \n

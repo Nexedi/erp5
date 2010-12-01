@@ -50,7 +50,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>def filterKnowledgePadListForContext(results, mode, \n
+            <value> <string>request = context.REQUEST\n
+isAnon = context.portal_membership.isAnonymousUser()\n
+isAnonymousKnowledgePadUsed = request.get(\'is_anonymous_knowledge_pad_used\', 0);\n
+\n
+def filterKnowledgePadListForContext(results, mode, \n
                                      default_pad_group):\n
   # when we use URL as a way to determine site\'s language do not\n
   # use (especially for Web Site\'s root) current context which is the language\n
@@ -74,9 +78,7 @@
                                 x.getGroup() == default_pad_group, results)\n
   return results\n
 \n
-request = context.REQUEST\n
-isAnon = context.portal_membership.isAnonymousUser()\n
-isAnonymousKnowledgePadUsed = request.get(\'is_anonymous_knowledge_pad_used\', 0);\n
+\n
 kw = {\'portal_type\': \'Knowledge Pad\',\n
       \'sort_on\': ((\'creation_date\', \'ascending\',),),\n
       \'limit\': 50,}\n
@@ -108,6 +110,7 @@ if active_pad is not None and active_pad.getValidationState() != \'deleted\':\n
 # filter\n
 results = filterKnowledgePadListForContext(results, mode, \n
                                      default_pad_group)\n
+\n
 \n
 if not len(results) and not isAnon:\n
   # try getting default knowledge pads for user from global site preference\n
@@ -163,12 +166,12 @@ return results\n
                           <tuple>
                             <string>mode</string>
                             <string>default_pad_group</string>
-                            <string>filterKnowledgePadListForContext</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
                             <string>isAnon</string>
                             <string>isAnonymousKnowledgePadUsed</string>
+                            <string>filterKnowledgePadListForContext</string>
                             <string>kw</string>
                             <string>_apply_</string>
                             <string>results</string>

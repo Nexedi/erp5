@@ -50,12 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>user_pref = None\n
-global_preference_list = context.portal_preferences.searchFolder(portal_type=\'Preference\',\n
-                                                                 preference_state=\'global\')\n
-if len(global_preference_list):\n
-  user_pref = global_preference_list[0].getObject()\n
-return user_pref\n
+            <value> <string>return  context.portal_preferences.getActivePreference()\n
 </string> </value>
         </item>
         <item>
@@ -88,13 +83,8 @@ return user_pref\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>None</string>
-                            <string>user_pref</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>global_preference_list</string>
-                            <string>len</string>
-                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
