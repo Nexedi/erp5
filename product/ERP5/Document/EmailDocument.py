@@ -58,7 +58,7 @@ DEFAULT_TEXT_FORMAT = 'text/html'
 COMMASPACE = ', '
 _MARKER = []
 
-file_name_regexp = 'name="([^"]*)"'
+filename_regexp = 'name="([^"]*)"'
 
 
 class EmailDocumentProxyMixin(DocumentProxyMixin):
@@ -227,20 +227,20 @@ class EmailDocument(TextDocument):
         kw = dict(part.items())
         kw['uid'] = 'part_%s' % i
         kw['index'] = i
-        file_name = part.get_filename()
-        if not file_name:
+        filename = part.get_filename()
+        if not filename:
           # get_filename return name only from Content-Disposition header
           # of the message but sometimes this value is stored in
           # Content-Type header
           content_type_header = kw.get('Content-Type',
                                                     kw.get('Content-type', ''))
-          file_name_list = re.findall(file_name_regexp,
+          filename_list = re.findall(filename_regexp,
                                       content_type_header,
                                       re.MULTILINE)
-          if file_name_list:
-            file_name = file_name_list[0]
-        if file_name:
-          kw['file_name'] = file_name
+          if filename_list:
+            filename = filename_list[0]
+        if filename:
+          kw['filename'] = filename
         else:
           content_disposition = kw.get('Content-Disposition', 
                                            kw.get('Content-disposition', None))
@@ -250,7 +250,7 @@ class EmailDocument(TextDocument):
               prefix = 'attachment_'
             elif content_disposition.split(';')[0] == 'inline':
               prefix = 'inline_'
-          kw['file_name'] = '%s%s' % (prefix, i)
+          kw['filename'] = '%s%s' % (prefix, i)
         kw['content_type'] = part.get_content_type()
         result.append(kw)
     return result
@@ -267,24 +267,24 @@ class EmailDocument(TextDocument):
         kw = dict(part.items())
         content_type = part.get_content_type()
         if REQUEST is not None:
-          file_name = part.get_filename()
-          if not file_name:
+          filename = part.get_filename()
+          if not filename:
             # get_filename return name only from Content-Disposition header
             # of the message but sometimes this value is stored in
             # Content-Type header
             content_type_header = kw.get('Content-Type',
                                                     kw.get('Content-type', ''))
-            file_name_list = re.findall(file_name_regexp,
+            filename_list = re.findall(filename_regexp,
                                         content_type_header,
                                         re.MULTILINE)
-            if file_name_list:
-              file_name = file_name_list[0]
+            if filename_list:
+              filename = filename_list[0]
           RESPONSE = REQUEST.RESPONSE
           RESPONSE.setHeader('Accept-Ranges', 'bytes')
-          if content_type and file_name:
+          if content_type and filename:
             RESPONSE.setHeader('Content-Type', content_type)
             RESPONSE.setHeader('Content-disposition',
-                               'attachment; filename="%s"' % file_name)
+                               'attachment; filename="%s"' % filename)
         if 'text/html' in content_type:
           # Strip out html content in safe mode.
           mime, content = self.convert(format='html',
@@ -338,18 +338,18 @@ class EmailDocument(TextDocument):
           result = result[0]
     if result:
       return result
-    return self.getSourceReference(*args)
+    return self.getFilename(*args)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSourceReference')
-  def getSourceReference(self, *args):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getFilename')
+  def getFilename(self, *args):
     """
       The Message-ID is considered here as the source reference
       of the message on the sender side (source)
     """
     if not self.hasData():
-      return self._baseGetSourceReference(*args)
+      return self._baseGetFilename(*args)
     if not len(args):
-      args = (self._baseGetSourceReference(),)
+      args = (self._baseGetFilename(),)
     content_information = self.getContentInformation()
     return content_information.get('Message-ID') or content_information.get('Message-Id', *args)
 
