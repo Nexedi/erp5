@@ -902,24 +902,26 @@ class PersistentMigrationMixin(object):
   _no_migration = 0
 
   def __setstate__(self, value):
-    if PersistentMigrationMixin._no_migration:
+    klass = self.__class__
+    if PersistentMigrationMixin._no_migration \
+        or klass.__module__ in ('erp5.portal_type', 'erp5.temp_portal_type'):
       super(PersistentMigrationMixin, self).__setstate__(value)
       return
 
     portal_type = value.get('portal_type')
     if portal_type is None:
-      portal_type = getattr(self.__class__, 'portal_type', None)
+      portal_type = getattr(klass, 'portal_type', None)
     if portal_type is None:
       LOG('ERP5Type', PROBLEM,
           "no portal type was found for %s (class %s)" \
-               % (self, self.__class__))
+               % (self, klass))
       super(PersistentMigrationMixin, self).__setstate__(value)
     else:
       # proceed with migration
       import erp5.portal_type
-      klass = getattr(erp5.portal_type, portal_type)
-      assert self.__class__ != klass
-      self.__class__ = klass
+      newklass = getattr(erp5.portal_type, portal_type)
+      assert self.__class__ != newklass
+      self.__class__ = newklass
       self.__setstate__(value)
       LOG('ERP5Type', TRACE, "Migration for object %s" % self)
 
