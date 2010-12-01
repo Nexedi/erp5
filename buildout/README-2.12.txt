@@ -111,7 +111,8 @@ $ cat > buildout.cfg                        # 3
 
 [buildout]
 extends-cache = instance-profiles/extends-cache
-offline = true                              # !!
+# Default run buildout in offline mode.
+offline = true
 extends =
   profiles/development-2.12.cfg
   instance-profiles/software-home.inc
@@ -123,9 +124,6 @@ parts =
 ^D
 $ ~/erp5.buildout/bin/bootstrap2.6      # 4
 $ bin/buildout -v         # 5
-
-Notice how we managed to run buildout in "offline-mode" (offline statement with
-!! above).
 
 The software-home configuration (along with the 'extends-cache' in the
 'instance-profiles' symlink) provides all the information and components that
