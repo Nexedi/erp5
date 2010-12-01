@@ -262,7 +262,7 @@ class InventoryAPITestCase(ERP5TypeTestCase):
 class TestInventory(InventoryAPITestCase):
   """Tests getInventory methods.
   """
-  def getInventoryEquals(self, value, **inventory_kw):
+  def assertInventoryEquals(self, value, **inventory_kw):
     self.assertEquals(value, self.getInventory(**inventory_kw))
 
   def testReturnedTypeIsFloat(self):
@@ -276,10 +276,10 @@ class TestInventory(InventoryAPITestCase):
     """Test Simulation Movements works in this testing environnement.
     """
     self._makeSimulationMovement(quantity=100)
-    self.getInventoryEquals(100, section_uid=self.section.getUid())
+    self.assertInventoryEquals(100, section_uid=self.section.getUid())
     # mixed with a real movement
     self._makeMovement(quantity=100)
-    self.getInventoryEquals(200, section_uid=self.section.getUid())
+    self.assertInventoryEquals(200, section_uid=self.section.getUid())
 
   def test_SimulationMovementisAccountable(self):
     """Test Simulation Movements are not accountable if related to a delivery.
@@ -293,36 +293,36 @@ class TestInventory(InventoryAPITestCase):
     self.failIf(sim_mvt.isAccountable())
     # not accountable movement are not counted by getInventory
     transaction.commit(); self.tic() # (after reindexing of course)
-    self.getInventoryEquals(100, section_uid=self.section.getUid())
+    self.assertInventoryEquals(100, section_uid=self.section.getUid())
   
   def test_OmitSimulation(self):
     """Test omit_simulation argument to getInventory.
     """
     self._makeSimulationMovement(quantity=100)
     self._makeMovement(quantity=100)
-    self.getInventoryEquals(100, section_uid=self.section.getUid(),
+    self.assertInventoryEquals(100, section_uid=self.section.getUid(),
                                         omit_simulation=1)
 
   def test_SectionCategory(self):
     """Tests inventory on section category. """
     self.section.setGroup('level1/level2')
     self._makeMovement(quantity=100)
-    self.getInventoryEquals(100, section_category='group/level1')
-    self.getInventoryEquals(100, section_category='group/level1/level2')
-    self.getInventoryEquals(0, section_category='group/anotherlevel')
+    self.assertInventoryEquals(100, section_category='group/level1')
+    self.assertInventoryEquals(100, section_category='group/level1/level2')
+    self.assertInventoryEquals(0, section_category='group/anotherlevel')
     
     # section category can be a list
-    self.getInventoryEquals(100,
+    self.assertInventoryEquals(100,
             section_category=['group/anotherlevel', 'group/level1'])
 
     # strict_section_category only takes movement where section is strict
     # member of the category.
-    self.getInventoryEquals(0,
+    self.assertInventoryEquals(0,
                 section_category_strict_membership=['group/level1'])
     self.section.setGroup('level1')
     transaction.commit()
     self.tic()
-    self.getInventoryEquals(100,
+    self.assertInventoryEquals(100,
                 section_category_strict_membership=['group/level1'])
     
     # non existing values to section_category are not silently ignored, but
@@ -335,22 +335,22 @@ class TestInventory(InventoryAPITestCase):
     """Tests inventory on mirror section category. """
     self.mirror_section.setGroup('level1/level2')
     self._makeMovement(quantity=100)
-    self.getInventoryEquals(100, mirror_section_category='group/level1')
-    self.getInventoryEquals(100, mirror_section_category='group/level1/level2')
-    self.getInventoryEquals(0, mirror_section_category='group/anotherlevel')
+    self.assertInventoryEquals(100, mirror_section_category='group/level1')
+    self.assertInventoryEquals(100, mirror_section_category='group/level1/level2')
+    self.assertInventoryEquals(0, mirror_section_category='group/anotherlevel')
 
     # section category can be a list
-    self.getInventoryEquals(100,
+    self.assertInventoryEquals(100,
               mirror_section_category=['group/anotherlevel', 'group/level1'])
 
     # strict_section_category only takes movement where section is strict
     # member of the category.
-    self.getInventoryEquals(0,
+    self.assertInventoryEquals(0,
               mirror_section_category_strict_membership=['group/level1'])
     self.mirror_section.setGroup('level1')
     transaction.commit()
     self.tic()
-    self.getInventoryEquals(100,
+    self.assertInventoryEquals(100,
               mirror_section_category_strict_membership=['group/level1'])
     
     # non existing values to section_category are not silently ignored, but
@@ -364,45 +364,45 @@ class TestInventory(InventoryAPITestCase):
     self.node.setGroup('level1/level2')
     self._makeMovement(quantity=100, source_value=None)
 
-    self.getInventoryEquals(100, node_category='group/level1')
-    self.getInventoryEquals(100, node_category='group/level1/level2')
-    self.getInventoryEquals(0, node_category_strict_membership=['group/level1'])
+    self.assertInventoryEquals(100, node_category='group/level1')
+    self.assertInventoryEquals(100, node_category='group/level1/level2')
+    self.assertInventoryEquals(0, node_category_strict_membership=['group/level1'])
     self.node.setGroup('level1')
     transaction.commit()
     self.tic()
-    self.getInventoryEquals(100,
+    self.assertInventoryEquals(100,
                             node_category_strict_membership=['group/level1'])
   
   def test_Function(self):
     """Tests inventory on function"""
     self._makeMovement(quantity=100, destination_function='function/function1')
 
-    self.getInventoryEquals(100, function='function/function1')
-    self.getInventoryEquals(0, function='function/function1/function2')
+    self.assertInventoryEquals(100, function='function/function1')
+    self.assertInventoryEquals(0, function='function/function1/function2')
 
   def test_FunctionUid(self):
     """Tests inventory on function uid"""
     function = self.portal.portal_categories.function
     self._makeMovement(quantity=100, destination_function='function/function1')
 
-    self.getInventoryEquals(100, function_uid=function.function1.getUid())
-    self.getInventoryEquals(0,
+    self.assertInventoryEquals(100, function_uid=function.function1.getUid())
+    self.assertInventoryEquals(0,
                             function_uid=function.function1.function2.getUid())
 
   def test_FunctionCategory(self):
     """Tests inventory on function category"""
     self._makeMovement(quantity=100,
                        destination_function='function/function1/function2')
-    self.getInventoryEquals(100, function_category='function/function1')
-    self.getInventoryEquals(100, function='function/function1/function2')
+    self.assertInventoryEquals(100, function_category='function/function1')
+    self.assertInventoryEquals(100, function='function/function1/function2')
 
   def test_FunctionCategoryStrictMembership(self):
     """Tests inventory on function category strict membership"""
     self._makeMovement(quantity=100,
                        destination_function='function/function1/function2')
-    self.getInventoryEquals(0,
+    self.assertInventoryEquals(0,
             function_category_strict_membership='function/function1')
-    self.getInventoryEquals(100,
+    self.assertInventoryEquals(100,
             function_category_strict_membership='function/function1/function2')
   
   def test_Project(self):
@@ -410,16 +410,16 @@ class TestInventory(InventoryAPITestCase):
     self._makeMovement(quantity=100, destination_project_value=self.project)
     self._makeMovement(quantity=100, source_project_value=self.other_project)
 
-    self.getInventoryEquals(100, project=self.project.getRelativeUrl())
-    self.getInventoryEquals(-100, project=self.other_project.getRelativeUrl())
+    self.assertInventoryEquals(100, project=self.project.getRelativeUrl())
+    self.assertInventoryEquals(-100, project=self.other_project.getRelativeUrl())
 
   def test_ProjectUid(self):
     """Tests inventory on project uid"""
     self._makeMovement(quantity=100, destination_project_value=self.project)
     self._makeMovement(quantity=100, source_project_value=self.other_project)
 
-    self.getInventoryEquals(100, project_uid=self.project.getUid())
-    self.getInventoryEquals(-100, project_uid=self.other_project.getUid())
+    self.assertInventoryEquals(100, project_uid=self.project.getUid())
+    self.assertInventoryEquals(-100, project_uid=self.other_project.getUid())
 
   def test_ProjectCategory(self):
     """Tests inventory on project category"""
@@ -427,8 +427,8 @@ class TestInventory(InventoryAPITestCase):
     self.project.setSource('group/level1/level2')
     self._makeMovement(quantity=100, destination_project_value=self.project)
 
-    self.getInventoryEquals(100, project_category='group/level1')
-    self.getInventoryEquals(100, project_category='group/level1/level2')
+    self.assertInventoryEquals(100, project_category='group/level1')
+    self.assertInventoryEquals(100, project_category='group/level1/level2')
 
   def test_ProjectCategoryStrictMembership(self):
     """Tests inventory on project category strict membership"""
@@ -436,9 +436,9 @@ class TestInventory(InventoryAPITestCase):
     self.project.setSource('group/level1/level2')
     self._makeMovement(quantity=100, destination_project_value=self.project)
 
-    self.getInventoryEquals(0,
+    self.assertInventoryEquals(0,
                     project_category_strict_membership='group/level1')
-    self.getInventoryEquals(100,
+    self.assertInventoryEquals(100,
                     project_category_strict_membership='group/level1/level2')
 
 
@@ -447,14 +447,14 @@ class TestInventory(InventoryAPITestCase):
     self.resource.setProductLine('level1/level2')
     self._makeMovement(quantity=100, source_value=None)
 
-    self.getInventoryEquals(100, resource_category='product_line/level1')
-    self.getInventoryEquals(100, resource_category='product_line/level1/level2')
-    self.getInventoryEquals(0,
+    self.assertInventoryEquals(100, resource_category='product_line/level1')
+    self.assertInventoryEquals(100, resource_category='product_line/level1/level2')
+    self.assertInventoryEquals(0,
                 resource_category_strict_membership=['product_line/level1'])
     self.resource.setProductLine('level1')
     transaction.commit()
     self.tic()
-    self.getInventoryEquals(100,
+    self.assertInventoryEquals(100,
                 resource_category_strict_membership=['product_line/level1'])
 
   def test_PaymentCategory(self):
@@ -466,20 +466,20 @@ class TestInventory(InventoryAPITestCase):
                        destination_payment_value=self.payment_node,
                        source_value=None)
 
-    self.getInventoryEquals(100, payment_category='product_line/level1')
-    self.getInventoryEquals(100, payment_category='product_line/level1/level2')
-    self.getInventoryEquals(0,
+    self.assertInventoryEquals(100, payment_category='product_line/level1')
+    self.assertInventoryEquals(100, payment_category='product_line/level1/level2')
+    self.assertInventoryEquals(0,
                 payment_category_strict_membership=['product_line/level1'])
     self.payment_node.setProductLine('level1')
     transaction.commit()
     self.tic()
-    self.getInventoryEquals(100,
+    self.assertInventoryEquals(100,
               payment_category_strict_membership=['product_line/level1'])
 
   def test_OwnershipInventoryByNode(self):
     """Tests ownership inventory by node. """
-    self.getInventoryEquals(0, node_uid=self.node.getUid())
-    self.getInventoryEquals(0, node_uid=self.other_node.getUid())
+    self.assertInventoryEquals(0, node_uid=self.node.getUid())
+    self.assertInventoryEquals(0, node_uid=self.other_node.getUid())
     # transfer quantity=100 from node to other_node.
     self._makeMovement(quantity=100,
                        source_value=self.node,
@@ -487,15 +487,15 @@ class TestInventory(InventoryAPITestCase):
     transaction.commit()
     self.tic()
 
-    self.getInventoryEquals(-100, node_uid=self.node.getUid())
-    self.getInventoryEquals(100, node_uid=self.other_node.getUid())
-    self.getInventoryEquals(100, mirror_node_uid=self.node.getUid())
-    self.getInventoryEquals(-100, mirror_node_uid=self.other_node.getUid())
+    self.assertInventoryEquals(-100, node_uid=self.node.getUid())
+    self.assertInventoryEquals(100, node_uid=self.other_node.getUid())
+    self.assertInventoryEquals(100, mirror_node_uid=self.node.getUid())
+    self.assertInventoryEquals(-100, mirror_node_uid=self.other_node.getUid())
 
   def test_OwnershipInventoryBySection(self):
     """Tests ownership inventory by section. """
-    self.getInventoryEquals(0, section_uid=self.section.getUid())
-    self.getInventoryEquals(0, section_uid=self.other_section.getUid())
+    self.assertInventoryEquals(0, section_uid=self.section.getUid())
+    self.assertInventoryEquals(0, section_uid=self.other_section.getUid())
     # transfer quantity=100 from section to other_section.
     self._makeMovement(quantity=100,
                        source_section_value=self.section,
@@ -503,10 +503,10 @@ class TestInventory(InventoryAPITestCase):
     transaction.commit()
     self.tic()
 
-    self.getInventoryEquals(-100, section_uid=self.section.getUid())
-    self.getInventoryEquals(100, section_uid=self.other_section.getUid())
-    self.getInventoryEquals(100, mirror_section_uid=self.section.getUid())
-    self.getInventoryEquals(-100,
+    self.assertInventoryEquals(-100, section_uid=self.section.getUid())
+    self.assertInventoryEquals(100, section_uid=self.other_section.getUid())
+    self.assertInventoryEquals(100, mirror_section_uid=self.section.getUid())
+    self.assertInventoryEquals(-100,
                             mirror_section_uid=self.other_section.getUid())
 
   def test_SimulationState(self):
@@ -516,10 +516,10 @@ class TestInventory(InventoryAPITestCase):
                        simulation_state='confirmed',
                        source_value=None)
 
-    self.getInventoryEquals(100)
-    self.getInventoryEquals(100, simulation_state='confirmed')
-    self.getInventoryEquals(0, simulation_state='planned')
-    self.getInventoryEquals(100, simulation_state=['planned', 'confirmed'])
+    self.assertInventoryEquals(100)
+    self.assertInventoryEquals(100, simulation_state='confirmed')
+    self.assertInventoryEquals(0, simulation_state='planned')
+    self.assertInventoryEquals(100, simulation_state=['planned', 'confirmed'])
 
   def test_MultipleNodes(self):
     """Test section category with many nodes. """
@@ -544,10 +544,10 @@ class TestInventory(InventoryAPITestCase):
 
       # getInventory on node uid for all member of a category ...
       total_quantity = sum([quantity_for_node[node] for node in node_list])
-      self.getInventoryEquals(total_quantity,
+      self.assertInventoryEquals(total_quantity,
                               node_uid=[node.getUid() for node in node_list])
       # ... is equivalent to node_category
-      self.getInventoryEquals(total_quantity,
+      self.assertInventoryEquals(total_quantity,
                               node_category=category.getRelativeUrl())
   
   @expectedFailure
@@ -559,9 +559,9 @@ class TestInventory(InventoryAPITestCase):
     self._makeMovement(quantity=100)
     # We are twice member of the section_category, but the quantity should not
     # change.
-    self.getInventoryEquals(100, section_category='group/level1')
-    self.getInventoryEquals(100, section_category='group/level1/level2')
-    self.getInventoryEquals(100,
+    self.assertInventoryEquals(100, section_category='group/level1')
+    self.assertInventoryEquals(100, section_category='group/level1/level2')
+    self.assertInventoryEquals(100,
             section_category_strict_membership=['group/level1/level2'])
 
   def test_NoSection(self):
@@ -569,10 +569,10 @@ class TestInventory(InventoryAPITestCase):
     empty."""
     self.section.setGroup('level1/level2')
     self._makeMovement(quantity=100, source_section_value=None)
-    self.getInventoryEquals(100, section_category='group/level1/level2')
-    self.getInventoryEquals(100,
+    self.assertInventoryEquals(100, section_category='group/level1/level2')
+    self.assertInventoryEquals(100,
             section_category_strict_membership=['group/level1/level2'])
-    self.getInventoryEquals(100, section_uid=self.section.getUid())
+    self.assertInventoryEquals(100, section_uid=self.section.getUid())
   
   def testPrecision(self):
     # getInventory supports a precision= argument to specify the precision to
@@ -595,7 +595,7 @@ class TestInventory(InventoryAPITestCase):
     self._makeMovement( quantity=1, price=1 )
     for i in range(10):
       self._makeMovement( quantity=-0.1, price=1 )
-    self.getInventoryEquals(0, precision=2, node_uid=self.node.getUid())
+    self.assertInventoryEquals(0, precision=2, node_uid=self.node.getUid())
     self.assertEquals(0, getInventoryAssetPrice(precision=2,
                                                 node_uid=self.node.getUid()))
     
@@ -603,35 +603,35 @@ class TestInventory(InventoryAPITestCase):
     self._makeMovement(quantity=1, price=1)
     self._makeMovement(quantity=-1, price=1)
     # omit input ignores movement comming to this node
-    self.getInventoryEquals(-1, node_uid=self.node.getUid(), omit_input=1)
+    self.assertInventoryEquals(-1, node_uid=self.node.getUid(), omit_input=1)
     # omit output ignores movement going to this node
-    self.getInventoryEquals(1, node_uid=self.node.getUid(), omit_output=1)
+    self.assertInventoryEquals(1, node_uid=self.node.getUid(), omit_output=1)
     # omit_output & omit_input return nothing in that case
-    self.getInventoryEquals(0, node_uid=self.node.getUid(),
+    self.assertInventoryEquals(0, node_uid=self.node.getUid(),
                             omit_input=1, omit_output=1)
     # this also work with movements without source or without destination
     self._makeMovement(quantity=-2, price=1, source_value=None)
-    self.getInventoryEquals(-3, node_uid=self.node.getUid(), omit_input=1)
-    self.getInventoryEquals(1, node_uid=self.node.getUid(), omit_output=1)
+    self.assertInventoryEquals(-3, node_uid=self.node.getUid(), omit_input=1)
+    self.assertInventoryEquals(1, node_uid=self.node.getUid(), omit_output=1)
     # and with movements without source section / desination sections
     self._makeMovement(quantity=2, price=1, source_section_value=None)
-    self.getInventoryEquals(-3, node_uid=self.node.getUid(), omit_input=1)
-    self.getInventoryEquals(3, node_uid=self.node.getUid(), omit_output=1)
+    self.assertInventoryEquals(-3, node_uid=self.node.getUid(), omit_input=1)
+    self.assertInventoryEquals(3, node_uid=self.node.getUid(), omit_output=1)
     
   def test_OmitInputOmitOutputWithDifferentSections(self):
     self._makeMovement(quantity=2, price=1)
     self._makeMovement(quantity=-3, price=1,
                        destination_section_value=self.other_section )
-    self.getInventoryEquals(0, node_uid=self.node.getUid(),
+    self.assertInventoryEquals(0, node_uid=self.node.getUid(),
                             section_uid=self.section.getUid(),
                             omit_input=1)
-    self.getInventoryEquals(-3, node_uid=self.node.getUid(),
+    self.assertInventoryEquals(-3, node_uid=self.node.getUid(),
                             section_uid=self.other_section.getUid(),
                             omit_input=1)
-    self.getInventoryEquals(2, node_uid=self.node.getUid(),
+    self.assertInventoryEquals(2, node_uid=self.node.getUid(),
                             section_uid=self.section.getUid(),
                             omit_output=1)
-    self.getInventoryEquals(0, node_uid=self.node.getUid(),
+    self.assertInventoryEquals(0, node_uid=self.node.getUid(),
                             section_uid=self.other_section.getUid(),
                             omit_output=1)
     
@@ -641,22 +641,22 @@ class TestInventory(InventoryAPITestCase):
                        destination_payment_value=self.payment_node )
     self._makeMovement(quantity=-3, price=1,
                        destination_payment_value=self.other_payment_node )
-    self.getInventoryEquals(0,
+    self.assertInventoryEquals(0,
                             node_uid=self.node.getUid(),
                             section_uid=self.section.getUid(),
                             payment_uid=self.payment_node.getUid(),
                             omit_input=1)
-    self.getInventoryEquals(-3,
+    self.assertInventoryEquals(-3,
                             node_uid=self.node.getUid(),
                             section_uid=self.section.getUid(),
                             payment_uid=self.other_payment_node.getUid(),
                             omit_input=1)
-    self.getInventoryEquals(2,
+    self.assertInventoryEquals(2,
                             node_uid=self.node.getUid(),
                             section_uid=self.section.getUid(),
                             payment_uid=self.payment_node.getUid(),
                             omit_output=1)
-    self.getInventoryEquals(0,
+    self.assertInventoryEquals(0,
                             node_uid=self.node.getUid(),
                             section_uid=self.other_section.getUid(),
                             payment_uid=self.other_payment_node.getUid(),
@@ -666,10 +666,10 @@ class TestInventory(InventoryAPITestCase):
     self._makeMovement(quantity=-1, price=1, cancellation_amount=True)
     self._makeMovement(quantity=2, price=1, cancellation_amount=True)
 
-    self.getInventoryEquals(2, node_uid=self.node.getUid(), omit_input=1)
-    self.getInventoryEquals(-1, node_uid=self.node.getUid(), omit_output=1)
+    self.assertInventoryEquals(2, node_uid=self.node.getUid(), omit_input=1)
+    self.assertInventoryEquals(-1, node_uid=self.node.getUid(), omit_output=1)
     # omit_output & omit_input return nothing in that case
-    self.getInventoryEquals(0, node_uid=self.node.getUid(),
+    self.assertInventoryEquals(0, node_uid=self.node.getUid(),
                             omit_input=1, omit_output=1)
     
   def test_OmitInputOmitOutputWithDifferentPaymentSameNodeSameSection(self):
@@ -680,12 +680,12 @@ class TestInventory(InventoryAPITestCase):
                        destination_section_value=self.section,
                        source_payment_value=self.other_payment_node,
                        destination_payment_value=self.payment_node )
-    self.getInventoryEquals(2,
+    self.assertInventoryEquals(2,
                             node_uid=self.node.getUid(),
                             section_uid=self.section.getUid(),
                             payment_uid=self.payment_node.getUid(),
                             omit_output=1)
-    self.getInventoryEquals(-2,
+    self.assertInventoryEquals(-2,
                             node_uid=self.node.getUid(),
                             section_uid=self.section.getUid(),
                             payment_uid=self.other_payment_node.getUid(),
@@ -700,11 +700,11 @@ class TestInventory(InventoryAPITestCase):
     date_gmt0 = DateTime('2005/12/01 GMT+10')
     date_gmt1 = DateTime('2005/12/01 GMT+11')
     self._makeMovement(quantity=1, start_date=date_gmt0)
-    self.getInventoryEquals(0,
+    self.assertInventoryEquals(0,
                             node_uid=self.node.getUid(),
                             resource=self.resource.getRelativeUrl(),
                             at_date=date_gmt1)
-    self.getInventoryEquals(1,
+    self.assertInventoryEquals(1,
                             node_uid=self.node.getUid(),
                             resource=self.resource.getRelativeUrl(),
                             at_date=date_gmt_1)
@@ -2337,7 +2337,7 @@ class TestInventoryDocument(InventoryAPITestCase):
           raise AssertionError, 'No line in %r match %r' % \
                                 (inventory_list, criterion_dict)
 
-  def getInventoryEquals(self, value, inventory_kw):
+  def assertInventoryEquals(self, value, inventory_kw):
     """
       Check that optimised getInventory call is equal to given value
       and that unoptimised call is *not* equal to thi value.
@@ -2352,7 +2352,7 @@ class TestInventoryDocument(InventoryAPITestCase):
       Check that inventory optimisation is executed when querying current
       amount (there is a usable full inventory which is the latest).
     """
-    self.getInventoryEquals(value=self.INVENTORY_QUANTITY_3 + \
+    self.assertInventoryEquals(value=self.INVENTORY_QUANTITY_3 + \
                                   self.BASE_QUANTITY,
                             inventory_kw={'node_uid': self.node_uid})
 
@@ -2361,7 +2361,7 @@ class TestInventoryDocument(InventoryAPITestCase):
       Check that inventory optimisation is executed when querying an amount
       at the exact time of latest usable full inventory.
     """
-    self.getInventoryEquals(value=self.INVENTORY_QUANTITY_3,
+    self.assertInventoryEquals(value=self.INVENTORY_QUANTITY_3,
                             inventory_kw={'node_uid': self.node_uid,
                                           'at_date': self.INVENTORY_DATE_3})
 
@@ -2370,7 +2370,7 @@ class TestInventoryDocument(InventoryAPITestCase):
       Check that inventory optimisation is executed when querying past
       amount (there is a usable full inventory which is not the latest).
     """
-    self.getInventoryEquals(value=self.INVENTORY_QUANTITY_2 + \
+    self.assertInventoryEquals(value=self.INVENTORY_QUANTITY_2 + \
                                   self.BASE_QUANTITY,
                             inventory_kw={'node_uid': self.node_uid,
                                           'at_date': self.INVENTORY_DATE_3 - \
