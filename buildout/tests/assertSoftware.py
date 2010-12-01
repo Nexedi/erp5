@@ -2242,7 +2242,7 @@ class AssertGraphviz(AssertSoftwareMixin):
       ])
 
 class AssertPkgconfig(AssertSoftwareMixin):
-  def test_ld_dot(self):
+  def test_ld_pkgconfig(self):
     self.assertLibraryList('parts/pkgconfig/bin/pkg-config', [
       'libc',
       'libglib-2.0',
