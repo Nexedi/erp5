@@ -74,7 +74,6 @@ import difflib
 from AccessControl import Unauthorized
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
-from Products.ERP5.Tool.ContributionTool import AlreadyIngestedUrlError
 
 QUIET = 0
 
