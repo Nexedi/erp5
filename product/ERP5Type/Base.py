@@ -3844,6 +3844,62 @@ class Base( CopyContainer,
   def isItem(self):
     return self.portal_type in self.getPortalItemTypeList()
 
+  security.declareProtected(Permissions.DeletePortalContent,
+                            'migratePortalType')
+  def migratePortalType(self, portal_type):
+    """
+    Recreate document by recomputing inputted parameters with help of
+    contribution tool.
+
+    Use an Unrestricted method to edit related relations on other objects.
+    """
+    if self.getPortalType() == portal_type:
+      raise TypeError, 'Can not migrate a document to same portal_type'
+    if not portal_type:
+      raise TypeError, 'Missing portal_type value'
+
+    # Reingestion requested with portal_type.
+    input_kw = {}
+    input_kw['portal_type'] = portal_type
+    for property_id in self.propertyIds():
+      if property_id not in ('portal_type', 'uid', 'id',) \
+            and self.hasProperty(property_id):
+        input_kw[property_id] = self.getProperty(property_id)
+    if getattr(self, 'hasUrlString', None) is not None and self.hasUrlString():
+      # URL is not stored on document
+      # pass required properties for portal_contributions.newContent
+      input_kw['url'] = self.asURL()
+
+    # Use meta transition to jump from one state to another
+    # without existing transitions.
+    from Products.ERP5.InteractionWorkflow import InteractionWorkflowDefinition
+    portal = self.getPortalObject()
+    workflow_tool = portal.portal_workflow
+    worflow_variable_list = []
+    for workflow in workflow_tool.getWorkflowsFor(self):
+      if not isinstance(workflow, InteractionWorkflowDefinition):
+        worflow_variable_list.append(self.getProperty(workflow.state_var))
+
+    # then restart ingestion with new portal_type
+    # XXX Contribution Tool accept only document which are containing
+    # at least the couple data and filename or one url
+    portal_contributions = portal.portal_contributions
+    new_document = portal_contributions.newContent(**input_kw)
+
+    # Meta transitions
+    for state in worflow_variable_list:
+      if workflow_tool._isJumpToStatePossibleFor(new_document, state):
+        workflow_tool._jumpToStateFor(new_document, state)
+
+    # Update relations
+    UnrestrictedMethod(self.updateRelatedContent)(self.getRelativeUrl(),
+                                                  new_document.getRelativeUrl())
+
+    # Delete actual content
+    self.getParentValue()._delObject(self.getId())
+
+    return new_document
+
 InitializeClass(Base)
 
 try:
