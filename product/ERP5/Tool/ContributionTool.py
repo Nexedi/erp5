@@ -29,12 +29,7 @@
 
 import cStringIO
 import re
-import string
 import socket
-try:
-  from hashlib import md5 as md5_new
-except ImportError:
-  from md5 import new as md5_new
 import urllib2, urllib
 import urlparse
 from cgi import parse_header
@@ -46,13 +41,11 @@ from Products.CMFCore.utils import getToolByName, _checkPermission
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.ERP5 import _dtmldir
-from Products.ERP5.Document.Url import no_crawl_protocol_list, no_host_protocol_list
+from Products.ERP5.Document.Url import no_crawl_protocol_list
 from AccessControl import Unauthorized
 
-from zLOG import LOG
 from DateTime import DateTime
-from Acquisition import aq_base
-from zExceptions import BadRequest
+import warnings
 
 # Install openers
 import ContributionOpener
@@ -83,7 +76,7 @@ class ContributionTool(BaseTool):
 
     Configuration Scripts:
 
-      - ContributionTool_getPropertyDictFromFileName: receives file name and a 
+      - ContributionTool_getPropertyDictFromFilename: receives file name and a 
         dict derived from filename by regular expression, and does any necesary
         operations (e.g. mapping document type id onto a real portal_type).
 
@@ -98,8 +91,7 @@ class ContributionTool(BaseTool):
   meta_type = 'ERP5 Contribution Tool'
   portal_type = 'Contribution Tool'
 
-  # Regular expressions
-  simple_normaliser = re.compile('#.*')
+  
 
   # Declarative Security
   security = ClassSecurityInfo()
@@ -108,153 +100,141 @@ class ContributionTool(BaseTool):
   manage_overview = DTMLFile( 'explainContributionTool', _dtmldir )
 
   security.declareProtected(Permissions.AddPortalContent, 'newContent')
-  def newContent(self, id=None, portal_type=None, url=None, container=None,
-                       container_path=None,
-                       discover_metadata=1, temp_object=0,
-                       user_login=None, data=None, file_name=None, **kw):
+  def newContent(self, **kw):
     """
       The newContent method is overriden to implement smart content
       creation by detecting the portal type based on whatever information
       was provided and finding out the most appropriate module to store
       the content.
 
-      user_login is the name under which the content will be created
-      XXX - this is a security hole which needs to be fixed by
-      making sure only Manager can use this parameter
-
-      container -- if specified, it is possible to define
-      where to contribute the content. Else, ContributionTool
-      tries to guess.
-
-      container_path -- if specified, defines the container path
-      and has precedence over container
-
-      url -- if specified, content is download from the URL.
-
-      NOTE:
-        We always generate ID. So, we must prevent using the one
-        which we were provided.
+      explicit named parameters was:
+        id - ignored argument
+        portal_type - explicit portal_type parameter, must be honoured
+        url - Identifier of external resource. Content will be downloaded
+              from it
+        container - if specified, it is possible to define
+                    where to contribute the content. Else, ContributionTool
+                    tries to guess.
+        container_path - if specified, defines the container path
+                         and has precedence over container
+        discover_metadata - Enable metadata extraction and discovery
+                            (default True)
+        temp_object - build tempObject or not (default False)
+        user_login - is the name under which the content will be created
+                     XXX - this is a security hole which needs to be fixed by
+                     making sure only Manager can use this parameter
+        data - Binary representation of content
+        filename - explicit filename of content
     """
-    if file_name is not None:
-      kw['file_name'] = file_name
-    if data is not None:
-      # This is only used to make sure
-      # we can pass file as parameter to ZPublisher
-      # whenever we ingest email
-      kw['data'] = data
+    kw.pop('id', None) # Never use hardcoded ids anymore longer
+
+    # Useful for metadata discovery, keep it as it as been provided
+    input_parameter_dict = kw.copy()
+    # But file and data are exceptions.
+    # They are potentialy too big to be keept into memory.
+    # We want to keep only one reference of thoses values
+    # on futur created document only !
+    if 'file' in input_parameter_dict:
+      del input_parameter_dict['file']
+    if 'data' in input_parameter_dict:
+      del input_parameter_dict['data']
+    # pop: remove keys which are not document properties
+    url = kw.pop('url', None)
+    container = kw.pop('container', None)
+    container_path = kw.pop('container_path', None)
+    discover_metadata = kw.pop('discover_metadata', True)
+    user_login = kw.pop('user_login', None)
+    # check file_name argument for backward compatibility.
+    if 'file_name' in kw:
+      if 'filename' not in kw:
+        kw['filename'] = kw['file_name']
+      del(kw['file_name'])
+    filename = kw.get('filename', None)
+    portal_type = kw.get('portal_type')
+    temp_object = kw.get('temp_object', False)
 
     document = None
-
-    # Try to find the file_name
+    portal = self.getPortalObject()
+    # Try to find the filename
     content_type = None
     if not url:
       # check if file was provided
-      file = kw.get('file', None)
-      if file is not None and file_name is None:
-        file_name = file.filename
+      file_object = kw.get('file')
+      if file_object is not None:
+        if not filename:
+          filename = file_object.filename
       else:
         # some channels supply data and file-name separately
         # this is the case for example for email ingestion
         # in this case, we build a file wrapper for it
-        data = kw.get('data', None)
-        if data is not None:
-          file_name = kw.get('file_name', None)
-          if file_name is not None:
-            file = cStringIO.StringIO()
-            file.write(data)
-            file.seek(0)
-            kw['file'] = file
-            del kw['data']
-            del kw['file_name']
+        data = kw.get('data')
+        if data is not None and filename:
+          file_object = cStringIO.StringIO()
+          file_object.write(data)
+          file_object.seek(0)
+          kw['file'] = file_object
+          del kw['data']
+        else:
+          raise TypeError, 'data and filename must be provided'
     else:
-      # build a new file from the url
-      url_file = urllib2.urlopen(url)
-      data = url_file.read() # time out must be set or ... too long XXX
-      file = cStringIO.StringIO()
-      file.write(data)
-      file.seek(0)
-      # if a content-disposition header is present,
-      # try first to read the suggested filename from it.
-      header_info = url_file.info()
-      content_disposition = header_info.getheader('content-disposition', '')
-      file_name = parse_header(content_disposition)[1].get('filename')
-      if not file_name:
-        # Now read the filename from url.
-        # In case of http redirection, the real url must be read
-        # from file object returned by urllib2.urlopen.
-        # It can happens when the header 'Location' is present in request.
-        # See http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.30
-        url = url_file.geturl()
-        # Create a file name based on the URL and quote it
-        file_name = urlparse.urlsplit(url)[-3]
-        file_name = os.path.basename(file_name)
-        file_name = urllib.quote(file_name, safe='')
-        file_name = file_name.replace('%', '')
-      # For URLs, we want an id by default equal to the encoded URL
-      if id is None:
-        id = self.encodeURL(url)
-      content_type = header_info.gettype()
+      file_object, filename, content_type = self._openURL(url)
       if content_type:
         kw['content_type'] = content_type
-      kw['file'] = file
+      kw['file'] = file_object
 
     # If the portal_type was provided, we can go faster
     if portal_type and container is None:
       # We know the portal_type, let us find the default module
       # and use it as container
       try:
-        container = self.getDefaultModule(portal_type)
+        container = portal.getDefaultModule(portal_type)
       except ValueError:
         container = None
 
-    if portal_type and container is not None:
-      # We could simplify things here and return a document immediately
-      # NOTE: we use the module ID generator rather than the provided ID
-      #document = module.newContent(portal_type=portal_type, **kw)
-      #if discover_metadata:
-      #  document.activate().discoverMetadata(file_name=file_name, user_login=user_login)
-      #return document
-      pass # XXX - This needs to be implemented once the rest is stable
-
     # From here, there is no hope unless a file was provided
-    if file is None:
-      raise ValueError, "could not determine portal type"
+    if file_object is None:
+      raise ValueError, "No data provided"
 
+
+    if portal_type is None:
+      # Guess it with help of portal_contribution_registry
+      registry = getToolByName(portal, 'portal_contribution_registry')
+      portal_type = registry.findPortalTypeName(filename=filename,
+                                                content_type=content_type)
     #
     # Check if same file is already exists. if it exists, then update it.
     #
-    if portal_type is None:
-      portal_type = self._guessPortalType(file_name, content_type, data)
-      property_dict = self.getMatchedFileNamePatternDict(file_name)
-      reference = property_dict.get('reference', None)
-      version  = property_dict.get('version', None)
-      language  = property_dict.get('language', None)
-      if portal_type and reference and version and language:
-        portal_catalog = getToolByName(self, 'portal_catalog')
-        document = portal_catalog.getResultValue(portal_type=portal_type,
-                                                  reference=reference,
-                                                  version=version,
-                                                  language=language)
-        if document is not None:
-          # document is already uploaded. So overrides file.
-          if not _checkPermission(Permissions.ModifyPortalContent, document):
-            raise Unauthorized, "[DMS] You are not allowed to update the existing document which has the same coordinates (id %s)" % document.getId()
-          document.edit(file=kw['file'])
-          return document
+    property_dict = self.getMatchedFilenamePatternDict(filename)
+    reference = property_dict.get('reference', None)
+    version  = property_dict.get('version', None)
+    language  = property_dict.get('language', None)
+    if portal_type and reference and version and language:
+      portal_catalog = getToolByName(portal, 'portal_catalog')
+      document = portal_catalog.getResultValue(portal_type=portal_type,
+                                                reference=reference,
+                                                version=version,
+                                                language=language)
 
+      if document is not None:
+        # document is already uploaded. So overrides file.
+        if not _checkPermission(Permissions.ModifyPortalContent, document):
+          raise Unauthorized, "[DMS] You are not allowed to update the existing document which has the same coordinates (id %s)" % document.getId()
+        document.edit(file=kw['file'])
+        return document
     # Temp objects use the standard newContent from Folder
     if temp_object:
       # For temp_object creation, use the standard method
-      return BaseTool.newContent(self, id=id, portal_type=portal_type,
-                                 temp_object=temp_object, **kw)
+      kw['portal_type'] = portal_type
+      return BaseTool.newContent(self, **kw)
 
     # Then put the file inside ourselves for a short while
     if container_path is not None:
       container = self.getPortalObject().restrictedTraverse(container_path)
-    document = self._setObject(file_name, None, portal_type=portal_type,
-                               user_login=user_login, id=id,
-                               container=container,
+    document = self._setObject(filename, None, portal_type=portal_type,
+                               user_login=user_login, container=container,
                                discover_metadata=discover_metadata,
+                               filename=filename,
+                               input_parameter_dict=input_parameter_dict
                                )
     object_id = document.getId()
     document = self._getOb(object_id) # Call _getOb to purge cache
@@ -264,17 +244,11 @@ class ContributionTool(BaseTool):
       if modified_kw is not None:
         kw.update(modified_kw)
 
+    kw['filename'] = filename # Override filename property
     # Then edit the document contents (so that upload can happen)
     document._edit(**kw)
-    # if no content_type has been set, guess it
-    if 'content_type' not in kw and getattr(document, 'guessMimeType', None) is not None:
-      # For File force to setup the mime_type
-      document.guessMimeType(fname=file_name)
     if url:
       document.fromURL(url)
-
-    # Notify workflows
-    #document.notifyWorkflowCreated()
 
     # Allow reindexing, reindex it and return the document
     try:
@@ -293,17 +267,19 @@ class ContributionTool(BaseTool):
     """
     pass
 
-  security.declareProtected(Permissions.ModifyPortalContent,'getMatchedFileNamePatternDict')
-  def getMatchedFileNamePatternDict(self, file_name):
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'getMatchedFilenamePatternDict')
+  def getMatchedFilenamePatternDict(self, filename):
     """
       Get matched group dict of file name parsing regular expression.
     """
     property_dict = {}
 
-    if file_name is None:
+    if filename is None:
       return property_dict
 
-    regex_text = self.portal_preferences.getPreferredDocumentFileNameRegularExpression()
+    regex_text = self.portal_preferences.\
+                                getPreferredDocumentFilenameRegularExpression()
     if regex_text in ('', None):
       return property_dict
 
@@ -311,42 +287,55 @@ class ContributionTool(BaseTool):
       pattern = re.compile(regex_text)
       if pattern is not None:
         try:
-          property_dict = pattern.match(file_name).groupdict()
+          property_dict = pattern.match(filename).groupdict()
         except AttributeError: # no match
           pass
     return property_dict
 
-  security.declareProtected(Permissions.ModifyPortalContent,'getPropertyDictFromFileName')
-  def getPropertyDictFromFileName(self, file_name):
+  # backward compatibility
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'getMatchedFileNamePatternDict')
+  def getMatchedFileNamePatternDict(self, filename):
+    """
+    (deprecated) use getMatchedFilenamePatternDict() instead.
+    """
+    warnings.warn('getMatchedFileNamePatternDict() is deprecated. '
+                  'use getMatchedFilenamePatternDict() instead.')
+    return self.getMatchedFilenamePatternDict(filename)
+
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'getPropertyDictFromFilename')
+  def getPropertyDictFromFilename(self, filename):
     """
       Gets properties from filename. File name is parsed with a regular expression
       set in preferences. The regexp should contain named groups.
     """
-    if file_name is None:
+    if filename is None:
       return {}
-    property_dict = self.getMatchedFileNamePatternDict(file_name)
-    method = self._getTypeBasedMethod('getPropertyDictFromFileName',
-        fallback_script_id = 'ContributionTool_getPropertyDictFromFileName')
-    property_dict = method(file_name, property_dict)
-    if property_dict.get('portal_type', None) is not None:
-      # we have to return portal_type as a tuple
-      # because we should allow for having multiple candidate types
-      property_dict['portal_type'] = (property_dict['portal_type'],)
-    else:
-      # we have to find candidates by file extenstion
-      basename, extension = os.path.splitext(file_name)
-      if extension:
-        extension = extension.lstrip('.') # remove first dot
-        property_dict['portal_type'] =\
-               self.ContributionTool_getCandidateTypeListByExtension(extension)
+    property_dict = self.getMatchedFilenamePatternDict(filename)
+    method = self._getTypeBasedMethod('getPropertyDictFromFilename',
+             fallback_script_id='ContributionTool_getPropertyDictFromFilename')
+    property_dict = method(filename, property_dict)
     return property_dict
 
+  # backward compatibility
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'getPropertyDictFromFileName')
+  def getPropertyDictFromFileName(self, filename):
+    """
+    (deprecated) use getPropertyDictFromFilename() instead.
+    """
+    warnings.warn('getPropertyDictFromFileName() is deprecated. '
+                  'use getPropertyDictFromFilename() instead.')
+    return self.getPropertyDictFromFilename(filename)
+
   # WebDAV virtual folder support
-  def _setObject(self, name, ob, portal_type=None, user_login=None,
-                 container=None, id=None, discover_metadata=1):
+  def _setObject(self, id, ob, portal_type=None, user_login=None,
+                 container=None, discover_metadata=True, filename=None,
+                 input_parameter_dict=None):
     """
       portal_contribution_registry will find appropriate portal type
-      name by file_name and content itself.
+      name by filename and content itself.
 
       The ContributionTool instance must be configured in such
       way that _verifyObjectPaste will return TRUE.
@@ -362,9 +351,8 @@ class ContributionTool(BaseTool):
       # redefine parameters
       portal_type = ob.getPortalType()
       container = ob.getParentValue()
-      id = ob.getId()
     if not portal_type:
-      document = BaseTool.newContent(self, id=name,
+      document = BaseTool.newContent(self, id=id,
                                      portal_type=portal_type,
                                      is_indexable=0)
     else:
@@ -379,33 +367,27 @@ class ContributionTool(BaseTool):
         module = self.getDefaultModule(portal_type)
       else:
         module = container
-      if id is None:
-        new_id = module.generateNewId()
-      else:
-        new_id = id
-      existing_document = module._getOb(new_id, None)
-      if existing_document is None:
-        # There is no preexisting document - we can therefore
-        # set the new object
-        document = module.newContent(id=new_id,
-                                     portal_type=portal_type,
-                                     is_indexable=0)
-        # We can now discover metadata
-        if discover_metadata:
-          # Metadata disovery is done as an activity by default
-          # If we need to discoverMetadata synchronously, it must
-          # be for user interface and should thus be handled by
-          # ZODB scripts
-          document.activate(after_path_and_method_id=(document.getPath(),
-            ('convertToBaseFormat', 'Document_tryToConvertToBaseFormat'))) \
-          .discoverMetadata(file_name=name, user_login=user_login)
-      else:
-        document = existing_document
+      # There is no preexisting document - we can therefore
+      # set the new object
+      document = module.newContent(portal_type=portal_type, is_indexable=0)
+      # We can now discover metadata
+      if discover_metadata:
+        # Metadata disovery is done as an activity by default
+        # If we need to discoverMetadata synchronously, it must
+        # be for user interface and should thus be handled by
+        # ZODB scripts
+        document.activate(after_path_and_method_id=(document.getPath(),
+          ('convertToBaseFormat', 'Document_tryToConvertToBaseFormat'))) \
+        .discoverMetadata(filename=filename,
+                          user_login=user_login,
+                          input_parameter_dict=input_parameter_dict)
       # Keep the document close to us - this is only useful for
       # file upload from webdav
-      if not hasattr(self, '_v_document_cache'):
+      volatile_cache = getattr(self, '_v_document_cache', None)
+      if volatile_cache is None:
         self._v_document_cache = {}
-      self._v_document_cache[document.getId()] = document.getRelativeUrl()
+        volatile_cache = self._v_document_cache
+      volatile_cache[document.getId()] = document.getRelativeUrl()
 
     # Return document to newContent method
     return document
@@ -417,10 +399,11 @@ class ContributionTool(BaseTool):
     """
     # Use the document cache if possible and return result immediately
     # this is only useful for webdav
-    if hasattr(self, '_v_document_cache'):
-      document_url = self._v_document_cache.get(id, None)
+    volatile_cache = getattr(self, '_v_document_cache', None)
+    if volatile_cache is not None:
+      document_url = volatile_cache.get(id)
       if document_url is not None:
-        del self._v_document_cache[id]
+        del volatile_cache[id]
         return self.getPortalObject().unrestrictedTraverse(document_url)
 
     # Try first to return the real object inside
@@ -475,65 +458,10 @@ class ContributionTool(BaseTool):
     def wrapper(o_list):
       for o in o_list:
         o = o.getObject()
-        id = '%s-%s' % (o.getUid(), o.getStandardFileName(),)
+        id = '%s-%s' % (o.getUid(), o.getStandardFilename(),)
         yield o.asContext(id=id)
 
     return wrapper(object_list)
-
-  # Crawling methods
-  security.declareProtected(Permissions.View, 'normaliseURL')
-  def normaliseURL(self, url, base_url=None):
-    """
-      Returns a normalised version of the url so
-      that we do not download twice the same content.
-      URL normalisation is an important part in crawlers.
-      The current implementation is obviously simplistic.
-      Refer to http://en.wikipedia.org/wiki/Web_crawler
-      and study Harvestman for more ideas.
-    """
-    url = self.simple_normaliser.sub('', url)
-    url_split = url.split(':')
-    url_protocol = url_split[0]
-    if url_protocol in no_host_protocol_list:
-      return url
-    if base_url and len(url_split) == 1:
-      # Make relative URL absolute
-      url = '%s/%s' % (base_url, url)
-    return url
-
-  security.declareProtected(Permissions.View, 'encodeURL')
-  def encodeURL(self, url):
-    """
-    Returns the URL as an ID. ID should be chosen in such
-    way that it is optimal with HBTreeFolder (ie. so that
-    distribution of access time on a cluster is possible)
-
-    NOTE: alternate approach is based on a url table
-    and catalog lookup. It is faster ? Not sure. Since
-    we must anyway insert objects in btrees and this
-    is simimar in cost to accessing them.
-    """
-    # Produce an MD5 from the URL
-    hex_md5 = md5_new(url).hexdigest()
-    # Take the first part in the URL which is not empty
-    # LOG("encodeURL", 0, url)
-    url_segment = url.split(':')[1]
-    url_segment_list = url_segment.split('/')
-    url_domain = None
-    for url_part in url_segment_list:
-      if url_part:
-        url_domain = url_part
-        break
-    # Return encoded url
-    if url_domain:
-      url_domain = urllib.quote(url_domain, safe='')
-      url_domain = url_domain.replace('%', '')
-      return "%s-%s" % (url_domain, hex_md5)
-    return hex_md5
-    url = urllib.quote(url, safe='')
-    url = url.replace('_', '__')
-    url = url.replace('%', '_')
-    return url
 
   security.declareProtected(Permissions.AddPortalContent, 'crawlContent')
   def crawlContent(self, content, container=None):
@@ -543,6 +471,8 @@ class ContributionTool(BaseTool):
       XXX: missing is the conversion of content local href to something
       valid.
     """
+    portal = self.getPortalObject()
+    url_registry_tool = portal.portal_url_registry
     depth = content.getCrawlingDepth()
     if depth < 0:
       # Do nothing if crawling depth is reached
@@ -554,32 +484,34 @@ class ContributionTool(BaseTool):
     if depth < 0:
       # Do nothing if crawling depth is reached
       return
-    base_url = content.getContentBaseURL()
-    url_list = map(lambda url: self.normaliseURL(url, base_url), set(content.getContentURLList()))
+    url_list = content.getContentNormalisedURLList()
     for url in set(url_list):
       # LOG('trying to crawl', 0, url)
       # Some url protocols should not be crawled
-      if url.split(':')[0] in no_crawl_protocol_list:
+      if urlparse.urlsplit(url)[0] in no_crawl_protocol_list:
         continue
       if container is None:
         #if content.getParentValue()
         # in place of not ?
         container = content.getParentValue()
-      # Calculate the id under which content will be stored
-      id = self.encodeURL(url)
-      # Try to access the document if it already exists
-      document = container.get(id, None)
-      if document is None:
-        # XXX - This call is not working due to missing group_method_id
-        # therefore, multiple call happen in parallel and eventually fail
-        # (the same URL is created multiple times)
-        # LOG('activate newContentFromURL', 0, url)
-        self.activate(activity="SQLQueue").newContentFromURL(container_path=container.getRelativeUrl(),
-                                                      id=id, url=url, crawling_depth=depth)
-      elif depth and document.getCrawlingDepth() < depth:
-        # Update the crawling depth if necessary
-        document._setCrawlingDepth(depth)
-        document.activate().crawlContent()
+      try:
+        url_registry_tool.getReferenceFromURL(url, context=container)
+      except KeyError:
+        pass
+      else:
+        # url already crawled
+        continue
+      # XXX - This call is not working due to missing group_method_id
+      # therefore, multiple call happen in parallel and eventually fail
+      # (the same URL is created multiple times)
+      # LOG('activate newContentFromURL', 0, url)
+      self.activate(activity="SQLQueue").newContentFromURL(
+                                  container_path=container.getRelativeUrl(),
+                                  url=url, crawling_depth=depth)
+      # Url is not known yet but register right now to avoid
+      # creation of duplicated crawled content
+      # An activity will later setup the good reference for it.
+      url_registry_tool.registerURL(url, None, context=container)
 
   security.declareProtected(Permissions.AddPortalContent, 'updateContentFromURL')
   def updateContentFromURL(self, content, repeat=MAX_REPEAT, crawling_depth=0):
@@ -595,10 +527,7 @@ class ContributionTool(BaseTool):
       # Step 1: download new content
       try:
         url = content.asURL()
-        data = urllib2.urlopen(url).read()
-        file = cStringIO.StringIO()
-        file.write(data)
-        file.seek(0)
+        file_object, filename, content_type = self._openURL(url)
       except urllib2.HTTPError, error:
         if repeat == 0:
           # XXX - Call the extendBadURLList method,--NOT Implemented--
@@ -615,28 +544,28 @@ class ContributionTool(BaseTool):
         content.activate(at_date=DateTime() + 1).updateContentFromURL(repeat=repeat - 1)
         return
 
-      # Step 2: compare and update if necessary (md5)
-      # md5 stuff to compare contents
-      new_content_md5 = md5_new(data).hexdigest()
-      content_md5 = content.getContentMd5()
-      if content_md5 == new_content_md5:
-        return
-      content._edit(file=file)# Please make sure that if content is the same
+      content._edit(file=file_object, content_type=content_type)
+                              # Please make sure that if content is the same
                               # we do not update it
                               # This feature must be implemented by Base or File
                               # not here (look at _edit in Base)
-      # Step 3: convert to base format
-      content.convertToBaseFormat()
+      # Step 2: convert to base format
+      if content.isSupportBaseDataConversion():
+        content.activate().Document_tryToConvertToBaseFormat()
+      # Step 3: run discoverMetadata
+      content.activate(after_path_and_method_id=(content.getPath(),
+            ('convertToBaseFormat', 'Document_tryToConvertToBaseFormat'))) \
+          .discoverMetadata(filename=filename)
       # Step 4: activate populate (unless interaction workflow does it)
       content.activate().populateContent()
       # Step 5: activate crawlContent
       depth = content.getCrawlingDepth()
       if depth > 0:
         content.activate().crawlContent()
-      content.setContentMd5(new_content_md5)
 
   security.declareProtected(Permissions.AddPortalContent, 'newContentFromURL')
-  def newContentFromURL(self, container_path=None, id=None, repeat=MAX_REPEAT, repeat_interval=1, batch_mode=True, **kw):
+  def newContentFromURL(self, container_path=None, id=None, repeat=MAX_REPEAT,
+                        repeat_interval=1, batch_mode=True, url=None, **kw):
     """
       A wrapper method for newContent which provides extra safety
       in case or errors (ie. download, access, conflict, etc.).
@@ -646,17 +575,13 @@ class ContributionTool(BaseTool):
       the at_date parameter and some standard values.
 
       NOTE: implementation needs to be done.
+      id parameter is ignored
     """
     document = None
-    # First of all, make sure do not try to create an existing document
-    if container_path is not None and id is not None:
-      container = self.restrictedTraverse(container_path)
-      document = container.get(id, None)
-      if document is not None:
-        # Document aleardy exists: no need to keep on crawling
-        return document
+    if not url:
+      raise TypeError, 'url parameter is mandatory'
     try:
-      document = self.newContent(container_path=container_path, id=id, **kw)
+      document = self.newContent(container_path=container_path, url=url, **kw)
       if document.isIndexContent() and document.getCrawlingDepth() >= 0:
         # If this is an index document, keep on crawling even if crawling_depth is 0
         document.activate().crawlContent()
@@ -672,7 +597,7 @@ class ContributionTool(BaseTool):
       if repeat > 0:
         # Catch any HTTP error
         self.activate(at_date=DateTime() + repeat_interval).newContentFromURL(
-                          container_path=container_path, id=id,
+                          container_path=container_path, url=url,
                           repeat=repeat - 1,
                           repeat_interval=repeat_interval, **kw)
     except urllib2.URLError, error:
@@ -685,28 +610,57 @@ class ContributionTool(BaseTool):
       if repeat > 0:
         self.activate(at_date=DateTime() + repeat_interval,
                       activity="SQLQueue").newContentFromURL(
-                        container_path=container_path, id=id,
+                        container_path=container_path, url=url,
                         repeat=repeat - 1,
                         repeat_interval=repeat_interval, **kw)
     return document
 
-  def _guessPortalType(self, name, typ, body):
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'guessMimeTypeFromFilename')
+  def guessMimeTypeFromFilename(self, filename):
     """
-       Call Portal Contribution Registry
-       to know which portal_type should be used
+      get mime type from file name
     """
-    findPortalTypeName = None
-    registry = getToolByName(self, 'portal_contribution_registry', None)
-    if registry is not None:
-      findPortalTypeName = registry.findPortalTypeName
-    else:
-      # Keep backward compatibility
-      registry = getToolByName(self, 'content_type_registry', None)
-      if registry is None:
-        return None
-      findPortalTypeName = registry.findTypeName
+    if not filename:
+      return
+    portal = self.getPortalObject()
+    content_type = portal.mimetypes_registry.lookupExtension(filename)
+    return content_type
 
-    portal_type = findPortalTypeName(name, typ, body)
-    return portal_type
+  def _openURL(self, url):
+    """Download content from url,
+    read filename and content_type
+    return file_object, filename, content_type tuple
+    """
+    # Quote path part of url
+    url_tuple = urlparse.urlsplit(url)
+    quoted_path = urllib.quote(url_tuple[2])
+    url = urlparse.urlunsplit((url_tuple[0], url_tuple[1], quoted_path,
+                               url_tuple[3], url_tuple[4]))
+    # build a new file from the url
+    url_file = urllib2.urlopen(url)
+    data = url_file.read() # time out must be set or ... too long XXX
+    file_object = cStringIO.StringIO()
+    file_object.write(data)
+    file_object.seek(0)
+    # if a content-disposition header is present,
+    # try first to read the suggested filename from it.
+    header_info = url_file.info()
+    content_disposition = header_info.getheader('content-disposition', '')
+    filename = parse_header(content_disposition)[1].get('filename')
+    if not filename:
+      # Now read the filename from url.
+      # In case of http redirection, the real url must be read
+      # from file object returned by urllib2.urlopen.
+      # It can happens when the header 'Location' is present in request.
+      # See http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.30
+      url = url_file.geturl()
+      # Create a file name based on the URL and quote it
+      filename = urlparse.urlsplit(url)[-3]
+      filename = os.path.basename(filename)
+      filename = urllib.quote(filename, safe='')
+      filename = filename.replace('%', '')
+    content_type = header_info.gettype()
+    return file_object, filename, content_type
 
 InitializeClass(ContributionTool)

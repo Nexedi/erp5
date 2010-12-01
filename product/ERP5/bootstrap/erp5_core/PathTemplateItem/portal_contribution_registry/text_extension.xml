@@ -11,7 +11,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>file_extension</string> </key>
+                    <key> <string>extension_from_filename</string> </key>
                     <value>
                       <list>
                         <string>txt</string>
@@ -36,7 +36,7 @@
             <key> <string>criterion_property</string> </key>
             <value>
               <tuple>
-                <string>file_extension</string>
+                <string>extension_from_filename</string>
               </tuple>
             </value>
         </item>
@@ -64,7 +64,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Text</string> </value>
+            <value> <string>Text by extension</string> </value>
         </item>
       </dictionary>
     </pickle>

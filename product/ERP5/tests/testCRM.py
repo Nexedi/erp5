@@ -36,7 +36,7 @@ from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.ERP5Type.tests.utils import DummyMailHost, FileUpload
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
                                                        _getConversionServerDict
-from Products.ERP5OOo.tests.testIngestion import FILE_NAME_REGULAR_EXPRESSION
+from Products.ERP5OOo.tests.testIngestion import FILENAME_REGULAR_EXPRESSION
 from Products.ERP5OOo.tests.testIngestion import REFERENCE_REGULAR_EXPRESSION
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
@@ -443,7 +443,7 @@ class TestCRMMailIngestion(BaseTestCRM):
       data=self._readTestData(filename)
     return self.portal.portal_contributions.newContent(
                     container_path='event_module',
-                    file_name='postfix_mail.eml',
+                    filename='postfix_mail.eml',
                     data=data)
 
   def test_findTypeByName_MailMessage(self):
@@ -451,7 +451,7 @@ class TestCRMMailIngestion(BaseTestCRM):
     self.assertEquals(
       'Mail Message',
       self.portal.portal_contribution_registry.findPortalTypeName(
-      file_name='postfix_mail.eml', mime_type='message/rfc822', data='Test'
+      filename='postfix_mail.eml', content_type='message/rfc822', data='Test'
       ))
 
   def test_Base_getEntityListFromFromHeader(self):
@@ -767,7 +767,7 @@ class TestCRMMailSend(BaseTestCRM):
     conversion_dict = _getConversionServerDict()
     default_pref.setPreferredOoodocServerAddress(conversion_dict['hostname'])
     default_pref.setPreferredOoodocServerPortNumber(conversion_dict['port'])
-    default_pref.setPreferredDocumentFileNameRegularExpression(FILE_NAME_REGULAR_EXPRESSION)
+    default_pref.setPreferredDocumentFileNameRegularExpression(FILENAME_REGULAR_EXPRESSION)
     default_pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
     if default_pref.getPreferenceState() == 'disabled':
       default_pref.enable()

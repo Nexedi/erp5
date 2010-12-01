@@ -45,6 +45,9 @@ try:
   from string import Template
 except ImportError:
   from Products.ERP5Type.patches.string import Template
+from Products.ERP5Type.Utils import guessEncodingFromText
+
+from lxml import html as etree_html
 
 class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
                                                             TextContent, File):
@@ -147,7 +150,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
         kw['format'] = format
         if not self.hasConversion(**kw):
           portal_transforms = getToolByName(portal, 'portal_transforms')
-          filename = self.getSourceReference(self.getTitleOrId())
+          filename = self.getStandardFilename(format=format)
           if mime_type == 'text/html':
             mime_type = 'text/x-html-safe'
           result = portal_transforms.convertToData(mime_type, text_content,
@@ -183,9 +186,13 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
       """
       if self.hasTextContent():
         html = self._asHTML()
-        base_list = re.findall(self.base_parser, str(html))
-        if base_list:
-          return base_list[0]
+        # a document can be entirely stripped by safe_html
+        # so its html conversion can be empty
+        if html.strip():
+          html_tree = etree_html.fromstring(html)
+          base_list = [href for href in html_tree.xpath('//base/@href') if href]
+          if base_list:
+            return str(base_list[0])
       return Document.getContentBaseURL(self)
 
     security.declareProtected(Permissions.ModifyPortalContent, 'setBaseData')
@@ -270,14 +277,14 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
         return encoded content_type and message if encoding
         is not utf-8
         """
-        codec = document._guessEncoding(text_content, content_type)
+        codec = guessEncodingFromText(text_content, content_type)
         if codec is not None:
           try:
             text_content = text_content.decode(codec).encode('utf-8')
           except (UnicodeDecodeError, LookupError):
             message = 'Conversion to base format with codec %r fails' % codec
             # try again with another guesser based on file command
-            codec = document._guessEncoding(text_content, 'text/plain')
+            codec = guessEncodingFromText(text_content, 'text/plain')
             if codec is not None:
               try:
                 text_content = text_content.decode(codec).encode('utf-8')

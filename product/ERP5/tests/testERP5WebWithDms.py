@@ -37,7 +37,8 @@ from AccessControl.SecurityManagement import newSecurityManager
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
      _getConversionServerDict
-from Products.ERP5Type.tests.utils import FileUpload
+from Products.ERP5Type.tests.utils import FileUpload, createZODBPythonScript
+
 
 LANGUAGE_LIST = ('en', 'fr', 'de', 'bg',)
 
@@ -568,8 +569,21 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
 
   def test_PreviewOOoDocumentWithEmbeddedImage(self):
     """Tests html preview of an OOo document with images as extensible content.
+    For this test, Presentation_checkConversionFormatPermission does not allow
+    access to original format for Unauthenticated users.
+    Chack that user can still access to other format.
     """
     portal = self.portal
+    script_id = 'Presentation_checkConversionFormatPermission'
+    python_code = """from AccessControl import getSecurityManager
+user = getSecurityManager().getUser()
+if (not user or not user.getId()) and not format:
+  return False
+return True
+"""
+    createZODBPythonScript(portal.portal_skins.custom, script_id,
+                           'format, **kw', python_code)
+    
     request = portal.REQUEST
     request['PARENTS'] = [self.app]
     self.getPortalObject().aq_parent.acl_users._doAddUser(
@@ -611,7 +625,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     # then publish the document and access it anonymously by reference through
     # the web site
     document.publish()
-    
+
     transaction.commit()
     self.tic()
 
@@ -620,7 +634,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertTrue(response.getHeader('content-type').startswith('text/html'))
     html = response.getBody()
     self.assertTrue('<img' in html, html)
-    
+
     # find the img src
     img_list = etree.HTML(html).findall('.//img')
     self.assertEquals(1, len(img_list))
@@ -632,6 +646,22 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEquals(response.getHeader('content-type'), 'image/png')
     png = response.getBody()
     self.assertTrue(png.startswith('\x89PNG'))
+
+    # Now purge cache and let Anonymous user converting the document.
+    self.login()
+    document.edit() # Reset cache key
+    transaction.commit()
+    self.tic()
+    response = self.publish('%s/%s/asEntireHTML' % (
+                            website.absolute_url_path(), document_reference))
+    self.assertTrue(response.getHeader('content-type').startswith('text/html'))
+    html = response.getBody()
+    self.assertTrue('<img' in html, html)
+    
+    # find the img src
+    img_list = etree.HTML(html).findall('.//img')
+    self.assertEquals(1, len(img_list))
+    src = img_list[0].get('src')
 
   def test_ImageConversionThroughWebSite(self):
     """Check that conversion parameters pass in url

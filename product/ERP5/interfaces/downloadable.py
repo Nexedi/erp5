@@ -52,11 +52,11 @@ class IDownloadable(Interface):
     kw -- optional conversion parameters
     """
 
-  def getStandardFileName(format=None):
+  def getStandardFilename(format=None):
     """
     Returns a standard file name for the document to download.
     This method is the reverse of
-    IMetadataDiscoverable.getPropertyDictFromFileName.
+    IDiscoverable.getPropertyDictFromFilename.
 
     format -- extension of returned file name
     """

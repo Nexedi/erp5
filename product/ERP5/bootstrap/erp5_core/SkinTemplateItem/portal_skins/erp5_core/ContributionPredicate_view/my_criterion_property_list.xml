@@ -222,12 +222,16 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>file_extension</string>
-                          <string>file_extension</string>
+                          <string>extension_from_filename</string>
+                          <string>extension_from_filename</string>
                         </tuple>
                         <tuple>
-                          <string>mime_type</string>
-                          <string>mime_type</string>
+                          <string>content_type</string>
+                          <string>content_type</string>
+                        </tuple>
+                        <tuple>
+                          <string>content_type_from_content</string>
+                          <string>content_type_from_content</string>
                         </tuple>
                       </list>
                     </value>

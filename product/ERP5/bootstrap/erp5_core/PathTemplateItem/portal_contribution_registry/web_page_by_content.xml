@@ -11,7 +11,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>content_type</string> </key>
+                    <key> <string>content_type_from_content</string> </key>
                     <value>
                       <list>
                         <string>text/html</string>
@@ -31,7 +31,7 @@
             <key> <string>criterion_property</string> </key>
             <value>
               <tuple>
-                <string>content_type</string>
+                <string>content_type_from_content</string>
               </tuple>
             </value>
         </item>
@@ -41,11 +41,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>webpage_mimetype</string> </value>
+            <value> <string>web_page_by_content</string> </value>
         </item>
         <item>
             <key> <string>int_index</string> </key>
-            <value> <int>20</int> </value>
+            <value> <int>70</int> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -59,7 +59,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Web Page by mimetype</string> </value>
+            <value> <string>Web Page by mimetype from data</string> </value>
         </item>
       </dictionary>
     </pickle>

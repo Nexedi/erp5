@@ -43,6 +43,7 @@ from zExceptions import BadRequest
 from Products.ERP5Type.tests.backportUnittest import skip
 from Products.ERP5Type.Tool.ClassTool import _aq_reset
 from Products.ERP5Type.Workflow import addWorkflowByType
+from Products.CMFCore.WorkflowCore import WorkflowException
 
 def getDummyTypeBaseMethod(self):
   """ Use a type Base method
@@ -1247,6 +1248,43 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.tic()
     self.assertFalse(person.isIndexable)
     self.assertEquals(0, len(self.portal.portal_catalog(uid=person.getUid())))
+
+  def test_metaWorkflowTransition(self):
+    """Test Meta Transtion, jump from state to another without explicitely
+    transtion defined.
+    """
+    module = self.portal.person_module
+    person = module.newContent(portal_type='Person')
+    self.assertEquals(person.getValidationState(), 'draft')
+    self.assertFalse(self.portal.portal_workflow.isTransitionPossible(person,
+                                                                 'invalidate'))
+    # test low-level implementation
+    self.portal.portal_workflow.validation_workflow._executeMetaTransition(
+                                                         person, 'invalidated')
+    self.assertEquals(person.getValidationState(), 'invalidated')
+    validation_history = person.workflow_history['validation_workflow']
+    self.assertEquals(len(validation_history), 2)
+    self.assertEquals(validation_history[-1]['comment'],
+                                      'Jump from \'draft\' to \'invalidated\'')
+    person = module.newContent(portal_type='Person')
+    self.assertEquals(person.getValidationState(), 'draft')
+
+    # test high-level implementation
+    self.portal.portal_workflow._jumpToStateFor(person, 'invalidated')
+    self.assertEquals(person.getValidationState(), 'invalidated')
+
+    person = module.newContent(portal_type='Person')
+    self.assertEquals(person.getValidationState(), 'draft')
+    self.portal.portal_workflow._jumpToStateFor(person, 'invalidated',
+                                               wf_id='validation_workflow')
+    self.assertEquals(person.getValidationState(), 'invalidated')
+    person = module.newContent(portal_type='Person')
+    self.assertEquals(person.getValidationState(), 'draft')
+    self.assertRaises(WorkflowException,
+                      self.portal.portal_workflow._jumpToStateFor,
+                      person, 'invalidated', wf_id='edit_workflow')
+    self.assertEquals(person.getValidationState(), 'draft')
+
 
 class TestERP5PropertyManager(unittest.TestCase):
   """Tests for ERP5PropertyManager.

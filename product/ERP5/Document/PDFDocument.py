@@ -114,22 +114,14 @@ class PDFDocument(Image):
     """
     if not self.hasData():
       return ''
-    tmp = tempfile.NamedTemporaryFile()
-    tmp.write(self.getData())
-    tmp.seek(0)
-    try:
-      command = ['pdftotext', '-layout', '-enc', 'UTF-8',
-                 '-nopgbrk', tmp.name, '-']
-      try:
-        command_result = Popen(command, stdout=PIPE).communicate()[0]
-      except OSError, e:
-        if e.errno == errno.ENOENT:
-          raise ConversionError('pdftotext was not found')
-        raise
-    finally:
-      tmp.close()
-    if command_result:
-      return command_result
+    mime_type = 'text/plain'
+    portal_transforms = self.getPortalObject().portal_transforms
+    filename = self.getStandardFilename(format='txt')
+    result = portal_transforms.convertToData(mime_type, str(self.getData()),
+                                             context=self, filename=filename,
+                                             mimetype=self.getContentType())
+    if result:
+      return result
     else:
       # Try to use OCR
       # As high dpi images are required, it may take some times to convert the
@@ -145,13 +137,12 @@ class PDFDocument(Image):
             frame=page_number, display='identical')
         if not src_mimetype.endswith('png'):
           continue
-        content = '%s' % png_data
-        mime_type = 'text/plain'
+        content = str(png_data)
         if content is not None:
-          portal_transforms = getToolByName(self, 'portal_transforms')
+          filename = self.getStandardFilename(format='png')
           result = portal_transforms.convertToData(mime_type, content,
                                                    context=self,
-                                                   filename=self.getTitleOrId(),
+                                                   filename=filename,
                                                    mimetype=src_mimetype)
           if result is None:
             raise ConversionError('PDFDocument conversion error. '

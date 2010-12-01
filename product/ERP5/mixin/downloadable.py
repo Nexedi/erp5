@@ -31,6 +31,7 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type.Utils import fill_args_from_request
 from Products.CMFCore.utils import getToolByName, _setCacheHeaders,\
     _ViewEmulator
+import warnings
 
 _MARKER = []
 
@@ -108,13 +109,29 @@ class DownloadableMixin:
     return str(data)
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getStandardFileName')
-  def getStandardFileName(self, format=None):
+                            'getStandardFilename')
+  def getStandardFilename(self, format=None):
     """Returns the document coordinates as a standard file name. This
     method is the reverse of getPropertyDictFromFileName.
     """
-    method = self._getTypeBasedMethod('getStandardFileName',
+    method = self._getTypeBasedMethod('getStandardFilename',
+                             fallback_script_id='Document_getStandardFilename')
+    if method is None:
+      # backward compatibility
+      method = self._getTypeBasedMethod('getStandardFileName',
                              fallback_script_id='Document_getStandardFileName')
+    return method(format=format)
+
+  # backward compatibility
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getStandardFileName')
+  def getStandardFileName(self, format=None):
+    """(deprecated) use getStandardFilename() instead."""
+    warnings.warn('getStandardFileName() is deprecated. '
+                  'use getStandardFilename() instead.')
+    return self.getStandardFilename(format=format)
+    method = self._getTypeBasedMethod('getStandardFilename',
+                             fallback_script_id='Document_getStandardFilename')
     return method(format=format)
 
   def manage_FTPget(self):

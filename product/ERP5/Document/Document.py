@@ -40,18 +40,15 @@ from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.DateUtils import convertDateToHour,\
                                 number_of_hours_in_day, number_of_hours_in_year
-from Products.ERP5Type.Utils import convertToUpperCase, fill_args_from_request
+from Products.ERP5Type.Utils import convertToUpperCase, fill_args_from_request,\
+                                    deprecated
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.Cache import getReadOnlyTransactionCache
-from Products.ERP5.Document.Url import UrlMixIn
 from Products.ERP5.Tool.ContributionTool import MAX_REPEAT
-from Products.ERP5Type.UnrestrictedMethod import unrestricted_apply
 from Products.ZSQLCatalog.SQLCatalog import SQLQuery
 from AccessControl import Unauthorized
 import zope.interface
 from Products.PythonScripts.Utility import allow_class
-import tempfile
-from subprocess import Popen, PIPE
 
 # Mixin Import
 from Products.ERP5.mixin.cached_convertable import CachedConvertableMixin
@@ -60,9 +57,10 @@ from Products.ERP5.mixin.downloadable import DownloadableMixin
 from Products.ERP5.mixin.document import DocumentMixin
 from Products.ERP5.mixin.extensible_traversable import DocumentExtensibleTraversableMixin
 from Products.ERP5.mixin.crawlable import CrawlableMixin
+from Products.ERP5.mixin.discoverable import DiscoverableMixin
+from Products.ERP5.mixin.url import UrlMixin
 
 _MARKER = []
-VALID_ORDER_KEY_LIST = ('user_login', 'content', 'file_name', 'input')
 
 # these property ids are unchangable
 FIXED_PROPERTY_IDS = ('id', 'uid', 'rid', 'sid')
@@ -88,8 +86,9 @@ class DocumentProxyError(Exception):pass
 class NotConvertedError(Exception):pass
 allow_class(NotConvertedError)
 
-class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixIn, CachedConvertableMixin,
-               CrawlableMixin, TextConvertableMixin, DownloadableMixin, DocumentMixin):
+class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
+               CachedConvertableMixin, CrawlableMixin, TextConvertableMixin,
+               DownloadableMixin, DocumentMixin, DiscoverableMixin):
   """Document is an abstract class with all methods related to document
   management in ERP5. This includes searchable text, explicit relations,
   implicit relations, metadata, versions, languages, etc.
@@ -144,7 +143,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixIn, CachedCo
 
   input      -   data supplied with http request or set on the object during (2) (e.g.
                  discovered from email text)
-  file_name  -   data which might be encoded in file name
+  filename   -   data which might be encoded in filename
   user_login -   information about user who is contributing the file
   content    -   data which might be derived from document content
 
@@ -156,7 +155,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixIn, CachedCo
   Methods for discovering metadata are:
 
     getPropertyDictFromInput
-    getPropertyDictFromFileName
+    getPropertyDictFromFilename
     getPropertyDictFromUserLogin
     getPropertyDictFromContent
 
@@ -266,10 +265,15 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixIn, CachedCo
                             interfaces.IVersionable,
                             interfaces.IDownloadable,
                             interfaces.ICrawlable,
-                            interfaces.IDocument
+                            interfaces.IDocument,
+                            interfaces.IDiscoverable,
+                            interfaces.IUrl,
                            )
 
   # Regular expressions
+  # XXX those regex are weak, fast but not reliable.
+  # this is a valid url than regex are not able to parse
+  # http://www.example.com//I don't care i put what/ i want/
   href_parser = re.compile('<a[^>]*href=[\'"](.*?)[\'"]',re.IGNORECASE)
   body_parser = re.compile('<body[^>]*>(.*?)</body>', re.IGNORECASE + re.DOTALL)
   title_parser = re.compile('<title[^>]*>(.*?)</title>', re.IGNORECASE + re.DOTALL)
@@ -639,141 +643,14 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixIn, CachedCo
     if not reference:
       return
     catalog = self.getPortalObject().portal_catalog
-    res = catalog(reference=self.getReference(), sort_on=(('creation_date','ascending'),))
+    result_list = catalog.unrestrictedSearchResults(
+                                      reference=self.getReference(),
+                                      sort_on=(('creation_date', 
+                                                'ascending'),))
     # XXX this should be security-unaware - delegate to script with proxy roles
-    return res[0].getLanguage() # XXX what happens if it is empty?
-
-  ### Property getters
-  # Property Getters are document dependent so that we can
-  # handle the weird cases in which needed properties change with the type of document
-  # and the usual cases in which accessing content changes with the meta type
-  security.declareProtected(Permissions.ModifyPortalContent,'getPropertyDictFromUserLogin')
-  def getPropertyDictFromUserLogin(self, user_login=None):
-    """
-      Based on the user_login, find out as many properties as needed.
-      returns properties which should be set on the document
-    """
-    if user_login is None:
-      user_login = str(getSecurityManager().getUser())
-    method = self._getTypeBasedMethod('getPropertyDictFromUserLogin',
-        fallback_script_id='Document_getPropertyDictFromUserLogin')
-    return method(user_login)
-
-  security.declareProtected(Permissions.ModifyPortalContent,'getPropertyDictFromContent')
-  def getPropertyDictFromContent(self):
-    """
-      Based on the document content, find out as many properties as needed.
-      returns properties which should be set on the document
-    """
-    # accesss data through convert
-    mime, content = self.convert(None)
-    if not content:
-       # if document is empty, we will not find anything in its content
-      return {}
-    method = self._getTypeBasedMethod('getPropertyDictFromContent',
-        fallback_script_id='Document_getPropertyDictFromContent')
-    return method()
-
-  security.declareProtected(Permissions.ModifyPortalContent,'getPropertyDictFromFileName')
-  def getPropertyDictFromFileName(self, file_name):
-    """
-      Based on the file name, find out as many properties as needed.
-      returns properties which should be set on the document
-    """
-    return self.portal_contributions.getPropertyDictFromFileName(file_name)
-
-  security.declareProtected(Permissions.ModifyPortalContent,'getPropertyDictFromInput')
-  def getPropertyDictFromInput(self):
-    """
-      Get properties which were supplied explicitly to the ingestion method
-      (discovered or supplied before the document was created).
-
-      The implementation consists in saving document properties
-      into _backup_input by supposing that original input parameters were
-      set on the document by ContributionTool.newContent as soon
-      as the document was created.
-    """
-    kw = getattr(self, '_backup_input', {})
-    if kw:
-      return kw
-    for id in self.propertyIds():
-      # We should not consider file data
-      if id not in ('data', 'categories_list', 'uid', 'id',
-                    'text_content', 'base_data',) \
-            and self.hasProperty(id):
-        kw[id] = self.getProperty(id)
-    self._backup_input = kw # We could use volatile and pass kw in activate
-                            # if we are garanteed that _backup_input does not
-                            # disappear within a given transaction
-    return kw
-
-  ### Metadata disovery and ingestion methods
-  security.declareProtected(Permissions.ModifyPortalContent, 'discoverMetadata')
-  def discoverMetadata(self, file_name=None, user_login=None):
-    """
-      This is the main metadata discovery function - controls the process
-      of discovering data from various sources. The discovery itself is
-      delegated to scripts or uses preference-configurable regexps. The
-      method returns either self or the document which has been
-      merged in the discovery process.
-
-      file_name - this parameter is a file name of the form "AA-BBB-CCC-223-en"
-
-      user_login - this is a login string of a person; can be None if the user is
-                   currently logged in, then we'll get him from session
-    """
-    # Preference is made of a sequence of 'user_login', 'content', 'file_name', 'input'
-    method = self._getTypeBasedMethod('getPreferredDocumentMetadataDiscoveryOrderList',
-        fallback_script_id = 'Document_getPreferredDocumentMetadataDiscoveryOrderList')
-    order_list = list(method())
-    order_list.reverse()
-    # build a dictionary according to the order
-    kw = {}
-    for order_id in order_list:
-      result = None
-      if order_id not in VALID_ORDER_KEY_LIST:
-        # Prevent security attack or bad preferences
-        raise AttributeError, "%s is not in valid order key list" % order_id
-      method_id = 'getPropertyDictFrom%s' % convertToUpperCase(order_id)
-      method = getattr(self, method_id)
-      if order_id == 'file_name':
-        if file_name is not None:
-          result = method(file_name)
-      elif order_id == 'user_login':
-        if user_login is not None:
-          result = method(user_login)
-      else:
-        result = method()
-      if result is not None:
-        for key, value in result.iteritems():
-          if value not in (None, ''):
-            kw[key]=value
-
-    if file_name is not None:
-      # filename is often undefined....
-      kw['source_reference'] = file_name
-    # Prepare the content edit parameters - portal_type should not be changed
-    kw.pop('portal_type', None)
-    # Try not to invoke an automatic transition here
-    self._edit(**kw)
-    # Finish ingestion by calling method
-    self.finishIngestion() # XXX - is this really the right place ?
-    self.reindexObject() # XXX - is this really the right place ?
-    # Revision merge is tightly coupled
-    # to metadata discovery - refer to the documentation of mergeRevision method
-    merged_doc = self.mergeRevision() # XXX - is this really the right place ?
-    merged_doc.reindexObject() # XXX - is this really the right place ?
-    return merged_doc # XXX - is this really the right place ?
-
-  security.declareProtected(Permissions.ModifyPortalContent, 'finishIngestion')
-  def finishIngestion(self):
-    """
-      Finish the ingestion process by calling the appropriate script. This
-      script can for example allocate a reference number automatically if
-      no reference was defined.
-    """
-    method = self._getTypeBasedMethod('finishIngestion', fallback_script_id='Document_finishIngestion')
-    return method()
+    if result_list:
+      return result_list[0].getLanguage()
+    return
 
   security.declareProtected(Permissions.View, 'asSubjectText')
   def asSubjectText(self, **kw):
@@ -827,32 +704,13 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixIn, CachedCo
     return self._stripHTML(self._asHTML(**kw))
 
   security.declarePrivate('_guessEncoding')
+  @deprecated
   def _guessEncoding(self, string, mime='text/html'):
     """
-      Try to guess the encoding for this string.
-      Returns None if no encoding can be guessed.
+      Deprecated method
     """
-    try:
-      import chardet
-    except ImportError:
-      chardet = None
-    if chardet is not None and (mime == 'text/html'\
-                                               or os.sys.platform != 'linux2'):
-      # chardet works fine on html document and its platform independent
-      return chardet.detect(string).get('encoding', None)
-    else:
-      # file command provide better result
-      # for text/plain documents
-      # store the content into tempfile
-      file_descriptor, path = tempfile.mkstemp()
-      file_object = os.fdopen(file_descriptor, 'w')
-      file_object.write(string)
-      file_object.close()
-      # run file command against tempfile to and read encoded
-      command_result = Popen(['file', '-b', '--mime-encoding', path],
-                                                  stdout=PIPE).communicate()[0]
-      # return detected encoding
-      return command_result.strip()
+    contribution_tool = self.getPortalObject().portal_contributions
+    return contribution_tool.guessEncodingFromText(string, content_type=mime)
 
   def _stripHTML(self, html, charset=None):
     """
@@ -865,22 +723,6 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixIn, CachedCo
     else:
       stripped_html = html
     return stripped_html
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getContentInformation')
-  def getContentInformation(self):
-    """
-    Returns the content information from the HTML conversion.
-    The default implementation tries to build a dictionnary
-    from the HTML conversion of the document and extract
-    the document title.
-    """
-    result = {}
-    html = self.asEntireHTML()
-    if not html: return result
-    title_list = re.findall(self.title_parser, str(html))
-    if title_list:
-      result['title'] = title_list[0]
-    return result
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getMetadataMappingDict')
@@ -918,21 +760,6 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixIn, CachedCo
       method = None
     if method is not None: method()
 
-  # Crawling API
-  security.declareProtected(Permissions.AccessContentsInformation, 'getContentURLList')
-  def getContentURLList(self):
-    """
-      Returns a list of URLs referenced by the content of this document.
-      Default implementation consists in analysing the document
-      converted to HTML. Subclasses may overload this method
-      if necessary. However, it is better to extend the conversion
-      methods in order to produce valid HTML, which is useful to
-      many people, rather than overload this method which is only
-      useful for crawling.
-    """
-    html_content = self.asStrippedHTML()
-    return re.findall(self.href_parser, str(html_content))
-
   security.declareProtected(Permissions.ModifyPortalContent, 'updateContentFromURL')
   def updateContentFromURL(self, repeat=MAX_REPEAT, crawling_depth=0):
     """
@@ -963,18 +790,3 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixIn, CachedCo
     if hasattr(aq_base(container), 'isIndexContent'):
       return container.isIndexContent(self)
     return False
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getContentBaseURL')
-  def getContentBaseURL(self):
-    """
-      Returns the content base URL based on the actual content or
-      on its URL.
-    """
-    base_url = self.asURL()
-    base_url_list = base_url.split('/')
-    if len(base_url_list):
-      if base_url_list[-1] and base_url_list[-1].find('.') > 0:
-        # Cut the trailing part in http://www.some.site/at/trailing.html
-        # but not in http://www.some.site/at
-        base_url = '/'.join(base_url_list[:-1])
-    return base_url

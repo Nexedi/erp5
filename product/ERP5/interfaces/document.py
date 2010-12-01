@@ -87,7 +87,7 @@ class IDocument(Interface):
 
   input      -   data supplied with http request or set on the object during (2) (e.g.
                  discovered from email text)
-  file_name  -   data which might be encoded in file name
+  filename  -   data which might be encoded in filename
   user_login -   information about user who is contributing the file
   content    -   data which might be derived from document content
 

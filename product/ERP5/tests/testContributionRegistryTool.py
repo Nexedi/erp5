@@ -120,36 +120,36 @@ return predicate.getDestinationPortalType()
     tool = self.portal.portal_contribution_registry
 
     # Test extension matching
-    self.assertEqual(tool.findPortalTypeName(file_name='test.txt'), 'Text')
-    self.assertEqual(tool.findPortalTypeName(file_name='test.odt'), 'Text')
-    self.assertEqual(tool.findPortalTypeName(file_name='001.jpg'), 'Image')
-    self.assertEqual(tool.findPortalTypeName(file_name='002.PNG'), 'Image')
-    self.assertEqual(tool.findPortalTypeName(file_name='002.PNG'), 'Image')
-    self.assertEqual(tool.findPortalTypeName(file_name='index.html'), 'Web Page')
+    self.assertEqual(tool.findPortalTypeName(filename='test.txt'), 'Text')
+    self.assertEqual(tool.findPortalTypeName(filename='test.odt'), 'Text')
+    self.assertEqual(tool.findPortalTypeName(filename='001.jpg'), 'Image')
+    self.assertEqual(tool.findPortalTypeName(filename='002.png'), 'Image')
+    self.assertEqual(tool.findPortalTypeName(filename='002.PNG'), 'Image')
+    self.assertEqual(tool.findPortalTypeName(filename='index.html'), 'Web Page')
     # Unknown extension
-    self.assertEqual(tool.findPortalTypeName(file_name='index.xxx'), 'File')
+    self.assertEqual(tool.findPortalTypeName(filename='index.xxx'), 'File')
 
     # Test mimetype matching
-    self.assertEqual(tool.findPortalTypeName(mime_type='text/html'), 'Web Page')
+    self.assertEqual(tool.findPortalTypeName(content_type='text/html'), 'Web Page')
 
     # Unknown mimetype
-    self.assertEqual(tool.findPortalTypeName(mime_type='application/octet-stream'), 'File')
+    self.assertEqual(tool.findPortalTypeName(content_type='application/octet-stream'), 'File')
 
     # Test both of extension and mimetype
-    self.assertNotEqual(tool.findPortalTypeName(file_name='message.eml'),
+    self.assertNotEqual(tool.findPortalTypeName(filename='message.eml'),
                         'Mail Message')
-    self.assertNotEqual(tool.findPortalTypeName(mime_type='message/rfc822'),
+    self.assertNotEqual(tool.findPortalTypeName(content_type='message/rfc822'),
                         'Mail Message')
-    self.assertEqual(tool.findPortalTypeName(file_name='message.eml',
-                                             mime_type='message/rfc822'),
+    self.assertEqual(tool.findPortalTypeName(filename='message.eml',
+                                             content_type='message/rfc822'),
                      'Mail Message')
 
     # Test test script
     data = """\
 Subject: Fax
 """
-    self.assertEqual(tool.findPortalTypeName(file_name='message.eml',
-                                             mime_type='message/rfc822',
+    self.assertEqual(tool.findPortalTypeName(filename='message.eml',
+                                             content_type='message/rfc822',
                                              data=data),
                      'Fax Message')
 

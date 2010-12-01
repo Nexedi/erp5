@@ -14,7 +14,7 @@
                     <key> <string>content_type</string> </key>
                     <value>
                       <list>
-                        <string>text/html</string>
+                        <string>text/plain</string>
                       </list>
                     </value>
                 </item>
@@ -37,11 +37,11 @@
         </item>
         <item>
             <key> <string>destination_portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Text</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>webpage_mimetype</string> </value>
+            <value> <string>text_by_conent_type</string> </value>
         </item>
         <item>
             <key> <string>int_index</string> </key>
@@ -59,7 +59,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Web Page by mimetype</string> </value>
+            <value> <string>Text by content type</string> </value>
         </item>
       </dictionary>
     </pickle>

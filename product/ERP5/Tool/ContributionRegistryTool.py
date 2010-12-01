@@ -29,7 +29,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Tool.BaseTool import BaseTool
-
+from Products.ERP5Type import Permissions
 
 class ContributionRegistryTool(BaseTool):
 
@@ -41,14 +41,18 @@ class ContributionRegistryTool(BaseTool):
 
   security = ClassSecurityInfo()
 
-  security.declarePrivate('findPortalTypeName')
-  def findPortalTypeName(self, file_name='', mime_type=None, data=None):
-    from Products.ERP5Type.Document import newTempIngestionFile
-    ingestion_file = newTempIngestionFile(self, 'id')
-    ingestion_file._edit(file_name=file_name, mime_type=mime_type, data=data)
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'findPortalTypeName')
+  def findPortalTypeName(self, context=None, **kw):
+    # if a context is passed, ignore other arguments
+    if context is None:
+      # Build a temp object edited with provided parameters
+      from Products.ERP5Type.Document import newTempFile
+      context = newTempFile(self, 'id')
+      context.edit(**kw)
 
     for predicate in self.objectValues(sort_on='int_index'):
-      result = predicate.test(ingestion_file)
+      result = predicate.test(context)
       if result:
         return result
 

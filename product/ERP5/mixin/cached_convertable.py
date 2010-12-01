@@ -139,10 +139,21 @@ class CachedConvertableMixin:
       cached_value = data
       conversion_md5 = md5_new(str(data.data)).hexdigest()
       size = len(data.data)
-    else:
+    elif isinstance(data, (str, unicode,)):
       cached_value = data
       conversion_md5 = md5_new(cached_value).hexdigest()
       size = len(cached_value)
+    elif isinstance(data, dict):
+      # Dict instance are used to store computed metadata
+      # from actual content.
+      # So this value is intimely related to cache of conversion.
+      # As it should be cleared each time the document is edited.
+      # Also may be a proper API should be used
+      cached_value = data
+      conversion_md5 = None
+      size = len(cached_value)
+    else:
+      raise NotImplementedError, 'Not able to store type:%r' % type(data)
     if date is None:
       date = DateTime()
     stored_data_dict = {'content_md5': self.getContentMd5(),
