@@ -1,6 +1,7 @@
 ##############################################################################
 #
 # Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
+#                    Arnaud Fontaine <arnaud.fontaine@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -26,12 +27,32 @@
 ##############################################################################
 
 class PropertyTypeValidityConstraint:
-  """Property sheet to enable Property Type Validity Constraint
   """
-
-  _constraints = (
-    { 'type': 'PropertyTypeValidity',
-      'id': 'type_check',
-      'description': "Type Validity Check Error",
-    },
-  )
+  Define an Attribute Equality Constraint for ZODB Property Sheets
+  """
+  _properties = (
+    {'id': 'message_unknown_type',
+     'type': 'string',
+     'description' : "Error message when the attribute's type is unknown",
+     'default': "Attribute ${attribute_name} is defined with an unknown "\
+                "type ${type_name}" },
+    {'id': 'message_incorrect_type',
+     'type': 'string',
+     'description' : "Error message when the type of attribute's value is "\
+                     "incorrect",
+     'default': "Attribute ${attribute_name} should be of type "\
+                "${expected_type} but is of type ${actual_type}" },
+    {'id': 'message_incorrect_type_fix_failed',
+     'type': 'string',
+     'description' : "Error message when the type of attribute's value is "\
+                     "incorrect and it could not be fixed",
+     'default': "Attribute ${attribute_name} should be of type "\
+                "${expected_type} but is of type ${actual_type} (Type cast "\
+                "failed with error ${type_cast_error})" },
+    {'id': 'message_incorrect_type_fixed',
+     'type': 'string',
+     'description' : "Error message when the type of attribute's value is "\
+                     "incorrect but could be fixed",
+     'default': "Attribute ${attribute_name} should be of type "\
+                "${expected_type} but is of type ${actual_type} (Fixed)" },
+    )

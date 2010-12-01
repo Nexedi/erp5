@@ -459,6 +459,15 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
       portal_type='TALES Constraint',
       expression='python: object.getTitle() == "my_tales_constraint_title"')
 
+  def _newPropertyTypeValidityConstraint(self):
+    """
+    Create a new Property Type Validity Constraint within test
+    Property Sheet
+    """
+    self.test_property_sheet.newContent(
+      reference='test_property_type_validity_constraint',
+      portal_type='Property Type Validity Constraint')
+
   def afterSetUp(self):
     """
     Create a test Property Sheet (and its properties)
@@ -511,6 +520,9 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
 
       # Create a TALES Constraint in the test Property Sheet
       self._newTALESConstraint()
+
+      # Create a Property Type Validity Constraint in the test Property Sheet
+      self._newPropertyTypeValidityConstraint()
 
       # Create all the test Properties
       for operation_type in ('change', 'delete', 'assign'):
@@ -993,6 +1005,19 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     self._checkConstraint('test_tales_constraint',
                           self.test_module.setTitle,
                           'my_tales_constraint_title')
+
+  def testPropertyTypeValidityConstraint(self):
+    """
+    Take the test module and check whether the Property Type Validity
+    Constraint is there, then set the title of Test Module to any
+    value besides of a string. Until the title of Test Module has been
+    set to any string, the constraint should fail
+    """
+    self.test_module.title = 123
+
+    self._checkConstraint('test_property_type_validity_constraint',
+                          self.test_module.setTitle,
+                          'my_property_type_validity_constraint_title')
 
 TestZodbPropertySheet = skip("ZODB Property Sheets code is not enabled yet")(
   TestZodbPropertySheet)

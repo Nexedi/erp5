@@ -25,3 +25,4 @@ from CategoryMembershipArityConstraint import CategoryMembershipArityConstraint
 from CategoryRelatedMembershipArityConstraint import \
      CategoryRelatedMembershipArityConstraint
 from TALESConstraint import TALESConstraint
+from PropertyTypeValidityConstraint import PropertyTypeValidityConstraint
