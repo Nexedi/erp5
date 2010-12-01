@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ContributionPredicate" module="Products.ERP5Type.Document.ContributionPredicate"/>
-        <tuple/>
-      </tuple>
+      <global name="ContributionPredicate" module="Products.ERP5Type.Document.ContributionPredicate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -14,7 +11,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>file_extension</string> </key>
+                    <key> <string>extension_from_filename</string> </key>
                     <value>
                       <list>
                         <string>eml</string>
@@ -34,7 +31,7 @@
             <key> <string>criterion_property</string> </key>
             <value>
               <tuple>
-                <string>file_extension</string>
+                <string>extension_from_filename</string>
               </tuple>
             </value>
         </item>
