@@ -2233,7 +2233,6 @@ class AssertPkgconfig(AssertSoftwareMixin):
 
 class AssertElfLinkedInternally(AssertSoftwareMixin):
   def test(self):
-    return
     result_dict = {}
     parts_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
     develop_eggs_dir = os.path.join(os.path.abspath(os.curdir), 'develop-eggs')
