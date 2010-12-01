@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -31,112 +32,11 @@ from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Base import Base
 from Products.ERP5.Document.Coordinate import Coordinate
+from Products.ERP5.mixin.url import UrlMixin, no_crawl_protocol_list,\
+                            no_host_protocol_list, default_protocol_dict
 from zLOG import LOG
-import urllib
 
-no_crawl_protocol_list = ['mailto', 'javascript', ]
-no_host_protocol_list = ['mailto', 'news', 'javascript',]
-default_protocol_dict = { 'Email' : 'mailto',
-                        }
-
-class UrlMixIn:
-
-  # Declarative security
-  security = ClassSecurityInfo()
-  security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'asURL')
-  def asURL(self):
-    """
-    Returns a text representation of the Url if defined
-    or None else.
-    """
-    url_string = self.getUrlString()
-    if not url_string:
-      return None
-    protocol = self.getUrlProtocol()
-    if not protocol:
-      # A quick fix for all objects which did not
-      # define protocol such as email addresses
-      ptype = self.getPortalType()
-      if default_protocol_dict.has_key(ptype):
-        protocol = default_protocol_dict[ptype]
-      else:
-        protocol = 'http'
-
-    if protocol in no_host_protocol_list or url_string.startswith('//'):
-      return '%s:%s' % (protocol, url_string)
-
-    if url_string.startswith(protocol):
-      return url_string
-
-    return '%s://%s' % (protocol, url_string)
-
-  security.declareProtected(Permissions.ModifyPortalContent, 'fromURL')
-  def fromURL(self, url):
-    """
-    Analyses a URL and splits it into two parts. URLs
-    normally follow RFC 1738. However, we accept URLs
-    without the protocol a.k.a. scheme part (http, mailto, etc.). In this
-    case only the url_string a.k.a. scheme-specific-part is taken
-    into account. asURL will then generate the full URL.
-    """
-    if ':' in url:
-      # This is the normal case (protocol specified in the URL)
-      protocol, url_string = url.split(':', 1)
-      if url_string.startswith('//'): url_string = url_string[2:]
-      self._setUrlProtocol(protocol)
-    else:
-      url_string = url
-    self.setUrlString(url_string)
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getURLServer')
-  def getURLServer(self):
-    """
-      Returns the server part of a URL
-
-      XXX - we must add here more consistency checking
-      based on the protocol of the URL
-
-      XXX - regular expressions would be better
-    """
-    url_string = self.getUrlString()
-    return url_string.split('/')[0].split(':')[0]
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getURLPort')
-  def getURLPort(self):
-    """
-      Returns the port part of a URL
-
-      XXX - we must add here more consistency checking
-      based on the protocol of the URL
-
-      XXX - regular expressions would be better
-    """
-    url_string = self.getUrlString()
-    server_part_list = url_string.split('/')[0].split(':')
-    if len(server_part_list) > 1:
-      return server_part_list[1]
-    return None
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getURLPath')
-  def getURLPath(self):
-    """
-      Returns the path part of a URL
-
-      XXX - we must add here more consistency checking
-      based on the protocol of the URL
-
-      XXX - regular expressions would be better
-    """
-    url_string = self.getUrlString()
-    return '/'.join(url_string.split('/')[1:])
-
-class Url(Coordinate, Base, UrlMixIn):
+class Url(Coordinate, Base, UrlMixin):
   """
   A Url is allows to represent in a standard way coordinates
   such as web sites, emails, ftp sites, etc.
