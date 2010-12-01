@@ -196,10 +196,13 @@ class NodeBudgetVariation(BudgetVariation):
     if axis == 'movement':
       axis = 'default_%s_uid' % base_category
       query_dict['select_list'] = [axis]
-    if axis == 'movement_strict_membership':
+      query_dict['group_by'] = [axis]
+    elif axis == 'movement_strict_membership':
       axis = 'default_strict_%s_uid' % base_category
       query_dict['select_list'] = [axis]
-    query_dict['group_by_%s' % axis] = True
+      query_dict['group_by'] = [axis]
+    else:
+      query_dict['group_by_%s' % axis] = True
 
     # TODO: This is not correct if axis is a category (such as
     # section_category)
