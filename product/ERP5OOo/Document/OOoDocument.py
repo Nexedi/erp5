@@ -383,7 +383,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
         temp_image = self.portal_contributions.newContent(
                                        portal_type='Image',
                                        file=cStringIO.StringIO(),
-                                       file_name=self.getId(),
+                                       filename=self.getId(),
                                        temp_object=1)
         temp_image._setData(data)
         # we care for first page only but as well for image quality
@@ -420,23 +420,23 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
     else:
       must_close = 0
     for f in zip_file.infolist():
-      file_name = f.filename
-      document = self.get(file_name, None)
+      filename = f.filename
+      document = self.get(filename, None)
       if document is not None:
-        self.manage_delObjects([file_name]) # For compatibility with old implementation
-      if file_name.endswith('html'):
+        self.manage_delObjects([filename]) # For compatibility with old implementation
+      if filename.endswith('html'):
         mime = 'text/html'
         # call portal_transforms to strip HTML in safe mode
         portal = self.getPortalObject()
         transform_tool = getToolByName(portal, 'portal_transforms')
         data = transform_tool.convertToData('text/x-html-safe',
-                                            zip_file.read(file_name),
+                                            zip_file.read(filename),
                                             object=self, context=self,
                                             mimetype=mime)
       else:
-        mime = guess_content_type(file_name)[0]
-        data = Pdata(zip_file.read(file_name))
-      self.setConversion(data, mime=mime, format=EMBEDDED_FORMAT, file_name=file_name)
+        mime = guess_content_type(filename)[0]
+        data = Pdata(zip_file.read(filename))
+      self.setConversion(data, mime=mime, format=EMBEDDED_FORMAT, filename=filename)
     if must_close:
       zip_file.close()
       archive_file.close()
@@ -450,7 +450,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
     """
     server_proxy = OOoServerProxy(self)
     response_code, response_dict, response_message = server_proxy.run_convert(
-                                      self.getSourceReference() or self.getId(),
+                                      self.getFilename() or self.getId(),
                                       enc(str(self.getData())),
                                       None,
                                       None,
@@ -468,9 +468,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
                 "OOoDocument: Error converting document to base format %s:%s:"
                                        % (response_code, response_message))
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getContentInformation')
-  def getContentInformation(self):
+  def _getContentInformation(self):
     """
       Returns the metadata extracted by the conversion
       server.

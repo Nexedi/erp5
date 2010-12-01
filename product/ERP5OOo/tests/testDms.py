@@ -74,11 +74,12 @@ import difflib
 from AccessControl import Unauthorized
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
+from Products.ERP5.Tool.ContributionTool import AlreadyIngestedUrlError
 
 QUIET = 0
 
 TEST_FILES_HOME = os.path.join(os.path.dirname(__file__), 'test_document')
-FILE_NAME_REGULAR_EXPRESSION = "(?P<reference>[A-Z]{3,10})-(?P<language>[a-z]{2})-(?P<version>[0-9]{3})"
+FILENAME_REGULAR_EXPRESSION = "(?P<reference>[A-Z]{3,10})-(?P<language>[a-z]{2})-(?P<version>[0-9]{3})"
 REFERENCE_REGULAR_EXPRESSION = "(?P<reference>[A-Z]{3,10})(-(?P<language>[a-z]{2}))?(-(?P<version>[0-9]{3}))?"
 
 def makeFilePath(name):
@@ -114,7 +115,7 @@ class TestDocumentMixin(ERP5TypeTestCase):
     conversion_dict = _getConversionServerDict()
     default_pref.setPreferredOoodocServerAddress(conversion_dict['hostname'])
     default_pref.setPreferredOoodocServerPortNumber(conversion_dict['port'])
-    default_pref.setPreferredDocumentFileNameRegularExpression(FILE_NAME_REGULAR_EXPRESSION)
+    default_pref.setPreferredDocumentFilenameRegularExpression(FILENAME_REGULAR_EXPRESSION)
     default_pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
     if self.portal.portal_workflow.isTransitionPossible(default_pref, 'enable'):
       default_pref.enable()
@@ -193,14 +194,14 @@ class TestDocument(TestDocumentMixin):
   
   ## helper methods
 
-  def createTestDocument(self, file_name=None, portal_type='Text', reference='TEST', version='002', language='en'):
+  def createTestDocument(self, filename=None, portal_type='Text', reference='TEST', version='002', language='en'):
     """
       Creates a text document
     """
     dm=self.getPortal().document_module
     doctext=dm.newContent(portal_type=portal_type)
-    if file_name is not None:
-      f = open(makeFilePath(file_name), 'rb')
+    if filename is not None:
+      f = open(makeFilePath(filename), 'rb')
       doctext.setTextContent(f.read())
       f.close()
     doctext.setReference(reference)
@@ -585,7 +586,7 @@ class TestDocument(TestDocumentMixin):
     # tests that owners can download OOo documents, and all headers (including
     # filenames) are set correctly
     doc = self.portal.document_module.newContent(
-                                  source_reference='test.ods',
+                                  filename='test.ods',
                                   portal_type='Spreadsheet')
     doc.edit(file=makeFileUpload('import_data_list.ods'))
 
@@ -608,7 +609,7 @@ class TestDocument(TestDocumentMixin):
     # tests that members can download OOo documents in pdf format (at least in
     # published state), and all headers (including filenames) are set correctly
     doc = self.portal.document_module.newContent(
-                                  source_reference='test.ods',
+                                  filename='test.ods',
                                   portal_type='Spreadsheet')
     doc.edit(file=makeFileUpload('import.file.with.dot.in.filename.ods'))
     doc.publish()
@@ -1276,32 +1277,28 @@ class TestDocument(TestDocumentMixin):
     upload_file = makeFileUpload('REF-en-001.pdf')
     document = self.portal.document_module.newContent(portal_type='PDF')
     # Here we use edit instead of setFile,
-    # because only edit method set filename as source_reference.
+    # because only edit method set filename as filename.
     document.edit(file=upload_file)
     self.assertEquals('application/pdf', document.getContentType())
 
-  def test_Document_getStandardFileName(self):
+  def test_Document_getStandardFilename(self):
     upload_file = makeFileUpload('metadata.pdf')
     document = self.portal.document_module.newContent(portal_type='PDF')
-    # Here we use edit instead of setFile,
-    # because only edit method set filename as source_reference.
     document.edit(file=upload_file)
-    self.assertEquals(document.getStandardFileName(), 'metadata.pdf')
-    self.assertEquals(document.getStandardFileName(format='png'),
+    self.assertEquals(document.getStandardFilename(), 'metadata.pdf')
+    self.assertEquals(document.getStandardFilename(format='png'),
                       'metadata.png')
     document.setVersion('001')
     document.setLanguage('en')
-    self.assertEquals(document.getStandardFileName(), 'metadata-001-en.pdf')
-    self.assertEquals(document.getStandardFileName(format='png'),
+    self.assertEquals(document.getStandardFilename(), 'metadata-001-en.pdf')
+    self.assertEquals(document.getStandardFilename(format='png'),
                       'metadata-001-en.png')
     # check when format contains multiple '.'
     upload_file = makeFileUpload('TEST-en-003.odp')
     document = self.portal.document_module.newContent(portal_type='Presentation')
-    # Here we use edit instead of setFile,
-    # because only edit method set filename as source_reference.
     document.edit(file=upload_file)
-    self.assertEquals(document.getStandardFileName(), 'TEST-en-003.odp')
-    self.assertEquals('TEST-en-003.odg', document.getStandardFileName(format='odp.odg'))
+    self.assertEquals(document.getStandardFilename(), 'TEST-en-003.odp')
+    self.assertEquals('TEST-en-003.odg', document.getStandardFilename(format='odp.odg'))
 
 
   def test_CMYKImageTextContent(self):
@@ -1320,14 +1317,10 @@ class TestDocument(TestDocumentMixin):
     self.stepTic()
     self.assertEquals('converted', document.getExternalProcessingState())
 
-    # Upload different type of file inside which can not be converted to base format
-    upload_file = makeFileUpload('REF-en-001.pdf')
-    document.edit(file=upload_file)
+    # Delete base_data
+    document.edit(base_data=None)
     self.stepTic()
-    self.assertEquals('application/pdf', document.getContentType())
-    self.assertEquals('conversion_failed', document.getExternalProcessingState())
-    # As document is not converted, text convertion is impossible
-    # But document can still be retrive with portal catalog
+    # As document is not converted, text conversion is impossible
     self.assertRaises(NotConvertedError, document.asText)
     self.assertRaises(NotConvertedError, document.getSearchableText)
     self.assertEquals('This document is not converted yet.',
@@ -1646,6 +1639,28 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     self.assertTrue('AZERTYY' not in safe_html)
     self.assertTrue('#FFAA44' in safe_html)
 
+  @expectedFailure
+  def test_safeHTML_impossible_conversion(self):
+    """Some html are not parsable.
+    """
+    web_page_portal_type = 'Web Page'
+    module = self.portal.getDefaultModule(web_page_portal_type)
+    web_page = module.newContent(portal_type=web_page_portal_type)
+    # very dirty html
+    html_content = """
+    <html>
+      <body>
+        <p><a href="http://www.example.com/category/html/" style="font-weight: bold; color: rgb(0, 0, 0); font-size: 90.8777%; text-decoration: none;" title="catégorie how to write valid html d" alt="Diancre pas d" accord="" :="" 6="" articles="">Its french</a></p>
+      </body>
+    </html>
+"""
+    web_page.edit(text_content=html_content)
+    from HTMLParser import ParserError
+    try:
+      web_page.asStrippedHTML()
+    except ParserError:
+      self.fail('Even BeautifulSoup is not able to parse such HTML')
+
   def test_parallel_conversion(self):
     """Check that conversion engine is able to fill in
     cache without overwrite previous conversion
@@ -1768,7 +1783,8 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     upload_file = makeFileUpload('TEST-text-iso8859-1.txt')
     web_page = module.newContent(portal_type=web_page_portal_type,
                                  file=upload_file)
-
+    transaction.commit()
+    self.tic()
     text_content = web_page.getTextContent()
     my_utf_eight_token = 'ùééàçèîà'
     text_content = text_content.replace('\n', '\n%s\n' % my_utf_eight_token)
@@ -1798,9 +1814,9 @@ return 1
       transaction.commit()
 
   def _test_document_conversion_to_base_format_no_original_format_access(self,
-      portal_type, file_name):
+      portal_type, filename):
     module = self.portal.getDefaultModule(portal_type)
-    upload_file = makeFileUpload(file_name)
+    upload_file = makeFileUpload(filename)
     document = module.newContent(portal_type=portal_type,
                                  file=upload_file)
 
@@ -1868,48 +1884,6 @@ return 1
         self.assertTrue('Back' in response.getBody())
         self.assertTrue('Continue' in response.getBody())
         self.assertTrue('Last page' in response.getBody())
-
-  def test_contributeLink(self):
-    """
-      Test contributing a link.
-    """
-    portal = self.portal
-    kw = {'url':portal.absolute_url()}
-    web_page_1 = portal.Base_contribute(**kw)
-    self.stepTic()
-    self.assertTrue(web_page_1.getRevision()=='2')
-    
-    web_page_2 = portal.Base_contribute(**kw)
-    self.stepTic()
-    self.assertTrue(web_page_1==web_page_2)
-    self.assertTrue(web_page_2.getRevision()=='3')
-
-    web_page_3 = portal.Base_contribute(**kw)
-    self.stepTic()
-    self.assertTrue(web_page_2==web_page_3)
-    self.assertTrue(web_page_3.getRevision()=='4')
-
-    # test in synchronous mode
-    kw['synchronous_metadata_discovery']=True
-    web_page_4 = portal.Base_contribute(**kw)
-    self.stepTic()
-    self.assertTrue(web_page_3==web_page_4)
-    self.assertTrue(web_page_4.getRevision()=='5')
-
-    web_page_5 = portal.Base_contribute(**kw)
-    self.stepTic()
-    self.assertTrue(web_page_4==web_page_5)
-    self.assertTrue(web_page_5.getRevision()=='6')
-
-    web_page_6 = portal.Base_contribute(**kw)
-    self.stepTic()
-    self.assertTrue(web_page_5==web_page_6)
-    self.assertTrue(web_page_6.getRevision()=='7')
-
-    # test contribute link is a safe html (duplicates parts of test_safeHTML_conversion)
-    web_page_6_entire_html = web_page_6.asEntireHTML()
-    self.assertTrue('<script' not in web_page_6_entire_html)
-    self.assertTrue('<javascript' not in web_page_6_entire_html)
 
   def test_getTargetFormatItemList(self):
     """

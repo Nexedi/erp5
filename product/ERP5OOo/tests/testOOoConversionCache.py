@@ -42,11 +42,6 @@ from zLOG import LOG
 import os
 
 
-TEST_FILES_HOME = os.path.join(os.path.dirname(__file__), 'test_document')
-FILE_NAME_REGULAR_EXPRESSION = "(?P<reference>[A-Z]{3,10})-(?P<language>[a-z]{2})-(?P<version>[0-9]{3})"
-REFERENCE_REGULAR_EXPRESSION = "(?P<reference>[A-Z]{3,10})(-(?P<language>[a-z]{2}))?(-(?P<version>[0-9]{3}))?"
-
-
 def makeFilePath(name):
   return os.path.join(os.path.dirname(__file__), 'test_document', name)
 
@@ -291,7 +286,10 @@ class TestDocumentConversionCache(TestDocumentMixin):
     filename = 'TEST-en-002.doc'
     file = makeFileUpload(filename)
     document_id = 'an id with spaces'
-    document = self.portal.portal_contributions.newContent(id=document_id, file=file)
+    portal_type = 'Text'
+    module = self.portal.getDefaultModule(portal_type)
+    document = module.newContent(id=document_id, file=file,
+                                 portal_type=portal_type)
     transaction.commit()
     self.tic()
     document_url = document.getRelativeUrl()
