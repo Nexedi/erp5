@@ -126,33 +126,33 @@
   </div>\n
 \n
   <div id="rename_tab_dialog" \n
-      tal:condition="active_knowledge_pad"\n
-      class="toggable_dialog">\n
+       tal:condition="active_knowledge_pad"\n
+       class="toggable_dialog"\n
+       tal:define="active_knowledge_pad_relative_url active_knowledge_pad/getRelativeUrl">\n
     <h3 i18n:translate="" i18n:domain="ui"> Rename tab </h3>\n
-    <form action="">\n
-      <div>\n
-        <span i18n:translate="" i18n:domain="ui">Tab name</span>:\n
-        <input type="text"\n
-              id="new_knowledge_pad_title"\n
-              name="knowledge_pad_title"\n
-              tal:attributes="value active_knowledge_pad/getTitle"/><br/><br/>\n
-        <button type="button"\n
-                i18n:translate="" \n
-                i18n:domain="ui"\n
-                onclick="toggleElementById(\'rename_tab_dialog\');">Cancel</button>\n
-        <button type="button"\n
-                i18n:translate="" \n
-                i18n:domain="ui"\n
-                id="rename_tab_dialog_rename_button"\n
-                tal:attributes="onclick python: \'renameKnowledgePadToServer(\n
-                \\\'rename_tab_dialog\\\',\n
-                \\\'active_knowledge_pad_title\\\',\n
-                \\\'new_knowledge_pad_title\\\',\n
-                \\\'%s\\\')\' %active_knowledge_pad.getRelativeUrl()">\n
-          Rename \n
-        </button>\n
-      </div>\n
-    </form>\n
+      <span i18n:translate="" i18n:domain="ui">Tab name</span>:\n
+      <input type="text"\n
+             id="new_knowledge_pad_title"\n
+             name="knowledge_pad_title"\n
+             tal:attributes="value active_knowledge_pad/getTitle;\n
+                             onkeypress string:return renameKnowledgePadToServerOnEnter(event,\n
+                                                        \'rename_tab_dialog\',\'active_knowledge_pad_title\',\n
+                                                         \'new_knowledge_pad_title\',\'${active_knowledge_pad_relative_url}\');"/>\n
+      <br/>\n
+      <br/>\n
+      <button type="button"\n
+              i18n:translate="" \n
+              i18n:domain="ui"\n
+              onclick="toggleElementById(\'rename_tab_dialog\');">Cancel</button>\n
+      <button type="button"\n
+              i18n:translate="" \n
+              i18n:domain="ui"\n
+              id="rename_tab_dialog_rename_button"\n
+              tal:attributes="onclick string:renameKnowledgePadToServer(\n
+                                               \'rename_tab_dialog\',\'active_knowledge_pad_title\',\n
+                                               \'new_knowledge_pad_title\',\'${active_knowledge_pad_relative_url}\');">\n
+        Rename \n
+      </button>\n
   </div>\n
 </tal:block>\n
 \n

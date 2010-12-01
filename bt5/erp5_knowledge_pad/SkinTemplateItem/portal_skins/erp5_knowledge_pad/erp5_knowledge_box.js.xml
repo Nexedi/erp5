@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts91117034.62</string> </value>
+            <value> <string>ts91191957.42</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -311,6 +311,15 @@ function removeKnowledgePadFromServer(knowledge_pad_relative_url, mode, base_pat
     }\n
 }\n
 \n
+function renameKnowledgePadToServerOnEnter(event, dialog_id, title_id, \n
+                                    input_id, knowledge_pad_relative_url){\n
+  if(event.keyCode == 13){\n
+    renameKnowledgePadToServer(dialog_id, title_id, input_id, knowledge_pad_relative_url);\n
+    return false;\n
+  }\n
+  return true;\n
+}\n
+\n
 function renameKnowledgePadToServer(dialog_id, title_id, \n
                                     input_id, knowledge_pad_relative_url){\n
   if (is_knowledge_template_used){\n
@@ -323,7 +332,7 @@ function renameKnowledgePadToServer(dialog_id, title_id, \n
     title_element.innerHTML = knowledge_pad_title;\n
     doSimpleXMLHttpRequest("ERP5Site_renameKnowledgePad", \n
                           {knowledge_pad_relative_url: knowledge_pad_relative_url,\n
-                            knowledge_pad_title: knowledge_pad_title});\n
+                           knowledge_pad_title: knowledge_pad_title});\n
   }\n
   //anyway toggle show dialog\n
   toggle(dialog_id);\n
@@ -433,7 +442,7 @@ MochiKit.DOM.addLoadEvent(initialize);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>15998</int> </value>
+            <value> <int>16302</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
