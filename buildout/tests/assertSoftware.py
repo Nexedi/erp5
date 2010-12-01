@@ -2217,6 +2217,29 @@ class AssertGraphviz(AssertSoftwareMixin):
       'zlib',
       'graphviz',
       ])
+  def test_ld_libgvplugin_gd(self):
+    self.assertLibraryList('parts/graphviz/lib/graphviz/libgvplugin_gd.so', [
+      'libc',
+      'libcdt',
+      'libdl',
+      'libexpat',
+      'libfontconfig',
+      'libfreetype',
+      'libgvc',
+      'libgraph',
+      'libm',
+      'libpathplan',
+      'libpng14',
+      'libxdot',
+      'libz',
+      ], [
+      'fontconfig',
+      'freetype',
+      'graphviz',
+      'libexpat',
+      'libpng',
+      'zlib',
+      ])
 
 class AssertPkgconfig(AssertSoftwareMixin):
   def test_ld_dot(self):
