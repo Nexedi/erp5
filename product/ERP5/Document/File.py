@@ -37,6 +37,9 @@ from Products.CMFDefault.File import File as CMFFile
 from Products.CMFCore.utils import getToolByName
 from OFS.Image import Pdata
 import cStringIO
+from Products.ERP5Type.Utils import deprecated
+
+import md5
 
 def _unpackData(data):
   """
@@ -104,7 +107,7 @@ class File(Document, CMFFile):
       # if file field is empty(no file is uploaded),
       # filename is empty string.
       if filename:
-        self._setSourceReference(filename)
+        self._setFilename(filename)
       if self._isNotEmpty(file):
         self._setFile(file, precondition=precondition)
       del kw['file']
@@ -122,6 +125,13 @@ class File(Document, CMFFile):
   getcontentlength = get_size
 
   def _setFile(self, data, precondition=None):
+    if data is not None and self.hasData() and \
+      md5.md5(str(data.read())).digest() ==\
+      md5.md5(str(self.getData())).digest():
+      # Compute md5 hash only if there is something to hash on both sides.
+      #
+      # Same data as previous, no need to change it's content
+      return
     CMFFile._edit(self, precondition=precondition, file=data)
 
   security.declareProtected(Permissions.ModifyPortalContent,'setFile')
@@ -136,22 +146,14 @@ class File(Document, CMFFile):
     """
     return self.hasData()
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'guessMimeType')
+  security.declareProtected(Permissions.AccessContentsInformation, 'guessMimeType')
+  @deprecated
   def guessMimeType(self, fname=None):
     """
-      get mime type from file name
+      Deprecated
     """
-    if not fname:
-      fname = self.getSourceReference()
-    if fname:
-      portal = self.getPortalObject()
-      content_type = getToolByName(portal, 'mimetypes_registry').\
-                                                         lookupExtension(fname)
-      if content_type is not None:
-        self.setContentType(content_type)
-    else:
-      content_type = None
-    return content_type
+    return self.getPortalObject().portal_contributions.\
+      guessMimeTypeFromFilename(fname)
 
   security.declareProtected(Permissions.ModifyPortalContent, '_setData')
   def _setData(self, data):
@@ -247,90 +249,16 @@ class File(Document, CMFFile):
     if content_type is 'text/html' and support conversion features of
     TextDocument.
     """
-    content_type = self.getContentType()
-
-    # Build the list of acceptable content_type for OOoDocument
-    # Hopefully this is cached
-    from Products.ERP5Type.Document import newTempOOoDocument
-    temp_odt = newTempOOoDocument(self, 'testOOoOdt')
-    temp_odt.edit(base_content_type='application/vnd.oasis.opendocument.text',
-                  base_data='not empty')
-    temp_ods = newTempOOoDocument(self, 'testOOoOds')
-    temp_ods.edit(
-            base_content_type='application/vnd.oasis.opendocument.spreadsheet',
-            base_data='not empty')
-    temp_odg = newTempOOoDocument(self, 'testOOoOdg')
-    temp_odg.edit(base_content_type='application/vnd.oasis.opendocument.draw',
-                  base_data='not empty')
-    temp_odb = newTempOOoDocument(self, 'testOOoOdb')
-    temp_odb.edit(base_content_type='application/vnd.oasis.opendocument.base',
-                  base_data='not empty')
-
-    supported_ooo_content_type_list = [item[0] for item in\
-                                           temp_odt.getTargetFormatItemList()]\
-                    + [item[0] for item in temp_ods.getTargetFormatItemList()]\
-                    + [item[0] for item in temp_odg.getTargetFormatItemList()]\
-                    + [item[0] for item in temp_odb.getTargetFormatItemList()]
-    portal = self.getPortalObject()
-    if content_type.startswith('text'):
-      # We can wrap it into TextDocument
-      from Products.ERP5Type.Document import newTempTextDocument
-      temp_document = newTempTextDocument(self, 'temp_%s' % self.getId(),
-                                          text_content=self.getData(),
-                                          content_type=content_type)
-      return temp_document.convert(format=format, **kw)
-    elif content_type.startswith('image'):
-      # We can wrap it into Image
-      from Products.ERP5Type.Document import newTempImage
-      temp_document = newTempImage(self, 'temp_%s' % self.getId(),
-                                   data=self.getData(),
-                                   content_type=content_type)
-      return temp_document.convert(format=format, **kw)
-    elif content_type == 'application/pdf':
-      # We can wrap it into PDFDocument
-      from Products.ERP5Type.Document import newTempPDFDocument
-      temp_document = newTempPDFDocument(self, 'temp_%s' % self.getId(),
-                                         data=self.getData(),
-                                         content_type=content_type)
-      return temp_document.convert(format=format, **kw)
-    elif content_type in supported_ooo_content_type_list:
-      # We can wrap it into OOoDocument
-      temp_document = newTempOOoDocument(self, 'temp_%s' % self.getId(),
-                                         text_content=self.getData(),
-                                         content_type=content_type)
-      return temp_document.convert(format=format, **kw)
-    elif content_type in portal.portal_transforms._mtmap:
-      # Look if portal_transforms can handle the content_type
-      # of this File
-      kw['format'] = format
-      if not self.hasConversion(**kw):
-        mime_type = str(getToolByName(portal, 'mimetypes_registry').\
-                                           lookupExtension('name.%s' % format))
-        result = portal.portal_transforms.convertToData(mime_type,
-                                                        self.getData(),
-                                                        object=self,
-                                                        context=self,
-                                                        mimetype=content_type)
-        if not result:
-          raise ConversionError('File conversion error. '
-                                'portal_transforms failed to convert '\
-                                'from %s to %s; %r' % (content_type, mime_type,
-                                                      self))
-        self.setConversion(result, mime_type, **kw)
-      else:
-        mime_type, result = self.getConversion(**kw)
-      return mime_type, result
-    else:
-      # We didn't find suitable wrapper to convert this File
-      if format in VALID_TEXT_FORMAT_LIST:
-        # This is acceptable to return empty string
-        # for a File we can not convert
-        return 'text/plain', ''
-      elif format is None:
-        # No conversion is asked,
-        # we can return safely the file content itself
-        return content_type, self.getData()
-      raise NotImplementedError
+    content_type = self.getContentType() or ''
+    if format is None:
+      # No conversion is asked,
+      # we can return safely the file content itself
+      return content_type, self.getData()
+    elif format in VALID_TEXT_FORMAT_LIST:
+      # This is acceptable to return empty string
+      # for a File we can not convert
+      return 'text/plain', ''
+    raise NotImplementedError
 
 # CMFFile also brings the IContentishInterface on CMF 2.2, remove it.
 removeIContentishInterface(File)
