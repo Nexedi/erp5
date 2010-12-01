@@ -44,6 +44,14 @@ class Data:
       'type'        : 'string',
       'default'     : 'application/unknown',
       'mode'        : 'w' },
+    # Syntax of filename property is published by
+    # Dublin Core DCMI Administrative Metadata.
+    # final version dated of 28 October 2003 can be found at url:
+    # http://dublincore.org/usage/meetings/2009/10/seoul/acore.pdf
+    { 'id'          : 'filename',
+      'description' : 'Name of provided file from where data come from',
+      'type'        : 'string',
+      'mode'        : 'w' },
     { 'id'          : 'size',
       'description' : 'Size in bytes of the data',
       'type'        : 'int',
