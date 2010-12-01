@@ -2214,6 +2214,19 @@ class AssertGraphviz(AssertSoftwareMixin):
       'graphviz',
       ])
 
+class AssertPkgconfig(AssertSoftwareMixin):
+  def test_ld_dot(self):
+    self.assertLibraryList('parts/pkgconfig/bin/pkg-config', [
+      'libc',
+      'libglib-2.0',
+      'libintl',
+      'libpopt',
+      ], [
+      'gettext',
+      'glib',
+      'popt',
+      ])
+
 class AssertElfLinkedInternally(AssertSoftwareMixin):
   def test(self):
     result_dict = {}
