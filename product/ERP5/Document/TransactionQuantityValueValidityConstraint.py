@@ -42,14 +42,11 @@ class TransactionQuantityValueValidityConstraint(ConstraintMixin):
                        PropertySheet.Predicate,
                        PropertySheet.Reference)
 
-    def checkConsistency(self, object, fixit=0):
+    def _checkConsistency(self, object, fixit=0):
       """
       Check if the quantity of the transaction is greater than the
       balance of the source.
       """
-      if not self.test(object):
-          return []
-
       errors = []
 
       source_cell = object.getSourceValue()

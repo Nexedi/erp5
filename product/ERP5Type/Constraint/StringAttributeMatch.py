@@ -47,11 +47,11 @@ class StringAttributeMatch(PropertyExistence):
   message_attribute_does_not_match = "Attribute ${attribute_name} is "\
      "${attribute_value} and does not match ${regular_expression}."
 
-  def checkConsistency(self, object, fixit=0):
+  def _checkConsistency(self, object, fixit=0):
     """Check the object's consistency.
     Check that each attribute matches the regular expression.
     """
-    error_list = PropertyExistence.checkConsistency(
+    error_list = PropertyExistence._checkConsistency(
                                   self, object, fixit=fixit)
     if not error_list:
       for attribute_name, regular_expression in\

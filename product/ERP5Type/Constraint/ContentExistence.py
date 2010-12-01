@@ -48,27 +48,26 @@ class ContentExistence(Constraint):
   message_no_subobject_portal_type = "The document does not contain any"\
                    " subobject of portal portal type ${portal_type}"
 
-  def checkConsistency(self, obj, fixit=0):
+  def _checkConsistency(self, obj, fixit=0):
     """Checks that object contains a subobject.
     """
     from Products.ERP5Type.Message import Message
     error_list = []
-    if self._checkConstraintCondition(obj):
-      # Retrieve configuration values from PropertySheet (_constraints)
-      portal_type = self.constraint_definition.get('portal_type', ())
-      if not len(obj.contentValues(portal_type=portal_type)):
-        # Generate error message
-        mapping = {}
-        message_id = 'message_no_subobject'
-        if portal_type is not ():
-          message_id = 'message_no_subobject_portal_type'
-          # XXX maybe this could be factored out
-          if isinstance(portal_type, basestring):
-            portal_type = (portal_type, )
-          mapping['portal_type'] = str(Message('erp5_ui', ' or ')).join(
-              [str(Message('erp5_ui', pt)) for pt in portal_type])
-        # Add error
-        error_list.append(self._generateError(obj,
-                            self._getMessage(message_id), mapping))
+    # Retrieve configuration values from PropertySheet (_constraints)
+    portal_type = self.constraint_definition.get('portal_type', ())
+    if not len(obj.contentValues(portal_type=portal_type)):
+      # Generate error message
+      mapping = {}
+      message_id = 'message_no_subobject'
+      if portal_type is not ():
+        message_id = 'message_no_subobject_portal_type'
+        # XXX maybe this could be factored out
+        if isinstance(portal_type, basestring):
+          portal_type = (portal_type, )
+        mapping['portal_type'] = str(Message('erp5_ui', ' or ')).join(
+            [str(Message('erp5_ui', pt)) for pt in portal_type])
+      # Add error
+      error_list.append(self._generateError(obj,
+                          self._getMessage(message_id), mapping))
     return error_list
 

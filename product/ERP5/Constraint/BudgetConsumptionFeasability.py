@@ -33,13 +33,10 @@ class BudgetConsumptionFeasability(Constraint):
     Check if there is enough budget to consumed.
     """
 
-    def checkConsistency(self, object, fixit=0):
+    def _checkConsistency(self, object, fixit=0):
       """
       Check if there is enough budget to consumed.
       """
-      if not self._checkConstraintCondition(object):
-        return []
-
       errors = []
 
       new_category_list = []

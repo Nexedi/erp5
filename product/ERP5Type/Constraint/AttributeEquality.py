@@ -50,14 +50,12 @@ class AttributeEquality(PropertyExistence):
   message_invalid_attribute_value_fixed = "Attribute ${attribute_name} "\
        "value is ${current_value} but should be ${expected_value} (Fixed)"
 
-  def checkConsistency(self, obj, fixit=0):
+  def _checkConsistency(self, obj, fixit=0):
     """Check the object's consistency.
       We will make sure that each non None constraint_definition is 
       satisfied (equality)
     """
-    if not self._checkConstraintCondition(obj):
-      return []
-    errors = PropertyExistence.checkConsistency(self, obj, fixit=fixit)
+    errors = PropertyExistence._checkConsistency(self, obj, fixit=fixit)
     for attribute_name, expected_value in self.constraint_definition.items():
       message_id = None
       mapping = dict()

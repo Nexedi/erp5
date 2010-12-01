@@ -62,14 +62,11 @@ class ContentExistenceConstraint(ConstraintMixin):
                      PropertySheet.Reference,
                      PropertySheet.ContentExistenceConstraint)
 
-  def checkConsistency(self, obj, fixit=0):
+  def _checkConsistency(self, obj, fixit=0):
     """
     Checks that object contains at least one subobject and, if a list
     of Portal Type has been given, check their Portal Types
     """
-    if not self.test(obj):
-      return []
-
     portal_type = self._getExpressionValue(obj,
                                            self.getConstraintPortalType())
 

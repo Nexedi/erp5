@@ -34,14 +34,11 @@ class TransactionQuantityValueFeasability(Constraint):
     for the source and the destination
     """
 
-    def checkConsistency(self, object, fixit=0):
+    def _checkConsistency(self, object, fixit=0):
       """
       Check if the quantity of the transaction is possible
       for the source and the destination
       """
-      if not self._checkConstraintCondition(object):
-          return []
-
       errors = []
       source_cell = object.getSourceValue()
       destination_cell = object.getDestinationValue()

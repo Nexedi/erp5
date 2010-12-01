@@ -48,13 +48,10 @@ class ResourceMeasuresConsistencyConstraint(ConstraintMixin):
                      PropertySheet.Reference,
                      PropertySheet.ResourceMeasuresConsistencyConstraint)
 
-  def checkConsistency(self, obj, fixit=0):
+  def _checkConsistency(self, obj, fixit=0):
     """
     Check the object's consistency
     """
-    if not self.test(obj):
-      return []
-
     error_list = []
     portal = obj.getPortalObject()
 

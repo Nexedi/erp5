@@ -73,14 +73,12 @@ class CategoryMembershipArity(Constraint):
     return len(obj.getCategoryMembershipList(base_category,
                                               portal_type=portal_type))
 
-  def checkConsistency(self, obj, fixit=0):
+  def _checkConsistency(self, obj, fixit=0):
     """Check the object's consistency.
       We are looking the definition of the constraing where
       are defined the minimum and the maximum arity, and the
       list of objects we wants to check the arity.
     """
-    if not self._checkConstraintCondition(obj):
-      return []
     error_list = []
     # Retrieve configuration values from PropertySheet (_constraints)
     base_category = self.constraint_definition['base_category']

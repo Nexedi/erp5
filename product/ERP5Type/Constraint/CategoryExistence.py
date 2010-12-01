@@ -55,11 +55,9 @@ class CategoryExistence(Constraint):
     return len(obj.getCategoryMembershipList(base_category,
                                              portal_type=portal_type))
 
-  def checkConsistency(self, obj, fixit=0):
+  def _checkConsistency(self, obj, fixit=0):
     """Check the object's consistency.
     """
-    if not self._checkConstraintCondition(obj):
-      return []
     error_list = []
     portal_type = self.constraint_definition.get('portal_type', ())
     # For each attribute name, we check if defined

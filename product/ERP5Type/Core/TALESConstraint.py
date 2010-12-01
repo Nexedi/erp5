@@ -66,14 +66,11 @@ class TALESConstraint(ConstraintMixin):
                      PropertySheet.Reference,
                      PropertySheet.TALESConstraint)
 
-  def checkConsistency(self, obj, fixit=0):
+  def _checkConsistency(self, obj, fixit=0):
     """
     Check that the Expression does not contain an error and is not
     evaluated to False
     """
-    if not self.test(obj):
-      return []
-
     expression_text = self.getExpression()
 
     try:

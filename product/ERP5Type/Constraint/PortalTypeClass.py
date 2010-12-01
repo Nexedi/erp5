@@ -60,11 +60,9 @@ class PortalTypeClass(Constraint):
       " definition. Portal Type class is ${portal_type_class},"\
       " document class is ${document_class}"
 
-  def checkConsistency(self, obj, fixit=0):
+  def _checkConsistency(self, obj, fixit=0):
     """Check the object's consistency.
     """
-    if not self._checkConstraintCondition(obj):
-      return []
     error_list = []
     types_tool = getToolByName(obj, 'portal_types')
     type_info = types_tool._getOb(obj.getPortalType(), None)

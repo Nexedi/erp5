@@ -51,15 +51,13 @@ class AttributeUnicity(PropertyExistence):
   message_invalid_attribute_unicity = "Attribute ${attribute_name} "\
        "value is ${value} but should be unique"
 
-  def checkConsistency(self, obj, fixit=0):
+  def _checkConsistency(self, obj, fixit=0):
     """Check the object's consistency.
       We will make sure that each non None constraint_definition is 
       satisfied (unicity)
       This Constraint use portal_catalog
     """
-    if not self._checkConstraintCondition(obj):
-      return []
-    errors = PropertyExistence.checkConsistency(self, obj, fixit=fixit)
+    errors = PropertyExistence._checkConsistency(self, obj, fixit=fixit)
     for attribute_name, expression_criterion_dict in self.constraint_definition.items():
       message_id = None
       mapping = dict(attribute_name=attribute_name)

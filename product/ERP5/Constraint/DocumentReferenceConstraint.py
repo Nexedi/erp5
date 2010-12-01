@@ -54,13 +54,10 @@ class DocumentReferenceConstraint(Constraint):
       'Multiple (${document_count}) documents ${document_reference} - '
       '${document_language} - ${document_version} already exists')
 
-  def checkConsistency(self, document, fixit=0):
+  def _checkConsistency(self, document, fixit=0):
     """
       Implement here the consistency checker
     """
-    if not self._checkConstraintCondition(document):
-      return []
-
     # XXX we probably could check reference syntax here, based on regexp in
     # preferences?
     error_list = []

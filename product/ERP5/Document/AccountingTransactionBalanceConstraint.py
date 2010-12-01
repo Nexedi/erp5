@@ -46,13 +46,10 @@ class AccountingTransactionBalanceConstraint(ConstraintMixin):
                      PropertySheet.Reference,
                      PropertySheet.AccountingTransactionBalanceConstraint)
 
-  def checkConsistency(self, obj, fixit=0):
+  def _checkConsistency(self, obj, fixit=0):
     """
     Check the object's consistency
     """
-    if not self.test(obj):
-      return []
-
     error_list = []
     source_sum = dict()
     destination_sum = dict()

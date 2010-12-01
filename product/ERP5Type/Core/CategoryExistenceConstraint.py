@@ -59,13 +59,10 @@ class CategoryExistenceConstraint(ConstraintMixin):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'checkConsistency')
-  def checkConsistency(self, obj, fixit=0):
+  def _checkConsistency(self, obj, fixit=0):
     """
     Check the object's consistency.
     """
-    if not self.test(obj):
-      return []
-
     error_list = []
     portal_type_list = self.getConstraintPortalTypeList()
     # For each attribute name, we check if defined

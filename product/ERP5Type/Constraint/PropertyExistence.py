@@ -51,11 +51,9 @@ class PropertyExistence(Constraint):
   message_property_not_set = "Property existence error for property "\
             "${property_id}, this property is not defined"
 
-  def checkConsistency(self, obj, fixit=0):
+  def _checkConsistency(self, obj, fixit=0):
     """Check the object's consistency.
     """
-    if not self._checkConstraintCondition(obj):
-      return []
     error_list = []
     # For each attribute name, we check if defined
     for property_id in self.constraint_definition.keys():

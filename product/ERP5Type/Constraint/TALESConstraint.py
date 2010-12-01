@@ -63,13 +63,11 @@ class TALESConstraint(Constraint):
   message_expression_error = \
       "Error while evaluating expression: ${error_text}"
 
-  def checkConsistency(self, obj, fixit=0):
+  def _checkConsistency(self, obj, fixit=0):
     """Check the object's consistency.
     """
     # import this later to prevent circular import
     from Products.ERP5Type.Utils import createExpressionContext
-    if not self._checkConstraintCondition(obj):
-      return []
     error_list = []
     expression_text = self.constraint_definition['expression']
     expression = Expression(expression_text)

@@ -66,13 +66,10 @@ class AttributeEqualityConstraint(ConstraintMixin):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'checkConsistency')
-  def checkConsistency(self, obj, fixit=False):
+  def _checkConsistency(self, obj, fixit=False):
     """
     Check the object's consistency.
     """
-    if not self.test(obj):
-      return []
-
     attribute_name = self.getConstraintAttributeName()
 
     # If property does not exist, error will be raised by

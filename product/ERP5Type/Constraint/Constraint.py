@@ -104,6 +104,16 @@ class Constraint:
 
     def checkConsistency(self, obj, fixit=0, **kw):
       """
+      Check the object's consistency. Note that _checkConsistency()
+      should be overriden in the Constraints rather than this one.
+      """
+      if not self._checkConstraintCondition(obj):
+        return []
+
+      return self._checkConsistency(obj, fixit, **kw)
+
+    def _checkConsistency(self, obj, fixit=0, **kw):
+      """
         Default method is to return no error.
       """
       errors = []

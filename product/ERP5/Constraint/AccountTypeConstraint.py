@@ -58,12 +58,9 @@ class AccountTypeConstraint(Constraint):
     ' of ${category}, this should have account_type'
     ' in ${account_type_list}')
 
-  def checkConsistency(self, obj, fixit=0):
+  def _checkConsistency(self, obj, fixit=0):
     """Implement here the consistency checker
     """
-    if not self._checkConstraintCondition(obj):
-      return []
-
     errors = []
     if getattr(obj, 'getAccountType', _MARKER) is _MARKER:
       errors.append(self._generateError(

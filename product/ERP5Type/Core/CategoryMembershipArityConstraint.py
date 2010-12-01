@@ -65,15 +65,12 @@ class CategoryMembershipArityConstraint(ConstraintMixin):
     return len(obj.getCategoryMembershipList(base_category_list,
                                              portal_type=portal_type_list))
 
-  def checkConsistency(self, obj, fixit=0):
+  def _checkConsistency(self, obj, fixit=0):
     """
     Check the object's consistency. We are looking at the definition
     of the constraint where the minimum and the maximum arities are
     defined, and the list of objects we wants to check the arity for
     """
-    if not self.test(obj):
-      return []
-
     # Retrieve configuration values from PropertySheet
     base_category_list = self.getConstraintBaseCategoryList()
     min_arity = self.getMinArity()

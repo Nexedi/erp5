@@ -76,10 +76,13 @@ class ConstraintMixin(Predicate):
                             'checkConsistency')
   def checkConsistency(self, obj, fixit=0, **kw):
     """
-    Default method is to return no error.
+    Check the pre-condition before checking the consistency.
+    _checkConsistency() must be define in the child class.
     """
-    errors = []
-    return errors
+    if not self.test(obj):
+      return []
+
+    return self._checkConsistency(obj, fixit, **kw)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'fixConsistency')

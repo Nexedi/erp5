@@ -41,13 +41,10 @@ class TradeModelLineCellConsistency(Constraint):
   message_cell_inexistance = translateString(
       'Missing cells on line "${line}"')
 
-  def checkConsistency(self, document, fixit=0):
+  def _checkConsistency(self, document, fixit=0):
     """
       Implement here the consistency checker
     """
-    if not self._checkConstraintCondition(document):
-      return []
-
     error_list = []
     base_id = self.constraint_definition['base_id']
     for cell_coordinates in document.getCellKeyList(base_id=base_id):

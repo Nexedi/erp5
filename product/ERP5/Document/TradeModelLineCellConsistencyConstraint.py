@@ -47,13 +47,10 @@ class TradeModelLineCellConsistencyConstraint(ConstraintMixin):
                      PropertySheet.Reference,
                      PropertySheet.TradeModelLineCellConsistencyConstraint)
 
-  def checkConsistency(self, document, fixit=0):
+  def _checkConsistency(self, document, fixit=0):
     """
     Check the object's consistency
     """
-    if not self.test(document):
-      return []
-
     base_id = self.getBaseId()
     for cell_coordinates in document.getCellKeyList(base_id=base_id):
       if document.getCell(base_id=base_id, *cell_coordinates) is None:

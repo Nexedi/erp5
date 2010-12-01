@@ -52,11 +52,9 @@ class CategoryAcquiredMembershipState(Constraint):
       "${workflow_variable} for object ${membership_url} is ${current_state} " \
       "which is not in ${valid_state_list}"
 
-  def checkConsistency(self, obj, fixit=0):
+  def _checkConsistency(self, obj, fixit=0):
     """Check the object's consistency.
     """
-    if not self._checkConstraintCondition(obj):
-      return []
     error_list = []
     # Retrieve values inside de PropertySheet (_constraints)
     base_category = self.constraint_definition['base_category']

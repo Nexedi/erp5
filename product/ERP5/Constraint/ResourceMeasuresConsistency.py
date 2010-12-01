@@ -54,12 +54,9 @@ class ResourceMeasuresConsistency(Constraint):
     "Implicit measure for the management unit can't be created" \
     " because 'metric_type/${metric_type}' category doesn't exist."
 
-  def checkConsistency(self, obj, fixit=0):
+  def _checkConsistency(self, obj, fixit=0):
     """Implement here the consistency checker
     """
-    if not self._checkConstraintCondition(obj):
-      return []
-
     error_list = []
     portal = obj.getPortalObject()
 

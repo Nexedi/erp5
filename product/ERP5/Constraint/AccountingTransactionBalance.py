@@ -41,12 +41,9 @@ class AccountingTransactionBalance(Constraint):
   message_transaction_not_balanced_for_destination = translateString(
        'Transaction is not balanced for ${section_title}')
 
-  def checkConsistency(self, obj, fixit=0):
+  def _checkConsistency(self, obj, fixit=0):
     """Implement here the consistency checker
     """
-    if not self._checkConstraintCondition(obj):
-      return []
-
     error_list = []
     source_sum = dict()
     destination_sum = dict()

@@ -47,14 +47,12 @@ class AttributeBlacklisted(PropertyExistence):
   message_invalid_attribute_blacklisted = "Attribute ${attribute_name}: "\
        "value is blacklisted"
 
-  def checkConsistency(self, obj, fixit=0):
+  def _checkConsistency(self, obj, fixit=0):
     """Check the object's consistency.
       We will make sure that each non None constraint_definition is 
       satisfied
     """
-    if not self._checkConstraintCondition(obj):
-      return []
-    errors = PropertyExistence.checkConsistency(self, obj, fixit=fixit)
+    errors = PropertyExistence._checkConsistency(self, obj, fixit=fixit)
     for attribute_name, expression_blacklisted_list in self.constraint_definition.items():
       message_id = None
       mapping = dict(attribute_name=attribute_name)
