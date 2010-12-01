@@ -59,7 +59,8 @@ class DocumentPreference:
       'preference'  : 1,
       'write_permission': Permissions.ManageProperties,
       'mode'        : '' },
-    { 'id'          : 'preferred_document_file_name_regular_expression',
+    { 'id'          : 'preferred_document_filename_regular_expression',
+      'storage_id'  : 'preferred_document_file_name_regular_expression', # Compatibility
       'description' : 'A regular expression to parse file names',
       'type'        : 'string',
       'preference'  : 1,
@@ -117,7 +118,21 @@ class DocumentPreference:
       'write_permission': Permissions.ManageProperties,
       'default'     : False,
       'preference'  : 1,
-      'mode'        : '' },      
+      'mode'        : '' },
+    { 'id'          : 'preferred_ingestion_namespace',
+      'description' : 'Namespace to use for url registry',
+      'type'        : 'string',
+      'write_permission': Permissions.ManageProperties,
+      'default'     : '',
+      'preference'  : 1,
+      'mode'        : 'w' },
+    # Kept for compatibility - will be removed some day
+    { 'id'          : 'preferred_document_file_name_regular_expression',
+      'description' : 'An alias of preferred_document_filename_regular_expression',
+      'type'        : 'string',
+      'preference'  : 1,
+      'write_permission': Permissions.ManageProperties,
+      'mode'        : '' },
     )
 
 # vim: shiftwidth=2
