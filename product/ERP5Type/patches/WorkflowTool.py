@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2001 Zope Corporation and Contributors. All Rights Reserved.
@@ -851,3 +852,43 @@ except ImportError:
   # We're on CMF 2, where WorkflowMethod has been removed from CMFCore
   #WorkflowCore.WorkflowMethod = WorkflowMethod
   WorkflowCore.WorkflowAction = WorkflowMethod
+
+def _jumpToStateFor(self, ob, state_id, wf_id=None, *args, **kw):
+  """Inspired from doActionFor.
+  This is public method to allow passing meta transition (Jump form
+  any state to another in same workflow)
+  """
+  from Products.ERP5.InteractionWorkflow import InteractionWorkflowDefinition
+  workflow_list = self.getWorkflowsFor(ob)
+  if wf_id is None:
+    if not workflow_list:
+      raise WorkflowException('No workflows found.')
+    found = False
+    for workflow in workflow_list:
+      if not isinstance(workflow, InteractionWorkflowDefinition) and\
+        state_id in workflow.states._mapping:
+        found = True
+        break
+    if not found:
+      raise WorkflowException('No workflow provides the destination state %r'\
+                                                                    % state_id)
+  else:
+    workflow = self.getWorkflowById(wf_id)
+    if workflow is None:
+      raise WorkflowException('Requested workflow definition not found.')
+
+  workflow._executeMetaTransition(ob, state_id)
+
+def _isJumpToStatePossibleFor(self, ob, state_id, wf_id=None):
+  """Test if given state_id is available for ob
+  in at least one associated workflow
+  """
+  from Products.ERP5.InteractionWorkflow import InteractionWorkflowDefinition
+  for workflow in (wf_id and (self[wf_id],) or self.getWorkflowsFor(ob)):
+    if not isinstance(workflow, InteractionWorkflowDefinition) and\
+    state_id in workflow.states._mapping:
+      return True
+  return False
+
+WorkflowTool._jumpToStateFor = _jumpToStateFor
+WorkflowTool._isJumpToStatePossibleFor = _isJumpToStatePossibleFor

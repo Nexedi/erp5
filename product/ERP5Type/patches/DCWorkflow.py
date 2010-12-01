@@ -425,6 +425,71 @@ def DCWorkflowDefinition_executeTransition(self, ob, tdef=None, kwargs=None):
 DCWorkflowDefinition._executeTransition = DCWorkflowDefinition_executeTransition
 from Products.DCWorkflow.utils import modifyRolesForPermission
 
+def _executeMetaTransition(self, ob, new_state_id):
+  """
+  Allow jumping from state to another without triggering any hooks. 
+  Must be used only under certain conditions.
+  """
+  sci = None
+  econtext = None
+  tdef = None
+  kwargs = None
+  # Figure out the old and new states.
+  old_sdef = self._getWorkflowStateOf(ob)
+  old_state = old_sdef.getId()
+  if old_state == new_state_id:
+    # Object is already in expected state
+    return
+  former_status = self._getStatusOf(ob)
+
+  new_sdef = self.states.get(new_state_id, None)
+  if new_sdef is None:
+    raise WorkflowException, ('Destination state undefined: ' + new_state_id)
+
+  # Update variables.
+  state_values = new_sdef.var_values
+  if state_values is None:
+    state_values = {}
+
+  tdef_exprs = {}
+  status = {}
+  for id, vdef in self.variables.items():
+    if not vdef.for_status:
+      continue
+    expr = None
+    if state_values.has_key(id):
+      value = state_values[id]
+    elif tdef_exprs.has_key(id):
+      expr = tdef_exprs[id]
+    elif not vdef.update_always and former_status.has_key(id):
+      # Preserve former value
+      value = former_status[id]
+    else:
+      if vdef.default_expr is not None:
+        expr = vdef.default_expr
+      else:
+        value = vdef.default_value
+    if expr is not None:
+      # Evaluate an expression.
+      if econtext is None:
+        # Lazily create the expression context.
+        if sci is None:
+          sci = StateChangeInfo(ob, self, former_status, tdef, old_sdef,
+                                new_sdef, kwargs)
+        econtext = createExprContext(sci)
+      value = expr(econtext)
+    status[id] = value
+
+  status['comment'] = 'Jump from %r to %r' % (old_state, new_state_id,)
+  status[self.state_var] = new_state_id
+  tool = aq_parent(aq_inner(self))
+  tool.setStatusOf(self.id, ob, status)
+
+  # Update role to permission assignments.
+  self.updateRoleMappingsFor(ob)
+  return new_sdef
+
+DCWorkflowDefinition._executeMetaTransition = _executeMetaTransition
 
 def DCWorkflowDefinition_wrapWorkflowMethod(self, ob, method_id, func, args, kw):
     '''
