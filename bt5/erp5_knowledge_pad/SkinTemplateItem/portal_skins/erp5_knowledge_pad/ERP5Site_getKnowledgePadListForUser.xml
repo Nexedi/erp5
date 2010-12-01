@@ -111,7 +111,6 @@ if active_pad is not None and active_pad.getValidationState() != \'deleted\':\n
 results = filterKnowledgePadListForContext(results, mode, \n
                                      default_pad_group)\n
 \n
-\n
 if not len(results) and not isAnon:\n
   # try getting default knowledge pads for user from global site preference\n
   user_pref = context.Base_getActiveGlobalKnowledgePadPreference()\n

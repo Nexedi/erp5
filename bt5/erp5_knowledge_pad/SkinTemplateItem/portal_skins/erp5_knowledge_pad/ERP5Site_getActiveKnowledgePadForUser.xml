@@ -89,7 +89,6 @@ for knowledge_pad in knowledge_pads:\n
     # ERP5 Site front gadget \n
     return knowledge_pad, knowledge_pads    \n
 \n
-\n
 # no customized version found for this context so\n
 # try finding pad by group\n
 for knowledge_pad in knowledge_pads:\n

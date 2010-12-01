@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts91191957.42</string> </value>
+            <value> <string>ts91216542.63</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -261,7 +261,7 @@ function showAddNewPadPopup(popup_id, input_id){\n
 \n
 function loadPadFromServer(pad_relative_url, wrapper_dom_id, mode){\n
   /* Load Pad from server */\n
-  d = MochiKit.Async.doSimpleXMLHttpRequest(\'A\', \n
+  d = MochiKit.Async.doSimpleXMLHttpRequest(\'KnowledgePag_getPadAsHTML\', \n
                                             {\'pad_relative_url\':pad_relative_url,\n
                                              \'mode\':mode});\n
   d.addCallback(handleServerSuccess);\n
@@ -299,7 +299,7 @@ function addPadOnServer(create_url,\n
     };\n
 };\n
 \n
-function removeKnowledgePadFromServer(knowledge_pad_relative_url, mode, base_path){\n
+function removeKnowledgePadFromServer(knowledge_pad_relative_url, mode){\n
   /* remove pad from server*/\n
   if (is_knowledge_template_used){\n
     showCreateDefaultKnowledgePadWarningMessage();}\n
@@ -442,7 +442,7 @@ MochiKit.DOM.addLoadEvent(initialize);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>16302</int> </value>
+            <value> <int>16315</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -53,19 +53,21 @@
             <value> <string>"""\n
   Render an entire PAD plus navigation (XXX)\n
   Used to in AJAX calls for instan PAD switching.\n
+  XXX: rather than return HTML we should return JSON as some parts like JS needs to be evaluated explicitly by\n
+  browser.\n
 """\n
 pad = context.restrictedTraverse(pad_relative_url)\n
+# we set this as a temp hack to force all gadgets rendering as synchronous\n
 context.REQUEST.set(\'force_synchronous_gadget_rendering\', 1)\n
-html = pad.WebSection_viewDashboardWidget(real_context=context, page_wrapper_id=\'\')\n
-#WebSection_viewDashboardWidget\n
-#KnowledgePad_viewDashboardWidget\n
-# XXX: merge both to KnowledgePad_viewDashboardWidget !\n
+\n
+# render Pad\'s html\n
+\n
+html = pad.KnowledgePad_viewDashboardWidget(real_context=context, page_wrapper_id=\'\')\n
 # toggle new active pad \n
 context.ERP5Site_toggleActiveKnowledgePad(pad_relative_url, mode, redirect=False)\n
-context.REQUEST.RESPONSE.setHeader(\'Content-Type\', \'text/html;; charset=utf-8\')\n
 \n
-print html\n
-return printed\n
+context.REQUEST.RESPONSE.setHeader(\'Content-Type\', \'text/html;; charset=utf-8\')\n
+return html\n
 </string> </value>
         </item>
         <item>
@@ -104,8 +106,6 @@ return printed\n
                           <tuple>
                             <string>pad_relative_url</string>
                             <string>mode</string>
-                            <string>_print_</string>
-                            <string>_print</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>pad</string>
