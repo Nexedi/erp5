@@ -239,8 +239,8 @@ class NodeBudgetVariation(BudgetVariation):
     key = BudgetVariation._getCellKeyFromInventoryListBrain(
                    self, brain, budget_line, cell_key_cache=cell_key_cache)
     if self.getProperty('include_virtual_other_node'):
-      if key not in [x[1] for x in
-          self.getBudgetVariationRangeCategoryList(budget_line)]:
+      if key not in budget_line.getVariationCategoryList(
+          base_category_list=(self.getProperty('variation_base_category'),)):
         key = '%s/budget_special_node/all_other' % (
             self.getProperty('variation_base_category'),)
     return key
