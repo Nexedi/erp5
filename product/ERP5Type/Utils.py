@@ -3186,3 +3186,125 @@ class ScalarMaxConflictResolver(persistent.Persistent):
     # My state doesn't depend on or materially effect the state of
     # other objects.
     return 1
+
+###################
+#  URL Normaliser #
+###################
+try:
+  import urlnorm
+except ImportError:
+  warnings.warn("urlnorm lib is not installed", DeprecationWarning)
+  urlnorm = None
+import urlparse
+import urllib
+
+# Regular expressions
+re_cleanup_anchors = re.compile('#.*')
+re_extract_port = re.compile(':(\d+)$')
+def uppercaseLetter(matchobject):
+  return matchobject.group(0).upper()
+re_cleanup_escaped_url = re.compile('%\w\d')
+re_cleanup_slashes = re.compile('/{2,}')
+re_cleanup_tail = re.compile('\??$')
+
+def legacyNormalizeUrl(url, base_url=None):
+  """this method does normalisation itself.
+  The result is less reliable but better than nothing
+  """
+  from Products.ERP5.mixin.url import no_host_protocol_list
+  # remove anchors
+  # http://www.example.com/page.html#ll -> http://www.example.com/page.html
+  url = re_cleanup_anchors.sub('', url)
+  url_split = urlparse.urlsplit(url)
+  url_sheme = url_split[0]
+  url_netloc = url_split[1]
+  url_path = url_split[2]
+  url_params = url_split[3]
+  url_query = url_split[4]
+  # strip ending dot in domain
+  url_netloc = url_netloc.rstrip('.')
+  if url_netloc:
+    # Strip default port number
+    # http://www.example.com:80/bar.html -> http://www.example.com/bar.html
+    # https://www.example.com:443/bar.html -> https://www.example.com/bar.html
+    protocol_port_mapping_dict = {'http': '80',
+                                  'https': '443',
+                                  'ftp': '21'}
+    for protocol, port in protocol_port_mapping_dict.items():
+      # extract port_number from domain
+      match_object = re_extract_port.search(url_netloc)
+      if url_sheme == protocol and match_object is not None and\
+        match_object.group(1) == port:
+        url_domain = re_extract_port.sub('', url_domain)
+  if url_sheme in no_host_protocol_list:
+    return url
+  if base_url and not (url_sheme or url_netloc):
+    # Make relative URL absolute
+    url = urlparse.urljoin(base_url, url)
+  # Remove double slashes
+  # http://www.example.com//bar.html -> http://www.example.com/bar.html
+  url_path = re_cleanup_slashes.sub('/', url_path)
+  url = urlparse.urlunsplit((url_sheme, url_netloc, url_path,
+                             url_params, url_query,))
+  # Uppercase escaped characters
+  # http://www.example.com/a%c2%b1b -> http://www.example.com/a%C2%B1b 
+  re_cleanup_escaped_url.sub(uppercaseLetter, url)
+  # Remove trailing '?'
+  # http://www.example.com/? -> http://www.example.com/
+  url = re_cleanup_tail.sub('', url)
+  if isinstance(url, unicode):
+    url = url.encode('utf-8')
+  return url
+
+def urlnormNormaliseUrl(url, base_url=None):
+  """The normalisation up is delegated to urlnorm library.
+  """
+  try:
+    url = urlnorm.norm(url)
+  except AttributeError:
+    # This url is not valid, a better Exception will
+    # be raised
+    return
+  url_split = urlparse.urlsplit(url)
+  url_protocol = url_split[0]
+  url_domain = url_split[1]
+  if base_url and not (url_protocol or url_domain):
+    # Make relative URL absolute
+    url = urlparse.urljoin(base_url, url)
+  if isinstance(url, unicode):
+    url = url.encode('utf-8')
+  return url
+
+if urlnorm is not None:
+  normaliseUrl = urlnormNormaliseUrl
+else:
+  normaliseUrl = legacyNormalizeUrl
+
+def guessEncodingFromText(data, content_type='text/html'):
+  """
+    Try to guess the encoding for this string.
+    Returns None if no encoding can be guessed.
+  This utility try use chardet for text/html
+  By default python-magic is used
+  XXX this implementation must migrate to cloudooo
+  """
+  try:
+    import chardet
+  except ImportError:
+    chardet = None
+  try:
+    import magic
+  except:
+    magic = None
+  if chardet is not None and content_type == 'text/html':
+    # chardet works fine on html document
+    return chardet.detect(data).get('encoding', None)
+  elif magic is not None:
+    # libmagic provides better result
+    # for text/plain documents.
+    enconding_detector = magic.Magic(mime_encoding=True)
+    return enconding_detector.from_buffer(data)
+  else:
+    raise NotImplementedError, 'No encoding detector found.'\
+                                  ' You must install chardet and python-magic'
+
