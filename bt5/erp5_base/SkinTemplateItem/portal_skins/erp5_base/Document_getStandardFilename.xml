@@ -50,14 +50,31 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>document = state_change[\'object\']\n
-portal = document.getPortalObject()\n
-\n
-filename = document.getFilename()\n
-content_type = portal.mimetypes_registry.lookupExtension(filename)\n
-\n
-if content_type is not None:\n
-  document.setContentType(str(content_type))\n
+            <value> <string>"""\n
+  This script returns a standard file name, build from reference, version and\n
+  language (this is only the base part of the name, the extension should be appended\n
+  in another place). It does the reverse of getPropertyDictFromFilename, so changes in\n
+  filename parsing regular expression should be reflected here.\n
+  It is used as a type-based method.\n
+"""\n
+original_filename = context.getFilename(\'\')\n
+original_extension = None\n
+if \'.\' in original_filename:\n
+  original_filename, original_extension = original_filename.rsplit(\'.\', 1)\n
+if context.hasReference():\n
+  filename = context.getReference()\n
+elif original_filename:\n
+  filename = original_filename\n
+else:\n
+  filename = context.getTitleOrId()\n
+if context.hasVersion():\n
+  filename = \'%s-%s\' % (filename, context.getVersion(),)\n
+if context.hasLanguage():\n
+  filename = \'%s-%s\' % (filename, context.getLanguage(),)\n
+if format or original_extension:\n
+  extension = (format or original_extension).split(\'.\')[-1]\n
+  filename = \'%s.%s\' % (filename, extension,)\n
+return filename\n
 </string> </value>
         </item>
         <item>
@@ -68,7 +85,7 @@ if content_type is not None:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
+            <value> <string>format=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -94,15 +111,15 @@ if content_type is not None:\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>state_change</string>
-                            <string>_getitem_</string>
-                            <string>document</string>
+                            <string>format</string>
                             <string>_getattr_</string>
-                            <string>portal</string>
-                            <string>filename</string>
-                            <string>content_type</string>
+                            <string>context</string>
+                            <string>original_filename</string>
                             <string>None</string>
-                            <string>str</string>
+                            <string>original_extension</string>
+                            <string>_getitem_</string>
+                            <string>filename</string>
+                            <string>extension</string>
                           </tuple>
                         </value>
                     </item>
@@ -114,12 +131,14 @@ if content_type is not None:\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Document_guessMimeType</string> </value>
+            <value> <string>Document_getStandardFilename</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

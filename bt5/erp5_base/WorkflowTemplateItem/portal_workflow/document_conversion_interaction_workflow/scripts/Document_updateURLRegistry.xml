@@ -52,12 +52,8 @@
             <key> <string>_body</string> </key>
             <value> <string>document = state_change[\'object\']\n
 portal = document.getPortalObject()\n
-\n
-filename = document.getFilename()\n
-content_type = portal.mimetypes_registry.lookupExtension(filename)\n
-\n
-if content_type is not None:\n
-  document.setContentType(str(content_type))\n
+portal_url_registry = portal.portal_url_registry\n
+portal_url_registry.registerURL(document.asNormalisedURL(), document.getReference(), context=document)\n
 </string> </value>
         </item>
         <item>
@@ -99,10 +95,7 @@ if content_type is not None:\n
                             <string>document</string>
                             <string>_getattr_</string>
                             <string>portal</string>
-                            <string>filename</string>
-                            <string>content_type</string>
-                            <string>None</string>
-                            <string>str</string>
+                            <string>portal_url_registry</string>
                           </tuple>
                         </value>
                     </item>
@@ -119,7 +112,7 @@ if content_type is not None:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Document_guessMimeType</string> </value>
+            <value> <string>Document_updateURLRegistry</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

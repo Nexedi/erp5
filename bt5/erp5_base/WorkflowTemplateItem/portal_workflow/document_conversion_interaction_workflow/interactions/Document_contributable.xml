@@ -27,15 +27,15 @@
         <item>
             <key> <string>after_script_name</string> </key>
             <value>
-              <list>
-                <string>Document_guessMimeType</string>
-              </list>
+              <tuple/>
             </value>
         </item>
         <item>
             <key> <string>before_commit_script_name</string> </key>
             <value>
-              <tuple/>
+              <list>
+                <string>Document_updateURLRegistry</string>
+              </list>
             </value>
         </item>
         <item>
@@ -50,19 +50,19 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Document_file</string> </value>
+            <value> <string>Document_contributable</string> </value>
         </item>
         <item>
             <key> <string>method_id</string> </key>
             <value>
               <list>
-                <string>_setFile</string>
+                <string>_setReference.*</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>once_per_transaction</string> </key>
-            <value> <int>0</int> </value>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>portal_type_filter</string> </key>
@@ -110,7 +110,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>here/hasFilename</string> </value>
+            <value> <string>here/hasUrlString</string> </value>
         </item>
       </dictionary>
     </pickle>

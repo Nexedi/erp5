@@ -50,34 +50,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  This script returns a standard file name, build from reference, version and\n
-  language (this is only the base part of the name, the extension should be appended\n
-  in another place). It does the reverse of getPropertyDictFromFileName, so changes in\n
-  filename parsing regular expression should be reflected here.\n
-  It is used as a type-based method.\n
+            <value> <string>"""Just an alias for real script\n
 """\n
-\n
-if context.hasReference():\n
-  file_name = context.getReference()\n
-elif context.hasSourceReference():\n
-  file_name = context.getSourceReference()\n
-else:\n
-  file_name = context.getTitleOrId()\n
-extension = None\n
-if \'.\' in file_name:\n
-  file_name, extension = file_name.rsplit(\'.\', 1)\n
-if context.getVersion():\n
-  file_name = \'%s-%s\' % (file_name, context.getVersion(),)\n
-if context.getLanguage():\n
-  file_name = \'%s-%s\' % (file_name, context.getLanguage(),)\n
-if format:\n
-  extension = format.rsplit(\'.\')[-1]\n
-elif not extension and \'.\' in context.getSourceReference(\'\'):\n
-  extension = context.getSourceReference().rsplit(\'.\')[-1]\n
-if extension:\n
-  file_name = \'%s.%s\' % (file_name, extension,)\n
-return file_name\n
+from Products.ERP5Type.Log import log\n
+log(\'DeprecationWarning: Please use Document_getStandardFilename\')\n
+return context.Document_getStandardFilename(format=format)\n
 </string> </value>
         </item>
         <item>
@@ -115,13 +92,10 @@ return file_name\n
                         <value>
                           <tuple>
                             <string>format</string>
+                            <string>Products.ERP5Type.Log</string>
+                            <string>log</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>file_name</string>
-                            <string>None</string>
-                            <string>extension</string>
-                            <string>_getiter_</string>
-                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
