@@ -55,10 +55,7 @@
 """\n
 \n
 all_pads = [x for x in context.ERP5Site_getKnowledgePadListForUser(mode, default_pad_group)]\n
-if mode.startswith(\'web\'):\n
-  active_pad, all_pads = context.WebSite_getActiveKnowledgePadForUser(all_pads, default_pad_group)\n
-else:\n
-  active_pad, all_pads = context.ERP5Site_getActiveKnowledgePadForUser(all_pads)\n
+active_pad, all_pads = context.ERP5Site_getActiveKnowledgePadForUser(all_pads, mode, default_pad_group)\n
 \n
 active_pad = active_pad.getObject()\n
 gadget_list = active_pad.contentValues(filter={\'portal_type\': \'Knowledge Box\'})\n
