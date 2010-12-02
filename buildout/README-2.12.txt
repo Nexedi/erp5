@@ -77,8 +77,14 @@ doubt, unset it before invoking that command.
 Post-build check
 ----------------
 
+There are tests for buildout in:
+  https://svn.erp5.org/repos/public/erp5/trunk/buildout/tests/assertSoftware.py
+
+Download this file, for example by using provided svn:
+
+ $ parts/subversion/bin/svn export --non-interactive --trust-server-cert https://svn.erp5.org/repos/public/erp5/trunk/buildout/tests/assertSoftware.py
 Run:
-  python tests/assertSoftware.py
+  python assertSoftware.py
 
 Instances
 =========
