@@ -6,5 +6,3 @@
      closer to buildout usage (internal cache, etc)
  - make eggs defined with standalone instance recipe inside instance instead
    of globally for buildout
- - update software-profiles/apache.cfg to build fully modular apache (with ssl,
-   cache, etc) which will give full control while creating apache instances
