@@ -1,11 +1,7 @@
 # svn propset svn:ignore -F ./IGNORE.TXT .
-
 .installed.cfg
 bin
 develop-eggs
 downloads
 eggs
-fake-eggs
 parts
-tmp-storage
-var
