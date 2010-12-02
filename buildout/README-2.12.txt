@@ -24,7 +24,6 @@ Requirements to build ERP5 Appliance 2.12 are:
  * make
  * patch
  * python (>=2.4) with development headers (to run buildout)
- * tool to download bootstrap (wget, curl or web browser)
  * subversion client (XXX: It will be removed some day)
 
 ** WARNING ** DO __NOT__ use helpers, they are only for ERP5 Appliance 2.8 flavour. ** WARNING **
@@ -52,13 +51,7 @@ And run it:
 WARNING: please read "Troubleshooting" section bellow, you may need to
 unset environment variables in your GNU/Linux distribution
 
-If curl or wget are available, it can be done in one line:
-
-in case of curl:
-  $ curl -s http://svn.zope.org/*checkout*/zc.buildout/trunk/bootstrap/bootstrap.py | python -S - -c buildout-2.12.cfg
-
-in case of wget:
-  $ wget -q  -O - http://svn.zope.org/*checkout*/zc.buildout/trunk/bootstrap/bootstrap.py | python -S - -c buildout-2.12.cfg
+  $ python -S -c 'import urllib2;print urllib2.urlopen("http://svn.zope.org/*checkout*/zc.buildout/trunk/bootstrap/bootstrap.py").read()' | python -S - -c buildout-2.12.cfg
 
 Run the Zope 2.12 buildout
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
