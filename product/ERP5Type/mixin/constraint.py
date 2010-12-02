@@ -34,7 +34,7 @@ from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
 from zope.interface import implements
 from Products.ERP5Type.Core.Predicate import Predicate
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Utils import UpperCase, createExpressionContext
 from Products.CMFCore.Expression import Expression
 
