@@ -59,10 +59,8 @@ class AttributeEqualityConstraint(ConstraintMixin):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  property_sheets = (PropertySheet.SimpleItem,
-                     PropertySheet.Predicate,
-                     PropertySheet.Reference,
-                     PropertySheet.AttributeEqualityConstraint)
+  property_sheets = ConstraintMixin.property_sheets + \
+                    (PropertySheet.AttributeEqualityConstraint,)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'checkConsistency')

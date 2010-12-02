@@ -48,10 +48,8 @@ class CategoryExistenceConstraint(ConstraintMixin):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  property_sheets = (PropertySheet.SimpleItem,
-                     PropertySheet.Predicate,
-                     PropertySheet.Reference,
-                     PropertySheet.CategoryExistenceConstraint)
+  property_sheets = ConstraintMixin.property_sheets + \
+                    (PropertySheet.CategoryExistenceConstraint,)
 
   def _calculateArity(self, obj, base_category, portal_type_list):
     return len(obj.getCategoryMembershipList(base_category,

@@ -55,6 +55,10 @@ class ConstraintMixin(Predicate):
   __allow_access_to_unprotected_subobjects__ = 1
   implements( IConstraint, )
 
+  property_sheets = (PropertySheet.SimpleItem,
+                     PropertySheet.Predicate,
+                     PropertySheet.Reference)
+
   def _getMessage(self, message_id):
     """
     Get the message corresponding to this message_id.

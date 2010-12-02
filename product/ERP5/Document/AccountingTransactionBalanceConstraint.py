@@ -41,10 +41,8 @@ class AccountingTransactionBalanceConstraint(ConstraintMixin):
   meta_type = 'ERP5 Accounting Transaction Balance Constraint'
   portal_type = 'Accounting Transaction Balance Constraint'
 
-  property_sheets = (PropertySheet.SimpleItem,
-                     PropertySheet.Predicate,
-                     PropertySheet.Reference,
-                     PropertySheet.AccountingTransactionBalanceConstraint)
+  property_sheets = ConstraintMixin.property_sheets + \
+                    (PropertySheet.AccountingTransactionBalanceConstraint,)
 
   def _checkConsistency(self, obj, fixit=0):
     """

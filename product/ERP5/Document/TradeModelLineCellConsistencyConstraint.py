@@ -42,10 +42,8 @@ class TradeModelLineCellConsistencyConstraint(ConstraintMixin):
   meta_type = 'ERP5 Trade Model Line Cell Consistency Constraint'
   portal_type = 'Trade Model Line Cell Consistency Constraint'
 
-  property_sheets = (PropertySheet.SimpleItem,
-                     PropertySheet.Predicate,
-                     PropertySheet.Reference,
-                     PropertySheet.TradeModelLineCellConsistencyConstraint)
+  property_sheets = ConstraintMixin.property_sheets + \
+                    (PropertySheet.TradeModelLineCellConsistencyConstraint,)
 
   def _checkConsistency(self, document, fixit=0):
     """

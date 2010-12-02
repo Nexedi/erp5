@@ -57,10 +57,8 @@ class ContentExistenceConstraint(ConstraintMixin):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  property_sheets = (PropertySheet.SimpleItem,
-                     PropertySheet.Predicate,
-                     PropertySheet.Reference,
-                     PropertySheet.ContentExistenceConstraint)
+  property_sheets = ConstraintMixin.property_sheets + \
+                    (PropertySheet.ContentExistenceConstraint,)
 
   def _checkConsistency(self, obj, fixit=0):
     """

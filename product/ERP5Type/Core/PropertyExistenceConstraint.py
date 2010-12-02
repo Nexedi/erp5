@@ -54,10 +54,8 @@ class PropertyExistenceConstraint(ConstraintMixin):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  property_sheets = (PropertySheet.SimpleItem,
-                     PropertySheet.Predicate,
-                     PropertySheet.Reference,
-                     PropertySheet.PropertyExistenceConstraint)
+  property_sheets = ConstraintMixin.property_sheets + \
+                    (PropertySheet.PropertyExistenceConstraint,)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'checkConsistency')

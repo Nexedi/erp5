@@ -43,10 +43,8 @@ class ResourceMeasuresConsistencyConstraint(ConstraintMixin):
   meta_type = 'ERP5 Resource Measures Consistency Constraint'
   portal_type = 'Resource Measures Consistency Constraint'
 
-  property_sheets = (PropertySheet.SimpleItem,
-                     PropertySheet.Predicate,
-                     PropertySheet.Reference,
-                     PropertySheet.ResourceMeasuresConsistencyConstraint)
+  property_sheets = ConstraintMixin.property_sheets + \
+                    (PropertySheet.ResourceMeasuresConsistencyConstraint,)
 
   def _checkConsistency(self, obj, fixit=0):
     """

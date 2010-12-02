@@ -61,10 +61,8 @@ class TALESConstraint(ConstraintMixin):
   meta_type = 'ERP5 TALES Constraint'
   portal_type = 'TALES Constraint'
 
-  property_sheets = (PropertySheet.SimpleItem,
-                     PropertySheet.Predicate,
-                     PropertySheet.Reference,
-                     PropertySheet.TALESConstraint)
+  property_sheets = ConstraintMixin.property_sheets + \
+                    (PropertySheet.TALESConstraint,)
 
   def _checkConsistency(self, obj, fixit=0):
     """

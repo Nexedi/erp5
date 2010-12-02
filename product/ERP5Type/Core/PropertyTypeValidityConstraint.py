@@ -44,10 +44,8 @@ class PropertyTypeValidityConstraint(ConstraintMixin):
   meta_type = 'ERP5 Property Type Validity Constraint'
   portal_type = 'Property Type Validity Constraint'
 
-  property_sheets = (PropertySheet.SimpleItem,
-                     PropertySheet.Predicate,
-                     PropertySheet.Reference,
-                     PropertySheet.PropertyTypeValidityConstraint)
+  property_sheets = ConstraintMixin.property_sheets + \
+                    (PropertySheet.PropertyTypeValidityConstraint,)
 
   # Initialize type dict
   _type_dict = {
