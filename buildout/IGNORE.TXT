@@ -5,3 +5,5 @@ develop-eggs
 downloads
 eggs
 parts
+reboostrap.*
+.reboostrap.*
