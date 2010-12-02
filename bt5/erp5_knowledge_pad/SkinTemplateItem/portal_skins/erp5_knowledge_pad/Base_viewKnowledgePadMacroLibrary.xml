@@ -208,8 +208,8 @@
                       </div>\n
                       <div class="pad-switch"\n
                            tal:attributes="style python: test(is_active, \'display:none\', \'display:block\')">\n
-<!--\n
-                       <span tal:attributes="onclick string:loadPadFromServer(\'${knowledge_pad_relative_url}\', \'${dom_id}\', \'${mode}\')" \n
+\n
+<!--                       <span tal:attributes="onclick string:loadPadFromServer(\'${knowledge_pad_relative_url}\', \'${dom_id}\', \'${mode}\')" \n
                              tal:content="knowledge_pad/getTitle"/>-->\n
 \n
                         <a tal:attributes="href python:\n

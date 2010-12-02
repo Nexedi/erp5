@@ -36,18 +36,17 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<div tal:define="layout here/KnowledgePad_getBoxColumnLayout;\n
+<div id="page_wrapper"\n
+    tal:define="layout here/KnowledgePad_getBoxColumnLayout;\n
                  real_context python: options.get(\'real_context\', None);\n
                  cancel_url python: options.get(\'cancel_url\', None);\n
                  isAnon python: here.portal_membership.isAnonymousUser();\n
                  is_tab_empty python: (len(layout)==1 and len(layout[0])==0) or\n
                                      (len(layout)==3 and len(layout[0]+layout[1]+layout[2])==0);\n
-                 page_wrapper_id python:  options.get(\'page_wrapper_id\', \'page_wrapper\');\n
                  columns python: options.get(\'columns\', 3);\n
                  column_css_class python: test(isAnon, \n
                                             \'portal-column portal-column-undraggable\', \n
-                                            \'portal-column\');"\n
-     tal:attributes="id page_wrapper_id">\n
+                                            \'portal-column\');">\n
 \n
     <!-- No gadgets message -->\n
     <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/add_new_gadget_message"/> \n

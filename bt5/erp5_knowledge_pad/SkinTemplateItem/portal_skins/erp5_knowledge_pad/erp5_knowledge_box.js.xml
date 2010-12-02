@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts91301986.39</string> </value>
+            <value> <string>ts91303406.12</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -270,7 +270,7 @@ function loadPadFromServer(pad_relative_url, selected_pad_dom_id, mode){\n
   /* Load Pad from server */\n
   // XXX: show some animation ?\n
     \n
-  d = MochiKit.Async.loadJSONDoc(\'KnowledgePag_getPadAsHTML\', \n
+  d = MochiKit.Async.loadJSONDoc(\'KnowledgePag_getPadAsJSON\', \n
                                  {\'pad_relative_url\':pad_relative_url,\n
                                   \'mode\':mode});\n
   //d.addCallback(handleServerSuccess);\n
@@ -303,8 +303,11 @@ function loadPadFromServer(pad_relative_url, selected_pad_dom_id, mode){\n
     javascript = meta.javascript\n
     body_element = getElement(\'pad-body-wrapper\');\n
     body_element.innerHTML = body;\n
+    // init new Pad\n
+    initialize();\n
     // execute JS code\n
     eval(javascript);\n
+    \n
   }\n
 }\n
 \n
@@ -475,7 +478,7 @@ MochiKit.DOM.addLoadEvent(initialize);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>17637</int> </value>
+            <value> <int>17680</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

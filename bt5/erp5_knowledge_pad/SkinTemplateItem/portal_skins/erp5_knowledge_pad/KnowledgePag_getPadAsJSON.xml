@@ -58,17 +58,11 @@
 """\n
 pad = context.restrictedTraverse(pad_relative_url)\n
 \n
-# we set this as a temp hack to force all gadgets rendering as synchronous\n
-#context.REQUEST.set(\'force_synchronous_gadget_rendering\', 1)\n
-\n
 # render Pad\'s html\n
-body = pad.KnowledgePad_viewDashboardWidget(real_context=context, page_wrapper_id=\'\')\n
+body = pad.KnowledgePad_viewDashboardWidget(real_context=context)\n
 \n
 # toggle new active pad \n
 context.ERP5Site_toggleActiveKnowledgePad(pad_relative_url, mode, redirect=False)\n
-\n
-# XXX: generate navigation\n
-#navigation = pad.KnowledgePad_viewNavigationWidget(real_context=context, page_wrapper_id=\'\')\n
 \n
 # XXX: generate all JS updater code\n
 javascript = \'\'\'updater(\'http://localhost/km/ERP5Site_viewRssGadget\', \'knowledge_pad_module/65/2\', \'visual_2\', \'web_site_module/km_test_web_site\', \'0\', {});\n
@@ -139,7 +133,7 @@ return \'%s\' % result\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>KnowledgePag_getPadAsHTML</string> </value>
+            <value> <string>KnowledgePag_getPadAsJSON</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
