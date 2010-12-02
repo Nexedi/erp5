@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts91216542.63</string> </value>
+            <value> <string>ts91285696.36</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -254,9 +254,16 @@ function addBoxToServer(url, dom_id, gadget_relative_url){\n
     button.disabled = true;}\n
 }\n
 \n
-function showAddNewPadPopup(popup_id, input_id){\n
-  toggleElementById(\'add_new_tab_dialog\'); \n
-//   MochiKit.DOM.getElement(\'new_pad_title\').focus();\n
+function showAddNewPadPopup(){\n
+   toggleElementById(\'add_new_tab_dialog\'); \n
+   // set focus on new Pad title after toggle effect is over \n
+   setTimeout("MochiKit.DOM.getElement(\'new_pad_title\').focus()", 500 );\n
+}\n
+\n
+function showRenamePadPopup(){\n
+   toggleElementById(\'rename_tab_dialog\');\n
+   // set focus on new Pad title after toggle effect is over \n
+   setTimeout("MochiKit.DOM.getElement(\'new_knowledge_pad_title\').focus()", 500 );\n
 }\n
 \n
 function loadPadFromServer(pad_relative_url, wrapper_dom_id, mode){\n
@@ -442,7 +449,7 @@ MochiKit.DOM.addLoadEvent(initialize);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>16315</int> </value>
+            <value> <int>16600</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
