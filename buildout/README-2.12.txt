@@ -32,7 +32,7 @@ Setup
 
 Create directory for buildout and its extends cache:
 
-  $ mkdir ~/erp5.buildout ~/erp5.buildout/extends-cache
+  $ mkdir -p ~/erp5.buildout/extends-cache
 
 Go to this directory:
 
