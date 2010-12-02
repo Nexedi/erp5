@@ -1,7 +1,6 @@
  - global build requirement checker
    - needs recipe
    - needs per profile dependency declaration
- - implement declared parts (*/buildout.cfg empty)
  - software-profiles/openoffice-bin.cfg:
    - consider using own recipe or zorg.recipe.openoffice, which would be
      closer to buildout usage (internal cache, etc)
