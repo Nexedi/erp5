@@ -2254,6 +2254,13 @@ class AssertPkgconfig(AssertSoftwareMixin):
       'popt',
       ])
 
+class AssertM4(AssertSoftwareMixin):
+  def test_ld_pkgconfig(self):
+    self.assertLibraryList('parts/m4/bin/m4', [
+      'libc',
+      ], [
+      ])
+
 class AssertElfLinkedInternally(AssertSoftwareMixin):
   def test(self):
     result_dict = {}
