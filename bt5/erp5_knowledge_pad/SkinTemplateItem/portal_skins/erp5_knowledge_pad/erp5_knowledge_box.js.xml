@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts91285696.36</string> </value>
+            <value> <string>ts91301986.39</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -266,19 +266,45 @@ function showRenamePadPopup(){\n
    setTimeout("MochiKit.DOM.getElement(\'new_knowledge_pad_title\').focus()", 500 );\n
 }\n
 \n
-function loadPadFromServer(pad_relative_url, wrapper_dom_id, mode){\n
+function loadPadFromServer(pad_relative_url, selected_pad_dom_id, mode){\n
   /* Load Pad from server */\n
-  d = MochiKit.Async.doSimpleXMLHttpRequest(\'KnowledgePag_getPadAsHTML\', \n
-                                            {\'pad_relative_url\':pad_relative_url,\n
-                                             \'mode\':mode});\n
-  d.addCallback(handleServerSuccess);\n
-  function handleServerSuccess(res){\n
-    response = res.responseText;\n
-//     removeElement(wrapper_dom_id);\n
-//     div = document.createElement("div")\n
-   dom = getElement(wrapper_dom_id);\n
-    dom.innerHTML = response;\n
-//     alert(div);\n
+  // XXX: show some animation ?\n
+    \n
+  d = MochiKit.Async.loadJSONDoc(\'KnowledgePag_getPadAsHTML\', \n
+                                 {\'pad_relative_url\':pad_relative_url,\n
+                                  \'mode\':mode});\n
+  //d.addCallback(handleServerSuccess);\n
+  d.addCallbacks(handleServerSuccess, metadataFetchFailed);\n
+\n
+  // set old pad to not selected\n
+  pads_container = getElement("tabs");\n
+  old_selected_pad = getFirstElementByTagAndClassName("li", "tab_selected", pads_container);\n
+  old_selected_pad.setAttribute("class", "tab");\n
+  pad_actions = getFirstElementByTagAndClassName("div", "pad-actions", old_selected_pad);\n
+  pad_switch = getFirstElementByTagAndClassName("div", "pad-switch", old_selected_pad); \n
+  pad_actions.style.display="none";\n
+  pad_switch.style.display="block";\n
+  \n
+  // set new selected pad class \n
+  new_selected_pad = getElement(selected_pad_dom_id);\n
+  new_selected_pad.setAttribute("class", "tab tab_selected");\n
+  \n
+  // enable "settings" for this pad and hide instant switch\n
+  pad_actions = getFirstElementByTagAndClassName("div", "pad-actions", new_selected_pad);\n
+  pad_switch = getFirstElementByTagAndClassName("div", "pad-switch", new_selected_pad); \n
+  pad_actions.style.display="block";\n
+  pad_switch.style.display="none";\n
+ \n
+   \n
+  function metadataFetchFailed(meta){}\n
+  \n
+  function handleServerSuccess(meta){\n
+    body = meta.body\n
+    javascript = meta.javascript\n
+    body_element = getElement(\'pad-body-wrapper\');\n
+    body_element.innerHTML = body;\n
+    // execute JS code\n
+    eval(javascript);\n
   }\n
 }\n
 \n
@@ -449,7 +475,7 @@ MochiKit.DOM.addLoadEvent(initialize);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>16600</int> </value>
+            <value> <int>17637</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

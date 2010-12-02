@@ -57,17 +57,27 @@
   browser.\n
 """\n
 pad = context.restrictedTraverse(pad_relative_url)\n
+\n
 # we set this as a temp hack to force all gadgets rendering as synchronous\n
-context.REQUEST.set(\'force_synchronous_gadget_rendering\', 1)\n
+#context.REQUEST.set(\'force_synchronous_gadget_rendering\', 1)\n
 \n
 # render Pad\'s html\n
+body = pad.KnowledgePad_viewDashboardWidget(real_context=context, page_wrapper_id=\'\')\n
 \n
-html = pad.KnowledgePad_viewDashboardWidget(real_context=context, page_wrapper_id=\'\')\n
 # toggle new active pad \n
 context.ERP5Site_toggleActiveKnowledgePad(pad_relative_url, mode, redirect=False)\n
 \n
-context.REQUEST.RESPONSE.setHeader(\'Content-Type\', \'text/html;; charset=utf-8\')\n
-return html\n
+# XXX: generate navigation\n
+#navigation = pad.KnowledgePad_viewNavigationWidget(real_context=context, page_wrapper_id=\'\')\n
+\n
+# XXX: generate all JS updater code\n
+javascript = \'\'\'updater(\'http://localhost/km/ERP5Site_viewRssGadget\', \'knowledge_pad_module/65/2\', \'visual_2\', \'web_site_module/km_test_web_site\', \'0\', {});\n
+updater(\'http://localhost/km/ERP5Site_viewRssGadget\', \'knowledge_pad_module/64/3\', \'visual_3\', \'\', \'0\', {}); \'\'\'\n
+\n
+# return JSON\n
+result = {\'body\': body,\n
+          \'javascript\': javascript }\n
+return \'%s\' % result\n
 </string> </value>
         </item>
         <item>
@@ -109,8 +119,10 @@ return html\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>pad</string>
-                            <string>html</string>
+                            <string>body</string>
                             <string>False</string>
+                            <string>javascript</string>
+                            <string>result</string>
                           </tuple>
                         </value>
                     </item>

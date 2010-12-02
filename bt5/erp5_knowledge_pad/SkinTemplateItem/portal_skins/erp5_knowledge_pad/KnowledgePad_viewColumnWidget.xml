@@ -43,8 +43,9 @@
   <tal:block \n
         tal:condition="python: getattr(here, box_id, None) is not None"\n
         tal:define="box python: getattr(here, box_id);\n
-                    view_form_dom_id python: \'visual_%s\' %box_id;\n
-                    edit_form_dom_id python: \'edit_form_%s\' %box_id;\n
+                    box_dom_id python: \'%s\' %box.getRelativeUrl().replace(\'/\', \'_\');\n
+                    view_form_dom_id python: \'%s_content\' %box_dom_id;\n
+                    edit_form_dom_id python: \'%s_edit_form\' %box_dom_id;\n
                     gadget python: box.getSpecialiseValue();\n
                     dummy python: request.set(\'is_gadget_mode\', \'1\');\n
                     dummy python: request.set(\'box_relative_url\', box.getRelativeUrl());\n
@@ -71,7 +72,7 @@
 \n
     <div class="block" \n
       tal:condition="python: gadget is not None"\n
-      tal:attributes="id python: \'%s_%s\' %(here.getRelativeUrl().replace(\'/\',\'_\'), box_id)">\n
+      tal:attributes="id box_dom_id">\n
 \n
       <h3 class="handle">\n
         <span class="handle">\n

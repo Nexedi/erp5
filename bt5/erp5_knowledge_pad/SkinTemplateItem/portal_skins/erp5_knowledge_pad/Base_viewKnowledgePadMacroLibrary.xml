@@ -185,39 +185,42 @@
                   <tal:block  \n
                     tal:define="knowledge_pad_relative_url knowledge_pad/getRelativeUrl;\n
                                 active_knowledge_pad_relative_url active_knowledge_pad/getRelativeUrl;\n
-                                is_active python: knowledge_pad_relative_url==active_knowledge_pad_relative_url"> \n
+                                is_active python: knowledge_pad_relative_url==active_knowledge_pad_relative_url;\n
+                                dom_id python: \'%s\' %knowledge_pad_relative_url.replace(\'/\', \'_\')"> \n
 \n
-                    <li tal:condition="is_active"\n
-                        class="tab tab_selected">\n
+                    <li tal:attributes="id dom_id;\n
+                                        class python: test(is_active, \'tab tab_selected\', \'tab\')">\n
+                      <div class="pad-actions"\n
+                           tal:attributes="style python: test(is_active, \'display:block\', \'display:none\')">\n
                         <span id="active_knowledge_pad_title" \n
                               tal:content="knowledge_pad/title"/>\n
-\n
                         <span title="Settings"\n
                               i18n:attributes="title"\n
                               i18n:domain="ui"\n
                               class="clickable_image rename_tab_dialog_image"\n
                               onclick="showRenamePadPopup();"></span>\n
-\n
                         <span title="Remove"\n
                               i18n:attributes="title"\n
                               i18n:domain="ui"\n
                               class="clickable_image remove_tab_dialog_image"\n
                               tal:attributes="onclick string: removeKnowledgePadFromServer(\n
                                                                 \'${active_knowledge_pad_relative_url}\', \'${mode}\')"/>\n
-                    </li>\n
-\n
-                    <li tal:condition="not: is_active"\n
-                        class="tab">\n
-                     <a tal:attributes="href python:\n
-                                          \'ERP5Site_toggleActiveKnowledgePad?knowledge_pad_url=%s&mode=%s\'\n
-                                          %(knowledge_pad.getRelativeUrl(), mode)">\n
-                             <span tal:content="knowledge_pad/getTitle"/>\n
-                      </a>\n
-                       <!-- XXX: instant switch-->\n
-<!--                       <span tal:attributes="onclick string:loadPadFromServer(\'${knowledge_pad_relative_url}\', \'page_wrapper\', \'${mode}\')" \n
+                      </div>\n
+                      <div class="pad-switch"\n
+                           tal:attributes="style python: test(is_active, \'display:none\', \'display:block\')">\n
+<!--\n
+                       <span tal:attributes="onclick string:loadPadFromServer(\'${knowledge_pad_relative_url}\', \'${dom_id}\', \'${mode}\')" \n
                              tal:content="knowledge_pad/getTitle"/>-->\n
 \n
+                        <a tal:attributes="href python:\n
+                                          \'ERP5Site_toggleActiveKnowledgePad?knowledge_pad_url=%s&mode=%s\'\n
+                                          %(knowledge_pad.getRelativeUrl(), mode)">\n
+                             <span tal:content="knowledge_pad/getTitle"/></a>\n
+\n
+                      </div>\n
+\n
                     </li>\n
+\n
                   </tal:block>\n
                 </tal:block>\n
                 <li class="tab"\n
