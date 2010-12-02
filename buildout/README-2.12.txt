@@ -19,24 +19,33 @@ Software part is system independent.
 
 Requirements to build ERP5 Appliance 2.12 are:
 
- * C and C++ compiler
- * standard C and C++ library with development headers
+ * C and C++ compiler (gcc and g++)
+ * standard C and C++ library with development headers (glibc and libstdc++)
  * make
  * patch
  * python (>=2.4) with development headers (to run buildout)
- * subversion client (XXX: It will be removed some day)
 
 ** WARNING ** DO __NOT__ use helpers, they are only for ERP5 Appliance 2.8 flavour. ** WARNING **
 
 Setup
 -----
 
-Checkout: https://svn.erp5.org/repos/public/erp5/trunk/buildout/
-For example:
+Create directory for buildout and its extends cache:
 
-  svn co https://svn.erp5.org/repos/public/erp5/trunk/buildout/ ~/erp5.buildout
+  $ mkdir ~/erp5.buildout ~/erp5.buildout/extends-cache
+
+Go to this directory:
 
   $ cd ~/erp5.buildout
+
+Create buildout.cfg there:
+
+  $ cat > buildout.cfg
+
+[buildout]
+extends = https://svn.erp5.org/repos/public/erp5/trunk/buildout/buildout-2.12.cfg
+extends-cache = extends-cache
+^D
 
 Bootstrap buildout
 ~~~~~~~~~~~~~~~~~~
@@ -46,17 +55,17 @@ Download the newest bootstrap.py file from:
 
 And run it:
 
-  $ python -S bootstrap.py -c buildout-2.12.cfg
+  $ python -S bootstrap.py
 
 WARNING: please read "Troubleshooting" section bellow, you may need to
 unset environment variables in your GNU/Linux distribution
 
-  $ python -S -c 'import urllib2;print urllib2.urlopen("http://svn.zope.org/*checkout*/zc.buildout/trunk/bootstrap/bootstrap.py").read()' | python -S - -c buildout-2.12.cfg
+  $ python -S -c 'import urllib2;print urllib2.urlopen("http://svn.zope.org/*checkout*/zc.buildout/trunk/bootstrap/bootstrap.py").read()' | python -S -
 
-Run the Zope 2.12 buildout
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Run the buildout
+~~~~~~~~~~~~~~~~
 
-  $ bin/buildout -v -c buildout-2.12.cfg
+  $ bin/buildout -v
 
 This will download and install the software components needed to run ERP5 on
 Zope 2.12 including Zope 2.12 plus dependencies (including
@@ -64,18 +73,6 @@ Acquisition with _aq_dynamic patch) and CMF 2.2 plus dependencies.
 
 Note on -S: this switch is overridden by PYTHON_PATH environment variable. In
 doubt, unset it before invoking that command.
-
-Minimal requirements
---------------------
-
-At the very least, running buildout requires:
-
- * Python 2.4 or later including development files (e.g. python2.4-devel or 
-   python2.4-dev package from your system package manager. A file like
-   /usr/lib*/python*/config/Makefile should be installed in the system.
-   XXX Since we compile our own python, are development files still necessary?)
- * C development toolchain (Make, gcc, gpp, etc.) 
- * subversion (svn) client, to check-out this buildout.
 
 Post-build check
 ----------------
@@ -97,24 +94,23 @@ following sequence of steps should result in a working "instance" buildout:
 
 $ mkdir ~/instances                         # 0
 $ cd ~/instances                            # 1
-$ ln -s ~/erp5.buildout/instance-profiles   # 2a
-$ ln -s ~/erp5.buildout/profiles            # 2b
-$ ln -s ~/erp5.buildout/software-profiles   # 2c
 $ cat > buildout.cfg                        # 3
 
 [buildout]
-extends-cache = instance-profiles/extends-cache
+# Reuse extends from software
+extends-cache = ~/erp5.buildout/extends-cache
 # Default run buildout in offline mode.
 offline = true
 extends =
-  profiles/development-2.12.cfg
-  instance-profiles/software-home.inc
+  https://svn.erp5.org/repos/public/erp5/trunk/buildout/profiles/development-2.12.cfg
+  ~/erp5.buildout/instance.inc
 
 parts =
   mysql-instance
   oood-instance
   supervisor-instance
 ^D
+
 $ ~/erp5.buildout/bin/bootstrap2.6      # 4
 $ bin/buildout -v         # 5
 
@@ -197,9 +193,6 @@ $ # other buildout related commands
 
 TODO
 ====
-
- * Adjust the 'runUnitTest' recipe to push the mysql server coordinates into
-   the 'bin/runUnitTest' script.
 
  * Refactor the .cfg files to reduce duplication and so that only the
    'instance-profiles' directory needs to be symlinked. Alternatively, push all
