@@ -1125,7 +1125,7 @@ class AssertCyrusSasl(AssertSoftwareMixin):
 
 class AssertPython26(AssertSoftwareMixin):
   # .1 could be read from current buildout
-  parts_name = 'parts.rebootstrap.1'
+  parts_name = 'rebootstrap.1.parts'
   python_path = parts_name + '/python2.6'
   rpath_list = [
       'bzip2',
