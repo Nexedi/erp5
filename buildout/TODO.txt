@@ -1,2 +1,0 @@
- - make eggs defined with standalone instance recipe inside instance instead
-   of globally for buildout
