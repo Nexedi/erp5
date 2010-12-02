@@ -664,7 +664,7 @@ div.ui-dialog-titlebar {\n
 div#edit_document fieldset {\n
   background:none no-repeat scroll 0 0 #FFFFFF;\n
   border:0 none;\n
-  height:69px;\n
+  height:72px;\n
   margin-left:-1em;\n
   margin-top:-0.5em;\n
   width:379px;\n
@@ -761,7 +761,7 @@ div.listbox-number-of-records{\n
   font-size: 12px;\n
   margin-right: 12em;\n
   margin-top: -18px;\n
-  width: 30%;\n
+  width: 28%;\n
 }\n
 \n
 div.listbox-navigation button.listbox_last_page,\n
@@ -805,6 +805,14 @@ div.listbox-navigation button.listbox_previous_page, \n
  div.listbox-navigation button.listbox_last_page,\n
  div.listbox-navigation button.listbox_next_page {\n
  background-repeat:no-repeat;\n
+}\n
+\n
+p#more_properties, p#hide_properties {\n
+  font-size: 12px;\n
+}\n
+\n
+p#more_properties:hover, p#hide_properties:hover {\n
+  color:#525f94;\n
 }
 
 ]]></string> </value>

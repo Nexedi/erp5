@@ -30,7 +30,23 @@
             <key> <string>raw</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+function getObjectPropertyValue(method_name){\n
+  return $.ajax({\n
+            url: method_name,\n
+            async: false\n
+         }).responseText;\n
+}\n
+\n
+function setObjectPropertyValue(method_name, value, parameter){\n
+  $.ajax({\n
+        type: "POST",\n
+        url: method_name,\n
+        data: parameter + "=" + value,\n
+  });\n
+  return true;\n
+}\n
 $(document).ready(function(){\n
+ $("a[name=\'document_title\']").html(getObjectPropertyValue("getTitle"));\n
  if ($("div.gadget-column").length == 1) {\n
     $("body").css("overflow", "hidden");\n
     navigation_html = $("div.listbox-footer div.listbox-page-navigation").html();\n
@@ -50,27 +66,64 @@ $(document).ready(function(){\n
     modal: true,\n
     buttons: {\n
       "Save": function(){\n
-       var new_title = $("input#name.title").attr("value");\n
-       $.ajax({\n
-           type: "POST",\n
-           url: "WebSection_renameDocument",\n
-           data: "new_title="+ new_title,\n
-           success: function(msg){\n
-             location.reload();\n
-        }\n
-       });\n
+         var new_title = $("input#name.title").attr("value");\n
+         var new_reference = $("input#reference.reference").attr("value");\n
+         var new_short_title = $("input#short_title.short_title").attr("value");\n
+         var new_language = $("input#language.language").attr("value");\n
+         var new_version = $("input#version.version").attr("value");\n
+         var new_int_index = $("input#sort_index.sort_index").attr("value");\n
+         setObjectPropertyValue("setTitle", new_title, "value");\n
+         setObjectPropertyValue("setReference", new_reference, "value");\n
+         setObjectPropertyValue("setShortTitle", new_short_title, "value");\n
+         setObjectPropertyValue("setLanguage", new_language, "language");\n
+         setObjectPropertyValue("setVersion", new_version, "value");\n
+         setObjectPropertyValue("setIntIndex", new_int_index, "value");\n
+         location.reload();\n
        },\n
        Cancel: function() {\n
          $(this).dialog("close");\n
        },\n
     }\n
  });\n
+ $("p#more_properties")\n
+    .click(function(){\n
+      $("div#more_property").show();\n
+      $("p#hide_properties").show();\n
+      $("div#edit_document fieldset").animate({"height": "151px"}, "slow");\n
+      $("div.ui-dialog").animate({"top": "50px"}, "slow")\n
+                        .animate({"height": "228px"}, "slow");\n
+      $("div#edit_document").animate({"height": "157px"}, "slow");\n
+      $("div#edit_document fieldset input").css("margin", "0")\n
+                                           .css("width", "60%");\n
+      $("div#edit_document fieldset label").css("float", "left")\n
+                                           .css("width", "35%");\n
+      $("div#more_property input").css("width", "47%");\n
+      $("p#more_properties").hide();\n
+ });\n
+ $("p#hide_properties")\n
+    .click(function(){\n
+    $("div#more_property").hide();\n
+    $("p#more_properties").show();\n
+    $("p#hide_properties").hide();\n
+    $("div#edit_document fieldset input").css("width", "95%")\n
+                                         .css("margin-top", "14px");\n
+    $("div#edit_document fieldset").animate({"height": "69px"}, "slow");\n
+    $("div.ui-dialog").animate({"height": "148px"}, "slow");\n
+    $("div#edit_document").animate({"height": "78px"}, "slow");\n
+ })\n
+ $("button.ui-button, span.ui-icon").click(function(){$("p#hide_properties").click()})\n
  $("a[name=\'document_title\']")\n
-    .click(function() {\n
+    .click(function(){\n
+        $("div#more_property").hide();\n
+        $("p#hide_properties").hide();\n
         var document_title = $(this).html();\n
         $("input#name.title").attr("value", document_title);\n
-        $("#edit_document").dialog("open");\n
-        \n
+        $("input#short_title.short_title").attr("value", getObjectPropertyValue("getShortTitle"));\n
+        $("input#reference.reference").attr("value", getObjectPropertyValue("getReference"));\n
+        $("input#version.version").attr("value", getObjectPropertyValue("getVersion"));\n
+        $("input#language.language").attr("value", getObjectPropertyValue("getLanguage"));\n
+        $("input#sort_index.sort_index").attr("value", getObjectPropertyValue("getIntIndex"));\n
+        $("#edit_document").dialog("open");     \n
     });\n
  return false;\n
 });

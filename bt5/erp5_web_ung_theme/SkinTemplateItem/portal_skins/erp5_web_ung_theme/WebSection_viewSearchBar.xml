@@ -53,16 +53,28 @@
  <tal:block tal:condition="python: has_editor">\n
  <a name="document_title" tal:content="here/getTitle"/>\n
  <a name="document_state" tal:content="here/getValidationStateTitle"/>\n
-<!--<tal:block tal:condition="python: \'Illustration\' not in request.get(\'ACTUAL_URL\')">-->\n
  <div id="edit_document" title="Rename Document">\n
   <form>\n
    <fieldset>\n
     <label for="name">Insert a new name:</label>\n
-    <input type="text" class="title" id="name" name="name" value="">\n
+    <input type="text" class="title" id="name" name="name" value=""><br>\n
+    <div id="more_property">\n
+     <label for="short_title">Short Title:</label>\n
+     <input type="text" class="short_title" id="short_title" name="short_title" value=""><br>\n
+     <label for="name">Reference:</label>\n
+     <input type="text" class="reference" id="reference" name="reference" value=""><br>\n
+     <label for="version">Version:</label>\n
+     <input type="text" class="version" id="version" name="version" value=""><br>\n
+     <label for="language">Language:</label>\n
+     <input type="text" class="language" id="language" name="language" value=""><br>\n
+     <label for="language">Sort Index:</label>\n
+     <input type="text" class="sort_index" id="sort_index" name="sort_index" value=""><br>\n
+    </div>\n
+    <p class="more_properties" id="more_properties">Edit More Properties</p>\n
+    <p class="hide_properties" id="hide_properties">Hide Properties</p>\n
    </fieldset>\n
   </form>\n
  </div>\n
-<!--</tal:block>-->\n
 </tal:block>\n
 </tal:block>
 
