@@ -125,6 +125,16 @@ $(document).ready(function(){\n
         $("input#sort_index.sort_index").attr("value", getObjectPropertyValue("getIntIndex"));\n
         $("#edit_document").dialog("open");     \n
     });\n
+ $("a#settings, a#help").click(function(){\n
+   $("a#right_message").show();\n
+ });\n
+ $("a.calendar, a.email").click(function(){\n
+   $("a#left_message").show();\n
+ });\n
+ $("a#right_message, a#left_message").click(function(){\n
+   $("a#right_message").hide();\n
+   $("a#left_message").hide();\n
+ });\n
  return false;\n
 });
 

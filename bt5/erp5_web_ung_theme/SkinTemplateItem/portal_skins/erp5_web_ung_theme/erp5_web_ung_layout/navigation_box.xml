@@ -219,7 +219,7 @@
                     <key> <string>default</string> </key>
                     <value> <string encoding="cdata"><![CDATA[
 
-<a href="#" class ="email">Email</a> <a class="document">Documents</a> <a href="#" class="calendar">Calendar</a>
+<a href="#" class ="email">Email</a> <a class="document">Documents</a> <a href="#" class="calendar">Calendar</a> <a id="left_message">Not Implemented yet</a>
 
 ]]></string> </value>
                 </item>

@@ -62,7 +62,7 @@ div.navigation fieldset.widget {\n
   border: 0px;\n
   padding-top: 0.6%; \n
   margin: -0.60%;\n
-  width: 93%;\n
+  width: 96%;\n
 }\n
 \n
 div.navigation-right { \n
@@ -813,6 +813,10 @@ p#more_properties, p#hide_properties {\n
 \n
 p#more_properties:hover, p#hide_properties:hover {\n
   color:#525f94;\n
+}\n
+a#left_message, a#right_message {\n
+ display: none;\n
+ color: #FD0A0A;\n
 }
 
 ]]></string> </value>
