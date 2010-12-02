@@ -50,13 +50,6 @@ extends-cache = extends-cache
 Bootstrap buildout
 ~~~~~~~~~~~~~~~~~~
 
-Download the newest bootstrap.py file from:
-  http://svn.zope.org/*checkout*/zc.buildout/trunk/bootstrap/bootstrap.py
-
-And run it:
-
-  $ python -S bootstrap.py
-
 WARNING: please read "Troubleshooting" section bellow, you may need to
 unset environment variables in your GNU/Linux distribution
 
