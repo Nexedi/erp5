@@ -1,3 +1,0 @@
-Helpers are being removed.
-Please do not use in case of ERP5 Appliance 2.12
-Please try to not use in case of ERP5 Appliance 2.8
