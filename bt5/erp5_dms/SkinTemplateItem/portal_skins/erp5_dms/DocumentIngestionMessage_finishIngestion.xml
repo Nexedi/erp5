@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -87,16 +84,16 @@ contribution_tool = context.getPortalObject().portal_contributions\n
 # Ingest attachments\n
 for attachment_item in context.getAttachmentInformationList():\n
   # We do not care about files without name\n
-  file_name = attachment_item.get(\'file_name\')\n
+  filename = attachment_item.get(\'filename\')\n
   # We do not take into account the message itself\n
   # XXX - this implementation is not acceptable in\n
   # the long term. Better approach to defining the\n
   # body of a message is required\n
-  if file_name and not file_name.startswith(\'part\'):\n
+  if filename and not filename.startswith(\'part\'):\n
     index = attachment_item[\'index\']\n
     data = context.getAttachmentData(index)\n
     # XXX - too bad we are not using content_type here\n
-    d = contribution_tool.newContent(data=data, file_name=file_name, user_login=user_login, **metadata)\n
+    d = contribution_tool.newContent(data=data, filename=filename, user_login=user_login, **metadata)\n
     context.setAggregateList(context.getAggregateList() + [d.getRelativeUrl()])\n
 \n
 context.receive()\n
@@ -151,7 +148,7 @@ context.receive()\n
                             <string>contribution_tool</string>
                             <string>_getiter_</string>
                             <string>attachment_item</string>
-                            <string>file_name</string>
+                            <string>filename</string>
                             <string>_getitem_</string>
                             <string>index</string>
                             <string>data</string>
