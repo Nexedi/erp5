@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts91303406.12</string> </value>
+            <value> <string>ts91368480.41</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -28,6 +28,10 @@
 
 // global layout is saved here\n
 var last_layout = \'\';\n
+\n
+// current active pad relative url\n
+var active_knowledge_pad_relative_url = \'\';\n
+var active_knowledge_pad_title_dom_id = \'\';\n
 \n
 // enable or disable integration with server\n
 var is_knowledge_template_used = 0;\n
@@ -260,8 +264,14 @@ function showAddNewPadPopup(){\n
    setTimeout("MochiKit.DOM.getElement(\'new_pad_title\').focus()", 500 );\n
 }\n
 \n
-function showRenamePadPopup(){\n
-   toggleElementById(\'rename_tab_dialog\');\n
+function showRenamePadPopup(knowledge_pad_relative_url, knowledge_pad_title_dom_id){\n
+  // set current active pad\' url & title dom element id\n
+  active_knowledge_pad_relative_url = knowledge_pad_relative_url;\n
+  active_knowledge_pad_title_dom_id = knowledge_pad_title_dom_id;\n
+  // init rename dialog input field to current active pad\n
+  getElement("new_knowledge_pad_title").value = getElement(knowledge_pad_title_dom_id).innerHTML;\n
+  // show rename dialog\n
+  toggleElementById(\'rename_tab_dialog\');\n
    // set focus on new Pad title after toggle effect is over \n
    setTimeout("MochiKit.DOM.getElement(\'new_knowledge_pad_title\').focus()", 500 );\n
 }\n
@@ -281,9 +291,8 @@ function loadPadFromServer(pad_relative_url, selected_pad_dom_id, mode){\n
   old_selected_pad = getFirstElementByTagAndClassName("li", "tab_selected", pads_container);\n
   old_selected_pad.setAttribute("class", "tab");\n
   pad_actions = getFirstElementByTagAndClassName("div", "pad-actions", old_selected_pad);\n
-  pad_switch = getFirstElementByTagAndClassName("div", "pad-switch", old_selected_pad); \n
+\n
   pad_actions.style.display="none";\n
-  pad_switch.style.display="block";\n
   \n
   // set new selected pad class \n
   new_selected_pad = getElement(selected_pad_dom_id);\n
@@ -291,11 +300,11 @@ function loadPadFromServer(pad_relative_url, selected_pad_dom_id, mode){\n
   \n
   // enable "settings" for this pad and hide instant switch\n
   pad_actions = getFirstElementByTagAndClassName("div", "pad-actions", new_selected_pad);\n
-  pad_switch = getFirstElementByTagAndClassName("div", "pad-switch", new_selected_pad); \n
   pad_actions.style.display="block";\n
-  pad_switch.style.display="none";\n
- \n
-   \n
+  \n
+  // set new active pad\n
+  active_knowledge_pad_relative_url = pad_relative_url;\n
+  \n
   function metadataFetchFailed(meta){}\n
   \n
   function handleServerSuccess(meta){\n
@@ -309,6 +318,15 @@ function loadPadFromServer(pad_relative_url, selected_pad_dom_id, mode){\n
     eval(javascript);\n
     \n
   }\n
+}\n
+\n
+function addNewPad(cancel_url, knowledge_pad_relative_url, mode){\n
+  // if it\'s first time we switch set active_knowledge_pad_relative_url\n
+  if(active_knowledge_pad_relative_url==\'\'){\n
+    active_knowledge_pad_relative_url = knowledge_pad_relative_url;\n
+  }\n
+  // redirect to add gadget dialog\n
+  window.location="Base_viewGadgetListDialog?reset=1&cancel_url="+cancel_url+"&active_pad_relative_url="+active_knowledge_pad_relative_url+"&mode="+mode; \n
 }\n
 \n
 function addPadOnServerOnEnter(event, create_url, mode, cancel_url){\n
@@ -347,31 +365,32 @@ function removeKnowledgePadFromServer(knowledge_pad_relative_url, mode){\n
     }\n
 }\n
 \n
-function renameKnowledgePadToServerOnEnter(event, dialog_id, title_id, \n
-                                    input_id, knowledge_pad_relative_url){\n
+function renameKnowledgePadToServerOnEnter(event){\n
   if(event.keyCode == 13){\n
-    renameKnowledgePadToServer(dialog_id, title_id, input_id, knowledge_pad_relative_url);\n
+    renameKnowledgePadToServer();\n
     return false;\n
   }\n
   return true;\n
 }\n
 \n
-function renameKnowledgePadToServer(dialog_id, title_id, \n
-                                    input_id, knowledge_pad_relative_url){\n
+function renameKnowledgePadToServer(){\n
   if (is_knowledge_template_used){\n
     showCreateDefaultKnowledgePadWarningMessage();}\n
   else{\n
     // rename it locally and update server asynchonously\n
-    title_element = getElement(title_id)\n
-    input_element = getElement(input_id)\n
+   \n
+    // --title_id, input_id, knowledge_pad_relative_url\n
+    \n
+    title_element = getElement(active_knowledge_pad_title_dom_id)\n
+    input_element = getElement("new_knowledge_pad_title")\n
     var knowledge_pad_title = input_element.value;\n
     title_element.innerHTML = knowledge_pad_title;\n
     doSimpleXMLHttpRequest("ERP5Site_renameKnowledgePad", \n
-                          {knowledge_pad_relative_url: knowledge_pad_relative_url,\n
+                          {knowledge_pad_relative_url: active_knowledge_pad_relative_url,\n
                            knowledge_pad_title: knowledge_pad_title});\n
   }\n
   //anyway toggle show dialog\n
-  toggle(dialog_id);\n
+  toggle("rename_tab_dialog");\n
 }\n
 \n
 function toggleElementById(dom_id){\n
@@ -385,18 +404,21 @@ function initialize(){\n
     // allow drag and drop only if we are dealing with a pad we can modify\n
     var sortables = getElementsByTagAndClassName(\'div\', \'portal-column\');\n
     forEach(sortables, function (item) {\n
-      MochiKit.Sortable.create(item.id,  {"constraint"  : false,\n
-                                          "containment" : sortables,\n
-                                          "handle": "handle",\n
-                                          "only": "block",\n
-                                          "tag": "div",\n
-                                          "scroll": "true",\n
-                                          "hoverclass": "block-hover",\n
-                                          "dropOnEmpty": "true",\n
-                                          "onUpdate": updateServerBoxColumnLayout,\n
-                                          "starteffect" : MochiKit.Base.noop,\n
-                                          "endeffect"   : MochiKit.Base.noop\n
-                                        });\n
+      // eliminate undraggable columns by checking exact match\n
+      if (item.className==\'portal-column\'){\n
+        MochiKit.Sortable.create(item.id,  {"constraint"  : false,\n
+                                            "containment" : sortables,\n
+                                            "handle": "handle",\n
+                                            "only": "block",\n
+                                            "tag": "div",\n
+                                            "scroll": "true",\n
+                                            "hoverclass": "block-hover",\n
+                                            "dropOnEmpty": "true",\n
+                                            "onUpdate": updateServerBoxColumnLayout,\n
+                                            "starteffect" : MochiKit.Base.noop,\n
+                                            "endeffect"   : MochiKit.Base.noop\n
+                                          });\n
+      };\n
     })}\n
 \n
   // enable show/hide tabs\n
@@ -478,7 +500,7 @@ MochiKit.DOM.addLoadEvent(initialize);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>17680</int> </value>
+            <value> <int>18522</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

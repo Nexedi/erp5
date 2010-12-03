@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts91104683.38</string> </value>
+            <value> <string>ts91368675.54</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -54,7 +54,9 @@ div.block {\n
   padding: 0px;\n
   width: 100%;\n
 }\n
-\n
+div.pad-actions{\n
+   float:left;\n
+}\n
 h3.handle {\n
   margin: 0;\n
   padding: 0 0 0 10px;\n
@@ -225,7 +227,9 @@ div.toggable_dialog{\n
   background-color: #97B0D1;\n
   padding: 0em 1em 0.5em 1em;\n
 }\n
-\n
+#add-gadgets{\n
+  cursor: pointer;\n
+}\n
 #add_new_tab_dialog_link{\n
   cursor: pointer; \n
   font-weight: bold;\n
@@ -493,7 +497,7 @@ div.gadget-rss-reader .body {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8186</int> </value>
+            <value> <int>8253</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
