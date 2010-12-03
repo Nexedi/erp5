@@ -36,6 +36,7 @@ from AccessControl import Unauthorized
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import getSecurityManager
 from Testing import ZopeTestCase
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyLocalizer
 from Products.ERP5Type.tests.utils import createZODBPythonScript
@@ -1310,9 +1311,20 @@ Hé Hé Hé!""", page.asText().strip())
     self.assertEquals(1, self.portal.person_module.isEditableMode())
     self.assertEquals(1, website.isEditableMode())
     self.assertEquals(1, getattr(website, 'person_module').isEditableMode())
-    
-    
-    
+
+  def test_20_reStructuredText(self):
+    def clearAllCache():
+      self.portal.portal_caches.clearAllCache()
+      getTransactionalVariable().clear()
+    web_page = self.portal.web_page_module.newContent(portal_type='Web Page',
+                                                      content_type='text/x-rst',
+                                                      text_content="`foo`")
+    clearAllCache()
+    self.assertTrue('<cite>foo</cite>' in web_page.asEntireHTML(charset='utf-8'))
+    # XXX: It currently fails if charset is not given. Is it normal ?
+    clearAllCache()
+    self.assertTrue('<cite>foo</cite>' in web_page.asEntireHTML())
+
 
 class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
   """
