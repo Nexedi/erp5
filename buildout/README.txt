@@ -44,6 +44,7 @@ For example:
 Run make inside:
 
   cd ~/erp5.buildout
+  mkdir -p downloads
   make
 
 It will install required software and configure it locally, up to ERP5 site
