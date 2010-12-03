@@ -1583,7 +1583,7 @@ class AssertBzip2(AssertSoftwareMixin):
 class AssertPysvn(AssertSoftwareMixin):
   def test_ld_pysvn(self):
     self.assertLibraryList('develop-eggs/%s/pysvn/_pysvn_%s.so' % (
-      getDevelopEggName('pysvn', '1.7.4nxd004'),
+      getDevelopEggName('pysvn', '1.7.4nxd005'),
       getPythonVersion().replace('.', '_')), [
       'libc',
       'libgcc_s',
