@@ -18,7 +18,7 @@ Now checkout the buildout:
 Start simple http server there:
 
   $ cd ~/buildout.devel/checkout
-  $ ~/erp5.buildout/bin/python2.6 -m 9000 # or any other free port
+  $ ~/erp5.buildout/bin/python2.6 -m SimpleHTTPServer 9000 # or any other free port
 
 Now create directory to simulate extending over the network:
 
