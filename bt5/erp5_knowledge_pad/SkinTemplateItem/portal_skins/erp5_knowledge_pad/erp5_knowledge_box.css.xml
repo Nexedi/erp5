@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts91368675.54</string> </value>
+            <value> <string>ts91384188.54</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -38,6 +38,22 @@
   width: 100%;\n
   float:left;\n
   margin-top: 0.5em;\n
+}\n
+\n
+#loading-wrapper{  \n
+  position:absolute;  \n
+  width:250px;  \n
+  top:80px;  \n
+  left:50%;  \n
+  margin-left:-150px;  \n
+  text-align:center;  \n
+  padding:7px 0 0 0; \n
+  background-color: #FFF; \n
+  z-index:1000;\n
+}  \n
+#loading-wrapper p{\n
+  font-weight: bold;\n
+  font-size: 90%;\n
 }\n
 \n
 /* 3 columng gadget layout */\n
@@ -497,7 +513,7 @@ div.gadget-rss-reader .body {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8253</int> </value>
+            <value> <int>8519</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -186,16 +186,16 @@
                     <li tal:attributes="id dom_id;\n
                                         class python: test(is_active, \'tab tab_selected\', \'tab\')">\n
 \n
-                      <a tal:attributes="href string:\n
+                    <!--                      \n
+                    <a tal:attributes="href string:\n
                                            ERP5Site_toggleActiveKnowledgePad?knowledge_pad_url=${knowledge_pad_relative_url}&amp;mode=${mode}">\n
                         <span tal:attributes="id pad_title_dom_id;"\n
                               tal:content="knowledge_pad/getTitle"/>\n
-                      </a>\n
+                      </a>-->\n
 \n
-\n
-<!--                     <span tal:attributes="id pad_title_dom_id;\n
+                      <span tal:attributes="id pad_title_dom_id;\n
                                              onclick string:loadPadFromServer(\'${knowledge_pad_relative_url}\', \'${dom_id}\', \'${mode}\')" \n
-                             tal:content="knowledge_pad/getTitle"/>-->\n
+                             tal:content="knowledge_pad/getTitle"/>\n
 \n
                       <div class="pad-actions"\n
                            tal:attributes="style python: test(is_active, \'display:block\', \'display:none\')">\n
@@ -292,7 +292,14 @@
       </div>\n
   </div>\n
 </tal:block>\n
-
+\n
+<tal:block metal:define-macro="loading_message">\n
+  <div id="loading-wrapper" style="display:none;">\n
+    <img src="ajax-loader.gif" title="Loading" alt="Loading"/>\n
+    <p i18n:translate="" i18n:domain="ui"> Please wait until your changes are being applied. </p>\n
+  </div>\n
+\n
+</tal:block>
 
 ]]></unicode> </value>
         </item>

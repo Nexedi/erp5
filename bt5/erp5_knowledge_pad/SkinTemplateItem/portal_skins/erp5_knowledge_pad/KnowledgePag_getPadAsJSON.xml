@@ -51,10 +51,8 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  Render an entire PAD plus navigation (XXX)\n
-  Used to in AJAX calls for instan PAD switching.\n
-  XXX: rather than return HTML we should return JSON as some parts like JS needs to be evaluated explicitly by\n
-  browser.\n
+  Render an entire Pad and needed JavaScript code.\n
+  Used to make instant Pad switching.\n
 """\n
 pad = context.restrictedTraverse(pad_relative_url)\n
 \n
@@ -64,14 +62,26 @@ body = pad.KnowledgePad_viewDashboardWidget(real_context=context)\n
 # toggle new active pad \n
 context.ERP5Site_toggleActiveKnowledgePad(pad_relative_url, mode, redirect=False)\n
 \n
-# XXX: generate all JS updater code\n
-javascript = \'\'\'updater(\'http://localhost/km/ERP5Site_viewRssGadget\', \'knowledge_pad_module/65/2\', \'visual_2\', \'web_site_module/km_test_web_site\', \'0\', {});\n
-updater(\'http://localhost/km/ERP5Site_viewRssGadget\', \'knowledge_pad_module/64/3\', \'visual_3\', \'\', \'0\', {}); \'\'\'\n
-\n
+# generate needed JavaScript code\n
+javascript_list = []\n
+for box in pad.objectValues():\n
+  gadget = box.getSpecialiseValue()\n
+  gadget_type = gadget.getRenderType()\n
+  if box.getValidationState() in [\'visible\', \'invisible\'] \\\n
+        and gadget_type==\'asynchronous\':\n
+    edit_form_id=gadget.getEditFormId()\n
+    view_form_id=gadget.getViewFormId()\n
+    base_url = \'%s/%s\' %(context.absolute_url(), view_form_id) \n
+    box_dom_id = box.getRelativeUrl().replace(\'/\', \'_\')\n
+    view_form_dom_id = \'%s_content\' %box_dom_id;\n
+    javascript_code = pad.KnowledgePad_generateAjaxCall(base_url, box, \\\n
+                            view_form_dom_id, ignore_security_check=1)\n
+    javascript_list.append(javascript_code)\n
+javascript = \'\'.join(javascript_list)\n
 # return JSON\n
 result = {\'body\': body,\n
-          \'javascript\': javascript }\n
-return \'%s\' % result\n
+          \'javascript\':  javascript}\n
+return result\n
 </string> </value>
         </item>
         <item>
@@ -115,6 +125,17 @@ return \'%s\' % result\n
                             <string>pad</string>
                             <string>body</string>
                             <string>False</string>
+                            <string>javascript_list</string>
+                            <string>_getiter_</string>
+                            <string>box</string>
+                            <string>gadget</string>
+                            <string>gadget_type</string>
+                            <string>edit_form_id</string>
+                            <string>view_form_id</string>
+                            <string>base_url</string>
+                            <string>box_dom_id</string>
+                            <string>view_form_dom_id</string>
+                            <string>javascript_code</string>
                             <string>javascript</string>
                             <string>result</string>
                           </tuple>

@@ -64,6 +64,7 @@
         <div id="pad-navigation-wrapper">\n
           <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/navigation"/>\n
         </div>\n
+        <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/loading_message"/>\n
         <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/knowledge_pad_security_check"/> \n
         <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/disable_server_integration"/>\n
         <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/disable_server_integration"/> \n

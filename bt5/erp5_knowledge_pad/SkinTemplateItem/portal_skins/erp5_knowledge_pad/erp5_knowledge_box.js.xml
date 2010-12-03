@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts91368480.41</string> </value>
+            <value> <string>ts91383963.02</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -272,14 +272,15 @@ function showRenamePadPopup(knowledge_pad_relative_url, knowledge_pad_title_dom_
   getElement("new_knowledge_pad_title").value = getElement(knowledge_pad_title_dom_id).innerHTML;\n
   // show rename dialog\n
   toggleElementById(\'rename_tab_dialog\');\n
-   // set focus on new Pad title after toggle effect is over \n
-   setTimeout("MochiKit.DOM.getElement(\'new_knowledge_pad_title\').focus()", 500 );\n
+  // set focus on new Pad title after toggle effect is over \n
+  setTimeout("MochiKit.DOM.getElement(\'new_knowledge_pad_title\').focus()", 500 );\n
 }\n
 \n
 function loadPadFromServer(pad_relative_url, selected_pad_dom_id, mode){\n
   /* Load Pad from server */\n
   // XXX: show some animation ?\n
-    \n
+  getElement("loading-wrapper").style.display="block";\n
+  \n
   d = MochiKit.Async.loadJSONDoc(\'KnowledgePag_getPadAsJSON\', \n
                                  {\'pad_relative_url\':pad_relative_url,\n
                                   \'mode\':mode});\n
@@ -291,7 +292,6 @@ function loadPadFromServer(pad_relative_url, selected_pad_dom_id, mode){\n
   old_selected_pad = getFirstElementByTagAndClassName("li", "tab_selected", pads_container);\n
   old_selected_pad.setAttribute("class", "tab");\n
   pad_actions = getFirstElementByTagAndClassName("div", "pad-actions", old_selected_pad);\n
-\n
   pad_actions.style.display="none";\n
   \n
   // set new selected pad class \n
@@ -314,9 +314,10 @@ function loadPadFromServer(pad_relative_url, selected_pad_dom_id, mode){\n
     body_element.innerHTML = body;\n
     // init new Pad\n
     initialize();\n
-    // execute JS code\n
+    // execute JS code provided by server\n
     eval(javascript);\n
-    \n
+    // give some timeout as we can be sometimes two fast loading a tab\n
+    setTimeout("getElement(\'loading-wrapper\').style.display=\'none\';", 250 );\n
   }\n
 }\n
 \n
@@ -500,7 +501,7 @@ MochiKit.DOM.addLoadEvent(initialize);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>18522</int> </value>
+            <value> <int>18734</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

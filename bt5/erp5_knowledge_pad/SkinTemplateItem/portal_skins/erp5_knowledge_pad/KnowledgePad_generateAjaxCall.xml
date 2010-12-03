@@ -60,7 +60,7 @@
 # asynchronous request and server can set it in context.REQUEST\n
 from Products.ERP5Type.JSONEncoder import encodeInJson\n
 current_web_section_url = \'\'\n
-current_web_section = context.REQUEST.get(\'current_web_section\', None)\n
+current_web_section = context.REQUEST.get(\'current_web_section\', context.getWebSiteValue())\n
 if current_web_section is not None:\n
   current_web_section_url = current_web_section.getRelativeUrl()\n
 if params is None:\n
@@ -132,8 +132,8 @@ return s\n
                             <string>Products.ERP5Type.JSONEncoder</string>
                             <string>encodeInJson</string>
                             <string>current_web_section_url</string>
-                            <string>None</string>
                             <string>current_web_section</string>
+                            <string>None</string>
                             <string>isinstance</string>
                             <string>str</string>
                             <string>box_relative_url</string>
