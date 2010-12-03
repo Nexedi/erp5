@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="ContributionPredicate" module="Products.ERP5Type.Document.ContributionPredicate"/>
+      <global name="Contribution Predicate" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -45,7 +45,7 @@
         </item>
         <item>
             <key> <string>int_index</string> </key>
-            <value> <int>100</int> </value>
+            <value> <int>10</int> </value>
         </item>
         <item>
             <key> <string>membership_criterion_base_category</string> </key>
