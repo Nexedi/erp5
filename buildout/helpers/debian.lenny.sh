@@ -21,6 +21,7 @@ libjpeg62-dev
 libldap2-dev
 libncurses5-dev
 libneon27-gnutls-dev
+libnss3-tools
 libpng12-dev
 libreadline-dev
 librsync-dev
