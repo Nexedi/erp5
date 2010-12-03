@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts91105683.41</string> </value>
+            <value> <string>ts91366854.22</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -51,7 +51,9 @@
 #portal-column-2{\n
  margin-right: 0px;\n
 }\n
-\n
+div.pad-actions{\n
+   float:none;\n
+}\n
 .block {\n
   margin-top: 0.5em;\n
 }\n
@@ -723,7 +725,7 @@ div.block fieldset.gadget-profile div.field{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>12275</int> </value>
+            <value> <int>12308</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
