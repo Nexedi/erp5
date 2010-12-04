@@ -142,25 +142,24 @@ class TestCRM(BaseTestCRM):
     for ptype in [x for x in self.portal.getPortalEventTypeList() if x !=
         'Acknowledgement']:
       # incoming
-      redirect = ticket.Ticket_newEvent(direction='incoming',
-                                        portal_type=ptype,
-                                        title='New Title',
-                                        description='New Desc')
-      self.assert_(redirect.startswith(event_module_url), redirect)
-      new_id = redirect[len(event_module_url)+1:].split('/', 1)[0]
-      new_event = self.portal.event_module._getOb(new_id)
-      self.assertEquals(ticket, new_event.getFollowUpValue())
+      ticket.Ticket_newEvent(direction='incoming',
+                             portal_type=ptype,
+                             title='Incoming Title',
+                             description='New Desc')
+      transaction.commit()
+      self.tic()
+      new_event = ticket.getFollowUpRelatedValueList()[0]
       self.assertEquals('new', new_event.getSimulationState())
 
       # outgoing
-      redirect = ticket.Ticket_newEvent(direction='outgoing',
+      ticket.Ticket_newEvent(direction='outgoing',
                                         portal_type=ptype,
-                                        title='New Title',
+                                        title='Outgoing Title',
                                         description='New Desc')
-      self.assert_(redirect.startswith(event_module_url), redirect)
-      new_id = redirect[len(event_module_url)+1:].split('/', 1)[0]
-      new_event = self.portal.event_module._getOb(new_id)
-      self.assertEquals(ticket, new_event.getFollowUpValue())
+      transaction.commit()
+      self.tic()
+      new_event = [event for event in ticket.getFollowUpRelatedValueList() if\
+                   event.getTitle() == 'Outgoing Title'][0]
       self.assertEquals('planned', new_event.getSimulationState())
 
   def test_Ticket_CreateRelatedEventUnauthorized(self):
