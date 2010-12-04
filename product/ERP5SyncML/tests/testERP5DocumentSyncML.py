@@ -913,8 +913,8 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
     self.assertEqual(len(conflict_list), 9)
     self.assertEqual(sorted([x.getKeyword() for x in conflict_list]),
                      ['base_data', 'content_md5', 'content_type',
-                      'data', 'description', 'short_title', 'size',
-                      'filename', 'title'])
+                      'data', 'description', 'filename', 'short_title',
+                      'size', 'title'])
     # check if we have the state conflict on all clients
     self.checkSynchronizationStateIsConflict()
     # we will take :
