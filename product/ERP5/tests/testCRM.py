@@ -959,16 +959,10 @@ class TestCRMMailSend(BaseTestCRM):
     Make sure that pdf document is correctly attached in email
     """
     # Add a document which will be attached.
-
-    def add_document(filename, id, container, portal_type):
-      f = makeFileUpload(filename)
-      document = container.newContent(id=id, portal_type=portal_type)
-      document.edit(file=f, reference=filename)
-      return document
-
     # pdf
-    document_pdf = add_document('sample_attachment.pdf', '1',
-                                self.portal.document_module, 'PDF')
+    filename = 'sample_attachment.pdf'
+    file_object = makeFileUpload(filename)
+    document = self.portal.portal_contributions.newContent(file=file_object)
 
     transaction.commit()
     self.tic()
@@ -987,7 +981,7 @@ class TestCRMMailSend(BaseTestCRM):
     event = self.portal.event_module.objectValues()[0]
     event.edit(source='person_module/me',
                destination='person_module/recipient',
-               aggregate=document_pdf.getRelativeUrl(),
+               aggregate=document.getRelativeUrl(),
                text_content='This is an advertisement mail.')
 
     mail_text = event.send(download=True)
@@ -1002,36 +996,28 @@ class TestCRMMailSend(BaseTestCRM):
 
     # Check attachment
     # pdf
-    self.assert_('sample_attachment.pdf' in 
+    self.assert_(filename in 
                  [i.get_filename() for i in message.get_payload()])
     part = None
     for i in message.get_payload():
-      if i.get_filename()=='sample_attachment.pdf':
+      if i.get_filename()==filename:
         part = i
-    self.assertEqual(part.get_payload(decode=True), str(document_pdf.getData()))
+    self.assertEqual(part.get_payload(decode=True), str(document.getData()))
 
   def test_MailAttachmentText(self):
     """
     Make sure that text document is correctly attached in email
     """
     # Add a document which will be attached.
+    filename = 'sample_attachment.odt'
+    file_object = makeFileUpload(filename)
+    document = self.portal.portal_contributions.newContent(file=file_object)
 
-    def add_document(filename, id, container, portal_type):
-      f = makeFileUpload(filename)
-      document = container.newContent(id=id, portal_type=portal_type)
-      document.edit(file=f, reference=filename)
-      return document
-
-    # odt
-    document_odt = add_document('sample_attachment.odt', '2',
-                                self.portal.document_module, 'Text')
-    
     transaction.commit()
     self.tic()
 
     # Add a ticket
-    ticket = self.portal.campaign_module.newContent(id='1',
-                                                    portal_type='Campaign',
+    ticket = self.portal.campaign_module.newContent(portal_type='Campaign',
                                                     title='Advertisement')
     # Create a event
     ticket.Ticket_newEvent(portal_type='Mail Message',
@@ -1043,7 +1029,7 @@ class TestCRMMailSend(BaseTestCRM):
     event = self.portal.event_module.objectValues()[0]
     event.edit(source='person_module/me',
                destination='person_module/recipient',
-               aggregate=document_odt.getRelativeUrl(),
+               aggregate=document.getRelativeUrl(),
                text_content='This is an advertisement mail.')
 
     mail_text = event.send(download=True)
@@ -1058,11 +1044,11 @@ class TestCRMMailSend(BaseTestCRM):
 
     # Check attachment
     # odt
-    self.assert_('sample_attachment.odt' in 
+    self.assert_(filename in 
                  [i.get_filename() for i in message.get_payload()])
     part = None
     for i in message.get_payload():
-      if i.get_filename()=='sample_attachment.odt':
+      if i.get_filename() == filename:
         part = i
     self.assert_(len(part.get_payload(decode=True))>0)
 
@@ -1071,23 +1057,14 @@ class TestCRMMailSend(BaseTestCRM):
     Make sure that file document is correctly attached in email
     """
     # Add a document which will be attached.
-
-    def add_document(filename, id, container, portal_type):
-      f = makeFileUpload(filename)
-      document = container.newContent(id=id, portal_type=portal_type)
-      document.edit(file=f, reference=filename)
-      return document
-
-    # zip
-    document_zip = add_document('sample_attachment.zip', '3',
-                                self.portal.document_module, 'File')
-
+    filename = 'sample_attachment.zip'
+    file_object = makeFileUpload(filename)
+    document = self.portal.portal_contributions.newContent(file=file_object)
     transaction.commit()
     self.tic()
 
     # Add a ticket
-    ticket = self.portal.campaign_module.newContent(id='1',
-                                                    portal_type='Campaign',
+    ticket = self.portal.campaign_module.newContent(portal_type='Campaign',
                                                     title='Advertisement')
     # Create a event
     ticket.Ticket_newEvent(portal_type='Mail Message',
@@ -1099,7 +1076,7 @@ class TestCRMMailSend(BaseTestCRM):
     event = self.portal.event_module.objectValues()[0]
     event.edit(source='person_module/me',
                destination='person_module/recipient',
-               aggregate=document_zip.getRelativeUrl(),
+               aggregate=document.getRelativeUrl(),
                text_content='This is an advertisement mail.')
 
     mail_text = event.send(download=True)
@@ -1114,11 +1091,11 @@ class TestCRMMailSend(BaseTestCRM):
 
     # Check attachment
     # zip
-    self.assert_('sample_attachment.zip' in 
+    self.assert_(filename in 
                  [i.get_filename() for i in message.get_payload()])
     part = None
     for i in message.get_payload():
-      if i.get_filename()=='sample_attachment.zip':
+      if i.get_filename() == filename:
         part = i
     self.assert_(len(part.get_payload(decode=True))>0)
 
@@ -1127,23 +1104,15 @@ class TestCRMMailSend(BaseTestCRM):
     Make sure that image document is correctly attached in email
     """
     # Add a document which will be attached.
-
-    def add_document(filename, id, container, portal_type):
-      f = makeFileUpload(filename)
-      document = container.newContent(id=id, portal_type=portal_type)
-      document.edit(file=f, reference=filename)
-      return document
-
-    # gif
-    document_gif = add_document('sample_attachment.gif', '4',
-                                self.portal.image_module, 'Image')
+    filename = 'sample_attachment.gif'
+    file_object = makeFileUpload(filename)
+    document = self.portal.portal_contributions.newContent(file=file_object)
 
     transaction.commit()
     self.tic()
 
     # Add a ticket
-    ticket = self.portal.campaign_module.newContent(id='1',
-                                                    portal_type='Campaign',
+    ticket = self.portal.campaign_module.newContent(portal_type='Campaign',
                                                     title='Advertisement')
     # Create a event
     ticket.Ticket_newEvent(portal_type='Mail Message',
@@ -1155,7 +1124,7 @@ class TestCRMMailSend(BaseTestCRM):
     event = self.portal.event_module.objectValues()[0]
     event.edit(source='person_module/me',
                destination='person_module/recipient',
-               aggregate=document_gif.getRelativeUrl(),
+               aggregate=document.getRelativeUrl(),
                text_content='This is an advertisement mail.')
 
     mail_text = event.send(download=True)
@@ -1170,31 +1139,28 @@ class TestCRMMailSend(BaseTestCRM):
 
     # Check attachment
     # gif
-    self.assert_('sample_attachment.gif' in 
+    self.assert_(filename in 
                  [i.get_filename() for i in message.get_payload()])
     part = None
     for i in message.get_payload():
-      if i.get_filename()=='sample_attachment.gif':
+      if i.get_filename() == filename:
         part = i
-    self.assertEqual(part.get_payload(decode=True), str(document_gif.getData()))
+    self.assertEqual(part.get_payload(decode=True), str(document.getData()))
 
   def test_MailAttachmentWebPage(self):
     """
     Make sure that webpage document is correctly attached in email
     """
     # Add a document which will be attached.
-
-    document_html = self.portal.web_page_module.newContent(id='5',
-                                                           portal_type='Web Page')
-    document_html.edit(text_content='<html><body>Hello world!</body></html>',
-                       reference='sample_attachment.html')
-
+    filename = 'sample_attachment.html'
+    document = self.portal.portal_contributions.newContent(
+                          data='<html><body>Hello world!</body></html>',
+                          filename=filename)
     transaction.commit()
     self.tic()
 
     # Add a ticket
-    ticket = self.portal.campaign_module.newContent(id='1',
-                                                    portal_type='Campaign',
+    ticket = self.portal.campaign_module.newContent(portal_type='Campaign',
                                                     title='Advertisement')
     # Create a event
     ticket.Ticket_newEvent(portal_type='Mail Message',
@@ -1206,7 +1172,7 @@ class TestCRMMailSend(BaseTestCRM):
     event = self.portal.event_module.objectValues()[0]
     event.edit(source='person_module/me',
                destination='person_module/recipient',
-               aggregate=document_html.getRelativeUrl(),
+               aggregate=document.getRelativeUrl(),
                text_content='This is an advertisement mail.')
 
     mail_text = event.send(download=True)
@@ -1221,14 +1187,14 @@ class TestCRMMailSend(BaseTestCRM):
 
     # Check attachment
     # html
-    self.assert_('sample_attachment.html' in 
+    self.assert_(filename in 
                  [i.get_filename() for i in message.get_payload()])
     part = None
     for i in message.get_payload():
-      if i.get_filename()=='sample_attachment.html':
+      if i.get_filename() == filename:
         part = i
     self.assertEqual(part.get_payload(decode=True),
-                     str(document_html.getTextContent()))
+                     str(document.getTextContent()))
     self.assertEqual(part.get_content_type(), 'text/html')
 
   def test_MailRespond(self):
@@ -1236,8 +1202,7 @@ class TestCRMMailSend(BaseTestCRM):
     Test we can answer an incoming event and quote it
     """
     # Add a ticket
-    ticket = self.portal.campaign_module.newContent(id='1',
-                                                    portal_type='Campaign',
+    ticket = self.portal.campaign_module.newContent(portal_type='Campaign',
                                                     title='Advertisement')
     # Create a event
     ticket.Ticket_newEvent(portal_type='Mail Message',
@@ -1280,22 +1245,21 @@ class TestCRMMailSend(BaseTestCRM):
     """
     # Add a document on a person which will be attached.
 
-    def add_document(filename, id, container, portal_type):
+    def add_document(filename, container, portal_type):
       f = makeFileUpload(filename)
-      document = container.newContent(id=id, portal_type=portal_type)
+      document = container.newContent(portal_type=portal_type)
       document.edit(file=f, reference=filename)
       return document
-
+    filename = 'sample_attachment.txt'
     # txt
-    document_txt = add_document('sample_attachment.txt', '2',
+    document_txt = add_document(filename,
                                 self.portal.person_module['me'], 'File')
 
     transaction.commit()
     self.tic()
 
     # Add a ticket
-    ticket = self.portal.campaign_module.newContent(id='1',
-                                                    portal_type='Campaign',
+    ticket = self.portal.campaign_module.newContent(portal_type='Campaign',
                                                     title='Advertisement')
     # Create a event
     ticket.Ticket_newEvent(portal_type='Mail Message',
@@ -1323,11 +1287,11 @@ class TestCRMMailSend(BaseTestCRM):
 
     # Check attachment
     # txt
-    self.assert_('sample_attachment.txt' in 
+    self.assert_(filename in 
                  [i.get_filename() for i in message.get_payload()])
     part = None
     for i in message.get_payload():
-      if i.get_filename()=='sample_attachment.txt':
+      if i.get_filename() == filename:
         part = i
     self.assert_(len(part.get_payload(decode=True))>0)
 
@@ -1339,22 +1303,22 @@ class TestCRMMailSend(BaseTestCRM):
     """
     # Add a document on a person which will be attached.
 
-    def add_document(filename, id, container, portal_type):
+    def add_document(filename, container, portal_type):
       f = makeFileUpload(filename)
-      document = container.newContent(id=id, portal_type=portal_type)
+      document = container.newContent(portal_type=portal_type)
       document.edit(file=f, reference=filename)
       return document
 
     # gif
-    document_gif = add_document('sample_attachment.gif', '1',
+    filename = 'sample_attachment.gif'
+    document_gif = add_document(filename,
                                 self.portal.person_module['me'], 'Image')
 
     transaction.commit()
     self.tic()
 
     # Add a ticket
-    ticket = self.portal.campaign_module.newContent(id='1',
-                                                    portal_type='Campaign',
+    ticket = self.portal.campaign_module.newContent(portal_type='Campaign',
                                                     title='Advertisement')
     # Create a event
     ticket.Ticket_newEvent(portal_type='Mail Message',
@@ -1381,11 +1345,11 @@ class TestCRMMailSend(BaseTestCRM):
 
     # Check attachment
     # gif
-    self.assert_('sample_attachment.gif' in 
+    self.assert_(filename in 
                  [i.get_filename() for i in message.get_payload()])
     part = None
     for i in message.get_payload():
-      if i.get_filename()=='sample_attachment.gif':
+      if i.get_filename() == filename:
         part = i
     self.assertEqual(part.get_payload(decode=True), str(document_gif.getData()))
 
