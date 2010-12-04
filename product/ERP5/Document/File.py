@@ -100,10 +100,10 @@ class File(Document, CMFFile):
     """
       This is used to edit files
     """
-    if kw.has_key('file'):
-      file = kw.get('file')
+    if 'file' in kw:
+      file_object = kw.pop('file')
       precondition = kw.get('precondition')
-      filename = getattr(file, 'filename', None)
+      filename = getattr(file_object, 'filename', None)
       # if file field is empty(no file is uploaded),
       # filename is empty string.
       if not filename:
@@ -113,9 +113,8 @@ class File(Document, CMFFile):
         filename = kw.get('filename')
       if filename:
         self._setFilename(filename)
-      if self._isNotEmpty(file):
-        self._setFile(file, precondition=precondition)
-      del kw['file']
+      if self._isNotEmpty(file_object):
+        self._setFile(file_object, precondition=precondition)
     Base._edit(self, **kw)
 
   security.declareProtected( Permissions.ModifyPortalContent, 'edit' )
