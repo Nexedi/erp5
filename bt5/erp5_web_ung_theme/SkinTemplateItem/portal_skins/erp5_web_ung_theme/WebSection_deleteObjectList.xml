@@ -57,10 +57,14 @@ website_url = context.absolute_url()\n
 uid_list = context.REQUEST.get("uids")\n
 \n
 if uid_list is not None:\n
-  object_list = portal.portal_catalog(portal_type=portal_type_list, \n
-                                      uid=uid_list)\n
-  id_list = [object.getId() for object in object_list]\n
-  portal.web_page_module.deleteContent(id_list)\n
+  for catalog_object in portal.portal_catalog(portal_type=portal_type_list, \n
+                                      uid=uid_list):\n
+    if catalog_object.getValidationState() == "deleted":\n
+      continue\n
+    object = context.restrictedTraverse(catalog_object.getPath())\n
+    object.delete()\n
+  \n
+    #portal.web_page_module.deleteContent(id_list)\n
 \n
 return context.ERP5Site_redirect(website_url, keep_items={"reset": 1})\n
 </string> </value>
@@ -106,12 +110,9 @@ return context.ERP5Site_redirect(website_url, keep_items={"reset": 1})\n
                             <string>website_url</string>
                             <string>uid_list</string>
                             <string>None</string>
-                            <string>object_list</string>
-                            <string>append</string>
-                            <string>$append0</string>
                             <string>_getiter_</string>
+                            <string>catalog_object</string>
                             <string>object</string>
-                            <string>id_list</string>
                           </tuple>
                         </value>
                     </item>

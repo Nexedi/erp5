@@ -1,3 +1,6 @@
+2010-12-04 gabriel
+* Refactor script to not delete object completely but only change the state in the first time. The goals is only remove the object completely on the trash section.
+
 2010-11-12 gabriel
 * clean up css to show records number of listbox in toolbar
 
