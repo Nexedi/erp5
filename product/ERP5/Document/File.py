@@ -128,6 +128,16 @@ class File(Document, CMFFile):
 
   getcontentlength = get_size
 
+  def _get_content_type(*args, **kw):
+    """Override original implementation from OFS/Image.py
+    to disable content_type discovery because
+    id of object its used to read the filename value.
+    In ERP5, an interaction
+    document_conversion_interaction_workflow/Document_file,
+    update the content_type by reading filename property
+    """
+    return None
+
   def _setFile(self, data, precondition=None):
     if data is not None and self.hasData() and \
       md5.md5(str(data.read())).digest() ==\
