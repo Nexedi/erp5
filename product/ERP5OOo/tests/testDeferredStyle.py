@@ -101,7 +101,9 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     mfrom, mto, message_text = last_message
     self.assertEquals('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
     mail_message = email.message_from_string(message_text)
+    failed = True
     for part in mail_message.walk():
+      failed = False
       content_type = part.get_content_type()
       file_name = part.get_filename()
       # "History" is the title of Base_viewHistory form
@@ -115,7 +117,7 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
         if error_list:
           self.fail(''.join(error_list))
         break
-    else:
+    if failed:
       self.fail('Attachment not found in email')
 
   def test_normal_form(self):
@@ -136,7 +138,9 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     mfrom, mto, message_text = last_message
     self.assertEquals('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
     mail_message = email.message_from_string(message_text)
+    failed = True
     for part in mail_message.walk():
+      failed = False
       content_type = part.get_content_type()
       file_name = part.get_filename()
       # "Person" is the title of Person_view form
@@ -150,7 +154,7 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
         if error_list:
           self.fail(''.join(error_list))
         break
-    else:
+    if failed:
       self.fail('Attachment not found in email')
 
 
