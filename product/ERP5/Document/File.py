@@ -106,6 +106,11 @@ class File(Document, CMFFile):
       filename = getattr(file, 'filename', None)
       # if file field is empty(no file is uploaded),
       # filename is empty string.
+      if not filename:
+        # settings the filename before calling
+        # _setFile is required to setup the content_type
+        # property
+        filename = kw.get('filename')
       if filename:
         self._setFilename(filename)
       if self._isNotEmpty(file):
