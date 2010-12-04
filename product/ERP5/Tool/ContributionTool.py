@@ -630,6 +630,8 @@ class ContributionTool(BaseTool):
       return
     portal = self.getPortalObject()
     content_type = portal.mimetypes_registry.lookupExtension(filename)
+    if content_type:
+      return str(content_type)
     return content_type
 
   def _openURL(self, url):
