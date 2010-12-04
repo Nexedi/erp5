@@ -182,6 +182,11 @@ class ContributionTool(BaseTool):
         kw['content_type'] = content_type
       kw['file'] = file_object
 
+    if not content_type:
+      # fallback to a default content_type according provided
+      # filename
+      content_type = self.guessMimeTypeFromFilename(filename)
+
     # If the portal_type was provided, we can go faster
     if portal_type and container is None:
       # We know the portal_type, let us find the default module
