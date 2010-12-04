@@ -160,8 +160,9 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
                                                    encoding=charset)
           if result is None:
             raise ConversionError('TextDocument conversion error. '
-                                  'portal_transforms failed to convert '\
-                                  'to %s: %r' % (mime_type, self))
+                                  'portal_transforms failed to convert '
+                                  'from %r to %s: %r' % 
+                                  (src_mimetype, mime_type, self))
           self.setConversion(result, original_mime_type, **kw)
         else:
           mime_type, result = self.getConversion(**kw)
