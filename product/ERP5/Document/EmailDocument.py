@@ -340,16 +340,17 @@ class EmailDocument(TextDocument):
       return result
     return self.getFilename(*args)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getFilename')
-  def getFilename(self, *args):
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getSourceReference')
+  def getSourceReference(self, *args):
     """
       The Message-ID is considered here as the source reference
       of the message on the sender side (source)
     """
     if not self.hasData():
-      return self._baseGetFilename(*args)
+      return self._baseGetSourceReference(*args)
     if not len(args):
-      args = (self._baseGetFilename(),)
+      args = (self._baseGetSourceReference(),)
     content_information = self.getContentInformation()
     return content_information.get('Message-ID') or content_information.get('Message-Id', *args)
 
