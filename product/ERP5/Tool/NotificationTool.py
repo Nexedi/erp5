@@ -93,7 +93,7 @@ def buildAttachmentDictList(document_list, document_type_list=()):
 
     attachment_list.append({'mime_type':mime_type,
                             'content':content,
-                            'name':attachment.getStandardFileName()}
+                            'name':attachment.getStandardFilename()}
                            )
   return attachment_list
 
