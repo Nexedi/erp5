@@ -49,11 +49,20 @@ function setObjectPropertyValue(method_name, value, parameter){\n
 $(document).ready(function(){\n
  $("a[name=\'document_title\']").html(getObjectPropertyValue("getTitle"));\n
  if ($("div.gadget-column").length == 1) {\n
-   blank_space_str = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp";\n
    $("a.tree-open, a.tree-closed").each(function(){\n
-   if ($(this).text() != "Document by Type")\n
-     $(this).html($(this).text() + blank_space_str);\n
-   });\n
+   /* XXX - Try Find a good way to the options don\'t break the css. \n
+   Insert blank spaces is not a clean way*/\n
+   if ($(this).text() == "Starred" || $(this).text() == "Hidden" || $(this).text() == "Trash"){\n
+     blank_space = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + \n
+                   "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp";\n
+     $(this).html($(this).text() + blank_space);\n
+   }\n
+   if ($(this).text() == "All Documents" || \n
+       $(this).text() == "Owned by me" || \n
+       $(this).text() == "Opened by me" || \n
+       $(this).text() == "Shared by me")\n
+     $(this).html($(this).text() + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp");\n
+   })\n
    $("body").css("overflow", "hidden");\n
    navigation_html = $("div.listbox-footer div.listbox-page-navigation").html();\n
    $("div.listbox-footer div.listbox-page-navigation").remove();\n

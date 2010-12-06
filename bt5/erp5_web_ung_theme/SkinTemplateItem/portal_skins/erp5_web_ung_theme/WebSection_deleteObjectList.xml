@@ -66,7 +66,11 @@ if uid_list is not None:\n
     object.setPublicationSection("trash")\n
     object.delete()\n
 \n
-return context.ERP5Site_redirect(website_url, keep_items={"reset": 1})\n
+return context.ERP5Site_redirect(website_url + "/unfoldDomain",\n
+                                             keep_items={"domain_url": "ung_domain/all_document_list",\n
+                                                         "form_id": "erp5_web_ung_layout",\n
+                                                         "list_selection_name": context.REQUEST.get("list_selection_name"),\n
+                                                         "domain_depth": 0})\n
 </string> </value>
         </item>
         <item>
