@@ -69,15 +69,6 @@
   </div> \n
    <div class="file-selection">\n
    <div class="file-quick-search">\n
-   <div class="quick-search-item">All Items</div>\n
-   <div class="quick-search-item">Owned by me</div>\n
-   <div class="quick-search-item">Opened by me</div>\n
-   <div class="quick-search-item">Shared by me</div>\n
-   <div class="quick-search-item">Starred</div>\n
-   <div class="quick-search-item">Hidden</div>\n
-   <div class="quick-search-item">Trash</div>\n
-   <div class="quick-search-item">Items by type</div>\n
-   <div class="quick-search-item">More searches</div>\n
   </div>\n
   <div class="file-quick-browser">\n
   <div class="quick-search-item">ERP5</div>\n
