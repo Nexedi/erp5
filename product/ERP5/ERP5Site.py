@@ -1403,7 +1403,7 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     
     We consider that a Site is migrated if its Types Tool is migrated
     (it will always be migrated last)"""
-    if self.portal_types.__class__.__module__ == 'erp5.portal_types':
+    if self.portal_types.__class__.__module__ == 'erp5.portal_type':
       # nothing to do
       return True
 
