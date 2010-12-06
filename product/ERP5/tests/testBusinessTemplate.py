@@ -6761,7 +6761,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       self.tic()
       # logged errors could keep a reference to a traceback having a reference
       # to 'another_file' object
-      del self.logged[:]
+      self.logged = []
       # check its class has not yet been overriden
       self.assertFalse(getattr(portal.another_file, 'isClassOverriden', False))
       for i in (0, 1):
