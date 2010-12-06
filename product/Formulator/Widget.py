@@ -1331,6 +1331,8 @@ class DateTimeWidget(Widget):
                 format of provided value.
         query : Passthrough of given value.
     """
+    if not value:
+      return None
     format_dict = self.format_to_sql_format_dict
     input_order = format_dict.get(self.getInputOrder(field),
                                   self.sql_format_default)
@@ -1807,6 +1809,8 @@ class FloatWidget(TextWidget):
                 format of provided value.
         query : Passthrough of given value.
     """
+    if not value:
+      return None
     precision = field.get_value('precision')
     format = '0'
     if precision:
