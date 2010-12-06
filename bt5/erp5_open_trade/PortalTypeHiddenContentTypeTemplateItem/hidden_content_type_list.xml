@@ -1,4 +1,13 @@
 <hidden_content_type_list>
+ <portal_type id="Open Internal Order Line">
+  <item>Open Internal Order Cell</item>
+ </portal_type>
+ <portal_type id="Open Purchase Order Line">
+  <item>Open Purchase Order Cell</item>
+ </portal_type>
+ <portal_type id="Open Sale Order Line">
+  <item>Open Sale Order Cell</item>
+ </portal_type>
  <portal_type id="Periodicity Line">
   <item>Predicate</item>
  </portal_type>
