@@ -14,6 +14,8 @@
                 <string>columns</string>
                 <string>count_method</string>
                 <string>default_params</string>
+                <string>domain_root_list</string>
+                <string>domain_tree</string>
                 <string>editable_columns</string>
                 <string>lines</string>
                 <string>list_method</string>
@@ -133,6 +135,21 @@
                         </tuple>
                       </list>
                     </value>
+                </item>
+                <item>
+                    <key> <string>domain_root_list</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>ung_domain</string>
+                          <string>UNG Documents</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>domain_tree</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>editable_columns</string> </key>

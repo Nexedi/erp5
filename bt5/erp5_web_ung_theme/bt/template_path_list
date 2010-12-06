@@ -1,3 +1,17 @@
+portal_categories/publication_section/hidden
+portal_categories/publication_section/hidden/**
+portal_categories/publication_section/opened
+portal_categories/publication_section/opened/**
+portal_categories/publication_section/owner
+portal_categories/publication_section/owner/**
+portal_categories/publication_section/shared
+portal_categories/publication_section/shared/**
+portal_categories/publication_section/starred
+portal_categories/publication_section/starred/**
+portal_categories/publication_section/trash
+portal_categories/publication_section/trash/**
+portal_domains/ung_domain
+portal_domains/ung_domain/**
 web_page_module/**
 web_site_module/ung
 web_site_module/ung/**

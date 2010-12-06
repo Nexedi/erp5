@@ -45,19 +45,29 @@ function setObjectPropertyValue(method_name, value, parameter){\n
   });\n
   return true;\n
 }\n
+\n
 $(document).ready(function(){\n
  $("a[name=\'document_title\']").html(getObjectPropertyValue("getTitle"));\n
  if ($("div.gadget-column").length == 1) {\n
-    $("body").css("overflow", "hidden");\n
-    navigation_html = $("div.listbox-footer div.listbox-page-navigation").html();\n
-    $("div.listbox-footer div.listbox-page-navigation").remove();\n
-    navigation_div = "<div class=\'listbox-navigation\'>" + navigation_html + "</div>";\n
-    $("div.toolbar").append(navigation_div);\n
-    var tr_length = $("div.main-right tbody tr").length;\n
-    if (tr_length < 16){\n
-      var height = tr_length * 1.5;\n
-      $("div.main-right tbody").css("height", height + "em");\n
-    }\n
+   blank_space_str = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp";\n
+   $("a.tree-open, a.tree-closed").each(function(){\n
+   if ($(this).text() != "Document by Type")\n
+     $(this).html($(this).text() + blank_space_str);\n
+   });\n
+   $("body").css("overflow", "hidden");\n
+   navigation_html = $("div.listbox-footer div.listbox-page-navigation").html();\n
+   $("div.listbox-footer div.listbox-page-navigation").remove();\n
+   navigation_div = "<div class=\'listbox-navigation\'>" + navigation_html + "</div>";\n
+   $("div.toolbar").append(navigation_div);\n
+   listbox_tree_html = $("div.listbox-tree").html();\n
+   listbox_tree_div = "<div class=\'listbox-tree\'>" + listbox_tree_html + "</div>";\n
+   $("div.listbox-tree").remove();\n
+   $("div.file-quick-search").append(listbox_tree_div);\n
+   var tr_length = $("div.main-right tbody tr").length;\n
+   if (tr_length < 16){\n
+     var height = tr_length * 1.5;\n
+     $("div.main-right tbody").css("height", height + "em");\n
+   }\n
  }\n
  $("#edit_document").dialog({\n
     autoOpen: false,\n

@@ -33,14 +33,14 @@
 /* No margins, take all screen */\n
 \n
 body {\n
- background: #fff !important;\n
- width:100%;\n
- height:100%;\n
- margin: 0;\n
- padding: 0;\n
- font-family: arial,sans-serif;\n
- display:inline-block;\n
- font-weight:normal;\n
+  background: #fff !important;\n
+  width:100%;\n
+  height:100%;\n
+  margin: 0;\n
+  padding: 0;\n
+  font-family: arial,sans-serif;\n
+  display:inline-block;\n
+  font-weight:normal;\n
 }\n
 \n
 /* Hidden input */\n
@@ -141,28 +141,25 @@ div.gadget-column div.file-selection {\n
   margin:15px -4px -4px;\n
 }\n
 \n
-div.gadget-column div.file-selection div.file-quick-search {\n
-  border-bottom: 1px solid #DDD;\n
-  padding-bottom: 5px;\n
-  padding-top: 5px;\n
-  width:15.6em;\n
-}\n
-\n
-div.gadget-column div.file-selection div.file-quick-browser {\n
+div.gadget-column div.file-selection div.file-quick-browser,\n
+  div.gadget-column div.file-selection div.file-quick-search {\n
   padding-top: 5px;\n
   padding-bottom: 5px;\n
   border-bottom: 1px solid #DDD;\n
   width:15.7em;\n
 }\n
 \n
-div.quick-search-item {\n
+div.quick-search-item, td.listbox-table-domain-tree-cell a {\n
   padding-left: 20px;\n
   font-size: 13px;\n
   line-height: 19px;\n
   cursor: pointer;\n
+  text-decoration: none;\n
+  color: #000000;\n
 }\n
 \n
-div.quick-search-item:hover {\n
+div.quick-search-item:hover,\n
+ td.listbox-table-domain-tree-cell a:hover {\n
   background-color: #DAE6F6;\n
 }\n
 \n
@@ -416,7 +413,7 @@ div.main-right div.content {\n
 }\n
 \n
 \n
-div.main-right tbody {\n
+div.listbox-body div.main-right tbody {\n
   height:25.35em;\n
   overflow-x:hidden;\n
   overflow-y:auto;\n
@@ -815,8 +812,34 @@ p#more_properties:hover, p#hide_properties:hover {\n
   color:#525f94;\n
 }\n
 a#left_message, a#right_message {\n
- display: none;\n
- color: #FD0A0A;\n
+  display: none;\n
+  color: #FD0A0A;\n
+}\n
+\n
+div.listbox-domain-tree-container select {\n
+  display:none;\n
+}\n
+\n
+div.listbox-tree {\n
+  font-size: 13px;\n
+  width: 103%;\n
+}\n
+\n
+div.listbox-tree-mode-selection {\n
+  display:none;\n
+}\n
+\n
+table.listbox-table-domain-tree {\n
+  width: 100%;\n
+}\n
+\n
+td.listbox-table-domain-tree-cell a {\n
+  padding-bottom: 3px;\n
+  padding-right: 125.5px;\n
+  padding-top: 3px;\n
+}\n
+a.tree-open {\n
+  background-color: #BBCCFF;\n
 }
 
 ]]></string> </value>
