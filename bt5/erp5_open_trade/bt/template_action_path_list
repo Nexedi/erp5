@@ -9,6 +9,7 @@ Open Internal Order Line | select_item_fast_input
 Open Internal Order Line | view
 Open Internal Order Line | view_trade_model
 Open Internal Order Module | view
+Open Internal Order | aggregate_item
 Open Internal Order | apply_trade_condition
 Open Internal Order | detailed_report
 Open Internal Order | jump_to_related_sale_order
@@ -25,6 +26,7 @@ Open Purchase Order Line | price_view
 Open Purchase Order Line | quantity_view
 Open Purchase Order Line | view
 Open Purchase Order Module | view
+Open Purchase Order | aggregate_item
 Open Purchase Order | apply_trade_condition
 Open Purchase Order | detailed_report
 Open Purchase Order | jump_to_related_sale_order
@@ -40,6 +42,7 @@ Open Sale Order Line | price_view
 Open Sale Order Line | quantity_view
 Open Sale Order Line | view
 Open Sale Order Module | view
+Open Sale Order | aggregate_item
 Open Sale Order | apply_trade_condition
 Open Sale Order | detailed_report
 Open Sale Order | jump_to_related_sale_order
