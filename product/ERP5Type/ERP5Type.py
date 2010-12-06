@@ -336,9 +336,6 @@ class ERP5TypeInformation(XMLObject,
       Call the init_script for the portal_type.
       Returns the object.
       """
-      if id is None or len(id) == 0:
-        raise ValueError("invalid object id")
-
       if not temp_object and not self.isConstructionAllowed(container):
         raise AccessControl_Unauthorized('Cannot create %s' % self.getId())
 
@@ -349,6 +346,8 @@ class ERP5TypeInformation(XMLObject,
       ob = klass(id)
 
       if temp_object:
+        if id in (None, ''):
+          raise ValueError("invalid object id")
         ob = ob.__of__(container)
         for ignore in ('activate_kw', 'is_indexable', 'reindex_kw'):
           kw.pop(ignore, None)
