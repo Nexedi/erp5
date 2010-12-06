@@ -87,7 +87,7 @@ class SynchronizationTool( SubscriptionSynchronization,
 
   id           = 'portal_synchronizations'
   meta_type    = 'ERP5 Synchronizations'
-  portal_type  = 'Synchronisation Tool'
+  portal_type  = 'Synchronization Tool'
 
   # On the server, this is use to keep track of the temporary
   # copies.
