@@ -52,20 +52,10 @@
             <key> <string>_body</string> </key>
             <value> <string># Return the list of items aggregated by this packing list\n
 \n
-selection_uid_list = []\n
-\n
-pl_type = context.getPortalType()\n
-pl_line_type = pl_type + \' Line\'\n
-pl_cell_type = pl_type + \' Cell\'\n
-\n
-line_list = context.objectValues(portal_type=pl_line_type)\n
-for line in line_list:\n
-  selection_uid_list.extend(line.getAggregateUidList())\n
-  cell_list = line.objectValues(portal_type=pl_cell_type)\n
-  for cell in cell_list:\n
-    selection_uid_list.extend(cell.getAggregateUidList())\n
-\n
-return [context.portal_catalog.getObject(uid) for uid in selection_uid_list]\n
+aggregate_value_list = []\n
+for movement in context.getMovementList():\n
+  aggregate_value_list.extend(movement.getAggregateValueList())\n
+return aggregate_value_list\n
 </string> </value>
         </item>
         <item>
@@ -103,20 +93,11 @@ return [context.portal_catalog.getObject(uid) for uid in selection_uid_list]\n
                         <value>
                           <tuple>
                             <string>kw</string>
-                            <string>selection_uid_list</string>
+                            <string>aggregate_value_list</string>
+                            <string>_getiter_</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>pl_type</string>
-                            <string>pl_line_type</string>
-                            <string>pl_cell_type</string>
-                            <string>line_list</string>
-                            <string>_getiter_</string>
-                            <string>line</string>
-                            <string>cell_list</string>
-                            <string>cell</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>uid</string>
+                            <string>movement</string>
                           </tuple>
                         </value>
                     </item>
