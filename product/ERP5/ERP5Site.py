@@ -1409,7 +1409,7 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
 
     id_list = self.objectIds()
 
-    # make sure that portal_types is migrated last
+    # make sure that Types Tool is migrated last
     id_list.remove('portal_types')
     id_list.append('portal_types')
     for id in id_list:
