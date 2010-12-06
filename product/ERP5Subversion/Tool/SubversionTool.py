@@ -949,7 +949,7 @@ class SubversionTool(BaseTool):
     # Dicts to track svn status in case it is not consistent with existing
     # files and directories
     versioned_dict = dict((x.getPath(), x) for x in client.status('.')
-                                           if x.getIsVersioned())
+      if str(x.getTextStatus()) not in ('ignored', 'unversioned'))
     del versioned_dict['.']
     added_set = set()
 
