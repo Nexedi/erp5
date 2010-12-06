@@ -1949,7 +1949,10 @@ class Base( CopyContainer,
       Returns the dictionnary of the object
       Only for debugging
     """
-    return copy(self.__dict__)
+    d = copy(self.__dict__)
+    klass = self.__class__
+    d['__class__'] = '%s.%s' % (klass.__module__, klass.__name__)
+    return d
 
   security.declareProtected( Permissions.ManagePortal, 'showPermissions' )
   def showPermissions(self, all=1):
