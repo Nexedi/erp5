@@ -41,7 +41,7 @@
                        portal_path python:website.absolute_url();\n
                        current_url here/absolute_url;\n
                        has_editor python: current_url != portal_path;">\n
-Starred\n
+<a class="domain_selected"></a>\n
 <tal:block tal:condition="python: not has_editor">\n
   <a tal:attributes="href python: request.get(\'URL\') + \'?reset:int=1\'">Refresh</a>\n
 </tal:block>\n

@@ -838,8 +838,14 @@ td.listbox-table-domain-tree-cell a {\n
   padding-right: 125.3px;\n
   padding-top: 3px;\n
 }\n
+\n
 a.tree-open {\n
   background-color: #BBCCFF;\n
+}\n
+\n
+a.domain_selected {\n
+  float:left !important;\n
+  font-size: 15px !important;\n
 }
 
 ]]></string> </value>

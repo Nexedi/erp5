@@ -49,6 +49,7 @@ function setObjectPropertyValue(method_name, value, parameter){\n
 $(document).ready(function(){\n
  $("a[name=\'document_title\']").html(getObjectPropertyValue("getTitle"));\n
  if ($("div.gadget-column").length == 1) {\n
+   $("a.domain_selected").text($("a.tree-open").text());\n
    $("a.tree-open, a.tree-closed").each(function(){\n
    /* XXX - Try Find a good way to the options don\'t break the css. \n
    Insert blank spaces is not a clean way*/\n
