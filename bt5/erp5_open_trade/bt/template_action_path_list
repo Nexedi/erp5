@@ -1,3 +1,13 @@
+Open Internal Order Cell | view
+Open Internal Order Line | create_task
+Open Internal Order Line | item_creation
+Open Internal Order Line | price_view
+Open Internal Order Line | profile_view
+Open Internal Order Line | project
+Open Internal Order Line | quantity_view
+Open Internal Order Line | select_item_fast_input
+Open Internal Order Line | view
+Open Internal Order Line | view_trade_model
 Open Internal Order Module | view
 Open Internal Order | apply_trade_condition
 Open Internal Order | detailed_report
@@ -10,6 +20,7 @@ Open Internal Order | reference_generate
 Open Internal Order | view
 Open Internal Order | view_stock
 Open Order Rule | view
+Open Purchase Order Cell | view
 Open Purchase Order Line | price_view
 Open Purchase Order Line | quantity_view
 Open Purchase Order Line | view
@@ -24,6 +35,7 @@ Open Purchase Order | profile_view
 Open Purchase Order | reference_generate
 Open Purchase Order | view
 Open Purchase Order | view_stock
+Open Sale Order Cell | view
 Open Sale Order Line | price_view
 Open Sale Order Line | quantity_view
 Open Sale Order Line | view
