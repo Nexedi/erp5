@@ -326,6 +326,15 @@ class TypesTool(TypeProvider):
       trashbin = UnrestrictedMethod(trash_tool.newTrashBin)(self.id)
       trashbin._setOb(old_types_tool.id, old_types_tool)
 
+    def _migrateToPortalTypeClass(self):
+      for type_definition in self.contentValues():
+        if not type_definition._migrateToPortalTypeClass():
+          LOG('TypesTool', WARNING,
+              'Type definition %s was not migrated'
+              % type_definition.getRelativeUrl())
+          return False
+      return super(BaseTool, self)._migrateToPortalTypeClass()
+
 # Compatibility code to access old "ERP5 Role Information" objects.
 OldRoleInformation = imp.new_module('Products.ERP5Type.RoleInformation')
 sys.modules[OldRoleInformation.__name__] = OldRoleInformation

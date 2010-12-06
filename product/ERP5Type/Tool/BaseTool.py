@@ -32,6 +32,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Type import Permissions, _dtmldir
+from zLOG import LOG, INFO, WARNING
 
 class BaseTool (UniqueObject, Folder):
     """
@@ -73,5 +74,34 @@ class BaseTool (UniqueObject, Folder):
             if meta_type['name'] in self.allowed_types:
                 meta_types.append(meta_type)
         return meta_types
+
+    def _migrateToPortalTypeClass(self):
+      portal_type = self.getPortalType()
+      # Tools are causing problems: they used to have no type_class, or wrong
+      # type_class. First check that everything is alright before trying
+      # to migrate the tool:
+      types_tool = self.getPortalObject().portal_types
+      type_definition = getattr(types_tool, portal_type, None)
+      if type_definition is None:
+        LOG('TypesTool', WARNING,
+            "No portal type was found for Tool '%s'"
+            " (class %s, portal_type '%s')"
+            % (self.getRelativeUrl(), self.__class__.__name__, portal_type))
+        return False
+
+      type_class = type_definition.getTypeClass()
+      if type_class in ('Folder', None):
+        # wrong type_class, fix it manually:
+        from Products.ERP5Type import document_class_registry
+        document_class_name = portal_type.replace(' ', '')
+        if document_class_name in document_class_registry:
+          type_definition.setTypeClass(document_class_name)
+        else:
+          LOG('TypesTool', WARNING,
+              'No document class could be found for portal type %s'
+              % portal_type)
+          return False
+
+      return super(BaseTool, self)._migrateToPortalTypeClass()
 
 InitializeClass(BaseTool)
