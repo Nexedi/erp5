@@ -58,6 +58,7 @@
                             global js_list js_list | python:[];\n
                             global css_list css_list | python:[];\n
                             dummy  python:css_list.extend(css_list_ung_template);\n
+                            dummy python:context.Base_setListBoxDisplayMode();\n
                             js_url_list python:[\'jquery/core/jquery.js\',\n
                                                 \'jquery/ui/js/jquery-ui.js\',\n
                                                 \'ung_js/ung.js\'];\n
@@ -65,7 +66,7 @@
         <tal:block metal:use-macro="here/template_erp5_xhtml_style/macros/master">\n
         <tal:block metal:fill-slot="layout">\n
     <div class="container">\n
-     <div class="navigation">\n
+     <div class="navigation">  \n
         <tal:block tal:condition="python: layout_form is not None">\n
           <tal:block tal:repeat="aggregate python: [(\'navigation\', navigation_area)]">\n
               <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>\n
