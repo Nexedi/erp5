@@ -333,7 +333,7 @@ class TypesTool(TypeProvider):
               'Type definition %s was not migrated'
               % type_definition.getRelativeUrl())
           return False
-      return super(BaseTool, self)._migrateToPortalTypeClass()
+      return super(TypesTool, self)._migrateToPortalTypeClass()
 
 # Compatibility code to access old "ERP5 Role Information" objects.
 OldRoleInformation = imp.new_module('Products.ERP5Type.RoleInformation')
