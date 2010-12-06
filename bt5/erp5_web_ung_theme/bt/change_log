@@ -1,4 +1,7 @@
 2010-12-06 gabriel
+* refactor the script WebSection_deleteObjectList to remove completely the objects with state 'deleted'.
+
+2010-12-06 gabriel
 * Added one domain and categories to filter the documents in listbox.
 
 2010-12-04 gabriel
