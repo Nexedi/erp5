@@ -1,5 +1,6 @@
 2010-12-06 nicolas.dumazet
 * rename Synchronisation Tool to Synchronization Tool for consistency
+* fix type classes on tool portal types
 
 2010-12-01 arnaud.fontaine
 * Add Property Type Validity Constraint portal type and its view for ZODB Property Sheets.

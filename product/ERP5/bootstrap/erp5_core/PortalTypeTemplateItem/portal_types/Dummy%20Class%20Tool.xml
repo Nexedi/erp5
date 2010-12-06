@@ -81,7 +81,13 @@
         </item>
         <item>
             <key> <string>type_class</string> </key>
-            <value> <string>Folder</string> </value>
+            <value> <string>ClassTool</string> </value>
+        </item>
+        <item>
+            <key> <string>type_mixin</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
       </dictionary>
     </pickle>

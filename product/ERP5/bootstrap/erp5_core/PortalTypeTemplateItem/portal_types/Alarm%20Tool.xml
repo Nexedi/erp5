@@ -59,7 +59,7 @@
         </item>
         <item>
             <key> <string>type_class</string> </key>
-            <value> <string>Folder</string> </value>
+            <value> <string>AlarmTool</string> </value>
         </item>
       </dictionary>
     </pickle>
