@@ -57,15 +57,19 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Synchronisation Tool</string> </value>
+            <value> <string>Synchronization Tool</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>permission</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -73,7 +77,13 @@
         </item>
         <item>
             <key> <string>type_class</string> </key>
-            <value> <string>Folder</string> </value>
+            <value> <string>SynchronizationTool</string> </value>
+        </item>
+        <item>
+            <key> <string>type_mixin</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
       </dictionary>
     </pickle>
