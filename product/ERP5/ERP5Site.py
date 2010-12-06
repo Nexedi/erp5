@@ -42,7 +42,7 @@ import ERP5Defaults
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
 
-from zLOG import LOG, INFO
+from zLOG import LOG, INFO, WARNING
 from string import join
 import os
 import warnings
@@ -1388,6 +1388,44 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     """
     if self.getERP5SiteGlobalId() in [None, '']:
       self.erp5_site_global_id = global_id
+
+  security.declareProtected(Permissions.ManagePortal, 'migrateToPortalTypeClass')
+  def migrateToPortalTypeClass(self):
+    """Migrate site to portal type classes"""
+    # XXX do we want to call this automatically? Where? (note that it's likely
+    # to fail as portal types are usually not perfectly configured, and it
+    # requires user action to fix issues)
+    # TODO better errors than the warnings in LOG + AssertionError
+    assert self._migrateToPortalTypeClass()
+
+  def _migrateToPortalTypeClass(self):
+    """Compatibility code that allows migrating a site to portal type classes.
+    
+    We consider that a Site is migrated if its Types Tool is migrated
+    (it will always be migrated last)"""
+    if self.portal_types.__class__.__module__ == 'erp5.portal_types':
+      # nothing to do
+      return True
+
+    id_list = self.objectIds()
+
+    # make sure that portal_types is migrated last
+    id_list.remove('portal_types')
+    id_list.append('portal_types')
+    for id in id_list:
+      method = getattr(self[id], '_migrateToPortalTypeClass', None)
+      if method is None:
+        print id
+        continue
+      if not method():
+        LOG('ERP5Site', WARNING, 'Site did not migrate to portal type classes')
+        return False
+
+    # note that the site itself is not migrated (ERP5Site is not a portal type)
+    # only the tools and top level modules are.
+    # Normally, PersistentMigrationMixin should take care of the rest.
+
+    return True
 
 Globals.InitializeClass(ERP5Site)
 
