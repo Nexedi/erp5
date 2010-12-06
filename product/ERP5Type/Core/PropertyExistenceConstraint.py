@@ -57,8 +57,6 @@ class PropertyExistenceConstraint(ConstraintMixin):
   property_sheets = ConstraintMixin.property_sheets + \
                     (PropertySheet.PropertyExistenceConstraint,)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'checkConsistency')
   def _checkConsistency(self, obj, fixit=0):
     """
     Check the object's consistency.

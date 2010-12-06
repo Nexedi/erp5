@@ -62,8 +62,6 @@ class AttributeEqualityConstraint(ConstraintMixin):
   property_sheets = ConstraintMixin.property_sheets + \
                     (PropertySheet.AttributeEqualityConstraint,)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'checkConsistency')
   def _checkConsistency(self, obj, fixit=False):
     """
     Check the object's consistency.

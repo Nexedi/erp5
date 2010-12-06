@@ -55,8 +55,6 @@ class CategoryExistenceConstraint(ConstraintMixin):
     return len(obj.getCategoryMembershipList(base_category,
                                              portal_type=portal_type_list))
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'checkConsistency')
   def _checkConsistency(self, obj, fixit=0):
     """
     Check the object's consistency.
