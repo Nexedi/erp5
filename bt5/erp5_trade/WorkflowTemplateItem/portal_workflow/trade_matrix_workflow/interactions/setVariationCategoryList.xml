@@ -67,20 +67,7 @@
         <item>
             <key> <string>portal_type_filter</string> </key>
             <value>
-              <list>
-                <string>Container Line</string>
-                <string>Internal Order Line</string>
-                <string>Internal Packing List Line</string>
-                <string>Inventory Line</string>
-                <string>Invoice Line</string>
-                <string>Pay Sheet Line</string>
-                <string>Pay Sheet Model Line</string>
-                <string>Purchase Order Line</string>
-                <string>Purchase Packing List Line</string>
-                <string>Returned Sale Packing List Line</string>
-                <string>Sale Order Line</string>
-                <string>Sale Packing List Line</string>
-              </list>
+              <none/>
             </value>
         </item>
         <item>
@@ -88,6 +75,10 @@
             <value>
               <tuple/>
             </value>
+        </item>
+        <item>
+            <key> <string>temporary_document_disallowed</string> </key>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
