@@ -33,7 +33,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>An Attribute Equality Constraint checks whether the attribute value is valid</string> </value>
+            <value> <string>A Resource Measures Consistency Constraint checks whether measures defined on a resource are not meaningless</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

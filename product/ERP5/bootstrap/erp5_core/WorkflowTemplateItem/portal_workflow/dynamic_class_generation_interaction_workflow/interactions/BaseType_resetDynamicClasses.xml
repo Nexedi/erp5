@@ -59,7 +59,7 @@
                 <string>_setTypeClass.*</string>
                 <string>_setTypeMixin.*</string>
                 <string>_setTypeInterface.*</string>
-                <string>_setTypeZodbPropertySheet.*</string>
+                <string>_setTypePropertySheet.*</string>
               </list>
             </value>
         </item>

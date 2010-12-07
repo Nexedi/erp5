@@ -1,3 +1,7 @@
+2010-12-07 arnaud.fontaine
+* Modify dynamic_class_generation_interaction_workflow to reset the dynamic modules when calling setTypePropertySheetList().
+* Fix description of Constraints portal types for ZODB Property Sheets.
+
 2010-12-06 nicolas.dumazet
 * rename Synchronisation Tool to Synchronization Tool for consistency
 * fix type classes on tool portal types

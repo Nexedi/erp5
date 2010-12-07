@@ -33,9 +33,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>A TALES Constraint checks whether the expression is not evaluated as false</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

@@ -33,7 +33,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>An Attribute Equality Constraint checks whether the attribute value is valid</string> </value>
+            <value> <string>A Trade Model Line Cell Consistency Constraint checks whether Trade Model Line should contain cells</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

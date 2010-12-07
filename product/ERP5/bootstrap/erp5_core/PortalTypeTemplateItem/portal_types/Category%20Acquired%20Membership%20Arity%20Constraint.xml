@@ -33,9 +33,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>A Category Acquired Membership Arity Constraint checks whether an object respects the arity with Acquisition</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

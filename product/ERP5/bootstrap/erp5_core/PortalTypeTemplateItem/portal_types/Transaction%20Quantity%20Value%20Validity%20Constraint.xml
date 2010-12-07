@@ -33,7 +33,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>An Attribute Equality Constraint checks whether the attribute value is valid</string> </value>
+            <value> <string>A Transaction Quantity Value Validity Constraint checks whether the quantity of the transaction is greater than the balance of the source</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

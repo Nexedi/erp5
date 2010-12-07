@@ -33,7 +33,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A Property Existence Constraint checks whether an object has the given properties</string> </value>
+            <value> <string>A Property Type Validity Constraint allow to check and fix type of each attributes defined in the PropertySheets</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

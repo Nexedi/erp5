@@ -33,7 +33,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>An Attribute Equality Constraint checks whether the attribute value is valid</string> </value>
+            <value> <string>An Accounting Transaction Balance Constraint checks whether accounting transaction total debit and total credit are equal</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
