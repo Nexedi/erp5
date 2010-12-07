@@ -1124,9 +1124,9 @@ class AssertCyrusSasl(AssertSoftwareMixin):
       ])
 
 class AssertPython26(AssertSoftwareMixin):
+  # .1 could be read from current buildout
   parts_name = 'rebootstrap.1.parts'
-  python_path = parts_name + '/python%s' % getPythonVersion()
-  python_dynload_folder = python_path + '/lib/python%s/lib-dynload' % getPythonVersion()
+  python_path = parts_name + '/python2.6'
   rpath_list = [
       'bzip2',
       'gdbm',
@@ -1139,39 +1139,39 @@ class AssertPython26(AssertSoftwareMixin):
       'zlib',
       ]
   def test_ld_dyn_bsddb(self):
-    self.assertLibraryList(self.python_dynload_folder+'/_bsddb.so', [
+    self.assertLibraryList(self.python_path+'/lib/python2.6/lib-dynload/_bsddb.so', [
       'libc',
       'libdb-4.5',
       'libpthread',
       ], self.rpath_list)
   def test_ld_dyn_dbm(self):
-    self.assertLibraryList(self.python_dynload_folder+'/dbm.so', [
+    self.assertLibraryList(self.python_path+'/lib/python2.6/lib-dynload/dbm.so', [
       'libc',
       'libgdbm',
       'libgdbm_compat',
       'libpthread',
       ], self.rpath_list)
   def test_ld_dyn_locale(self):
-    self.assertLibraryList(self.python_dynload_folder+'/_locale.so', [
+    self.assertLibraryList(self.python_path+'/lib/python2.6/lib-dynload/_locale.so', [
       'libc',
       'libintl',
       'libpthread',
       ], self.rpath_list)
   def test_ld_dyn_readline(self):
-    self.assertLibraryList(self.python_dynload_folder+'/readline.so', [
+    self.assertLibraryList(self.python_path+'/lib/python2.6/lib-dynload/readline.so', [
       'libc',
       'libncursesw',
       'libreadline',
       'libpthread',
       ], self.rpath_list)
   def test_ld_dyn_sqlite3(self):
-    self.assertLibraryList(self.python_dynload_folder+'/_sqlite3.so', [
+    self.assertLibraryList(self.python_path+'/lib/python2.6/lib-dynload/_sqlite3.so', [
       'libc',
       'libsqlite3',
       'libpthread',
       ], self.rpath_list)
   def test_ld_dyn_ssl(self):
-    self.assertLibraryList(self.python_dynload_folder+'/_ssl.so', [
+    self.assertLibraryList(self.python_path+'/lib/python2.6/lib-dynload/_ssl.so', [
       'libc',
       'libssl',
       'libcrypto',
@@ -1179,7 +1179,7 @@ class AssertPython26(AssertSoftwareMixin):
       ], self.rpath_list)
   def test_no_failed_ext_lib(self):
     self.assertEquals([],
-                      glob(self.python_dynload_folder+'/*_failed.so'))
+                      glob(self.python_path+'/lib/python2.6/lib-dynload/*_failed.so'))
 
 class AssertGettext(AssertSoftwareMixin):
   def test_ld_libintl(self):
