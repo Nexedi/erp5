@@ -346,8 +346,6 @@ class ERP5TypeInformation(XMLObject,
       ob = klass(id)
 
       if temp_object:
-        if id in (None, ''):
-          raise ValueError("invalid object id")
         ob = ob.__of__(container)
         for ignore in ('activate_kw', 'is_indexable', 'reindex_kw'):
           kw.pop(ignore, None)
