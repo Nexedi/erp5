@@ -211,6 +211,7 @@ class ERP5TypeInformation(XMLObject,
 
     acquire_local_roles = False
     property_sheet_list = ()
+    zodb_property_sheet_list = ()
     base_category_list = ()
     init_script = ''
     product = 'ERP5Type'
@@ -346,8 +347,6 @@ class ERP5TypeInformation(XMLObject,
       ob = klass(id)
 
       if temp_object:
-        if id in (None, ''):
-          raise ValueError("invalid object id")
         ob = ob.__of__(container)
         for ignore in ('activate_kw', 'is_indexable', 'reindex_kw'):
           kw.pop(ignore, None)
@@ -376,7 +375,10 @@ class ERP5TypeInformation(XMLObject,
         #ob._setPortalTypeName(self.getId())
         # XXX rafael: if we use _set because it is trigger by interaction
         # workflow and it is annoyning without security setted
-        ob.portal_type = self.getId()
+        try:
+          ob.portal_type = self.getId()
+        except:
+          import pdb; pdb.set_trace()
 
       if not temp_object:
         # Do not reindex object because it's already done by manage_afterAdd
@@ -422,6 +424,12 @@ class ERP5TypeInformation(XMLObject,
     def getTypePropertySheetList(self):
       """Getter for 'type_property_sheet' property"""
       return list(self.property_sheet_list)
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getTypeZodbPropertySheetList')
+    def getTypeZodbPropertySheetList(self):
+      """Getter for 'zodb_type_property_sheet' property"""
+      return list(self.zodb_property_sheet_list)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getTypeBaseCategoryList')
