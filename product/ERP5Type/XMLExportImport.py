@@ -66,9 +66,9 @@ class OrderedPickler(Pickler):
         dispatch[PyStringMap] = save_dict        
 
 # ERP5 specific pickle function - produces ordered pickles
-def dumps(obj, protocol=None, bin=None):
+def dumps(obj, protocol=None):
     file = StringIO()
-    OrderedPickler(file, protocol, bin).dump(obj)
+    OrderedPickler(file, protocol).dump(obj)
     return file.getvalue()
 
 def Base_asXML(object, root=None):
