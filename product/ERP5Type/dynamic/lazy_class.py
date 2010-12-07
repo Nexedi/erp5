@@ -69,6 +69,9 @@ class GhostBaseMetaClass(ExtensionClass):
     cls.__getattribute__ = __getattribute__
     cls.__init__ = __init__
     cls.__doc__ = GhostBaseMetaClass.ghost_doc
+    # This prevents serialize (ZODB) from reloading the class during commit
+    # (which would even trigger migration, resulting in a ConflictError).
+    cls.__getnewargs__ = None
 
 InitGhostBase = GhostBaseMetaClass('InitGhostBase', (ERP5Base,), {})
 
