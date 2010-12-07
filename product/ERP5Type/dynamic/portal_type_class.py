@@ -220,30 +220,35 @@ def generatePortalTypeClass(portal_type_name):
 
     property_sheet_generating_portal_type_set.add(portal_type_name)
 
+    property_sheet_tool = getattr(site, 'portal_property_sheets', None)
+
     property_sheet_set = set()
 
-    if portal_type is not None:
-      # Get the Property Sheets defined on the portal_type and use the
-      # ZODB Property Sheet rather than the filesystem only if it
-      # exists in ZODB
-      zodb_property_sheet_set = set(site.portal_property_sheets.objectIds())
-      for property_sheet in portal_type.getTypePropertySheetList():
-        if property_sheet in zodb_property_sheet_set:
-          property_sheet_set.add(property_sheet)
+    # The Property Sheet Tool may be None if the code is updated but
+    # the BT has not been upgraded yet with portal_property_sheets
+    if property_sheet_tool is not None:
+      if portal_type is not None:
+        # Get the Property Sheets defined on the portal_type and use the
+        # ZODB Property Sheet rather than the filesystem only if it
+        # exists in ZODB
+        zodb_property_sheet_set = set(property_sheet_tool.objectIds())
+        for property_sheet in portal_type.getTypePropertySheetList():
+          if property_sheet in zodb_property_sheet_set:
+            property_sheet_set.add(property_sheet)
 
-    # Get the Property Sheets defined on the document and its bases
-    # recursively. Fallback on the filesystem Property Sheet only and
-    # only if the ZODB Property Sheet does not exist
-    from Products.ERP5Type.Base import getClassPropertyList
-    for property_sheet in getClassPropertyList(klass):
-      # If the Property Sheet is a string, then this is a ZODB
-      # Property Sheet
-      #
-      # NOTE: The Property Sheets of a document should be given as a
-      #       string from now on
-      if isinstance(property_sheet, basestring):
-        property_sheet_name = property_sheet
-        property_sheet_set.add(property_sheet_name)
+      # Get the Property Sheets defined on the document and its bases
+      # recursively. Fallback on the filesystem Property Sheet only and
+      # only if the ZODB Property Sheet does not exist
+      from Products.ERP5Type.Base import getClassPropertyList
+      for property_sheet in getClassPropertyList(klass):
+        # If the Property Sheet is a string, then this is a ZODB
+        # Property Sheet
+        #
+        # NOTE: The Property Sheets of a document should be given as a
+        #       string from now on
+        if isinstance(property_sheet, basestring):
+          property_sheet_name = property_sheet
+          property_sheet_set.add(property_sheet_name)
 
     import erp5
 
@@ -251,10 +256,10 @@ def generatePortalTypeClass(portal_type_name):
       # Initialize ZODB Property Sheets accessor holders
       _fillAccessorHolderList(
         accessor_holder_list,
-        site.portal_property_sheets.createZodbPropertySheetAccessorHolder,
+        property_sheet_tool.createZodbPropertySheetAccessorHolder,
         property_sheet_set,
         erp5.accessor_holder,
-        site.portal_property_sheets)
+        property_sheet_tool)
 
     property_sheet_generating_portal_type_set.remove(portal_type_name)
 
