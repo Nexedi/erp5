@@ -51,54 +51,13 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  This script generates a sections list to filter the document on UNG Docs.\n
-  XXX - The generation of domains should be more dynamic because some domains is create manually.\n
+  This script is used by domain to filter all Web Page objects except objects \n
+  with validation state == \'deleted\'.\n
 """\n
-domain_list = []\n
-\n
-if depth == 0:\n
-  url = \'publication_section\'\n
-  context.log(script.id, \'parent = %r, context = %r, url = %r, depth = %r\' % (parent, context, url, depth))\n
-  domain = parent.generateTempDomain(id=\'all_document_list\')\n
-  domain.edit(title=\'All Documents\',\n
-              list_method=\'WebPageModule_getDocumentListFiltered\',\n
-              domain_generator_method_id = script.id)\n
-  domain_list.append(domain)\n
-\n
-  category_list = context.portal_categories.getCategoryValue(url).contentValues()\n
-  for category in category_list:\n
-    domain = parent.generateTempDomain(id = category.getId())\n
-    domain.edit(title = category.getTitle(),\n
-                membership_criterion_base_category = (\'publication_section\',), \n
-                membership_criterion_category = (category.getRelativeUrl(),),\n
-                domain_generator_method_id = script.id,\n
-                uid = category.getUid())\n
-\n
-    domain_list.append(domain)\n
-  \n
-  domain = parent.generateTempDomain(id=\'webpage_module_list\')\n
-  domain.edit(title=\'Document by Type\',\n
-              list_method=\'WebPageModule_getDocumentListFiltered\',\n
-              domain_generator_method_id = script.id)\n
-  domain_list.append(domain)\n
-\n
-  # XXX - Review code to be more dynamic\n
-  webpage_subdomain = domain.generateTempDomain(id=\'subWebPage\')\n
-  webpage_subdomain.edit(title="Web Page",\n
-              list_method=\'WebPageModule_getWebPageListFiltered\',\n
-              domain_generator_method_id=script.id)\n
-\n
-  webtable_subdomain = domain.generateTempDomain(id=\'subWebTable\')\n
-  webtable_subdomain.edit(title="Web Table",\n
-              list_method=\'WebPageModule_getWebTableListFiltered\',\n
-              domain_generator_method_id=script.id)\n
-\n
-  webillustration_subdomain = domain.generateTempDomain(id=\'subWebIllustraion\')\n
-  webillustration_subdomain.edit(title="Web Illustration",\n
-              list_method=\'WebPageModule_getWebIllustrationListFiltered\',\n
-              domain_generator_method_id=script.id)\n
-\n
-return domain_list\n
+# XXX - the query should returns Web Page objects except validation_state == "deleted". \n
+# Try use Query or ComplexQuery object for it\n
+return context.portal_catalog(portal_type=["Web Page"], \n
+                              validation_state=["draft"])\n
 </string> </value>
         </item>
         <item>
@@ -109,7 +68,7 @@ return domain_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>depth, parent, **kw</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -129,27 +88,15 @@ return domain_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>depth</string>
-                            <string>parent</string>
                             <string>kw</string>
-                            <string>domain_list</string>
-                            <string>url</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>script</string>
-                            <string>domain</string>
-                            <string>category_list</string>
-                            <string>_getiter_</string>
-                            <string>category</string>
-                            <string>webpage_subdomain</string>
-                            <string>webtable_subdomain</string>
-                            <string>webillustration_subdomain</string>
                           </tuple>
                         </value>
                     </item>
@@ -166,7 +113,7 @@ return domain_list\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebPageModule_generateDomain</string> </value>
+            <value> <string>WebPageModule_getWebPageListFiltered</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -50,7 +50,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return context.portal_catalog(portal_type=["Web Page", "Web Illustration", "Web Table"], \n
+            <value> <string>"""\n
+  This script is used by domain to filter all objects from Web Page Module except objects \n
+  with validation state == \'deleted\'.\n
+"""\n
+# XXX - the query should returns all object except validation_state == "deleted". \n
+# Try use Query or ComplexQuery object for it\n
+return context.portal_catalog(portal_type=["Web Page", "Web Illustration", "Web Table"], \n
                               validation_state=["draft"])\n
 </string> </value>
         </item>

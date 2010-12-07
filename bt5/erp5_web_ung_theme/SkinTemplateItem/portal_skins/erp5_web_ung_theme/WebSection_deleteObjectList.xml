@@ -66,7 +66,7 @@ if uid_list is not None:\n
     object.setPublicationSection("trash")\n
     object.delete()\n
 \n
-return context.ERP5Site_redirect(website_url, keep_items={"reset": 1})\n
+return context.ERP5Site_redirect(context.REQUEST.get("HTTP_REFERER"))\n
 </string> </value>
         </item>
         <item>

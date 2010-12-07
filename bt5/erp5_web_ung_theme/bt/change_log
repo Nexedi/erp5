@@ -1,3 +1,6 @@
+2010-12-07 gabriel
+* Added feature to be possible filter the Listbox according to the Portal Type
+
 2010-12-06 gabriel
 * refactor the script WebSection_deleteObjectList to remove completely the objects with state 'deleted'.
 
