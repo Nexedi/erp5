@@ -575,6 +575,14 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, aq_key, portal):
       ptype_object.updatePropertySheetDefinitionDict(ps_definition_dict)
 
     for base in getClassPropertyList(klass):
+      # FIXME: With ZODB Property Sheets, there should only be the
+      # name of the Property Sheet as a string. aq_dynamic should not
+      # be necessary as soon as all the Documents and Property Sheets
+      # have been migrated. This is kept for backward compatility with
+      # the filesystem Property Sheet (see ERP5Type.dynamic.portal_type_class)
+      if isinstance(base, basestring):
+        continue
+
       for list_name, current_list in ps_definition_dict.items():
         try:
           current_list += getattr(base, list_name, ())

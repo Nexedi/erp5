@@ -101,6 +101,7 @@ class BaseType:
         , 'mode':       'w'
         , 'label':      'Property Sheets'
         , 'select_variable':'getAvailablePropertySheetList'
+        , 'default':    ()
          },
         { 'id':         'type_base_category'
         , 'storage_id': 'base_category_list' # CMF Compatibility

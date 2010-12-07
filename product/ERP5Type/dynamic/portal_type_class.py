@@ -222,28 +222,28 @@ def generatePortalTypeClass(portal_type_name):
 
     property_sheet_set = set()
 
-    #### Waiting for Yoshinori's advice before enabling this code
-    # if portal_type is not None:
-    #   # Get the Property Sheets defined on the portal_type
-    #   property_sheet_set.update(portal_type.getTypeZodbPropertySheetList() \
-    #                             or ())
+    if portal_type is not None:
+      # Get the Property Sheets defined on the portal_type and use the
+      # ZODB Property Sheet rather than the filesystem only if it
+      # exists in ZODB
+      zodb_property_sheet_set = set(site.portal_property_sheets.objectIds())
+      for property_sheet in portal_type.getTypePropertySheetList():
+        if property_sheet in zodb_property_sheet_set:
+          property_sheet_set.add(property_sheet)
 
-    #### The Property Sheets specified in the property_sheets
-    #### attribute of a Document are only filesystem-based, thus for
-    #### now it has to be done in the Portal Types themselves
-    # # Get the Property Sheets defined on the document and its bases
-    # # recursively
-    # from Products.ERP5Type.Base import getClassPropertyList
-    # for property_sheet in getClassPropertyList(klass):
-    #   if isinstance(property_sheet, basestring):
-    #     property_sheet_name = property_sheet
-    #   # FIXME: The Property Sheets of a document should be given as a
-    #   # string from now on, but to avoid changing all the code now, we
-    #   # just get the class name of the filesystem Property Sheet
-    #   else:
-    #     property_sheet_name = property_sheet.__name__
-
-    #   property_sheet_set.add(property_sheet_name)
+    # Get the Property Sheets defined on the document and its bases
+    # recursively. Fallback on the filesystem Property Sheet only and
+    # only if the ZODB Property Sheet does not exist
+    from Products.ERP5Type.Base import getClassPropertyList
+    for property_sheet in getClassPropertyList(klass):
+      # If the Property Sheet is a string, then this is a ZODB
+      # Property Sheet
+      #
+      # NOTE: The Property Sheets of a document should be given as a
+      #       string from now on
+      if isinstance(property_sheet, basestring):
+        property_sheet_name = property_sheet
+        property_sheet_set.add(property_sheet_name)
 
     import erp5
 

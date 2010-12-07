@@ -33,7 +33,7 @@ import transaction
 
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.backportUnittest import expectedFailure, skip
+from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
 from zope.interface import Interface, implementedBy
 
@@ -545,9 +545,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
         id='Test Migration',
         portal_type='Base Type',
         type_class='Folder',
-        # XXX: to be renamed to type_property_sheet_list as soon as
-        #      the migration has been finished
-        type_zodb_property_sheet_list=('TestMigration',),
+        type_property_sheet_list=('TestMigration',),
         type_base_category_list=('test_category_existence_constraint',),
         type_allowed_content_type_list=('Content Existence Constraint',))
 
@@ -596,20 +594,18 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     portal = self.getPortal()
     person_type = portal.portal_types.Person
 
-    self.failIf('TestMigration' in \
-                (person_type.getTypeZodbPropertySheetList() or []))
+    self.failIf('TestMigration' in person_type.getTypePropertySheetList())
 
     new_person = None
     try:
       # Assign ZODB test Property Sheet to the existing Person type
       # and create a new Person, this should generate the test
       # accessor holder which should be in the Person type inheritance
-      person_type.setTypeZodbPropertySheetList('TestMigration')
+      person_type.setTypePropertySheetList('TestMigration')
 
       transaction.commit()
 
-      self.assertTrue('TestMigration' in \
-                      person_type.getTypeZodbPropertySheetList())
+      self.assertTrue('TestMigration' in person_type.getTypePropertySheetList())
 
       # The accessor holder will be generated once the new Person will
       # be created as Person type has test Property Sheet
@@ -678,7 +674,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
       # '_setType*'
       transaction.commit()
 
-      person_type.setTypeZodbPropertySheetList(None)
+      person_type.setTypePropertySheetList(())
 
       if new_person is not None:
         portal.person_module.deleteContent(new_person.getId())
@@ -689,15 +685,14 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     # unassigned by creating a new person in Person module
     transaction.commit()
 
-    self.failIf('TestMigration' in \
-                (person_type.getTypeZodbPropertySheetList() or []))
+    self.failIf('TestMigration' in person_type.getTypePropertySheetList())
 
     try:
       new_person = portal.person_module.newContent(
         id='testAssignZodbPropertySheet', portal_type='Person')
 
-      self.failIfHasAttribute(new_person, 'getTestStandardPropertyAssign')
       self.failIfHasAttribute(erp5.accessor_holder, 'TestMigration')
+      self.failIfHasAttribute(new_person, 'getTestStandardPropertyAssign')
 
     finally:
       if new_person is not None:
@@ -1018,9 +1013,6 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     self._checkConstraint('test_property_type_validity_constraint',
                           self.test_module.setTitle,
                           'my_property_type_validity_constraint_title')
-
-TestZodbPropertySheet = skip("ZODB Property Sheets code is not enabled yet")(
-  TestZodbPropertySheet)
 
 from Products.ERP5Type import PropertySheet
 from Products.CMFCore.Expression import Expression

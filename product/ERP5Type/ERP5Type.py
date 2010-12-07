@@ -608,8 +608,13 @@ class ERP5TypeInformation(XMLObject,
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getAvailablePropertySheetList')
     def getAvailablePropertySheetList(self):
-      return sorted(k for k in PropertySheet.__dict__
-                      if not k.startswith('__'))
+      property_sheet_set = set([k for k in PropertySheet.__dict__
+                                if not k.startswith('__')])
+
+      property_sheet_tool = self.getPortalObject().portal_property_sheets
+      property_sheet_set.update(property_sheet_tool.objectIds())
+
+      return sorted(property_sheet_set)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getAvailableConstraintList')
