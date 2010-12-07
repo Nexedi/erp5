@@ -107,13 +107,6 @@ def readElfAsDict(f):
     runpath_list=sorted(runpath_list)
   )
 
-def getPythonVersion():
-  return '%s.%s' % util.sys.version_info[0:2]
-
-def getDevelopEggName(name, version):
-  return '%s-%s-py%s-%s.egg' % (name, version, getPythonVersion(),
-                                util.get_platform())
-
 def readLddInfoList(f):
   popen = subprocess.Popen(['ldd', f], stdout=subprocess.PIPE,
       stderr=subprocess.STDOUT)
@@ -145,6 +138,11 @@ def readLddInfoList(f):
   return link_list
 
 class AssertSoftwareMixin(unittest.TestCase):
+  python_version = '2.6'
+  def getDevelopEggName(self, name, version):
+    return '%s-%s-py%s-%s.egg' % (name, version, self.python_version,
+                                util.get_platform())
+
   def assertEqual(self, first, second, msg=None):
     try:
       return unittest.TestCase.assertEqual(self, first, second, msg=msg)
@@ -1583,8 +1581,8 @@ class AssertBzip2(AssertSoftwareMixin):
 class AssertPysvn(AssertSoftwareMixin):
   def test_ld_pysvn(self):
     self.assertLibraryList('develop-eggs/%s/pysvn/_pysvn_%s.so' % (
-      getDevelopEggName('pysvn', '1.7.4nxd006'),
-      getPythonVersion().replace('.', '_')), [
+      self.getDevelopEggName('pysvn', '1.7.4nxd006', self.python_version),
+      self.python_verion.replace('.', '_')), [
       'libc',
       'libgcc_s',
       'libm',
@@ -1599,7 +1597,7 @@ class AssertPysvn(AssertSoftwareMixin):
 
 class AssertLxml(AssertSoftwareMixin):
   def test_ld_etree_so(self):
-    egg_name = getDevelopEggName('lxml', '2.2.8')
+    egg_name = self.getDevelopEggName('lxml', '2.2.8')
     python_version_major, python_version_minor = util.sys.version_info[0:2]
     self.assertLibraryList('develop-eggs/%s/lxml/etree.so' % (egg_name), [
       'libc',
@@ -1616,7 +1614,7 @@ class AssertLxml(AssertSoftwareMixin):
       ])
 
   def test_ld_objectify_so(self):
-    egg_name = getDevelopEggName('lxml', '2.2.8')
+    egg_name = self.getDevelopEggName('lxml', '2.2.8')
     python_version_major, python_version_minor = util.sys.version_info[0:2]
     self.assertLibraryList('develop-eggs/%s/lxml/objectify.so' % (egg_name), [
       'libc',
