@@ -77,7 +77,7 @@ catalog_query = portal.portal_catalog(\n
            " AND " \\\n
            "found_movement.portal_type=\'Purchase Packing List Line\'" % \\\n
            (state_string,))\n
-return [q.getUrlString() for q in catalog_query]\n
+return [q.getUrlString() for q in catalog_query if q.getUrlString()]\n
 </string> </value>
         </item>
         <item>
@@ -127,8 +127,7 @@ return [q.getUrlString() for q in catalog_query]\n
                             <string>state_string</string>
                             <string>tuple</string>
                             <string>catalog_query</string>
-                            <string>append</string>
-                            <string>$append0</string>
+                            <string>$list0</string>
                             <string>_getiter_</string>
                             <string>q</string>
                           </tuple>
