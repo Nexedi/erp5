@@ -95,21 +95,20 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
         # If the dictionary not exist, initialize the generator
         self.initializeGenerator()
         last_max_id_dict = self.last_max_id_dict
-      if last_max_id_dict.get(id_group, None) is not None and \
-          last_max_id_dict[id_group].value > new_id:
-        raise ValueError, 'The last_id %s stored in zodb dictionary is ' \
-            'higher than the new id %s generated for id_group %s. ' \
-            'invoke %s/rebuildSqlTable to fix this problem.' % \
-            (last_max_id_dict[id_group].value, new_id, id_group, self.absolute_url())
-      # Check the store interval to store the data
-      store_interval = self.getStoreInterval()
-      if not store_interval:
-        store_interval = 1
-      # Store the new id
-      if last_max_id_dict.get(id_group, None) is None:
+      last_max_id = last_max_id_dict.get(id_group)
+      if last_max_id is None:
         last_max_id_dict[id_group] = ScalarMaxConflictResolver(new_id)
-      elif last_max_id_dict[id_group].value <= (new_id - store_interval):
-        last_max_id_dict[id_group].set(new_id)
+      else:
+        last_max_id_value = last_max_id.value
+        if new_id <= last_max_id_value:
+          raise ValueError('The last id %s stored in ZODB dictionary is higher'
+                           ' than the new id %s generated for id_group %r.'
+                           ' Invoke %s/rebuildSqlTable to fix this problem.'
+                           % (last_max_id_value, new_id, id_group,
+                              self.absolute_url()))
+        # Check the store interval to store the data
+        if last_max_id_value <= new_id - (self.getStoreInterval() or 1):
+          last_max_id.set(new_id)
     return new_id
 
   def _updateSqlTable(self):
