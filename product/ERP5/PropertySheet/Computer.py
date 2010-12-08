@@ -38,7 +38,7 @@ class Computer:
     , 'description'              : 'The unique identity of the computer in computer network.'
     , 'type'                     : 'content'
     , 'portal_type'              : ( 'Internet Protocol Address', )#'Asynchronous Transfer Mode Address', 'UMTS Address' )
-    , 'acquired_property_id'     : ( 'text', 'host_name', 'ip_address', )
+    , 'acquired_property_id'     : ( 'text', 'host_name', 'ip_address', 'netmask', )
     , 'acquisition_base_category': ( 'parent', )
     , 'acquisition_portal_type'  : ( 'Computer', )
     , 'acquisition_copy_value'   : 0
