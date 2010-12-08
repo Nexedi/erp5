@@ -110,6 +110,12 @@ return True\n
             <value> <string>computer_dict</string> </value>
         </item>
         <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>errors</string> </key>
             <value>
               <tuple/>
@@ -160,7 +166,7 @@ return True\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Computer_loadComputerPartitionsFromDictionnary</string> </value>
+            <value> <string>Computer_updateFromDict</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
