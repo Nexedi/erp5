@@ -58,6 +58,7 @@ treated_partition_list = []\n
 \n
 context.edit(\n
   default_network_address_ip_address = computer_dict[\'address\'],\n
+  default_network_address_netmask = computer_dict[\'netmask\'],\n
   quantity = len(computer_dict[\'partition_list\']),\n
 )\n
 \n
@@ -67,7 +68,9 @@ for partition in computer_partition_list:\n
 \n
     if partition_dict[\'reference\'] == partition.getReference():\n
       partition.edit(\n
-          default_network_address_ip_address = partition_dict[\'addr\'],)\n
+          default_network_address_ip_address = partition_dict[\'addr\'],\n
+          default_network_address_netmask = partition_dict[\'netmask\'],\n
+      )\n
 \n
       partition.getDefaultNetworkAddressValue().edit(network_interface = partition_dict[\'tap\'][\'name\'])\n
 \n
