@@ -232,14 +232,9 @@ class SlapTool(BaseTool):
     "Load the given xml as configuration for the computer object"
     self._loginAsSuperUser()
     computer_dict = xml_marshaller.xml_marshaller.loads(xml)
-    try:
-      computer = self._getComputerDocument(computer_dict['reference'])
-    except Unauthorized:
-      return 'Bad reference'
-
-    if computer.Computer_loadComputerPartitionsFromDictionnary(computer_dict):
-      return 'Configuration properly registered'
-    return 'Problem occured during the configuration registration'
+    computer = self._getComputerDocument(computer_dict['reference'])
+    computer.Computer_loadComputerPartitionsFromDictionnary(computer_dict)
+    return 'Content properly posted.'
 
   security.declarePublic('useComputerPartition')
   def useComputerPartition(self, computer_id, computer_partition_id, use_string):
