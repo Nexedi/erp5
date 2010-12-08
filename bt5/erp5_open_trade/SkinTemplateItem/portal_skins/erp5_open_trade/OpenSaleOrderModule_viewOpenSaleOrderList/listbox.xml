@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ListBox" module="Products.ERP5Form.ListBox"/>
-        <tuple/>
-      </tuple>
+      <global name="ListBox" module="Products.ERP5Form.ListBox"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -376,6 +373,14 @@
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
+                        <tuple>
+                          <string>destination_section_title</string>
+                          <string>Client</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_simulation_state_title</string>
+                          <string>State</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -388,6 +393,10 @@
                 <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default_display_style</string> </key>
+                    <value> <string>table</string> </value>
                 </item>
                 <item>
                     <key> <string>default_params</string> </key>
@@ -440,6 +449,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>global_search_column</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>hidden</string> </key>
                     <value> <int>0</int> </value>
                 </item>
@@ -466,6 +479,10 @@
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>page_navigation_template</string> </key>
+                    <value> <string>ListBox_viewSliderPageNavigationRenderer</string> </value>
                 </item>
                 <item>
                     <key> <string>page_template</string> </key>
@@ -532,6 +549,12 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>style_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>title</string> </key>
                     <value> <string>Open Sales Orders</string> </value>
                 </item>
@@ -587,10 +610,7 @@
   </record>
   <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
+      <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -603,10 +623,7 @@
   </record>
   <record id="5" aka="AAAAAAAAAAU=">
     <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
+      <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
     <pickle>
       <dictionary>
