@@ -42,8 +42,6 @@
      <tal:block tal:define="website here/getWebSiteValue;\n
                             portal_path python:website.absolute_url();\n
                             dummy python: request.set(\'editable_mode\', 0);\n
-                            layout_form_id request/layout_form_id | here/getApplicableLayout | nothing;\n
-                            layout_form python: layout_form_id and getattr(here, layout_form_id, None) or None;\n
                             has_no_layout python: layout_form is None;\n
                             has_editor python: here.absolute_url() != portal_path;\n
                             aggregate python: has_no_layout or layout_form.Form_getGroupList(\n
