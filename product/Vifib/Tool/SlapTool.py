@@ -233,7 +233,7 @@ class SlapTool(BaseTool):
     self._loginAsSuperUser()
     computer_dict = xml_marshaller.xml_marshaller.loads(xml)
     computer = self._getComputerDocument(computer_dict['reference'])
-    computer.Computer_loadComputerPartitionsFromDictionnary(computer_dict)
+    computer.Computer_updateFromDict(computer_dict)
     return 'Content properly posted.'
 
   security.declarePublic('useComputerPartition')
