@@ -38,6 +38,7 @@ from Products.ERP5.Document.File import File
 from Products.ERP5.Document.Document import ConversionError
 from Products.ERP5.mixin.document_proxy import DocumentProxyMixin, DocumentProxyError
 from Products.ERP5.Tool.NotificationTool import buildEmailMessage
+from Products.ERP5Type.Utils import guessEncodingFromText
 from MethodObject import Method
 from zLOG import LOG, INFO
 
@@ -200,7 +201,7 @@ class EmailDocument(TextDocument):
           else:
             text = text.decode().encode('utf-8')
         except (UnicodeDecodeError, LookupError), error_message:
-          encoding = self._guessEncoding(text)
+          encoding = guessEncodingFromText(text, content_type='text/plain')
           if encoding is not None:
             try:
               text = text.decode(encoding).encode('utf-8')
@@ -453,7 +454,8 @@ class EmailDocument(TextDocument):
             LOG('EmailDocument.getTextContent', INFO, 
                 'Failed to decode %s TEXT message of %s with error: %s' % 
                 (part_encoding, self.getPath(), error_message))
-            codec = self._guessEncoding(message_text)
+            codec = guessEncodingFromText(message_text,
+                                          content_type=part.get_content_type())
             if codec is not None:
               try:
                 text_result = message_text.decode(codec).encode('utf-8')
