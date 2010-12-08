@@ -3182,11 +3182,6 @@ class ScalarMaxConflictResolver(persistent.Persistent):
   def _p_resolveConflict(self, old, first_id, second_id):
     return max(first_id, second_id)
 
-  def _p_independent(self):
-    # My state doesn't depend on or materially effect the state of
-    # other objects.
-    return 1
-
 ###################
 #  URL Normaliser #
 ###################
