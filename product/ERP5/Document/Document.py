@@ -41,7 +41,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.DateUtils import convertDateToHour,\
                                 number_of_hours_in_day, number_of_hours_in_year
 from Products.ERP5Type.Utils import convertToUpperCase, fill_args_from_request,\
-                                    deprecated
+                                    deprecated, guessEncodingFromText
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 from Products.ERP5.Tool.ContributionTool import MAX_REPEAT
@@ -709,8 +709,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
     """
       Deprecated method
     """
-    contribution_tool = self.getPortalObject().portal_contributions
-    return contribution_tool.guessEncodingFromText(string, content_type=mime)
+    return guessEncodingFromText(string, content_type=mime)
 
   def _stripHTML(self, html, charset=None):
     """
