@@ -37,7 +37,7 @@ import os
 
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
-from Products.CMFCore.utils import getToolByName, _checkPermission
+from Products.CMFCore.utils import _checkPermission
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.ERP5 import _dtmldir
@@ -203,7 +203,7 @@ class ContributionTool(BaseTool):
 
     if portal_type is None:
       # Guess it with help of portal_contribution_registry
-      registry = getToolByName(portal, 'portal_contribution_registry')
+      registry = portal.portal_contribution_registry
       portal_type = registry.findPortalTypeName(filename=filename,
                                                 content_type=content_type)
     #
@@ -214,7 +214,7 @@ class ContributionTool(BaseTool):
     version  = property_dict.get('version', None)
     language  = property_dict.get('language', None)
     if portal_type and reference and version and language:
-      portal_catalog = getToolByName(portal, 'portal_catalog')
+      portal_catalog = portal.portal_catalog
       document = portal_catalog.getResultValue(portal_type=portal_type,
                                                 reference=reference,
                                                 version=version,
