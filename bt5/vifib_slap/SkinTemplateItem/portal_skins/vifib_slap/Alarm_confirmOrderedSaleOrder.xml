@@ -64,7 +64,10 @@ for sale_order_line in portal.portal_catalog(\n
     sale_order.edit(\n
       source_section=\'organisation_module/vifib_internet\',\n
       source=\'organisation_module/vifib_internet\')\n
-    sale_order.confirm()\n
+    try:\n
+      sale_order.confirm()\n
+    except ValueError:\n
+      continue\n
 </string> </value>
         </item>
         <item>
@@ -108,6 +111,7 @@ for sale_order_line in portal.portal_catalog(\n
                             <string>_getiter_</string>
                             <string>sale_order_line</string>
                             <string>sale_order</string>
+                            <string>ValueError</string>
                           </tuple>
                         </value>
                     </item>
