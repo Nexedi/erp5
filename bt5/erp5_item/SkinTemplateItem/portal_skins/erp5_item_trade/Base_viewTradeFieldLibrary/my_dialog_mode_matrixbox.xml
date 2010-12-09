@@ -10,14 +10,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>editable_attributes</string>
-                <string>title</string>
+                <string>as_cell_range_script_id</string>
                 <string>cell_base_id</string>
                 <string>cell_portal_type</string>
-                <string>tabs</string>
-                <string>lines</string>
-                <string>columns</string>
+                <string>editable_attributes</string>
                 <string>enabled</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -66,15 +64,9 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>columns</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>enabled</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -84,18 +76,6 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>lines</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>tabs</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
-                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -109,8 +89,16 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>as_cell_range_script_id</string> </key>
+                    <value> <string>DeliveryLine_asCellRange</string> </value>
+                </item>
+                <item>
                     <key> <string>cell_base_id</string> </key>
                     <value> <string>movement</string> </value>
+                </item>
+                <item>
+                    <key> <string>cell_portal_type</string> </key>
+                    <value> <string>Mapped Value</string> </value>
                 </item>
                 <item>
                     <key> <string>editable_attributes</string> </key>
@@ -120,12 +108,12 @@
                           <string>quantity</string>
                           <string>Quantity</string>
                         </tuple>
-                        <tuple>
-                          <string>simulation_quantity</string>
-                          <string>Simulation Quantity</string>
-                        </tuple>
                       </list>
                     </value>
+                </item>
+                <item>
+                    <key> <string>enabled</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -174,46 +162,7 @@ python: [x.id for x in here.allowedContentTypes() if x.id.find(\'Cell\')>=0][0]
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.DeliveryLine_asCellRange(matrixbox=1)[1]</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
             <value> <string>not:context/isMovement</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="5" aka="AAAAAAAAAAU=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python:here.DeliveryLine_asCellRange(matrixbox=1)[0]</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="6" aka="AAAAAAAAAAY=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python:here.DeliveryLine_asCellRange(matrixbox=1)[2]</string> </value>
         </item>
       </dictionary>
     </pickle>
