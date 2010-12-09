@@ -221,7 +221,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
           # This is very temporary code - XXX needs to be changed
           # so that the system can retry
           raise ConversionError("OOoDocument: can not get list of allowed acceptable"
-                                " formats for conversion: %s (%s)" % (
+                                " formats for conversion (Code %s: %s)" % (
                                       response_code, response_message))
 
       except Fault, f:
@@ -465,7 +465,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
     else:
       # Explicitly raise the exception!
       raise ConversionError(
-                "OOoDocument: Error converting document to base format %s:%s:"
+                "OOoDocument: Error converting document to base format. (Code %s: %s)"
                                        % (response_code, response_message))
 
   def _getContentInformation(self):
@@ -498,5 +498,5 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       self.updateFileMetadata() # record in workflow history # XXX must put appropriate comments.
     else:
       # Explicitly raise the exception!
-      raise ConversionError("OOoDocument: error getting document metadata %s:%s"
+      raise ConversionError("OOoDocument: error getting document metadata (Code %s: %s)"
                         % (response_code, response_message))
