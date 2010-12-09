@@ -136,7 +136,7 @@
                         </tuple>
                         <tuple>
                           <string>getQuantity</string>
-                          <string>Quantity</string>
+                          <string>Order Quantity</string>
                         </tuple>
                         <tuple>
                           <string>order_quantity_unit</string>
