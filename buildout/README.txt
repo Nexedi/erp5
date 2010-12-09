@@ -149,8 +149,6 @@ mysql> grant all privileges on test212.* to 'test'@'localhost';
 mysql> grant all privileges on test212.* to 'test'@'127.0.0.1';
 mysql> exit
 
-$ var/bin/
-
 Now edit buildout.cfg and add "runUnitTest" (w/o quotes) to 'buildout:parts'.
 The "development-instance" part will be pulled in automatically as a
 dependency:
@@ -162,9 +160,9 @@ Then run buildout again to finish the configuration
 $ bin/buildout -ov         # 8
 
 Now a fully configured development instance will be available in the directory
-"var/development-instance", so you can do:
+"parts/erp5_instance", so you can do:
 
- $ var/development-site/bin/zopectl fg
+ $ parts/erp5_instance/bin/zopectl fg
 
 And see an ERP5 instance running on "http://localhost:18080/". The port '18080'
 refers to the 'development-instance:http-address' setting in
