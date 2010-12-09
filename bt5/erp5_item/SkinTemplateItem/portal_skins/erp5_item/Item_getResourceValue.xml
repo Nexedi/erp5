@@ -51,21 +51,28 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from DateTime import DateTime\n
+portal = context.getPortalObject()\n
 \n
 if at_date is None:\n
   at_date = DateTime()\n
 kw[\'at_date\'] = at_date\n
 kw[\'item\'] = context.getRelativeUrl()\n
 \n
-last_affectation_list = context.portal_simulation.getCurrentTrackingList(**kw)\n
+last_affectation_list = portal.portal_simulation.getCurrentTrackingList(**kw)\n
 \n
 if kw.get(\'src__\',0):\n
   return last_affectation_list\n
 \n
+if not last_affectation_list:\n
+  # Falback in Future inventory\n
+  if at_date is not None:\n
+    del kw[\'at_date\']\n
+  last_affectation_list = portal.portal_simulation.getFutureTrackingList(**kw)\n
+\n
 if len(last_affectation_list):\n
   last_affectation = last_affectation_list[0]\n
   if last_affectation.resource_uid is not None:\n
-    resource_value = context.portal_catalog.getObject(last_affectation.resource_uid)\n
+    resource_value = portal.portal_catalog.getObject(last_affectation.resource_uid)\n
     return resource_value\n
 \n
 return None\n
@@ -108,10 +115,11 @@ return None\n
                             <string>at_date</string>
                             <string>kw</string>
                             <string>DateTime</string>
-                            <string>None</string>
-                            <string>_write_</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal</string>
+                            <string>None</string>
+                            <string>_write_</string>
                             <string>_apply_</string>
                             <string>last_affectation_list</string>
                             <string>len</string>
