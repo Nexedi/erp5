@@ -62,7 +62,7 @@ resource = context.getResourceValue()\n
 if resource is None:\n
   item_display_list = item_list\n
 else:\n
-  selected_use_list = [use_value.getCategoryRelativeUrl() for use_value in resource.getUseValueList()]\n
+  selected_use_list = [use_value.getCategoryRelativeUrl() for use_value in resource.getUseValueList() + context.getUseValueList()]\n
   item_display_list = [(\'\', \'\')] + [item for item in item_list if item[1] in selected_use_list]\n
 \n
 return item_display_list\n
@@ -114,8 +114,7 @@ return item_display_list\n
                             <string>resource</string>
                             <string>None</string>
                             <string>item_display_list</string>
-                            <string>append</string>
-                            <string>$append0</string>
+                            <string>$list0</string>
                             <string>_getiter_</string>
                             <string>use_value</string>
                             <string>selected_use_list</string>
