@@ -47,45 +47,22 @@ class TestTaskReporting(ERP5ReportTestCase):
   @reindex
   def _makeOneTask(self, simulation_state='planned', **kw):
     """Create a task, support many options"""
-    task = self.portal.task_module.newContent(portal_type='Task',
-                                              specialise=self.business_process)
-    task._edit(**kw)
+    task_module = self.getPortalObject().task_module
+    task = task_module.newContent(portal_type='Task', **kw)
     if simulation_state == 'planned':
       task.plan()
     if simulation_state == 'confirmed':
       task.confirm()
 
-  def getRule(self, **kw):
-    return self.portal.portal_rules.searchFolder(
-          sort_on='version', sort_order='descending', **kw)[0].getObject()
-
-  def createBusinessProcess(self):
-    module = self.portal.business_process_module
-    id = self.__class__.__name__
-    try:
-      business_process = module[id]
-    except KeyError:
-      default = module.erp5_default_business_process
-      business_process = module.newContent(id, default.getPortalType(),
-                                           specialise_value=default)
-      delivery_path, = default.getTradeModelPathValueList(
-          trade_phase='default/delivery')
-      business_process.newContent(portal_type=delivery_path.getPortalType(),
-                                  reference=delivery_path.getReference(),
-                                  trade_phase=delivery_path.getTradePhase())
-    return business_process.getRelativeUrl()
-
   def afterSetUp(self):
     """Setup the fixture.
     """
-    for rule_id in ('default_order_rule',
-                    'default_delivery_rule',
-                    'default_delivering_rule'):
-      rule = self.getRule(reference=rule_id)
-      if rule.getValidationState() != 'validated':
-        rule.validate()
+    self.portal = self.getPortal()
 
-    self.business_process = self.createBusinessProcess()
+    for rule_id in ['default_order_rule', 'default_delivery_rule']:
+      rule = getattr(self.portal.portal_rules, rule_id)
+      if rule.getValidationState() == 'draft':
+        rule.validate()
 
     # create organisations
     if not self.portal.organisation_module.has_key('Organisation_1'):
@@ -176,13 +153,15 @@ class TestTaskReporting(ERP5ReportTestCase):
     """Remove all documents.
     """
     transaction.abort()
-    portal = self.portal
+
+    portal = self.getPortal()
     portal.task_module.manage_delObjects(
                       list(portal.task_module.objectIds()))
     portal.task_report_module.manage_delObjects(
                       list(portal.task_report_module.objectIds()))
     portal.portal_simulation.manage_delObjects(
                       list(portal.portal_simulation.objectIds()))
+
     transaction.commit()
     self.tic()
 
