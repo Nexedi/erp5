@@ -32,6 +32,8 @@ from Products.ERP5.tests.testProject import *
 test_suite_list.append(test_suite)
 from Products.ERP5.tests.testTask import *
 test_suite_list.append(test_suite)
+from Products.ERP5.tests.testTaskReporting import *
+test_suite_list.append(test_suite)
 from Products.ERP5.tests.testTaskReportDivergence import *
 test_suite_list.append(test_suite)
 
@@ -42,6 +44,10 @@ Legacy_getBusinessTemplateList(TestProject)
 
 TestTaskMixin.business_process = None
 Legacy_getBusinessTemplateList(TestTaskMixin)
+
+TestTaskReporting.createBusinessProcess = lambda self: None
+Legacy_getBusinessTemplateList(TestTaskReporting)
+
 
 def test_suite():
   suite = test_suite_list[0]()

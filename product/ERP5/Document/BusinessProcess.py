@@ -187,8 +187,7 @@ class BusinessProcess(Path, XMLObject):
       raise ValueError('explanation must not be a Root Applied Rule')
 
     trade_date = trade_model_path.getTradeDate()
-    if not trade_date:
-      raise ValueError('a trade_date must be defined on every Trade Model Path')
+    assert trade_date, 'a trade_date must be defined on the Trade Model Path'
 
     reference_date_method_id = trade_model_path.getReferenceDateMethodId()
     if not reference_date_method_id:
@@ -801,10 +800,10 @@ class BusinessProcess(Path, XMLObject):
         # applied rules which are not root applied rules. 
         # XXX-JPS could be extended with a rule property instead
         # of supports only in root applied rule case
-        start_date, stop_date = self.getExpectedTradeModelPathStartAndStopDate(
-                               explanation, trade_model_path, delay_mode=delay_mode)
-        property_dict['start_date'] = start_date
-        property_dict['stop_date'] = stop_date
+        if trade_model_path.getTradeDate():
+          property_dict['start_date'], property_dict['stop_date'] = \
+            self.getExpectedTradeModelPathStartAndStopDate(
+              explanation, trade_model_path, delay_mode=delay_mode)
     else:
       raise TypeError("Explanation must be an Applied Rule in expand process") # Nothing to do
     return property_dict
