@@ -162,7 +162,7 @@ $ bin/buildout -ov         # 8
 Now a fully configured development instance will be available in the directory
 "parts/development-site", so you can do:
 
- $ parts/development-site/bin/zopectl fg
+ $ bin/development-site fg
 
 And see an ERP5 instance running on "http://localhost:18080/". The port '18080'
 refers to the 'development-instance:http-address' setting in
