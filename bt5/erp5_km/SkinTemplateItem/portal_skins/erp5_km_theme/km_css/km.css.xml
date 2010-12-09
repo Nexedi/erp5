@@ -887,10 +887,11 @@ div.searchDetails, span.found{\n
 /* Download Document in various format widget */\n
 div.download-document-format-list-container{\n
   color:#000000;\n
-  left:0px;\n
+  left:525px;\n
   top:0px;\n
   position:absolute;\n
-  z-index:100;\n
+  z-index:200; /* Collapse menu z-index is 100 */\n
+  width:200px;\n
 }\n
 div.download-document-format-list-container span{\n
   cursor: pointer; \n
@@ -907,8 +908,8 @@ div.download-document-format-list-menu{\n
   float:right;\n
   border: 1px solid #A8A799;\n
   background-color: #FFFFFF;\n
-  left:80px;\n
-  top:20px;\n
+  left:0px;\n
+  top:0px;\n
   position:relative;\n
 }\n
 \n
