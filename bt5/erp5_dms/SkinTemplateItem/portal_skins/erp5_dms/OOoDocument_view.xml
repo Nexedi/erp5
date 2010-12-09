@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ERP5Form" module="Products.ERP5Form.Form"/>
-        <tuple/>
-      </tuple>
+      <global name="ERP5Form" module="Products.ERP5Form.Form"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -102,7 +99,7 @@
                         <string>my_language</string>
                         <string>my_int_index</string>
                         <string>my_file</string>
-                        <string>my_source_reference</string>
+                        <string>my_filename</string>
                         <string>my_translated_portal_type</string>
                         <string>my_translated_external_processing_state_title</string>
                         <string>my_revision</string>
