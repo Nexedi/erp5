@@ -34,7 +34,7 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
       xmlns:metal="http://xml.zope.org/namespaces/metal">\n
@@ -47,7 +47,7 @@
                   person_full_name string:DMS tester">\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">Attach Document</td></tr>\n
+<tr><td rowspan="1" colspan="3" tal:content="template/getId"/></tr>\n
 </thead><tbody>\n
 \n
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />\n
@@ -214,7 +214,7 @@ Wait for activities</span>\n
 </body>\n
 </html>
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -229,8 +229,12 @@ Wait for activities</span>\n
             <value> <string>testAttachDocument</string> </value>
         </item>
         <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <unicode></unicode> </value>
         </item>
       </dictionary>
     </pickle>
