@@ -99,7 +99,11 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
     self.web_section_content_knowledge_pad = portal.restrictedTraverse(
                                           self.web_section_content_knowledge_pad_relative_url)
     self.stepTic()
-
+    # Publish all knowledge pad gadgets
+    for gadget in self.portal.portal_gadgets.objectValues():
+      if gadget.getValidationState() == 'invisible':
+        gadget.visible()
+        gadget.public()
     
   def login(self, quiet=0, run=run_all_test):
     uf = self.getPortal().acl_users
