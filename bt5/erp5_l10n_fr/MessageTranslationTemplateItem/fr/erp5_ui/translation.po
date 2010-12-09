@@ -1026,6 +1026,12 @@ msgstr "Demander la cotation"
 msgid "Ask for More Details"
 msgstr "Demander plus de précisions"
 
+msgid "Asked quantity of \"${product_title} - ${product_reference}\" is not available in inventory for line ${line_id}"
+msgstr "La quantité demandée de \"${product_title} - ${product_reference}\" n'est pas disponible pour la ligne ${line_id}"
+
+msgid "Asked quantity of \"${product_title} - ${product_reference}\" is not available in inventory for lines ${line_id}"
+msgstr "La quantité demandée de \"${product_title} - ${product_reference}\" n'est pas disponible pour les lignes ${line_id}"
+
 msgid "Assessment"
 msgstr "Appréciation"
 
@@ -3565,6 +3571,12 @@ msgstr "Responsable des tâches administratives pour le client"
 msgid "Destination Conversion"
 msgstr "Conversion pour la destination"
 
+msgid "Destination Credit"
+msgstr "Crédit"
+
+msgid "Destination Debit"
+msgstr "Débit"
+
 msgid "Destination Payment"
 msgstr "Payeur"
 
@@ -3615,6 +3627,9 @@ msgstr "Détail du solde initial"
 
 msgid "Detailed Report"
 msgstr "Rapport détaillé"
+
+msgid "Detailed Report of Items"
+msgstr "Rapport détaillé des lots"
 
 msgid "Details"
 msgstr "Détails"
@@ -3843,6 +3858,15 @@ msgstr "Filtres prédétermines"
 
 msgid "Domains"
 msgstr "Domaines"
+
+msgid "Don't Display Negative Stock"
+msgstr "Ne pas afficher les stocks négatifs"
+
+msgid "Don't Display Positive Stock"
+msgstr "Ne pas afficher les stocks positifs"
+
+msgid "Don't Display Zero Stock"
+msgstr "Ne pas afficher les stocks à zéro"
 
 msgid "Don't forget to logout or exit your browser when you're done."
 msgstr "N'oubliez pas de vous déconnecter ou de fermer votre navigateur quand vous avez terminé."
@@ -5296,11 +5320,14 @@ msgstr "Dépôt sur compte d'ordre"
 msgid "Internal Money Deposit Module"
 msgstr "Dépôt sur compte d'ordre"
 
-msgid "Internal Orders"
-msgstr "Commandes internes"
+msgid "Internal Order"
+msgstr "Commande interne"
 
 msgid "Internal Order Lines"
 msgstr "Lignes de commande interne"
+
+msgid "Internal Orders"
+msgstr "Commandes internes"
 
 msgid "Internal Packing List"
 msgstr "Livraison interne"
@@ -7835,12 +7862,6 @@ msgstr "Quantité"
 msgid "Quantity < ${max_quantity}"
 msgstr "Quantité < ${max_quantity}"
 
-msgid "Asked quantity of \"${product_title} - ${product_reference}\" is not available in inventory for lines ${line_id}"
-msgstr "La quantité demandée de \"${product_title} - ${product_reference}\" n'est pas disponible pour les lignes ${line_id}"
-
-msgid "Asked quantity of \"${product_title} - ${product_reference}\" is not available in inventory for line ${line_id}"
-msgstr "La quantité demandée de \"${product_title} - ${product_reference}\" n'est pas disponible pour la ligne ${line_id}"
-
 msgid "Quantity Divergence Tester"
 msgstr "Test de divergence sur la quantité"
 
@@ -9481,12 +9502,6 @@ msgstr "Code source"
 
 msgid "Source Conversion"
 msgstr "Conversion pour la source"
-
-msgid "Destination Credit"
-msgstr "Crédit"
-
-msgid "Destination Debit"
-msgstr "Débit"
 
 msgid "Source Credit"
 msgstr "Crédit"
@@ -11469,11 +11484,11 @@ msgstr "Champs de mise à jour"
 msgid "Update Fields by English Glossary"
 msgstr "Mettre à jour les champs à partir du glossaire anglais"
 
-msgid "Update Lines"
-msgstr "Mettre à jour des lignes"
-
 msgid "Update File Metadata [transition in processing_status_workflow]"
 msgstr "Mettre à jour les méta données"
+
+msgid "Update Lines"
+msgstr "Mettre à jour des lignes"
 
 msgid "Update My Credentials"
 msgstr "Mettre à jour mon compte utilisateur"
