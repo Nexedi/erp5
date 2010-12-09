@@ -75,6 +75,7 @@
                         <string>your_import_file</string>
                         <string>your_effective_date</string>
                         <string>your_update_existing_property</string>
+                        <string>your_create_local_property</string>
                         <string>your_existing_category_list</string>
                         <string>your_expiration_date</string>
                         <string>your_detailed_report</string>

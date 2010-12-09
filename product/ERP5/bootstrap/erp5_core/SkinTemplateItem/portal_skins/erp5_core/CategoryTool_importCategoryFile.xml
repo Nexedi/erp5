@@ -52,6 +52,7 @@
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Type.Message import translateString\n
 from Products.ERP5Type.Document import newTempBase\n
+portal = context.getPortalObject()\n
 \n
 # Initialise some general variables\n
 detailed_report_result = []\n
@@ -60,13 +61,15 @@ base_category_id_list = []\n
 category_path_dict = {}\n
 simulation_new_category_id_list = []\n
 \n
-property_id_list = context.portal_classes.getPropertySheetPropertyIdList()\n
+property_id_list = portal.portal_classes.getPropertySheetPropertyIdList()\n
+category_property_id_list = None\n
 \n
+getRelatedValueList = portal.portal_categories.getRelatedValueList\n
 def Object_hasRelation(obj):\n
   # Check if there is some related objets.\n
   result = 0\n
   for o in obj.getIndexableChildValueList():\n
-    for related in obj.portal_categories.getRelatedValueList(o):\n
+    for related in getRelatedValueList(o):\n
       related_url = related.getRelativeUrl()\n
       if related_url.startswith(obj.getRelativeUrl()):\n
         continue\n
@@ -172,6 +175,8 @@ for base_category, category_list in \\\n
           category_path_dict[base_path_obj.getRelativeUrl()] = None\n
         is_base_category = False\n
         parent_path = category[\'path\'].split(category_id)[0] +category_id\n
+\n
+      property_id_list = base_path_obj.propertyIds() # XXX could be cached\n
       if is_valid_category:\n
         # Only try to update a valid category\n
         new_category = base_path_obj\n
@@ -182,6 +187,18 @@ for base_category, category_list in \\\n
           key = str(key)\n
           if key not in [\'path\', \'id\']:\n
             value = category[key]\n
+\n
+            if not create_local_property and key not in property_id_list:\n
+              # if we do not create local properties, then we skip properties\n
+              # that are not in category ids\n
+              report_line = newTempBase(context, \'item\')\n
+              report_line.edit(field_type=\'Update\',\n
+                  field_category=new_category.getRelativeUrl(),\n
+                  field_message=translateString("Ignoring local property ${key} with value ${value}",\n
+                                                mapping=dict(key=key, value=value)))\n
+              detailed_report_append(report_line)\n
+              continue\n
+\n
             if is_new_category:\n
               # Always update properties if this a new category\n
               category_update_dict[key] = value\n
@@ -231,6 +248,7 @@ for base_category, category_list in \\\n
                 detailed_report_append(report_line)\n
         if not is_new_category and category_update_dict:\n
           updated_category_counter += 1\n
+\n
         if not simulation_mode:\n
           # force_update=1 is required here because\n
           # edit(short_title=\'foo\', title=\'foo\') only stores short_title property.\n
@@ -330,7 +348,7 @@ return context.REQUEST.RESPONSE.redirect(\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>import_file, update_existing_property=False, keep_existing_category=True, detailed_report=False, simulation_mode=False, displayed_report=[], effective_date=None, expiration_date=None, existing_category_list=\'keep\', **kw</string> </value>
+            <value> <string>import_file, update_existing_property=False, keep_existing_category=True, detailed_report=False, simulation_mode=False, displayed_report=[], effective_date=None, expiration_date=None, existing_category_list=\'keep\', create_local_property=False, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -350,7 +368,7 @@ return context.REQUEST.RESPONSE.redirect(\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>9</int> </value>
+                        <value> <int>10</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -365,19 +383,24 @@ return context.REQUEST.RESPONSE.redirect(\n
                             <string>effective_date</string>
                             <string>expiration_date</string>
                             <string>existing_category_list</string>
+                            <string>create_local_property</string>
                             <string>kw</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>translateString</string>
                             <string>Products.ERP5Type.Document</string>
                             <string>newTempBase</string>
-                            <string>detailed_report_result</string>
                             <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>detailed_report_result</string>
                             <string>detailed_report_append</string>
                             <string>base_category_id_list</string>
                             <string>category_path_dict</string>
                             <string>simulation_new_category_id_list</string>
-                            <string>context</string>
                             <string>property_id_list</string>
+                            <string>None</string>
+                            <string>category_property_id_list</string>
+                            <string>getRelatedValueList</string>
                             <string>Object_hasRelation</string>
                             <string>isValidID</string>
                             <string>new_category_counter</string>
@@ -414,7 +437,6 @@ return context.REQUEST.RESPONSE.redirect(\n
                             <string>category_type</string>
                             <string>report_line</string>
                             <string>dict</string>
-                            <string>None</string>
                             <string>new_category</string>
                             <string>category_update_dict</string>
                             <string>first_update_reported</string>
@@ -448,6 +470,7 @@ return context.REQUEST.RESPONSE.redirect(\n
                 <none/>
                 <none/>
                 <string>keep</string>
+                <int>0</int>
               </tuple>
             </value>
         </item>
