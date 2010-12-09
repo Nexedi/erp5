@@ -124,7 +124,8 @@ return []\n
                             <string>last_affectation</string>
                             <string>None</string>
                             <string>movement</string>
-                            <string>$list0</string>
+                            <string>append</string>
+                            <string>$append0</string>
                             <string>_getiter_</string>
                             <string>x</string>
                             <string>variation_list</string>

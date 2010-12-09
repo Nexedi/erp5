@@ -51,20 +51,17 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from DateTime import DateTime\n
+portal = context.getPortalObject()\n
 \n
-if at_date is None:\n
-  at_date = DateTime()\n
-\n
-last_affectation_list = context.portal_simulation.getCurrentTrackingList(\n
+last_affectation_list = portal.portal_simulation.getCurrentTrackingList(\n
                              item=context.getRelativeUrl(), at_date=at_date)\n
 \n
-if len(last_affectation_list) == 0:\n
-  return None\n
+if not last_affectation_list:\n
+  last_affectation_list = portal.portal_simulation.getFutureTrackingList(\n
+                             item=context.getRelativeUrl(), at_date=at_date)\n
 \n
-if last_affectation_list[0].section_uid is not None:\n
-  return context.portal_catalog.getObject(last_affectation_list[0].section_uid)\n
-\n
-return None\n
+if last_affectation_list and last_affectation_list[0].section_uid:\n
+  return portal.portal_catalog.getObject(last_affectation_list[0].section_uid)\n
 </string> </value>
         </item>
         <item>
@@ -103,11 +100,10 @@ return None\n
                           <tuple>
                             <string>at_date</string>
                             <string>DateTime</string>
-                            <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal</string>
                             <string>last_affectation_list</string>
-                            <string>len</string>
                             <string>_getitem_</string>
                           </tuple>
                         </value>

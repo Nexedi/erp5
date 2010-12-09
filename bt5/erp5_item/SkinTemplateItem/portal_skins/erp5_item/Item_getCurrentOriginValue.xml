@@ -51,19 +51,18 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from DateTime import DateTime\n
+portal = context.getPortalObject()\n
 \n
 if at_date is None:\n
   at_date = DateTime()\n
 \n
-\n
-\n
-last_affectation_list = context.portal_simulation.getCurrentTrackingList(\n
+last_affectation_list = portal.portal_simulation.getCurrentTrackingList(\n
                             item=context.getRelativeUrl())\n
 if not last_affectation_list:\n
   return None\n
 last_affectation_date_list = [x.getDate() for x in last_affectation_list]\n
 last_affectation_date_list.sort()\n
-first_affectation_list = context.portal_simulation.getCurrentTrackingList(\n
+first_affectation_list = portal.portal_simulation.getCurrentTrackingList(\n
                             item=context.getRelativeUrl(),at_date=last_affectation_date_list[0])\n
 \n
 if len(last_affectation_list) == 0:\n
@@ -72,8 +71,6 @@ if len(last_affectation_list) == 0:\n
 if first_affectation_list[0].node_uid is not None:\n
   site = context.portal_catalog.getObject(first_affectation_list[0].delivery_uid)\n
   return site\n
-\n
-return None\n
 </string> </value>
         </item>
         <item>
@@ -112,9 +109,10 @@ return None\n
                           <tuple>
                             <string>at_date</string>
                             <string>DateTime</string>
-                            <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal</string>
+                            <string>None</string>
                             <string>last_affectation_list</string>
                             <string>append</string>
                             <string>$append0</string>

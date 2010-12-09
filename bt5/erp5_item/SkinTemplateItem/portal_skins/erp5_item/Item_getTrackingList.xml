@@ -153,7 +153,8 @@ return history_list\n
                             <string>section_value</string>
                             <string>resource_value</string>
                             <string>None</string>
-                            <string>$list0</string>
+                            <string>append</string>
+                            <string>$append0</string>
                             <string>x</string>
                             <string>_getitem_</string>
                           </tuple>
