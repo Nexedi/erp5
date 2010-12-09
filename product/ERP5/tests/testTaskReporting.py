@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5ReportTestCase
 from Products.ERP5Type.tests.utils import reindex
 import transaction
@@ -327,3 +328,8 @@ class TestTaskReporting(ERP5ReportTestCase):
                    **{'person_module/Person_1': None,
                       'person_module/Person_2': None,
                       })
+
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestTaskReporting))
+  return suite
