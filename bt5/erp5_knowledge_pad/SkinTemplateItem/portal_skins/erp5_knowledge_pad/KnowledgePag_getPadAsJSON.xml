@@ -68,7 +68,7 @@ for box in pad.objectValues():\n
   gadget = box.getSpecialiseValue()\n
   gadget_type = gadget.getRenderType()\n
   if box.getValidationState() in [\'visible\', \'invisible\'] \\\n
-        and gadget_type==\'asynchronous\':\n
+        and gadget_type==\'asynchronous\' and gadget.getValidationState()!=\'invisible\':\n
     edit_form_id=gadget.getEditFormId()\n
     view_form_id=gadget.getViewFormId()\n
     base_url = \'%s/%s\' %(context.absolute_url(), view_form_id) \n

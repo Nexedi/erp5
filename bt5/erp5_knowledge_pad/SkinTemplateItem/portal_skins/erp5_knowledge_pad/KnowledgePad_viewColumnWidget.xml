@@ -36,10 +36,14 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<tal:block\n
-     tal:repeat="box_id python: options[\'section_layout\']"\n
-     tal:define="real_context python: options.get(\'real_context\', None);\n
-                 cancel_url python: options.get(\'cancel_url\', None);">\n
+<tal:block tal:define="layout python: options[\'section_layout\'];\n
+                       real_context python: options.get(\'real_context\', None);\n
+                       cancel_url python: options.get(\'cancel_url\', None);\n
+                       isAnon python: here.portal_membership.isAnonymousUser();\n
+                       visibility_css_dict python: {\'visible\': \'block\',\n
+                                                   \'invisible\': \'none\'};">\n
+\n
+<tal:block tal:repeat="box_id layout">\n
   <tal:block \n
         tal:condition="python: getattr(here, box_id, None) is not None"\n
         tal:define="box python: getattr(here, box_id);\n
@@ -47,11 +51,9 @@
                     view_form_dom_id python: \'%s_content\' %box_dom_id;\n
                     edit_form_dom_id python: \'%s_edit_form\' %box_dom_id;\n
                     gadget python: box.getSpecialiseValue();\n
+                    gadget_state python: gadget.getValidationState();\n
                     dummy python: request.set(\'is_gadget_mode\', \'1\');\n
                     dummy python: request.set(\'box_relative_url\', box.getRelativeUrl());\n
-                    visibility_css_dict python: {\'visible\': \'block\',\n
-                                                 \'invisible\': \'none\'};\n
-                    isAnon python: here.portal_membership.isAnonymousUser();\n
                     edit_form_id gadget/getEditFormId;\n
                     view_form_id gadget/getViewFormId;\n
                     render_type gadget/getRenderType;\n
@@ -69,8 +71,17 @@
                     isAnonymousKnowledgePadUsed python:\n
                        request.get(\'is_anonymous_knowledge_pad_used\', 0);">\n
 \n
+\n
+\n
     <div class="block" \n
-      tal:condition="python: gadget is not None"\n
+      tal:condition="python: gadget is not None and gadget_state==\'invisible\'"\n
+      tal:attributes="id box_dom_id"\n
+      style="display:none;"></div>\n
+\n
+\n
+    <!-- Show only public gadgets -->\n
+    <div class="block" \n
+      tal:condition="python: gadget is not None and gadget_state!=\'invisible\'"\n
       tal:attributes="id box_dom_id">\n
 \n
       <h3 class="handle">\n
@@ -203,6 +214,7 @@
         </div>  \n
   </div>\n
   </tal:block>\n
+</tal:block>\n
 </tal:block>\n
 
 
