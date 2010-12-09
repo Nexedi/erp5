@@ -52,6 +52,7 @@
             <key> <string>_body</string> </key>
             <value> <string>portal = context.getPortalObject()\n
 person_uid = portal.ERP5Site_getPropertyFromAuthenticatedMemberPersonValue(\'uid\')\n
+\n
 default_open_order = portal.portal_catalog.getResultValue(portal_type="Open Sale Order",\n
                      default_destination_section_uid=person_uid)\n
 \n

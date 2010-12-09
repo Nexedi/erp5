@@ -139,7 +139,13 @@ context.WebSection_viewNextStep()\n
         <item>
             <key> <string>errors</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string encoding="cdata"><![CDATA[
+
+non-default argument follows default argument (<function parameters>, line 1)
+
+]]></string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -154,42 +160,12 @@ context.WebSection_viewNextStep()\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
-                          <tuple>
-                            <string>uids</string>
-                            <string>dialog_id</string>
-                            <string>quantity</string>
-                            <string>reset_shopping_cart</string>
-                            <string>kw</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal</string>
-                            <string>prefered_resource</string>
-                            <string>service</string>
-                            <string>resource_list</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>item</string>
-                            <string>item_list</string>
-                            <string>len</string>
-                            <string>shopping_cart</string>
-                            <string>shopping_cart_items</string>
-                            <string>resource</string>
-                            <string>_getitem_</string>
-                            <string>product_url</string>
-                            <string>release_url</string>
-                            <string>False</string>
-                            <string>line_found</string>
-                            <string>order_line</string>
-                            <string>int</string>
-                            <string>new_quantity</string>
-                            <string>True</string>
-                          </tuple>
+                          <tuple/>
                         </value>
                     </item>
                   </dictionary>
@@ -200,12 +176,7 @@ context.WebSection_viewNextStep()\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <list/>
-                <none/>
-                <int>1</int>
-                <int>1</int>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
