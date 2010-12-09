@@ -53,7 +53,9 @@
             <value> <string>from DateTime import DateTime\n
 portal = context.getPortalObject()\n
 \n
+default_at_date = False\n
 if at_date is None:\n
+  default_at_date = True\n
   at_date = DateTime()\n
 kw[\'at_date\'] = at_date\n
 \n
@@ -66,7 +68,7 @@ if kw.get(\'src__\',0):\n
 \n
 if not last_affectation_list:\n
   # Falback in Future inventory\n
-  if at_date is None:\n
+  if default_at_date:\n
     del kw[\'at_date\']\n
   last_affectation_list = portal.portal_simulation.getFutureTrackingList(**kw)\n
 \n
@@ -119,7 +121,10 @@ return []\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
+                            <string>False</string>
+                            <string>default_at_date</string>
                             <string>None</string>
+                            <string>True</string>
                             <string>_write_</string>
                             <string>_apply_</string>
                             <string>last_affectation_list</string>
