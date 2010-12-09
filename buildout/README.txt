@@ -117,6 +117,7 @@ parts =
   mysql-instance
   oood-instance
   supervisor-instance
+  runUnitTest
 ^D
 
 $ ~/erp5.buildout/bin/bootstrap2.6      # 4
@@ -149,22 +150,12 @@ mysql> grant all privileges on test212.* to 'test'@'localhost';
 mysql> grant all privileges on test212.* to 'test'@'127.0.0.1';
 mysql> exit
 
-Now edit buildout.cfg and add "runUnitTest" (w/o quotes) to 'buildout:parts'.
-The "development-instance" part will be pulled in automatically as a
-dependency:
-
-$ $EDITOR buildout.cfg                  # 7
-
-Then run buildout again to finish the configuration
-
-$ bin/buildout -ov         # 8
-
-Now a fully configured development instance will be available in the directory
+Also a fully configured development instance will be available in the directory
 "parts/development-site", so you can do:
 
  $ bin/development-site fg
 
-And see an ERP5 instance running on "http://localhost:18080/". The port '18080'
+And see a Zope instance running on "http://localhost:18080/". The port '18080'
 refers to the 'development-instance:http-address' setting in
 'profiles/development-2.12.cfg'. The file 'instance-profiles/zope-2.12.cfg'
 provides the "Manager" credentials you should use (usually zope:zope), in
