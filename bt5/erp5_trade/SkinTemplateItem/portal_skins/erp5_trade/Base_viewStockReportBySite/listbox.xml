@@ -10,12 +10,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>editable_columns</string>
-                <string>title</string>
-                <string>selection_name</string>
-                <string>list_method</string>
-                <string>sort_columns</string>
                 <string>columns</string>
+                <string>editable_columns</string>
+                <string>list_method</string>
+                <string>selection_name</string>
+                <string>sort_columns</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -64,6 +64,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>editable_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -72,7 +76,23 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>list_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>sort_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -179,7 +199,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: field.get_orig_value(\'columns\') + (context.REQUEST.form.get("item_stock") == 1 and [(\'aggregate_title_list\',\'Items aggregated\')] or [])</string> </value>
+            <value> <string>python: field.get_orig_value(\'columns\') + (context.REQUEST.form.get("item_stock") == 1 and [(\'aggregate_title_list\', \'Aggregated Items\')] or [])</string> </value>
         </item>
       </dictionary>
     </pickle>
