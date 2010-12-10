@@ -54,7 +54,7 @@
 \n
 return [(translateString(role), role)\n
         for role in context.valid_roles()\n
-        if role not in (\'Owner\', \'Manager\')]\n
+        if role not in (\'Owner\', \'Manager\', \'Anonymous\', \'Authenticated\', \'Member\', \'Reviewer\',)]\n
 </string> </value>
         </item>
         <item>
