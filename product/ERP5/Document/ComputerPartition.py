@@ -27,7 +27,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Item import Item
 
 class ComputerPartition(Item):
@@ -38,3 +38,15 @@ class ComputerPartition(Item):
 
   # Declarative security
   security = ClassSecurityInfo()
+  # Declarative properties
+  property_sheets = ( PropertySheet.Base
+                      , PropertySheet.XMLObject
+                      , PropertySheet.CategoryCore
+                      , PropertySheet.DublinCore
+                      , PropertySheet.Item
+                      , PropertySheet.Amount
+                      , PropertySheet.Computer
+                      , PropertySheet.Mapping
+                      , PropertySheet.Task
+                      , PropertySheet.Reference
+                      )
