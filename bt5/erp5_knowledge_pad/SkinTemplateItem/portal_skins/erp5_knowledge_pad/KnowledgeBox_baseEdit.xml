@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -62,13 +59,13 @@ request = context.REQUEST\n
 form = request.form\n
 fields = filter(lambda x: x.startswith(form_fields_main_prefix), form.keys())\n
 box = context.restrictedTraverse(box_relative_url)\n
+portal_selection = context.getPortalObject().portal_selections\n
 \n
 # get interesting for us fields and save\n
 listbox_selection_field_prefix = \'%s_my_listbox_selection_\' %form_fields_main_prefix\n
 for field in fields:\n
   #if it\'s a fied in a lisbox gadget it modifies directly the selection\n
   if field.startswith(listbox_selection_field_prefix):\n
-    portal_selection = getattr(context, \'portal_selections\')\n
     selection_name = context.Base_getListboxGadgetSelectionName(box_relative_url)\n
     selection = portal_selection.getSelectionFor(selection_name)\n
     if selection is not None:\n
@@ -78,17 +75,16 @@ for field in fields:\n
   kw[field.replace(\'%s_my_\' %form_fields_main_prefix, \'\')] = form[field]\n
 \n
 # determine redirect URL as passed from gadget preference form\n
-redirect_url = kw.pop(\'%s_cancel_url\' %form_fields_main_prefix, None)\n
-if redirect_url is None:\n
+if gadget_redirect_url is None:\n
   # taking URL1 as the base of the original URL. \n
   # it works for both synchronous and  asynchronous gadgets\n
-  redirect_url = request[\'URL1\']\n
+  gadget_redirect_url = request[\'URL1\']\n
   \n
 # edit\n
 box.edit(**kw)\n
 \n
 request.RESPONSE.redirect(\'%s?portal_status_message=%s\'\n
-                           %(redirect_url, \n
+                           %(gadget_redirect_url, \n
                              context.Base_translateString(\'Preference updated.\')))\n
 </string> </value>
         </item>
@@ -100,7 +96,7 @@ request.RESPONSE.redirect(\'%s?portal_status_message=%s\'\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_fields_main_prefix, box_relative_url</string> </value>
+            <value> <string>form_fields_main_prefix, box_relative_url, gadget_redirect_url=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -120,7 +116,7 @@ request.RESPONSE.redirect(\'%s?portal_status_message=%s\'\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -128,6 +124,7 @@ request.RESPONSE.redirect(\'%s?portal_status_message=%s\'\n
                           <tuple>
                             <string>form_fields_main_prefix</string>
                             <string>box_relative_url</string>
+                            <string>gadget_redirect_url</string>
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
@@ -136,11 +133,10 @@ request.RESPONSE.redirect(\'%s?portal_status_message=%s\'\n
                             <string>filter</string>
                             <string>fields</string>
                             <string>box</string>
+                            <string>portal_selection</string>
                             <string>listbox_selection_field_prefix</string>
                             <string>_getiter_</string>
                             <string>field</string>
-                            <string>getattr</string>
-                            <string>portal_selection</string>
                             <string>selection_name</string>
                             <string>selection</string>
                             <string>None</string>
@@ -148,7 +144,6 @@ request.RESPONSE.redirect(\'%s?portal_status_message=%s\'\n
                             <string>str</string>
                             <string>_getitem_</string>
                             <string>_write_</string>
-                            <string>redirect_url</string>
                             <string>_apply_</string>
                           </tuple>
                         </value>
@@ -161,7 +156,9 @@ request.RESPONSE.redirect(\'%s?portal_status_message=%s\'\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
