@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -37,7 +34,7 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <h1> Thank you for using our online shop! </h1>\n
 \n
@@ -47,7 +44,7 @@
     <a tal:attributes="href python: \'%s/SaleOrderModule_viewAsWebSaleOrderList\' % here.getWebSiteValue().absolute_url()">here</a>\n
 </p>
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -62,8 +59,12 @@
             <value> <string>SaleOrder_viewThankYouMessageRenderer</string> </value>
         </item>
         <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string>Thank you message renderer</string> </value>
+            <value> <unicode>Thank you message renderer</unicode> </value>
         </item>
       </dictionary>
     </pickle>
