@@ -70,6 +70,12 @@
   <form action="WebSection_uploadDocument" method="post" enctype="multipart/form-data">\n
    <fieldset id="file_box">\n
      <input type="file" size="30" name="file">\n
+     <select name="portal_type">\n
+       <option value="Web Page">Web Page</option>\n
+       <option value="Web Illustration">Web Illustration</option>\n
+       <option value="Web Table">Web Table</option>\n
+     </select>\n
+     <br />\n
      <input type="submit" value="Submit" id="submit_document">\n
    </fieldset>\n
   </form> \n

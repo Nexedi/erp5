@@ -849,7 +849,7 @@ a.domain_selected {\n
 }\n
 \n
 div#upload_document {\n
-  height: 36px !important;\n
+  height: 58px !important;\n
   width: 390px !important;\n
   font-size: 12px;\n
 }\n

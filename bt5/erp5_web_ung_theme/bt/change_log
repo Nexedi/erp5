@@ -1,4 +1,7 @@
 2010-12-10 gabriel
+* Refactored code to be possible make upload of Spreadsheet Documents.
+
+2010-12-10 gabriel
 * Added box and feature to make upload of Text documents.
 
 2010-12-07 gabriel
