@@ -10,12 +10,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>description</string>
-                <string>title</string>
                 <string>css_class</string>
-                <string>input_style</string>
+                <string>description</string>
                 <string>display_width</string>
                 <string>enabled</string>
+                <string>input_style</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -58,6 +58,14 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>display_width</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -78,7 +86,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>input_style</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -95,6 +111,14 @@
                 <item>
                     <key> <string>description</string> </key>
                     <value> <string>Quantity expected, based on order simulation.</string> </value>
+                </item>
+                <item>
+                    <key> <string>display_width</string> </key>
+                    <value> <int>20</int> </value>
+                </item>
+                <item>
+                    <key> <string>enabled</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -143,7 +167,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>context/isMovement</string> </value>
+            <value> <string>python: context.isMovement() and context.getPortalType() in context.getPortalDeliveryTypeList()</string> </value>
         </item>
       </dictionary>
     </pickle>
