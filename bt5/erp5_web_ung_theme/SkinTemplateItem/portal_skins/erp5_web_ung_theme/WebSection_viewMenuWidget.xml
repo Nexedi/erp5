@@ -65,11 +65,17 @@
     </li> \n
         </tal:block>\n
   </div>\n
-  <input type="submit" name="Upload" value="Upload..."/>\n
-  </div> \n
-   <div class="file-selection">\n
-   <div class="file-quick-search">\n
+  <input type="submit" id="upload" name="Upload" value="Upload"/>\n
+  <div id="upload_document" title="Upload Document">\n
+  <form action="WebSection_uploadDocument" method="post" enctype="multipart/form-data">\n
+   <fieldset id="file_box">\n
+     <input type="file" size="30" name="file">\n
+     <input type="submit" value="Submit" id="submit_document">\n
+   </fieldset>\n
+  </form> \n
   </div>\n
+   <div class="file-selection">\n
+   <div class="file-quick-search"></div>\n
   <div class="file-quick-browser">\n
   <div class="quick-search-item">ERP5</div>\n
   <div class="quick-search-item">SANEF</div>\n

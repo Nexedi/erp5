@@ -30,11 +30,54 @@
             <key> <string>raw</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+function getCurrentObjectUrl(){\n
+  return window.location.href.split("?")[0];\n
+}\n
+\n
+function getUrlParameterList(){\n
+  var argumentList = {};\n
+  resultList = window.location.href.split("?")[1].split("&");\n
+  for (var i=0;i<resultList.length;i++){\n
+    parameterList = (resultList[i].replace(":int","")).split("=");\n
+    argumentList[parameterList[0]] = parameterList[1];\n
+  }\n
+  return argumentList;\n
+}\n
+\n
 function getObjectPropertyValue(method_name){\n
   return $.ajax({\n
             url: method_name,\n
-            async: false\n
+            async: false,\n
          }).responseText;\n
+}\n
+\n
+function updateWebPage(){\n
+  parameterList = getUrlParameterList();\n
+  url = "Base_updateWebDocument?document_path=" + parameterList.document_path + "&webpage_path=" + parameterList.webpage_path;\n
+  $.get(url, {}, function(data, textStatus, XMLHttpRequest){\n
+    response = jQuery.parseJSON(data);\n
+    if (response.status != 200){\n
+      setTimeout(updateWebPage(), 1500);\n
+    }\n
+    else {\n
+      clearTimeout();\n
+      window.location = getCurrentObjectUrl() + "?editable_mode:int=1";\n
+    }\n
+  });\n
+}\n
+function checkConversion(){\n
+  parameterList = getUrlParameterList();\n
+  $.get("Base_getDocumentConversionState?path=" + parameterList.document_path, {},\n
+                                               function(data, textStatus, XMLHttpRequest){\n
+     status = jQuery.parseJSON(data);\n
+     if (status != "converted"){\n
+       setTimeout(checkConversion(), 1500);\n
+     }\n
+     else {\n
+       clearTimeout();\n
+       setTimeout(updateWebPage(), 1000);\n
+     }\n
+});\n
 }\n
 \n
 function setObjectPropertyValue(method_name, value, parameter){\n
@@ -46,8 +89,24 @@ function setObjectPropertyValue(method_name, value, parameter){\n
   return true;\n
 }\n
 \n
+function update(){\n
+  $("a#loading_message").append(".");\n
+}\n
+\n
 $(document).ready(function(){\n
- $("a[name=\'document_title\']").html(getObjectPropertyValue("getTitle"));\n
+  if ($("div.gadget-column").length == 0 && window.location.href.split("?").length > 1) {\n
+    parameterList = getUrlParameterList();\n
+    if (parameterList.hasOwnProperty("upload_document") == true){\n
+      $("a[name=\'document_title\'], a[name=\'document_state\'], div.header-right, div.content").hide();\n
+      $("a#loading_message").show();\n
+      setTimeout(checkConversion(), 1000);\n
+    }\n
+  }\n
+  $("a[name=\'document_title\']").html(getObjectPropertyValue("getTitle"));\n
+  $("input#upload").click(function(event){\n
+   event.preventDefault();\n
+   $("#upload_document").dialog("open");\n
+  });\n
  if ($("div.gadget-column").length == 1) {\n
    $("a.domain_selected").text($("a.tree-open").text());\n
    $("a.tree-open, a.tree-closed").each(function(){\n
@@ -92,6 +151,7 @@ $(document).ready(function(){\n
          var new_language = $("input#language.language").attr("value");\n
          var new_version = $("input#version.version").attr("value");\n
          var new_int_index = $("input#sort_index.sort_index").attr("value");\n
+         $("a[name=\'document_title\']").html(new_title);\n
          setObjectPropertyValue("setTitle", new_title, "value");\n
          setObjectPropertyValue("setReference", new_reference, "value");\n
          setObjectPropertyValue("setShortTitle", new_short_title, "value");\n
@@ -104,6 +164,12 @@ $(document).ready(function(){\n
          $(this).dialog("close");\n
        },\n
     }\n
+ });\n
+ $("#upload_document").dialog({\n
+    autoOpen: false,\n
+    height: 116,\n
+    width: 346,\n
+    modal: true,\n
  });\n
  $("p#more_properties")\n
     .click(function(){\n
@@ -136,8 +202,10 @@ $(document).ready(function(){\n
     .click(function(){\n
         $("div#more_property").hide();\n
         $("p#hide_properties").hide();\n
-        var document_title = $(this).html();\n
-        $("input#name.title").attr("value", document_title);\n
+        if ($("input#name.title").attr("value") != getObjectPropertyValue("getTitle")) {\n
+            $(this).html(getObjectPropertyValue("getTitle"));\n
+        }\n
+        $("input#name.title").attr("value", getObjectPropertyValue("getTitle"));\n
         $("input#short_title.short_title").attr("value", getObjectPropertyValue("getShortTitle"));\n
         $("input#reference.reference").attr("value", getObjectPropertyValue("getReference"));\n
         $("input#version.version").attr("value", getObjectPropertyValue("getVersion"));\n
@@ -145,10 +213,12 @@ $(document).ready(function(){\n
         $("input#sort_index.sort_index").attr("value", getObjectPropertyValue("getIntIndex"));\n
         $("#edit_document").dialog("open");     \n
     });\n
- $("a#settings, a#help").click(function(){\n
+ $("a#settings, a#help").click(function(event){\n
+   event.preventDefault()\n
    $("a#right_message").show();\n
  });\n
- $("a.calendar, a.email").click(function(){\n
+ $("a.calendar, a.email").click(function(event){\n
+   event.preventDefault()  \n
    $("a#left_message").show();\n
  });\n
  $("a#right_message, a#left_message").click(function(){\n

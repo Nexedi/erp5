@@ -50,17 +50,24 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>request = context.REQUEST\n
-portal_type = request.get("select_action", selection_action)\n
+            <value> <string>document = context.Base_contribute(file=file, \n
+                       url=None, \n
+                       portal_type="Text", \n
+                       synchronous_metadata_discovery=None, \n
+                       redirect_to_document=False, \n
+                       attach_document_to_context=False, \n
+                       use_context_for_container=False, \n
+                       redirect_url=None, \n
+                       cancel_url=None, \n
+                       batch_mode=False,\n
+                       max_repeat=0, \n
+                       editable_mode=1,\n
+                       follow_up_list=None, \n
+)\n
 \n
-# Create the new content in appropriate module\n
-portal_object = context.getPortalObject()\n
-module = portal_object.getDefaultModule(portal_type)\n
-new_object = module.newContent(portal_type=portal_type)\n
-\n
-kw["webpage_path"] = new_object.getPath()\n
-return new_object.Base_redirect(context.Base_getEditorViewName(portal_type), \n
-                                keep_items = dict(editable_mode=1, **kw))\n
+return context.ERP5Site_createNewWebDocument(selection_action="Web Page",\n
+                                             document_path=document.getPath(),\n
+                                             upload_document=1)\n
 </string> </value>
         </item>
         <item>
@@ -71,7 +78,7 @@ return new_object.Base_redirect(context.Base_getEditorViewName(portal_type), \n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>selection_action=None, **kw</string> </value>
+            <value> <string>file, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -97,18 +104,13 @@ return new_object.Base_redirect(context.Base_getEditorViewName(portal_type), \n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>selection_action</string>
+                            <string>file</string>
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>request</string>
-                            <string>portal_type</string>
-                            <string>portal_object</string>
-                            <string>module</string>
-                            <string>new_object</string>
-                            <string>_write_</string>
-                            <string>_apply_</string>
-                            <string>dict</string>
+                            <string>None</string>
+                            <string>False</string>
+                            <string>document</string>
                           </tuple>
                         </value>
                     </item>
@@ -120,14 +122,12 @@ return new_object.Base_redirect(context.Base_getEditorViewName(portal_type), \n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <none/>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Site_createNewWebDocument</string> </value>
+            <value> <string>WebSection_uploadDocument</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

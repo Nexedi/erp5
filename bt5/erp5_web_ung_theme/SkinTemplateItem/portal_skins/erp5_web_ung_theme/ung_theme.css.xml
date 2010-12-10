@@ -41,10 +41,13 @@ body {\n
   font-family: arial,sans-serif;\n
   display:inline-block;\n
   font-weight:normal;\n
+  overflow-x: hidden;\n
 }\n
 \n
 /* Hidden input */\n
-fieldset#hidden_fieldset {\t \n
+fieldset#hidden_fieldset,\n
+ div#upload_document,\n
+ div#edit_document {\t \n
   display: none;\n
 }\n
 \n
@@ -650,10 +653,6 @@ div#edit_document fieldset label {\n
   font-size: 12px;\n
 }\n
 \n
-span#ui-dialog-title-edit_document {\n
-  margin-top:-3px;\n
-}\n
-\n
 div.ui-dialog-titlebar {\n
   height:15px;\n
 }\n
@@ -687,7 +686,8 @@ div#edit_document fieldset label {\n
   font-size: 12px;\n
 }\n
 \n
-span#ui-dialog-title-edit_document {\n
+span#ui-dialog-title-edit_document, \n
+ span#ui-dialog-title-upload_document {\n
   font-size:17px;\n
   margin-left:-8px;\n
   margin-top:-3px;\n
@@ -846,6 +846,29 @@ a.tree-open {\n
 a.domain_selected {\n
   float:left !important;\n
   font-size: 15px !important;\n
+}\n
+\n
+div#upload_document {\n
+  height: 36px !important;\n
+  width: 390px !important;\n
+  font-size: 12px;\n
+}\n
+fieldset#file_box {\n
+  border: 0px !important;\n
+  margin-left: -17px;\n
+  margin-top: -4px;\n
+}\n
+input#submit_document {\n
+  background: url("images/ui-bg_glass_75_dae6f6_1x400.png") repeat-x scroll 50% 50% #DAE6F6;\n
+  border: 1px solid #3D6474;\n
+  color: #555555;\n
+  font-weight: normal;\n
+  -moz-border-radius: 4px 4px 4px 4px;\n
+  margin-top: 3px;\n
+}\n
+\n
+a#loading_message {\n
+  display: none;\n
 }
 
 ]]></string> </value>

@@ -43,6 +43,7 @@
 <a class="ung_docs" tal:attributes="href python: portal_path + \'?reset:int=1\'">\n
  <img src="ung_images/ung-logo.gif">\n
 </a>\n
+<a id=\'loading_message\'>Loading...</a>\n
 <tal:block tal:condition="python: not has_editor">\n
   <form>\n
   <input type="text" name="field_your_search_text" class="field" \n

@@ -50,17 +50,18 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>request = context.REQUEST\n
-portal_type = request.get("select_action", selection_action)\n
+            <value> <string>from Products.ERP5Type.JSONEncoder import encodeInJson as dumps\n
 \n
-# Create the new content in appropriate module\n
-portal_object = context.getPortalObject()\n
-module = portal_object.getDefaultModule(portal_type)\n
-new_object = module.newContent(portal_type=portal_type)\n
+catalog_object = context.portal_catalog.getResultValue(path=path)\n
 \n
-kw["webpage_path"] = new_object.getPath()\n
-return new_object.Base_redirect(context.Base_getEditorViewName(portal_type), \n
-                                keep_items = dict(editable_mode=1, **kw))\n
+if catalog_object is None:\n
+ print dumps("empty")\n
+ return printed\n
+\n
+document = context.restrictedTraverse(catalog_object.getPath())\n
+\n
+print dumps(document.getExternalProcessingState())\n
+return printed\n
 </string> </value>
         </item>
         <item>
@@ -71,7 +72,7 @@ return new_object.Base_redirect(context.Base_getEditorViewName(portal_type), \n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>selection_action=None, **kw</string> </value>
+            <value> <string>path</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -97,18 +98,17 @@ return new_object.Base_redirect(context.Base_getEditorViewName(portal_type), \n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>selection_action</string>
-                            <string>kw</string>
+                            <string>path</string>
+                            <string>_print_</string>
+                            <string>_print</string>
+                            <string>Products.ERP5Type.JSONEncoder</string>
+                            <string>encodeInJson</string>
+                            <string>dumps</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>request</string>
-                            <string>portal_type</string>
-                            <string>portal_object</string>
-                            <string>module</string>
-                            <string>new_object</string>
-                            <string>_write_</string>
-                            <string>_apply_</string>
-                            <string>dict</string>
+                            <string>catalog_object</string>
+                            <string>None</string>
+                            <string>document</string>
                           </tuple>
                         </value>
                     </item>
@@ -120,14 +120,12 @@ return new_object.Base_redirect(context.Base_getEditorViewName(portal_type), \n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <none/>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Site_createNewWebDocument</string> </value>
+            <value> <string>Base_getDocumentConversionState</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
