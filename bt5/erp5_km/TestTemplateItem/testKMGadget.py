@@ -430,8 +430,9 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
     km_my_documents_gadget = portal_gadgets.km_my_documents
     km_my_contacts_gadget = portal_gadgets.km_my_contacts
     
-    self.changeSkin('KM')
-    response = self.publish('%s/WebSite_viewKnowledgePad' %self.web_site_url, self.auth)
+    #self.changeSkin('KM')
+    url = '%s/ERP5Site_viewHomeAreaRenderer?gadget_mode=web_front' %self.web_site_url
+    response = self.publish(url, self.auth)
     self.failUnless(self.web_front_knowledge_pad.getTitle() in response.getBody())
 
     # Web Front gadgets
@@ -440,9 +441,9 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
       self.web_front_knowledge_pad.KnowledgePad_addBoxList(**{'uids':[gadget.getUid()]})
     self.stepTic()
     
-    self.changeSkin('KM')
+    #self.changeSkin('KM')
     # check that gadgets are added to web front page view
-    response = self.publish('%s/WebSite_viewKnowledgePad' %self.web_site_url, self.auth)
+    response = self.publish(url, self.auth)
     for gadget in web_front_gadgets:
       self.failUnless(gadget.getTitle() in response.getBody())
 
@@ -771,35 +772,34 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
     request = self.app.REQUEST
     portal_gadgets = portal.portal_gadgets
 
-    self.changeSkin('KM')
-    response = self.publish('%s/WebSite_viewKnowledgePad' %self.web_site_url, self.auth)
+    url = '%s/ERP5Site_viewHomeAreaRenderer?gadget_mode=web_front' %self.web_site_url
+    response = self.publish(url, self.auth)
     self.failUnless(self.web_front_knowledge_pad.getTitle() in response.getBody())
 
     gadget = portal_gadgets.km_latest_documents
     self.web_front_knowledge_pad.KnowledgePad_addBoxList(**{'uids':[gadget.getUid()]})
     self.stepTic()
 
-    self.changeSkin('KM')
     # check that gadgets are added to web front page view
-    response = self.publish('%s/WebSite_viewKnowledgePad' %self.web_site_url, self.auth)
+    response = self.publish(url, self.auth)
     self.failUnless(gadget.getTitle() in response.getBody())
 
     # set non existent view_form
     old_gadget_view_form_id =  gadget.view_form_id
     gadget.view_form_id = 'NO_SUCH_FORM_EXISTS'
-    response = self.publish('%s/WebSite_viewKnowledgePad' %self.web_site_url, self.auth)
+    response = self.publish(url, self.auth)
     self.failUnless('Server side error' in response.getBody())
     gadget.view_form_id = old_gadget_view_form_id
-    response = self.publish('%s/WebSite_viewKnowledgePad' %self.web_site_url, self.auth)
+    response = self.publish(url, self.auth)
     self.failUnless('Server side error' not in response.getBody())
     
     # set non existent edit_form
     old_gadget_edit_form_id =  gadget.edit_form_id
     gadget.edit_form_id = 'NO_SUCH_FORM_EXISTS'
-    response = self.publish('%s/WebSite_viewKnowledgePad' %self.web_site_url, self.auth)
+    response = self.publish(url, self.auth)
     self.failUnless('Server side error' in response.getBody())
     gadget.edit_form_id = old_gadget_edit_form_id
-    response = self.publish('%s/WebSite_viewKnowledgePad' %self.web_site_url, self.auth)
+    response = self.publish(url, self.auth)
     self.failUnless('Server side error' not in response.getBody())
 
   def test_16WebSiteBrowserGadget(self, quiet=quiet, run=run_all_test):
