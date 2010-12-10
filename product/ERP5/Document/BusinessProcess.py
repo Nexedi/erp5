@@ -187,8 +187,7 @@ class BusinessProcess(Path, XMLObject):
       raise ValueError('explanation must not be a Root Applied Rule')
 
     trade_date = trade_model_path.getTradeDate()
-    if not trade_date:
-      raise ValueError('a trade_date must be defined on every Trade Model Path')
+    assert trade_date, 'a trade_date must be defined on the Trade Model Path'
 
     reference_date_method_id = trade_model_path.getReferenceDateMethodId()
     if not reference_date_method_id:
@@ -797,14 +796,15 @@ class BusinessProcess(Path, XMLObject):
     # global.
     if explanation.getPortalType() == 'Applied Rule':
       if explanation.getParentValue().getPortalType() != "Simulation Tool":
-        # It only makes sens to search for start and start date for
-        # applied rules which are not root applied rules. 
-        # XXX-JPS could be extended with a rule property instead
-        # of supports only in root applied rule case
-        start_date, stop_date = self.getExpectedTradeModelPathStartAndStopDate(
-                               explanation, trade_model_path, delay_mode=delay_mode)
-        property_dict['start_date'] = start_date
-        property_dict['stop_date'] = stop_date
+        # It only makes sense to search for start and stop dates for
+        # applied rules which are not root applied rules.
+        # Date calculation by Business Process can be also disabled by
+        # leaving 'trade_phase' unset (XXX: a separate boolean property,
+        # on the TMP or the rule, may be better).
+        if trade_model_path.getTradeDate():
+          property_dict['start_date'], property_dict['stop_date'] = \
+            self.getExpectedTradeModelPathStartAndStopDate(
+              explanation, trade_model_path, delay_mode=delay_mode)
     else:
       raise TypeError("Explanation must be an Applied Rule in expand process") # Nothing to do
     return property_dict

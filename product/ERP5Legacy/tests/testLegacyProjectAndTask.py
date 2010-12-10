@@ -28,11 +28,14 @@
 from Products.ERP5Legacy.tests import Legacy_getBusinessTemplateList
 
 test_suite_list = []
-from Products.ERP5.tests.testProject import *
-test_suite_list.append(test_suite)
 from Products.ERP5.tests.testTask import *
 test_suite_list.append(test_suite)
+from Products.ERP5.tests.testTaskReporting import *
+test_suite_list.append(test_suite)
 from Products.ERP5.tests.testTaskReportDivergence import *
+test_suite_list.append(test_suite)
+# testProject breaks testTaskReporting so we run it after
+from Products.ERP5.tests.testProject import *
 test_suite_list.append(test_suite)
 
 # WARNING: TestProject is tested with rules using 'order' category
@@ -42,6 +45,9 @@ Legacy_getBusinessTemplateList(TestProject)
 
 TestTaskMixin.business_process = None
 Legacy_getBusinessTemplateList(TestTaskMixin)
+
+TestTaskReporting.createBusinessProcess = lambda self: None
+Legacy_getBusinessTemplateList(TestTaskReporting)
 
 def test_suite():
   suite = test_suite_list[0]()
