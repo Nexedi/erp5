@@ -582,10 +582,6 @@ fieldset.right .field {\n
   float: left;\n
 }\n
 \n
-.date_field {\n
-  width: auto;\n
-}\n
-\n
 /* ## forms ########################################## end ### */\n
 \n
 /* ## buttons ######################################### start # */\n
