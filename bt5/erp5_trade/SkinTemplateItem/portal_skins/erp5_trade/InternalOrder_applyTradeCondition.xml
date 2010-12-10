@@ -78,8 +78,10 @@ else:\n
 \n
 def rank_method(trade_condition):\n
   rank = 0\n
+  destination_section_group = None\n
   destination_section = trade_condition.getDestinationSection()\n
   if destination_section:\n
+    destination_section_group = trade_condition.getDestinationSectionValue().getGroup()\n
     if destination_section == context.getDestinationSection():\n
       rank += 10\n
     else:\n
@@ -92,6 +94,13 @@ def rank_method(trade_condition):\n
       rank -= 2\n
   if trade_condition.getSourceSection():\n
     rank += 1\n
+    if destination_section_group:\n
+      source_section_group = trade_condition.getSourceSectionValue().getGroup()\n
+      if source_section_group:\n
+        if source_section_group.startswith(destination_section_group) \\\n
+             or destination_section_group.startswith(source_section_group):\n
+          # trade conditions where both sections are in the same group must have high priority\n
+          rank += 20\n
   if trade_condition.getSource():\n
     rank += 1\n
   rank += len(trade_condition.getSpecialiseList())\n
