@@ -52,7 +52,7 @@
             <key> <string>_body</string> </key>
             <value> <string># This script returns an iterable of the paths to standard JavaScript objects.\n
 \n
-return (\'jquery-ui-1.8.2/js/jquery-1.4.2.min.js\',)\n
+return (\'jquery/core/jquery.js\', )\n
 </string> </value>
         </item>
         <item>
