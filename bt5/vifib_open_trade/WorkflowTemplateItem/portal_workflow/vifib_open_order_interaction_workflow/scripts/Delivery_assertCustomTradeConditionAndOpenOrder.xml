@@ -99,7 +99,9 @@ if not len(open_order_list):\n
     open_order_url = context.portal_workflow.getInfoFor(ob=person, name=\'open_order_url\', wf_id=\'person_slap_interface_workflow\')\n
     open_order = portal.restrictedTraverse(open_order_url)\n
   else:\n
-    open_order = portal.open_sale_order_module.newContent(destination_section_uid=order.getDestinationSectionUid(),\n
+    open_order = portal.open_sale_order_module.newContent(\n
+          destination_section_uid=order.getDestinationSectionUid(),\n
+          destination_decision_uid=order.getDestinationDecisionUid(),\n
           title="ViFiB Open Order")\n
     person.createOpenOrder(open_order_url=open_order.getRelativeUrl())\n
     open_order.order()\n
