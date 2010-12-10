@@ -123,8 +123,8 @@ for line in listbox:\n
             cell.edit(mapped_value_property_list=[\'price\',\'quantity\'],\n
                       price=line[\'price\'], quantity=line[\'quantity\'],\n
                       quantity_unit = line["quantity_unit"],\n
-                      predicate_category_list=cell_key,\n
-                      variation_category_list=cell_key)\n
+                      predicate_category_list=cell_key,)\n
+            cell.setVariationCategoryList(cell_key)\n
       else:\n
         trade_document_line.edit(quantity = line["quantity"],\n
                                  price = line["price"],\n
