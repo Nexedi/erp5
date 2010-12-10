@@ -645,7 +645,8 @@ class ContributionTool(BaseTool):
     url = urlparse.urlunsplit((url_tuple[0], url_tuple[1], quoted_path,
                                url_tuple[3], url_tuple[4]))
     # build a new file from the url
-    url_file = urllib2.urlopen(url)
+    url_file = urllib2.urlopen(urllib2.Request(url,
+                                               headers={'Accept':'*/*'}))
     data = url_file.read() # time out must be set or ... too long XXX
     file_object = cStringIO.StringIO()
     file_object.write(data)
