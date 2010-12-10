@@ -37,8 +37,8 @@
             <value> <unicode encoding="cdata"><![CDATA[
 
 <tal:block  \n
-  tal:define="mode python: options.get(\'mode\', \'erp5_front\');\n
-              default_pad_group python: options.get(\'default_pad_group\', \'\');\n
+  tal:define="mode python: options.get(\'mode\', request.get(\'gadget_mode\', \'erp5_front\'));\n
+              default_pad_group python: options.get(\'default_pad_group\', request.get(\'gadget_default_pad_group\', \'\'));\n
               kw python: dict(mode=mode, default_pad_group=default_pad_group);\n
               knowledge_pads python:  here.ERP5Site_getKnowledgePadListForUser(**kw);\n
               struct python: here.ERP5Site_getActiveKnowledgePadForUser(knowledge_pads, **kw);\n
