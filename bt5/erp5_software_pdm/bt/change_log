@@ -1,5 +1,13 @@
+2010-12-10 romain
+* Move software release stuff from erp5_forge_release.
+
 2010-07-13 fabien
 * commit jps changes
 
 2010-05-14 fabien
 * initial version
+
+2010-02-24 yusei
+* Move software release stuff from erp5_forge.
+* added Software Release portal type
+* added Software Publication portal type

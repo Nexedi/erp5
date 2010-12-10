@@ -8,4 +8,10 @@
  <portal_type id="Software Product Module">
   <item>business_application</item>
  </portal_type>
+ <portal_type id="Software Publication Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Software Release Module">
+  <item>business_application</item>
+ </portal_type>
 </base_category_list>
