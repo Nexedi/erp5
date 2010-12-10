@@ -633,6 +633,9 @@ msgstr "Composants définis sur la forme"
 msgid "Aggregated Industrial Process"
 msgstr "Opérations définies sur la forme"
 
+msgid "Aggregated Items"
+msgstr "Lots attachés"
+
 msgid "Aggregation Level"
 msgstr "Niveau d'agrégation"
 
@@ -2931,8 +2934,14 @@ msgstr "État actuel"
 msgid "Current Function"
 msgstr "CSP"
 
+msgid "Current Owner"
+msgstr "Propriétaire actuel"
+
 msgid "Current Period"
 msgstr "Exercice N"
+
+msgid "Current Site"
+msgstr "Site actuel"
 
 msgid "Current Value"
 msgstr "Valeur actuelle"
@@ -2952,17 +2961,11 @@ msgstr "Classification"
 msgid "Current organisation"
 msgstr "Fait partie de"
 
-msgid "Current Owner"
-msgstr "Propriétaire actuel"
-
 msgid "Current salary coefficient"
 msgstr "Coefficient"
 
 msgid "Current salary level"
 msgstr "Salaire actuel"
-
-msgid "Current Site"
-msgstr "Site actuel"
 
 msgid "Current skills"
 msgstr "Aptitudes"
@@ -4383,6 +4386,9 @@ msgstr "Aperçu"
 
 msgid "Expanded view"
 msgstr "Aperçu"
+
+msgid "Expected Quantity"
+msgstr "Quantité attendue"
 
 msgid "Expense"
 msgstr "Charges"
@@ -8270,6 +8276,9 @@ msgstr "Documents liés"
 msgid "Related Events"
 msgstr "Évènements liés"
 
+msgid "Related Internal Packing List"
+msgstr "Livraison interne liée"
+
 msgid "Related Invoice"
 msgstr "Facture correspondante"
 
@@ -11249,6 +11258,9 @@ msgstr "Total pour la classe ${account_class}"
 
 msgid "Trade"
 msgstr "Négoce"
+
+msgid "Trade Condition"
+msgstr "Condition commerciale"
 
 msgid "Trade Date"
 msgstr "Date de référence"
