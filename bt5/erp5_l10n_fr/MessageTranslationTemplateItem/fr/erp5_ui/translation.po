@@ -9908,6 +9908,9 @@ msgstr "Soumis"
 msgid "Subpages"
 msgstr "Sous-pages"
 
+msgid "Subscription Type"
+msgstr "Type d'abonnement"
+
 msgid "Subsections"
 msgstr "Sous-sections"
 
