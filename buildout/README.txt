@@ -29,6 +29,7 @@ Requirements to build ERP5 Appliance are:
  * standard C and C++ library with development headers (glibc and libstdc++)
  * make
  * patch
+ * diff (also known as diffutils)
  * python (>=2.4) with development headers (to run buildout)
 
 Setup
