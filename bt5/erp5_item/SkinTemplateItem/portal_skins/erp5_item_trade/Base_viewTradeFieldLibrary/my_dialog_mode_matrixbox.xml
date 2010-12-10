@@ -58,10 +58,22 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>as_cell_range_script_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>cell_base_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>cell_portal_type</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
+                </item>
+                <item>
+                    <key> <string>editable_attributes</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
@@ -79,6 +91,10 @@
                 </item>
                 <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -162,7 +178,7 @@ python: [x.id for x in here.allowedContentTypes() if x.id.find(\'Cell\')>=0][0]
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>not:context/isMovement</string> </value>
+            <value> <string>python: not context.isMovement() and context.getPortalType() in context.getPortalDeliveryTypeList()</string> </value>
         </item>
       </dictionary>
     </pickle>
