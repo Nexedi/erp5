@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ERP5TypeInformation" module="Products.ERP5Type.ERP5Type"/>
-        <tuple/>
-      </tuple>
+      <global name="ERP5TypeInformation" module="Products.ERP5Type.ERP5Type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -30,7 +27,7 @@
         </item>
         <item>
             <key> <string>acquire_local_roles</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>content_icon</string> </key>
@@ -79,15 +76,28 @@
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>
+        <item>
+            <key> <string>type_class</string> </key>
+            <value> <string>Inventory</string> </value>
+        </item>
+        <item>
+            <key> <string>type_interface</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_mixin</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
       </dictionary>
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
-        <tuple/>
-      </tuple>
+      <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -104,10 +114,7 @@
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <tuple>
-        <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
-        <tuple/>
-      </tuple>
+      <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
     </pickle>
     <pickle>
       <dictionary>
