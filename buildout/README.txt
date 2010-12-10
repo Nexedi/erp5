@@ -30,6 +30,7 @@ Requirements to build ERP5 Appliance are:
  * make
  * patch
  * diff (also known as diffutils)
+ * groff
  * python (>=2.4) with development headers (to run buildout)
 
 Setup
