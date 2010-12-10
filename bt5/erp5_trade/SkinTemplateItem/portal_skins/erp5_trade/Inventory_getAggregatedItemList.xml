@@ -63,21 +63,20 @@ tracking_parameters = dict(\n
     node_uid=brain.node_uid,\n
     resource_uid=brain.resource_uid,\n
     at_date=at_date,\n
-    output=True,)\n
+    )\n
 \n
 result_list = []\n
 \n
-current_variation = context.getVariationCategoryList()\n
+if context.getVariationCategoryList():\n
+  tracking_parameters[\'variation_text\'] = brain.variation_text\n
+\n
 \n
 for tracking_brain in portal.portal_simulation.getCurrentTrackingList(\n
                             **tracking_parameters):\n
   item = tracking_brain.getObject()\n
  \n
-  if current_variation and\\\n
-        item.Item_getVariationCategoryList(at_date=at_date) != current_variation:\n
-    continue\n
-\n
-  item_dict = "%s : %s"% ( item.getReference(), item.getQuantity(at_date=at_date) )\n
+  item_dict = "%s : %s"% ( item.getReference(),\n
+                           item.getQuantity(at_date=at_date) )\n
   result_list.append(item_dict)\n
 \n
 return result_list\n
@@ -126,10 +125,9 @@ return result_list\n
                             <string>request</string>
                             <string>brain</string>
                             <string>dict</string>
-                            <string>True</string>
                             <string>tracking_parameters</string>
                             <string>result_list</string>
-                            <string>current_variation</string>
+                            <string>_write_</string>
                             <string>_getiter_</string>
                             <string>_apply_</string>
                             <string>tracking_brain</string>
