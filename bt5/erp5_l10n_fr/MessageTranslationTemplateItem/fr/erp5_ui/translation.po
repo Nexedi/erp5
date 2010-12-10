@@ -2952,11 +2952,17 @@ msgstr "Classification"
 msgid "Current organisation"
 msgstr "Fait partie de"
 
+msgid "Current Owner"
+msgstr "Propriétaire actuel"
+
 msgid "Current salary coefficient"
 msgstr "Coefficient"
 
 msgid "Current salary level"
 msgstr "Salaire actuel"
+
+msgid "Current Site"
+msgstr "Site actuel"
 
 msgid "Current skills"
 msgstr "Aptitudes"
