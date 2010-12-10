@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ListField" module="Products.Formulator.StandardFields"/>
-        <tuple/>
-      </tuple>
+      <global name="ListField" module="Products.Formulator.StandardFields"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -279,7 +276,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.SaleOrder_getSelectedShippingResource()</string> </value>
+            <value> <string>python: here.SaleOrder_getSelectedShippingResource().getRelativeUlr()</string> </value>
         </item>
       </dictionary>
     </pickle>

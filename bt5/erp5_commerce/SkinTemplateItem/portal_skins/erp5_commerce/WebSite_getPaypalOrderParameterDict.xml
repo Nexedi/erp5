@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -63,8 +60,12 @@ shopping_cart_product_list = shopping_cart.SaleOrder_getShoppingCartItemList()\n
 shopping_cart_price = float(web_site.SaleOrder_getShoppingCartTotalPrice())\n
 taxes_amount = float(shopping_cart.SaleOrder_getShoppingCartTotalPrice(include_taxes=True, include_shipping=True)) - \\\n
                float(shopping_cart.SaleOrder_getShoppingCartTotalPrice(include_shipping=True));\n
-shipping = context.SaleOrder_getSelectedShippingResource()\n
-shipping_price = context.restrictedTraverse(shipping).getPrice()\n
+if shopping_cart.SaleOrder_isShippingRequired():\n
+  shipping = shopping_cart.SaleOrder_getSelectedShippingResource()\n
+  shipping_price = shipping.getPrice()\n
+else:\n
+  shipping_price = 0\n
+\n
 customer = context.SaleOrder_getShoppingCartCustomer()\n
 site_url = web_site.absolute_url()\n
 \n
@@ -72,8 +73,8 @@ order_parameter_dict[\'METHOD\'] = \'SetExpressCheckout\'\n
 order_parameter_dict[\'RETURNURL\'] = \'%s/WebSection_checkPaypalIdentification\' % site_url\n
 order_parameter_dict[\'CANCELURL\'] = site_url\n
 order_parameter_dict[\'PAYMENTACTION\'] = \'Sale\'\n
-actual_product_index = 0\n
 \n
+actual_product_index = 0\n
 for product in shopping_cart_product_list:\n
   resource = context.restrictedTraverse(product.getResource())\n
   quantity = int(product.getQuantity())\n
@@ -88,8 +89,8 @@ order_parameter_dict[\'ITEMAMT\'] = shopping_cart_price\n
 order_parameter_dict[\'TAXAMT\'] = taxes_amount\n
 order_parameter_dict[\'SHIPPINGAMT\'] = shipping_price\n
 order_parameter_dict[\'AMT\'] = shopping_cart_price + taxes_amount + shipping_price\n
-order_parameter_dict[\'CURRENCYCODE\'] = \'EUR\'\n
-order_parameter_dict[\'NOSHIPPING\'] = \'1\'\n
+order_parameter_dict[\'CURRENCYCODE\'] = context.WebSite_getShoppingCartDefaultCurrencyCode()\n
+order_parameter_dict[\'NOSHIPPING\'] = str(not shopping_cart.SaleOrder_isShippingRequired())\n
 order_parameter_dict[\'ALLOWNOTE\'] = \'0\'\n
 \n
 return order_parameter_dict\n
@@ -153,6 +154,7 @@ return order_parameter_dict\n
                             <string>quantity</string>
                             <string>price</string>
                             <string>_inplacevar_</string>
+                            <string>str</string>
                           </tuple>
                         </value>
                     </item>
@@ -170,6 +172,33 @@ return order_parameter_dict\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>WebSite_getPaypalOrderParameterDict</string> </value>
+        </item>
+        <item>
+            <key> <string>isIndexable</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="PropertyGetter" module="Products.ERP5Type.Accessor.Constant"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>__name__</string> </key>
+                        <value> <string>isIndexable</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_id</string> </key>
+                        <value> <string>isIndexable</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>value</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

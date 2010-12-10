@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -37,7 +34,7 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <tal:block tal:define="shopping_cart           here/SaleOrder_getShoppingCart;\n
                        shopping_cart_item_list shopping_cart/SaleOrder_getShoppingCartItemList;\n
@@ -49,7 +46,7 @@
                        taxes_amount            python: float(shopping_cart.SaleOrder_getShoppingCartTotalPrice(include_taxes=True, include_shipping=True)) -\n
                                                        float(shopping_cart.SaleOrder_getShoppingCartTotalPrice(include_shipping=True));\n
                        shipping                here/SaleOrder_getSelectedShippingResource;\n
-                       shipping_price          python: here.restrictedTraverse(shipping).getPrice();\n
+                       shipping_price          python: shipping.getPrice();\n
                        paypal_method           python: \'_express-checkout\';\n
                        test_env                python: True;\n
                        test_base_url           python: \'http://www.dentra.net:9080/erp5\';\n
@@ -129,7 +126,7 @@
   </tal:block>\n
 </tal:block>
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -144,8 +141,12 @@
             <value> <string>SaleOrder_viewPaypalForm</string> </value>
         </item>
         <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string>Paypal button for external payment</string> </value>
+            <value> <unicode>Paypal button for external payment</unicode> </value>
         </item>
       </dictionary>
     </pickle>

@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -192,7 +189,9 @@
             <value> <string>shopping_cart = context.SaleOrder_getShoppingCart()\n
 shipping_method = getattr(shopping_cart, \'shipping_method\', None)\n
 if shipping_method is not None:\n
-  return shipping_method.getResource()\n
+  return shipping_method.getResourceValue()\n
+else:\n
+  return None\n
 </string> </value>
         </item>
         <item>
@@ -261,6 +260,33 @@ if shipping_method is not None:\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>SaleOrder_getSelectedShippingResource</string> </value>
+        </item>
+        <item>
+            <key> <string>isIndexable</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="PropertyGetter" module="Products.ERP5Type.Accessor.Constant"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>__name__</string> </key>
+                        <value> <string>isIndexable</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_id</string> </key>
+                        <value> <string>isIndexable</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>value</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>

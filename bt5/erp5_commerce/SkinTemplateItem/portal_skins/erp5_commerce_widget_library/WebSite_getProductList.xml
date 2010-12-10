@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -61,7 +58,9 @@
 from random import choice\n
 \n
 web_site = context.getWebSiteValue() or context.REQUEST.get(\'current_web_site\')\n
-kw[\'portal_type\'] = \'Product\'\n
+\n
+if not kw.has_key(\'portal_type\'):\t \t \n
+  kw[\'portal_type\'] = \'Product\'\n
 \n
 # Getting all the products from all the visible Web Section.\n
 product_dict = {}\n
@@ -153,8 +152,7 @@ return product_list\n
                             <string>random_uid_list</string>
                             <string>key_list</string>
                             <string>random_uid</string>
-                            <string>append</string>
-                            <string>$append0</string>
+                            <string>$list0</string>
                             <string>uid</string>
                             <string>product_list</string>
                           </tuple>

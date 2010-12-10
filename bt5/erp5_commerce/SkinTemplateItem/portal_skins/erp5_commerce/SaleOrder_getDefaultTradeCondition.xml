@@ -50,28 +50,14 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>#TODO : USE CACHE\n
-#the goal of this script is to get all the related product of this section\n
-current_web_section = context.REQUEST.get(\'current_web_section\', context)\n
-product_list = []\n
+            <value> <string>"""Return the default trade condition"""\n
+default = "sale_trade_condition_module/default_trade_condition"\n
 \n
-if not kw.has_key(\'portal_type\'):\n
-  kw[\'portal_type\'] = \'Product\'\n
-\t\t \n
-if not kw.has_key(\'limit\'):\t\t \n
-  kw[\'limit\'] = limit\t\t \n
-\t\t \n
-if not kw.has_key(\'all_versions\'):\t\t \n
-  kw[\'all_versions\'] = 1\t\t \n
-\t\t \n
-if not kw.has_key(\'all_languages\'):\t\t \n
-  kw[\'all_languages\'] = 1\t\t \n
-\t\t \n
-for key in [\'limit\',\'all_versions\',\'all_languages\']:\t\t \n
-  kw[key] = int(kw[key])\t\t \n
-\t\t \n
-product_list = current_web_section.getDocumentValueList(**kw)\n
-return product_list\n
+website = context.getWebSiteValue()\n
+if website:\n
+  default = website.getLayoutProperty(\'ecommerce_default_trade_condition\', default)\n
+\n
+return context.getPortalObject().restrictedTraverse(default)\n
 </string> </value>
         </item>
         <item>
@@ -82,24 +68,7 @@ return product_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>limit=1000, **kw</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
-                <string>Authenticated</string>
-                <string>Author</string>
-                <string>Manager</string>
-                <string>Member</string>
-                <string>Owner</string>
-                <string>Reviewer</string>
-              </tuple>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -119,24 +88,16 @@ return product_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>limit</string>
-                            <string>kw</string>
+                            <string>default</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>current_web_section</string>
-                            <string>product_list</string>
-                            <string>_write_</string>
-                            <string>_getiter_</string>
-                            <string>key</string>
-                            <string>int</string>
-                            <string>_getitem_</string>
-                            <string>_apply_</string>
+                            <string>website</string>
                           </tuple>
                         </value>
                     </item>
@@ -148,14 +109,12 @@ return product_list\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <int>1000</int>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSection_getProductList</string> </value>
+            <value> <string>SaleOrder_getDefaultTradeCondition</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

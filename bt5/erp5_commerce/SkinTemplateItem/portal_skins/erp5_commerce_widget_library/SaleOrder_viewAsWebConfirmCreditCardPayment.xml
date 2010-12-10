@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ERP5Form" module="Products.ERP5Form.Form"/>
-        <tuple/>
-      </tuple>
+      <global name="ERP5Form" module="Products.ERP5Form.Form"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -83,9 +80,7 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list>
-                        <string>shipping</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -95,6 +90,7 @@
                         <string>fake_form</string>
                         <string>submit</string>
                         <string>fake_payment</string>
+                        <string>shipping</string>
                       </list>
                     </value>
                 </item>

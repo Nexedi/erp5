@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -37,7 +34,7 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <tal:block tal:define="shipping here/SaleOrder_getSelectedShippingResource;\n
                        web_site here/getWebSiteValue;">\n
@@ -55,12 +52,11 @@
     </p>\n
   </tal:block>\n
 \n
-  <tal:block tal:condition="python: shipping is not None"\n
-             tal:define="shipping_obj python: here.restrictedTraverse(shipping);">\n
+  <tal:block tal:condition="python: shipping is not None">\n
     <p>\n
       <span tal:replace="shipping_obj/getTitle"/> : \n
       <b>\n
-        <span tal:replace="shipping_obj/getPrice"/>\n
+        <span tal:replace="shipping/getPrice"/>\n
         <span tal:replace="python: web_site.WebSite_getShoppingCartDefaultCurrency().getTitle()"/>\n
       </b>\n
     </p>\n
@@ -68,7 +64,7 @@
 </tal:block>\n
 
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -83,8 +79,12 @@
             <value> <string>SaleOrder_viewShippingRenderer</string> </value>
         </item>
         <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string>Shipping method custom renderer</string> </value>
+            <value> <unicode>Shipping method custom renderer</unicode> </value>
         </item>
       </dictionary>
     </pickle>

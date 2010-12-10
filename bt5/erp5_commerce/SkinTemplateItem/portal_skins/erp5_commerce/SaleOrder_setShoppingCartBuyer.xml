@@ -50,28 +50,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>#TODO : USE CACHE\n
-#the goal of this script is to get all the related product of this section\n
-current_web_section = context.REQUEST.get(\'current_web_section\', context)\n
-product_list = []\n
+            <value> <string>"""Set connected user as shopping cart customer"""\n
+shopping_cart = context.SaleOrder_getShoppingCart()\n
 \n
-if not kw.has_key(\'portal_type\'):\n
-  kw[\'portal_type\'] = \'Product\'\n
-\t\t \n
-if not kw.has_key(\'limit\'):\t\t \n
-  kw[\'limit\'] = limit\t\t \n
-\t\t \n
-if not kw.has_key(\'all_versions\'):\t\t \n
-  kw[\'all_versions\'] = 1\t\t \n
-\t\t \n
-if not kw.has_key(\'all_languages\'):\t\t \n
-  kw[\'all_languages\'] = 1\t\t \n
-\t\t \n
-for key in [\'limit\',\'all_versions\',\'all_languages\']:\t\t \n
-  kw[key] = int(kw[key])\t\t \n
-\t\t \n
-product_list = current_web_section.getDocumentValueList(**kw)\n
-return product_list\n
+if person is None:\n
+  person = shopping_cart.SaleOrder_getShoppingCartCustomer()\n
+\n
+shopping_cart.edit(destination_decision_value=person)\n
 </string> </value>
         </item>
         <item>
@@ -82,23 +67,12 @@ return product_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>limit=1000, **kw</string> </value>
+            <value> <string>person=None</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
             <value>
-              <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
-                <string>Authenticated</string>
-                <string>Author</string>
-                <string>Manager</string>
-                <string>Member</string>
-                <string>Owner</string>
-                <string>Reviewer</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -125,18 +99,11 @@ return product_list\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>limit</string>
-                            <string>kw</string>
+                            <string>person</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>current_web_section</string>
-                            <string>product_list</string>
-                            <string>_write_</string>
-                            <string>_getiter_</string>
-                            <string>key</string>
-                            <string>int</string>
-                            <string>_getitem_</string>
-                            <string>_apply_</string>
+                            <string>shopping_cart</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
@@ -149,13 +116,17 @@ return product_list\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <int>1000</int>
+                <none/>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSection_getProductList</string> </value>
+            <value> <string>SaleOrder_setShoppingCartBuyer</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Set shopping cart customer object</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

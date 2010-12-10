@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -66,8 +63,11 @@ if parameter_dict[\'ACK\'] != \'Success\':\n
 if parameter_dict[\'PAYERID\'] != payer_id:\n
   return "Identification failed.2 : %s" % parameter_dict[\'PAYERID\']\n
 \n
-context.Base_redirect(\'SaleOrder_viewAsWeb\', \\\n
-                       keep_items={\'portal_status_message\':translateString("Your paypal account is authentificated.", mapping = dict()),\n
+#redirect user to the checkout section\n
+website = context.getWebSiteValue() \n
+section_url = website.getLayoutProperty(\'ecommerce_checkout_section_id\',"checkout")\n
+website.Base_redirect(section_url, \\\n
+                       keep_items={\'portal_status_message\':translateString("The payment procedure went well on Paypal."),\n
                                       \'token\':token})\n
 </string> </value>
         </item>
@@ -112,7 +112,8 @@ context.Base_redirect(\'SaleOrder_viewAsWeb\', \\\n
                             <string>payer_id</string>
                             <string>parameter_dict</string>
                             <string>_getitem_</string>
-                            <string>dict</string>
+                            <string>website</string>
+                            <string>section_url</string>
                           </tuple>
                         </value>
                     </item>
@@ -130,6 +131,33 @@ context.Base_redirect(\'SaleOrder_viewAsWeb\', \\\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>WebSection_checkPaypalIdentification</string> </value>
+        </item>
+        <item>
+            <key> <string>isIndexable</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="PropertyGetter" module="Products.ERP5Type.Accessor.Constant"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>__name__</string> </key>
+                        <value> <string>isIndexable</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_id</string> </key>
+                        <value> <string>isIndexable</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>value</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

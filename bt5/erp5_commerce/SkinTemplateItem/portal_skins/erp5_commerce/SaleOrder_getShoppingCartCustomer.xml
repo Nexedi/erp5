@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -53,9 +50,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># based on current Authenticated Member this script must return\n
-# the Person object\n
-return context.getPortalObject().ERP5Site_getAuthenticatedMemberPersonValue()\n
+            <value> <string>"""Get the shopping cart customer"""\n
+shopping_cart = context.SaleOrder_getShoppingCart()\n
+return shopping_cart.getDestinationSectionValue()\n
 </string> </value>
         </item>
         <item>
@@ -100,6 +97,7 @@ return context.getPortalObject().ERP5Site_getAuthenticatedMemberPersonValue()\n
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>shopping_cart</string>
                           </tuple>
                         </value>
                     </item>
@@ -117,6 +115,33 @@ return context.getPortalObject().ERP5Site_getAuthenticatedMemberPersonValue()\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>SaleOrder_getShoppingCartCustomer</string> </value>
+        </item>
+        <item>
+            <key> <string>isIndexable</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="PropertyGetter" module="Products.ERP5Type.Accessor.Constant"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>__name__</string> </key>
+                        <value> <string>isIndexable</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_id</string> </key>
+                        <value> <string>isIndexable</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>value</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>

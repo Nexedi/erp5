@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -198,7 +195,10 @@
     - B2P in EU, tax\n
 """\n
 \n
-return {context.Base_translateString(\'VAT\'): 20.0,}\n
+return {\'VAT\': {\'translated_title\':context.Base_translateString(\'VAT\'),\n
+                \'percent\': 19.6,\n
+               },\n
+       }\n
 </string> </value>
         </item>
         <item>
@@ -263,6 +263,33 @@ return {context.Base_translateString(\'VAT\'): 20.0,}\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>Person_getApplicableTaxList</string> </value>
+        </item>
+        <item>
+            <key> <string>isIndexable</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="PropertyGetter" module="Products.ERP5Type.Accessor.Constant"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>__name__</string> </key>
+                        <value> <string>isIndexable</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_id</string> </key>
+                        <value> <string>isIndexable</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>value</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>

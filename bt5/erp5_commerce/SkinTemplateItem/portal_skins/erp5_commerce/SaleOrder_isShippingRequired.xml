@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -189,13 +186,23 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>\'\'\'\n
-  XXX: implement this check based on shopping cart content\n
-  for example if we sell online products there\'s no shipping. \n
+            <value> <string encoding="cdata"><![CDATA[
+
 \'\'\'\n
+If all product have no Weight, it don\'t need to be sheep. \n
+\'\'\'\n
+return False\n
+shopping_cart_items = context.SaleOrder_getShoppingCartItemList()\n
 \n
-return 1\n
-</string> </value>
+weight = 0\n
+for order_line in shopping_cart_items:\n
+  resource = order_line.getResourceValue()\n
+  weight  += resource.getBaseWeight(0)\n
+\n
+return weight > 0\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -239,7 +246,17 @@ return 1\n
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
-                          <tuple/>
+                          <tuple>
+                            <string>False</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>shopping_cart_items</string>
+                            <string>weight</string>
+                            <string>_getiter_</string>
+                            <string>order_line</string>
+                            <string>resource</string>
+                            <string>_inplacevar_</string>
+                          </tuple>
                         </value>
                     </item>
                   </dictionary>
@@ -256,6 +273,33 @@ return 1\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>SaleOrder_isShippingRequired</string> </value>
+        </item>
+        <item>
+            <key> <string>isIndexable</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="PropertyGetter" module="Products.ERP5Type.Accessor.Constant"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>__name__</string> </key>
+                        <value> <string>isIndexable</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_id</string> </key>
+                        <value> <string>isIndexable</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>value</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>

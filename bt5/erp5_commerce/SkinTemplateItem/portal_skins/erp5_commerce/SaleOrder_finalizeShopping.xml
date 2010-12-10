@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -199,34 +196,45 @@ web_site = context.getWebSiteValue()\n
 isAnon = context.portal_membership.isAnonymousUser()\n
 translateString = context.Base_translateString\n
 shopping_cart = context.SaleOrder_getShoppingCart()\n
-shopping_cart_item_list = context.SaleOrder_getShoppingCartItemList(include_shipping=True)\n
-customer = context.SaleOrder_getShoppingCartCustomer()\n
+shopping_cart_item_list = shopping_cart.SaleOrder_getShoppingCartItemList(include_shipping=True)\n
+customer = shopping_cart.SaleOrder_getShoppingCartCustomer()\n
+buyer = shopping_cart.SaleOrder_getShoppingCartBuyer()\n
 \n
 if isAnon:\n
   # create first an account for user\n
   msg = translateString("You need to create an account to continue. If you already have please login.")\n
-  web_site.Base_redirect(\'register\', \\\n
+  web_site.Base_redirect(\'login_form\', \\\n
                       keep_items={\'portal_status_message\': msg})\n
   return\n
 \n
-# XXX: Implement check if payment is sucessfull\n
-sale_order_module = context.getPortalObject().sale_order_module\n
-sale_order = sale_order_module.newContent(portal_type=\'Sale Order\')\n
-sale_order.setDestination(customer.getRelativeUrl())\n
-sale_order.setDestinationSection(customer.getRelativeUrl())\n
-sale_order.setStartDate(DateTime())\n
-sale_order.setReceivedDate(DateTime())\n
-sale_order.setComment(shopping_cart.getComment())\n
+#Check if payment is sucessfull\n
+if buyer is None:\n
+  raise ValueError, "Impossible to finalize and order not payed"\n
 \n
-# set order default currency\n
-sale_order.setDefaultPriceCurrency(web_site.WebSite_getShoppingCartDefaultCurrency().getRelativeUrl())\n
+portal_type = "Sale %s" % shopping_cart.getPortalType()\n
+module = context.getDefaultModule(portal_type)\n
+sale_order = module.newContent(portal_type=portal_type,\n
+                                          destination_value = customer,\n
+                                          destination_section_value = customer,\n
+                                          destination_decision_value = customer,\n
+                                          source_section_value = buyer,\n
+                                          source_value = buyer,\n
+                                          start_date = DateTime(),\n
+                                          received_date = DateTime(),\n
+                                          comment = shopping_cart.getComment(),\n
+                                          # set order default currency,\n
+                                          default_price_currency = web_site.WebSite_getShoppingCartDefaultCurrency().getRelativeUrl(),\n
+                                          # set trade condition\n
+                                          specialise_value = web_site.SaleOrder_getDefaultTradeCondition()\n
+                                          )\n
 \n
 for order_line in shopping_cart_item_list:\n
-  resource = context.restrictedTraverse(order_line.getResource())\n
-  sale_order.newContent(portal_type = \'Sale Order Line\',\n
+  resource = order_line.getResourceValue()\n
+  sale_order.newContent(portal_type = order_line.getPortalType(),\n
                         resource = order_line.getResource(),\n
+                        aggregate_list = order_line.getAggregateList(),\n
                         quantity = order_line.getQuantity(),\n
-                        price = resource.getPrice(),\n
+                        price = order_line.getPrice(),\n
                         title = resource.getTitle())\n
 \n
 # order it\n
@@ -289,8 +297,12 @@ context.Base_redirect(\'SaleOrder_viewThankYouMessage\')\n
                             <string>True</string>
                             <string>shopping_cart_item_list</string>
                             <string>customer</string>
+                            <string>buyer</string>
                             <string>msg</string>
-                            <string>sale_order_module</string>
+                            <string>None</string>
+                            <string>ValueError</string>
+                            <string>portal_type</string>
+                            <string>module</string>
                             <string>sale_order</string>
                             <string>_getiter_</string>
                             <string>order_line</string>
@@ -312,6 +324,33 @@ context.Base_redirect(\'SaleOrder_viewThankYouMessage\')\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>SaleOrder_finalizeShopping</string> </value>
+        </item>
+        <item>
+            <key> <string>isIndexable</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="PropertyGetter" module="Products.ERP5Type.Accessor.Constant"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>__name__</string> </key>
+                        <value> <string>isIndexable</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_id</string> </key>
+                        <value> <string>isIndexable</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>value</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>

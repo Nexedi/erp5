@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -61,7 +58,7 @@
 #get live description\n
 web_page = portal.portal_catalog(portal_type=\'Web Page\',\n
                                  default_follow_up_uid=context.getUid(),\n
-                                 default_publication_section_uid=context.restrictedTraverse(\'portal_categories/publication_section/pamphlet/web/short\').getUid(),\n
+                                 default_publication_section_uid=context.restrictedTraverse(\'portal_categories/publication_section/website/product/short_description\').getUid(),\n
                                  #src__=1,\n
                                  )\n
 if web_page is None or len(web_page) == 0:\n
@@ -132,6 +129,33 @@ return web_page[0].getObject().asStrippedHTML()\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>Product_getRelatedDescription</string> </value>
+        </item>
+        <item>
+            <key> <string>isIndexable</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="PropertyGetter" module="Products.ERP5Type.Accessor.Constant"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>__name__</string> </key>
+                        <value> <string>isIndexable</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_id</string> </key>
+                        <value> <string>isIndexable</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>value</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

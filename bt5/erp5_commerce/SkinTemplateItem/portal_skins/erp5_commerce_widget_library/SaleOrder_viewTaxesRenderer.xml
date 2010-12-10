@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -37,7 +34,7 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <tal:block tal:define="shipping here/SaleOrder_getSelectedShippingResource;\n
                        tax_info here/Person_getApplicableTaxList;\n
@@ -51,8 +48,8 @@
     <div tal:condition="python: tax_info is not None">\n
       <p><span tal:replace="python: here.Base_translateString(\'For your location the following taxes are applicable\')"/> :</p>\n
         <ul>\n
-          <tal:block tal:repeat="tax_name python: tax_info.keys()">\n
-            <b><li tal:content="python: \'%s (%s %s)\' %(tax_name, tax_info[tax_name], \'%\')">item </li></b>\n
+          <tal:block tal:repeat="tax python: tax_info.values()">\n
+            <b><li tal:content="python: \'%s (%s %s)\' %(tax[\'translated_title\'], tax[\'percent\'], \'%\')">item </li></b>\n
           </tal:block>\n
         </ul>\n
     </div>\n
@@ -69,7 +66,7 @@
 </tal:block>\n
 
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -84,8 +81,12 @@
             <value> <string>SaleOrder_viewTaxesRenderer</string> </value>
         </item>
         <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string>Taxes custom renderer</string> </value>
+            <value> <unicode>Taxes custom renderer</unicode> </value>
         </item>
       </dictionary>
     </pickle>

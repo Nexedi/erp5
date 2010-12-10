@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -53,7 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return \'%s/%s\' % (context.getRelativeUrl(), \'Resource_viewAsShop\')\n
+            <value> <string>return \'%s/%s\' % (context.getAbsoluteUrl(), \'Resource_viewAsShop\')\n
 </string> </value>
         </item>
         <item>

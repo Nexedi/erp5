@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ERP5Form" module="Products.ERP5Form.Form"/>
-        <tuple/>
-      </tuple>
+      <global name="ERP5Form" module="Products.ERP5Form.Form"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -92,6 +89,7 @@
                         <string>my_ecommerce_product_list</string>
                         <string>my_ecommerce_base_currency</string>
                         <string>my_ecommerce_payment_mode_list</string>
+                        <string>my_ecommerce_default_trade_condition</string>
                       </list>
                     </value>
                 </item>

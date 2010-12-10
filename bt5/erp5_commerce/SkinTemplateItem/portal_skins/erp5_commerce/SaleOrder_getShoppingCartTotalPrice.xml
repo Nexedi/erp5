@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -77,8 +74,8 @@ for order_line in shopping_cart_item_list:\n
 if include_taxes:\n
   tax_info = context.Person_getApplicableTaxList()\n
   if tax_info is not None:\n
-    for tax_name, tax_percent in tax_info.items():\n
-      total += total*(tax_percent/100)\n
+    for tax in tax_info.values():\n
+      total += total*(tax[\'percent\']/100)\n
     \n
 if include_currency:\n
   currency = web_site.WebSite_getShoppingCartDefaultCurrency()\n
@@ -143,8 +140,8 @@ else:\n
                             <string>None</string>
                             <string>_inplacevar_</string>
                             <string>tax_info</string>
-                            <string>tax_name</string>
-                            <string>tax_percent</string>
+                            <string>tax</string>
+                            <string>_getitem_</string>
                             <string>currency</string>
                             <string>str</string>
                           </tuple>
@@ -168,6 +165,33 @@ else:\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>SaleOrder_getShoppingCartTotalPrice</string> </value>
+        </item>
+        <item>
+            <key> <string>isIndexable</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="PropertyGetter" module="Products.ERP5Type.Accessor.Constant"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>__name__</string> </key>
+                        <value> <string>isIndexable</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_id</string> </key>
+                        <value> <string>isIndexable</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>value</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>

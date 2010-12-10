@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -56,7 +53,11 @@
             <value> <string>""" \n
   Return reference of the default currency used in Shopping Cart.\n
 """\n
-return context.getWebSiteValue().WebSite_getShoppingCartDefaultCurrency().getReference()\n
+website = context.getWebSiteValue()\n
+if website:\n
+  return website.WebSite_getShoppingCartDefaultCurrency().getReference()\n
+else:\n
+  return \'\'\n
 </string> </value>
         </item>
         <item>
@@ -101,6 +102,7 @@ return context.getWebSiteValue().WebSite_getShoppingCartDefaultCurrency().getRef
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>website</string>
                           </tuple>
                         </value>
                     </item>
@@ -118,6 +120,33 @@ return context.getWebSiteValue().WebSite_getShoppingCartDefaultCurrency().getRef
         <item>
             <key> <string>id</string> </key>
             <value> <string>WebSite_getShoppingCartDefaultCurrencyCode</string> </value>
+        </item>
+        <item>
+            <key> <string>isIndexable</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="PropertyGetter" module="Products.ERP5Type.Accessor.Constant"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>__name__</string> </key>
+                        <value> <string>isIndexable</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_id</string> </key>
+                        <value> <string>isIndexable</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>value</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>

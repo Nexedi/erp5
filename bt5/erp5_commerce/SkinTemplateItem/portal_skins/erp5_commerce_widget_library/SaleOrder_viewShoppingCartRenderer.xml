@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -37,7 +34,7 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <tal:block tal:define="shopping_cart here/SaleOrder_getShoppingCart;\n
                        web_site here/getWebSiteValue;\n
@@ -114,9 +111,8 @@
         <td></td>\n
         <td class="used"><span tal:replace="python: here.Base_translateString(\'Shipping Price\')"/></td>\n
         <td class="used" style="vertical-align=middle;">\n
-            <tal:block tal:condition="python: shipping is not None"\n
-                       tal:define="shipping_obj python: here.restrictedTraverse(shipping);">\n
-              <b><span tal:replace="python: \'%s %s\' % (shipping_obj.getPrice(), currency_code)"/></b>\n
+            <tal:block tal:condition="python: shipping is not None">\n
+              <b><span tal:replace="python: \'%s %s\' % (shipping.getPrice(), currency_code)"/></b>\n
             </tal:block>\n
             <tal:block tal:condition="python: shipping is None">\n
                 <b>\n
@@ -131,15 +127,12 @@
         <td></td>\n
         <td class="used"><span tal:replace="python: here.Base_translateString(\'Total HT\')"/></td>\n
         <td class="used" style="vertical-align=middle;">\n
-            <tal:block tal:define="shipping_obj python: here.restrictedTraverse(shipping);">\n
-              <b><span tal:replace="python: \'%s %s\' % (float(total_price) + shipping_obj.getPrice(), currency_code)"/></b>\n
-            </tal:block>\n
+              <b><span tal:replace="python: \'%s %s\' % (float(total_price) + shipping.getPrice(), currency_code)"/></b>\n
          </td>\n
       </tr>\n
       <tr class="shopping_cart_end_lines"\n
           tal:condition="python: shipping is not None"\n
-          tal:define="shipping here/SaleOrder_getSelectedShippingResource;\n
-                      total_price python: here.SaleOrder_getShoppingCartTotalPrice(include_shipping=True, \n
+          tal:define="total_price python: here.SaleOrder_getShoppingCartTotalPrice(include_shipping=True, \n
                                                                                    include_taxes=True,\n
                                                                                    include_currency=True);">\n
         <td></td>\n
@@ -169,8 +162,8 @@
              tal:define="tax_info here/Person_getApplicableTaxList">\n
     <p tal:condition="python: tax_info is not None">\n
       <span tal:replace="python: here.Base_translateString(\'* Applicable taxes\')"/> :\n
-      <tal:block tal:repeat="tax_name python: tax_info.keys()">\n
-        <span tal:content="python: \'%s (%s %s)\' %(tax_name, tax_info[tax_name], \'%\')">item </span>\n
+      <tal:block tal:repeat="tax python: tax_info.values()">\n
+        <span tal:content="python: \'%s (%s %s)\' %(tax[\'translated_title\'], tax[\'percent\'], \'%\')">item </span>\n
       </tal:block>\n
     </p>\n
     <p tal:condition="python: tax_info is None">\n
@@ -182,7 +175,7 @@
 </tal:block>\n
 
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -197,8 +190,12 @@
             <value> <string>SaleOrder_viewShoppingCartRenderer</string> </value>
         </item>
         <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string>Edit/Review shopping cart content custom renderer</string> </value>
+            <value> <unicode>Edit/Review shopping cart content custom renderer</unicode> </value>
         </item>
       </dictionary>
     </pickle>
