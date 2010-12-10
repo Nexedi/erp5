@@ -520,7 +520,7 @@ msgid "Actions"
 msgstr "Actions"
 
 msgid "Active"
-msgstr "Statut"
+msgstr "Actif"
 
 msgid "Active Preference"
 msgstr "Préférence active"
