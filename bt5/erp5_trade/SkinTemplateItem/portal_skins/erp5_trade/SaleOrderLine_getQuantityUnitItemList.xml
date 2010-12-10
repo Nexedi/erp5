@@ -61,6 +61,7 @@ base_category = portal.portal_categories.quantity_unit\n
 list_method_id = portal.portal_preferences.\\\n
     getPreferredCategoryChildItemListMethodId(\n
                                   \'getCategoryChildCompactLogicalPathItemList\')\n
+\n
 method = getattr(base_category, list_method_id)\n
 item_list = method(base=0, local_sort_id=(\'int_index\', \'translated_title\'),\n
                    checked_permission=\'View\')\n
@@ -103,7 +104,7 @@ if resource_value is None:\n
       resource_value = resource_list[0]\n
 \n
 if resource_value is not None:\n
- quantity_unit_list = [(x.getLogicalPath(), x.getCategoryRelativeUrl(base=0))\n
+ quantity_unit_list = [(x.getTranslatedLogicalPath(), x.getCategoryRelativeUrl(base=0))\n
                        for x in resource_value.getQuantityUnitValueList()]\n
  # return the first quantity_unit item of resource\n
  result_item_list.extend(quantity_unit_list)\n
