@@ -9,7 +9,9 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>first_item</string>
+              </list>
             </value>
         </item>
         <item>
@@ -72,6 +74,10 @@
                 <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_view_mode_listbox_resource_relative_url</string> </value>
+                </item>
+                <item>
+                    <key> <string>first_item</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
