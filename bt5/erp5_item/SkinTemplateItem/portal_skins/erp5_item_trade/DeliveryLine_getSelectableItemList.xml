@@ -53,7 +53,6 @@
             <value> <string>from Products.ERP5Type.Document import newTempBase\n
 from Products.ERP5Type.Utils import cartesianProduct\n
 portal = context.getPortalObject()\n
-request = portal.REQUEST\n
 \n
 tracking_parameters = {\n
     \'node_uid\': context.getSourceUid(),\n
@@ -61,9 +60,10 @@ tracking_parameters = {\n
     \'at_date\': context.getStartDate(),\n
     \'output\': 1,\n
 \n
-    \'item_catalog_title\': request.get(\'title\') or \'\',\n
-    \'item_catalog_reference\': request.get(\'reference\') or \'\',\n
-    \'item_catalog_portal_type\': request.get(\'portal_type\') or \'\',\n
+    \'item_catalog_title\': kw.get(\'title\') or \'\',\n
+    \'item_catalog_reference\': kw.get(\'reference\') or \'\',\n
+    \'item_catalog_portal_type\': kw.get(\'portal_type\') or \'\',\n
+    \'item_catalog_validation_state\': kw.get(\'validation_state\') or \'\',\n
 }\n
 \n
 \n
@@ -132,7 +132,6 @@ return result_list\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
-                            <string>request</string>
                             <string>tracking_parameters</string>
                             <string>bool</string>
                             <string>check_variation</string>
