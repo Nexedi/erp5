@@ -2261,6 +2261,59 @@ if python_version >= '2.6':
         'openssl',
         'zlib',
         ])
+# tests for Zope-8 buildout only
+elif python_version == '2.4':
+  class AssertPython24(AssertSoftwareMixin):
+    # .1 could be read from current buildout
+    parts_name = 'rebootstrap.1.parts'
+    python_path = parts_name + '/python%s' % python_version
+    rpath_list = [
+        'bzip2',
+        'gdbm',
+        'gettext',
+        'libdb',
+        'ncurses',
+        'openssl',
+        'readline',
+        'sqlite3',
+        'zlib',
+        ]
+    def test_ld_dyn_bsddb(self):
+      self.assertLibraryList(self.python_path+'/lib/python%s/lib-dynload/_bsddb.so' % python_version, [
+        'libc',
+        'libdb-4.5',
+        'libpthread',
+        ], self.rpath_list)
+    def test_ld_dyn_dbm(self):
+      self.assertLibraryList(self.python_path+'/lib/python%s/lib-dynload/dbm.so' % python_version, [
+        'libc',
+        'libgdbm',
+        'libgdbm_compat',
+        'libpthread',
+        ], self.rpath_list)
+    def test_ld_dyn_locale(self):
+      self.assertLibraryList(self.python_path+'/lib/python%s/lib-dynload/_locale.so' % python_version, [
+        'libc',
+        'libintl',
+        'libpthread',
+        ], self.rpath_list)
+    def test_ld_dyn_readline(self):
+      self.assertLibraryList(self.python_path+'/lib/python%s/lib-dynload/readline.so' % python_version, [
+        'libc',
+        'libncurses',
+        'libreadline',
+        'libpthread',
+        ], self.rpath_list)
+    def test_ld_dyn_ssl(self):
+      self.assertLibraryList(self.python_path+'/lib/python%s/lib-dynload/_ssl.so' % python_version, [
+        'libc',
+        'libssl',
+        'libcrypto',
+        'libpthread',
+        ], self.rpath_list)
+    def test_no_failed_ext_lib(self):
+      self.assertEquals([],
+                        glob(self.python_path+'/lib/python%s/lib-dynload/*_failed.so' % python_version))
 
 class AssertElfLinkedInternally(AssertSoftwareMixin):
   def test(self):
