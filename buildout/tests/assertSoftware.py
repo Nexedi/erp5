@@ -42,6 +42,8 @@ except NameError:
         return True
     return False
 
+python_version = '%s.%s' % util.sys.version_info[0:2]
+
 # List of libraries which are acceptable to be linked in globally
 ACCEPTABLE_GLOBAL_LIB_LIST = (
   # 32 bit Linux
@@ -138,9 +140,8 @@ def readLddInfoList(f):
   return link_list
 
 class AssertSoftwareMixin(unittest.TestCase):
-  python_version = '2.6'
   def getDevelopEggName(self, name, version):
-    return '%s-%s-py%s-%s.egg' % (name, version, self.python_version,
+    return '%s-%s-py%s-%s.egg' % (name, version, python_version,
                                 util.get_platform())
 
   def assertEqual(self, first, second, msg=None):
@@ -1121,64 +1122,6 @@ class AssertCyrusSasl(AssertSoftwareMixin):
       ], [
       ])
 
-class AssertPython26(AssertSoftwareMixin):
-  # .1 could be read from current buildout
-  parts_name = 'rebootstrap.1.parts'
-  python_path = parts_name + '/python2.6'
-  rpath_list = [
-      'bzip2',
-      'gdbm',
-      'gettext',
-      'libdb',
-      'ncurses',
-      'openssl',
-      'readline',
-      'sqlite3',
-      'zlib',
-      ]
-  def test_ld_dyn_bsddb(self):
-    self.assertLibraryList(self.python_path+'/lib/python2.6/lib-dynload/_bsddb.so', [
-      'libc',
-      'libdb-4.5',
-      'libpthread',
-      ], self.rpath_list)
-  def test_ld_dyn_dbm(self):
-    self.assertLibraryList(self.python_path+'/lib/python2.6/lib-dynload/dbm.so', [
-      'libc',
-      'libgdbm',
-      'libgdbm_compat',
-      'libpthread',
-      ], self.rpath_list)
-  def test_ld_dyn_locale(self):
-    self.assertLibraryList(self.python_path+'/lib/python2.6/lib-dynload/_locale.so', [
-      'libc',
-      'libintl',
-      'libpthread',
-      ], self.rpath_list)
-  def test_ld_dyn_readline(self):
-    self.assertLibraryList(self.python_path+'/lib/python2.6/lib-dynload/readline.so', [
-      'libc',
-      'libncursesw',
-      'libreadline',
-      'libpthread',
-      ], self.rpath_list)
-  def test_ld_dyn_sqlite3(self):
-    self.assertLibraryList(self.python_path+'/lib/python2.6/lib-dynload/_sqlite3.so', [
-      'libc',
-      'libsqlite3',
-      'libpthread',
-      ], self.rpath_list)
-  def test_ld_dyn_ssl(self):
-    self.assertLibraryList(self.python_path+'/lib/python2.6/lib-dynload/_ssl.so', [
-      'libc',
-      'libssl',
-      'libcrypto',
-      'libpthread',
-      ], self.rpath_list)
-  def test_no_failed_ext_lib(self):
-    self.assertEquals([],
-                      glob(self.python_path+'/lib/python2.6/lib-dynload/*_failed.so'))
-
 class AssertGettext(AssertSoftwareMixin):
   def test_ld_libintl(self):
     self.assertLibraryList('parts/gettext/lib/libintl.so', [
@@ -1582,7 +1525,7 @@ class AssertPysvn(AssertSoftwareMixin):
   def test_ld_pysvn(self):
     self.assertLibraryList('develop-eggs/%s/pysvn/_pysvn_%s.so' % (
       self.getDevelopEggName('pysvn', '1.7.4nxd006'),
-      self.python_version.replace('.', '_')), [
+      python_version.replace('.', '_')), [
       'libc',
       'libgcc_s',
       'libm',
@@ -2136,55 +2079,6 @@ class AssertLibuuid(AssertSoftwareMixin):
       ],
       [])
 
-class AssertCurl(AssertSoftwareMixin):
-  def test_ld_curl(self):
-    self.assertLibraryList('parts/curl/bin/curl', [
-      'libc',
-      'libcurl',
-      'librt',
-      'libz',
-      ], [
-      'curl',
-      'openssl',
-      'zlib',
-      ])
-  def test_ld_libcurl(self):
-    self.assertLibraryList('parts/curl/lib/libcurl.so', [
-      'libc',
-      'libcrypto',
-      'libdl',
-      'librt',
-      'libssl',
-      'libz',
-      ], [
-      'openssl',
-      'zlib',
-      ])
-
-class AssertGit(AssertSoftwareMixin):
-  def test_ld_git(self):
-    self.assertLibraryList('parts/git/bin/git', [
-      'libc',
-      'libcrypto',
-      'libpthread',
-      'libz',
-      ], [
-      'openssl',
-      'zlib',
-      ])
-  def test_ld_git_http_fetch(self):
-    self.assertLibraryList('parts/git/libexec/git-core/git-http-fetch', [
-      'libc',
-      'libcrypto',
-      'libcurl',
-      'libpthread',
-      'libz',
-      ], [
-      'curl',
-      'openssl',
-      'zlib',
-      ])
-
 class AssertGraphviz(AssertSoftwareMixin):
   def test_ld_dot(self):
     self.assertLibraryList('parts/graphviz/bin/dot', [
@@ -2258,6 +2152,115 @@ class AssertM4(AssertSoftwareMixin):
       'libc',
       ], [
       ])
+
+# tests for Zope-2.12 buildout only
+if python_version >= '2.6':
+  class AssertPython26(AssertSoftwareMixin):
+    # .1 could be read from current buildout
+    parts_name = 'rebootstrap.1.parts'
+    python_path = parts_name + '/python%s' % python_version
+    rpath_list = [
+        'bzip2',
+        'gdbm',
+        'gettext',
+        'libdb',
+        'ncurses',
+        'openssl',
+        'readline',
+        'sqlite3',
+        'zlib',
+        ]
+    def test_ld_dyn_bsddb(self):
+      self.assertLibraryList(self.python_path+'/lib/python%s/lib-dynload/_bsddb.so' % python_version, [
+        'libc',
+        'libdb-4.5',
+        'libpthread',
+        ], self.rpath_list)
+    def test_ld_dyn_dbm(self):
+      self.assertLibraryList(self.python_path+'/lib/python%s/lib-dynload/dbm.so' % python_version, [
+        'libc',
+        'libgdbm',
+        'libgdbm_compat',
+        'libpthread',
+        ], self.rpath_list)
+    def test_ld_dyn_locale(self):
+      self.assertLibraryList(self.python_path+'/lib/python%s/lib-dynload/_locale.so' % python_version, [
+        'libc',
+        'libintl',
+        'libpthread',
+        ], self.rpath_list)
+    def test_ld_dyn_readline(self):
+      self.assertLibraryList(self.python_path+'/lib/python%s/lib-dynload/readline.so' % python_version, [
+        'libc',
+        'libncursesw',
+        'libreadline',
+        'libpthread',
+        ], self.rpath_list)
+    def test_ld_dyn_sqlite3(self):
+      self.assertLibraryList(self.python_path+'/lib/python%s/lib-dynload/_sqlite3.so' % python_version, [
+        'libc',
+        'libsqlite3',
+        'libpthread',
+        ], self.rpath_list)
+    def test_ld_dyn_ssl(self):
+      self.assertLibraryList(self.python_path+'/lib/python%s/lib-dynload/_ssl.so' % python_version, [
+        'libc',
+        'libssl',
+        'libcrypto',
+        'libpthread',
+        ], self.rpath_list)
+    def test_no_failed_ext_lib(self):
+      self.assertEquals([],
+                        glob(self.python_path+'/lib/python%s/lib-dynload/*_failed.so' % python_version))
+
+  class AssertCurl(AssertSoftwareMixin):
+    def test_ld_curl(self):
+      self.assertLibraryList('parts/curl/bin/curl', [
+        'libc',
+        'libcurl',
+        'librt',
+        'libz',
+        ], [
+        'curl',
+        'openssl',
+        'zlib',
+        ])
+    def test_ld_libcurl(self):
+      self.assertLibraryList('parts/curl/lib/libcurl.so', [
+        'libc',
+        'libcrypto',
+        'libdl',
+        'librt',
+        'libssl',
+        'libz',
+        ], [
+        'openssl',
+        'zlib',
+        ])
+
+  class AssertGit(AssertSoftwareMixin):
+    def test_ld_git(self):
+      self.assertLibraryList('parts/git/bin/git', [
+        'libc',
+        'libcrypto',
+        'libpthread',
+        'libz',
+        ], [
+        'openssl',
+        'zlib',
+        ])
+    def test_ld_git_http_fetch(self):
+      self.assertLibraryList('parts/git/libexec/git-core/git-http-fetch', [
+        'libc',
+        'libcrypto',
+        'libcurl',
+        'libpthread',
+        'libz',
+        ], [
+        'curl',
+        'openssl',
+        'zlib',
+        ])
 
 class AssertElfLinkedInternally(AssertSoftwareMixin):
   def test(self):
