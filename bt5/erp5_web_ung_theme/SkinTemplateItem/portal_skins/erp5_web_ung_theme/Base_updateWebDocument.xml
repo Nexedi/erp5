@@ -62,7 +62,6 @@ webpage_document.setTextContent(document.asStrippedHTML())\n
 webpage_document.setTitle(document.getTitle())\n
 \n
 if document.getTitle() != webpage_document.getTitle() or document.getId() == webpage_document.getTitle():\n
-  context.log(document.getTitle(), webpage_document.getTitle())\n
   print dumps(dict(status=400))\n
   return printed\n
  \n
