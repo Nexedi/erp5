@@ -51,6 +51,10 @@ function getObjectPropertyValue(method_name){\n
          }).responseText;\n
 }\n
 \n
+function showNotImplementedMessage(tag){\n
+  $(tag).fadeIn(400).delay(1000).slideUp(1000);\n
+}\n
+\n
 function updateWebPage(){\n
   parameterList = getUrlParameterList();\n
   url = "Base_updateWebDocument?document_path=" + parameterList.document_path + "&webpage_path=" + parameterList.webpage_path;\n
@@ -214,16 +218,12 @@ $(document).ready(function(){\n
         $("#edit_document").dialog("open");     \n
     });\n
  $("a#settings, a#help").click(function(event){\n
-   event.preventDefault()\n
-   $("a#right_message").show();\n
+   event.preventDefault();\n
+   showNotImplementedMessage("a#right_message");\n
  });\n
  $("a.calendar, a.email").click(function(event){\n
-   event.preventDefault()  \n
-   $("a#left_message").show();\n
- });\n
- $("a#right_message, a#left_message").click(function(){\n
-   $("a#right_message").hide();\n
-   $("a#left_message").hide();\n
+   event.preventDefault();\n
+   showNotImplementedMessage("a#left_message");\n
  });\n
  return false;\n
 });
