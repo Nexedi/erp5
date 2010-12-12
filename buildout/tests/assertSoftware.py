@@ -1072,10 +1072,6 @@ class AssertApache(AssertSoftwareMixin):
       'libsqlite3',
       ], self.apache_rpath)
 
-class AssertItools(AssertSoftwareMixin):
-  def test_ld_parserso(self):
-    self.assertLibraryList('parts/itools/lib/itools/xml/parser.so', ['libc', 'libglib-2.0', 'libpthread'], ['glib'])
-
 class AssertOpenssl(AssertSoftwareMixin):
   def test_ld_openssl(self):
     self.assertLibraryList('parts/openssl/bin/openssl', ['libc', 'libcrypto', 'libdl', 'libssl'], ['openssl'])
@@ -2213,6 +2209,10 @@ if python_version >= '2.6':
       self.assertEquals([],
                         glob(self.python_path+'/lib/python%s/lib-dynload/*_failed.so' % python_version))
 
+  class AssertItools(AssertSoftwareMixin):
+    def test_ld_parserso(self):
+      self.assertLibraryList('parts/itools/lib/itools/xml/parser.so', ['libc', 'libglib-2.0', 'libpthread'], ['glib'])
+
   class AssertCurl(AssertSoftwareMixin):
     def test_ld_curl(self):
       self.assertLibraryList('parts/curl/bin/curl', [
@@ -2314,6 +2314,11 @@ elif python_version == '2.4':
     def test_no_failed_ext_lib(self):
       self.assertEquals([],
                         glob(self.python_path+'/lib/python%s/lib-dynload/*_failed.so' % python_version))
+
+  class AssertItools(AssertSoftwareMixin):
+    def test_ld_parserso(self):
+      egg_name = self.getDevelopEggName('itools', '0.20.8')
+      self.assertLibraryList('develop-eggs/%s/itools/xml/parser.so' % (egg_name), ['libc', 'libglib-2.0', 'libpthread'], ['glib'])
 
 class AssertElfLinkedInternally(AssertSoftwareMixin):
   def test(self):
