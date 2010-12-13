@@ -110,7 +110,7 @@
   <tal:block tal:condition="is_gadget_mode">\n
     <tal:block tal:define="global box_relative_url python: request.get(\'box_relative_url\', \'\');\n
                            global box python: real_context.restrictedTraverse(box_relative_url); \n
-                           global box_id python: \'visual_%s\' %box_relative_url.split(\'/\')[-1];\n
+                           global box_id python: \'%s_content\' %box_relative_url.replace(\'/\', \'_\');\n
                            global dom_id python: request.get(\'dom_id\',None) or box_id;">\n
       <input tal:condition="python:form_id" \n
              type="hidden" \n
