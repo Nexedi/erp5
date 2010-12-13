@@ -184,7 +184,14 @@ if memcache is not None:
           result = self.memcached_connection.get(encoded_key)
         except memcache.Client.MemcachedConnectionError:
           self._initialiseConnection()
-          result = self.memcached_connection.get(encoded_key)
+          try:
+            result = self.memcached_connection.get(encoded_key)
+          except memcache.Client.MemcachedConnectionError:
+            # maybe the server is not available at all / misconfigured
+            LOG('MemcacheTool', 0,
+                'get command to memcached server (%r) failed'
+                % (self.server_list,))
+            raise KeyError
         self.local_cache[key] = result
       return result
 
