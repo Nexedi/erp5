@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="UrlRegistryTool" module="Products.ERP5.Tool.UrlRegistryTool"/>
+      <global name="Url Registry Tool" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>

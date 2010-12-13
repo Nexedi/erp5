@@ -1,3 +1,6 @@
+2010-12-13 nicolas.dumazet
+* Migrate Tools to portal type classes
+
 2010-02-15 ivan
 * Use dedicated file system based Gadget class
 

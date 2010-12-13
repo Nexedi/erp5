@@ -1,3 +1,6 @@
+2010-12-13 nicolas.dumazet
+* Migrate Tools to portal type classes
+
 2010-09-21 nicolas
 * Add LiveTest instance to check
 Ingestion of URLs

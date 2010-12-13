@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="WizardTool" module="Products.ERP5Wizard.Tool.WizardTool"/>
-        <tuple/>
-      </tuple>
+      <global name="Wizard Tool" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
