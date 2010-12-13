@@ -11367,11 +11367,17 @@ msgstr "Traduit"
 msgid "Translated [state in document_publication_workflow]"
 msgstr "Traduit"
 
+msgid "Translation"
+msgstr "Traduction"
+
 msgid "Translation Requested"
 msgstr "Traduction demandée"
 
 msgid "Translation Requested [state in document_publication_workflow]"
 msgstr "Traduction demandée"
+
+msgid "Translations"
+msgstr "Traductions"
 
 msgid "Translations to Assign"
 msgstr "Traductions à assigner"
