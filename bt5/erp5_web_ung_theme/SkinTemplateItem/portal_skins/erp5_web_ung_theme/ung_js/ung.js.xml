@@ -152,6 +152,8 @@ $(document).ready(function(){\n
      var height = tr_length * 1.5;\n
      $("div.main-right tbody").css("height", height + "em");\n
    }\n
+   if ($("div.listbox-navigation").text() == "null")\n
+     $("div.listbox-navigation").hide();\n
  }\n
  $("#edit_document").dialog({\n
     autoOpen: false,\n
