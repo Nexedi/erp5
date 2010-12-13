@@ -59,12 +59,12 @@ uid_list = context.REQUEST.get("uids")\n
 if uid_list is not None:\n
   for catalog_object in portal.portal_catalog(portal_type=portal_type_list, \n
                                       uid=uid_list):\n
-    if catalog_object.getValidationState() == "deleted":\n
-      portal.web_page_module.deleteContent(catalog_object.getId())\n
-      continue\n
     object = context.restrictedTraverse(catalog_object.getPath())\n
-    object.setPublicationSection("trash")\n
-    object.delete()\n
+    if object.getValidationState() == "deleted":\n
+      portal.web_page_module.deleteContent(object.getId())\n
+      continue\n
+    else:\n
+      object.delete()\n
 \n
 return context.ERP5Site_redirect(context.REQUEST.get("HTTP_REFERER"))\n
 </string> </value>
