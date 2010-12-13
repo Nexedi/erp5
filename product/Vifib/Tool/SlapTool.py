@@ -36,7 +36,7 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from Products.ERP5Security.ERP5UserManager import SUPER_USER
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Tool.BaseTool import BaseTool
-from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
+from Products.ERP5Type import Permissions
 from lxml import etree
 from slapos.slap.slap import Computer
 from slapos.slap.slap import ComputerPartition as SlapComputerPartition
@@ -56,7 +56,6 @@ def convertToREST(function):
     """
     Log the call, and the result of the call
     """
-    self._loginAsSuperUser()
     try:
       retval = function(self, *args, **kwd)
     except ValueError, log:
@@ -92,7 +91,7 @@ class SlapTool(BaseTool):
   # Public GET methods
   ####################################################
 
-  security.declarePublic('getComputerInformation')
+  security.declareProtected(Permissions.AccessContentsInformation, 'getComputerInformation')
   def getComputerInformation(self, computer_id):
     """Returns marshalled XML of all needed information for computer
 
@@ -102,7 +101,6 @@ class SlapTool(BaseTool):
     """
     computer_document = self._getComputerDocument(computer_id)
     self.REQUEST.response.setHeader('Content-Type', 'text/xml')
-    self._loginAsSuperUser()
 
     slap_computer = Computer(computer_id)
     slap_computer._software_release_list = \
@@ -123,7 +121,7 @@ class SlapTool(BaseTool):
   # Public POST methods
   ####################################################
 
-  security.declarePublic('setComputerPartitionParameterDict')
+  security.declareProtected(Permissions.AccessContentsInformation, 'setComputerPartitionParameterDict')
   def setComputerPartitionConnectionXml(self, computer_id,
                                         computer_partition_id,
                                         connection_xml):
@@ -134,42 +132,42 @@ class SlapTool(BaseTool):
                                                    computer_partition_id,
                                                    connection_xml)
 
-  security.declarePublic('buildingSoftwareRelease')
+  security.declareProtected(Permissions.AccessContentsInformation, 'buildingSoftwareRelease')
   def buildingSoftwareRelease(self, url, computer_id):
     """
     Reports that Software Release is being build
     """
     return self._buildingSoftwareRelease(url, computer_id)
 
-  security.declarePublic('availableSoftwareRelease')
+  security.declareProtected(Permissions.AccessContentsInformation, 'availableSoftwareRelease')
   def availableSoftwareRelease(self, url, computer_id):
     """
     Reports that Software Release is available
     """
     return self._availableSoftwareRelease(url, computer_id)
 
-  security.declarePublic('softwareReleaseError')
+  security.declareProtected(Permissions.AccessContentsInformation, 'softwareReleaseError')
   def softwareReleaseError(self, url, computer_id, error_log):
     """
     Add an error for a software Release workflow
     """
     return self._softwareReleaseError(url, computer_id, error_log)
 
-  security.declarePublic('buildingComputerPartition')
+  security.declareProtected(Permissions.AccessContentsInformation, 'buildingComputerPartition')
   def buildingComputerPartition(self, computer_id, computer_partition_id):
     """
     Reports that Computer Partition is being build
     """
     return self._buildingComputerPartition(computer_id, computer_partition_id)
 
-  security.declarePublic('availableComputerPartition')
+  security.declareProtected(Permissions.AccessContentsInformation, 'availableComputerPartition')
   def availableComputerPartition(self, computer_id, computer_partition_id):
     """
     Reports that Computer Partition is available
     """
     return self._availableComputerPartition(computer_id, computer_partition_id)
 
-  security.declarePublic('softwareInstanceError')
+  security.declareProtected(Permissions.AccessContentsInformation, 'softwareInstanceError')
   def softwareInstanceError(self, computer_id,
                             computer_partition_id, error_log):
     """
@@ -178,28 +176,28 @@ class SlapTool(BaseTool):
     return self._softwareInstanceError(computer_id, computer_partition_id,
                                        error_log)
 
-  security.declarePublic('startedComputerPartition')
+  security.declareProtected(Permissions.AccessContentsInformation, 'startedComputerPartition')
   def startedComputerPartition(self, computer_id, computer_partition_id):
     """
     Reports that Computer Partition is started
     """
     return self._startedComputerPartition(computer_id, computer_partition_id)
 
-  security.declarePublic('stoppedComputerPartition')
+  security.declareProtected(Permissions.AccessContentsInformation, 'stoppedComputerPartition')
   def stoppedComputerPartition(self, computer_id, computer_partition_id):
     """
     Reports that Computer Partition is stopped
     """
     return self._stoppedComputerPartition(computer_id, computer_partition_id)
 
-  security.declarePublic('destroyedComputerPartition')
+  security.declareProtected(Permissions.AccessContentsInformation, 'destroyedComputerPartition')
   def destroyedComputerPartition(self, computer_id, computer_partition_id):
     """
     Reports that Computer Partition is destroyed
     """
     return self._destroyedComputerPartition(computer_id, computer_partition_id)
 
-  security.declarePublic('requestComputerPartition')
+  security.declareProtected(Permissions.AccessContentsInformation, 'requestComputerPartition')
   def requestComputerPartition(self, computer_id, computer_partition_id,
       software_release, software_type, partition_reference, 
       shared_xml, partition_parameter_xml, filter_xml):
@@ -218,7 +216,7 @@ class SlapTool(BaseTool):
         software_release, software_type, partition_reference, 
         shared_xml, partition_parameter_xml, filter_xml)
 
-  security.declarePublic('useComputer')
+  security.declareProtected(Permissions.AccessContentsInformation, 'useComputer')
   def useComputer(self, computer_id, use_string):
     """Entry point to reporting usage of a computer."""
     computer_document = self._getComputerDocument(computer_id)
@@ -227,16 +225,15 @@ class SlapTool(BaseTool):
     self._reportComputerUsage(computer_document, use_string)
     return 'Content properly posted.'
 
-  security.declarePublic('loadComputerConfigurationFromXML')
+  security.declareProtected(Permissions.AccessContentsInformation, 'loadComputerConfigurationFromXML')
   def loadComputerConfigurationFromXML(self, xml):
     "Load the given xml as configuration for the computer object"
-    self._loginAsSuperUser()
     computer_dict = xml_marshaller.xml_marshaller.loads(xml)
     computer = self._getComputerDocument(computer_dict['reference'])
     computer.Computer_updateFromDict(computer_dict)
     return 'Content properly posted.'
 
-  security.declarePublic('useComputerPartition')
+  security.declareProtected(Permissions.AccessContentsInformation, 'useComputerPartition')
   def useComputerPartition(self, computer_id, computer_partition_id, use_string):
     """Warning : deprecated method."""
     computer_document = self._getComputerDocument(computer_id)
@@ -248,7 +245,7 @@ class SlapTool(BaseTool):
     return """Content properly posted.
               WARNING : this method is deprecated. Please use useComputer."""
 
-  security.declarePublic('registerComputerPartition')
+  security.declareProtected(Permissions.AccessContentsInformation, 'registerComputerPartition')
   def registerComputerPartition(self, computer_reference,
                                 computer_partition_reference):
     """
@@ -547,14 +544,6 @@ class SlapTool(BaseTool):
   # Internals methods
   ####################################################
 
-  def _loginAsSuperUser(self):
-    """Inovking python scripts requiers any user, UnrestrictedMethod is not enough"""
-    # XXX-Luke: Workaround of security issues. As soon as security will be
-    # defined there will be no reason to reuse system user.
-    newSecurityManager(None, self.getPortalObject().acl_users.getUserById(
-      SUPER_USER))
-
-  @UnrestrictedMethod
   def _getDocument(self, **kwargs):
     # No need to get all results if an error is raised when at least 2 objects
     # are found
@@ -590,18 +579,14 @@ class SlapTool(BaseTool):
                              reference=computer_partition_reference,
                              grand_parent_uid=computer.getUid())
 
-  @UnrestrictedMethod
   def _getUsageReportServiceDocument(self):
-    self._loginAsSuperUser()
     service_document = self.Base_getUsageReportServiceDocument()
     if service_document is not None:
       return service_document
     raise Unauthorized
 
-  @UnrestrictedMethod
   def _getSoftwareInstanceForComputerPartition(self, computer_id,
       computer_partition_id):
-    self._loginAsSuperUser()
     computer_partition_document = self._getComputerPartitionDocument(
       computer_id, computer_partition_id)
     packing_list_line = self._getSalePackingListLineForComputerPartition(
@@ -618,9 +603,7 @@ class SlapTool(BaseTool):
       else:
         return software_instance
 
-  @UnrestrictedMethod
   def _getSalePackingListLineAsSoftwareInstance(self, sale_packing_list_line):
-    self._loginAsSuperUser()
     merged_dict = sale_packing_list_line.\
       SalePackinListLine_asSoftwareInstnaceComputerPartitionMergedDict()
     if merged_dict is None:
@@ -629,11 +612,9 @@ class SlapTool(BaseTool):
       raise Unauthorized
     return merged_dict
 
-  @UnrestrictedMethod
   def _getSoftwareReleaseValueListForComputer(self, computer_document):
     """Returns list of Software Releases documentsfor computer"""
     portal = self.getPortalObject()
-    self._loginAsSuperUser()
 
     state_list = []
     state_list.extend(portal.getPortalReservedInventoryStateList())
@@ -649,7 +630,6 @@ class SlapTool(BaseTool):
       software_release_list.append(software_release_response)
     return software_release_list
 
-  @UnrestrictedMethod
   def _getSalePackingListLineForComputerPartition(self,
                                                   computer_partition_document):
     """
@@ -659,7 +639,6 @@ class SlapTool(BaseTool):
     portal = self.getPortalObject()
     portal_preferences = portal.portal_preferences
     service_uid_list = []
-    self._loginAsSuperUser()
     for service_relative_url in \
       (portal_preferences.getPreferredInstanceSetupResource(),
        portal_preferences.getPreferredInstanceHostingResource(),
@@ -688,10 +667,8 @@ class SlapTool(BaseTool):
     else:
       return None
 
-  @UnrestrictedMethod
   def _reportComputerUsage(self, computer, usage):
     """Stores usage report of a computer."""
-    self._loginAsSuperUser()
     usage_report_portal_type = 'Usage Report'
     usage_report_module = \
       self.getPortalObject().getDefaultModule(usage_report_portal_type)
@@ -772,7 +749,6 @@ class SlapTool(BaseTool):
         ]
       )
 
-  @UnrestrictedMethod
   def _reportUsage(self, computer_partition, usage):
     """Warning : deprecated method."""
     portal_type = 'Usage Report'
