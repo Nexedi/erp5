@@ -10,7 +10,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>editable_columns</string>
+                <string>sort</string>
+                <string>title</string>
+                <string>url_columns</string>
                 <string>selection_name</string>
+                <string>portal_types</string>
+                <string>columns</string>
               </list>
             </value>
         </item>
@@ -61,10 +67,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -76,24 +78,127 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>int_index</string>
+                          <string>Index</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_portal_type</string>
+                          <string>Contact Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_id</string>
+                          <string>Contact Function</string>
+                        </tuple>
+                        <tuple>
+                          <string>asText</string>
+                          <string>Value</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>editable_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>int_index</string>
+                          <string>Index</string>
+                        </tuple>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_contact_listbox</string> </value>
+                    <value> <string>my_view_mode_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Entity_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewCredentialFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>lines</string> </key>
-                    <value> <int>20</int> </value>
+                    <key> <string>portal_types</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>Address</string>
+                          <string>Address</string>
+                        </tuple>
+                        <tuple>
+                          <string>Email</string>
+                          <string>Email</string>
+                        </tuple>
+                        <tuple>
+                          <string>Telephone</string>
+                          <string>Telephone</string>
+                        </tuple>
+                        <tuple>
+                          <string>Fax</string>
+                          <string>Fax</string>
+                        </tuple>
+                        <tuple>
+                          <string>ChatAddress</string>
+                          <string>ChatAddress</string>
+                        </tuple>
+                        <tuple>
+                          <string>Chat Address</string>
+                          <string>Chat Address</string>
+                        </tuple>
+                        <tuple>
+                          <string>Link</string>
+                          <string>Link</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
                     <value> <string>person_contact_list_selection</string> </value>
                 </item>
                 <item>
+                    <key> <string>sort</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>portal_type</string>
+                          <string>Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>int_index</string>
+                          <string>Index</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Contacts</string> </value>
+                </item>
+                <item>
+                    <key> <string>url_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>asText</string>
+                          <string>Coordinate_asURL</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
               </dictionary>
             </value>

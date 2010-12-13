@@ -10,8 +10,9 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>external_validator</string>
+                <string>title</string>
                 <string>required</string>
+                <string>external_validator</string>
               </list>
             </value>
         </item>
@@ -80,11 +81,11 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>your_reference</string> </value>
+                    <value> <string>my_dialog_mode_reference</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewCredentialFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
@@ -93,6 +94,10 @@
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Desired Login Name</string> </value>
                 </item>
               </dictionary>
             </value>

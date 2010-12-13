@@ -10,16 +10,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>date_only</string>
-                <string>description</string>
-                <string>editable</string>
                 <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_start_date</string> </value>
+            <value> <string>my_dialog_mode_default_mobile_telephone_text</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -75,20 +72,8 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>date_only</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>The date at which an operation starts in ERP5</string> </value>
-                </item>
-                <item>
-                    <key> <string>editable</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_date</string> </value>
+                    <value> <string>my_string_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -100,7 +85,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Start Date</string> </value>
+                    <value> <string>Mobile Telephone</string> </value>
                 </item>
               </dictionary>
             </value>

@@ -9,9 +9,7 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>required</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
@@ -73,15 +71,11 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_email</string> </value>
+                    <value> <string>my_dialog_mode_required_default_email_text</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>required</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>Base_viewCredentialFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

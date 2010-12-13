@@ -10,18 +10,17 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>columns</string>
-                <string>count_method</string>
-                <string>default_params</string>
-                <string>description</string>
                 <string>editable_columns</string>
+                <string>sort</string>
+                <string>description</string>
+                <string>title</string>
+                <string>count_method</string>
+                <string>selection_name</string>
                 <string>list_method</string>
                 <string>portal_types</string>
-                <string>search</string>
-                <string>select</string>
-                <string>selection_name</string>
-                <string>sort</string>
-                <string>title</string>
+                <string>columns</string>
+                <string>lines</string>
+                <string>hide_rows_on_no_search_criterion</string>
               </list>
             </value>
         </item>
@@ -72,6 +71,18 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>hide_rows_on_no_search_criterion</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>lines</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -120,18 +131,7 @@
                 <item>
                     <key> <string>count_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>default_params</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>checked_permission</string>
-                          <string>View</string>
-                        </tuple>
-                      </list>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -159,16 +159,16 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_list_mode_listbox</string> </value>
+                    <value> <string>my_view_mode_event_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewCredentialFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -197,14 +197,6 @@
                         </tuple>
                       </list>
                     </value>
-                </item>
-                <item>
-                    <key> <string>search</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>select</string> </key>
-                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
@@ -237,6 +229,32 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: preferences.getPreference(\'preferred_hide_rows_on_no_search_criterion\', False)</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: preferences.getPreference(\'preferred_listbox_list_mode_line_count\', 30)</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
       <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
     <pickle>
@@ -248,7 +266,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="3" aka="AAAAAAAAAAM=">
+  <record id="5" aka="AAAAAAAAAAU=">
     <pickle>
       <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>

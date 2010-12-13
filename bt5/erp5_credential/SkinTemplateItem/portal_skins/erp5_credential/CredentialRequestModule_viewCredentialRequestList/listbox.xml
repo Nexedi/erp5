@@ -10,16 +10,15 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>columns</string>
-                <string>domain_root_list</string>
+                <string>sort</string>
                 <string>domain_tree</string>
+                <string>domain_root_list</string>
+                <string>title</string>
                 <string>portal_types</string>
-                <string>report_root_list</string>
+                <string>columns</string>
                 <string>search_columns</string>
                 <string>selection_name</string>
-                <string>sort</string>
                 <string>sort_columns</string>
-                <string>title</string>
               </list>
             </value>
         </item>
@@ -152,22 +151,11 @@ Role & Function
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_list_mode_listbox</string> </value>
+                    <value> <string>my_view_mode_module_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>portal_type</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>Credential Request</string>
-                          <string>Credential Request</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <value> <string>Base_viewCredentialFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
@@ -178,12 +166,6 @@ Role & Function
                           <string>Credential Request</string>
                         </tuple>
                       </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>report_root_list</string> </key>
-                    <value>
-                      <list/>
                     </value>
                 </item>
                 <item>
