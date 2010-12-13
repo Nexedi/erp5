@@ -104,11 +104,12 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     for part in mail_message.walk():
       content_type = part.get_content_type()
       file_name = part.get_filename()
-      # "History" is the title of Base_viewHistory form
-      if file_name == 'History%s' % self.attachment_file_extension:
-        self.assertEquals(content_type, self.content_type)
-        self.assertEquals('attachment; filename="History%s"' %
-                                self.attachment_file_extension,
+      if content_type == self.content_type:
+        # "History" is the title of Base_viewHistory form
+        file_name = part.get_filename()
+        expected_file_name = 'History%s' % self.attachment_file_extension
+        self.assertEquals(expected_file_name, file_name)
+        self.assertEquals('attachment; filename="%s"' % expected_file_name,
                           part.get('Content-Disposition'))
         data = part.get_payload(decode=True)
         error_list = Validator().validate(data)
@@ -138,12 +139,12 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     mail_message = email.message_from_string(message_text)
     for part in mail_message.walk():
       content_type = part.get_content_type()
-      file_name = part.get_filename()
-      # "Person" is the title of Person_view form
-      if file_name == 'Person%s' % self.attachment_file_extension:
-        self.assertEquals(content_type, self.content_type)
-        self.assertEquals('attachment; filename="Person%s"' %
-                                self.attachment_file_extension,
+      if content_type == self.content_type:
+        # "Person" is the title of Person_view form
+        file_name = part.get_filename()
+        expected_file_name = 'Person%s' % self.attachment_file_extension
+        self.assertEquals(expected_file_name, file_name)
+        self.assertEquals('attachment; filename="%s"' % expected_file_name,
                           part.get('Content-Disposition'))
         data = part.get_payload(decode=True)
         error_list = Validator().validate(data)
