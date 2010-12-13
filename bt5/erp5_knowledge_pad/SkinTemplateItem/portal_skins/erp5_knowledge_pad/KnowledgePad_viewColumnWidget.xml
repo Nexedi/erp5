@@ -50,6 +50,7 @@
                     box_dom_id python: \'%s\' %box.getRelativeUrl().replace(\'/\', \'_\');\n
                     view_form_dom_id python: \'%s_content\' %box_dom_id;\n
                     edit_form_dom_id python: \'%s_edit_form\' %box_dom_id;\n
+                    gadget_title_dom_id python: \'%s_gadget_title\' %box_dom_id;\n
                     gadget python: box.getSpecialiseValue();\n
                     gadget_state python: gadget.getValidationState();\n
                     dummy python: request.set(\'is_gadget_mode\', \'1\');\n
@@ -105,7 +106,8 @@
              title="Minimize"></a>\n
         </tal:block>\n
         <span class="gadget_title" \n
-              tal:content="python: here.Base_translateString(box.getProperty(\'preferred_header_title\', None) or gadget.getTitle())"/>\n
+              tal:content="python: here.Base_translateString(box.getProperty(\'preferred_header_title\', None) or gadget.getTitle())"\n
+              tal:attributes="id gadget_title_dom_id"/>\n
         </span>\n
       </h3>\n
 \n

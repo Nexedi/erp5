@@ -19,7 +19,6 @@
                 <string>search_columns</string>
                 <string>sort</string>
                 <string>sort_columns</string>
-                <string>title</string>
                 <string>url_columns</string>
               </list>
             </value>
@@ -113,12 +112,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>url_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -170,7 +163,7 @@
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -230,10 +223,6 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Rss reader</string> </value>
-                </item>
-                <item>
                     <key> <string>url_columns</string> </key>
                     <value>
                       <list>
@@ -264,19 +253,6 @@
     </pickle>
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: request.get(\'rss_title\', \'Rss Title Error\').encode(\'utf-8\')</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>

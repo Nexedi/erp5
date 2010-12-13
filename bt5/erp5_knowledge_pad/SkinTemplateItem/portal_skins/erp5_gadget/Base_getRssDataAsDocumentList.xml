@@ -50,16 +50,21 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Document import newTempBase\n
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.ERP5Type.Document import newTempBase\n
+\n
 box_relative_url = kw.get(\'box_relative_url\')\n
 selection_name = kw.get(\'list_selection_name\')\n
 portal_selection = getattr(context,\'portal_selections\')\n
 selection = portal_selection.getSelectionFor(selection_name)\n
 \n
-# XXX: This test has been added because currently the "Asynchronous" mode is\n
-# the only one supported by gadgets which uses the page templates\n
-# ListBox_asListStyleHTML.\n
-# More investigation are required to fix this bug\n
+error_mapping_dict = {-1: \'Please enter a valid Rss or Atom url in the preference form.\',\n
+                      -2: \'Wrong Rss or Atom url or service temporary down.\',\n
+                      -3: \'Unauthorized, verify your authentication.\',\n
+                      -4: \'Page not found.\',\n
+                      -5: \'Mismatched RSS feed.\'}\n
+\n
 if box_relative_url:\n
   box = context.restrictedTraverse(box_relative_url)\n
   preferences = box.KnowledgeBox_getDefaultPreferencesDict()\n
@@ -70,24 +75,27 @@ feed_url = str(preferences.get(\'preferred_rss_feed\',\'\'))\n
 username = str(preferences.get(\'preferred_username\',\'\'))\n
 password = str(preferences.get(\'preferred_password\',\'\'))\n
 results = context.Base_getRssDataAsDict(context, url = feed_url, username = username, password = password)\n
-readItemList = {}\n
+\n
 md5_list = []\n
 message_list = []\n
-items = results.get(\'items\',None)\n
+items = results.get(\'items\', [])\n
+status = results.get(\'status\', 0)\n
 \n
-rss_title = results.get(\'title\',\'No title for this feed\')\n
-if items is not None:\n
-  rss_title = \'%s (%s)\' %(rss_title, len(items))\n
-\n
-rss_logo = results.get(\'logo\', None)\n
-if rss_logo not in (\'\', None):\n
-  context.REQUEST.set(\'rss_logo\',rss_logo)\n
-\n
-context.REQUEST.set(\'rss_title\', rss_title)\n
-context.REQUEST.set(\'rss_link\',results.get(\'link\',None))\n
-\n
-if items is None:\n
+context.REQUEST.set(\'rss_status\', status)\n
+if status < 0:\n
+  # some error occured show message to user\n
+  context.REQUEST.set(\'rss_title\', context.Base_translateString(error_mapping_dict[status]))\n
   return []\n
+else:\n
+  # all good\n
+  rss_title = results.get(\'title\',\'No title for this feed\')\n
+  rss_logo = results.get(\'logo\', None)\n
+  if items is not None:\n
+    rss_title = \'%s (%s)\' %(rss_title, len(items))\n
+  if rss_logo not in (\'\', None):\n
+    context.REQUEST.set(\'rss_logo\',rss_logo)\n
+  context.REQUEST.set(\'rss_link\',results.get(\'link\',None))\n
+  context.REQUEST.set(\'rss_gadget_title\', rss_title)\n
 \n
 for result in items:\n
   md5_list.append(result[\'md5\'])\n
@@ -106,7 +114,9 @@ for result in items:\n
 context.REQUEST.set(\'rss_documents_count\', len(message_list))\n
 \n
 return message_list\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -152,6 +162,7 @@ return message_list\n
                             <string>context</string>
                             <string>portal_selection</string>
                             <string>selection</string>
+                            <string>error_mapping_dict</string>
                             <string>box</string>
                             <string>preferences</string>
                             <string>str</string>
@@ -159,17 +170,17 @@ return message_list\n
                             <string>username</string>
                             <string>password</string>
                             <string>results</string>
-                            <string>readItemList</string>
                             <string>md5_list</string>
                             <string>message_list</string>
-                            <string>None</string>
                             <string>items</string>
+                            <string>status</string>
+                            <string>_getitem_</string>
                             <string>rss_title</string>
-                            <string>len</string>
+                            <string>None</string>
                             <string>rss_logo</string>
+                            <string>len</string>
                             <string>_getiter_</string>
                             <string>result</string>
-                            <string>_getitem_</string>
                             <string>date</string>
                             <string>message</string>
                           </tuple>

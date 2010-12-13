@@ -50,39 +50,26 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Render an entire Pad and needed JavaScript code.\n
-  Used to make instant Pad switching.\n
-"""\n
-from Products.ERP5Type.JSON import dumps\n
+            <value> <string>from Products.ERP5Type.JSON import dumps\n
 \n
-pad = context.restrictedTraverse(pad_relative_url)\n
+request = context.REQUEST\n
 \n
-# render Pad\'s html\n
-body = pad.KnowledgePad_viewDashboardWidget(real_context=context)\n
+# render real gadget content as HTML\n
+html = context.ERP5Site_viewRssGadget()\n
+box_relative_url = request.get(\'box_relative_url\', None)\n
+box = context.restrictedTraverse(box_relative_url)\n
 \n
-# toggle new active pad \n
-context.ERP5Site_toggleActiveKnowledgePad(pad_relative_url, mode, redirect=False)\n
+box_dom_id = box.getRelativeUrl().replace(\'/\', \'_\')\n
+gadget_title_dom_id = \'%s_gadget_title\' %box_dom_id\n
 \n
-# generate needed JavaScript code\n
-javascript_list = []\n
-for box in pad.objectValues():\n
-  gadget = box.getSpecialiseValue()\n
-  gadget_type = gadget.getRenderType()\n
-  if box.getValidationState() in [\'visible\', \'invisible\'] \\\n
-        and gadget_type==\'asynchronous\' and gadget.getValidationState()!=\'invisible\':\n
-    edit_form_id=gadget.getEditFormId()\n
-    view_form_id=gadget.getViewFormId()\n
-    base_url = \'%s/%s\' %(context.absolute_url(), view_form_id) \n
-    box_dom_id = box.getRelativeUrl().replace(\'/\', \'_\')\n
-    view_form_dom_id = \'%s_content\' %box_dom_id;\n
-    javascript_code = pad.KnowledgePad_generateAjaxCall(base_url, box, \\\n
-                            view_form_dom_id, ignore_security_check=1)\n
-    javascript_list.append(javascript_code)\n
-javascript = \'\'.join(javascript_list)\n
-# return JSON\n
-result = {\'body\': body,\n
-          \'javascript\':  javascript}\n
+# return some JavaScript which will update respective page\n
+gadget_title = request.get(\'rss_gadget_title\', box.getSpecialiseValue().getTitle())\n
+gadget_title = unicode(gadget_title).encode(\'utf-8\')[:40]\n
+javascript = \'getElement("%s").innerHTML="%s";\' %(gadget_title_dom_id, gadget_title)\n
+\n
+request.RESPONSE.setHeader("Content-Type", "application/json;; charset=utf-8")\n
+result =  {"body": html,\n
+          "javascript": javascript}\n
 return dumps(result)\n
 </string> </value>
         </item>
@@ -94,7 +81,7 @@ return dumps(result)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>pad_relative_url, mode</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -114,32 +101,26 @@ return dumps(result)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>pad_relative_url</string>
-                            <string>mode</string>
                             <string>Products.ERP5Type.JSON</string>
                             <string>dumps</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>pad</string>
-                            <string>body</string>
-                            <string>False</string>
-                            <string>javascript_list</string>
-                            <string>_getiter_</string>
+                            <string>request</string>
+                            <string>html</string>
+                            <string>None</string>
+                            <string>box_relative_url</string>
                             <string>box</string>
-                            <string>gadget</string>
-                            <string>gadget_type</string>
-                            <string>edit_form_id</string>
-                            <string>view_form_id</string>
-                            <string>base_url</string>
                             <string>box_dom_id</string>
-                            <string>view_form_dom_id</string>
-                            <string>javascript_code</string>
+                            <string>gadget_title_dom_id</string>
+                            <string>gadget_title</string>
+                            <string>_getitem_</string>
+                            <string>unicode</string>
                             <string>javascript</string>
                             <string>result</string>
                           </tuple>
@@ -158,7 +139,7 @@ return dumps(result)\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>KnowledgePag_getPadAsJSON</string> </value>
+            <value> <string>ERP5Site_viewRssGadgetAsJSON</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

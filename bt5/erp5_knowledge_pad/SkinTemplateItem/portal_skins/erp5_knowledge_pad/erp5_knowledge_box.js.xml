@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts91990881.97</string> </value>
+            <value> <string>ts92251348.76</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -107,8 +107,22 @@ function updater(url, box_relative_url, dom_id, \n
  d = MochiKit.Async.doSimpleXMLHttpRequest(url, request_params);\n
  d.addCallbacks(handleServerSuccess, handleServerError);\n
  function handleServerSuccess(res){\n
-      getElement(dom_id).innerHTML = res.responseText;\n
+      content_type = res.getResponseHeader(\'Content-Type\');\n
+      if(content_type.search("application/json")!=-1){\n
+        /* server returned JSON which may contain HTML & JavaScript */\n
+        text = res.responseText \n
+        json_dict = evalJSON(text);\n
+        html = json_dict[\'body\'];\n
+        eval(json_dict[\'javascript\']);\n
+      }\n
+      else{\n
+        /* server returned HTML */\n
+        html = res.responseText;\n
+      }\n
+      /* set HTML as returned from server */\n
+      getElement(dom_id).innerHTML = html;\n
       getElement(dom_id).style.opacity = 1.0;};\n
+      \n
  function handleServerError(res){\n
       getElement(dom_id).innerHTML = \'Server side error.\';\n
       getElement(dom_id).style.opacity = 1.0;};\n
@@ -507,7 +521,7 @@ MochiKit.DOM.addLoadEvent(initialize);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>19090</int> </value>
+            <value> <int>19554</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

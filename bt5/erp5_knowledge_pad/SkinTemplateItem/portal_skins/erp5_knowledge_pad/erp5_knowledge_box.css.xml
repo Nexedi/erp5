@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts91384188.54</string> </value>
+            <value> <string>ts92251979.92</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -452,8 +452,15 @@ div.document-gadget-quick-preview a.document-link{\n
 show number of records  or show \'No results\' as listbox title is used for this */\n
 div.gadget-rss-reader table.listbox thead,\n
 div.gadget-rss-reader div.listbox-number-of-records,\n
-div.gadget-rss-reader table.listbox td.listbox-table-no-result-row{\n
+div.gadget-rss-reader table.listbox td.listbox-table-no-result-row,\n
+div.gadget-rss-reader div.listbox-title{\n
   display: none;\n
+}\n
+div.gadget-rss-reader-message{\n
+  font-weight:bold;\n
+}\n
+div.gadget-rss-reader .listbox-head-content{\n
+  height:auto;\n
 }\n
 div.gadget-rss-reader .listbox-body,\n
 div.gadget-rss-reader .listbox-head{\n
@@ -513,7 +520,7 @@ div.gadget-rss-reader .body {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8519</int> </value>
+            <value> <int>8675</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

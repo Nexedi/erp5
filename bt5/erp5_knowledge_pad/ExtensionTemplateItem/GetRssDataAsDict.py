@@ -1,11 +1,12 @@
 import feedparser, md5, urllib2, socket
-  
+ 
 def getRssDataAsDict(self, url, username=None, password=None):
   result = {}
   translate = self.Base_translateString
   # no url, no feed to read
   if url in ('', None, 'None',):
-    return {'title':translate('Please enter a valid Rss or Atom url in the preference form.')}
+    # no URL
+    return {'status':-1}
     
   # use authentication or not?
   handlers = []
@@ -20,16 +21,19 @@ def getRssDataAsDict(self, url, username=None, password=None):
   socket.setdefaulttimeout(10.0)
   d = feedparser.parse(url, handlers=handlers)  
   socket.setdefaulttimeout(default_timeout)    
-    
+  
   if d.bozo and isinstance(d.bozo_exception, urllib2.URLError):
     # we have an URL error
-    return {'title':translate('Wrong Rss or Atom url or service temporary down.')}
-    
-  # http status code checks
+    return {'status':-2}
+  elif d.bozo:
+    print d.bozo, d.bozo_exception
+    return {'status': -5}
   if d.status == 401:
-    return {'title': translate('Unauthorized, verify your authentication.')}
+    return {'status':-3}
   elif d.status == 404:
-    return {'title': translate('Page not found.')}
+    return {'status':-4}
+  
+
   
   result['items'] = []
   # some feeds may not provide logo
@@ -51,4 +55,5 @@ def getRssDataAsDict(self, url, username=None, password=None):
   # sort by date
   result['items'] = sorted(result['items'], key=lambda k: k['updated_parsed'])
   result['items'].reverse()
+  result['status'] = 0
   return result

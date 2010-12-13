@@ -74,6 +74,7 @@
                       <list>
                         <string>listbox</string>
                         <string>logo</string>
+                        <string>message</string>
                       </list>
                     </value>
                 </item>
