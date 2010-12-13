@@ -328,11 +328,7 @@ class TypesTool(TypeProvider):
 
   def _migrateToPortalTypeClass(self):
     for type_definition in self.contentValues():
-      if not type_definition._migrateToPortalTypeClass():
-        LOG('TypesTool', WARNING,
-            'Type definition %s was not migrated'
-            % type_definition.getRelativeUrl())
-        return False
+      type_definition._migrateToPortalTypeClass()
     return super(TypesTool, self)._migrateToPortalTypeClass()
 
 # Compatibility code to access old "ERP5 Role Information" objects.

@@ -3864,8 +3864,6 @@ class Base( CopyContainer,
       assert klass != newklass
       self.__class__ = newklass
 
-    return True
-
   security.declareProtected(Permissions.DeletePortalContent,
                             'migratePortalType')
   def migratePortalType(self, portal_type):

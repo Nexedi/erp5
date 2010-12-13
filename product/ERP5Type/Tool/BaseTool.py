@@ -78,16 +78,17 @@ class BaseTool (UniqueObject, Folder):
     def _migrateToPortalTypeClass(self):
       portal_type = self.getPortalType()
       # Tools are causing problems: they used to have no type_class, or wrong
-      # type_class. First check that everything is alright before trying
+      # type_class, or sometimes have no type definitions at all.
+      # Check that everything is alright before trying
       # to migrate the tool:
       types_tool = self.getPortalObject().portal_types
       type_definition = getattr(types_tool, portal_type, None)
       if type_definition is None:
-        LOG('TypesTool', WARNING,
-            "No portal type was found for Tool '%s'"
+        from Products.ERP5.Document.Document import NotConvertedError
+        raise NotConvertedError( 
+            "No portal type definition was found for Tool '%s'"
             " (class %s, portal_type '%s')"
             % (self.getRelativeUrl(), self.__class__.__name__, portal_type))
-        return False
 
       type_class = type_definition.getTypeClass()
       if type_class in ('Folder', None):
@@ -97,10 +98,10 @@ class BaseTool (UniqueObject, Folder):
         if document_class_name in document_class_registry:
           type_definition.setTypeClass(document_class_name)
         else:
-          LOG('TypesTool', WARNING,
+          from Products.ERP5.Document.Document import NotConvertedError
+          raise NotConvertedError( 
               'No document class could be found for portal type %s'
               % portal_type)
-          return False
 
       return super(BaseTool, self)._migrateToPortalTypeClass()
 
