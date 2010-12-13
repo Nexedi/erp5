@@ -118,10 +118,12 @@ property_sheet_generating_portal_type_set = set()
 # Property Sheet to allow the outer (which will actually be stored in
 # 'erp5.portal_type') to be fully generated.
 core_portal_type_class_dict = {
-  'Base Type': {'type_class': 'ERP5TypeInformation',
-                'generating': False},
-  'Types Tool': {'type_class': 'TypesTool',
-                 'generating': False}
+  'Base Type':    {'type_class': 'ERP5TypeInformation',
+                   'generating': False},
+  'Types Tool':   {'type_class': 'TypesTool',
+                   'generating': False},
+  'Solver Tool': {'type_class': 'SolverTool',
+                  'generating': False}
   }
 
 def generatePortalTypeClass(portal_type_name):
