@@ -54,6 +54,7 @@
 
 from Products.ERP5Type.Document import newTempBase\n
 \n
+request = context.REQUEST\n
 box_relative_url = kw.get(\'box_relative_url\')\n
 selection_name = kw.get(\'list_selection_name\')\n
 portal_selection = getattr(context,\'portal_selections\')\n
@@ -84,18 +85,18 @@ status = results.get(\'status\', 0)\n
 context.REQUEST.set(\'rss_status\', status)\n
 if status < 0:\n
   # some error occured show message to user\n
-  context.REQUEST.set(\'rss_title\', context.Base_translateString(error_mapping_dict[status]))\n
+  request.set(\'rss_title\', context.Base_translateString(error_mapping_dict[status]))\n
   return []\n
 else:\n
   # all good\n
-  rss_title = results.get(\'title\',\'No title for this feed\')\n
+  rss_title = results.get(\'title\',\'\')\n
   rss_logo = results.get(\'logo\', None)\n
   if items is not None:\n
     rss_title = \'%s (%s)\' %(rss_title, len(items))\n
   if rss_logo not in (\'\', None):\n
-    context.REQUEST.set(\'rss_logo\',rss_logo)\n
-  context.REQUEST.set(\'rss_link\',results.get(\'link\',None))\n
-  context.REQUEST.set(\'rss_gadget_title\', rss_title)\n
+    request.set(\'rss_logo\', rss_logo)\n
+  request.set(\'rss_link\', results.get(\'link\',None))\n
+  request.set(\'rss_gadget_title\', rss_title)\n
 \n
 for result in items:\n
   md5_list.append(result[\'md5\'])\n
@@ -107,11 +108,8 @@ for result in items:\n
             field_img = result.get(\'img\',\'\'),\n
             field_others_links = result.get(\'other_links\',\'\'),\n
             field_link = result.get(\'link\',\'\'),\n
-            field_md5 = result.get(\'md5\',\'\')\n
-           )\n
+            field_md5 = result.get(\'md5\',\'\'))\n
   message_list.append(message)\n
-# export to request so rendering form can use \n
-context.REQUEST.set(\'rss_documents_count\', len(message_list))\n
 \n
 return message_list\n
 
@@ -156,10 +154,11 @@ return message_list\n
                             <string>Products.ERP5Type.Document</string>
                             <string>newTempBase</string>
                             <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
                             <string>box_relative_url</string>
                             <string>selection_name</string>
                             <string>getattr</string>
-                            <string>context</string>
                             <string>portal_selection</string>
                             <string>selection</string>
                             <string>error_mapping_dict</string>
