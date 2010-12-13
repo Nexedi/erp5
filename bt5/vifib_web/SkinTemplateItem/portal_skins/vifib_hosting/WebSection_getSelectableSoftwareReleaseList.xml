@@ -50,20 +50,28 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Return a property layout from a website.\n
-Useful to use notification message reference from website configuration not in website context."""\n
+            <value> <string>"""Get the release of the selected product"""\n
 portal = context.getPortalObject()\n
-current_web_site = portal.getWebSiteValue()\n
-try:\n
-  website = getattr(portal.web_site_module,website)\n
-except TypeError:\n
-  #website parameter is None\n
-  website = current_website\n
-except AttributeError:\n
-  #website parameter is from a non existant web site\n
-  website = current_web_site\n
+prefered_resource = portal.portal_preferences.getPreferredInstanceSetupResource()\n
+service = portal.restrictedTraverse(prefered_resource)\n
 \n
-return website.getLayoutProperty(reference, defaultValue)\n
+shopping_cart_items = context.SaleOrder_getShoppingCartItemList()\n
+\n
+# assert there is only one item\n
+if len(shopping_cart_items) != 1:\n
+  raise NotImplementedError, "There should be only one shopping card item"\n
+\n
+order_line = shopping_cart_items[0]\n
+software_product = order_line.getAggregateValue(portal_type="Software Product")\n
+\n
+if software_product is None:\n
+  raise NotImplementedError, "There should one selected software product"\n
+\n
+return context.portal_catalog(\n
+  portal_type="Software Release",\n
+  default_aggregate_uid=software_product.getUid(),\n
+  validation_state=["shared", "shared_alive", "released", "released_alive", "published", "published_alive"]\n
+  )\n
 </string> </value>
         </item>
         <item>
@@ -74,7 +82,7 @@ return website.getLayoutProperty(reference, defaultValue)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>reference, defaultValue, website=None</string> </value>
+            <value> <string>dialog_id=None, uids=[], quantity = 1, reset_shopping_cart=True, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -94,23 +102,29 @@ return website.getLayoutProperty(reference, defaultValue)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>reference</string>
-                            <string>defaultValue</string>
-                            <string>website</string>
+                            <string>dialog_id</string>
+                            <string>uids</string>
+                            <string>quantity</string>
+                            <string>reset_shopping_cart</string>
+                            <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
-                            <string>current_web_site</string>
-                            <string>getattr</string>
-                            <string>TypeError</string>
-                            <string>current_website</string>
-                            <string>AttributeError</string>
+                            <string>prefered_resource</string>
+                            <string>service</string>
+                            <string>shopping_cart_items</string>
+                            <string>len</string>
+                            <string>NotImplementedError</string>
+                            <string>_getitem_</string>
+                            <string>order_line</string>
+                            <string>software_product</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
@@ -124,12 +138,15 @@ return website.getLayoutProperty(reference, defaultValue)\n
             <value>
               <tuple>
                 <none/>
+                <list/>
+                <int>1</int>
+                <int>1</int>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSite_getLayoutProperty</string> </value>
+            <value> <string>WebSection_getSelectableSoftwareReleaseList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -10,16 +10,18 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>css_class</string>
-                <string>default</string>
-                <string>name</string>
+                <string>columns</string>
+                <string>list_method</string>
+                <string>select</string>
+                <string>selection_name</string>
                 <string>title</string>
+                <string>url_columns</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_stop_button</string> </value>
+            <value> <string>listbox</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -56,14 +58,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>default</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -72,10 +66,12 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>href</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <key> <string>list_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -93,28 +89,45 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>css_class</string> </key>
-                    <value> <string>nolabel cancel widthAuto</string> </value>
-                </item>
-                <item>
-                    <key> <string>default</string> </key>
-                    <value> <string>Stop</string> </value>
+                    <key> <string>columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>image</string>
+                          <string>Image</string>
+                        </tuple>
+                        <tuple>
+                          <string>aggregate_title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>version</string>
+                          <string>Version</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_input_button_field</string> </value>
+                    <value> <string>my_list_mode_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewWebFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>href</string> </key>
-                    <value> <string>#</string> </value>
+                    <key> <string>list_method</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
-                    <key> <string>name</string> </key>
-                    <value> <string>SoftwareInstance_requestStop:method</string> </value>
+                    <key> <string>select</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string>computer_software_release_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -122,7 +135,26 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Stop</string> </value>
+                    <value> <string>Software Release</string> </value>
+                </item>
+                <item>
+                    <key> <string>url_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>aggregate_title</string>
+                          <string></string>
+                        </tuple>
+                        <tuple>
+                          <string>version</string>
+                          <string></string>
+                        </tuple>
+                        <tuple>
+                          <string>image</string>
+                          <string></string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
               </dictionary>
             </value>
@@ -132,16 +164,13 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
+      <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <string>here/SoftwareInstance_getStopUrl</string> </value>
+            <key> <string>method_name</string> </key>
+            <value> <string>Computer_getSoftwareReleaseList</string> </value>
         </item>
       </dictionary>
     </pickle>

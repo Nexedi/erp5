@@ -50,20 +50,19 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Return a property layout from a website.\n
-Useful to use notification message reference from website configuration not in website context."""\n
-portal = context.getPortalObject()\n
-current_web_site = portal.getWebSiteValue()\n
-try:\n
-  website = getattr(portal.web_site_module,website)\n
-except TypeError:\n
-  #website parameter is None\n
-  website = current_website\n
-except AttributeError:\n
-  #website parameter is from a non existant web site\n
-  website = current_web_site\n
+            <value> <string>portal = context.getPortalObject()\n
 \n
-return website.getLayoutProperty(reference, defaultValue)\n
+computer_portal_type = "Computer"\n
+module = portal.getDefaultModule(portal_type=computer_portal_type)\n
+computer = module.newContent(\n
+  portal_type=computer_portal_type,\n
+  title=title,\n
+)\n
+\n
+computer.requestComputerRegistration()\n
+\n
+message = "Registering Computer"\n
+return computer.Base_redirect(keep_items=dict(portal_status_message=message))\n
 </string> </value>
         </item>
         <item>
@@ -74,7 +73,7 @@ return website.getLayoutProperty(reference, defaultValue)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>reference, defaultValue, website=None</string> </value>
+            <value> <string>title</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -94,23 +93,21 @@ return website.getLayoutProperty(reference, defaultValue)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>reference</string>
-                            <string>defaultValue</string>
-                            <string>website</string>
+                            <string>title</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
-                            <string>current_web_site</string>
-                            <string>getattr</string>
-                            <string>TypeError</string>
-                            <string>current_website</string>
-                            <string>AttributeError</string>
+                            <string>computer_portal_type</string>
+                            <string>module</string>
+                            <string>computer</string>
+                            <string>message</string>
+                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
@@ -122,14 +119,12 @@ return website.getLayoutProperty(reference, defaultValue)\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <none/>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSite_getLayoutProperty</string> </value>
+            <value> <string>WebSection_registerNewComputer</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

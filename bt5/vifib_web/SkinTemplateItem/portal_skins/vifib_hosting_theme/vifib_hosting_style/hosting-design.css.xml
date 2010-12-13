@@ -135,7 +135,7 @@ cursor:pointer;\n
 float:left;\n
 height:70px;\n
 padding:10px;\n
-width:116px;\n
+width:142px;\n
 border:1px solid grey;\n
 background-color:#FFFFFF;\n
 }\n
@@ -144,10 +144,11 @@ background-color:#D2E7F4;\n
 }\n
 \n
 .service-listbox table {background-color:#FFFFFF}\n
+.service-listbox .listbox tr td {border-top: None;}\n
 .service-listbox .listbox-head {display:none;}\n
 .service-listbox thead {display:none;}\n
 .service-listbox .listbox-table-select-cell{display:none;}\n
-.service-listbox tr, .service-listbox td {position:relative; width:150px;float:left;background:none!important}\n
+.service-listbox tr, .service-listbox td {position:relative; width:175px;float:left;background:none!important}\n
 </tal:block>
 
 ]]></unicode> </value>

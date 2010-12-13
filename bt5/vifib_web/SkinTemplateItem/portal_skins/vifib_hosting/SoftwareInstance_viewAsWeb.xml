@@ -61,8 +61,8 @@
               <list>
                 <string>normal</string>
                 <string>right width100 alignr</string>
+                <string>normal bis</string>
                 <string>center</string>
-                <string>bottom</string>
                 <string>hidden</string>
               </list>
             </value>
@@ -71,12 +71,6 @@
             <key> <string>groups</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key> <string>bottom</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
                 <item>
                     <key> <string>center</string> </key>
                     <value>
@@ -101,6 +95,13 @@
                         <string>my_reference</string>
                         <string>my_title</string>
                         <string>your_status</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>normal bis</string> </key>
+                    <value>
+                      <list>
                         <string>your_connection_xml</string>
                       </list>
                     </value>

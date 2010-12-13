@@ -92,9 +92,6 @@
          <!--status message here//-->\n
 \n
           <div id="content_padding">\n
-\n
-            <!--breadcrump here//-->\n
-            <!-- ERP5 layout form rendering code -->                  \n
             <tal:block tal:condition="has_breadcrumb_area">\n
               <tal:block tal:condition="python: layout_form is not None"\n
                          tal:define="wrapper_class string:breadcrumb_area">\n
@@ -104,6 +101,9 @@
                 </tal:block>\n
               </tal:block>    \n
             </tal:block>\n
+            <!--breadcrump here//-->\n
+            <!-- ERP5 layout form rendering code -->                  \n
+\n
             <!--breadcrump here//-->\n
 \n
             <!--navigation here//-->\n

@@ -12,7 +12,6 @@
               <list>
                 <string>css_class</string>
                 <string>default</string>
-                <string>enabled</string>
                 <string>name</string>
                 <string>title</string>
               </list>
@@ -82,10 +81,6 @@
                 <item>
                     <key> <string>default</string> </key>
                     <value> <string>Update</string> </value>
-                </item>
-                <item>
-                    <key> <string>enabled</string> </key>
-                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>

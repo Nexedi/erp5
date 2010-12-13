@@ -48,7 +48,7 @@
     <span tal:content="python:\'%.2f %s\' % (resource.getPrice(),\'Eur\')#context.WebSite_getShoppingCartDefaultCurrencySymbol())"/>    \n
     </tal:comment>\n
     <img tal:condition="here/getDefaultImageAbsoluteUrl" tal:attributes="src string:${resource/getDefaultImageAbsoluteUrl}?resolution=75&display=thumbnail">\n
-    <a tal:attributes="href string:${resource/getAbsoluteUrl}?came_from=${came_from}">View details</a>\n
+    <!--a tal:attributes="href string:${resource/getAbsoluteUrl}?came_from=${came_from}">View details</a-->\n
     </p>\n
  \n
 </div>\n

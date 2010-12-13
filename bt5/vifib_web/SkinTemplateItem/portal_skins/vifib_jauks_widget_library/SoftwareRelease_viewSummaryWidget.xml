@@ -46,8 +46,8 @@
     <span i18n:translate="">Version</span>\n
     <span tal:content="resource/getVersion" />\n
     </p>\n
-    <a tal:attributes="href string:./${resource/getRelativeUrl}?came_from=${came_from}"\n
-       i18n:translate="" >View details</a>\n
+    <!--a tal:attributes="href string:./${resource/getRelativeUrl}?came_from=${came_from}"\n
+       i18n:translate="" >View details</a-->\n
  \n
 </div>\n
 </tal:block>
