@@ -51,6 +51,11 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from DateTime import DateTime\n
+def sorted(seq):\n
+  seq = seq[:]\n
+  seq.sort()\n
+  return seq\n
+\n
 portal = context.getPortalObject()\n
 request = portal.REQUEST\n
 \n
@@ -79,7 +84,7 @@ for tracking_brain in portal.portal_simulation.getCurrentTrackingList(\n
                            item.getQuantity(at_date=at_date) )\n
   result_list.append(item_dict)\n
 \n
-return result_list\n
+return sorted(result_list)\n
 </string> </value>
         </item>
         <item>
@@ -119,6 +124,7 @@ return result_list\n
                             <string>at_date</string>
                             <string>kw</string>
                             <string>DateTime</string>
+                            <string>sorted</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
