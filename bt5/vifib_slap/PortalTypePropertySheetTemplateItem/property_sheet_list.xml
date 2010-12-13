@@ -8,9 +8,6 @@
  <portal_type id="System Preference">
   <item>VifibSystemPreference</item>
  </portal_type>
- <portal_type id="Usage Report">
-  <item>TextDocument</item>
- </portal_type>
  <portal_type id="Virtio Partition">
   <item>ComputerPartition</item>
  </portal_type>

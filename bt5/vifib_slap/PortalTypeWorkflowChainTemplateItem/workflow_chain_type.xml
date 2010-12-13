@@ -40,10 +40,6 @@
   <workflow>slap_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Usage Report</type>
-  <workflow>edit_workflow, validation_workflow</workflow>
- </chain>
- <chain>
   <type>Virtio Partition</type>
   <workflow>computer_partition_slap_interface_workflow, edit_workflow, slap_interaction_workflow, validation_workflow</workflow>
  </chain>

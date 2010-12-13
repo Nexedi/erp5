@@ -3,7 +3,5 @@ Computer Partition | slave_partition
 Slave Partition | jump_to_related_usage_report_list
 Slave Partition | view
 System Preference | vifib_preference
-Usage Report Module | view
-Usage Report | view
 Virtio Partition | jump_to_related_usage_report_list
 Virtio Partition | view

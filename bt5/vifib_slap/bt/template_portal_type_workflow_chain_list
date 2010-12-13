@@ -14,8 +14,6 @@ Slave Partition | validation_workflow
 Software Instance | slap_interaction_workflow
 Software Instance | slap_interaction_workflow
 Software Release | slap_interaction_workflow
-Usage Report | edit_workflow
-Usage Report | validation_workflow
 Virtio Partition | computer_partition_slap_interface_workflow
 Virtio Partition | edit_workflow
 Virtio Partition | slap_interaction_workflow
