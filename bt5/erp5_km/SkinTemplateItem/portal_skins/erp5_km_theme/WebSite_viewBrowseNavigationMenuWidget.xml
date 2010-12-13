@@ -52,7 +52,7 @@
 \n
   <li class="collapse-menu"\n
       tal:condition="not:static_navigation_menu">\n
-    <a href="#" >\n
+    <a href="#" tal:attributes="href current_web_section_url">\n
       <tal:block i18n:translate="" i18n:domain="ui">Browse</tal:block>\n
       <!--[if IE 7]><!-->\n
     </a><!--<![endif]-->\n
