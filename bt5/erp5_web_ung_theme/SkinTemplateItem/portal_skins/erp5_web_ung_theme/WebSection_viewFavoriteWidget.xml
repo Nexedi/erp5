@@ -43,7 +43,10 @@
                        has_editor python: current_url != portal_path;">\n
 <a class="domain_selected"></a>\n
 <tal:block tal:condition="python: not has_editor">\n
-  <a tal:attributes="href python: request.get(\'URL\') + \'?reset:int=1\'">Refresh</a>\n
+  <a tal:attributes="href python: request.get(\'URL\') + \'?domain_url=ung_domain/all_document_list&\' + \n
+                                                        \'form_id=erp5_web_ung_layout&\' + \n
+                                                        \'list_selection_name=ung_document_list_selection&\' + \n
+                                                        \'domain_depth:int=0&reset:int=1\'">Refresh</a>\n
 </tal:block>\n
 <tal:block tal:condition="python: has_editor">\n
   <a tal:attributes="href python: request.get(\'URL\') + \'?editable_mode:int=1\'">Refresh</a>\n

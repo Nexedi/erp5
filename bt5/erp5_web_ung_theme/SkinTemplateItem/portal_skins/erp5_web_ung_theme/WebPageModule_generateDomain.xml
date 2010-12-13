@@ -54,7 +54,6 @@
   This script generates a sections list to filter the document on UNG Docs.\n
   XXX - The generation of domains should be more dynamic because some domains is create manually.\n
 """\n
-domain_list = []\n
 \n
 def appendTempDomain(id, title, property_dict):\n
   domain = parent.generateTempDomain(id=id)\n
@@ -65,56 +64,66 @@ def appendTempDomain(id, title, property_dict):\n
     domain.setCriterion(key, value)\n
   domain_list.append(domain)\n
  \n
-if depth == 0:\n
-  domain = appendTempDomain(\'all_document_list\', \n
-                            \'All Documents\', \n
-                            dict(validation_state=[\'draft\']))\n
+domain_list = []\n
+\n
+if depth == 1:\n
+  return domain_list\n
+\n
+domain = appendTempDomain(\'all_document_list\', \n
+                          \'All Documents\', \n
+                           dict(validation_state=[\'draft\']))\n
   \n
-  domain = appendTempDomain(\'hidden_document_list\', \n
-                            \'Hidden\', \n
-                            dict(validation_state=[\'hidden\']))\n
+domain = appendTempDomain(\'hidden_document_list\', \n
+                          \'Hidden\', \n
+                          dict(validation_state=[\'hidden\']))\n
 \n
-  domain = appendTempDomain(\'opened_document_list\', \n
-                            \'Opened by me\', \n
-                            dict(local_roles=\'Owner\', validation_state=[\'draft\']))\n
+domain = appendTempDomain(\'opened_document_list\', \n
+                          \'Opened by me\', \n
+                          dict(local_roles=\'Owner\', validation_state=[\'draft\']))\n
 \n
-  domain = appendTempDomain(\'owner_document_list\', \n
-                            \'Owned by me\',\n
-                            dict(local_roles=\'Owner\', validation_state=[\'draft\']))\n
+domain = appendTempDomain(\'owner_document_list\', \n
+                          \'Owned by me\',\n
+                          dict(local_roles=\'Owner\', validation_state=[\'draft\']))\n
 \n
-  domain = appendTempDomain(\'shared_document_list\', \n
-                            \'Shared by me\',\n
-                            dict(validation_state=[\'draft\']))\n
+domain = appendTempDomain(\'shared_document_list\', \n
+                          \'Shared by me\',\n
+                          dict(validation_state=[\'draft\']))\n
 \n
-  domain = appendTempDomain(\'starred_document_list\',\n
-                            \'Starred\',\n
-                            dict(validation_state=[\'draft\']))\n
+domain = appendTempDomain(\'starred_document_list\',\n
+                          \'Starred\',\n
+                          dict(validation_state=[\'draft\']))\n
 \n
-  domain = appendTempDomain(\'trash_document_list\',\n
-                            \'Trash\',\n
-                            dict(validation_state=[\'deleted\']))\n
+domain = appendTempDomain(\'trash_document_list\',\n
+                          \'Trash\',\n
+                          dict(validation_state=[\'deleted\']))\n
 \n
-  domain = parent.generateTempDomain(id=\'webpage_module_list\')\n
-  domain.edit(title=\'Document by Type\',\n
-              list_method=\'WebPageModule_getDocumentListFiltered\',\n
-              domain_generator_method_id = script.id)\n
-  domain_list.append(domain)\n
+domain = parent.generateTempDomain(id=\'webpage_module_list\')\n
+domain.edit(title=\'Document by Type\',\n
+            list_method=\'WebPageModule_getDocumentListFiltered\',\n
+            domain_generator_method_id = script.id)\n
+domain_list.append(domain)\n
 \n
-  # XXX - Review code to be more dynamic\n
-  webpage_subdomain = domain.generateTempDomain(id=\'subWebPage\')\n
-  webpage_subdomain.edit(title="Web Page",\n
-              list_method=\'WebPageModule_getWebPageListFiltered\',\n
-              domain_generator_method_id=script.id)\n
+# XXX - Review code to be more dynamic\n
+webpage_subdomain = domain.generateTempDomain(id=\'subWebPage\')\n
+webpage_subdomain.edit(title="Web Page",\n
+             membership_criterion_base_category = ("webpage_module_list"),\n
+             membership_criterion_category = ("webpage_module_list"),\n
+             list_method=\'WebPageModule_getWebPageListFiltered\',\n
+             domain_generator_method_id=script.id)\n
 \n
-  webtable_subdomain = domain.generateTempDomain(id=\'subWebTable\')\n
-  webtable_subdomain.edit(title="Web Table",\n
-              list_method=\'WebPageModule_getWebTableListFiltered\',\n
-              domain_generator_method_id=script.id)\n
+webtable_subdomain = domain.generateTempDomain(id=\'subWebTable\')\n
+webtable_subdomain.edit(title="Web Table",\n
+             membership_criterion_base_category = ("webpage_module_list"),\n
+             membership_criterion_category = ("webpage_module_list"),\n
+             list_method=\'WebPageModule_getWebTableListFiltered\',\n
+             domain_generator_method_id=script.id)\n
 \n
-  webillustration_subdomain = domain.generateTempDomain(id=\'subWebIllustraion\')\n
-  webillustration_subdomain.edit(title="Web Illustration",\n
-              list_method=\'WebPageModule_getWebIllustrationListFiltered\',\n
-              domain_generator_method_id=script.id)\n
+webillustration_subdomain = domain.generateTempDomain(id=\'subWebIllustraion\')\n
+webillustration_subdomain.edit(title="Web Illustration",\n
+             membership_criterion_base_category = ("webpage_module_list"),\n
+             membership_criterion_category = ("webpage_module_list"),\n
+             list_method=\'WebPageModule_getWebIllustrationListFiltered\',\n
+             domain_generator_method_id=script.id)\n
 \n
 return domain_list\n
 </string> </value>

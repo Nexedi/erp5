@@ -40,7 +40,10 @@
                        enctype string:multipart/form-data;\n
                        portal_path python:website.absolute_url();\n
                        has_editor python: here.absolute_url() != portal_path;">\n
-<a class="ung_docs" tal:attributes="href python: portal_path + \'?reset:int=1\'">\n
+<a class="ung_docs" tal:attributes="href python: portal_path + \'?domain_url=ung_domain/all_document_list&\' + \n
+                                                               \'form_id=erp5_web_ung_layout&\' + \n
+                                                               \'list_selection_name=ung_document_list_selection&\' + \n
+                                                               \'domain_depth:int=0&reset:int=1\'">\n
  <img src="ung_images/ung-logo.gif">\n
 </a>\n
 <a id=\'loading_message\'>Loading...</a>\n
