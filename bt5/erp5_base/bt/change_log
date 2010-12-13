@@ -1,3 +1,6 @@
+2010-12-13 nicolas.dumazet
+* Migrate Tools.
+
 2010-11-29 lucas
 * Added proxy role in reindex_object_interaction_workflow/scripts/callRecursiveReindexObject to avoid security issues.
 

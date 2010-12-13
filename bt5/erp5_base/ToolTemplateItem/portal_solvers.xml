@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="SolverTool" module="Products.ERP5.Tool.SolverTool"/>
+      <global name="Solver Tool" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>

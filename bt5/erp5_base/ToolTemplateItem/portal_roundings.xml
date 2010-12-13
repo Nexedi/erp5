@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="RoundingTool" module="Products.ERP5.Tool.RoundingTool"/>
+      <global name="Rounding Tool" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
