@@ -1,3 +1,6 @@
+2010-12-13 gabriel
+* Remove all categories because for now all ung sections are domains only
+
 2010-12-10 gabriel
 * Refactored code to be possible make upload of Spreadsheet Documents.
 
