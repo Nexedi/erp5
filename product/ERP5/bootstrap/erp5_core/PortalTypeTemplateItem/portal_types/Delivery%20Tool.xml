@@ -26,10 +26,6 @@
             </value>
         </item>
         <item>
-            <key> <string>acquire_local_roles</string> </key>
-            <value> <int>1</int> </value>
-        </item>
-        <item>
             <key> <string>content_icon</string> </key>
             <value> <string>folder_icon.gif</string> </value>
         </item>
@@ -39,7 +35,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Template Tool contains Business Templates.</string> </value>
+            <value> <string>Delivery Tool contains delivery builders.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
@@ -50,23 +46,11 @@
             <value> <int>1</int> </value>
         </item>
         <item>
-            <key> <string>group_list</string> </key>
-            <value>
-              <tuple>
-                <string>module</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
-            <value> <string>Template Tool</string> </value>
+            <value> <string>Delivery Tool</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>permission</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
@@ -75,7 +59,7 @@
         </item>
         <item>
             <key> <string>type_class</string> </key>
-            <value> <string>TemplateTool</string> </value>
+            <value> <string>DeliveryTool</string> </value>
         </item>
       </dictionary>
     </pickle>

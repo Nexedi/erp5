@@ -1,3 +1,6 @@
+2010-12-13 nicolas.dumazet
+* Add Tool portal types for Tools added through ERP5Site.manage_addERP5Site
+
 2010-12-07 arnaud.fontaine
 * Add portal_property_sheets to the Tools.
 
