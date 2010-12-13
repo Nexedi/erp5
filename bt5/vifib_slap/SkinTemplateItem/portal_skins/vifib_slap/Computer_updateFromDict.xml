@@ -51,52 +51,26 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string># Getting existing partitions\n
-computer_partition_list = context.contentValues()\n
+existing_partition_dict = {}\n
+for c in context.contentValues():\n
+  existing_partition_dict[c.getReference()] = c\n
 \n
-# List of the partitions already treated\n
-treated_partition_list = []\n
-\n
+# update computer data\n
 context.edit(\n
   default_network_address_ip_address = computer_dict[\'address\'],\n
   default_network_address_netmask = computer_dict[\'netmask\'],\n
   quantity = len(computer_dict[\'partition_list\']),\n
 )\n
 \n
-# Searching through existing partitions and updating them\n
-for partition in computer_partition_list:\n
-  for partition_dict in computer_dict[\'partition_list\']:\n
-\n
-    if partition_dict[\'reference\'] == partition.getReference():\n
-      partition.edit(\n
-          default_network_address_ip_address = partition_dict[\'addr\'],\n
-          default_network_address_netmask = partition_dict[\'netmask\'],\n
-      )\n
-\n
-      partition.getDefaultNetworkAddressValue().edit(network_interface = partition_dict[\'tap\'][\'name\'])\n
-\n
-      # Adding the treated partition to the list\n
-      computer_dict[\'partition_list\'].remove(partition_dict)\n
-\n
-      treated_partition_list.append(partition)\n
-\n
-# Adding remaining partition listed in the dict to the computer object\n
-for partition_dict in computer_dict[\'partition_list\']:\n
-  partition = context.newContent(\n
-    portal_type = "Computer Partition",\n
-    reference = partition_dict[\'reference\'],\n
-    default_network_address_ip_address = partition_dict[\'addr\'],\n
-  )\n
-  partition.getDefaultNetworkAddressValue().edit(network_interface = partition_dict[\'tap\'][\'name\'])\n
-\n
-  partition.markFree()\n
-  treated_partition_list.append(partition)\n
-\n
-for partition in computer_partition_list:\n
-  if partition not in treated_partition_list:\n
-    # Do something to disable the partition\n
-    break\n
-\n
-return True\n
+for send_partition in computer_dict[\'partition_list\']:\n
+  partition = existing_partition_dict.get(send_partition[\'reference\'], None)\n
+  if partition is None:\n
+    partition = context.newContent(portal_type=\'Computer Partition\')\n
+    partition.markFree()\n
+  partition.edit(default_network_address_ip_address = send_partition[\'addr\'],\n
+          default_network_address_netmask = send_partition[\'netmask\'],)\n
+  partition.getDefaultNetworkAddressValue().edit(\n
+      network_interface = send_partition[\'tap\'][\'name\'])\n
 </string> </value>
         </item>
         <item>
@@ -140,16 +114,17 @@ return True\n
                         <value>
                           <tuple>
                             <string>computer_dict</string>
+                            <string>existing_partition_dict</string>
+                            <string>_getiter_</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>computer_partition_list</string>
-                            <string>treated_partition_list</string>
+                            <string>c</string>
+                            <string>_write_</string>
                             <string>_getitem_</string>
                             <string>len</string>
-                            <string>_getiter_</string>
+                            <string>send_partition</string>
+                            <string>None</string>
                             <string>partition</string>
-                            <string>partition_dict</string>
-                            <string>True</string>
                           </tuple>
                         </value>
                     </item>
