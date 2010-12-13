@@ -34,6 +34,11 @@ function getCurrentObjectUrl(){\n
   return window.location.href.split("?")[0];\n
 }\n
 \n
+function getWebEditorName(){\n
+  currentUrlSplitted = window.location.href.split("?")[0].split("/");\n
+  return currentUrlSplitted[currentUrlSplitted.length-1];\n
+}\n
+\n
 function getUrlParameterList(){\n
   var argumentList = {};\n
   resultList = window.location.href.split("?")[1].split("&");\n
@@ -105,6 +110,12 @@ $(document).ready(function(){\n
       $("a#loading_message").show();\n
       setTimeout(checkConversion(), 1000);\n
     }\n
+    if (getWebEditorName() == "WebPage_viewEditor" || getWebEditorName() == "WebTable_viewEditor")\n
+     $("div.content").css({"position":"fixed", "bottom": "0px", "left": "0px", "right": "0px"});\n
+    if (getWebEditorName() == "WebPage_viewEditor")\n
+     $("div.content").css({"top": "5em"});\n
+    if (getWebEditorName() == "WebTable_viewEditor")\n
+     $("div.content").css({"top": "7em"});\n
   }\n
   $("a[name=\'document_title\']").html(getObjectPropertyValue("getTitle"));\n
   $("input#upload").click(function(event){\n

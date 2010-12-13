@@ -341,6 +341,7 @@ div.main-left, div.main-right, div.main {\n
 \n
 div.main {\n
  margin-top: 0.5em;\n
+ height: auto;\n
 }\n
 button.delete {\n
   margin-top: 6px;\n
@@ -414,7 +415,6 @@ div.content {\n
 div.main-right div.content {\n
   height:27em;\n
 }\n
-\n
 \n
 div.listbox-body div.main-right tbody {\n
   height:25.35em;\n
@@ -869,6 +869,10 @@ input#submit_document {\n
 \n
 a#loading_message {\n
   display: none;\n
+}\n
+\n
+iframe#field_my_text_content___Frame {\n
+  height: 489px !important;\n
 }
 
 ]]></string> </value>
