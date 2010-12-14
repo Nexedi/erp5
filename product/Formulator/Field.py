@@ -207,7 +207,7 @@ class Field:
           return self.widget.render(self, key, value, REQUEST,
                                     render_prefix=render_prefix)
 
-    security.declarePrivate('_render_helper')
+    security.declarePrivate('_render_odt_helper')
     def _render_odt_helper(self, key, value, as_string, ooo_builder,
                            REQUEST, render_prefix, attr_dict, local_name):
       value = self._get_default(key, value, REQUEST)
