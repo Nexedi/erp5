@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -59,6 +56,14 @@ cancel_url = kw.get(\'cancel_url\', None)\n
 active_pad_relative_url = kw.get(\'active_pad_relative_url\', None)\n
 knowledge_pad = context.restrictedTraverse(active_pad_relative_url)\n
 not_added_gadgets_mesage = None\n
+\n
+selection_name = context.REQUEST.get(\'list_selection_name\', None)\n
+if selection_name is not None:\n
+  # maybe user already selected them in a previous page in a listbox selection\n
+  portal_selection = context.portal_selections\n
+  params = portal_selection.getSelectionParamsFor(selection_name, {})\n
+  uids.extend(params.get(\'uids\', []))\n
+\n
 if len(uids):\n
   for uid in uids:\n
     gadget = context.portal_catalog(uid=uid)[0]\n
@@ -134,6 +139,9 @@ else:\n
                             <string>active_pad_relative_url</string>
                             <string>knowledge_pad</string>
                             <string>not_added_gadgets_mesage</string>
+                            <string>selection_name</string>
+                            <string>portal_selection</string>
+                            <string>params</string>
                             <string>len</string>
                             <string>_getiter_</string>
                             <string>uid</string>
