@@ -63,8 +63,14 @@
   <div class="clear"></div>\n
 </div>\n
 \n
-</tal:block>\n
-
+<div class="available_menu_option">\n
+  <a tal:attributes="href string:${website_url}/myspace/my_servers">\n
+    <img tal:attributes="src string:${base_url}my_servers_active.png" alt="My Servers" />\n
+    <br /><span i18n:translate="">My Servers</span>\n
+  </a>\n
+</div>\n
+\n
+</tal:block>
 
 ]]></unicode> </value>
         </item>
