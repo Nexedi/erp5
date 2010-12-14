@@ -840,6 +840,37 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
     self.failUnless(subsection.getTitle() in 
                     self.publish(url, self.auth).getBody())
 
+  def test_17AddGadgets(self, quiet=quiet, run=run_all_test):
+    """ Check Latest Content Gadgets """
+
+    portal = self.getPortal()
+    portal_selections = portal.portal_selections
+    km_my_documents_gadget = portal.portal_gadgets.km_my_documents
+    km_my_contacts_gadget = portal.portal_gadgets.km_my_contacts
+    
+    # test directly adding a gadget
+    self.web_front_knowledge_pad.KnowledgePad_addBoxList(**{'uids':[km_my_contacts_gadget.getUid()]})
+    self.stepTic()
+    self.assertSameSet([km_my_contacts_gadget],
+                        [x.getSpecialiseValue() for x in self.web_front_knowledge_pad.objectValues()])
+    # clean up for rest of test
+    self.web_front_knowledge_pad.manage_delObjects(list(self.web_front_knowledge_pad.objectIds()))
+    self.stepTic()
+
+    # in order to emulate a dialog listbox for adding gadgets we need to set selection and its name
+    # in REQUEST. This test like user selects a gadget from dialog's first page then go to second
+    # and select again.
+    selection_name = 'gadget_tool_view_gadget_add_dialog'
+    self.app.REQUEST.set('list_selection_name', selection_name)
+    portal.portal_selections.setSelectionParamsFor(selection_name, {'uids':[km_my_documents_gadget.getUid()]})
+    self.web_front_knowledge_pad.KnowledgePad_addBoxList(**{'uids':[km_my_contacts_gadget.getUid()]})
+    self.stepTic()
+    # now even though we explicitly add only one gadget KnowledgePad_addBoxList should check and add one
+    # in listbox selection as well
+    self.assertSameSet([km_my_documents_gadget, km_my_contacts_gadget],
+                        [x.getSpecialiseValue() for x in self.web_front_knowledge_pad.objectValues()])
+    
+    
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestGadgets))
