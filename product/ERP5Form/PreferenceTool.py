@@ -225,36 +225,45 @@ class PreferenceTool(BaseTool):
         sorted so that the first in the list should be applied first
     """
     tv = getTransactionalVariable()
-    user = getToolByName(self, 'portal_membership').getAuthenticatedMember()
-    tv_key = 'PreferenceTool._getSortedPreferenceList/%s/%s' % (user,
-                                                                sql_catalog_id)
-    if tv.get(tv_key, None) is None:
-      prefs = []
-      # XXX will also cause problems with Manager (too long)
-      # XXX For manager, create a manager specific preference
-      #                  or better solution
-      user_is_manager = 'Manager' in user.getRolesInContext(self)
-      for pref in self.searchFolder(portal_type='Preference', sql_catalog_id=sql_catalog_id):
-        pref = pref.getObject()
-        if pref is not None and pref.getProperty('preference_state',
-                                  'broken') in ('enabled', 'global'):
-          # XXX quick workaround so that manager only see user preference
-          # they actually own.
-          if user_is_manager and pref.getPriority() == Priority.USER :
-            if pref.getOwnerTuple()[1] == user.getId():
+    security_manager = getSecurityManager()
+    user = security_manager.getUser()
+    acl_users = self.getPortalObject().acl_users
+    try:
+      # reset a security manager without any proxy role or unrestricted method,
+      # wich affects the catalog search that we do to find applicable
+      # preferences.
+      actual_user = acl_users.getUser(str(user))
+      if actual_user is not None:
+        newSecurityManager(self.REQUEST, actual_user.__of__(acl_users))
+      tv_key = 'PreferenceTool._getSortedPreferenceList/%s/%s' % (user,
+                                                                  sql_catalog_id)
+      if tv.get(tv_key, None) is None:
+        prefs = []
+        # XXX will also cause problems with Manager (too long)
+        # XXX For manager, create a manager specific preference
+        #                  or better solution
+        user_is_manager = 'Manager' in user.getRolesInContext(self)
+        for pref in self.searchFolder(portal_type='Preference', sql_catalog_id=sql_catalog_id):
+          pref = pref.getObject()
+          if pref is not None and pref.getProperty('preference_state',
+                                    'broken') in ('enabled', 'global'):
+            # XXX quick workaround so that manager only see user preference
+            # they actually own.
+            if user_is_manager and pref.getPriority() == Priority.USER :
+              if pref.getOwnerTuple()[1] == user.getId():
+                prefs.append(pref)
+            else :
               prefs.append(pref)
-          else :
-            prefs.append(pref)
-      prefs.sort(key=lambda x: x.getPriority(), reverse=True)
-      # add system preferences before user preferences
-      sys_prefs = [x.getObject() for x in self.searchFolder(portal_type='System Preference', sql_catalog_id=sql_catalog_id) \
-                   if x.getObject().getProperty('preference_state', 'broken') in ('enabled', 'global')]
-      sys_prefs.sort(key=lambda x: x.getPriority(), reverse=True)
-      preference_list = sys_prefs + prefs
-      tv[tv_key] = preference_list
-    else:
-      preference_list = tv[tv_key]
-    return preference_list
+        prefs.sort(key=lambda x: x.getPriority(), reverse=True)
+        # add system preferences before user preferences
+        sys_prefs = [x.getObject() for x in self.searchFolder(portal_type='System Preference', sql_catalog_id=sql_catalog_id) \
+                     if x.getObject().getProperty('preference_state', 'broken') in ('enabled', 'global')]
+        sys_prefs.sort(key=lambda x: x.getPriority(), reverse=True)
+        preference_list = sys_prefs + prefs
+        tv[tv_key] = preference_list
+      return tv[tv_key]
+    finally:
+      setSecurityManager(security_manager)
 
   def _getActivePreferenceByPortalType(self, portal_type):
     enabled_prefs = self._getSortedPreferenceList()

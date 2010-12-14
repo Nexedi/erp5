@@ -37,7 +37,9 @@ from zExceptions import Unauthorized
 from AccessControl.ZopeGuards import guarded_hasattr
 from DateTime import DateTime
 
+from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from Products.ERP5Type.tests.testERP5Type import PropertySheetTestCase
+from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Form.PreferenceTool import Priority
 from Products.ERP5.PropertySheet.HtmlStylePreference import HtmlStylePreference
 
@@ -358,6 +360,50 @@ class TestPreferences(PropertySheetTestCase):
     self.assertEquals(None,
         portal_preferences.getPreferredAccountingTransactionAtDate())
 
+  def test_proxy_roles(self):
+    # make sure we can get preferences in a script with proxy roles
+    portal_workflow = self.getWorkflowTool()
+    portal_preferences = self.getPreferenceTool()
+    # create 2 users: user_a and user_b
+    uf = self.portal.acl_users
+    uf._doAddUser('user_a', '', ['Member', ], [])
+    uf._doAddUser('user_b', '', ['Member', ], [])
+
+    self.login('user_a')
+
+    user_a = portal_preferences.newContent(
+        id='user_a', portal_type='Preference',
+        # this preference have group priority, so preference for user_b would get
+        # picked first
+        priority=Priority.GROUP,
+        preferred_accounting_transaction_simulation_state_list=['user_a'])
+    transaction.commit(); self.tic()
+
+    # enable a pref
+    portal_workflow.doActionFor(
+       user_a, 'enable_action', wf_id='preference_workflow')
+
+    self.login('user_b')
+    # create a pref for user_b
+    user_b = portal_preferences.newContent(
+        id='user_b', portal_type='Preference',
+        preferred_accounting_transaction_simulation_state_list=['user_b'])
+    transaction.commit(); self.tic()
+
+    # enable this preference
+    portal_workflow.doActionFor(
+       user_b, 'enable_action', wf_id='preference_workflow')
+  
+    self.login('ERP5TypeTestCase')
+    script = createZODBPythonScript(
+     self.portal.portal_skins.custom,
+     'PreferenceTool_testPreferencesProxyRole', '',
+     'return context.getPreferredAccountingTransactionSimulationStateList()')
+    script.manage_proxy(['Manager'])
+    
+    self.login('user_a')
+    self.assertEquals(['user_a'],
+        portal_preferences.PreferenceTool_testPreferencesProxyRole())
 
   def test_GlobalPreference(self):
     # globally enabled preference are preference for anonymous users.
@@ -617,6 +663,7 @@ class TestPreferences(PropertySheetTestCase):
     self.assertEqual(system_preference_string,
         portal_preferences.getDummystring())
 
+  @expectedFailure
   def test_system_preference_value_prefererred_clear_cache_disabled(self):
     default_preference_string = 'Default Name'
     normal_preference_string = 'Normal Preference'
