@@ -220,7 +220,7 @@ class EssendexGateway(XMLObject):
         setSecurityManager(sm)
       
       
-    security.declareProtected(Permissions.ManagePortal, 'receive')
+    security.declareProtected(Permissions.ManagePortal, 'notifyReception')
     def notifyReception(self, xml):
       """The gateway inform what we ha a new message.
          root: lxml Element"""
