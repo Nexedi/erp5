@@ -221,6 +221,16 @@ class Field:
                                       REQUEST, render_prefix, attr_dict,
                                       local_name)
 
+    security.declarePrivate('_render_odt_variable_helper')
+    def _render_odt_variable_helper(self, key, value, as_string, ooo_builder,
+                           REQUEST, render_prefix, attr_dict, local_name):
+      value = self._get_default(key, value, REQUEST)
+      __traceback_info__ = ('key=%s value=%r' % (key, value))
+      return self.widget.render_odt_variable(self, value, as_string,
+                                             ooo_builder, REQUEST,
+                                             render_prefix, attr_dict,
+                                             local_name)
+
     security.declarePrivate('_get_default')
     def _get_default(self, key, value, REQUEST):
         if value is not None:
@@ -312,6 +322,15 @@ class Field:
         key_prefix=None):
       field_key = self.generate_field_key(key=key, key_prefix=key_prefix)
       return self._render_odt_helper(field_key, value, as_string,
+                                     ooo_builder, REQUEST, render_prefix,
+                                     attr_dict, local_name)
+
+    security.declareProtected('View', 'render_odt_variable')
+    def render_odt_variable(self, key=None, value=None, as_string=True,
+        ooo_builder=None, REQUEST=None, render_prefix=None, attr_dict=None,
+        local_name='variable-set', key_prefix=None):
+      field_key = self.generate_field_key(key=key, key_prefix=key_prefix)
+      return self._render_odt_variable_helper(field_key, value, as_string,
                                      ooo_builder, REQUEST, render_prefix,
                                      attr_dict, local_name)
 

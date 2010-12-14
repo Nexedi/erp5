@@ -224,6 +224,28 @@ class Widget:
       return etree.tostring(text_node)
     return text_node
 
+  def render_odt_variable(self, field, value, as_string, ooo_builder, REQUEST,
+                      render_prefix, attr_dict, local_name):
+    """
+      Return a field value rendered in odt format as read-only mode.
+      - as_string return value as string or as xml object
+      - attr_dict can be used for additional attributes (like style).
+      - ooo_builder wrapper of ODF zipped archive usefull to insert images
+      - local_name local-name of the node returned by this render
+    """
+    if attr_dict is None:
+      attr_dict = {}
+    attr_dict['{%s}value-type' % OFFICE_URI] = 'string'
+    if isinstance(value, str):
+      #required by lxml
+      value = value.decode('utf-8')
+    text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
+    text_node.text = value
+    text_node.attrib.update(attr_dict)
+    if as_string:
+      return etree.tostring(text_node)
+    return text_node
+
   def render_odg(self, field, value, as_string, ooo_builder, REQUEST,
                  render_prefix, attr_dict, local_name):
     """This render dedicated to render fields inside OOo document
@@ -1496,6 +1518,27 @@ class DateTimeWidget(Widget):
       return etree.tostring(text_node)
     return text_node
 
+  def render_odt_variable(self, field, value, as_string, ooo_builder, REQUEST,
+                      render_prefix, attr_dict, local_name):
+    """
+      Return a field value rendered in odt format as read-only mode.
+      - as_string return value as string or as xml object
+      - attr_dict can be used for additional attributes (like style).
+      - ooo_builder wrapper of ODF zipped archive usefull to insert images
+      - local_name local-name of the node returned by this render
+    """
+    if attr_dict is None:
+      attr_dict = {}
+    attr_dict['{%s}value-type' % OFFICE_URI] = 'date'
+    if not value and field.get_value('default_now'):
+      value = DateTime()
+    text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
+    attr_dict['{%s}date-value' % OFFICE_URI] = value.strftime('%Y-%m-%d %H:%M:%S')
+    text_node.attrib.update(attr_dict)
+    if as_string:
+      return etree.tostring(text_node)
+    return text_node
+
   def render_odg_view(self, field, value, as_string, ooo_builder, REQUEST,
                       render_prefix, attr_dict, local_name):
     """Transform DateTime into string then call default renderer
@@ -1643,6 +1686,29 @@ class IntegerWidget(TextWidget) :
     return TextWidget.render_odt_view(self, field, value, as_string,
                                       ooo_builder, REQUEST, render_prefix, 
                                       attr_dict, local_name)
+
+  def render_odt_variable(self, field, value, as_string, ooo_builder, REQUEST,
+                      render_prefix, attr_dict, local_name):
+    """
+      Return a field value rendered in odt format as read-only mode.
+      - as_string return value as string or as xml object
+      - attr_dict can be used for additional attributes (like style).
+      - ooo_builder wrapper of ODF zipped archive usefull to insert images
+      - local_name local-name of the node returned by this render
+    """
+    if attr_dict is None:
+      attr_dict = {}
+    attr_dict['{%s}value-type' % OFFICE_URI] = 'float'
+    if isinstance(value, str):
+      #required by lxml
+      value = value.decode('utf-8')
+    text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
+    text_node.text = str(value)
+    attr_dict['{%s}value' % OFFICE_URI] = str(value)
+    text_node.attrib.update(attr_dict)
+    if as_string:
+      return etree.tostring(text_node)
+    return text_node
 
 IntegerWidgetInstance = IntegerWidget()
 class FloatWidget(TextWidget):
@@ -1832,6 +1898,29 @@ class FloatWidget(TextWidget):
       attr_dict = {}
     text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
     text_node.text = self.format_value(field, value).decode('utf-8')
+    text_node.attrib.update(attr_dict)
+    if as_string:
+      return etree.tostring(text_node)
+    return text_node
+
+  def render_odt_variable(self, field, value, as_string, ooo_builder, REQUEST,
+                      render_prefix, attr_dict, local_name):
+    """
+      Return a field value rendered in odt format as read-only mode.
+      - as_string return value as string or as xml object
+      - attr_dict can be used for additional attributes (like style).
+      - ooo_builder wrapper of ODF zipped archive usefull to insert images
+      - local_name local-name of the node returned by this render
+    """
+    if attr_dict is None:
+      attr_dict = {}
+    attr_dict['{%s}value-type' % OFFICE_URI] = 'float'
+    if isinstance(value, str):
+      #required by lxml
+      value = value.decode('utf-8')
+    text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
+    text_node.text = str(value)
+    attr_dict['{%s}value' % OFFICE_URI] = str(value)
     text_node.attrib.update(attr_dict)
     if as_string:
       return etree.tostring(text_node)
