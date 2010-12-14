@@ -42,7 +42,14 @@ except NameError:
         return True
     return False
 
-python_version = '%s.%s' % util.sys.version_info[0:2]
+# checking if Zope-2.8 flavour or Zope-2.12 flavour
+# BBB it is adhoc, but all tests in this file will be soon merged into
+# each buildout configuration.
+parts_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
+if os.path.exists('%s/zope-2.8' % parts_dir):
+  python_version = '2.4'
+else:
+  python_version = '2.6'
 
 # List of libraries which are acceptable to be linked in globally
 ACCEPTABLE_GLOBAL_LIB_LIST = (
