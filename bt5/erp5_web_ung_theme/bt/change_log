@@ -1,5 +1,6 @@
 2010-12-14 gabriel
-* Refactor code to use ERP5 System Templates to create each allowed document in UNG Web Site.
+* Added default reference for templates.
+* Refactor code to create the documents allowed in UNG using ERP5 System Templates.
 * Added one preference and one template for each allowed object in UNG Web Site
 
 2010-12-13 gabriel
