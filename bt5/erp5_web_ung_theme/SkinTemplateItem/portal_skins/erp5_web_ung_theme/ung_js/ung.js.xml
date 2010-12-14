@@ -175,7 +175,8 @@ $(document).ready(function(){\n
          setObjectPropertyValue("setLanguage", new_language, "language");\n
          setObjectPropertyValue("setVersion", new_version, "value");\n
          setObjectPropertyValue("setIntIndex", new_int_index, "value");\n
-         location.reload();\n
+         $("#edit_document").dialog("close");\n
+         $("button.save").click();\n
        },\n
        Cancel: function() {\n
          $(this).dialog("close");\n
