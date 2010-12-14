@@ -1475,6 +1475,10 @@ div.searchDetails a.modification-date-link{\n
   display:block;\n
 }\n
 \n
+div.collapse-menu-root{\n
+  display:block;\n
+  z-index:111;\n
+}\n
 \n
 /* type.css */\n
 table tr td, table tr th, table tr th button {\n
