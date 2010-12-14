@@ -40,23 +40,23 @@
   <div class="gadget-action">\n
    <div class="menu_create_object">\n
         <tal:block tal:define="portal_path here/absolute_url;\n
-                               url_suffix python: \'/ERP5Site_createNewWebDocument?select_action=\'">\n
+                               url_suffix python: \'/ERP5Site_createNewWebDocument?template=\'">\n
         <li><a id="current">Create New<img tal:attributes="src python: portal_path + \'/ung_images/arrow.png\'"></a>\n
             <ul>\n
           <li>\n
-            <a tal:attributes="href python: portal_path + url_suffix + \'Web Illustration\'">\n
+            <a tal:attributes="href python: portal_path + url_suffix + \'web_illustration_template\'">\n
              <img tal:attributes="src python: portal_path + \'/ung_images/svg.png\'">\n
              Web Illustration\n
             </a>\n
           </li>\n
           <li>\n
-            <a tal:attributes="href python: portal_path + url_suffix +\'Web Table\'">\n
+            <a tal:attributes="href python: portal_path + url_suffix + \'web_table_template\'">\n
              <img tal:attributes="src python: portal_path + \'/ung_images/table.jpg\'">\n
               Web Table\n
             </a>\n
           </li>\n
           <li>\n
-            <a tal:attributes="href python: portal_path + url_suffix + \'Web Page\'">\n
+            <a tal:attributes="href python: portal_path + url_suffix + \'web_page_template\'">\n
              <img tal:attributes="src python: portal_path + \'/ung_images/document.gif\'">\n
               Web Page\n
             </a>\n

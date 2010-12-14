@@ -51,15 +51,28 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>request = context.REQUEST\n
-portal_type = request.get("select_action", selection_action)\n
+template_name = template or request.get("template")\n
+if template_name is None:\n
+  return None\n
 \n
+template_relative_url = "portal_preferences/ung_preference/%s" % template_name\n
 # Create the new content in appropriate module\n
-portal_object = context.getPortalObject()\n
-module = portal_object.getDefaultModule(portal_type)\n
+portal = context.getPortalObject()\n
+template = portal.restrictedTraverse(template_relative_url)\n
+preference = template.getParentValue()\n
+\n
+preference.manage_copyObjects(ids=[template.getId()], REQUEST=request, RESPONSE=None)\n
+new_content_list = portal.web_page_module.manage_pasteObjects(request[\'__cp\'])\n
+new_content_id = new_content_list[0][\'new_id\']\n
+new_content = portal.web_page_module[new_content_id]\n
+new_content.makeTemplateInstance()\n
+\n
+portal_type = new_content.getPortalType()\n
+module = portal.getDefaultModule(portal_type)\n
 new_object = module.newContent(portal_type=portal_type)\n
 \n
 kw["webpage_path"] = new_object.getPath()\n
-return new_object.Base_redirect(context.Base_getEditorViewName(portal_type), \n
+return new_content.Base_redirect(context.Base_getEditorViewName(portal_type), \n
                                 keep_items = dict(editable_mode=1, **kw))\n
 </string> </value>
         </item>
@@ -71,7 +84,7 @@ return new_object.Base_redirect(context.Base_getEditorViewName(portal_type), \n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>selection_action=None, **kw</string> </value>
+            <value> <string>template=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -97,13 +110,21 @@ return new_object.Base_redirect(context.Base_getEditorViewName(portal_type), \n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>selection_action</string>
+                            <string>template</string>
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
+                            <string>template_name</string>
+                            <string>None</string>
+                            <string>template_relative_url</string>
+                            <string>portal</string>
+                            <string>preference</string>
+                            <string>_getitem_</string>
+                            <string>new_content_list</string>
+                            <string>new_content_id</string>
+                            <string>new_content</string>
                             <string>portal_type</string>
-                            <string>portal_object</string>
                             <string>module</string>
                             <string>new_object</string>
                             <string>_write_</string>
