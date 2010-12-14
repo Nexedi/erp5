@@ -262,7 +262,6 @@ div.input > input {\n
 \tmargin:0em;\n
 \tpadding:0px;\n
         padding-top: 4px;\n
-        z-index:100;\n
 \tborder-style: none;\n
 \tborder-width:1px 1px 0;\n
         font-size: 9pt;\n
@@ -356,7 +355,6 @@ ul.breadcrumb {\n
 \theight:100%;\n
 \tfloat: left;\n
 \tposition: relative;\n
-\tz-index: 11;\n
 }\n
 \n
 ul.breadcrumb li {\n
@@ -382,7 +380,6 @@ ul.language_box{\n
 \tfloat:right;\n
 \tmargin:0;\n
 \tpadding: 0;\n
-\tz-index: 10;\n
 \tposition: relative;\n
 \tlist-style-type: none!important;\n
 }\n
@@ -857,7 +854,6 @@ div.web-toolbar div.menu div.field input, div.web-toolbar div.menu div.field sel
 /* Save button styling */\n
 div.actions button {\n
   float: right;\n
-  z-index: 300;\n
   top: -.5em;\n
   right: 0;\n
 }\n
