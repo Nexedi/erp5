@@ -230,6 +230,12 @@ class TestFloatField(ERP5TypeTestCase):
       .xpath('%s/text()' % ODG_XML_WRAPPING_XPATH, namespaces=NSMAP)[0]
     self.assertEquals('1 000.0', test_value)
 
+  def test_render_odt_variable(self):
+    self.field.values['default'] = 1000.0
+    node = self.field.render_odt_variable(as_string=False)
+    self.assertEquals(node.get('{%s}value-type' % NSMAP['office']), 'float')
+    self.assertEquals(node.get('{%s}value' % NSMAP['office']), str(1000.0))
+
 class TestIntegerField(ERP5TypeTestCase):
   """Tests integer field
   """
@@ -245,6 +251,13 @@ class TestIntegerField(ERP5TypeTestCase):
     self.field.values['default'] = 34
     self.assertEquals('34', self.field.render_odt(as_string=False).text)
 
+  def test_render_odt_variable(self):
+    value = 34
+    self.field.values['default'] = value
+    node = self.field.render_odt_variable(as_string=False)
+    self.assertEquals(node.get('{%s}value-type' % NSMAP['office']), 'float')
+    self.assertEquals(node.get('{%s}value' % NSMAP['office']), str(value))
+    self.assertEquals(node.text, str(value))
 
 class TestStringField(ERP5TypeTestCase):
   """Tests string field
@@ -275,6 +288,12 @@ class TestStringField(ERP5TypeTestCase):
       .xpath('%s/text()' % ODG_XML_WRAPPING_XPATH, namespaces=NSMAP)[0]
     self.assertEquals('Hello World!', test_value)
 
+  def test_render_odt_variable(self):
+    self.field.values['default'] = 'Hello World! <&> &lt;&mp;&gt;'
+    node = self.field.render_odt_variable(as_string=False)
+    self.assertEquals(node.get('{%s}value-type' % NSMAP['office']), 'string')
+    self.assertEquals(node.text, 'Hello World! <&> &lt;&mp;&gt;')
+
 class TestDateTimeField(ERP5TypeTestCase):
   """Tests DateTime field
   """
@@ -297,6 +316,14 @@ class TestDateTimeField(ERP5TypeTestCase):
     self.assertEquals('2010/01/01   00:00',
                       self.field.render_odg(as_string=False)\
              .xpath('%s/text()' % ODG_XML_WRAPPING_XPATH, namespaces=NSMAP)[0])
+
+  def test_render_odt_variable(self):
+    value = DateTime(2010, 12, 06, 10, 23, 32)
+    self.field.values['default'] = value
+    node = self.field.render_odt_variable(as_string=False)
+    self.assertEquals(node.get('{%s}value-type' % NSMAP['office']), 'date')
+    self.assertEquals(node.get('{%s}date-value' % NSMAP['office']),
+                      value.strftime('%Y-%m-%d %H:%M:%S'))
 
 class TestTextAreaField(ERP5TypeTestCase):
   """Tests TextArea field
