@@ -67,7 +67,6 @@
         <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/loading_message"/>\n
         <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/knowledge_pad_security_check"/> \n
         <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/disable_server_integration"/>\n
-        <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/disable_server_integration"/> \n
       </tal:block>\n
 \n
       <!-- Render active Knowledge pad -->\n
