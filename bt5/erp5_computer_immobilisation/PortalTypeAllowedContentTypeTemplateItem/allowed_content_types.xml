@@ -2,6 +2,7 @@
  <portal_type id="Computer">
   <item>Computer Partition</item>
   <item>Internet Protocol Address</item>
+  <item>Tcp Port Number</item>
  </portal_type>
  <portal_type id="Computer Module">
   <item>Computer</item>
