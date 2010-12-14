@@ -425,17 +425,23 @@ class SubversionTool(BaseTool):
       raise SubversionPreferencesError, \
       'Please set at least one Subversion Working Copy in preferences first.'
     bt_name = business_template.getTitle()
+    join = os.path.join
+    isdir = os.path.isdir
     for working_copy in wc_list:
       working_copy = self._getWorkingPath(working_copy)
-      if bt_name in listdir(working_copy) :
-        wc_path = os.path.join(working_copy, bt_name)
-        if os.path.isdir(wc_path):
-          if with_name:
-            return wc_path
-          else:
-            return os.sep.join(wc_path.split(os.sep)[:-1])
-    raise SubversionUnknownBusinessTemplateError, \
-        "Could not find '%s' at first level of working copies." % (bt_name, )
+      wc_path = join(working_copy, bt_name)
+      if not isdir(wc_path):
+        for d in listdir(working_copy):
+          wc_path = join(working_copy, d, bt_name)
+          if isdir(wc_path):
+            break
+        else:
+          continue
+      if with_name:
+        return wc_path
+      return os.path.dirname(wc_path)
+    raise SubversionUnknownBusinessTemplateError(
+      "Could not find %r at first or second level of working copies." % bt_name)
 
   def _getWorkingPath(self, path):
     """ Check if the given path is reachable (allowed)
