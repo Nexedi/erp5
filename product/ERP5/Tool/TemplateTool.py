@@ -1239,6 +1239,8 @@ class TemplateTool (BaseTool):
       else:
         log("Updated %s from %s" % (bt_title, download_url))
 
+      return imported_bt5
+
     security.declareProtected(Permissions.ManagePortal,
             'getBusinessTemplateUrl')
     def getBusinessTemplateUrl(self, base_url_list, bt5_title):
