@@ -39,6 +39,7 @@ from Products.MimetypesRegistry.mime_types.magic import guessMime
 from Products.ERP5OOo.OOoUtils import OOoBuilder
 from Products.ERP5OOo.tests.utils import Validator
 from Products.ERP5Type.tests.utils import FileUpload
+from DateTime import DateTime
 from lxml import etree
 import os
 
@@ -73,11 +74,15 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     foo5_file_path = os.path.join(os.path.dirname(__file__),
                                   'test_document',
                                   'Foo_005.odt')
+    variable_file_path = os.path.join(os.path.dirname(__file__),
+                                  'test_document',
+                                  'Foo_001_with_variable.odt')
     foo_file = open(foo_file_path, 'rb')
     foo2_file = open(foo2_file_path, 'rb')
     foo3_file = open(foo3_file_path, 'rb')
     foo4_file = open(foo4_file_path, 'rb')
     foo5_file = open(foo5_file_path, 'rb')
+    variable_file_object = open(variable_file_path, 'rb')
     custom = self.portal.portal_skins.custom
     addStyleSheet = custom.manage_addProduct['OFSP'].manage_addFile
     if custom._getOb('Foo_getODTStyleSheet', None) is None:
@@ -95,6 +100,11 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     if custom._getOb('Foo5_getODTStyleSheet', None) is None:
       addStyleSheet(id='Foo5_getODTStyleSheet', file=foo5_file, title='',
                     precondition='', content_type = 'application/vnd.oasis.opendocument.text')
+    if custom._getOb('Foo_getVariableODTStyleSheet', None) is None:
+      addStyleSheet(id='Foo_getVariableODTStyleSheet',
+                    file=variable_file_object, title='',
+                    precondition='',
+                    content_type='application/vnd.oasis.opendocument.text')
     erp5OOo = custom.manage_addProduct['ERP5OOo']
     addOOoTemplate = erp5OOo.addOOoTemplate
     if custom._getOb('Foo_viewAsOdt', None) is None:
@@ -597,7 +607,6 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     request = self.app.REQUEST
     request['here'] = test1
 
-    from DateTime import DateTime
     test1.foo_1.setTitle('foo_title_7')
     test1.foo_1.setStartDate(DateTime(2009,4,20))
     message = listbox.ListBox_setPropertyList(
@@ -1198,6 +1207,54 @@ return []
     """
     """
     return self.test_09_FieldReplacement(validate=True)
+
+  def test_field_replacement_with_variable(self):
+    """test variables replacement in ODT documents.
+    """
+    document = self.portal.foo_module.test1
+    document.setTitle(None)
+    foo_form = document.Foo_view
+    field_configuration_list = (
+      ('my_string', 'StringField', 'ZZZ test here ZZZ'),
+      ('my_figure', 'IntegerField', 221),
+      ('my_float', 'FloatField', 23.43535),
+      ('my_date', 'DateTimeField', DateTime('2010-12-6 23:24:15.234 GMT+6')),
+      )
+    for field_configuration in field_configuration_list:
+      field_id, klass, value = field_configuration
+      if foo_form._getOb(field_id, None) is not None:
+        foo_form._delObject(field_id)
+      foo_form.manage_addField(field_id, field_id, klass)
+      field = foo_form[field_id]
+      field.values['default'] = value
+    foo_printout = self.portal.foo_module.test1.Foo_viewAsPrintout
+    # Use template with variable defines
+    foo_printout.template = 'Foo_getVariableODTStyleSheet'
+    odf_document = foo_printout(self.portal.REQUEST)
+    self.assertTrue(odf_document is not None)
+    builder = OOoBuilder(odf_document)
+    content_xml = builder.extract("content.xml")
+    content_tree = etree.fromstring(content_xml)
+    nsmap = content_tree.nsmap
+    for field_configuration in field_configuration_list:
+      field_id, klass, value = field_configuration
+      xpath = '//text:variable-set[@text:name = "%s"]' % field_id
+      node_list = content_tree.xpath(xpath, namespaces=nsmap)
+      self.assertEquals(1, len(node_list))
+      node = node_list[0]
+      if klass == 'StringField':
+        self.assertEquals(node.get('{%s}value-type' % nsmap['office']),
+                          'string')
+        self.assertEquals(node.text, value)
+      elif klass in ('IntegerField', 'FloatField'):
+        self.assertEquals(node.get('{%s}value-type' % nsmap['office']),
+                          'float')
+        self.assertEquals(node.get('{%s}value' % nsmap['office']), str(value))
+      elif klass == 'DateTimeField':
+        self.assertEquals(node.get('{%s}value-type' % nsmap['office']), 'date')
+        self.assertEquals(node.text, value.strftime('%d/%m/%Y %H:%M:%S'))
+      else:
+        raise NotImplementedError
 
 def test_suite():
   suite = unittest.TestSuite()

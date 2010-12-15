@@ -63,6 +63,8 @@ TEXT_URI = 'urn:oasis:names:tc:opendocument:xmlns:text:1.0'
 XLINK_URI = 'http://www.w3.org/1999/xlink'
 SVG_URI = 'urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0'
 TABLE_URI = 'urn:oasis:names:tc:opendocument:xmlns:table:1.0'
+OFFICE_URI = 'urn:oasis:names:tc:opendocument:xmlns:office:1.0'
+STYLE_URI = 'urn:oasis:names:tc:opendocument:xmlns:style:1.0'
 
 
 NSMAP = {
@@ -71,6 +73,8 @@ NSMAP = {
           'xlink': XLINK_URI,
           'svg': SVG_URI,
           'table': TABLE_URI,
+          'office': OFFICE_URI,
+          'style': STYLE_URI,
         }
 
 
@@ -916,6 +920,7 @@ class ODTStrategy(ODFStrategy):
     self._replaceNodeViaRangeReference(element_tree, field)
     self._replaceNodeViaPointReference(element_tree, field)
     self._replaceNodeViaFormName(element_tree, field)
+    self._replaceNodeViaVariable(element_tree, field)
 
   def _replaceNodeViaPointReference(self, element_tree, field, iteration_index=0):
     """Replace text node via an ODF point reference.
@@ -936,6 +941,39 @@ class ODTStrategy(ODFStrategy):
       node_to_replace.getparent().replace(node_to_replace, new_node)
     # set when using report section
     self._setUniqueElementName(base_name=field.id,
+                               iteration_index=iteration_index,
+                               xpath=reference_xpath,
+                               element_tree=element_tree)
+
+  def _replaceNodeViaVariable(self, element_tree, field, iteration_index=0):
+    """Replace text node via an ODF variable name.
+    <text:variable-set text:name="my_title" 
+                    office:value-type="string">Title</text:variable-set>
+    """
+    field_id = field.id
+    reference_xpath = '//text:variable-set[@text:name="%s"]' % field_id
+    node_list = element_tree.xpath(reference_xpath,
+                                   namespaces=element_tree.nsmap)
+    for target_node in node_list:
+      attr_dict = {}
+      style_attribute_id = '{%s}data-style-name' % STYLE_URI
+      style_value = target_node.attrib.get(style_attribute_id)
+      if style_value:
+        attr_dict.update({style_attribute_id: style_value})
+      formula_attribute_id = '{%s}formula' % TEXT_URI
+      formula_value = target_node.attrib.get(formula_attribute_id)
+      if formula_value:
+        attr_dict.update({formula_attribute_id: formula_value})
+      name_attribute_id = '{%s}name' % TEXT_URI
+      attr_dict[name_attribute_id] = target_node.get(name_attribute_id)
+      value_type_attribute_id = '{%s}value-type' % OFFICE_URI
+      attr_dict[value_type_attribute_id] = target_node.get(
+                                                       value_type_attribute_id)
+      new_node = field.render_odt_variable(as_string=False,
+                                           attr_dict=attr_dict)
+      target_node.getparent().replace(target_node, new_node)
+    # set when using report section
+    self._setUniqueElementName(base_name=field_id,
                                iteration_index=iteration_index,
                                xpath=reference_xpath,
                                element_tree=element_tree)
