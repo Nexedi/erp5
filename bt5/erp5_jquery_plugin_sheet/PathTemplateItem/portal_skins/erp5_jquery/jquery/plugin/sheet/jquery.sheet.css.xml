@@ -29,10 +29,12 @@
         <item>
             <key> <string>raw</string> </key>
             <value> <string>/* Controls styling */\r\n
-.jSheetControls_loc, .jSheetControls_fx\r\n
+.jSheetControls_loc\r\n
 {\r\n
 \tborder-width: 0px ! important;\r\n
 \tbackground: none ! important;\r\n
+\twidth: 35px;\r\n
+\ttext-align: right;\r\n
 }\r\n
 \r\n
 .jSheetControls_formula\r\n
@@ -124,6 +126,7 @@
 \tborder-spacing: 0px ! important;\r\n
 \tborder-width: 1px ! important;\r\n
 \tmargin-bottom: 20px ! important;\r\n
+\tcursor: cell;\r\n
 }\r\n
 .jSheet tbody\r\n
 {\r\n
@@ -141,7 +144,7 @@
 \tcolor:  inherit ! important;\r\n
 \tborder-width: 0px ! important;\r\n
 }\r\n
-.jSheet td {\r\n
+.jSheet td, .jSheet th {\r\n
 \tborder-width: 1px ! important;\r\n
 \tborder-color: inherit;\r\n
 \tpadding: 0px ! important;\r\n
@@ -152,7 +155,7 @@
     white-space: nowrap ! important;\r\n
 \tmargin: 0px ! important;\r\n
 \tpadding: 0px ! important;\r\n
-\tfont-size: 1em ! important;\r\n
+\tfont-size: 1em;\r\n
 \theight: inherit ! important;\r\n
 \tcolor:  inherit;\r\n
 \tposition: relative;\r\n
@@ -251,6 +254,8 @@
 .safeImg\r\n
 {\r\n
 \tdisplay: inline;\r\n
+\theight: inherit ! important;\r\n
+\twidth: inherit ! important;\r\n
 }\r\n
 \r\n
 .jSheetInPlaceEdit\r\n
@@ -273,6 +278,7 @@
 \tposition: fixed;\r\n
 \ttop: expression(eval(document.body.scrollTop + 15) + "px");\r\n
 \tleft: expression(eval(document.body.scrollLeft) + "px");\r\n
+\tz-index: 9999;\r\n
 }\r\n
 \r\n
 .jSheetFullScreenTabContainer\r\n
@@ -282,6 +288,39 @@
 \tposition: fixed;\r\n
 \ttop: expression(eval(document.body.scrollTop + 15) + "px");\r\n
 \tleft: expression(eval(document.body.scrollLeft) + "px");\r\n
+}\r\n
+\r\n
+.jSheetAutoFiller\r\n
+{\r\n
+\tposition: absolute;\r\n
+\theight: 8px;\r\n
+\twidth: 8px;\r\n
+\ttop: 0px;\r\n
+\tleft: 0px;\r\n
+\tcursor: crosshair ! important;\r\n
+\tdisplay: none;\r\n
+}\r\n
+\r\n
+.jSheetTitle, .jSheetInlineMenu\r\n
+{\r\n
+\twidth: auto;\r\n
+\ttext-align: center;\r\n
+}\r\n
+\r\n
+.jSheetChart\r\n
+{\r\n
+\twidth: inherit;\r\n
+\theight: inherit;\r\n
+}\r\n
+\r\n
+.bodyNoScroll\r\n
+{\r\n
+\toverflow: hidden ! important;\r\n
+}\r\n
+\r\n
+.jSheetParent, .jSheetParent div\r\n
+{\r\n
+\tpadding: 0px ! important;\r\n
 }\r\n
 \r\n
 /* Cell styler classes */\r\n
@@ -315,6 +354,10 @@
 { display: none; }\r\n
 .styleWrap\r\n
 { word-wrap: break-word; }</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
