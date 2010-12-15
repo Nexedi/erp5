@@ -48,8 +48,6 @@
 <div id="menuFile_menuInstance" class="menu">\n
   <a onclick="sheetInstance.newSheet(); return false;" title="Creates a new spreadsheet.">New</a>\n
   <a onclick="sheetInstance.s.fnOpen(); return false;" title="Open a new spreadsheet.">Open</a>\n
-  <a onclick="sheetInstance.s.fnSave(); return false;" title="Save the current spreadsheet.">Save</a>\n
-  <a onclick="sheetInstance.s.fnClose(); return false;" title="Close the current spreadsheet without saving.">Close</a>\n
 </div>\n
 \n
 <div id="menuView_menuInstance" class="menu">\n
