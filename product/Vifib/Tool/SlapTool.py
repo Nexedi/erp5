@@ -121,7 +121,7 @@ class SlapTool(BaseTool):
   # Public POST methods
   ####################################################
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'setComputerPartitionParameterDict')
+  security.declareProtected(Permissions.AccessContentsInformation, 'setComputerPartitionConnectionXml')
   def setComputerPartitionConnectionXml(self, computer_id,
                                         computer_partition_id,
                                         connection_xml):
