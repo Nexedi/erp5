@@ -66,7 +66,7 @@ class TradeModelLine(AmountGeneratorLine):
     return ('price',)
 
   def getMappedValueBaseCategoryList(self):
-    return self._baseGetMappedValueBaseCategoryList() or ('trade_phase',)
+    return self._baseGetMappedValueBaseCategoryList() or ('trade_phase', 'use',)
 
   #
   security.declareProtected(Permissions.AccessContentsInformation,
