@@ -161,18 +161,12 @@ context.REQUEST.RESPONSE.redirect(\'%s/portal_skins/%s/manage_main\' \\\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>create_skin_id=None, selected_skin_id=None, erp5_report_form_title, erp5_report_form_id, listbox_column_id_list=[], python_expression=None, sql_expression=None, action_portal_type=None,portal_type_action=False, create_configure_dialog=True, **kw</string> </value>
+            <value> <string>create_skin_id=None, selected_skin_id=None, erp5_report_form_title=None, erp5_report_form_id=None, listbox_column_id_list=[], python_expression=None, sql_expression=None, action_portal_type=None,portal_type_action=False, create_configure_dialog=True, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
             <value>
-              <tuple>
-                <string encoding="cdata"><![CDATA[
-
-non-default argument follows default argument (<function parameters>, line 1)
-
-]]></string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -187,12 +181,47 @@ non-default argument follows default argument (<function parameters>, line 1)
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>10</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
-                          <tuple/>
+                          <tuple>
+                            <string>create_skin_id</string>
+                            <string>selected_skin_id</string>
+                            <string>erp5_report_form_title</string>
+                            <string>erp5_report_form_id</string>
+                            <string>listbox_column_id_list</string>
+                            <string>python_expression</string>
+                            <string>sql_expression</string>
+                            <string>action_portal_type</string>
+                            <string>portal_type_action</string>
+                            <string>create_configure_dialog</string>
+                            <string>kw</string>
+                            <string>None</string>
+                            <string>MARKER</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>portal_skins</string>
+                            <string>skin_folder</string>
+                            <string>getattr</string>
+                            <string>form_action_portal_type</string>
+                            <string>form_id</string>
+                            <string>dialog_form_id</string>
+                            <string>source_form_id</string>
+                            <string>cb_copy_data</string>
+                            <string>form_object</string>
+                            <string>listbox_list_method_id</string>
+                            <string>_getitem_</string>
+                            <string>zsql_method</string>
+                            <string>script</string>
+                            <string>listbox_id</string>
+                            <string>listbox</string>
+                            <string>$list0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
+                          </tuple>
                         </value>
                     </item>
                   </dictionary>
@@ -203,7 +232,18 @@ non-default argument follows default argument (<function parameters>, line 1)
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <list/>
+                <none/>
+                <none/>
+                <none/>
+                <int>0</int>
+                <int>1</int>
+              </tuple>
             </value>
         </item>
         <item>

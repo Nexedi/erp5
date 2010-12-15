@@ -68,18 +68,12 @@ invoice.Base_jumpToRelatedObject(base_category=base_category, related=related, p
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>base_category, portal_type=(), invoice_type, related=1, selection_name="", selection_index=0, form_id=\'view\', target_form_id=None, jump_from_relative_url=None</string> </value>
+            <value> <string>base_category, portal_type=(), invoice_type=(), related=1, selection_name="", selection_index=0, form_id=\'view\', target_form_id=None, jump_from_relative_url=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
             <value>
-              <tuple>
-                <string encoding="cdata"><![CDATA[
-
-non-default argument follows default argument (<function parameters>, line 1)
-
-]]></string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -94,12 +88,25 @@ non-default argument follows default argument (<function parameters>, line 1)
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>9</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
-                          <tuple/>
+                          <tuple>
+                            <string>base_category</string>
+                            <string>portal_type</string>
+                            <string>invoice_type</string>
+                            <string>related</string>
+                            <string>selection_name</string>
+                            <string>selection_index</string>
+                            <string>form_id</string>
+                            <string>target_form_id</string>
+                            <string>jump_from_relative_url</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>invoice</string>
+                          </tuple>
                         </value>
                     </item>
                   </dictionary>
@@ -110,7 +117,16 @@ non-default argument follows default argument (<function parameters>, line 1)
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <tuple/>
+                <tuple/>
+                <int>1</int>
+                <string></string>
+                <int>0</int>
+                <string>view</string>
+                <none/>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
