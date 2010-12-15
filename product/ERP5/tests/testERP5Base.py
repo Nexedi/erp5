@@ -1366,9 +1366,15 @@ class TestERP5Base(ERP5TypeTestCase):
     self.assertEquals(DateTime().day(), assignment.getStopDate().day())
 
   def test_ERP5Site_checkDataWithScript(self):
+    # note the '/'.join(obj.getPhysicalPath()) idiom:
+
+    # it's basically a obj.absolute_url(relative=1) without escaping:
+    #  - getRelativeUrl() is not enough as it does not return a full
+    #    path for portal_categories.action_type for instance
+    #  - absolute_url escapes 'Foo Tool' into 'Foo%20Tool'
     test = 'test_ERP5Site_checkDataWithScript'
     createZODBPythonScript(self.getSkinsTool().custom, test, '',
-                           'return context.absolute_url(relative=1),')
+                           'return "/".join(context.getPhysicalPath()),')
 
     organisation = self.getOrganisationModule() \
                        .newContent(portal_type='Organisation')
@@ -1388,7 +1394,7 @@ class TestERP5Base(ERP5TypeTestCase):
 
     self.assertEquals(len(relative_url_list), len(set(relative_url_list)))
     for obj in organisation, person, person.getDefaultEmailValue():
-      self.assertTrue(obj.absolute_url(relative=1) in relative_url_list)
+      self.assertTrue('/'.join(obj.getPhysicalPath()) in relative_url_list)
     for relative_url in relative_url_list:
       self.assertTrue('/' in relative_url)
       self.assertNotEquals(None, self.portal.unrestrictedTraverse(relative_url))
