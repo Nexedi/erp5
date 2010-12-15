@@ -105,37 +105,85 @@ $(function() {\n
 <span id="themeSwitcher"></span>\n
 <span id="inlineMenu" style="display: none;">\n
 <span>\n
-<a href="#" onclick="sheetInstance.controlFactory.addRow(); return false;" title="Insert Row After Selected"><img alt="Insert Row After Selected" src="jquery_sheet_image/sheet_row_add.png"/></a>\n
-<a href="#" onclick="sheetInstance.controlFactory.addRow(null, true); return false;" title="Insert Row Before Selected"><img alt="Insert Row Before Selected" src="jquery_sheet_image/sheet_row_add.png"/></a>\n
-<a href="#" onclick="sheetInstance.controlFactory.addRow(null, null, \':last\'); return false;" title="Add Row At End"><img alt="Add Row" src="jquery_sheet_image/sheet_row_add.png"/></a>\n
-<a href="#" onclick="sheetInstance.controlFactory.addRowMulti(); return false;" title="Add Multi-Rows"><img alt="Add Multi-Rows" src="jquery_sheet_image/sheet_row_add_multi.png"/></a>\n
-<a href="#" onclick="sheetInstance.deleteRow(); return false;" title="Delete Row"><img alt="Delete Row" src="jquery_sheet_image/sheet_row_delete.png"/></a>\n
-<a href="#" onclick="sheetInstance.controlFactory.addColumn(); return false;" title="Insert Column After Selected"><img alt="Insert Column After Selected" src="jquery_sheet_image/sheet_col_add.png"/></a>\n
-<a href="#" onclick="sheetInstance.controlFactory.addColumn(null, true); return false;" title="Insert Column Before Selected"><img alt="Insert Column Before Selected" src="jquery_sheet_image/sheet_col_add.png"/></a>\n
-<a href="#" onclick="sheetInstance.controlFactory.addColumn(null, null, \':last\'); return false;" title="Add Column At End"><img alt="Add Column At End" src="jquery_sheet_image/sheet_col_add.png"/></a>\n
-<a href="#" onclick="sheetInstance.controlFactory.addColumnMulti(); return false;" title="Insert Multi-Columns"><img alt="Add Multi-Columns" src="jquery_sheet_image/sheet_col_add_multi.png"/></a>\n
-<a href="#" onclick="sheetInstance.deleteColumn(); return false;" title="Delete Column"><img alt="Delete Column" src="jquery_sheet_image/sheet_col_delete.png"/></a>\n
-<a href="#" onclick="sheetInstance.getTdRange(null, sheetInstance.obj.formula().val()); return false;" title="Get Cell Range"><img alt="Get Cell Range" src="jquery_sheet_image/sheet_get_range.png"/></a>\n
-<a href="#" onclick="sheetInstance.s.fnSave(); return false;" title="Save Sheets"><img alt="Save Sheet" src="jquery_sheet_image/disk.png"/></a>\n
-<a href="#" onclick="sheetInstance.deleteSheet(); return false;" title="Delete Current Sheet"><img alt="Delete Current Sheet" src="jquery_sheet_image/table_delete.png"/></a>\n
-<a href="#" onclick="sheetInstance.calc(sheetInstance.i); return false;" title="Refresh Calculations"><img alt="Refresh Calculations" src="jquery_sheet_image/arrow_refresh.png"/></a>\n
-<a href="#" onclick="sheetInstance.cellFind(); return false;" title="Find"><img alt="Find" src="jquery_sheet_image/find.png"/></a>\n
-<a href="#" onclick="sheetInstance.cellStyleToggle(\'styleBold\'); return false;" title="Bold"><img alt="Bold" src="jquery_sheet_image/text_bold.png"/></a>\n
-<a href="#" onclick="sheetInstance.cellStyleToggle(\'styleItalics\'); return false;" title="Italic"><img alt="Italic" src="jquery_sheet_image/text_italic.png"/></a>\n
-<a href="#" onclick="sheetInstance.cellStyleToggle(\'styleUnderline\', \'styleLineThrough\'); return false;" title="Underline"><img alt="Underline" src="jquery_sheet_image/text_underline.png"/></a>\n
-<a href="#" onclick="sheetInstance.cellStyleToggle(\'styleLineThrough\', \'styleUnderline\'); return false;" title="Strikethrough"><img alt="Strikethrough" src="jquery_sheet_image/text_strikethrough.png"/></a>\n
-<a href="#" onclick="sheetInstance.cellStyleToggle(\'styleLeft\', \'styleCenter styleRight\'); return false;" title="Align Left"><img alt="Align Left" src="jquery_sheet_image/text_align_left.png"/></a>\n
-<a href="#" onclick="sheetInstance.cellStyleToggle(\'styleCenter\', \'styleLeft styleRight\'); return false;" title="Align Center"><img alt="Align Center" src="jquery_sheet_image/text_align_center.png"/></a>\n
-<a href="#" onclick="sheetInstance.cellStyleToggle(\'styleRight\', \'styleLeft styleCenter\'); return false;" title="Align Right"><img alt="Align Right" src="jquery_sheet_image/text_align_right.png"/></a>\n
-<a href="#" onclick="sheetInstance.fillUpOrDown(); return false;" title="Fill Down"><img alt="Fill Down" src="jquery_sheet_image/arrow_down.png"/></a>\n
-<a href="#" onclick="sheetInstance.fillUpOrDown(true); return false;" title="Fill Up"><img alt="Fill Up" src="jquery_sheet_image/arrow_up.png"/></a>\n
+<a href="#" onclick="sheetInstance.controlFactory.addRow(); return false;" title="Insert Row After Selected">\n
+  <img alt="Insert Row After Selected" src="jquery_sheet_image/sheet_row_add.png"/>\n
+</a>\n
+<a href="#" onclick="sheetInstance.controlFactory.addRow(null, true); return false;" title="Insert Row Before Selected">\n
+  <img alt="Insert Row Before Selected" src="jquery_sheet_image/sheet_row_add.png"/>\n
+</a>\n
+<a href="#" onclick="sheetInstance.controlFactory.addRow(null, null, \':last\'); return false;" title="Add Row At End">\n
+  <img alt="Add Row" src="jquery_sheet_image/sheet_row_add.png"/>\n
+</a>\n
+<a href="#" onclick="sheetInstance.controlFactory.addRowMulti(); return false;" title="Add Multi-Rows">\n
+  <img alt="Add Multi-Rows" src="jquery_sheet_image/sheet_row_add_multi.png"/>\n
+</a>\n
+<a href="#" onclick="sheetInstance.deleteRow(); return false;" title="Delete Row">\n
+  <img alt="Delete Row" src="jquery_sheet_image/sheet_row_delete.png"/>\n
+</a>\n
+<a href="#" onclick="sheetInstance.controlFactory.addColumn(); return false;" title="Insert Column After Selected">\n
+  <img alt="Insert Column After Selected" src="jquery_sheet_image/sheet_col_add.png"/>\n
+</a>\n
+<a href="#" onclick="sheetInstance.controlFactory.addColumn(null, true); return false;" title="Insert Column Before Selected">\n
+  <img alt="Insert Column Before Selected" src="jquery_sheet_image/sheet_col_add.png"/>\n
+</a>\n
+<a href="#" onclick="sheetInstance.controlFactory.addColumn(null, null, \':last\'); return false;" title="Add Column At End">\n
+  <img alt="Add Column At End" src="jquery_sheet_image/sheet_col_add.png"/>\n
+</a>\n
+<a href="#" onclick="sheetInstance.controlFactory.addColumnMulti(); return false;" title="Insert Multi-Columns">\n
+  <img alt="Add Multi-Columns" src="jquery_sheet_image/sheet_col_add_multi.png"/>\n
+</a>\n
+<a href="#" onclick="sheetInstance.deleteColumn(); return false;" title="Delete Column">\n
+  <img alt="Delete Column" src="jquery_sheet_image/sheet_col_delete.png"/>\n
+</a>\n
+<a href="#" onclick="sheetInstance.getTdRange(null, sheetInstance.obj.formula().val()); return false;" title="Get Cell Range">\n
+  <img alt="Get Cell Range" src="jquery_sheet_image/sheet_get_range.png"/>\n
+</a>\n
+<a href="#" onclick="sheetInstance.deleteSheet(); return false;" title="Delete Current Sheet">\n
+  <img alt="Delete Current Sheet" src="jquery_sheet_image/table_delete.png"/>\n
+</a>\n
+<a href="#" onclick="sheetInstance.calc(sheetInstance.i); return false;" title="Refresh Calculations">\n
+  <img alt="Refresh Calculations" src="jquery_sheet_image/arrow_refresh.png"/>\n
+</a>\n
+<a href="#" onclick="sheetInstance.cellFind(); return false;" title="Find">\n
+  <img alt="Find" src="jquery_sheet_image/find.png"/>\n
+</a>\n
+<a href="#" onclick="sheetInstance.cellStyleToggle(\'styleBold\'); return false;" title="Bold">\n
+  <img alt="Bold" src="jquery_sheet_image/text_bold.png"/>\n
+</a>\n
+<a href="#" onclick="sheetInstance.cellStyleToggle(\'styleItalics\'); return false;" title="Italic">\n
+  <img alt="Italic" src="jquery_sheet_image/text_italic.png"/>\n
+</a>\n
+<a href="#" onclick="sheetInstance.cellStyleToggle(\'styleUnderline\', \'styleLineThrough\'); return false;" title="Underline">\n
+  <img alt="Underline" src="jquery_sheet_image/text_underline.png"/>\n
+</a>\n
+<a href="#" onclick="sheetInstance.cellStyleToggle(\'styleLineThrough\', \'styleUnderline\'); return false;" title="Strikethrough">\n
+  <img alt="Strikethrough" src="jquery_sheet_image/text_strikethrough.png"/>\n
+</a>\n
+<a href="#" onclick="sheetInstance.cellStyleToggle(\'styleLeft\', \'styleCenter styleRight\'); return false;" title="Align Left">\n
+  <img alt="Align Left" src="jquery_sheet_image/text_align_left.png"/>\n
+</a>\n
+<a href="#" onclick="sheetInstance.cellStyleToggle(\'styleCenter\', \'styleLeft styleRight\'); return false;" title="Align Center">\n
+  <img alt="Align Center" src="jquery_sheet_image/text_align_center.png"/>\n
+</a>\n
+<a href="#" onclick="sheetInstance.cellStyleToggle(\'styleRight\', \'styleLeft styleCenter\'); return false;" title="Align Right">\n
+  <img alt="Align Right" src="jquery_sheet_image/text_align_right.png"/>\n
+</a>\n
+<a href="#" onclick="sheetInstance.fillUpOrDown(); return false;" title="Fill Down">\n
+  <img alt="Fill Down" src="jquery_sheet_image/arrow_down.png"/>\n
+</a>\n
+<a href="#" onclick="sheetInstance.fillUpOrDown(true); return false;" title="Fill Up">\n
+  <img alt="Fill Up" src="jquery_sheet_image/arrow_up.png"/>\n
+</a>\n
 <span class="colorPickers">\n
-<input title="Foreground color" class="colorPickerFont" style="background-image: url(\'jquery_sheet_image/palette.png\') ! important; width: 16px; height: 16px;" />\n
-<input title="Background Color" class="colorPickerCell" style="background-image: url(\'jquery_sheet_image/palette_bg.png\') ! important; width: 16px; height: 16px;" />\n
+  <input title="Foreground color" class="colorPickerFont" style="background-image: url(\'jquery_sheet_image/palette.png\') ! important; width: 16px; height: 16px;" />\n
+  <input title="Background Color" class="colorPickerCell" style="background-image: url(\'jquery_sheet_image/palette_bg.png\') ! important; width: 16px; height: 16px;" />\n
 </span>\n
-<a href="#" onclick="sheetInstance.obj.formula().val(\'=HYPERLINK(\\\'\' + prompt(\'Enter Web Address\', \'http://www.visop-dev.com/\') + \'\\\')\').keydown(); return false;" title="HyperLink"><img alt="Web Link" src="jquery_sheet_image/page_link.png"/></a>\n
-<a href="#" onclick="sheetInstance.toggleFullScreen(); $(\'#lockedMenu\').toggle(); return false;" title="Toggle Full Screen"><img alt="Web Link" src="jquery_sheet_image/arrow_out.png"/></a>\n
-<!--<a href="#" onclick="insertAt(\'jSheetControls_formula\', \'~np~text~\'+\'/np~\');return false;" title="Non-parsed"><img alt="Non-parsed" src="jquery_sheet_image/noparse.png"/></a>-->\n
+<a href="#" onclick="sheetInstance.obj.formula().val(\'=HYPERLINK(\\\'\' + prompt(\'Enter Web Address\', \'http://www.visop-dev.com/\') + \'\\\')\').keydown(); return false;" title="HyperLink">\n
+  <img alt="Web Link" src="jquery_sheet_image/page_link.png"/>\n
+</a>\n
+<a href="#" onclick="sheetInstance.toggleFullScreen(); $(\'#lockedMenu\').toggle(); return false;" title="Toggle Full Screen">\n
+  <img alt="Web Link" src="jquery_sheet_image/arrow_out.png"/>\n
+</a>\n
 </span>\n
 </span>
 

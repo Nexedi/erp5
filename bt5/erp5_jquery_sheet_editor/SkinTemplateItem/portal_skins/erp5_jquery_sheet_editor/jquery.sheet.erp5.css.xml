@@ -114,9 +114,11 @@ body div.content{\n
   width:24px;\n
   padding:5px;\n
 }\n
+\n
 .menuContainer td.img img{\n
   width:20px;\n
 }\n
+\n
 .menuContainer .textBox{\n
   padding: 5px;\n
   font-family:Arial,Helvetica,sans-serif;\n
@@ -124,6 +126,7 @@ body div.content{\n
   background-color:#ffffff;\n
   color: #c3c3c3;\n
 }\n
+\n
 .menuContainer .selected td{\n
   background-color:#f3f3f3;\n
   background-image:url("../images/bgnd_sel_2.jpg")\n
@@ -216,6 +219,10 @@ body div.content{\n
 .verticalMenu .menuShadow{\n
   background:black;\n
   padding:5px;\n
+}\n
+\n
+span#themeSwitcher{\n
+  display:none;\n
 }</string> </value>
         </item>
         <item>
