@@ -100,7 +100,6 @@ $(function() {\n
    return false;\n
  }\n
 </script>\n
-<input type=\'hidden\' id=\'my_text_content\' name=\'field_my_text_content\' value=\'\'>\n
 <div id="jQuerySheet0" style="height: 400px;"></div>\n
 <span id="themeSwitcher"></span>\n
 <span id="inlineMenu" style="display: none;">\n
