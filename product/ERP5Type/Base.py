@@ -3594,6 +3594,10 @@ class Base( CopyContainer,
                  and documented_item.__class__ \
                  or documented_item
 
+    # XXX assume that we dont care about the portal type class
+    while item_class.__module__ in ('erp5.portal_type', 'erp5.temp_portal_type'):
+      item_class = item_class.__bases__[0]
+
     static_method_list = []    # Class methods
     static_property_list = []  # Class attributes
     dynamic_method_list = []   # Workflow methods
