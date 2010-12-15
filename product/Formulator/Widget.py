@@ -534,6 +534,26 @@ class CheckBoxWidget(Widget):
       return etree.tostring(text_node)
     return text_node
 
+  def render_odt_variable(self, field, value, as_string, ooo_builder, REQUEST,
+                      render_prefix, attr_dict, local_name):
+    """
+      Return a field value rendered in odt format as read-only mode.
+      - as_string return value as string or as xml object
+      - attr_dict can be used for additional attributes (like style).
+      - ooo_builder wrapper of ODF zipped archive usefull to insert images
+      - local_name local-name of the node returned by this render
+    """
+    if attr_dict is None:
+      attr_dict = {}
+    attr_dict['{%s}value-type' % OFFICE_URI] = 'boolean'
+    text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
+    attr_dict['{%s}boolean-value' % NSMAP['office']] = str(value).lower()
+    text_node.text = str(value).upper()
+    text_node.attrib.update(attr_dict)
+    if as_string:
+      return etree.tostring(text_node)
+    return text_node
+
 CheckBoxWidgetInstance = CheckBoxWidget()
 
 class TextAreaWidget(Widget):
