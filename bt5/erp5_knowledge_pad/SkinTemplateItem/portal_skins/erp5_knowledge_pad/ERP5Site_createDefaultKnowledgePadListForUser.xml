@@ -94,9 +94,13 @@ if knowledge_pad is None:\n
                             title = context.Base_translateString(\'Tab 1\'),\n
                             activate_kw = activate_kw)\n
 if is_web_mode:\n
-  if context.getPortalType() == \'Web Site\' and default_pad_group in (\'\', None,):\n
+  # in Web Mode we can have a temporary Web Site objects created based on current language\n
+  real_context = context\n
+  if context.isTempObject():\n
+    real_context = context.getParentValue()\n
+  if real_context.getPortalType() == \'Web Site\' and default_pad_group in (\'\', None,):\n
     # script is called within Front Page Gadgets view\n
-    knowledge_pad.setPublicationSectionValue(context)\n
+    knowledge_pad.setPublicationSectionValue(real_context)\n
 \n
   # create a default pad for user belonging to respective pad group\n
   # this pad will be available globally for other contexes using the same\n
@@ -171,6 +175,7 @@ return knowledge_pad.getRelativeUrl()\n
                             <string>new_id</string>
                             <string>_getiter_</string>
                             <string>box</string>
+                            <string>real_context</string>
                             <string>current_user</string>
                             <string>str</string>
                           </tuple>
