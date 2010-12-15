@@ -415,6 +415,16 @@ class TestCheckBoxField(ERP5TypeTestCase):
                       self.field.render_odt(as_string=False, REQUEST=self.portal.REQUEST).tag)
     self.assertEquals('1', self.field.render_odt(as_string=False, REQUEST=self.portal.REQUEST).text)
 
+  def test_render_odt_variable(self):
+    for value in (True, False,):
+      self.field.values['default'] = value
+      node = self.field.render_odt_variable(as_string=False)
+      self.assertEquals(node.get('{%s}value-type' % NSMAP['office']),
+                            'boolean')
+      self.assertEquals(node.get('{%s}boolean-value' % NSMAP['office']),
+                        str(value).lower())
+      self.assertEquals(node.text, str(value).upper())
+
 class TestListField(ERP5TypeTestCase):
   """Tests List field
   """
