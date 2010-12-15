@@ -312,7 +312,11 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     """
     delivery_value = self.getDeliveryValue()
     if delivery_value is None:
-      ra = self.getRootAppliedRule()
+      # If the parent is not an Applied Rule, self does not have the method.
+      if getattr(self, 'getRootAppliedRule', None) is not None:
+        ra = self.getRootAppliedRule()
+      else:
+        return None
       order = ra.getCausalityValue()
       if order is not None:
         return order
