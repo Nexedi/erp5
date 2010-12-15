@@ -1248,6 +1248,8 @@ class TemplateTool (BaseTool):
         This method verify if the business template are available
         into one url (repository).
       """
+      if base_url_list is None:
+        base_url_list = self.getRepositoryList()
       # This list could be preconfigured at some properties or
       # at preferences.
       for base_url in base_url_list:
