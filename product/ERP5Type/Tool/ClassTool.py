@@ -53,7 +53,6 @@ from Products.ERP5Type import _dtmldir
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Type.Core.Folder import OFS_HANDLER
-from Products.ERP5Type import Document
 
 from Products.ERP5Type.Utils import readLocalPropertySheet, writeLocalPropertySheet, getLocalPropertySheetList
 from Products.ERP5Type.Utils import readLocalExtension, writeLocalExtension, getLocalExtensionList
@@ -1104,7 +1103,11 @@ def initialize( context ):
           XXX: this code is (almost) duplicated from ERP5Types/Base.py:asDocumentationHelper
         """
 
-        my_class = getattr(getattr(Document, class_id), class_id)
+        from Products.ERP5Type import document_class_registry
+        from Products.ERP5Type.dynamic.portal_type_class import _importClass
+        # XXX so this is ugly, but should disappear with classes in ZODB
+        my_class = _importClass(document_class_registry[class_id])
+
         method_list = []
         property_list = []
         dochelper = newTempDocumentationHelper(self.getPortalObject(), class_id, title=class_id,
