@@ -407,12 +407,12 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     pt = self.getTypeTool()
     # create module object portal type
     object_type = pt.newContent('Geek Object', 'Base Type',
-                                type_factory_method_id='addPerson')
+                                type_class='Person')
     self.failUnless(object_type is not None)
     sequence.edit(object_ptype_id=object_type.getId())
     # create module portal type
     module_type = pt.newContent('Geek Module', 'Base Type',
-      type_factory_method_id='addFolder',
+      type_class='Folder',
       type_filter_content_type=1,
       type_allowed_content_type_list=('Geek Object',),
       type_hidden_content_type_list=('Geek Object',),
@@ -6846,7 +6846,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     dummy_type = type_provider.newContent(
                              portal_type='Base Type',
                              id='Dummy Type',
-                             type_factory_method_id='addFolder',
+                             type_class='Folder',
                              type_property_sheet_list=('Reference',),
                              type_base_category_list=('source',),
                              type_allowed_content_type_list=('Dummy Type',),
