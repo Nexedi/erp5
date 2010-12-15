@@ -2,7 +2,10 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+      <tuple>
+        <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+        <tuple/>
+      </tuple>
     </pickle>
     <pickle>
       <dictionary>
@@ -56,7 +59,7 @@ Note: this JavaScript is used to make parallel list field more user friendly\n
 $(function() {\n
 \n
   // Make the parallel list field adding more elements automatically.\n
-  $(\'.input:has(.extensible_parallel_list_field)\').change(function(event) {\n
+  $(\'.input .extensible_parallel_list_field\').change(function(event) {\n
     event.preventDefault();\n
     var select_element = $(event.target)\n
     var add_element = true;\n
@@ -83,7 +86,8 @@ $(function() {\n
     }\n
   });\n
 \n
-});
+});\n
+
 
 ]]></string> </value>
         </item>
