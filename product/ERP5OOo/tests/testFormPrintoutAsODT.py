@@ -1219,6 +1219,7 @@ return []
       ('my_figure', 'IntegerField', 221),
       ('my_float', 'FloatField', 23.43535),
       ('my_date', 'DateTimeField', DateTime('2010-12-6 23:24:15.234 GMT+6')),
+      ('my_boolean', 'CheckBoxField', False),
       )
     for field_configuration in field_configuration_list:
       field_id, klass, value = field_configuration
@@ -1253,6 +1254,12 @@ return []
       elif klass == 'DateTimeField':
         self.assertEquals(node.get('{%s}value-type' % nsmap['office']), 'date')
         self.assertEquals(node.text, value.strftime('%d/%m/%Y %H:%M:%S'))
+      elif klass == 'CheckBoxField':
+        self.assertEquals(node.get('{%s}value-type' % nsmap['office']),
+                          'boolean')
+        self.assertEquals(node.get('{%s}boolean-value' % nsmap['office']),
+                          'false')
+        self.assertEquals(node.text, 'FALSE')
       else:
         raise NotImplementedError
 
