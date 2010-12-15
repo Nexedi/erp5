@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="HyperLinkField" module="Products.ERP5Form.HyperLinkField"/>
-        <tuple/>
-      </tuple>
+      <global name="HyperLinkField" module="Products.ERP5Form.HyperLinkField"/>
     </pickle>
     <pickle>
       <dictionary>

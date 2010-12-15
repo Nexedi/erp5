@@ -2,19 +2,10 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="Category" module="Products.ERP5Type.Document.Category"/>
-        <tuple/>
-      </tuple>
+      <global name="Category" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>3422</string> </value>
@@ -25,13 +16,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Odchylenia od cen ewidencyjnych towar\xc3\xb3w w detalu</string> </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Odchylenia od cen ewidencyjnych towarów w detalu</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -34,7 +34,7 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <?xml version="1.0" encoding="latin1"?>\n
 <document\n
@@ -153,7 +153,7 @@
 </document>\n
 
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -166,6 +166,10 @@
         <item>
             <key> <string>id</string> </key>
             <value> <string>AccountingTransactionModule_viewJournalAsPdf</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
         </item>
         <item>
             <key> <string>pdf_stylesheet</string> </key>

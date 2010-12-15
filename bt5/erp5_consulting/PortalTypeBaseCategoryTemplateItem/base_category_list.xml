@@ -10,9 +10,9 @@
   <item>lexicon_item_ubm</item>
  </portal_type>
  <portal_type id="Test Case">
-  <item>specialise</item>
-  <item>source</item>
   <item>requirement</item>
+  <item>source</item>
+  <item>specialise</item>
  </portal_type>
  <portal_type id="Test Case Actor">
   <item>group</item>
@@ -20,8 +20,8 @@
   <item>use_case_actor_role</item>
  </portal_type>
  <portal_type id="Test Case Step">
-  <item>source_section</item>
   <item>requirement</item>
+  <item>source_section</item>
  </portal_type>
  <portal_type id="Test Report">
   <item>requirement</item>
@@ -29,28 +29,28 @@
   <item>specialise</item>
  </portal_type>
  <portal_type id="Test Report Actor">
-  <item>source</item>
   <item>group</item>
-  <item>use_case_actor_role</item>
   <item>site</item>
+  <item>source</item>
+  <item>use_case_actor_role</item>
  </portal_type>
  <portal_type id="Test Report Step">
-  <item>source_section</item>
   <item>requirement</item>
+  <item>source_section</item>
  </portal_type>
  <portal_type id="Use Case">
   <item>requirement</item>
  </portal_type>
  <portal_type id="Use Case Actor">
-  <item>use_case_actor_role</item>
-  <item>site</item>
   <item>group</item>
+  <item>site</item>
+  <item>use_case_actor_role</item>
  </portal_type>
  <portal_type id="Use Case Scenario">
   <item>requirement</item>
  </portal_type>
  <portal_type id="Use Case Scenario Step">
-  <item>source_section</item>
   <item>requirement</item>
+  <item>source_section</item>
  </portal_type>
 </base_category_list>

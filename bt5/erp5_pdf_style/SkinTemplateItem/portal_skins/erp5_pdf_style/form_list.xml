@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PDFTemplate" module="Products.ERP5Form.PDFTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="PDFTemplate" module="Products.ERP5Form.PDFTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -37,7 +34,7 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <?xml version="1.0" encoding="iso-8859-1" ?>\n
 <document filename="erp5_list.pdf"\n
@@ -65,7 +62,7 @@
 \n
 
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -78,6 +75,10 @@
         <item>
             <key> <string>id</string> </key>
             <value> <string>form_list</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
         </item>
         <item>
             <key> <string>pdf_stylesheet</string> </key>

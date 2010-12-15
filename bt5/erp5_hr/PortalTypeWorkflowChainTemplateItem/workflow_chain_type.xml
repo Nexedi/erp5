@@ -5,7 +5,7 @@
  </chain>
  <chain>
   <type>Position Announcement</type>
-  <workflow>publication_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, publication_workflow</workflow>
  </chain>
  <chain>
   <type>Position Opportunity</type>

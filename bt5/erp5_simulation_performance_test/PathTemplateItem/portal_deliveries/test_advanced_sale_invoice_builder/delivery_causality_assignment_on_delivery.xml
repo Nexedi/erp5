@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="DeliveryCausalityAssignmentMovementGroup" module="Products.ERP5Type.Document.DeliveryCausalityAssignmentMovementGroup"/>
-        <tuple/>
-      </tuple>
+      <global name="Delivery Causality Assignment Movement Group" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>

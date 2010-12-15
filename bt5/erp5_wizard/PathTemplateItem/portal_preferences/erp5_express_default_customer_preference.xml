@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="Preference" module="Products.ERP5Type.Document.Preference"/>
-        <tuple/>
-      </tuple>
+      <global name="Preference" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -36,18 +33,6 @@
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
             </value>
         </item>
         <item>
@@ -125,12 +110,6 @@
         <item>
             <key> <string>title</string> </key>
             <value> <string>Erp5 Express Default Customer Preference</string> </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
       </dictionary>
     </pickle>

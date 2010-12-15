@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="StringField" module="Products.Formulator.StandardFields"/>
-        <tuple/>
-      </tuple>
+      <global name="StringField" module="Products.Formulator.StandardFields"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -182,12 +179,6 @@
                     <value> <string></string> </value>
                 </item>
               </dictionary>
-            </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
             </value>
         </item>
         <item>

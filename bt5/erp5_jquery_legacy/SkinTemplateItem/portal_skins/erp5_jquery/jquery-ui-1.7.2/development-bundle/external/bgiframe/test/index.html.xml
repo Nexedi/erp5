@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -37,7 +34,7 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"\n
 \t"http://www.w3.org/TR/html4/strict.dtd">\n
@@ -237,11 +234,15 @@
 \t</body>\n
 </html>
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="MirrorMovementGroup" module="Products.ERP5Type.Document.MirrorMovementGroup"/>
-        <tuple/>
-      </tuple>
+      <global name="Mirror Movement Group" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>

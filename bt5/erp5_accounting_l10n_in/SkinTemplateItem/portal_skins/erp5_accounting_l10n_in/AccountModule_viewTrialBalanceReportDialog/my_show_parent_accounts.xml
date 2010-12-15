@@ -2,13 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.StandardFields</string>
-          <string>CheckBoxField</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="CheckBoxField" module="Products.Formulator.StandardFields"/>
     </pickle>
     <pickle>
       <dictionary>

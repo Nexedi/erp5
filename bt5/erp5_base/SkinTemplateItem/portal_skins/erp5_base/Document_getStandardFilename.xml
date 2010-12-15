@@ -117,8 +117,9 @@ return filename\n
                             <string>original_filename</string>
                             <string>None</string>
                             <string>original_extension</string>
-                            <string>_getitem_</string>
+                            <string>_getiter_</string>
                             <string>filename</string>
+                            <string>_getitem_</string>
                             <string>extension</string>
                           </tuple>
                         </value>

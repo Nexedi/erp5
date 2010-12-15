@@ -1,17 +1,17 @@
 <base_category_list>
  <portal_type id="Position Announcement">
-  <item>site</item>
-  <item>source</item>
-  <item>successor</item>
-  <item>predecessor</item>
+  <item>aggregate</item>
+  <item>classification</item>
   <item>destination</item>
   <item>function</item>
-  <item>aggregate</item>
   <item>group</item>
-  <item>classification</item>
+  <item>predecessor</item>
   <item>publication_section</item>
-  <item>source_project</item>
   <item>similar</item>
+  <item>site</item>
+  <item>source</item>
+  <item>source_project</item>
+  <item>successor</item>
  </portal_type>
  <portal_type id="Position Opportunity">
   <item>referral</item>

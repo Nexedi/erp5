@@ -2,19 +2,10 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ExternalMethod" module="Products.ExternalMethod.ExternalMethod"/>
-        <tuple/>
-      </tuple>
+      <global name="ExternalMethod" module="Products.ExternalMethod.ExternalMethod"/>
     </pickle>
     <pickle>
       <dictionary>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
         <item>
             <key> <string>_function</string> </key>
             <value> <string>ERP5Site_updateModuleScribus</string> </value>

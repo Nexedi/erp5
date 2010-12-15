@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="File" module="OFS.Image"/>
-        <tuple/>
-      </tuple>
+      <global name="File" module="OFS.Image"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -14,20 +11,8 @@
             <value> <string>ts37704797.08</string> </value>
         </item>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>__name__</string> </key>
             <value> <string>ooo_template_spreadsheet</string> </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>

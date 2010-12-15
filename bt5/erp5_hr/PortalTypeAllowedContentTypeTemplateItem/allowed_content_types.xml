@@ -3,8 +3,8 @@
   <item>Career</item>
  </portal_type>
  <portal_type id="Position Announcement">
-  <item>Image</item>
   <item>File</item>
+  <item>Image</item>
  </portal_type>
  <portal_type id="Position Announcement Module">
   <item>Position Announcement</item>
@@ -13,10 +13,10 @@
   <item>Position</item>
  </portal_type>
  <portal_type id="Position Opportunity">
+  <item>Document</item>
   <item>File</item>
   <item>Image</item>
   <item>Link</item>
-  <item>Document</item>
  </portal_type>
  <portal_type id="Position Opportunity Module">
   <item>Position Opportunity</item>

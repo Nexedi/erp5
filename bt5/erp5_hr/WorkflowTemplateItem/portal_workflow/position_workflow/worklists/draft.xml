@@ -2,22 +2,10 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Worklists</string>
-          <string>WorklistDefinition</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="WorklistDefinition" module="Products.DCWorkflow.Worklists"/>
     </pickle>
     <pickle>
       <dictionary>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
         <item>
             <key> <string>actbox_category</string> </key>
             <value> <string>global</string> </value>
@@ -47,12 +35,6 @@ position_module?validation_state=draft&reset=1
         <item>
             <key> <string>id</string> </key>
             <value> <string>draft</string> </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>

@@ -34,7 +34,7 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <tal:block tal:replace="nothing">\n
 <!--\n
@@ -105,7 +105,7 @@ XXX: PDF pagination should be similar to OOo one (using iframe). This part shoul
 </tal:block>\n
 
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -120,8 +120,12 @@ XXX: PDF pagination should be similar to OOo one (using iframe). This part shoul
             <value> <string>PDF_renderHTMLPreviewNavigation</string> </value>
         </item>
         <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <unicode></unicode> </value>
         </item>
       </dictionary>
     </pickle>

@@ -2,61 +2,13 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.ERP5Type.ERP5Type</string>
-          <string>ERP5TypeInformation</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="ERP5TypeInformation" module="Products.ERP5Type.ERP5Type"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_actions</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_aliases</string> </key>
-            <value>
-              <dictionary/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_roles</string> </key>
-            <value>
-              <list/>
-            </value>
-        </item>
-        <item>
             <key> <string>acquire_local_roles</string> </key>
             <value> <int>1</int> </value>
-        </item>
-        <item>
-            <key> <string>allowed_content_types</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>base_category_list</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
         <item>
             <key> <string>content_icon</string> </key>
@@ -87,12 +39,6 @@
             </value>
         </item>
         <item>
-            <key> <string>hidden_content_type_list</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Position Announcement</string> </value>
         </item>
@@ -103,12 +49,6 @@
         <item>
             <key> <string>permission</string> </key>
             <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>property_sheet_list</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="Image" module="Products.ERP5Type.Document.Image"/>
-        <tuple/>
-      </tuple>
+      <global name="Image" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -893,7 +890,7 @@ rr8/GuPX09B5z/Vj+3+N/S9LP9WP7f439L1Ivq9/IH//2Q==</string> </value>
   </record>
   <record id="7" aka="AAAAAAAAAAc=">
     <pickle>
-      <global name="OOBTree" module="BTrees._OOBTree"/>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
     </pickle>
     <pickle>
       <none/>
@@ -901,7 +898,7 @@ rr8/GuPX09B5z/Vj+3+N/S9LP9WP7f439L1Ivq9/IH//2Q==</string> </value>
   </record>
   <record id="8" aka="AAAAAAAAAAg=">
     <pickle>
-      <global name="OOBTree" module="BTrees._OOBTree"/>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
     </pickle>
     <pickle>
       <none/>

@@ -2,19 +2,10 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="OOoTemplate" module="Products.ERP5OOo.OOoTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="OOoTemplate" module="Products.ERP5OOo.OOoTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
         <item>
             <key> <string>_bind_names</string> </key>
             <value>
@@ -42,14 +33,8 @@
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <office:document-content xmlns:draw=\'urn:oasis:names:tc:opendocument:xmlns:drawing:1.0\' xmlns:office=\'urn:oasis:names:tc:opendocument:xmlns:office:1.0\' xmlns:text=\'urn:oasis:names:tc:opendocument:xmlns:text:1.0\' xmlns:ooo=\'http://openoffice.org/2004/office\' xmlns:number=\'urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0\' xmlns:dc=\'http://purl.org/dc/elements/1.1/\' xmlns:meta=\'urn:oasis:names:tc:opendocument:xmlns:meta:1.0\' xmlns:table=\'urn:oasis:names:tc:opendocument:xmlns:table:1.0\' xmlns:dr3d=\'urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0\' xmlns:fo=\'urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0\' xmlns:style=\'urn:oasis:names:tc:opendocument:xmlns:style:1.0\' xmlns:xforms=\'http://www.w3.org/2002/xforms\' xmlns:form=\'urn:oasis:names:tc:opendocument:xmlns:form:1.0\' xmlns:script=\'urn:oasis:names:tc:opendocument:xmlns:script:1.0\' xmlns:ooow=\'http://openoffice.org/2004/writer\' xmlns:svg=\'urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0\' xmlns:chart=\'urn:oasis:names:tc:opendocument:xmlns:chart:1.0\' xmlns:dom=\'http://www.w3.org/2001/xml-events\' xmlns:xlink=\'http://www.w3.org/1999/xlink\' xmlns:xsd=\'http://www.w3.org/2001/XMLSchema\' xmlns:xsi=\'http://www.w3.org/2001/XMLSchema-instance\' xmlns:oooc=\'http://openoffice.org/2004/calc\' xmlns:math=\'http://www.w3.org/1998/Math/MathML\'  xmlns:tal=\'http://xml.zope.org/namespaces/tal\'\n
           xmlns:i18n=\'http://xml.zope.org/namespaces/i18n\'\n
@@ -114,7 +99,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell table:style-name=\'ce2\' office:value-type=\'string\'>\n
-            <text:p>A. Przychody ze sprzeda\xc5\xbcy netto i zwi\xc4\x85zane z nimi</text:p>\n
+            <text:p>A. Przychody ze sprzedaży netto i związane z nimi</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value pl/A" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -123,7 +108,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>I. Przychody netto ze sprzeda\xc5\xbcy produkt\xc3\xb3w</text:p>\n
+            <text:p>I. Przychody netto ze sprzedaży produktów</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value pl/AI" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -132,7 +117,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>II. Zmiana stanu produkt\xc3\xb3w (+ zwi\xc4\x99kszenie, - zmniejszenie)</text:p>\n
+            <text:p>II. Zmiana stanu produktów (+ zwiększenie, - zmniejszenie)</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value pl/AII" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -141,7 +126,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>III. Koszty wytworzenia produkt\xc3\xb3w na w\xc5\x82asne potrzeby jednostki</text:p>\n
+            <text:p>III. Koszty wytworzenia produktów na własne potrzeby jednostki</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value pl/AIII" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -150,7 +135,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>IV. Przychody netto ze sprzeda\xc5\xbcy towar\xc3\xb3w i materia\xc5\x82\xc3\xb3w</text:p>\n
+            <text:p>IV. Przychody netto ze sprzedaży towarów i materiałów</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value pl/AIV" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -159,7 +144,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell table:style-name=\'ce2\' office:value-type=\'string\'>\n
-            <text:p>B. Koszty dzia\xc5\x82alno\xc5\x9bci operacyjnej</text:p>\n
+            <text:p>B. Koszty działalności operacyjnej</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value pl/B" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -177,7 +162,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>II. Zu\xc5\xbcycie materia\xc5\x82\xc3\xb3w i energii</text:p>\n
+            <text:p>II. Zużycie materiałów i energii</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value pl/BII" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -186,7 +171,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>III. Us\xc5\x82ugi obce</text:p>\n
+            <text:p>III. Usługi obce</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value pl/BIII" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -195,7 +180,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>IV. Podatki i op\xc5\x82aty</text:p>\n
+            <text:p>IV. Podatki i opłaty</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value pl/BIV" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -213,7 +198,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>VI. Ubezpieczenia spo\xc5\x82eczne i inne \xc5\x9bwiadczenia</text:p>\n
+            <text:p>VI. Ubezpieczenia społeczne i inne świadczenia</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value pl/BVI" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -222,7 +207,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>VII. Pozosta\xc5\x82e koszty rodzajowe</text:p>\n
+            <text:p>VII. Pozostałe koszty rodzajowe</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value pl/BVII" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -231,7 +216,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>VIII. Warto\xc5\x9b\xc4\x87 sprzedanych towar\xc3\xb3w i materia\xc5\x82\xc3\xb3w</text:p>\n
+            <text:p>VIII. Wartość sprzedanych towarów i materiałów</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value pl/BVIII" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -240,7 +225,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell table:style-name=\'ce2\' office:value-type=\'string\'>\n
-            <text:p>C. Zysk (strata) ze sprzeda\xc5\xbcy (A-B)</text:p>\n
+            <text:p>C. Zysk (strata) ze sprzedaży (A-B)</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value pl/C" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -250,7 +235,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell table:style-name=\'ce2\' office:value-type=\'string\'>\n
-            <text:p>D. Pozosta\xc5\x82e przychody operacyjne</text:p>\n
+            <text:p>D. Pozostałe przychody operacyjne</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value pl/D" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -259,7 +244,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>I. Zysk ze zbycia niefinansowych aktyw\xc3\xb3w trwa\xc5\x82ych</text:p>\n
+            <text:p>I. Zysk ze zbycia niefinansowych aktywów trwałych</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value pl/DI" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -286,7 +271,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell table:style-name=\'ce2\' office:value-type=\'string\'>\n
-            <text:p>E. Pozosta\xc5\x82e koszty operacyjne</text:p>\n
+            <text:p>E. Pozostałe koszty operacyjne</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value pl/E" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -295,7 +280,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>I. Strata ze zbycia niefinansowych aktyw\xc3\xb3w trwa\xc5\x82ych</text:p>\n
+            <text:p>I. Strata ze zbycia niefinansowych aktywów trwałych</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value pl/EI" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -304,7 +289,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>II. Aktualizacja warto\xc5\x9bci aktyw\xc3\xb3w niefinansowych</text:p>\n
+            <text:p>II. Aktualizacja wartości aktywów niefinansowych</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value pl/EII" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -322,7 +307,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell table:style-name=\'ce2\' office:value-type=\'string\'>\n
-            <text:p>F. Zysk (strata) na dzia\xc5\x82alno\xc5\x9bci operacyjnej (C+D-E)</text:p>\n
+            <text:p>F. Zysk (strata) na działalności operacyjnej (C+D-E)</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value pl/F" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -340,7 +325,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>I. Dywidendy i udzia\xc5\x82y w zyskach</text:p>\n
+            <text:p>I. Dywidendy i udziały w zyskach</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value pl/GI" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -367,7 +352,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>IV. Aktualizacja warto\xc5\x9bci inwestycji</text:p>\n
+            <text:p>IV. Aktualizacja wartości inwestycji</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value pl/GIV" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -412,7 +397,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>III. Aktualizacja warto\xc5\x9bci inwestycji</text:p>\n
+            <text:p>III. Aktualizacja wartości inwestycji</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value pl/HIII" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -430,7 +415,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell table:style-name=\'ce2\' office:value-type=\'string\'>\n
-            <text:p>I. Zysk (strata) z dzia\xc5\x82alno\xc5\x9bci gospodarczej (F+G-H)</text:p>\n
+            <text:p>I. Zysk (strata) z działalności gospodarczej (F+G-H)</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value pl/I" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -440,7 +425,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell table:style-name=\'ce2\' office:value-type=\'string\'>\n
-            <text:p>J. Wynik zdarze\xc5\x84 nadzwyczajnych (J.I. - J.II.)</text:p>\n
+            <text:p>J. Wynik zdarzeń nadzwyczajnych (J.I. - J.II.)</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value pl/J" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -485,7 +470,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell table:style-name=\'ce2\' office:value-type=\'string\'>\n
-            <text:p>M. Pozosta\xc5\x82e obowi\xc4\x85zkowe zmniejszenia zysku (zwi\xc4\x99kszenia straty)</text:p>\n
+            <text:p>M. Pozostałe obowiązkowe zmniejszenia zysku (zwiększenia straty)</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value pl/M" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -507,7 +492,7 @@
 </office:document-content>\n
 
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -524,6 +509,10 @@
         <item>
             <key> <string>ooo_stylesheet</string> </key>
             <value> <string>ooo_template_spreadsheet</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

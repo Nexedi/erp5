@@ -2,13 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.ERP5Type.Document.Account</string>
-          <string>Account</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="Account" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -53,12 +47,6 @@
             </value>
         </item>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_count</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -68,12 +56,6 @@
             <key> <string>_mt_index</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
             </value>
         </item>
         <item>
@@ -96,7 +78,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Attention: s\xc3\xa9parer 431 et 437 (social_security_debt, social_debt)</string> </value>
+            <value> <string>Attention: séparer 431 et 437 (social_security_debt, social_debt)</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -114,36 +96,18 @@
             <key> <string>title</string> </key>
             <value> <string>Dettes sociales</string> </value>
         </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
       </dictionary>
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>BTrees.Length</string>
-          <string>Length</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="Length" module="BTrees.Length"/>
     </pickle>
     <pickle> <int>0</int> </pickle>
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>BTrees.OOBTree</string>
-          <string>OOBTree</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
     </pickle>
     <pickle>
       <none/>
@@ -151,13 +115,7 @@
   </record>
   <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>BTrees.OOBTree</string>
-          <string>OOBTree</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
     </pickle>
     <pickle>
       <none/>

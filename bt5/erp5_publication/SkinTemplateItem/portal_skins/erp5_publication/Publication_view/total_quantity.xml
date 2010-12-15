@@ -2,13 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.StandardFields</string>
-          <string>FloatField</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="FloatField" module="Products.Formulator.StandardFields"/>
     </pickle>
     <pickle>
       <dictionary>

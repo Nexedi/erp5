@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ExternalMethod" module="Products.ExternalMethod.ExternalMethod"/>
-        <tuple/>
-      </tuple>
+      <global name="ExternalMethod" module="Products.ExternalMethod.ExternalMethod"/>
     </pickle>
     <pickle>
       <dictionary>

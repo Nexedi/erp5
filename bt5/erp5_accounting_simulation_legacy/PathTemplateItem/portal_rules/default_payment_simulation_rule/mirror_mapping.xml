@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="MappedProperty" module="Products.ERP5Type.Document.MappedProperty"/>
+      <global name="Mapped Property" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>

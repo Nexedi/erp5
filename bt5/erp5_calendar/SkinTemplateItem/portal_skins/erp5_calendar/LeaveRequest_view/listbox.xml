@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
-        <tuple/>
-      </tuple>
+      <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -79,7 +76,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>default_params</string> </key>
+                    <key> <string>default_params</string> </key>
                     <value>
                       <list/>
                     </value>
@@ -93,11 +90,11 @@
                     <value> <string>Calendar_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>list_action</string> </key>
+                    <key> <string>list_action</string> </key>
                     <value> <string>Folder_viewContentList</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>portal_types</string> </key>
+                    <key> <string>portal_types</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -108,7 +105,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>selection_name</string> </key>
+                    <key> <string>selection_name</string> </key>
                     <value> <string>leave_request_period_selection</string> </value>
                 </item>
                 <item>
@@ -116,7 +113,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Leave Request Periods</string> </value>
                 </item>
               </dictionary>

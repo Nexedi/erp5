@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="OrderMovementGroup" module="Products.ERP5Type.Document.OrderMovementGroup"/>
+      <global name="Order Movement Group" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>

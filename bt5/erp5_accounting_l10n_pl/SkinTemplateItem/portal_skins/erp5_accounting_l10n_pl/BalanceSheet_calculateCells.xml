@@ -2,28 +2,13 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>Python_magic</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>Script_magic</string> </key>
             <value> <int>3</int> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -73,7 +58,7 @@ getCredit=context.getCredit\n
 # pobiera stan kont po stronie debit\n
 getDebit=context.getDebit\n
 \n
-# pobiera r\xc3\xb3\xc5\xbcnic\xc4\x99 dla kont po obu stronach \n
+# pobiera różnicę dla kont po obu stronach \n
 getBalance=context.getBalance\n
 \n
 class Bil:pass\n
@@ -169,7 +154,7 @@ bil.pBI1=-getBalance((\'831\',))\n
 bil.pBI2=-getBalance((\'833\',)) # zmienione\n
 bil.pBI3=-getBalance((\'832\',\'834\',\'646\'))\n
 bil.pBI=bil.pBI1+bil.pBI2+bil.pBI3\n
-bil.pBII1=0 # zmienione - nie mamy tego rozr\xef\xbf\xbdnienia\n
+bil.pBII1=0 # zmienione - nie mamy tego rozr�nienia\n
 bil.pBII2a=-getBalance((\'138\',\'255\'))\n
 bil.pBII2b=-getBalance((\'259\',))\n
 bil.pBII2c=-getBalance((\'251\',\'256\',\'258\'))\n
@@ -190,7 +175,7 @@ bil.pBIII2=bil.pBIII2a +bil.pBIII2b +bil.pBIII2c +bil.pBIII2d +bil.pBIII2e +bil.
 bil.pBIII3=-getBalance((\'851\',\'859\'))\n
 bil.pBIII=bil.pBIII1+bil.pBIII2+bil.pBIII3\n
 bil.pBIV1=-getBalance((\'841\',))\n
-bil.pBIV2=-getBalance((\'843\',\'844\',\'845\')) # czy rozr\xef\xbf\xbdnienie termin\xef\xbf\xbdw jest wa\xef\xbf\xbdne? to tzreba by albo zmieni\xef\xbf\xbd plan kont, albo liczy\xef\xbf\xbd wg terminu\n
+bil.pBIV2=-getBalance((\'843\',\'844\',\'845\')) # czy rozr�nienie termin�w jest wa�ne? to tzreba by albo zmieni� plan kont, albo liczy� wg terminu\n
 bil.pBIV=bil.pBIV1+bil.pBIV2\n
 \n
 bil.pB=bil.pBI+bil.pBII+bil.pBIII\n
@@ -216,18 +201,6 @@ return bil\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_filepath</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>

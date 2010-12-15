@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="DeliveryRule" module="Products.ERP5Type.Document.DeliveryRule"/>
+      <global name="Delivery Rule" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>

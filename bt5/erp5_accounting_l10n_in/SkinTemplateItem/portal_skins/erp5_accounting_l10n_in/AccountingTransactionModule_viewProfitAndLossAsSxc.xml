@@ -2,13 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.ERP5OOo.OOoTemplate</string>
-          <string>OOoTemplate</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="OOoTemplate" module="Products.ERP5OOo.OOoTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -23,12 +17,6 @@ vSkG1xZGJPmq2UKgoo472d+fDUpu6p4m6UZdC/6Ww51yxj3LqVdvwrOf/9fMv3OJDwZpdqxFhtke
 nvU22Y0DbUjyadgEN84Nn7ewyJz/xXNpF/LHt7j8BFBLAQIUABQAAAAIAFoX5TTMBk1mQgEAAFEH
 AAAVAAAAAAAAAAAAAAAAAAAAAABNRVRBLUlORi9tYW5pZmVzdC54bWxQSwUGAAAAAAEAAQBDAAAA
 dQEAAAAA</string> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -58,7 +46,7 @@ dQEAAAAA</string> </value>
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <office:document-content xmlns:office=\'urn:oasis:names:tc:opendocument:xmlns:office:1.0\' xmlns:text=\'urn:oasis:names:tc:opendocument:xmlns:text:1.0\' xmlns:number=\'urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0\' xmlns:meta=\'urn:oasis:names:tc:opendocument:xmlns:meta:1.0\' xmlns:table=\'urn:oasis:names:tc:opendocument:xmlns:table:1.0\' xmlns:style=\'urn:oasis:names:tc:opendocument:xmlns:style:1.0\' xmlns:script=\'urn:oasis:names:tc:opendocument:xmlns:script:1.0\' xmlns:xlink=\'http://www.w3.org/1999/xlink\' xmlns:math=\'http://www.w3.org/1998/Math/MathML\' xmlns:draw=\'urn:oasis:names:tc:opendocument:xmlns:drawing:1.0\' xmlns:form=\'urn:oasis:names:tc:opendocument:xmlns:form:1.0\' xmlns:ooo=\'http://openoffice.org/2004/office\' xmlns:dc=\'http://purl.org/dc/elements/1.1/\' xmlns:chart=\'urn:oasis:names:tc:opendocument:xmlns:chart:1.0\' xmlns:dr3d=\'urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0\' xmlns:fo=\'urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0\' xmlns:xforms=\'http://www.w3.org/2002/xforms\' xmlns:dom=\'http://www.w3.org/2001/xml-events\' xmlns:ooow=\'http://openoffice.org/2004/writer\' xmlns:svg=\'urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0\' xmlns:xsd=\'http://www.w3.org/2001/XMLSchema\' xmlns:xsi=\'http://www.w3.org/2001/XMLSchema-instance\' xmlns:oooc=\'http://openoffice.org/2004/calc\'  xmlns:tal=\'http://xml.zope.org/namespaces/tal\'\n
           xmlns:i18n=\'http://xml.zope.org/namespaces/i18n\'\n
@@ -328,7 +316,7 @@ tal:attributes="office:value python: context.ProfitLossCell_getCurrentInventory(
 \n
 
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -345,6 +333,10 @@ tal:attributes="office:value python: context.ProfitLossCell_getCurrentInventory(
         <item>
             <key> <string>ooo_stylesheet</string> </key>
             <value> <string>AccountingTransactionModule_profitLossStylesheet</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

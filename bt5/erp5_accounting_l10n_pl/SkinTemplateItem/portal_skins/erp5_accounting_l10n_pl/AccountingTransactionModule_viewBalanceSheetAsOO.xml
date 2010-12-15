@@ -2,19 +2,10 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="OOoTemplate" module="Products.ERP5OOo.OOoTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="OOoTemplate" module="Products.ERP5OOo.OOoTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
         <item>
             <key> <string>_bind_names</string> </key>
             <value>
@@ -42,14 +33,8 @@
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <office:document-content xmlns:draw=\'urn:oasis:names:tc:opendocument:xmlns:drawing:1.0\' xmlns:office=\'urn:oasis:names:tc:opendocument:xmlns:office:1.0\' xmlns:text=\'urn:oasis:names:tc:opendocument:xmlns:text:1.0\' xmlns:ooo=\'http://openoffice.org/2004/office\' xmlns:number=\'urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0\' xmlns:dc=\'http://purl.org/dc/elements/1.1/\' xmlns:meta=\'urn:oasis:names:tc:opendocument:xmlns:meta:1.0\' xmlns:table=\'urn:oasis:names:tc:opendocument:xmlns:table:1.0\' xmlns:dr3d=\'urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0\' xmlns:fo=\'urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0\' xmlns:style=\'urn:oasis:names:tc:opendocument:xmlns:style:1.0\' xmlns:xforms=\'http://www.w3.org/2002/xforms\' xmlns:form=\'urn:oasis:names:tc:opendocument:xmlns:form:1.0\' xmlns:script=\'urn:oasis:names:tc:opendocument:xmlns:script:1.0\' xmlns:ooow=\'http://openoffice.org/2004/writer\' xmlns:svg=\'urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0\' xmlns:chart=\'urn:oasis:names:tc:opendocument:xmlns:chart:1.0\' xmlns:dom=\'http://www.w3.org/2001/xml-events\' xmlns:xlink=\'http://www.w3.org/1999/xlink\' xmlns:xsd=\'http://www.w3.org/2001/XMLSchema\' xmlns:xsi=\'http://www.w3.org/2001/XMLSchema-instance\' xmlns:oooc=\'http://openoffice.org/2004/calc\' xmlns:math=\'http://www.w3.org/1998/Math/MathML\'  xmlns:tal=\'http://xml.zope.org/namespaces/tal\'\n
           xmlns:i18n=\'http://xml.zope.org/namespaces/i18n\'\n
@@ -123,7 +108,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>A. AKTYWA TRWA\xc5\x81E</text:p>\n
+            <text:p>A. AKTYWA TRWAŁE</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/A" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -132,7 +117,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>    I. Warto\xc5\x9bci niematerialne i prawne.</text:p>\n
+            <text:p>    I. Wartości niematerialne i prawne.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/AI" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -141,7 +126,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>        1. Koszty zako\xc5\x84czonych prac rozwojowych.</text:p>\n
+            <text:p>        1. Koszty zakończonych prac rozwojowych.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/AI1" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -150,7 +135,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>        2. Warto\xc5\x9b\xc4\x87 firmy.</text:p>\n
+            <text:p>        2. Wartość firmy.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/AI2" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -159,7 +144,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>        3. Inne Warto\xc5\x9bci niematerialne i prawne.</text:p>\n
+            <text:p>        3. Inne Wartości niematerialne i prawne.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/AI3" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -168,7 +153,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>        4. Zaliczki na warto\xc5\x9bci niematerialne i prawne.</text:p>\n
+            <text:p>        4. Zaliczki na wartości niematerialne i prawne.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/AI4" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -177,7 +162,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>    II. Rzeczowe aktywa trwa\xc5\x82e.</text:p>\n
+            <text:p>    II. Rzeczowe aktywa trwałe.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/AII" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -186,7 +171,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>        1. \xc5\x9arodki trwa\xc5\x82e</text:p>\n
+            <text:p>        1. Środki trwałe</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/AII1" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -195,7 +180,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>           a) grunty (w tym prawo u\xc5\xbcytkowania wieczystego gruntu).</text:p>\n
+            <text:p>           a) grunty (w tym prawo użytkowania wieczystego gruntu).</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/AII1a" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -204,7 +189,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>           b) budynki, lokale i obiekty in\xc5\xbcynierii l\xc4\x85dowej i wodnej.</text:p>\n
+            <text:p>           b) budynki, lokale i obiekty inżynierii lądowej i wodnej.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/AII1b" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -213,7 +198,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>           c) urz\xc4\x85dzenia techniczne i maszyny.</text:p>\n
+            <text:p>           c) urządzenia techniczne i maszyny.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/AII1c" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -222,7 +207,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>           d) \xc5\x9brodki transportu.</text:p>\n
+            <text:p>           d) środki transportu.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/AII1d" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -231,7 +216,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>           e) inne \xc5\x9brodki trwa\xc5\x82e.</text:p>\n
+            <text:p>           e) inne środki trwałe.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/AII1e" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -240,7 +225,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>        2. \xc5\x9arodki trwa\xc5\x82e w budowie.</text:p>\n
+            <text:p>        2. Środki trwałe w budowie.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/AII2" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -249,7 +234,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>        3. Zaliczki na \xc5\x9brodki trwa\xc5\x82e w budowie.</text:p>\n
+            <text:p>        3. Zaliczki na środki trwałe w budowie.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/AII3" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -258,7 +243,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>    III. Nale\xc5\xbcno\xc5\x9bci d\xc5\x82ugoterminowe.</text:p>\n
+            <text:p>    III. Należności długoterminowe.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/AIII" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -267,7 +252,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>    IV. Inwestycje d\xc5\x82ugoterminowe.</text:p>\n
+            <text:p>    IV. Inwestycje długoterminowe.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/AIV" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -276,7 +261,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>        1. Nieruchomo\xc5\x9bci.</text:p>\n
+            <text:p>        1. Nieruchomości.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/AIV1" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -285,7 +270,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>        2. Warto\xc5\x9bci niematerialne i prawne.</text:p>\n
+            <text:p>        2. Wartości niematerialne i prawne.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/AIV2" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -294,7 +279,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>        3. D\xc5\x82ugoterminowe aktywa finansowe.</text:p>\n
+            <text:p>        3. Długoterminowe aktywa finansowe.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/AIV3" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -303,7 +288,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>           a) w jednostkach powi\xc4\x85zanych.</text:p>\n
+            <text:p>           a) w jednostkach powiązanych.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/AIV3a" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -312,7 +297,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>              - udzia\xc5\x82y lub akcje.</text:p>\n
+            <text:p>              - udziały lub akcje.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/AIV3a1" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -321,7 +306,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>              - inne papiery warto\xc5\x9bciowe.</text:p>\n
+            <text:p>              - inne papiery wartościowe.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/AIV3a2" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -330,7 +315,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>              - udzielone po\xc5\xbcyczki.</text:p>\n
+            <text:p>              - udzielone pożyczki.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/AIV3a3" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -339,7 +324,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>              - inne d\xc5\x82ugoterminowe aktywa finansowe.</text:p>\n
+            <text:p>              - inne długoterminowe aktywa finansowe.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/AIV3a4" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -348,7 +333,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>           b) w pozosta\xc5\x82ych jednostkach.</text:p>\n
+            <text:p>           b) w pozostałych jednostkach.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/AIV3b" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -357,7 +342,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>              - udzia\xc5\x82y lub akcje.</text:p>\n
+            <text:p>              - udziały lub akcje.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/AIV3b1" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -366,7 +351,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>              - inne papiery warto\xc5\x9bciowe.</text:p>\n
+            <text:p>              - inne papiery wartościowe.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/AIV3b2" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -375,7 +360,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>              - udzielone po\xc5\xbcyczki.</text:p>\n
+            <text:p>              - udzielone pożyczki.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/AIV3b3" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -384,7 +369,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>              - inne d\xc5\x82ugoterminowe aktywa finansowe.</text:p>\n
+            <text:p>              - inne długoterminowe aktywa finansowe.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/AIV3b4" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -393,7 +378,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>        4. Inne inwestycje d\xc5\x82ugoterminowe.</text:p>\n
+            <text:p>        4. Inne inwestycje długoterminowe.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/AIV4" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -402,7 +387,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>    V. D\xc5\x82ugoterminowe rozliczenia mi\xc4\x99dzyokresowe.</text:p>\n
+            <text:p>    V. Długoterminowe rozliczenia międzyokresowe.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/AV" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -411,7 +396,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>        1. Aktywa z tytu\xc5\x82u odroczonego podatku dochodowego.</text:p>\n
+            <text:p>        1. Aktywa z tytułu odroczonego podatku dochodowego.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/AV1" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -420,7 +405,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>        2. Inne rozliczenia mi\xc4\x99dzyokresowe.</text:p>\n
+            <text:p>        2. Inne rozliczenia międzyokresowe.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/AV2" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -447,7 +432,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>        1. Materia\xc5\x82y.</text:p>\n
+            <text:p>        1. Materiały.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/BI1" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -456,7 +441,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>        2. P\xc3\xb3\xc5\x82produkty i produkty w toku.</text:p>\n
+            <text:p>        2. Półprodukty i produkty w toku.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/BI2" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -492,7 +477,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>    II. Nale\xc5\xbcno\xc5\x9bci kr\xc3\xb3tkoterminowe.</text:p>\n
+            <text:p>    II. Należności krótkoterminowe.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/BII" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -501,7 +486,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>        1. Nale\xc5\xbcno\xc5\x9bci od jednostek powi\xc4\x85zanych.</text:p>\n
+            <text:p>        1. Należności od jednostek powiązanych.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/BII1" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -510,7 +495,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>           a) z tytu\xc5\x82u dostaw i us\xc5\x82ug, o okresie sp\xc5\x82aty:</text:p>\n
+            <text:p>           a) z tytułu dostaw i usług, o okresie spłaty:</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/BII1a" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -528,7 +513,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>        2. Nale\xc5\xbcno\xc5\x9bci od pozosta\xc5\x82ych jednostek.</text:p>\n
+            <text:p>        2. Należności od pozostałych jednostek.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/BII2" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -537,7 +522,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>           a) z tytu\xc5\x82u dostaw i us\xc5\x82ug, o okresie sp\xc5\x82aty:</text:p>\n
+            <text:p>           a) z tytułu dostaw i usług, o okresie spłaty:</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/BII2a" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -546,7 +531,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>           b) z tytu\xc5\x82u podatk\xc3\xb3w, dotacji, ce\xc5\x82, ubezpiecze\xc5\x84 spo\xc5\x82ecznych i zdrowotnych oraz innych \xc5\x9bwiadcze\xc5\x84.</text:p>\n
+            <text:p>           b) z tytułu podatków, dotacji, ceł, ubezpieczeń społecznych i zdrowotnych oraz innych świadczeń.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/BII2b" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -564,7 +549,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>           d) dochodzone na drodze s\xc4\x85dowej.</text:p>\n
+            <text:p>           d) dochodzone na drodze sądowej.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/BII2d" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -573,7 +558,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>    III. Inwestycje kr\xc3\xb3tkoterminowe.</text:p>\n
+            <text:p>    III. Inwestycje krótkoterminowe.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/BIII" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -582,7 +567,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>        1. Kr\xc3\xb3tkoterminowe aktywa finansowe.</text:p>\n
+            <text:p>        1. Krótkoterminowe aktywa finansowe.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/BIII1" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -591,7 +576,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>           a) w jednostkach powi\xc4\x85zanych.</text:p>\n
+            <text:p>           a) w jednostkach powiązanych.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/BIII1a" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -600,7 +585,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>           b) w pozosta\xc5\x82ych jednostkach.</text:p>\n
+            <text:p>           b) w pozostałych jednostkach.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/BIII1b" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -609,7 +594,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>           c) \xc5\x9brodki pieni\xc4\x99\xc5\xbcne i inne aktywa pieni\xc4\x99\xc5\xbcne.</text:p>\n
+            <text:p>           c) środki pieniężne i inne aktywa pieniężne.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/BIII1c" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -618,7 +603,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>              - \xc5\x9brodki pieni\xc4\x99\xc5\xbcne w kasie i na rachunkach.</text:p>\n
+            <text:p>              - środki pieniężne w kasie i na rachunkach.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/BIII1c1" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -627,7 +612,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>              - inne \xc5\x9brodki pieni\xc4\x99\xc5\xbcne.</text:p>\n
+            <text:p>              - inne środki pieniężne.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/BIII1c2" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -636,7 +621,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>              - inne aktywa pieni\xc4\x99\xc5\xbcne.</text:p>\n
+            <text:p>              - inne aktywa pieniężne.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/BIII1c3" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -645,7 +630,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>        2. Inne inwestycje kr\xc3\xb3tkoterminowe.</text:p>\n
+            <text:p>        2. Inne inwestycje krótkoterminowe.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/BIII2" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -654,7 +639,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>    IV. Kr\xc3\xb3tkoterminowe rozliczenia mi\xc4\x99dzyokresowe.</text:p>\n
+            <text:p>    IV. Krótkoterminowe rozliczenia międzyokresowe.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/BIV" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -690,7 +675,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>A. Kapita\xc5\x82 (fundusz) w\xc5\x82asny</text:p>\n
+            <text:p>A. Kapitał (fundusz) własny</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/pA" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -700,7 +685,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>    I. Kapita\xc5\x82 (fundusz) podstawowy.</text:p>\n
+            <text:p>    I. Kapitał (fundusz) podstawowy.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/pAI" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -710,7 +695,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>    II. Nale\xc5\xbcne wp\xc5\x82aty na kapita\xc5\x82 podstawowy (wielko\xc5\x9b\xc4\x87 ujemna).</text:p>\n
+            <text:p>    II. Należne wpłaty na kapitał podstawowy (wielkość ujemna).</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/pAII" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -720,7 +705,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>    III. Udzia\xc5\x82y (akcje) w\xc5\x82asne (wielko\xc5\x9b\xc4\x87 ujemna).</text:p>\n
+            <text:p>    III. Udziały (akcje) własne (wielkość ujemna).</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/pAIII" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -730,7 +715,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>    IV. Kapita\xc5\x82 (fundusz) zapasowy.</text:p>\n
+            <text:p>    IV. Kapitał (fundusz) zapasowy.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/pAIV" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -740,7 +725,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>    V. Kapita\xc5\x82 (fundusz) z aktualizacji wyceny.</text:p>\n
+            <text:p>    V. Kapitał (fundusz) z aktualizacji wyceny.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/pAV" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -750,7 +735,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>    VI. Pozosta\xc5\x82e kapita\xc5\x82y (fundusze) rezerwowe.</text:p>\n
+            <text:p>    VI. Pozostałe kapitały (fundusze) rezerwowe.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/pAVI" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -760,7 +745,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>    VII. Zysk (strata) z lat ubieg\xc5\x82ych.</text:p>\n
+            <text:p>    VII. Zysk (strata) z lat ubiegłych.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/pAVII" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -780,7 +765,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>    IX. Odpisy z zysku netto w ci\xc4\x85gu roku obrotowego (wielko\xc5\x9b\xc4\x87 ujemna).</text:p>\n
+            <text:p>    IX. Odpisy z zysku netto w ciągu roku obrotowego (wielkość ujemna).</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/pAIX" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -790,7 +775,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>B. Zobowi\xc4\x85zania i rezerwy na zobowi\xc4\x85zania.</text:p>\n
+            <text:p>B. Zobowiązania i rezerwy na zobowiązania.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/pB" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -800,7 +785,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>    I. Rezerwy na zobowi\xc4\x85zania.</text:p>\n
+            <text:p>    I. Rezerwy na zobowiązania.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/pBI" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -810,7 +795,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>        1. Rezerwa z tytu\xc5\x82u odroczonego podatku dochodowego.</text:p>\n
+            <text:p>        1. Rezerwa z tytułu odroczonego podatku dochodowego.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/pBI1" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -820,7 +805,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>        2. Rezerwa na \xc5\x9bwiadczenia emerytalne i podobne.</text:p>\n
+            <text:p>        2. Rezerwa na świadczenia emerytalne i podobne.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/pBI2" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -830,7 +815,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>        3. Pozosta\xc5\x82e rezerwy.</text:p>\n
+            <text:p>        3. Pozostałe rezerwy.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/pBI3" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -840,7 +825,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>    II. Zobowi\xc4\x85zania d\xc5\x82ugoterminowe.</text:p>\n
+            <text:p>    II. Zobowiązania długoterminowe.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/pBII" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -850,7 +835,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>        1. Wobec jednostek powi\xc4\x85zanych.</text:p>\n
+            <text:p>        1. Wobec jednostek powiązanych.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/pBII1" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -860,7 +845,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>        2. Wobec pozosta\xc5\x82ych jednostek.</text:p>\n
+            <text:p>        2. Wobec pozostałych jednostek.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/pBII2" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -870,7 +855,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>           a) kredyty i po\xc5\xbcyczki.</text:p>\n
+            <text:p>           a) kredyty i pożyczki.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/pBII2a" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -880,7 +865,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>           b) z tytu\xc5\x82u emisji d\xc5\x82u\xc5\xbcnych papier\xc3\xb3w warto\xc5\x9bciowych.</text:p>\n
+            <text:p>           b) z tytułu emisji dłużnych papierów wartościowych.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/pBII2b" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -890,7 +875,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>           c) inne zobowi\xc4\x85zania finansowe.</text:p>\n
+            <text:p>           c) inne zobowiązania finansowe.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/pBII2c" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -910,7 +895,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>    III. Zobowi\xc4\x85zania kr\xc3\xb3tkoterminowe.</text:p>\n
+            <text:p>    III. Zobowiązania krótkoterminowe.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/pBIII" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -920,7 +905,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>        1. Wobec jednostek powi\xc4\x85zanych.</text:p>\n
+            <text:p>        1. Wobec jednostek powiązanych.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/pBIII1" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -938,7 +923,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>           a) kredyty i po\xc5\xbcyczki.</text:p>\n
+            <text:p>           a) kredyty i pożyczki.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/pBIII2a" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -948,7 +933,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>           b) z tytu\xc5\x82u emisji d\xc5\x82u\xc5\xbcnych papier\xc3\xb3w warto\xc5\x9bciowych.</text:p>\n
+            <text:p>           b) z tytułu emisji dłużnych papierów wartościowych.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/pBIII2b" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -958,7 +943,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>           c) inne zobowi\xc4\x85zania finansowe.</text:p>\n
+            <text:p>           c) inne zobowiązania finansowe.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/pBIII2c" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -968,7 +953,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>           d) z tytu\xc5\x82u dostaw i us\xc5\x82ug</text:p>\n
+            <text:p>           d) z tytułu dostaw i usług</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/pBIII2d" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -978,7 +963,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>           e) zaliczki otrzymane od dostawc\xc3\xb3w</text:p>\n
+            <text:p>           e) zaliczki otrzymane od dostawców</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/pBIII2e" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -988,7 +973,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>           f) zobowi\xc4\x85zania wekslowe.</text:p>\n
+            <text:p>           f) zobowiązania wekslowe.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/pBIII2f" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -998,7 +983,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>           g) z tytu\xc5\x82u podatk\xc3\xb3w, ce\xc5\x82, ubezpiecze\xc5\x84 i innych \xc5\x9bwiadcze\xc5\x84.</text:p>\n
+            <text:p>           g) z tytułu podatków, ceł, ubezpieczeń i innych świadczeń.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/pBIII2g" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -1008,7 +993,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>           h) z tytu\xc5\x82u wynagrodze\xc5\x84.</text:p>\n
+            <text:p>           h) z tytułu wynagrodzeń.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/pBIII2h" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -1038,7 +1023,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>    IV. Rozliczenia mi\xc4\x99dzyokresowe.</text:p>\n
+            <text:p>    IV. Rozliczenia międzyokresowe.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/pBIV" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -1048,7 +1033,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>        1. Ujemna warto\xc5\x9b\xc4\x87 firmy.</text:p>\n
+            <text:p>        1. Ujemna wartość firmy.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/pBIV1" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -1058,7 +1043,7 @@
 \n
         <table:table-row table:style-name=\'ro1\'>\n
           <table:table-cell office:value-type=\'string\'>\n
-            <text:p>        2. Inne rozliczenia mi\xc4\x99dzyokresowe.</text:p>\n
+            <text:p>        2. Inne rozliczenia międzyokresowe.</text:p>\n
           </table:table-cell>\n
           <table:table-cell tal:attributes="office:value bil/pBIV1" office:value-type=\'float\'>\n
             <text:p></text:p>\n
@@ -1083,7 +1068,7 @@
 </office:document-content>\n
 
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -1100,6 +1085,10 @@
         <item>
             <key> <string>ooo_stylesheet</string> </key>
             <value> <string>ooo_template_spreadsheet</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

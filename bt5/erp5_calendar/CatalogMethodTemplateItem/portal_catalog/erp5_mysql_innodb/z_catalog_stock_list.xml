@@ -2,19 +2,10 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="SQL" module="Products.ZSQLMethods.SQL"/>
-        <tuple/>
-      </tuple>
+      <global name="SQL" module="Products.ZSQLMethods.SQL"/>
     </pickle>
     <pickle>
       <dictionary>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
         <item>
             <key> <string>_arg</string> </key>
             <value>
@@ -162,6 +153,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>isCancellationAmount</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>isInventoryMovement</string> </key>
                                 <value>
                                   <dictionary/>
@@ -169,12 +166,6 @@
                             </item>
                             <item>
                                 <key> <string>isMovement</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                            <item>
-                                <key> <string>isCancellationAmount</string> </key>
                                 <value>
                                   <dictionary/>
                                 </value>
@@ -192,32 +183,32 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>uid</string>
-<string>getResourceUid</string>
-<string>getInventoriatedQuantity</string>
-<string>getSourceUid</string>
-<string>getDestinationUid</string>
-<string>getSourceSectionUid</string>
-<string>getDestinationSectionUid</string>
-<string>isMovement</string>
-<string>isCancellationAmount</string>
-<string>isInventoryMovement</string>
-<string>getSourcePaymentUid</string>
-<string>getDestinationPaymentUid</string>
-<string>getSourceFunctionUid</string>
-<string>getDestinationFunctionUid</string>
-<string>getSourceProjectUid</string>
-<string>getDestinationProjectUid</string>
-<string>getSimulationState</string>
-<string>getSourceInventoriatedTotalAssetPrice</string>
-<string>getDestinationInventoriatedTotalAssetPrice</string>
-<string>getStartDate</string>
-<string>getStopDate</string>
-<string>isAccountable</string>
-<string>getPortalType</string>
-<string>getVariationText</string>
-<string>getSubVariationText</string>
-<string>asMovementList</string>
+                            <string>uid</string>
+                            <string>getResourceUid</string>
+                            <string>getInventoriatedQuantity</string>
+                            <string>getSourceUid</string>
+                            <string>getDestinationUid</string>
+                            <string>getSourceSectionUid</string>
+                            <string>getDestinationSectionUid</string>
+                            <string>isMovement</string>
+                            <string>isCancellationAmount</string>
+                            <string>isInventoryMovement</string>
+                            <string>getSourcePaymentUid</string>
+                            <string>getDestinationPaymentUid</string>
+                            <string>getSourceFunctionUid</string>
+                            <string>getDestinationFunctionUid</string>
+                            <string>getSourceProjectUid</string>
+                            <string>getDestinationProjectUid</string>
+                            <string>getSimulationState</string>
+                            <string>getSourceInventoriatedTotalAssetPrice</string>
+                            <string>getDestinationInventoriatedTotalAssetPrice</string>
+                            <string>getStartDate</string>
+                            <string>getStopDate</string>
+                            <string>isAccountable</string>
+                            <string>getPortalType</string>
+                            <string>getVariationText</string>
+                            <string>getSubVariationText</string>
+                            <string>asMovementList</string>
                           </list>
                         </value>
                     </item>

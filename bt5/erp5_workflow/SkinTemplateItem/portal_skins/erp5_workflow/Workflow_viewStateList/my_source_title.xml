@@ -2,19 +2,10 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
-        <tuple/>
-      </tuple>
+      <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
     </pickle>
     <pickle>
       <dictionary>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
@@ -91,11 +82,11 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>base_category</string> </key>
+                    <key> <string>base_category</string> </key>
                     <value> <string>source</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>catalog_index</string> </key>
+                    <key> <string>catalog_index</string> </key>
                     <value> <string>title</string> </value>
                 </item>
                 <item>
@@ -107,13 +98,13 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>parameter_list</string> </key>
+                    <key> <string>parameter_list</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>portal_type</string> </key>
+                    <key> <string>portal_type</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -128,7 +119,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Initial State</string> </value>
                 </item>
               </dictionary>

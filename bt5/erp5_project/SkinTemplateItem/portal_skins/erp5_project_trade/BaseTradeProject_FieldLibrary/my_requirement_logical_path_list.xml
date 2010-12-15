@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="MultiRelationStringField" module="Products.ERP5Form.MultiRelationField"/>
-        <tuple/>
-      </tuple>
+      <global name="MultiRelationStringField" module="Products.ERP5Form.MultiRelationField"/>
     </pickle>
     <pickle>
       <dictionary>

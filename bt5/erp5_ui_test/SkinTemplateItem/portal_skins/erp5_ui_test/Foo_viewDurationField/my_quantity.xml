@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="DurationField" module="Products.ERP5Form.DurationField"/>
-        <tuple/>
-      </tuple>
+      <global name="DurationField" module="Products.ERP5Form.DurationField"/>
     </pickle>
     <pickle>
       <dictionary>

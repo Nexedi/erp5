@@ -34,7 +34,7 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <html>\n
 <head><title>Test for Account module main lisbox</title></head>\n
@@ -184,7 +184,7 @@ Test `preferred_gap_id` column of Account Module\n
 -->\n
 
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -199,8 +199,12 @@ Test `preferred_gap_id` column of Account Module\n
             <value> <string>test_account_module_preferred_gap_id_as_reference_column.html</string> </value>
         </item>
         <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <unicode></unicode> </value>
         </item>
       </dictionary>
     </pickle>

@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -101,6 +98,7 @@ context.InvoiceTransaction_postTransactionLineGeneration(**kw)\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>related_simulation_movement_path_list</string>
                             <string>kw</string>
                             <string>context</string>
                             <string>invoice_transaction</string>

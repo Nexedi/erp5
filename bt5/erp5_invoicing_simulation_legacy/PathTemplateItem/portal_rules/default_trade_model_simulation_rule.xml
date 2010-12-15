@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="TradeModelSimulationRule" module="Products.ERP5Type.Document.TradeModelSimulationRule"/>
+      <global name="Trade Model Simulation Rule" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>

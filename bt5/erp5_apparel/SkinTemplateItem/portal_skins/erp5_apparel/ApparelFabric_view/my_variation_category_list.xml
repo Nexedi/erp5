@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ParallelListField" module="Products.ERP5Form.ParallelListField"/>
-        <tuple/>
-      </tuple>
+      <global name="ParallelListField" module="Products.ERP5Form.ParallelListField"/>
     </pickle>
     <pickle>
       <dictionary>

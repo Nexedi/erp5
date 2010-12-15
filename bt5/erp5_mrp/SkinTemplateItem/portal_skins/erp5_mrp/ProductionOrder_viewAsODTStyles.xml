@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="OOoTemplate" module="Products.ERP5OOo.OOoTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="OOoTemplate" module="Products.ERP5OOo.OOoTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -49,7 +46,7 @@ AAA=</string> </value>
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <?xml version="1.0" encoding="utf-8"?>\n
 <office:document-styles xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0"\n
@@ -375,7 +372,7 @@ AAA=</string> </value>
 </office:document-styles>\n
 
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -396,6 +393,10 @@ AAA=</string> </value>
         <item>
             <key> <string>ooo_xml_file_id</string> </key>
             <value> <string>styles.xml</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

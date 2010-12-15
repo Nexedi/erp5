@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
-        <tuple/>
-      </tuple>
+      <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -84,7 +81,7 @@
                     <value> <string>Calendar_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>portal_types</string> </key>
+                    <key> <string>portal_types</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -95,7 +92,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>selection_name</string> </key>
+                    <key> <string>selection_name</string> </key>
                     <value> <string>group_calendar_line_selection</string> </value>
                 </item>
                 <item>

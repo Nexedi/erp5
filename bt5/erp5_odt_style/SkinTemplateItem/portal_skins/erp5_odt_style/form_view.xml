@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="OOoTemplate" module="Products.ERP5OOo.OOoTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="OOoTemplate" module="Products.ERP5OOo.OOoTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -100,7 +97,7 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <office:document-content\n
           xmlns:draw=\'urn:oasis:names:tc:opendocument:xmlns:drawing:1.0\'\n
@@ -426,7 +423,7 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
 </office:document-content>\n
 
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -447,6 +444,10 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
         <item>
             <key> <string>ooo_stylesheet</string> </key>
             <value> <string>Base_getODTStyleSheet</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -2,19 +2,10 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="Category" module="Products.ERP5Type.Document.Category"/>
-        <tuple/>
-      </tuple>
+      <global name="Category" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>5908</string> </value>
@@ -25,13 +16,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Autres valeurs mobili\xc3\xa8res de placement et cr\xc3\xa9ances assimil\xc3\xa9es</string> </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Autres valeurs mobilières de placement et créances assimilées</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="RAMCacheManager" module="Products.StandardCacheManagers.RAMCacheManager"/>
-        <tuple/>
-      </tuple>
+      <global name="RAMCacheManager" module="Products.StandardCacheManagers.RAMCacheManager"/>
     </pickle>
     <pickle>
       <dictionary>

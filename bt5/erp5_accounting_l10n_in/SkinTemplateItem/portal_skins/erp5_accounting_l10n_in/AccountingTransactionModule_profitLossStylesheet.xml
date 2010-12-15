@@ -2,25 +2,13 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>OFS.Image</string>
-          <string>File</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="File" module="OFS.Image"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
             <value> <string>ts52084461.08</string> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>

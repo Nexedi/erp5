@@ -34,13 +34,13 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <tal:body xmlns:tal="http://xml.zope.org/namespaces/tal"\n
           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
           ><html><body><tal:x replace="structure options/body"/></body></html></tal:body>
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -57,6 +57,10 @@
         <item>
             <key> <string>mailhost</string> </key>
             <value> <string>MailHost</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
         </item>
       </dictionary>
     </pickle>

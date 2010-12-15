@@ -2,19 +2,10 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="Category" module="Products.ERP5Type.Document.Category"/>
-        <tuple/>
-      </tuple>
+      <global name="Category" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>51921</string> </value>
@@ -25,13 +16,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Avances de tr\xc3\xa9sorerie de la collectivit\xc3\xa9 de rattachement (r\xc3\xa9gies non personnalis\xc3\xa9es)</string> </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Avances de trésorerie de la collectivité de rattachement (régies non personnalisées)</string> </value>
         </item>
       </dictionary>
     </pickle>

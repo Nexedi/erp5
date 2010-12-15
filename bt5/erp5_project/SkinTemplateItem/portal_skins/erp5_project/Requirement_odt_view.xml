@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="OOoTemplate" module="Products.ERP5OOo.OOoTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="OOoTemplate" module="Products.ERP5OOo.OOoTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -47,7 +44,7 @@ AAAAAAAAAAAATUVUQS1JTkYvbWFuaWZlc3QueG1sUEsFBgAAAAABAAEAQwAAADEBAAAAAA==</string
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 \n
 <office:document-content xmlns:draw=\'http://openoffice.org/2000/drawing\' xmlns:office=\'http://openoffice.org/2000/office\' xmlns:text=\'http://openoffice.org/2000/text\' xmlns:number=\'http://openoffice.org/2000/datastyle\' xmlns:chart=\'http://openoffice.org/2000/chart\' xmlns:table=\'http://openoffice.org/2000/table\' xmlns:dr3d=\'http://openoffice.org/2000/dr3d\' xmlns:fo=\'http://www.w3.org/1999/XSL/Format\' xmlns:style=\'http://openoffice.org/2000/style\' xmlns:form=\'http://openoffice.org/2000/form\' xmlns:script=\'http://openoffice.org/2000/script\' xmlns:svg=\'http://www.w3.org/2000/svg\' xmlns:xlink=\'http://www.w3.org/1999/xlink\' xmlns:math=\'http://www.w3.org/1998/Math/MathML\' office:class=\'text\'  xmlns:tal=\'http://xml.zope.org/namespaces/tal\'\n
@@ -86,7 +83,7 @@ AAAAAAAAAAAATUVUQS1JTkYvbWFuaWZlc3QueG1sUEsFBgAAAAABAAEAQwAAADEBAAAAAA==</string
 </office:document-content>\n
 
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -99,6 +96,10 @@ AAAAAAAAAAAATUVUQS1JTkYvbWFuaWZlc3QueG1sUEsFBgAAAAABAAEAQwAAADEBAAAAAA==</string
         <item>
             <key> <string>ooo_stylesheet</string> </key>
             <value> <string>Requirement_odt_style</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

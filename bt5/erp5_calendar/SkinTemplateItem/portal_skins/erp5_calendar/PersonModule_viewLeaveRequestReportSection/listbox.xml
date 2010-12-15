@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
-        <tuple/>
-      </tuple>
+      <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -61,7 +58,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>columns</string> </key>
+                    <key> <string>columns</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
@@ -75,15 +72,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>list_method</string> </key>
+                    <key> <string>list_method</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>selection_name</string> </key>
+                    <key> <string>selection_name</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>stat_method</string> </key>
+                    <key> <string>stat_method</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -91,11 +88,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>untranslatable_columns</string> </key>
+                    <key> <string>untranslatable_columns</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
@@ -157,7 +154,7 @@
                     <value> <string>Leave Requests Report</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>untranslatable_columns</string> </key>
+                    <key> <string>untranslatable_columns</string> </key>
                     <value>
                       <list/>
                     </value>

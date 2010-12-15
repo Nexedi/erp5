@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="SQL" module="Products.ZSQLMethods.SQL"/>
-        <tuple/>
-      </tuple>
+      <global name="SQL" module="Products.ZSQLMethods.SQL"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -15,12 +12,6 @@
               <list>
                 <string>Member</string>
               </list>
-            </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
             </value>
         </item>
         <item>
@@ -100,12 +91,6 @@
                   </dictionary>
                 </state>
               </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
             </value>
         </item>
         <item>

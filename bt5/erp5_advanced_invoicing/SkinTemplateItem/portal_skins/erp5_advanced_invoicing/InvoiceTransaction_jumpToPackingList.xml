@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -76,7 +73,13 @@ invoice.Base_jumpToRelatedObject(base_category=base_category, related=related, p
         <item>
             <key> <string>errors</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string encoding="cdata"><![CDATA[
+
+non-default argument follows default argument (<function parameters>, line 1)
+
+]]></string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -91,25 +94,12 @@ invoice.Base_jumpToRelatedObject(base_category=base_category, related=related, p
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>9</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
-                          <tuple>
-                            <string>base_category</string>
-                            <string>portal_type</string>
-                            <string>invoice_type</string>
-                            <string>related</string>
-                            <string>selection_name</string>
-                            <string>selection_index</string>
-                            <string>form_id</string>
-                            <string>target_form_id</string>
-                            <string>jump_from_relative_url</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>invoice</string>
-                          </tuple>
+                          <tuple/>
                         </value>
                     </item>
                   </dictionary>
@@ -120,16 +110,7 @@ invoice.Base_jumpToRelatedObject(base_category=base_category, related=related, p
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <tuple/>
-                <none/>
-                <int>1</int>
-                <string></string>
-                <int>0</int>
-                <string>view</string>
-                <none/>
-                <none/>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

@@ -21,8 +21,8 @@
   <item>SortIndex</item>
  </portal_type>
  <portal_type id="Use Case">
-  <item>SortIndex</item>
   <item>Arrow</item>
+  <item>SortIndex</item>
  </portal_type>
  <portal_type id="Use Case Actor">
   <item>SortIndex</item>

@@ -1,26 +1,26 @@
 <base_category_list>
  <portal_type id="Pay Sheet Cell">
-  <item>product_line</item>
   <item>contribution_share</item>
+  <item>product_line</item>
   <item>salary_range</item>
  </portal_type>
  <portal_type id="Pay Sheet Line">
-  <item>salary_range</item>
   <item>base_amount</item>
   <item>contribution_share</item>
+  <item>salary_range</item>
  </portal_type>
  <portal_type id="Pay Sheet Model Cell">
-  <item>product_line</item>
   <item>contribution_share</item>
+  <item>product_line</item>
   <item>salary_range</item>
  </portal_type>
  <portal_type id="Pay Sheet Model Module">
   <item>business_application</item>
  </portal_type>
  <portal_type id="Pay Sheet Model Slice">
-  <item>salary_range</item>
-  <item>product_line</item>
   <item>contribution_share</item>
+  <item>product_line</item>
+  <item>salary_range</item>
  </portal_type>
  <portal_type id="Pay Sheet Transaction">
   <item>quantity_unit</item>

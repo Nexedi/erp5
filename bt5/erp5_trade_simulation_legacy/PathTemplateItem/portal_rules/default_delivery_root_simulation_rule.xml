@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="DeliveryRootSimulationRule" module="Products.ERP5Type.Document.DeliveryRootSimulationRule"/>
+      <global name="Delivery Root Simulation Rule" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>

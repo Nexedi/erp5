@@ -2,13 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.ERP5OOo.OOoTemplate</string>
-          <string>OOoTemplate</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="OOoTemplate" module="Products.ERP5OOo.OOoTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -23,12 +17,6 @@ wjg0DkRwLoLHZSbPShJQK8MJE+HW2GBb1CER70zj0Kf70sfWk+FkjEqGy5Y36GEiqeXWJ8240P7p
 kgiyEJ8D/tbDheGEe4LjWf0Wj/n0v8P8u+vpoNBfnW2R+NUuntU2tBvNpfJAXVlY3Vwbv+7GIlH8
 p562dgRn5KO4fwNQSwECFAAUAAAACAAEEcg0osfUWWcBAACNBwAAFQAAAAAAAAAAAAAAAAAAAAAA
 TUVUQS1JTkYvbWFuaWZlc3QueG1sUEsFBgAAAAABAAEAQwAAAJoBAAAAAA==</string> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -58,7 +46,7 @@ TUVUQS1JTkYvbWFuaWZlc3QueG1sUEsFBgAAAAABAAEAQwAAAJoBAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <office:document-content xmlns:draw=\'http://openoffice.org/2000/drawing\' xmlns:office=\'http://openoffice.org/2000/office\' xmlns:text=\'http://openoffice.org/2000/text\' xmlns:ooo=\'http://openoffice.org/2004/office\' xmlns:number=\'http://openoffice.org/2000/datastyle\' xmlns:dc=\'http://purl.org/dc/elements/1.1/\' xmlns:meta=\'http://openoffice.org/2000/meta\' xmlns:table=\'http://openoffice.org/2000/table\' xmlns:dr3d=\'http://openoffice.org/2000/dr3d\' xmlns:fo=\'http://www.w3.org/1999/XSL/Format\' xmlns:style=\'http://openoffice.org/2000/style\' xmlns:xforms=\'http://www.w3.org/2002/xforms\' xmlns:form=\'http://openoffice.org/2000/form\' xmlns:script=\'http://openoffice.org/2000/script\' xmlns:ooow=\'http://openoffice.org/2004/writer\' xmlns:svg=\'http://www.w3.org/2000/svg\' xmlns:chart=\'http://openoffice.org/2000/chart\' xmlns:dom=\'http://www.w3.org/2001/xml-events\' xmlns:xlink=\'http://www.w3.org/1999/xlink\' xmlns:xsd=\'http://www.w3.org/2001/XMLSchema\' xmlns:xsi=\'http://www.w3.org/2001/XMLSchema-instance\' xmlns:oooc=\'http://openoffice.org/2004/calc\' xmlns:math=\'http://www.w3.org/1998/Math/MathML\' office:class=\'spreadsheet\'  xmlns:tal=\'http://xml.zope.org/namespaces/tal\'\n
           xmlns:i18n=\'http://xml.zope.org/namespaces/i18n\'\n
@@ -346,7 +334,7 @@ TUVUQS1JTkYvbWFuaWZlc3QueG1sUEsFBgAAAAABAAEAQwAAAJoBAAAAAA==</string> </value>
 </office:document-content>\n
 
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -363,6 +351,10 @@ TUVUQS1JTkYvbWFuaWZlc3QueG1sUEsFBgAAAAABAAEAQwAAAJoBAAAAAA==</string> </value>
         <item>
             <key> <string>ooo_stylesheet</string> </key>
             <value> <string>AccountingTransactionModule_balanceSheetStylesheet</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

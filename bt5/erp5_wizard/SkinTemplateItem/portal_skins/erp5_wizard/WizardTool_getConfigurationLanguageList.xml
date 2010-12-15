@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -55,7 +52,7 @@
             <key> <string>_body</string> </key>
             <value> <string># XXX: take this list from remote server using portal_wizard calls\n
 return ((\'English\', \'en\'), \n
-        (\'Fran\xc3\xa7ais\', \'fr\'))\n
+        (\'Français\', \'fr\'))\n
 </string> </value>
         </item>
         <item>

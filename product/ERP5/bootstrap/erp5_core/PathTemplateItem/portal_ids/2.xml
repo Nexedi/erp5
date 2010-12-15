@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="IdGenerator" module="Products.ERP5Type.Document.IdGenerator"/>
+      <global name="Conceptual Id Generator" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>

@@ -3,9 +3,9 @@
   <item>Transition Variable</item>
  </portal_type>
  <portal_type id="Workflow">
+  <item>State</item>
   <item>Transition</item>
   <item>Variable</item>
-  <item>State</item>
   <item>Worklist</item>
  </portal_type>
  <portal_type id="Workflow Module">

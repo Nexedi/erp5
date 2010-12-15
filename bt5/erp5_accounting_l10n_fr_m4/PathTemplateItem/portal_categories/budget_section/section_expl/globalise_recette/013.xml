@@ -2,19 +2,10 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="Category" module="Products.ERP5Type.Document.Category"/>
-        <tuple/>
-      </tuple>
+      <global name="Category" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
         <item>
             <key> <string>categories</string> </key>
             <value>
@@ -41,17 +32,11 @@
         </item>
         <item>
             <key> <string>short_title</string> </key>
-            <value> <string>Att\xc3\xa9nuations de charges</string> </value>
+            <value> <string>Atténuations de charges</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>013 - Att\xc3\xa9nuations de charges</string> </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>013 - Atténuations de charges</string> </value>
         </item>
       </dictionary>
     </pickle>

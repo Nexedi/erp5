@@ -5,6 +5,6 @@
  </chain>
  <chain>
   <type>Archive Inventory</type>
-  <workflow>edit_workflow, archive_inventory_workflow</workflow>
+  <workflow>archive_inventory_workflow, edit_workflow</workflow>
  </chain>
 </workflow_chain>

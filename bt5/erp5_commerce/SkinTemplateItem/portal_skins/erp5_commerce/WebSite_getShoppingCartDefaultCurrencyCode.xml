@@ -122,33 +122,6 @@ else:\n
             <value> <string>WebSite_getShoppingCartDefaultCurrencyCode</string> </value>
         </item>
         <item>
-            <key> <string>isIndexable</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="PropertyGetter" module="Products.ERP5Type.Accessor.Constant"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>__name__</string> </key>
-                        <value> <string>isIndexable</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_id</string> </key>
-                        <value> <string>isIndexable</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>value</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Get default Currency symbol for Shopping Cart</string> </value>
         </item>

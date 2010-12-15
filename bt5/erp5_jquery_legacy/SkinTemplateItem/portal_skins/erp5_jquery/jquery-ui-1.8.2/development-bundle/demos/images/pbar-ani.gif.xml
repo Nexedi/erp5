@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="Image" module="OFS.Image"/>
-        <tuple/>
-      </tuple>
+      <global name="Image" module="OFS.Image"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -1181,7 +1178,7 @@ d\xaa\xa6C\x1b\xac0I\xccGlGJ^\xdf\xebL\xec<UN\x01\x0c\x8e|E\xa3h\xc1L\x1a\x91\xc
                                                                                                     \n
                                                                                                     \n
                                                                                                     \n
-             
+
 
 ]]></string> </value>
         </item>
@@ -1881,7 +1878,7 @@ d\xaa\xa6C\x1b\xac0I\xccGlGJ^\xdf\xebL\xec<UN\x01\x0c\x8e|E\xa3h\xc1L\x1a\x91\xc
 </x:xmpmeta>\n
                                                                                                     \n
                                                                                                     \n
-                                                                                                    
+
 
 ]]></string> </value>
         </item>

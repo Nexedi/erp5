@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="BaseDomain" module="Products.ERP5Type.Document.BaseDomain"/>
+      <global name="Base Domain" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>

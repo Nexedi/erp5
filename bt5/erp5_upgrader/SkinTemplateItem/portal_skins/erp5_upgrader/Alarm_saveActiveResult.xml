@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -77,7 +74,13 @@ return active_result\n
         <item>
             <key> <string>errors</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string encoding="cdata"><![CDATA[
+
+non-default argument follows default argument (<function parameters>, line 1)
+
+]]></string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -92,22 +95,12 @@ return active_result\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
-                          <tuple>
-                            <string>summary</string>
-                            <string>severity</string>
-                            <string>detail</string>
-                            <string>Products.ERP5Type.Log</string>
-                            <string>log</string>
-                            <string>Products.CMFActivity.ActiveResult</string>
-                            <string>ActiveResult</string>
-                            <string>active_result</string>
-                            <string>_getattr_</string>
-                          </tuple>
+                          <tuple/>
                         </value>
                     </item>
                   </dictionary>
@@ -118,9 +111,7 @@ return active_result\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <int>0</int>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="Category" module="Products.ERP5Type.Document.Category"/>
-        <tuple/>
-      </tuple>
+      <global name="Category" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -45,7 +42,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>13 Sal\xc3\xa1rio a Pagar</string> </value>
+            <value> <string>13 Salário a Pagar</string> </value>
         </item>
       </dictionary>
     </pickle>

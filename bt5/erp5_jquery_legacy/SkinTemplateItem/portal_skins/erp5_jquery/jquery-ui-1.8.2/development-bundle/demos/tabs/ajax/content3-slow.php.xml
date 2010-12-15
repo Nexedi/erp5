@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -37,7 +34,7 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <?php\n
 sleep(1);\n
@@ -47,11 +44,15 @@ sleep(1);\n
 <p>Proin ut erat vel nunc tincidunt commodo. Curabitur feugiat, nisi et vehicula viverra, nisl orci eleifend arcu, sed blandit lectus nisl quis nisi. In hac habitasse platea dictumst. In hac habitasse platea dictumst. Aenean rutrum gravida velit ac imperdiet. Integer vitae arcu risus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Proin tincidunt orci at leo egestas porta. Vivamus ac augue et enim bibendum hendrerit ut id urna. Donec sollicitudin pulvinar turpis vitae scelerisque. Etiam tempor porttitor est sed blandit. Phasellus varius consequat leo eget tincidunt. Aliquam ac dui lectus. In et consectetur orci. Duis posuere nulla ac turpis faucibus vestibulum. Sed ut velit et dolor rhoncus dapibus. Sed sit amet pellentesque est.</p>\n
 <p>Nam in volutpat orci. Morbi sit amet orci in erat egestas dignissim. Etiam mi sapien, tempus sed iaculis a, adipiscing quis tellus. Suspendisse potenti. Nam malesuada tristique vestibulum. In tempor tellus dignissim neque consectetur eu vestibulum nisl pellentesque. Phasellus ultrices cursus velit, id aliquam nisl fringilla quis. Cras varius elit sed urna ultrices congue. Sed ornare odio sed velit pellentesque id varius nisl sodales. Sed auctor ligula egestas mi pharetra ut consectetur erat pharetra.</p>
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>content3-slow.php</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
         </item>
       </dictionary>
     </pickle>

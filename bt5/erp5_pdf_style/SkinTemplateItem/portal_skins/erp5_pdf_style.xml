@@ -2,42 +2,20 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="Folder" module="OFS.Folder"/>
-        <tuple/>
-      </tuple>
+      <global name="Folder" module="OFS.Folder"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_local_properties</string> </key>
             <value>
-              <tuple>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>business_template_registered_skin_selections</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>tokens</string> </value>
-                  </item>
-                </dictionary>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
             <key> <string>_objects</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>business_template_registered_skin_selections</string> </key>
-            <value>
-              <tuple>
-                <string>Print</string>
-              </tuple>
             </value>
         </item>
         <item>

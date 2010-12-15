@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ImageField" module="Products.ERP5Form.ImageField"/>
-        <tuple/>
-      </tuple>
+      <global name="ImageField" module="Products.ERP5Form.ImageField"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -206,12 +203,6 @@
                     <value> <string></string> </value>
                 </item>
               </dictionary>
-            </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
             </value>
         </item>
         <item>

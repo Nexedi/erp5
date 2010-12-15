@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="TaxLineDeliveryMovementGroup" module="Products.ERP5Type.Document.TaxLineDeliveryMovementGroup"/>
-        <tuple/>
-      </tuple>
+      <global name="Tax Line Delivery Movement Group" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>

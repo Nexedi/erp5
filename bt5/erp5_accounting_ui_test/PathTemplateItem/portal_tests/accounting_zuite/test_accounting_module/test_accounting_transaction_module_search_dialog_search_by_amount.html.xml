@@ -34,7 +34,7 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <html>\n
   <head><title>Accounting Transaction Module Search Dialog: seach by amount</title></head>\n
@@ -202,7 +202,7 @@ Accounting Transaction Module Search Dialog: seach by amount\n
 -->\n
 
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -217,8 +217,12 @@ Accounting Transaction Module Search Dialog: seach by amount\n
             <value> <string>test_accounting_transaction_module_search_dialog_search_by_amount.html</string> </value>
         </item>
         <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <unicode></unicode> </value>
         </item>
       </dictionary>
     </pickle>

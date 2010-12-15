@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="PythonScript" module="Products.ERP5Type.Document.PythonScript"/>
+      <global name="Python Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>

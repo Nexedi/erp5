@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="StringEquivalenceTester" module="Products.ERP5Type.Document.StringEquivalenceTester"/>
-        <tuple/>
-      </tuple>
+      <global name="String Divergence Tester" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>

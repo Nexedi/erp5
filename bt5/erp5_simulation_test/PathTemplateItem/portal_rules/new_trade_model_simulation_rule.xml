@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="TradeModelSimulationRule" module="Products.ERP5Type.Document.TradeModelSimulationRule"/>
-        <tuple/>
-      </tuple>
+      <global name="Trade Model Simulation Rule" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -102,7 +99,7 @@
   </record>
   <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
-      <global name="OOBTree" module="BTrees._OOBTree"/>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
     </pickle>
     <pickle>
       <none/>
@@ -128,7 +125,7 @@
   </record>
   <record id="6" aka="AAAAAAAAAAY=">
     <pickle>
-      <global name="OOBTree" module="BTrees._OOBTree"/>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
     </pickle>
     <pickle>
       <none/>

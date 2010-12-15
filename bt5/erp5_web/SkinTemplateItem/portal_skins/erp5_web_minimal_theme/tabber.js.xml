@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="DTMLDocument" module="OFS.DTMLDocument"/>
-        <tuple/>
-      </tuple>
+      <global name="DTMLDocument" module="OFS.DTMLDocument"/>
     </pickle>
     <pickle>
       <dictionary>

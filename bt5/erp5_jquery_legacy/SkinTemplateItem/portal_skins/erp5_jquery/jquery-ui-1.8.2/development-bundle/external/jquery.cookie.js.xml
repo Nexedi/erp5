@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="File" module="OFS.Image"/>
-        <tuple/>
-      </tuple>
+      <global name="File" module="OFS.Image"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -110,7 +107,7 @@ jQuery.cookie = function (key, value, options) {\n
             options.path ? \'; path=\' + options.path : \'\',\n
             options.domain ? \'; domain=\' + options.domain : \'\',\n
             options.secure ? \'; secure\' : \'\'\n
-        ].join(\'\'));\n
+].join(\'\'));\n
     }\n
 \n
     // key and possibly options given, get cookie...\n

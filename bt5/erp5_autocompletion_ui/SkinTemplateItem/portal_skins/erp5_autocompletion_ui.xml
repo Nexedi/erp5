@@ -2,13 +2,16 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="Folder" module="OFS.Folder"/>
-        <tuple/>
-      </tuple>
+      <global name="Folder" module="OFS.Folder"/>
     </pickle>
     <pickle>
       <dictionary>
+        <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
         <item>
             <key> <string>_objects</string> </key>
             <value>
