@@ -133,6 +133,8 @@ class ProxyWidget(Widget.Widget):
   render_odf = WidgetDelegatedMethod('render_odf', default='')
   render_odt = WidgetDelegatedMethod('render_odt', default=None)
   render_odt_view = WidgetDelegatedMethod('render_odt_view', default=None)
+  render_odt_variable = WidgetDelegatedMethod('render_odt_variable',
+                                              default=None)
   render_odg = WidgetDelegatedMethod('render_odg', default=None)
   get_javascript_list = WidgetDelegatedMethod(
                             'get_javascript_list', default=[])
