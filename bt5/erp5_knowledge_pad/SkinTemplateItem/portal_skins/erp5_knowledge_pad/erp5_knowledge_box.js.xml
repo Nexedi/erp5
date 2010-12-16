@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts92251348.76</string> </value>
+            <value> <string>ts92483701.94</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -35,6 +35,9 @@ var active_knowledge_pad_title_dom_id = \'\';\n
 \n
 // enable or disable integration with server\n
 var is_knowledge_template_used = 0;\n
+\n
+// dictionary of invisible gadgets\n
+var invisible_gadgets={};\n
 \n
 function createCustomKnowledgePadOnServer(){\n
   url = "ERP5Site_createDefaultKnowledgePadListForUser";\n
@@ -484,7 +487,15 @@ function initialize(){\n
          if (is_knowledge_template_used){\n
            showCreateDefaultKnowledgePadWarningMessage();}\n
          else{\n
+           // togle DOM element (locally)\n
            toggle(minimize_wrapper);\n
+           js_dom_id = box.id + \'_content\';\n
+           js_code = invisible_gadgets[js_dom_id];\n
+           if (js_code!=undefined){\n
+             eval(js_code);\n
+             // gadget is now visible, i.e. no need to query server just toggle locally dom\n
+             delete invisible_gadgets[js_dom_id];}\n
+           // update server \n
            doSimpleXMLHttpRequest("KnowledgeBox_toggleVisibility", \n
                                   {box_relative_url: box.id});}});\n
        }\n
@@ -521,7 +532,7 @@ MochiKit.DOM.addLoadEvent(initialize);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>19554</int> </value>
+            <value> <int>19989</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

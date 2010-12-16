@@ -80,11 +80,14 @@ if editable_mode in (\'True\', True, 1):\n
   editable_mode = 1\n
 else:\n
   editable_mode = 0\n
+js_update_code = """updater(\'%s\', \'%s\', \'%s\', \'%s\', \'%s\', %s);""" %(url, box_relative_url, dom_id, \n
+                                                                 current_web_section_url, editable_mode, encodeInJson(params))\n
+if box.getValidationState()==\'invisible\':\n
+  # we can generate \n
+  s = """invisible_gadgets["%s"]="%s";""" %(dom_id, js_update_code)\n
+else:\n
+  s = js_update_code\n
 \n
-s = """\n
-  updater(\'%s\', \'%s\', \'%s\', \'%s\', \'%s\', %s);\n
-  """ %(url, box_relative_url, dom_id, \n
-        current_web_section_url, editable_mode, encodeInJson(params))\n
 return s\n
 </string> </value>
         </item>
@@ -139,6 +142,7 @@ return s\n
                             <string>box_relative_url</string>
                             <string>editable_mode</string>
                             <string>True</string>
+                            <string>js_update_code</string>
                             <string>s</string>
                           </tuple>
                         </value>
