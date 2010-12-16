@@ -532,8 +532,9 @@ class TestCommerce(ERP5TypeTestCase):
     """
     # XXX : actually the script is only in squeleton mode,
     # only return a tax of 20%
-    self.assertEquals({'VAT': 20.0},
-                          self.getPortal().Person_getApplicableTaxList())
+    self.assertEquals(
+        {'VAT': {'translated_title': 'VAT', 'percent': 20.0}},
+        self.getPortal().Person_getApplicableTaxList())
 
   def test_09_paymentRedirect(self):
     """
