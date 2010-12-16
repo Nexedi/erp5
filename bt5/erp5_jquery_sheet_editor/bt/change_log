@@ -1,3 +1,6 @@
+2010-12-16 gabriel
+* Added default theme to Spreadsheet
+
 2010-11-21 gabriel
 * Clear the text_content field to use Spreadsheet Editor from EditorField
 

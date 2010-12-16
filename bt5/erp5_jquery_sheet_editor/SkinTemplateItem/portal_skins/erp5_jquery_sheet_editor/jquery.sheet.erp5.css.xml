@@ -221,7 +221,7 @@ body div.content{\n
   padding:5px;\n
 }\n
 \n
-span#themeSwitcher{\n
+span#themeSwitcher {\n
   display:none;\n
 }</string> </value>
         </item>
