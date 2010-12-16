@@ -384,10 +384,8 @@ class EmailDocument(TextDocument):
         return self._baseGetTitle(default)
     subject = self.getContentInformation().get('Subject', '')
     # Remove all newlines
-    if '\r' in subject:
-      subject = ''.join(subject.split('\r'))
-    if '\n' in subject:
-      subject = ''.join(subject.split('\n'))
+    subject = subject.replace('\r', '')
+    subject = subject.replace('\n', '')
     return subject
   
   security.declareProtected(Permissions.AccessContentsInformation, 'getStartDate')
