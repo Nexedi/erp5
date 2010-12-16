@@ -1908,7 +1908,7 @@ return 1
 
     image=self.portal.image_module.newContent(portal_type='Image',
                                                     content_type='image/png')
-    self.assertTrue('txt' in image.getTargetFormatList())
+    self.assertTrue(image.getTargetFormatList())
     
     # test Not converted (i.e. empty) OOoDocument instances
     presentation=self.portal.document_module.newContent(portal_type='Presentation')
