@@ -43,7 +43,6 @@ class TestContributionRegistryTool(ERP5TypeTestCase):
 
   def afterSetUp(self):
     self.setUpTestScript()
-    self.setUpMimeType()
     self.setUpPredicate()
 
   def setUpTestScript(self):
@@ -73,24 +72,6 @@ return predicate.getDestinationPortalType()
     self.portal.IngestionFile_testEvent.write(python_script_src)
     transaction.commit()
     self.tic()
-
-  def setUpMimeType(self):
-    portal_categories = self.portal.portal_categories
-    if getattr(portal_categories, 'mime_type', None) is None:
-      mime_type = portal_categories.newContent(portal_type='Base Category',
-                                               id='mime_type')
-      text = mime_type.newContent(portal_type='Category', id='text')
-      text.newContent(portal_type='Category', id='html')
-      transaction.commit()
-      self.tic()
-
-    if getattr(portal_categories, 'mime_type', None) is None:
-      mime_type = portal_categories.newContent(portal_type='Base Category',
-                                               id='mime_type')
-      message = mime_type.newContent(portal_type='Category', id='message')
-      message.newContent(portal_type='Category', id='rfc822')
-      transaction.commit()
-      self.tic()
 
   def setUpPredicate(self):
     portal_contribution_registry = self.portal.portal_contribution_registry
