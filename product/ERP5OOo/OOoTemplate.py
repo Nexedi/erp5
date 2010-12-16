@@ -585,7 +585,7 @@ class OOoTemplate(ZopePageTemplate):
     from Products.ERP5Type.Document import newTempOOoDocument
     tmp_ooo = newTempOOoDocument(self, self.title_or_id())
     tmp_ooo.edit(data=ooo,
-                 source_reference=filename,
+                 filename=filename,
                  content_type=self.content_type,)
 
     format = opts.get('format', request.get('format', None))

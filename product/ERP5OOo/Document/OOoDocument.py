@@ -163,6 +163,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
                     , PropertySheet.DublinCore
                     , PropertySheet.Version
                     , PropertySheet.Document
+                    , PropertySheet.Data
                     , PropertySheet.ExternalDocument
                     , PropertySheet.Url
                     , PropertySheet.Periodicity
