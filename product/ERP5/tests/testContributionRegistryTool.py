@@ -39,7 +39,7 @@ class TestContributionRegistryTool(ERP5TypeTestCase):
     return "Contribution Registry Tool"
 
   def getBusinessTemplateList(self):
-    return ('erp5_base', 'erp5_ingestion', 'erp5_web', 'erp5_dms',)
+    return ('erp5_base',)
 
   def afterSetUp(self):
     self.setUpTestScript()
@@ -94,25 +94,56 @@ return predicate.getDestinationPortalType()
 
   def setUpPredicate(self):
     portal_contribution_registry = self.portal.portal_contribution_registry
-    if getattr(portal_contribution_registry, 'webpage_mimetype', None) is None:
+
+    predicate_id = 'webpage_by_content_type'
+    if getattr(portal_contribution_registry, predicate_id, None) is None:
       predicate = portal_contribution_registry.newContent(
         portal_type='Contribution Predicate',
-        id='webpage_mimetype')
-      predicate._setMembershipCriterionCategoryList(['mime_type/text/html'])
-      predicate._setMembershipCriterionBaseCategoryList(['mime_type'])
+        id=predicate_id)
+      predicate.setCriterion('content_type', identity=['text/html'])
       predicate.setDestinationPortalType('Web Page')
       transaction.commit()
       self.tic()
 
-    if getattr(portal_contribution_registry, 'my_predicate', None) is None:
+    predicate_id = 'webpage_by_extension'
+    if getattr(portal_contribution_registry, predicate_id, None) is None:
       predicate = portal_contribution_registry.newContent(
         portal_type='Contribution Predicate',
-        id='my_predicate')
-      predicate._setMembershipCriterionCategoryList(['mime_type/message/rfc822'])
-      predicate._setMembershipCriterionBaseCategoryList(['mime_type'])
-      predicate.setCriterion('file_extension', identity=['eml'])
+        id=predicate_id)
+      predicate.setCriterion('extension_from_filename', identity=['html'])
+      predicate.setDestinationPortalType('Web Page')
+      transaction.commit()
+      self.tic()
+
+    predicate_id = 'email_by_extension_and_content_type'
+    if getattr(portal_contribution_registry, predicate_id, None) is None:
+      predicate = portal_contribution_registry.newContent(
+        portal_type='Contribution Predicate',
+        id=predicate_id)
+      predicate.setCriterion('extension_from_filename', identity=['eml'])
+      predicate.setCriterion('content_type', identity=['message/rfc822'])
       predicate.setDestinationPortalType('Mail Message')
       predicate.setTestMethodId('IngestionFile_testEvent')
+      transaction.commit()
+      self.tic()
+
+    predicate_id = 'text_by_extension'
+    if getattr(portal_contribution_registry, predicate_id, None) is None:
+      predicate = portal_contribution_registry.newContent(
+        portal_type='Contribution Predicate',
+        id=predicate_id)
+      predicate.setCriterion('extension_from_filename', identity=['odt', 'txt'])
+      predicate.setDestinationPortalType('Text')
+      transaction.commit()
+      self.tic()
+
+    predicate_id = 'image_by_extension'
+    if getattr(portal_contribution_registry, predicate_id, None) is None:
+      predicate = portal_contribution_registry.newContent(
+        portal_type='Contribution Predicate',
+        id=predicate_id)
+      predicate.setCriterion('extension_from_filename', identity=['jpg', 'png'])
+      predicate.setDestinationPortalType('Image')
       transaction.commit()
       self.tic()
 
