@@ -659,8 +659,10 @@ class TestCommerce(ERP5TypeTestCase):
 
     order_line.setResource(shipping_list[0].getRelativeUrl())
     order_line.setQuantity(1)
+
+    selected_resource = self.portal.SaleOrder_getSelectedShippingResource()
     self.assertEquals(shipping_list[0].getRelativeUrl(),
-                      self.portal.SaleOrder_getSelectedShippingResource())
+                      selected_resource.getRelativeUrl())
 
   def test_15_getShoppingCartDefaultCurrency(self):
     """
