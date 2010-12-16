@@ -51,24 +51,24 @@ class TestApparelModel(ERP5TypeTestCase):
   def createCategories(self):
     """Create the categories for our test. """
     # create categories
-    for cat_string in self.getNeededCategoryList() :
+    for cat_string in self.getNeededCategoryList():
       base_cat = cat_string.split("/")[0]
       # if base_cat not exist, create it
-      if getattr(self.getPortal().portal_categories, base_cat, None) == None:
-        self.getPortal().portal_categories.newContent(\
+      if getattr(self.getPortal().portal_categories, base_cat, None) is None:
+        self.getPortal().portal_categories.newContent(
                                           portal_type='Base Category',
                                           id=base_cat)
       path = self.getPortal().portal_categories[base_cat]
-      for cat in cat_string.split("/")[1:] :
-        if not cat in path.objectIds() :
+      for cat_id in cat_string.split("/")[1:]:
+        if not cat_id in path.objectIds():
           path = path.newContent(
                     portal_type='Category',
-                    id=cat,
-                    title=cat.replace('_', ' ').title(),)
+                    id=cat_id,
+                    title=cat_id.title())
         else:
-          path = path[cat]
+          path = path[cat_id]
     # check categories have been created
-    for cat_string in self.getNeededCategoryList() :
+    for cat_string in self.getNeededCategoryList():
       self.assertNotEquals(None,
                 self.getCategoryTool().restrictedTraverse(cat_string),
                 cat_string)
@@ -84,72 +84,87 @@ class TestApparelModel(ERP5TypeTestCase):
     Check that it's possible to copy composition from a model, and that cells
     are well created.
     '''
+    portal = self.getPortal()
+
     # defin an apparel fabric
-    apparel_fabric_module = self.getPortal().getDefaultModule('Apparel Fabric')
-    apparel_fabric = apparel_fabric_module.newContent(portal_type=\
-        'Apparel Fabric')
-    apparel_fabric.setCategoryList(('composition/acrylique', 'composition/elasthane'))
-    apparel_fabric.updateCellRange(base_id='composition')
+    apparel_fabric_module = portal.getDefaultModule('Apparel Fabric')
+    apparel_fabric = apparel_fabric_module.newContent(
+        portal_type = 'Apparel Fabric')
+    apparel_fabric.setCategoryList(
+        ('composition/acrylique',
+         'composition/elasthane'))
+    apparel_fabric.updateCellRange(base_id = 'composition')
 
     # create composition cells
-    apparel_fabric.newCell('composition/acrylique',
-                           base_id='composition',
-                           portal_type='Mapped Value',
-                           quantity = 0.88)
-    apparel_fabric.newCell('composition/elasthane',
-                           base_id='composition',
-                           portal_type='Mapped Value',
-                           quantity = 0.12)
+    apparel_fabric.newCell(
+        'composition/acrylique',
+        base_id = 'composition',
+        portal_type = 'Mapped Value',
+        quantity = 0.88)
+    apparel_fabric.newCell(
+        'composition/elasthane',
+        base_id ='composition',
+        portal_type = 'Mapped Value',
+        quantity = 0.12)
 
     # add some color variations
-    fabric_color1 = apparel_fabric.newContent(portal_type='Apparel Fabric Colour Variation',
-        title='Bleu ciel')
-    fabric_color2 = apparel_fabric.newContent(portal_type='Apparel Fabric Colour Variation',
-        title='Volcano')
+    fabric_color1 = apparel_fabric.newContent(
+        portal_type = 'Apparel Fabric Colour Variation',
+        title = 'Bleu ciel')
+    fabric_color2 = apparel_fabric.newContent(
+        portal_type = 'Apparel Fabric Colour Variation',
+        title = 'Volcano')
 
     # create an Apparel Colour Range
-    apparel_colour_range_module = self.getPortal().getDefaultModule(\
-        'Apparel Colour Range')
-    apparel_colour_range = apparel_colour_range_module.newContent(portal_type=\
-        'Apparel Colour Range')
-    color1 = apparel_colour_range.newContent(title='Blue',
-        portal_type='Apparel Colour Range Variation')
-    color2 = apparel_colour_range.newContent(title='Red',
-        portal_type='Apparel Colour Range Variation')
+    apparel_colour_range_module = portal.getDefaultModule('Apparel Colour Range')
+    apparel_colour_range = apparel_colour_range_module.newContent(
+        portal_type = 'Apparel Colour Range')
+    color1 = apparel_colour_range.newContent(
+        title = 'Blue',
+        portal_type = 'Apparel Colour Range Variation')
+    color2 = apparel_colour_range.newContent(
+        title = 'Red',
+        portal_type = 'Apparel Colour Range Variation')
 
-    variation1 = color1.newContent(title='Ocean', int_index=2,
-        portal_type='Apparel Colour Range Variation Line')
-    variation2 = color1.newContent(title='Volcano', int_index=1,
-        portal_type='Apparel Colour Range Variation Line')
+    variation1 = color1.newContent(
+        title = 'Ocean',
+        int_index = 2,
+        portal_type = 'Apparel Colour Range Variation Line')
+    variation2 = color1.newContent(
+        title = 'Volcano',
+        int_index = 1,
+        portal_type = 'Apparel Colour Range Variation Line')
 
     variation1.setSpecialiseValue(fabric_color1)
     variation2.setSpecialiseValue(fabric_color2)
 
     # create an Apparel Model
-    apparel_model_module = self.getPortal().getDefaultModule(\
-        'Apparel Model')
+    apparel_model_module = portal.getDefaultModule('Apparel Model')
     apparel_model = apparel_model_module.newContent(portal_type='Apparel Model')
     apparel_model.setSpecialiseValue(apparel_colour_range)
     apparel_model.ApparelModel_copyComposition()
 
     # check the cells have been copied
-    self.assertEquals(len(apparel_model.contentValues(portal_type=\
-        'Mapped Value')), 2)
-    self.assertNotEquals(apparel_model.getCell('composition/acrylique',
-      base_id='composition'), None)
-    cell1 = apparel_model.getCell('composition/acrylique',
-                                  base_id='composition')
-    self.assertEqual(cell1.getQuantity(), 0.88)
-    self.assertNotEquals(apparel_model.getCell('composition/elasthane',
-      base_id='composition'), None)
-    cell1 = apparel_model.getCell('composition/elasthane',
-                                  base_id='composition')
-    self.assertEqual(cell1.getQuantity(), 0.12)
+    cell_list = apparel_model.contentValues(portal_type = 'Mapped Value')
+    self.assertEquals(len(cell_list), 2)
+
+    acrylique = apparel_model.getCell(
+        'composition/acrylique',
+        base_id = 'composition')
+    self.assertNotEquals(acrylique, None)
+    self.assertEqual(acrylique.getQuantity(), 0.88)
+
+    elasthane = apparel_model.getCell(
+        'composition/elasthane',
+        base_id = 'composition')
+    self.assertNotEquals(elasthane, None)
+    self.assertEqual(elasthane.getQuantity(), 0.12)
 
     # check indexes are present
     self.assertTrue(apparel_model.index.has_key('composition'))
-    self.assertTrue(apparel_model.index['composition'][0].has_key('composition/elasthane'))
-    self.assertTrue(apparel_model.index['composition'][0].has_key('composition/acrylique'))
+    index = apparel_model.index['composition'][0]
+    self.assertTrue(index.has_key('composition/elasthane'))
+    self.assertTrue(index.has_key('composition/acrylique'))
 
   def test_checkCopyColourRangeVariation(self):
     '''
