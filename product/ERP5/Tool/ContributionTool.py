@@ -243,11 +243,6 @@ class ContributionTool(BaseTool):
                                )
     object_id = document.getId()
     document = self._getOb(object_id) # Call _getOb to purge cache
-    rewrite_method = document._getTypeBasedMethod('rewriteIngestionData')
-    if rewrite_method is not None:
-      modified_kw = rewrite_method(**kw.copy())
-      if modified_kw is not None:
-        kw.update(modified_kw)
 
     kw['filename'] = filename # Override filename property
     # Then edit the document contents (so that upload can happen)
