@@ -52,7 +52,12 @@
             <key> <string>_body</string> </key>
             <value> <string>"""Get the shopping cart customer"""\n
 shopping_cart = context.SaleOrder_getShoppingCart()\n
-return shopping_cart.getDestinationSectionValue()\n
+result = shopping_cart.getDestinationSectionValue()\n
+if result is None:\n
+  shopping_cart.SaleOrder_setShoppingCartCustomer()\n
+  result = shopping_cart.getDestinationSectionValue()\n
+\n
+return result\n
 </string> </value>
         </item>
         <item>
@@ -98,6 +103,8 @@ return shopping_cart.getDestinationSectionValue()\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>shopping_cart</string>
+                            <string>result</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
