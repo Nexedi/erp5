@@ -57,7 +57,7 @@
 from Products.ERP5Type.Cache import CachingMethod\n
 \n
 def contentTypeMatch(content_type, glob):\n
-  if \'*\' in glob:\n
+  if \'*\' == glob[-1]:\n
     # \'image/png\' must match \'image/*\'\n
     index = glob.index(\'*\')\n
     return content_type[:index] == glob[:index]\n
