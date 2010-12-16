@@ -39,7 +39,7 @@ class TestContributionRegistryTool(ERP5TypeTestCase):
     return "Contribution Registry Tool"
 
   def getBusinessTemplateList(self):
-    return ('erp5_base',)
+    return ('erp5_base', 'erp5_ingestion', 'erp5_web', 'erp5_dms',)
 
   def afterSetUp(self):
     self.setUpTestScript()
