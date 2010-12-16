@@ -203,8 +203,14 @@ class ContributionTool(BaseTool):
 
     if portal_type is None:
       # Guess it with help of portal_contribution_registry
+
+      # XXX may be broken for non-cStringIO files / IO that cant be replayed?
+      data = file_object.read()
+      file_object.seek(0)
+
       registry = portal.portal_contribution_registry
       portal_type = registry.findPortalTypeName(filename=filename,
+                                                data=data,
                                                 content_type=content_type)
     #
     # Check if same file is already exists. if it exists, then update it.
