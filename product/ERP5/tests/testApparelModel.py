@@ -92,12 +92,14 @@ class TestApparelModel(ERP5TypeTestCase):
     apparel_fabric.updateCellRange(base_id='composition')
 
     # create composition cells
-    acrylique = apparel_fabric.newCell('composition/acrylique',
-        base_id='composition', portal_type='Mapped Value')
-    acrylique.setQuantity(0.88)
-    elasthane = apparel_fabric.newCell('composition/elasthane',
-        base_id='composition', portal_type='Mapped Value')
-    elasthane.setQuantity(0.12)
+    apparel_fabric.newCell('composition/acrylique',
+                           base_id='composition',
+                           portal_type='Mapped Value',
+                           quantity = 0.88)
+    apparel_fabric.newCell('composition/elasthane',
+                           base_id='composition',
+                           portal_type='Mapped Value',
+                           quantity = 0.12)
 
     # add some color variations
     fabric_color1 = apparel_fabric.newContent(portal_type='Apparel Fabric Colour Variation',
