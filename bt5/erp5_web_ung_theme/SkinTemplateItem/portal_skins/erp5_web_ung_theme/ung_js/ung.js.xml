@@ -74,6 +74,7 @@ function updateWebPage(){\n
     }\n
   });\n
 }\n
+\n
 function checkConversion(){\n
   parameterList = getUrlParameterList();\n
   $.get("Base_getDocumentConversionState?path=" + parameterList.document_path, {},\n
@@ -154,6 +155,19 @@ $(document).ready(function(){\n
    }\n
    if ($("div.listbox-navigation").text() == "null")\n
      $("div.listbox-navigation").hide();\n
+ }\n
+ else {\n
+  $("div.action_menu ul li a").click(function(event){\n
+   event.preventDefault();\n
+   herfList = this.getAttribute("href").split("?");\n
+   action_name = herfList[herfList.length-1].split("=")[1];\n
+   $.ajax({url: "Base_changeWorkflowState", \n
+           data: "action_name=" + action_name,\n
+           success: function(){\n
+             window.location.reload();\n
+          },\n
+   });\n
+  });\n
  }\n
  $("#edit_document").dialog({\n
     autoOpen: false,\n

@@ -1,3 +1,6 @@
+2010-12-16 gabriel
+* Implemented feature to change the state of Document via UNG Theme
+
 2010-12-14 gabriel
 * Added default reference for templates.
 * Refactor code to create the documents allowed in UNG using ERP5 System Templates.
