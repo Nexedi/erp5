@@ -196,7 +196,7 @@
 """\n
 \n
 return {\'VAT\': {\'translated_title\':context.Base_translateString(\'VAT\'),\n
-                \'percent\': 20,\n
+                \'percent\': 20.,\n
                },\n
        }\n
 </string> </value>
