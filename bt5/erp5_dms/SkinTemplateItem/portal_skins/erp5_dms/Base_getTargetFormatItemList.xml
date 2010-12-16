@@ -56,20 +56,29 @@
 """\n
 from Products.ERP5Type.Cache import CachingMethod\n
 \n
+def contentTypeMatch(content_type, glob):\n
+  if \'*\' in glob:\n
+    # \'image/png\' must match \'image/*\'\n
+    index = glob.index(\'*\')\n
+    return content_type[:index] == glob[:index]\n
+  else:\n
+    return content_type == glob\n
+\n
+portal = context.getPortalObject()\n
 content_type = context.getContentType()\n
 \n
 def getTargetFormatItemList(content_type):\n
   format_list = []\n
   output_content_type_list = []\n
-  for obj in context.portal_transforms.objectValues():\n
+  for obj in portal.portal_transforms.objectValues():\n
     for input in obj.inputs:\n
-      if input==content_type and \\\n
+      if contentTypeMatch(content_type, input) and \\\n
         obj.output not in output_content_type_list and\\\n
         obj.output!=content_type:\n
         output_content_type_list.append(obj.output)\n
 \n
   for output_content_type in output_content_type_list:\n
-    mimetypes_registry_extension_list = context.mimetypes_registry.lookup(output_content_type)\n
+    mimetypes_registry_extension_list = portal.mimetypes_registry.lookup(output_content_type)\n
     for mimetypes_registry_extension in mimetypes_registry_extension_list:\n
       title = mimetypes_registry_extension.name()\n
       try:\n
@@ -129,8 +138,10 @@ return getTargetFormatItemList(content_type)\n
                           <tuple>
                             <string>Products.ERP5Type.Cache</string>
                             <string>CachingMethod</string>
+                            <string>contentTypeMatch</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal</string>
                             <string>content_type</string>
                             <string>getTargetFormatItemList</string>
                           </tuple>
