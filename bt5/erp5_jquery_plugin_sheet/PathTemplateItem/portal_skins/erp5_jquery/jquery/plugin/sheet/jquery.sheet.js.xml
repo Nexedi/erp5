@@ -2696,6 +2696,18 @@ jQuery.sheet = {\n
         w.document.write("\074html\076\074body\076\074xmp\076" + o + "\\n\074/xmp\076\074/body\076\074/html\076");\n
         w.document.close();\n
       },\n
+      getSource: function(pretty) {\n
+        var sheetClone = jS.sheetDecorateRemove(true);\n
+        var s = "";\n
+        if (pretty) {\n
+          jQuery(sheetClone).each(function() {\n
+             s += jS.HTMLtoPrettySource(this);\n
+          });\n
+        } else {\n
+          s += jQuery(\'\074div /\076\').html(sheetClone).html();\n
+        }\n
+          return s;\n
+      },\n
       viewSource: function(pretty) { /* prints the source of a sheet for a user to see\n
                         pretty: bool, makes html a bit easier for the user to see;\n
                       */\n
