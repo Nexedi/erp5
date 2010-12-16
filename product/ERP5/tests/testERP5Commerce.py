@@ -918,7 +918,7 @@ class TestCommerce(ERP5TypeTestCase):
     """
     product = self.getDefaultProduct()
     self.assertEquals(product.Resource_getShopUrl(),
-                 '%s/%s' % (product.getRelativeUrl(), 'Resource_viewAsShop'))
+                 '%s/%s' % (product.absolute_url(), 'Resource_viewAsShop'))
 
   @newSimulationExpectedFailure
   def test_28_finalizeShoppingWithComment(self):
