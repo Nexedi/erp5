@@ -207,7 +207,7 @@ class OOoDocumentExtensibleTraversableMixin(BaseExtensibleTraversableMixin):
     try:
       self._convert(format='html')
       _setCacheHeaders(_ViewEmulator().__of__(self), web_cache_kw)
-      mime, data = self.getConversion(format=EMBEDDED_FORMAT, file_name=name)
+      mime, data = self.getConversion(format=EMBEDDED_FORMAT, filename=name)
       document = OFSFile(name, name, data, content_type=mime).__of__(self.aq_parent)
     except (NotConvertedError, ConversionError, KeyError):
       document = DocumentExtensibleTraversableMixin.getExtensibleContent(self, request, name)
