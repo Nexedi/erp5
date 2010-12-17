@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #############################################################################
 #
 # Copyright (c) 2002-2005 Nexedi SARL and Contributors. All Rights Reserved.
@@ -198,7 +199,7 @@ class P0:
     , 'mode'       : 'w'
     },
     { 'id'         : 'first_spouse_fullname'
-    , 'description': 'Noms et pr�noms'
+    , 'description': 'Noms et prénoms'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -218,22 +219,22 @@ class P0:
     , 'mode'       : 'w'
     },
     { 'id'         : 'main_activity_free_text'
-    , 'description': 'Activit� principale'
+    , 'description': 'Activité principale'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'second_company_activity_free_text'
-    , 'description': 'Activit� principale'
+    , 'description': 'Activité principale'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'main_company'
-    , 'description': 'Principal �tablissement'
+    , 'description': 'Principal établissement'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'married_check'
-    , 'description': 'Mari�'
+    , 'description': 'Marié'
     , 'type'       : 'boolean'
     , 'mode'       : 'w'
     },
@@ -283,7 +284,7 @@ class P0:
     , 'mode'       : 'w'
     },
     { 'id'         : 'other_check_info'
-    , 'description': 'Autres(pr�ciser)'
+    , 'description': 'Autres(préciser)'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -293,7 +294,7 @@ class P0:
     , 'mode'       : 'w'
     },
     { 'id'         : 'other_companies_corporate_registration_code'
-    , 'description': 'Identit� de l exploitant'
+    , 'description': 'Identité de l exploitant'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -448,7 +449,7 @@ class P0:
     , 'mode'       : 'w'
     },
     { 'id'         : 'signature'
-    , 'description': 'Noms et Pr�noms'
+    , 'description': 'Noms et Prénoms'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },

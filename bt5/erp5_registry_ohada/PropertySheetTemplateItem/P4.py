@@ -232,7 +232,7 @@ class P4:
     , 'mode'       : 'w'
     },
     { 'id'         : 'second_another_cause'
-    , 'description': 'Noms et Pr�noms'
+    , 'description': 'Noms et Prénoms'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },

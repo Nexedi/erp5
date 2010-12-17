@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #############################################################################
 #
 # Copyright (c) 2002-2005 Nexedi SARL and Contributors. All Rights Reserved.
@@ -206,7 +207,7 @@ class P2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'first_administrator_last_name'
-    , 'description': 'Noms et Pr�noms'
+    , 'description': 'Noms et Prénoms'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -221,7 +222,7 @@ class P2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'first_spouse_fullname'
-    , 'description': 'Noms et pr�noms'
+    , 'description': 'Noms et prénoms'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -241,12 +242,12 @@ class P2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'main_company'
-    , 'description': 'Principal �tablissement'
+    , 'description': 'Principal établissement'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'married_check'
-    , 'description': 'Mari�'
+    , 'description': 'Marié'
     , 'type'       : 'boolean'
     , 'mode'       : 'w'
     },
@@ -266,7 +267,7 @@ class P2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'non_check'
-    , 'description': 'Mari�'
+    , 'description': 'Marié'
     , 'type'       : 'boolean'
     , 'mode'       : 'w'
     },
@@ -331,7 +332,7 @@ class P2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'place'
-    , 'description': 'Fait �'
+    , 'description': 'Fait à'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -431,7 +432,7 @@ class P2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'second_administrator_last_name'
-    , 'description': 'Noms et Pr�noms'
+    , 'description': 'Noms et Prénoms'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -476,7 +477,7 @@ class P2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'signature'
-    , 'description': 'Noms et Pr�noms'
+    , 'description': 'Noms et Prénoms'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #############################################################################
 #
 # Copyright (c) 2002-2005 Nexedi SARL and Contributors. All Rights Reserved.
@@ -156,7 +157,7 @@ class M4:
     , 'mode'       : 'w'
     },
     { 'id'         : 'reported_date'
-    , 'description': 'Date Report�e'
+    , 'description': 'Date Reportée'
     , 'type'       : 'date'
     , 'mode'       : 'w'
     },
@@ -171,7 +172,7 @@ class M4:
     , 'mode'       : 'w'
     },
     { 'id'         : 'first_garanty_person_birthdate'
-    , 'description': 'Nationalit�'
+    , 'description': 'Nationalité'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -186,12 +187,12 @@ class M4:
     , 'mode'       : 'w'
     },
     { 'id'         : 'first_garanty_person_lastname'
-    , 'description': 'Noms et Pr�noms'
+    , 'description': 'Noms et Prénoms'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'first_name'
-    , 'description': 'T�l�phone'
+    , 'description': 'Téléphone'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -201,7 +202,7 @@ class M4:
     , 'mode'       : 'w'
     },
     { 'id'         : 'first_spouse_fullname'
-    , 'description': 'Noms et pr�noms'
+    , 'description': 'Noms et prénoms'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -221,12 +222,12 @@ class M4:
     , 'mode'       : 'w'
     },
     { 'id'         : 'main_activity'
-    , 'description': 'Activit� principale'
+    , 'description': 'Activité principale'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'main_company'
-    , 'description': 'Principal �tablissement'
+    , 'description': 'Principal établissement'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -286,7 +287,7 @@ class M4:
     , 'mode'       : 'w'
     },
     { 'id'         : 'place'
-    , 'description': 'Fait �'
+    , 'description': 'Fait à'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
