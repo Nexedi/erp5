@@ -69,9 +69,8 @@ new_content.makeTemplateInstance()\n
 \n
 portal_type = new_content.getPortalType()\n
 module = portal.getDefaultModule(portal_type)\n
-new_object = module.newContent(portal_type=portal_type)\n
 \n
-kw["webpage_path"] = new_object.getPath()\n
+kw["webpage_path"] = new_content.getPath()\n
 return new_content.Base_redirect(context.Base_getEditorViewName(portal_type), \n
                                 keep_items = dict(editable_mode=1, **kw))\n
 </string> </value>
@@ -85,6 +84,14 @@ return new_content.Base_redirect(context.Base_getEditorViewName(portal_type), \n
         <item>
             <key> <string>_params</string> </key>
             <value> <string>template=None, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -126,7 +133,6 @@ return new_content.Base_redirect(context.Base_getEditorViewName(portal_type), \n
                             <string>new_content</string>
                             <string>portal_type</string>
                             <string>module</string>
-                            <string>new_object</string>
                             <string>_write_</string>
                             <string>_apply_</string>
                             <string>dict</string>
