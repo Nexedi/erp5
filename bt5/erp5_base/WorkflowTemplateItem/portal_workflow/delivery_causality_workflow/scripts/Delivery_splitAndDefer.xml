@@ -94,80 +94,12 @@ for delivery_builder in delivery.getBuilderList():\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>state_change</string>
-                            <string>_getitem_</string>
-                            <string>delivery</string>
-                            <string>split_movement_list</string>
-                            <string>start_date</string>
-                            <string>stop_date</string>
-                            <string>len</string>
-                            <string>_getattr_</string>
-                            <string>tag</string>
-                            <string>_getiter_</string>
-                            <string>movement</string>
-                            <string>None</string>
-                            <string>explanation_uid_list</string>
-                            <string>object</string>
-                            <string>previous_tag</string>
-                            <string>delivery_builder</string>
-                            <string>this_builder_tag</string>
-                            <string>after_tag</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Delivery_splitAndDefer</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

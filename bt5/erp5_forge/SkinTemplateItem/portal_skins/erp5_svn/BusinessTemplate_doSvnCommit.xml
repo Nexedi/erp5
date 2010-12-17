@@ -114,98 +114,12 @@ return getattr(context, method)()\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>added=\'\',modified=\'\',removed=\'\', changelog=None, **kw</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>added</string>
-                            <string>modified</string>
-                            <string>removed</string>
-                            <string>changelog</string>
-                            <string>kw</string>
-                            <string>Products.ERP5Subversion.SubversionClient</string>
-                            <string>SubversionSSLTrustError</string>
-                            <string>SubversionLoginError</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>translateString</string>
-                            <string>ZTUtils</string>
-                            <string>make_query</string>
-                            <string>_getattr_</string>
-                            <string>container</string>
-                            <string>request</string>
-                            <string>same_type</string>
-                            <string>getRevisionNumber</string>
-                            <string>None</string>
-                            <string>error_msg</string>
-                            <string>error_kw</string>
-                            <string>method</string>
-                            <string>context</string>
-                            <string>portal_subversion</string>
-                            <string>exclude_list</string>
-                            <string>True</string>
-                            <string>filter</string>
-                            <string>revision</string>
-                            <string>e</string>
-                            <string>dict</string>
-                            <string>_apply_</string>
-                            <string>getattr</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <string></string>
-                <string></string>
-                <string></string>
-                <none/>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>BusinessTemplate_doSvnCommit</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

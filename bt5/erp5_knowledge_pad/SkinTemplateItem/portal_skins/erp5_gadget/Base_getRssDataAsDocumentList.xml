@@ -117,84 +117,8 @@ return message_list\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
-        </item>
-        <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>kw</string>
-                            <string>Products.ERP5Type.Document</string>
-                            <string>newTempBase</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>request</string>
-                            <string>box_relative_url</string>
-                            <string>selection_name</string>
-                            <string>getattr</string>
-                            <string>portal_selection</string>
-                            <string>selection</string>
-                            <string>error_mapping_dict</string>
-                            <string>box</string>
-                            <string>preferences</string>
-                            <string>str</string>
-                            <string>feed_url</string>
-                            <string>username</string>
-                            <string>password</string>
-                            <string>results</string>
-                            <string>md5_list</string>
-                            <string>message_list</string>
-                            <string>items</string>
-                            <string>status</string>
-                            <string>_getitem_</string>
-                            <string>rss_title</string>
-                            <string>None</string>
-                            <string>rss_logo</string>
-                            <string>len</string>
-                            <string>_getiter_</string>
-                            <string>result</string>
-                            <string>date</string>
-                            <string>message</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -203,12 +127,6 @@ return message_list\n
         <item>
             <key> <string>title</string> </key>
             <value> <string>Take Rss dictionary and return document list</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

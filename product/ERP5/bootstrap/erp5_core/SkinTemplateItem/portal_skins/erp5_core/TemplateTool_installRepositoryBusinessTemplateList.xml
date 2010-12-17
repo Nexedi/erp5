@@ -123,95 +123,12 @@ RESPONSE.redirect(\'%s/TemplateTool_viewMultiInstallationDialog?%s&form_id=Busin
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>kw</string>
-                            <string>ZTUtils</string>
-                            <string>make_query</string>
-                            <string>Products.PythonScripts.standard</string>
-                            <string>url_quote</string>
-                            <string>_getattr_</string>
-                            <string>container</string>
-                            <string>REQUEST</string>
-                            <string>RESPONSE</string>
-                            <string>_getitem_</string>
-                            <string>selection_name</string>
-                            <string>context</string>
-                            <string>uids</string>
-                            <string>len</string>
-                            <string>id_list</string>
-                            <string>portal_status_message</string>
-                            <string>current_uid_list</string>
-                            <string>_getiter_</string>
-                            <string>uid</string>
-                            <string>repository</string>
-                            <string>id</string>
-                            <string>dependency_list</string>
-                            <string>dep_repository</string>
-                            <string>dep_id</string>
-                            <string>_inplacevar_</string>
-                            <string>provider_list</string>
-                            <string>False</string>
-                            <string>provider_installed</string>
-                            <string>provider</string>
-                            <string>True</string>
-                            <string>tuple_list</string>
-                            <string>bt_list</string>
-                            <string>bt</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>TemplateTool_installRepositoryBusinessTemplateList</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

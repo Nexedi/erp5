@@ -111,109 +111,12 @@ return container[report].index_html(REQUEST=context.REQUEST, RESPONSE=context.RE
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>report</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>report</string>
-                            <string>_print_</string>
-                            <string>_print</string>
-                            <string>True</string>
-                            <string>debug</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>request</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
-                            <string>Dane</string>
-                            <string>mess</string>
-                            <string>str</string>
-                            <string>dane</string>
-                            <string>_getiter_</string>
-                            <string>range</string>
-                            <string>f</string>
-                            <string>setattr</string>
-                            <string>_write_</string>
-                            <string>p08_1</string>
-                            <string>p20</string>
-                            <string>p22</string>
-                            <string>p24</string>
-                            <string>p26</string>
-                            <string>p28</string>
-                            <string>p25</string>
-                            <string>p27</string>
-                            <string>p29</string>
-                            <string>p40</string>
-                            <string>p41</string>
-                            <string>float</string>
-                            <string>p42</string>
-                            <string>ValueError</string>
-                            <string>p44</string>
-                            <string>p45</string>
-                            <string>p46</string>
-                            <string>p47</string>
-                            <string>p50</string>
-                            <string>p53</string>
-                            <string>p55</string>
-                            <string>max</string>
-                            <string>p56</string>
-                            <string>p59</string>
-                            <string>n</string>
-                            <string>getattr</string>
-                            <string>_getitem_</string>
-                            <string>container</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>FiscalReport_doReport</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

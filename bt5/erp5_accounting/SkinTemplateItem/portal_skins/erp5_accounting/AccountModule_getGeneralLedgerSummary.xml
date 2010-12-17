@@ -113,97 +113,12 @@ return [Object(debit_price=debit, credit_price=credit)]\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>section_uid, simulation_state, at_date, period_start_date, precision, node_category=None, function_category=None, funding_category=None, project_uid=None, from_date=\'ignored\', mirror_section_category=None, mirror_section_uid=None, **kw</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>12</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>section_uid</string>
-                            <string>simulation_state</string>
-                            <string>at_date</string>
-                            <string>period_start_date</string>
-                            <string>precision</string>
-                            <string>node_category</string>
-                            <string>function_category</string>
-                            <string>funding_category</string>
-                            <string>project_uid</string>
-                            <string>from_date</string>
-                            <string>mirror_section_category</string>
-                            <string>mirror_section_uid</string>
-                            <string>kw</string>
-                            <string>Products.PythonScripts.standard</string>
-                            <string>Object</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>getInventoryAssetPrice</string>
-                            <string>dict</string>
-                            <string>inventory_kw</string>
-                            <string>_write_</string>
-                            <string>_apply_</string>
-                            <string>income_node_category</string>
-                            <string>balance_node_category</string>
-                            <string>debit</string>
-                            <string>credit</string>
-                            <string>_inplacevar_</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <string>ignored</string>
-                <none/>
-                <none/>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>AccountModule_getGeneralLedgerSummary</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

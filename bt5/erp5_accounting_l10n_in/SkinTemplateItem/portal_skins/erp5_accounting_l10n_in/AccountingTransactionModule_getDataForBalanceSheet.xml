@@ -303,90 +303,12 @@ return (result, loop_dict[\'schedules\'])\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>True</string>
-                            <string>STRIP_IF_EMPTY</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>request</string>
-                            <string>result</string>
-                            <string>_getitem_</string>
-                            <string>GAP</string>
-                            <string>organisation_id</string>
-                            <string>dict</string>
-                            <string>ooo_struct</string>
-                            <string>getAccountsForGap</string>
-                            <string>getUniqueGapList</string>
-                            <string>getCell</string>
-                            <string>None</string>
-                            <string>addLine</string>
-                            <string>False</string>
-                            <string>loop_dict</string>
-                            <string>addScheduleForAccounts</string>
-                            <string>structure</string>
-                            <string>parse_structure</string>
-                            <string>do_section</string>
-                            <string>do_end</string>
-                            <string>do_sub</string>
-                            <string>handlers</string>
-                            <string>_getiter_</string>
-                            <string>item</string>
-                            <string>_write_</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>AccountingTransactionModule_getDataForBalanceSheet</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

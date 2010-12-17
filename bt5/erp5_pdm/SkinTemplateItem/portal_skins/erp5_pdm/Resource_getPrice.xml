@@ -111,88 +111,12 @@ return unit_base_price\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>default=None, movement=None, REQUEST=None, **kw</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>default</string>
-                            <string>movement</string>
-                            <string>REQUEST</string>
-                            <string>kw</string>
-                            <string>_apply_</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>price_parameter_dict</string>
-                            <string>None</string>
-                            <string>unit_base_price</string>
-                            <string>_getitem_</string>
-                            <string>base_price</string>
-                            <string>_inplacevar_</string>
-                            <string>sum</string>
-                            <string>variable_value</string>
-                            <string>sum_discount_ratio</string>
-                            <string>exclusive_discount_ratio</string>
-                            <string>max</string>
-                            <string>d_ratio</string>
-                            <string>min</string>
-                            <string>sum_surcharge_ratio</string>
-                            <string>priced_quantity</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <none/>
-                <none/>
-                <none/>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Resource_getPrice</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

@@ -100,87 +100,12 @@ else:\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>selection_name=\'\', selection_index=\'0\', form_id=\'view\'</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>selection_name</string>
-                            <string>selection_index</string>
-                            <string>form_id</string>
-                            <string>Products.CMFActivity.Errors</string>
-                            <string>ActivityPendingError</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>Base_translateString</string>
-                            <string>person</string>
-                            <string>career_list</string>
-                            <string>None</string>
-                            <string>default_career</string>
-                            <string>_getitem_</string>
-                            <string>message</string>
-                            <string>new_id</string>
-                            <string>error</string>
-                            <string>new_start_date</string>
-                            <string>cb_data</string>
-                            <string>copied</string>
-                            <string>getattr</string>
-                            <string>new_default_career</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <string></string>
-                <string>0</string>
-                <string>view</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Person_shiftDefaultCareer</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

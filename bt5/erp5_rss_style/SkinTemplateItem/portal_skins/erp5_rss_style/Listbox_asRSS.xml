@@ -161,97 +161,12 @@ return feed_data\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>label_list, line_list</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>label_list</string>
-                            <string>line_list</string>
-                            <string>Products.CMFCore.utils</string>
-                            <string>getToolByName</string>
-                            <string>Products.PythonScripts.standard</string>
-                            <string>html_quote</string>
-                            <string>items</string>
-                            <string>feed_data</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>request</string>
-                            <string>required_field_list</string>
-                            <string>allowed_field_list</string>
-                            <string>rss_column_mapping</string>
-                            <string>_getiter_</string>
-                            <string>enumerate</string>
-                            <string>index</string>
-                            <string>column_item</string>
-                            <string>_getitem_</string>
-                            <string>column_header</string>
-                            <string>_write_</string>
-                            <string>line</string>
-                            <string>rss_item_dict</string>
-                            <string>column_item_list</string>
-                            <string>header</string>
-                            <string>value_tuple</string>
-                            <string>hasattr</string>
-                            <string>value</string>
-                            <string>rss_item_string</string>
-                            <string>key</string>
-                            <string>_inplacevar_</string>
-                            <string>required_field</string>
-                            <string>field_data</string>
-                            <string>unicode</string>
-                            <string>tuple</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Listbox_asRSS</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

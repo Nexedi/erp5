@@ -92,74 +92,8 @@ return s\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>url, box, dom_id, params=None, ignore_security_check=0</string> </value>
-        </item>
-        <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>5</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>url</string>
-                            <string>box</string>
-                            <string>dom_id</string>
-                            <string>params</string>
-                            <string>ignore_security_check</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>Products.ERP5Type.JSONEncoder</string>
-                            <string>encodeInJson</string>
-                            <string>current_web_section_url</string>
-                            <string>current_web_section</string>
-                            <string>None</string>
-                            <string>isinstance</string>
-                            <string>str</string>
-                            <string>box_relative_url</string>
-                            <string>editable_mode</string>
-                            <string>True</string>
-                            <string>js_update_code</string>
-                            <string>s</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <none/>
-                <int>0</int>
-              </tuple>
-            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -168,12 +102,6 @@ return s\n
         <item>
             <key> <string>title</string> </key>
             <value> <string>Generate Ajax JavaScript calls</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

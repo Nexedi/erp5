@@ -141,98 +141,12 @@ return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/view?portal
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>listbox=[], **kw</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>listbox</string>
-                            <string>kw</string>
-                            <string>string</string>
-                            <string>zfill</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>destination_obj</string>
-                            <string>first_level_type</string>
-                            <string>second_level_type</string>
-                            <string>items</string>
-                            <string>_getiter_</string>
-                            <string>inputline</string>
-                            <string>scenario</string>
-                            <string>int</string>
-                            <string>_getitem_</string>
-                            <string>_write_</string>
-                            <string>clean_input_lines</string>
-                            <string>False</string>
-                            <string>has_1st_level</string>
-                            <string>has_2nd_level</string>
-                            <string>None</string>
-                            <string>new_1st_level_item</string>
-                            <string>item</string>
-                            <string>True</string>
-                            <string>new_1st_level_key</string>
-                            <string>new_2nd_level_item</string>
-                            <string>result</string>
-                            <string>int_index</string>
-                            <string>key</string>
-                            <string>new_1st_level_obj</string>
-                            <string>_inplacevar_</string>
-                            <string>second_level_int_index</string>
-                            <string>second_level</string>
-                            <string>new_2nd_level_obj</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <list/>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>UseCase_generateUseCaseScenarioList</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

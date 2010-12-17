@@ -305,126 +305,12 @@ return request.RESPONSE.redirect(redirect_url)\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>dialog_method, dialog_id, dialog_category=\'\', update_method=None, **kw</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>dialog_method</string>
-                            <string>dialog_id</string>
-                            <string>dialog_category</string>
-                            <string>update_method</string>
-                            <string>kw</string>
-                            <string>Products.ERP5Type.Log</string>
-                            <string>log</string>
-                            <string>isListBox</string>
-                            <string>Products.Formulator.Errors</string>
-                            <string>FormValidationError</string>
-                            <string>ZTUtils</string>
-                            <string>make_query</string>
-                            <string>_getattr_</string>
-                            <string>container</string>
-                            <string>request</string>
-                            <string>request_form</string>
-                            <string>error_message</string>
-                            <string>context</string>
-                            <string>_getitem_</string>
-                            <string>value</string>
-                            <string>None</string>
-                            <string>getattr</string>
-                            <string>form</string>
-                            <string>hasattr</string>
-                            <string>editable_mode</string>
-                            <string>validation_errors</string>
-                            <string>field_errors</string>
-                            <string>can_redirect</string>
-                            <string>MARKER</string>
-                            <string>listbox_id_list</string>
-                            <string>file_id_list</string>
-                            <string>_getiter_</string>
-                            <string>field</string>
-                            <string>k</string>
-                            <string>v</string>
-                            <string>splitted</string>
-                            <string>len</string>
-                            <string>_write_</string>
-                            <string>listbox_id</string>
-                            <string>listbox_line_list</string>
-                            <string>listbox</string>
-                            <string>listbox_keys</string>
-                            <string>key</string>
-                            <string>listbox_line</string>
-                            <string>tuple</string>
-                            <string>selection_list</string>
-                            <string>map</string>
-                            <string>object_uid_list</string>
-                            <string>error</string>
-                            <string>listbox_uid</string>
-                            <string>uids</string>
-                            <string>selected_uids</string>
-                            <string>clean_kw</string>
-                            <string>dialog_form</string>
-                            <string>page_template</string>
-                            <string>url_params_string</string>
-                            <string>new_skin_name</string>
-                            <string>deferred_portal_skin</string>
-                            <string>list</string>
-                            <string>_apply_</string>
-                            <string>redirect_url</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <string></string>
-                <none/>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Base_callDialogMethod</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

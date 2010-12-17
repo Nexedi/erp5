@@ -83,20 +83,8 @@ return item_list\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>account=\'\', section_category=\'\', section_category_strict_membership=True</string> </value>
-        </item>
-        <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -105,12 +93,6 @@ return item_list\n
         <item>
             <key> <string>title</string> </key>
             <value> <string>TODO: rename into AccountModule_getMirrorSectionItemList</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

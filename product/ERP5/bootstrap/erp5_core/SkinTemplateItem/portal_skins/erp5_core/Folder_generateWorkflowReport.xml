@@ -126,12 +126,6 @@ return context.Folder_viewWorkflowReport()\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>
@@ -144,85 +138,8 @@ return context.Folder_viewWorkflowReport()\n
             </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>listbox</string>
-                            <string>result_dict</string>
-                            <string>translate_state_dict</string>
-                            <string>state_dict</string>
-                            <string>portal_type_dict</string>
-                            <string>workflow_dict</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal_workflow</string>
-                            <string>content_type_list</string>
-                            <string>translateString</string>
-                            <string>workflow_tool</string>
-                            <string>_getiter_</string>
-                            <string>portal_type</string>
-                            <string>portal_type_id</string>
-                            <string>workflow_list</string>
-                            <string>workflow</string>
-                            <string>getattr</string>
-                            <string>None</string>
-                            <string>state_var</string>
-                            <string>result_list</string>
-                            <string>len</string>
-                            <string>_getitem_</string>
-                            <string>result</string>
-                            <string>state_title</string>
-                            <string>_write_</string>
-                            <string>state_list_dict</string>
-                            <string>portal_type_list</string>
-                            <string>workflow_title</string>
-                            <string>state_list</string>
-                            <string>state</string>
-                            <string>result_count</string>
-                            <string>count</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Folder_generateWorkflowReport</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

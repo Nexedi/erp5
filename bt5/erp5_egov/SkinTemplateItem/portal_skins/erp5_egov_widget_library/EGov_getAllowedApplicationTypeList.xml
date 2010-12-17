@@ -115,12 +115,6 @@ else:\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>
@@ -133,71 +127,8 @@ else:\n
             </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal_type_list</string>
-                            <string>portal_type_anon_list</string>
-                            <string>portal_type_auth_list</string>
-                            <string>_getiter_</string>
-                            <string>portal_type</string>
-                            <string>_inplacevar_</string>
-                            <string>portal</string>
-                            <string>user_name</string>
-                            <string>user_obj</string>
-                            <string>vat_code</string>
-                            <string>len</string>
-                            <string>sigtas_information</string>
-                            <string>_getitem_</string>
-                            <string>sigtas_line</string>
-                            <string>imposition_period</string>
-                            <string>declaration_list</string>
-                            <string>dec</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>EGov_getAllowedApplicationTypeList</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

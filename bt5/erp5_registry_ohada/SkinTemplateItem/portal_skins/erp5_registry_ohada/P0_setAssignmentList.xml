@@ -198,12 +198,6 @@ return context.REQUEST.RESPONSE.redirect(redirect_url)\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>listbox=[], **kw</string> </value>
         </item>
@@ -216,108 +210,8 @@ return context.REQUEST.RESPONSE.redirect(redirect_url)\n
             </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>listbox</string>
-                            <string>kw</string>
-                            <string>Products.ZSQLCatalog.SQLCatalog</string>
-                            <string>ComplexQuery</string>
-                            <string>Query</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal</string>
-                            <string>person_module</string>
-                            <string>items</string>
-                            <string>_getiter_</string>
-                            <string>line</string>
-                            <string>_getitem_</string>
-                            <string>None</string>
-                            <string>int</string>
-                            <string>line_id</string>
-                            <string>item</string>
-                            <string>_write_</string>
-                            <string>context_obj</string>
-                            <string>duration</string>
-                            <string>duration_length</string>
-                            <string>date</string>
-                            <string>beginning_date</string>
-                            <string>y</string>
-                            <string>m</string>
-                            <string>d</string>
-                            <string>stop_year</string>
-                            <string>new_items</string>
-                            <string>person_title</string>
-                            <string>filter</string>
-                            <string>new_items_list</string>
-                            <string>len</string>
-                            <string>person_third_party</string>
-                            <string>person_third_party_assgmnt</string>
-                            <string>person_item</string>
-                            <string>person_item_asgt</string>
-                            <string>new_items_assgt_list</string>
-                            <string>w</string>
-                            <string>w_assgmnt</string>
-                            <string>result_list</string>
-                            <string>function_relative_url</string>
-                            <string>destination_form_uid</string>
-                            <string>object</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>x</string>
-                            <string>asst_list</string>
-                            <string>assgment</string>
-                            <string>role_type</string>
-                            <string>form_id</string>
-                            <string>ignore_layout</string>
-                            <string>editable_mode</string>
-                            <string>message</string>
-                            <string>redirect_url</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <list/>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>P0_setAssignmentList</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

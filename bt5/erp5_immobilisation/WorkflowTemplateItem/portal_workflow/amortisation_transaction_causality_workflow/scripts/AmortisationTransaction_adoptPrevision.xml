@@ -75,77 +75,12 @@ transaction.activate(after_tag=tag).updateCausalityState()\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>state_change</string>
-                            <string>_getitem_</string>
-                            <string>transaction</string>
-                            <string>_getattr_</string>
-                            <string>movement_list</string>
-                            <string>all_simulation_movement_path_list</string>
-                            <string>_getiter_</string>
-                            <string>movement</string>
-                            <string>simulation_movement_list</string>
-                            <string>simulation_movement</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>x</string>
-                            <string>builder</string>
-                            <string>tag</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>AmortisationTransaction_adoptPrevision</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

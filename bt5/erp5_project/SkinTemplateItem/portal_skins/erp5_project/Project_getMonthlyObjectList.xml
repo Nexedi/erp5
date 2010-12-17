@@ -76,87 +76,12 @@ return result_list\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>selection_report=None, selection=None, selection_domain=None, report_url=None, **kw</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>selection_report</string>
-                            <string>selection</string>
-                            <string>selection_domain</string>
-                            <string>report_url</string>
-                            <string>kw</string>
-                            <string>_getitem_</string>
-                            <string>_getattr_</string>
-                            <string>object_domain</string>
-                            <string>context</string>
-                            <string>object_dict</string>
-                            <string>summary_dict</string>
-                            <string>current_criterion</string>
-                            <string>date</string>
-                            <string>result_list</string>
-                            <string>len</string>
-                            <string>None</string>
-                            <string>returned_object</string>
-                            <string>_getiter_</string>
-                            <string>k</string>
-                            <string>v</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Project_getMonthlyObjectList</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

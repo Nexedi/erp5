@@ -183,12 +183,6 @@ return line_list\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>selection=None, sort_on=[], node_category=None, node_category_strict_membership=None, from_date=None, selection_name=None, function=None, project_uid=None, analytic_column_list=(), **kw</string> </value>
         </item>
@@ -201,117 +195,8 @@ return line_list\n
             </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>9</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>selection</string>
-                            <string>sort_on</string>
-                            <string>node_category</string>
-                            <string>node_category_strict_membership</string>
-                            <string>from_date</string>
-                            <string>selection_name</string>
-                            <string>function</string>
-                            <string>project_uid</string>
-                            <string>analytic_column_list</string>
-                            <string>kw</string>
-                            <string>Products.PythonScripts.standard</string>
-                            <string>Object</string>
-                            <string>Products.ERP5Type.Document</string>
-                            <string>newTempBase</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal</string>
-                            <string>getObject</string>
-                            <string>params</string>
-                            <string>N_</string>
-                            <string>AssertionError</string>
-                            <string>None</string>
-                            <string>mirror_section_relative_url</string>
-                            <string>_getitem_</string>
-                            <string>payment_uid</string>
-                            <string>portal_type_filter</string>
-                            <string>portal_type_list</string>
-                            <string>total_debit</string>
-                            <string>total_credit</string>
-                            <string>total_debit_price</string>
-                            <string>total_credit_price</string>
-                            <string>line_list</string>
-                            <string>_getiter_</string>
-                            <string>brain</string>
-                            <string>mvt</string>
-                            <string>transaction</string>
-                            <string>is_source</string>
-                            <string>specific_reference</string>
-                            <string>mirror_section_title</string>
-                            <string>section_title</string>
-                            <string>max</string>
-                            <string>debit</string>
-                            <string>_inplacevar_</string>
-                            <string>credit</string>
-                            <string>debit_price</string>
-                            <string>credit_price</string>
-                            <string>brain_date</string>
-                            <string>line</string>
-                            <string>dict</string>
-                            <string>analytic_info</string>
-                            <string>analytic_column</string>
-                            <string>analytic_column_title</string>
-                            <string>_write_</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <none/>
-                <list/>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <tuple/>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Account_getNotGroupedAccountingTransactionList</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

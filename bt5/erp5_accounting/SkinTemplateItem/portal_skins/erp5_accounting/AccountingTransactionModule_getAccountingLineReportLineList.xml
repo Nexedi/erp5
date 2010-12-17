@@ -257,105 +257,12 @@ return line_list\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>kw</string>
-                            <string>Products.PythonScripts.standard</string>
-                            <string>Object</string>
-                            <string>line_list</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>request</string>
-                            <string>portal</string>
-                            <string>portal_selections</string>
-                            <string>selection_name</string>
-                            <string>selection_params</string>
-                            <string>section_category</string>
-                            <string>section_category_strict</string>
-                            <string>isSource</string>
-                            <string>isDestination</string>
-                            <string>currency</string>
-                            <string>checked_uid_list</string>
-                            <string>getObject</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>uid</string>
-                            <string>delivery_list</string>
-                            <string>params</string>
-                            <string>None</string>
-                            <string>_write_</string>
-                            <string>dict</string>
-                            <string>account_reference_cache</string>
-                            <string>getAccountReference</string>
-                            <string>getTitle</string>
-                            <string>bank_account_title_cache</string>
-                            <string>getBankAccountTitle</string>
-                            <string>accounting_currency_reference_cache</string>
-                            <string>getAccountingCurrencyReference</string>
-                            <string>portal_type</string>
-                            <string>delivery</string>
-                            <string>is_source</string>
-                            <string>is_destination</string>
-                            <string>movement</string>
-                            <string>node</string>
-                            <string>node_title</string>
-                            <string>node_account_type_title</string>
-                            <string>node_financial_section_title</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>AccountingTransactionModule_getAccountingLineReportLineList</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

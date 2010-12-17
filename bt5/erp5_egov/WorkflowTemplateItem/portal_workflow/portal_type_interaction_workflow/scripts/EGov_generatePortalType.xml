@@ -211,94 +211,12 @@ if not procedure_request.getStepAuthentication():\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>state_change</string>
-                            <string>_getitem_</string>
-                            <string>procedure_request</string>
-                            <string>_getattr_</string>
-                            <string>portal_type_name</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>word</string>
-                            <string>context</string>
-                            <string>portal</string>
-                            <string>result</string>
-                            <string>content_type_list</string>
-                            <string>len</string>
-                            <string>workflow_list</string>
-                            <string>portal_type_module_name</string>
-                            <string>type_allowed_content_type_list</string>
-                            <string>portal_type_module</string>
-                            <string>procedure_target</string>
-                            <string>procedure_organisation_direction</string>
-                            <string>procedure_publication_section</string>
-                            <string>procedure_step_subscription</string>
-                            <string>citizen_category_list</string>
-                            <string>company_category_list</string>
-                            <string>madatary_category_list</string>
-                            <string>procedure_publication_section_category</string>
-                            <string>None</string>
-                            <string>portal_type_module_id</string>
-                            <string>getattr</string>
-                            <string>module_object</string>
-                            <string>portal_type_module_object</string>
-                            <string>allowed_content_type_list</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>EGov_generatePortalType</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

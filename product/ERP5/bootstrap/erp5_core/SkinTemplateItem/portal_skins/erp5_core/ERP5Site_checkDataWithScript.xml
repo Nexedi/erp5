@@ -155,114 +155,12 @@ else:\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>method_id, relative_url=None, active_process=None, id_list=None, full=0, recursive=1, tag=None, packet=30, hbtree_days=3, method_kw=None</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>10</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>method_id</string>
-                            <string>relative_url</string>
-                            <string>active_process</string>
-                            <string>id_list</string>
-                            <string>full</string>
-                            <string>recursive</string>
-                            <string>tag</string>
-                            <string>packet</string>
-                            <string>hbtree_days</string>
-                            <string>method_kw</string>
-                            <string>Products.ERP5Type.Log</string>
-                            <string>log</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>document</string>
-                            <string>len</string>
-                            <string>depth</string>
-                            <string>maximum_depth</string>
-                            <string>AssertionError</string>
-                            <string>activate</string>
-                            <string>error_list</string>
-                            <string>None</string>
-                            <string>recurse</string>
-                            <string>_getiter_</string>
-                            <string>id</string>
-                            <string>_getitem_</string>
-                            <string>getattr</string>
-                            <string>list</string>
-                            <string>tuple</string>
-                            <string>DateTime</string>
-                            <string>xrange</string>
-                            <string>day_ago</string>
-                            <string>date</string>
-                            <string>_inplacevar_</string>
-                            <string>TypeError</string>
-                            <string>IndexError</string>
-                            <string>result</string>
-                            <string>dict</string>
-                            <string>kw</string>
-                            <string>i</string>
-                            <string>_write_</string>
-                            <string>_apply_</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <none/>
-                <none/>
-                <none/>
-                <int>0</int>
-                <int>1</int>
-                <none/>
-                <int>30</int>
-                <int>3</int>
-                <none/>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>ERP5Site_checkDataWithScript</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

@@ -74,83 +74,12 @@ return "OK"\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>html_text, main_template_id, skin_folder_id, css_tales, js_tales, main_div_class_name</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>6</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>html_text</string>
-                            <string>main_template_id</string>
-                            <string>skin_folder_id</string>
-                            <string>css_tales</string>
-                            <string>js_tales</string>
-                            <string>main_div_class_name</string>
-                            <string>getattr</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>skin_folder</string>
-                            <string>template</string>
-                            <string>template_source</string>
-                            <string>_getiter_</string>
-                            <string>template_body_top</string>
-                            <string>template_body_bottom</string>
-                            <string>new_code</string>
-                            <string>new_code_0</string>
-                            <string>new_code_1</string>
-                            <string>new_code_2</string>
-                            <string>final_code</string>
-                            <string>_getitem_</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Base_createNewWebSiteMainTemplateTheme</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

@@ -170,108 +170,8 @@ return REQUEST.RESPONSE.redirect("%s%s" % (ret_url, qs))\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>form_id=\'\',selection_index=None,object_uid=None,selection_name=None,field_id=None,uids=None,cancel_url=\'\',listbox_uid=[],md5_object_uid_list=\'\'</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>9</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>form_id</string>
-                            <string>selection_index</string>
-                            <string>object_uid</string>
-                            <string>selection_name</string>
-                            <string>field_id</string>
-                            <string>uids</string>
-                            <string>cancel_url</string>
-                            <string>listbox_uid</string>
-                            <string>md5_object_uid_list</string>
-                            <string>ZODB.POSException</string>
-                            <string>ConflictError</string>
-                            <string>Products.CMFCore.WorkflowCore</string>
-                            <string>WorkflowException</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal</string>
-                            <string>Base_translateString</string>
-                            <string>selected_uids</string>
-                            <string>error</string>
-                            <string>REQUEST</string>
-                            <string>qs</string>
-                            <string>ret_url</string>
-                            <string>message</string>
-                            <string>None</string>
-                            <string>object_used</string>
-                            <string>$list0</string>
-                            <string>_getiter_</string>
-                            <string>x</string>
-                            <string>object_list</string>
-                            <string>sum</string>
-                            <string>repr</string>
-                            <string>object_to_remove_list</string>
-                            <string>object_to_delete_list</string>
-                            <string>object</string>
-                            <string>history_dict</string>
-                            <string>Exception</string>
-                            <string>object_ids</string>
-                            <string>comment</string>
-                            <string>not_deleted_count</string>
-                            <string>_inplacevar_</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <string></string>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <string></string>
-                <list/>
-                <string></string>
-              </tuple>
-            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -280,12 +180,6 @@ return REQUEST.RESPONSE.redirect("%s%s" % (ret_url, qs))\n
         <item>
             <key> <string>title</string> </key>
             <value> <string>Delete objects from a folder</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

@@ -66,81 +66,12 @@ return \'\'.join([choice(character_set) for i in range(int(string_length))])\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>string_length=10, include_letters=1, include_digits=1</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>string_length</string>
-                            <string>include_letters</string>
-                            <string>include_digits</string>
-                            <string>random</string>
-                            <string>choice</string>
-                            <string>string</string>
-                            <string>letters</string>
-                            <string>digits</string>
-                            <string>character_set</string>
-                            <string>_getattr_</string>
-                            <string>$list0</string>
-                            <string>_getiter_</string>
-                            <string>range</string>
-                            <string>int</string>
-                            <string>i</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <int>10</int>
-                <int>1</int>
-                <int>1</int>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Base_generateRandomString</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

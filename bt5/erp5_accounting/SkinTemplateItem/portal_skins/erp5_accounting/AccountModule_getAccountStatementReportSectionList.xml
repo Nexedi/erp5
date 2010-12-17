@@ -192,98 +192,12 @@ return report_section_list\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>Products.ERP5Form.Report</string>
-                            <string>ReportSection</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>translateString</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>request</string>
-                            <string>traverse</string>
-                            <string>True</string>
-                            <string>_getitem_</string>
-                            <string>at_date</string>
-                            <string>section_uid</string>
-                            <string>node</string>
-                            <string>None</string>
-                            <string>mirror_section</string>
-                            <string>payment</string>
-                            <string>function</string>
-                            <string>funding</string>
-                            <string>project</string>
-                            <string>simulation_state</string>
-                            <string>hide_analytic</string>
-                            <string>from_date</string>
-                            <string>detailed_from_date_summary</string>
-                            <string>omit_grouping_reference</string>
-                            <string>parent_portal_type</string>
-                            <string>period_start_date</string>
-                            <string>currency</string>
-                            <string>precision</string>
-                            <string>dict</string>
-                            <string>params</string>
-                            <string>_write_</string>
-                            <string>analytic_column_list</string>
-                            <string>selection_columns</string>
-                            <string>len</string>
-                            <string>_inplacevar_</string>
-                            <string>report_section_list</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>AccountModule_getAccountStatementReportSectionList</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

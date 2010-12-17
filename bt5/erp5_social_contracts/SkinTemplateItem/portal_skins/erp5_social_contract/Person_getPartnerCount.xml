@@ -91,80 +91,12 @@ return len( partner_uid_dict.keys() )\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>valid_social_contract_type_list=None, at_date=None</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>valid_social_contract_type_list</string>
-                            <string>at_date</string>
-                            <string>None</string>
-                            <string>DateTime</string>
-                            <string>_getattr_</string>
-                            <string>social_contract_list</string>
-                            <string>_getiter_</string>
-                            <string>context</string>
-                            <string>social_contract</string>
-                            <string>valid_social_contract_type</string>
-                            <string>getattr</string>
-                            <string>partner_uid_dict</string>
-                            <string>partner_uid</string>
-                            <string>_write_</string>
-                            <string>len</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <none/>
-                <none/>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Person_getPartnerCount</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

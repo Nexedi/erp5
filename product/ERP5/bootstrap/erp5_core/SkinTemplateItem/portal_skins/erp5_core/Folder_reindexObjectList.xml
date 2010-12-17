@@ -112,100 +112,12 @@ if id_list_list is not None:\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>id_list, id_list_list=None, folder_tag=None, folder_after_tag=None, object_tag=None, object_after_tag=None, object_priority=1, sql_catalog_id=None, passive_commit=1, count=None</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>10</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>id_list</string>
-                            <string>id_list_list</string>
-                            <string>folder_tag</string>
-                            <string>folder_after_tag</string>
-                            <string>object_tag</string>
-                            <string>object_after_tag</string>
-                            <string>object_priority</string>
-                            <string>sql_catalog_id</string>
-                            <string>passive_commit</string>
-                            <string>count</string>
-                            <string>context</string>
-                            <string>folder</string>
-                            <string>None</string>
-                            <string>ValueError</string>
-                            <string>len</string>
-                            <string>_getattr_</string>
-                            <string>activate_kw</string>
-                            <string>_getiter_</string>
-                            <string>key</string>
-                            <string>value</string>
-                            <string>id</string>
-                            <string>getattr</string>
-                            <string>obj</string>
-                            <string>new_activity_kw</string>
-                            <string>node_len</string>
-                            <string>_write_</string>
-                            <string>_inplacevar_</string>
-                            <string>_apply_</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <int>1</int>
-                <none/>
-                <int>1</int>
-                <none/>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Folder_reindexObjectList</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

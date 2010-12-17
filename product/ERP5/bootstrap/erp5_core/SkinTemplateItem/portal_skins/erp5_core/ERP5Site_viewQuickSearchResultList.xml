@@ -82,83 +82,12 @@ return search_context.Base_redirect(field_your_search_form_id, keep_items=kw)\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>field_your_search_text=\'\', field_your_search_portal_type=\'\', all_languages=None, list_style=None, field_your_search_form_id=\'ERP5Site_viewSearchResult\'</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>5</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>field_your_search_text</string>
-                            <string>field_your_search_portal_type</string>
-                            <string>all_languages</string>
-                            <string>list_style</string>
-                            <string>field_your_search_form_id</string>
-                            <string>kw</string>
-                            <string>_getattr_</string>
-                            <string>list</string>
-                            <string>context</string>
-                            <string>web_section</string>
-                            <string>None</string>
-                            <string>bool</string>
-                            <string>False</string>
-                            <string>search_context</string>
-                            <string>_write_</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <string></string>
-                <string></string>
-                <none/>
-                <none/>
-                <string>ERP5Site_viewSearchResult</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>ERP5Site_viewQuickSearchResultList</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

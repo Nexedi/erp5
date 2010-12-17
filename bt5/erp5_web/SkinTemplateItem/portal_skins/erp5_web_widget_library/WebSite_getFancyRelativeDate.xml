@@ -72,61 +72,8 @@ return translateString("${timedif} days ago",  mapping = {\'timedif\':int(dif)})
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>date_object</string> </value>
-        </item>
-        <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>date_object</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>translateString</string>
-                            <string>DateTime</string>
-                            <string>dif</string>
-                            <string>hour</string>
-                            <string>minute</string>
-                            <string>int</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -135,12 +82,6 @@ return translateString("${timedif} days ago",  mapping = {\'timedif\':int(dif)})
         <item>
             <key> <string>title</string> </key>
             <value> <string>Generate relative fancy formatted date as string</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

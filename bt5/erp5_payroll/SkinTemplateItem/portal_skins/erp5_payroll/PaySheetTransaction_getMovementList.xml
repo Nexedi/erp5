@@ -217,121 +217,12 @@ return line_list\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>kw</string>
-                            <string>Products.ERP5Type.Utils</string>
-                            <string>cartesianProduct</string>
-                            <string>pprint</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>translateString</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal</string>
-                            <string>paysheet_line_list</string>
-                            <string>None</string>
-                            <string>precision</string>
-                            <string>line_list</string>
-                            <string>_getiter_</string>
-                            <string>paysheet_line</string>
-                            <string>base_category_list</string>
-                            <string>base_application_list</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>x</string>
-                            <string>str</string>
-                            <string>translated_base_application_list</string>
-                            <string>service</string>
-                            <string>base_contribution_list</string>
-                            <string>causality</string>
-                            <string>base_application</string>
-                            <string>base_list</string>
-                            <string>base_name</string>
-                            <string>list_of_list</string>
-                            <string>base_category</string>
-                            <string>list</string>
-                            <string>cartesian_product</string>
-                            <string>previous_share</string>
-                            <string>indice</string>
-                            <string>params</string>
-                            <string>_apply_</string>
-                            <string>object_dict</string>
-                            <string>product</string>
-                            <string>_inplacevar_</string>
-                            <string>share_dict</string>
-                            <string>cell</string>
-                            <string>base</string>
-                            <string>cell_contribution_share</string>
-                            <string>_write_</string>
-                            <string>round</string>
-                            <string>tuple_dict</string>
-                            <string>item</string>
-                            <string>_getitem_</string>
-                            <string>slice</string>
-                            <string>slice_title</string>
-                            <string>category</string>
-                            <string>salary_range_list</string>
-                            <string>salary_range</string>
-                            <string>object_key</string>
-                            <string>sortByTitleAscending</string>
-                            <string>sortByTitleDescending</string>
-                            <string>sortByIntIndexAscending</string>
-                            <string>sortByIntIndexDescending</string>
-                            <string>sortByDefaultSortMethod</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>PaySheetTransaction_getMovementList</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

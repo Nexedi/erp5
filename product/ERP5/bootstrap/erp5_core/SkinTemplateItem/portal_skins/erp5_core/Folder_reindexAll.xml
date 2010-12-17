@@ -167,115 +167,12 @@ else:  \n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>folder_tag=None, folder_after_tag=None, object_tag=None, object_after_tag=None, object_priority=1, sql_catalog_id=None, passive_commit=1, start_tree=None, stop_tree=None</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>9</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>folder_tag</string>
-                            <string>folder_after_tag</string>
-                            <string>object_tag</string>
-                            <string>object_after_tag</string>
-                            <string>object_priority</string>
-                            <string>sql_catalog_id</string>
-                            <string>passive_commit</string>
-                            <string>start_tree</string>
-                            <string>stop_tree</string>
-                            <string>context</string>
-                            <string>folder</string>
-                            <string>activate_kw</string>
-                            <string>_getiter_</string>
-                            <string>_getattr_</string>
-                            <string>key</string>
-                            <string>value</string>
-                            <string>None</string>
-                            <string>folder_id</string>
-                            <string>bundle_tag</string>
-                            <string>bundle_object_tag</string>
-                            <string>BUNDLE_ITEM_COUNT</string>
-                            <string>Folder_reindexObjectList</string>
-                            <string>tree_id_list</string>
-                            <string>NotImplementedError</string>
-                            <string>AttributeError</string>
-                            <string>$list0</string>
-                            <string>x</string>
-                            <string>id_list</string>
-                            <string>id_list_list</string>
-                            <string>xrange</string>
-                            <string>len</string>
-                            <string>bundle_index</string>
-                            <string>_getitem_</string>
-                            <string>remaining_object_id_count</string>
-                            <string>new_tree_id_list</string>
-                            <string>tree_id</string>
-                            <string>i</string>
-                            <string>tree_tag</string>
-                            <string>tree_after_tag</string>
-                            <string>folder_id_after_tag</string>
-                            <string>id_activate_kw</string>
-                            <string>_write_</string>
-                            <string>_apply_</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <int>1</int>
-                <none/>
-                <int>1</int>
-                <none/>
-                <none/>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Folder_reindexAll</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

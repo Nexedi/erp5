@@ -168,104 +168,12 @@ return data_dict\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal</string>
-                            <string>portal_simulation</string>
-                            <string>gap_root</string>
-                            <string>portal_type</string>
-                            <string>request</string>
-                            <string>_getitem_</string>
-                            <string>at_date</string>
-                            <string>simulation_state</string>
-                            <string>section_uid</string>
-                            <string>getGapCategoryValueList</string>
-                            <string>getInventory</string>
-                            <string>data_dict</string>
-                            <string>_write_</string>
-                            <string>data_list</string>
-                            <string>None</string>
-                            <string>addItem</string>
-                            <string>addGapCategoryItem</string>
-                            <string>sale_gap_path_list</string>
-                            <string>cos_gap_path_list</string>
-                            <string>non_operating_income_gap_path_list</string>
-                            <string>non_operating_expense_gap_path_list</string>
-                            <string>sga_gap_path_list</string>
-                            <string>extraordinary_income_gap_path_list</string>
-                            <string>extraordinary_expense_gap_path_list</string>
-                            <string>corporation_tax_gap_path_list</string>
-                            <string>corporation_tax_adjustment_gap_path_list</string>
-                            <string>sale_amount</string>
-                            <string>cost_of_sale_amount</string>
-                            <string>gross_profit_amount</string>
-                            <string>sga_amount</string>
-                            <string>operating_profit_amount</string>
-                            <string>non_operating_income_amount</string>
-                            <string>non_operating_expense_amount</string>
-                            <string>ordinary_profit_amount</string>
-                            <string>extraordinary_income_amount</string>
-                            <string>extraordinary_expense_amount</string>
-                            <string>pretax_income_amount</string>
-                            <string>corporation_tax_amount</string>
-                            <string>corporation_tax_adjustment_amount</string>
-                            <string>net_income_amount</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>AccountingTransactionModule_getJapaneseProfitAndLossDataDict</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

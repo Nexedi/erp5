@@ -159,115 +159,12 @@ return temp_stat_object_list\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>selection=None,list_method=None, selection_context=None, report_tree_list = None, object_tree_line=None, REQUEST=None, field=None</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>7</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>selection</string>
-                            <string>list_method</string>
-                            <string>selection_context</string>
-                            <string>report_tree_list</string>
-                            <string>object_tree_line</string>
-                            <string>REQUEST</string>
-                            <string>field</string>
-                            <string>Products.ERP5Type.Log</string>
-                            <string>log</string>
-                            <string>Products.ERP5Type.Document</string>
-                            <string>newTempMovement</string>
-                            <string>newTempBase</string>
-                            <string>string</string>
-                            <string>zfill</string>
-                            <string>_getattr_</string>
-                            <string>start_property_id</string>
-                            <string>stop_property_id</string>
-                            <string>size_property_id</string>
-                            <string>input_object_list</string>
-                            <string>temp_object_list</string>
-                            <string>temp_object_id</string>
-                            <string>_getiter_</string>
-                            <string>input_object</string>
-                            <string>None</string>
-                            <string>block_begin</string>
-                            <string>block_end</string>
-                            <string>block_size</string>
-                            <string>float</string>
-                            <string>context</string>
-                            <string>str</string>
-                            <string>temp_object</string>
-                            <string>_inplacevar_</string>
-                            <string>prop_list</string>
-                            <string>temp_stat</string>
-                            <string>size</string>
-                            <string>temp_stat_object_list</string>
-                            <string>range</string>
-                            <string>len</string>
-                            <string>index</string>
-                            <string>_getitem_</string>
-                            <string>current_prop</string>
-                            <string>start</string>
-                            <string>stop</string>
-                            <string>temp_stat_object_id</string>
-                            <string>temp_stat_object</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Planning_commonStats</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

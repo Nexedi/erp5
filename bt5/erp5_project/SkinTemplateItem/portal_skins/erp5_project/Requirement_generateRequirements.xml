@@ -159,112 +159,12 @@ return context.Base_redirect(form_id,\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>listbox=[], form_id=\'view\', **kw</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>listbox</string>
-                            <string>form_id</string>
-                            <string>kw</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>context_obj</string>
-                            <string>requirement_module_type</string>
-                            <string>requirement_document_type</string>
-                            <string>requirement_type</string>
-                            <string>_getitem_</string>
-                            <string>requirement_doc</string>
-                            <string>destination_obj</string>
-                            <string>requirements_items</string>
-                            <string>_getiter_</string>
-                            <string>requirement_line</string>
-                            <string>int</string>
-                            <string>requirement_line_id</string>
-                            <string>requirement</string>
-                            <string>_write_</string>
-                            <string>clean_requirements</string>
-                            <string>clean_requirements_key_list</string>
-                            <string>dict</string>
-                            <string>description_dict</string>
-                            <string>False</string>
-                            <string>has_1st_level_requirement</string>
-                            <string>has_2nd_level_requirement</string>
-                            <string>None</string>
-                            <string>new_1st_level_requirement</string>
-                            <string>requirement_item</string>
-                            <string>True</string>
-                            <string>new_1st_level_requirement_title</string>
-                            <string>new_2nd_level_feat</string>
-                            <string>int_index</string>
-                            <string>destination_object_subobject_list</string>
-                            <string>len</string>
-                            <string>max</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>req</string>
-                            <string>sub_requirement_int_index</string>
-                            <string>int_index_step</string>
-                            <string>key</string>
-                            <string>_inplacevar_</string>
-                            <string>new_1st_requirement</string>
-                            <string>second_level</string>
-                            <string>new_2nd_requirement</string>
-                            <string>translateString</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <list/>
-                <string>view</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Requirement_generateRequirements</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

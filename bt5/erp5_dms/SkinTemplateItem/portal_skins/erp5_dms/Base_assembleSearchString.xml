@@ -163,98 +163,12 @@ return search_string\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>logical_operator=\'AND\', **kw</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>logical_operator</string>
-                            <string>kw</string>
-                            <string>None</string>
-                            <string>MARKER</string>
-                            <string>BOOLEAN_MARKER</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>request</string>
-                            <string>searchabletext</string>
-                            <string>searchabletext_any</string>
-                            <string>search_string</string>
-                            <string>searchabletext_phrase</string>
-                            <string>_inplacevar_</string>
-                            <string>searchabletext_all</string>
-                            <string>_getiter_</string>
-                            <string>searchabletext_without</string>
-                            <string>created_within</string>
-                            <string>portal_type_list</string>
-                            <string>isinstance</string>
-                            <string>str</string>
-                            <string>portal_type_string_list</string>
-                            <string>portal_type</string>
-                            <string>portal_type_string</string>
-                            <string>reference</string>
-                            <string>version</string>
-                            <string>language</string>
-                            <string>category</string>
-                            <string>category_field_id</string>
-                            <string>category_value</string>
-                            <string>mine</string>
-                            <string>newest</string>
-                            <string>search_mode</string>
-                            <string>search_mode_map</string>
-                            <string>_getitem_</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <string>AND</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Base_assembleSearchString</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

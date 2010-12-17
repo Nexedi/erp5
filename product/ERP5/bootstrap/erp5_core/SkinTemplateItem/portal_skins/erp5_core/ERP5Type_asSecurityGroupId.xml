@@ -148,93 +148,12 @@ return [\'_\'.join(x) for x in cartesianProduct(list_of_list) if x]\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>category_order, **kw</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>category_order</string>
-                            <string>kw</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal</string>
-                            <string>getCategoryValue</string>
-                            <string>None</string>
-                            <string>list</string>
-                            <string>Products.ERP5Type.Utils</string>
-                            <string>cartesianProduct</string>
-                            <string>list_of_list</string>
-                            <string>user_list</string>
-                            <string>_getiter_</string>
-                            <string>base_category</string>
-                            <string>_getitem_</string>
-                            <string>category_list</string>
-                            <string>KeyError</string>
-                            <string>associative_list</string>
-                            <string>isinstance</string>
-                            <string>str</string>
-                            <string>category</string>
-                            <string>is_child_category</string>
-                            <string>category_path</string>
-                            <string>category_object</string>
-                            <string>RuntimeError</string>
-                            <string>portal_type</string>
-                            <string>user_name</string>
-                            <string>category_code</string>
-                            <string>_inplacevar_</string>
-                            <string>$list0</string>
-                            <string>x</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>ERP5Type_asSecurityGroupId</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

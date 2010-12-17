@@ -84,76 +84,8 @@ return "OK"\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>user_layout = \'\'</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>user_layout</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>None</string>
-                            <string>box_url</string>
-                            <string>new_user_layout</string>
-                            <string>_getiter_</string>
-                            <string>item</string>
-                            <string>l</string>
-                            <string>sub_items</string>
-                            <string>_getitem_</string>
-                            <string>splitted_box_url</string>
-                            <string>sub_item</string>
-                            <string>knowledge_box</string>
-                            <string>knowledge_pad</string>
-                            <string>getattr</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <string></string>
-              </tuple>
-            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -162,12 +94,6 @@ return "OK"\n
         <item>
             <key> <string>title</string> </key>
             <value> <string>Save user preffered layout</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

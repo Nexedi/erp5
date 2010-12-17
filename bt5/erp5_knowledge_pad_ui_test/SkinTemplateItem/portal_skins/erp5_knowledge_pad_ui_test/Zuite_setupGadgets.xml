@@ -74,12 +74,6 @@ return printed\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>remove_existing_pads=0, mode=\'erp5_front\'</string> </value>
         </item>
@@ -92,69 +86,8 @@ return printed\n
             </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>remove_existing_pads</string>
-                            <string>mode</string>
-                            <string>_print_</string>
-                            <string>_print</string>
-                            <string>_getiter_</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>gadget</string>
-                            <string>active_preference</string>
-                            <string>knowledge_pad</string>
-                            <string>user_knowledge_pad_list</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>x</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <int>0</int>
-                <string>erp5_front</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Zuite_setupGadgets</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

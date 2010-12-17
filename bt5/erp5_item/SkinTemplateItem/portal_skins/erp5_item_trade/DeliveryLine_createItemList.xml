@@ -171,111 +171,12 @@ return context.Base_redirect(form_id, keep_items=dict(\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>form_id=\'view\', dialog_id=\'DeliveryLine_viewItemCreationDialog\', *args, **kw</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>form_id</string>
-                            <string>dialog_id</string>
-                            <string>args</string>
-                            <string>kw</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>translateString</string>
-                            <string>DateTime</string>
-                            <string>item_list</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>request</string>
-                            <string>total_quantity</string>
-                            <string>now</string>
-                            <string>_getitem_</string>
-                            <string>item_portal_type</string>
-                            <string>cell_portal_type</string>
-                            <string>dict</string>
-                            <string>item_property_dict</string>
-                            <string>getattr</string>
-                            <string>dialog</string>
-                            <string>box</string>
-                            <string>form</string>
-                            <string>_getiter_</string>
-                            <string>field</string>
-                            <string>field_id</string>
-                            <string>_write_</string>
-                            <string>movement_cell_list</string>
-                            <string>base_id</string>
-                            <string>line</string>
-                            <string>None</string>
-                            <string>item</string>
-                            <string>msg</string>
-                            <string>module</string>
-                            <string>_apply_</string>
-                            <string>line_variation_category_list</string>
-                            <string>variation</string>
-                            <string>cell_found</string>
-                            <string>movement_to_update</string>
-                            <string>variation_category_list</string>
-                            <string>update_quantity</string>
-                            <string>movement_list</string>
-                            <string>movement</string>
-                            <string>quantity</string>
-                            <string>len</string>
-                            <string>NotImplementedError</string>
-                            <string>_inplacevar_</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <string>view</string>
-                <string>DeliveryLine_viewItemCreationDialog</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>DeliveryLine_createItemList</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

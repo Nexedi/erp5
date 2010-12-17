@@ -260,98 +260,12 @@ return printed\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>sql_catalog_id=None, additional_priority=0, passive_commit=1, clear_catalog=0, final_activity_tag=None, start_tree=None, stop_tree=None</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>7</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>sql_catalog_id</string>
-                            <string>additional_priority</string>
-                            <string>passive_commit</string>
-                            <string>clear_catalog</string>
-                            <string>final_activity_tag</string>
-                            <string>start_tree</string>
-                            <string>stop_tree</string>
-                            <string>_print_</string>
-                            <string>_print</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal</string>
-                            <string>catalog</string>
-                            <string>tag</string>
-                            <string>getattr</string>
-                            <string>None</string>
-                            <string>person_module</string>
-                            <string>higher_priority</string>
-                            <string>folder_after_tag</string>
-                            <string>folder_tag</string>
-                            <string>object_tag</string>
-                            <string>object_after_tag</string>
-                            <string>object_priority</string>
-                            <string>_getiter_</string>
-                            <string>folder</string>
-                            <string>tool_list</string>
-                            <string>possible_tool_list</string>
-                            <string>tool_id</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <none/>
-                <int>0</int>
-                <int>1</int>
-                <int>0</int>
-                <none/>
-                <none/>
-                <none/>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>ERP5Site_reindexAll</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

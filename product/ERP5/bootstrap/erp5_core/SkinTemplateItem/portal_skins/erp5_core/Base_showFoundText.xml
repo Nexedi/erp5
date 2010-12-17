@@ -116,89 +116,12 @@ else:\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>document_text=None, selection=None, max_lines = 5, max_text_length = 500</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>document_text</string>
-                            <string>selection</string>
-                            <string>max_lines</string>
-                            <string>max_text_length</string>
-                            <string>Products.ERP5.Document.Document</string>
-                            <string>NotConvertedError</string>
-                            <string>encoding</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>is_gadget_mode</string>
-                            <string>getRandomDocumentTextExcerpt</string>
-                            <string>None</string>
-                            <string>getattr</string>
-                            <string>isinstance</string>
-                            <string>str</string>
-                            <string>unicode</string>
-                            <string>search_string</string>
-                            <string>search_argument_list</string>
-                            <string>found_text_fragments</string>
-                            <string>map</string>
-                            <string>result</string>
-                            <string>unicode_result</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <none/>
-                <none/>
-                <int>5</int>
-                <int>500</int>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Base_showFoundText</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

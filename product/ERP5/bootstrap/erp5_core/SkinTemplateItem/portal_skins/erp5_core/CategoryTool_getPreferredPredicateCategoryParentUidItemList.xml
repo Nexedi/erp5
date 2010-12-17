@@ -86,82 +86,12 @@ return ()\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>membership_criterion_category_list, document</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>membership_criterion_category_list</string>
-                            <string>document</string>
-                            <string>_getattr_</string>
-                            <string>enabled_base_category_list</string>
-                            <string>context</string>
-                            <string>preferred_predicate_category_list</string>
-                            <string>category_parent_uid_item_list</string>
-                            <string>category_parent_uid_item_dict</string>
-                            <string>_getiter_</string>
-                            <string>category_uid</string>
-                            <string>base_category_uid</string>
-                            <string>category_strict_membership</string>
-                            <string>_write_</string>
-                            <string>_getitem_</string>
-                            <string>base_category_id</string>
-                            <string>getattr</string>
-                            <string>None</string>
-                            <string>base_category</string>
-                            <string>uid_item_list_list</string>
-                            <string>reduce</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>CategoryTool_getPreferredPredicateCategoryParentUidItemList</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

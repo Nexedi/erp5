@@ -96,81 +96,12 @@ return \'\\n\'.join(result)\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>request</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>request</string>
-                            <string>_getattr_</string>
-                            <string>get</string>
-                            <string>result</string>
-                            <string>table_list</string>
-                            <string>_getiter_</string>
-                            <string>key</string>
-                            <string>prefix</string>
-                            <string>num</string>
-                            <string>int</string>
-                            <string>table</string>
-                            <string>html</string>
-                            <string>i</string>
-                            <string>start</string>
-                            <string>end</string>
-                            <string>_getitem_</string>
-                            <string>title</string>
-                            <string>num_passed_commands</string>
-                            <string>num_failed_commands</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>TestTool_reportResult</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

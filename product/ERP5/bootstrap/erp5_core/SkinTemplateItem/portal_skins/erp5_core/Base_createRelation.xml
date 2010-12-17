@@ -149,101 +149,12 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>form_id, dialog_id, selection_index, selection_name, object_uid, base_category, catalog_index, portal_type, default_module, return_url</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>10</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>form_id</string>
-                            <string>dialog_id</string>
-                            <string>selection_index</string>
-                            <string>selection_name</string>
-                            <string>object_uid</string>
-                            <string>base_category</string>
-                            <string>catalog_index</string>
-                            <string>portal_type</string>
-                            <string>default_module</string>
-                            <string>return_url</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>request</string>
-                            <string>o</string>
-                            <string>getattr</string>
-                            <string>form</string>
-                            <string>_getitem_</string>
-                            <string>my_field</string>
-                            <string>k</string>
-                            <string>None</string>
-                            <string>values</string>
-                            <string>module</string>
-                            <string>ref_list</string>
-                            <string>_getiter_</string>
-                            <string>v</string>
-                            <string>id</string>
-                            <string>str</string>
-                            <string>new_ob</string>
-                            <string>kw</string>
-                            <string>_write_</string>
-                            <string>_apply_</string>
-                            <string>f</string>
-                            <string>relation_list</string>
-                            <string>len</string>
-                            <string>FormValidationError</string>
-                            <string>validation_errors</string>
-                            <string>field_errors</string>
-                            <string>message</string>
-                            <string>redirect_url</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Base_createRelation</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

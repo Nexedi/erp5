@@ -86,70 +86,8 @@ return report_section_idx, data\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>localizer_language, skin_name, report_section, report_section_idx, request_other</string> </value>
-        </item>
-        <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>5</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>localizer_language</string>
-                            <string>skin_name</string>
-                            <string>report_section</string>
-                            <string>report_section_idx</string>
-                            <string>request_other</string>
-                            <string>_getattr_</string>
-                            <string>container</string>
-                            <string>request</string>
-                            <string>context</string>
-                            <string>portal</string>
-                            <string>_write_</string>
-                            <string>render_prefix</string>
-                            <string>getattr</string>
-                            <string>form</string>
-                            <string>None</string>
-                            <string>selection_name</string>
-                            <string>dict</string>
-                            <string>data</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -158,12 +96,6 @@ return report_section_idx, data\n
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

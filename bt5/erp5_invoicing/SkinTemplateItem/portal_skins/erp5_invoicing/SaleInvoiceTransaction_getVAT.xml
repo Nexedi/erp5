@@ -133,12 +133,6 @@ return vat_infos\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>REQUEST=None</string> </value>
         </item>
@@ -152,76 +146,8 @@ return vat_infos\n
             </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>REQUEST</string>
-                            <string>None</string>
-                            <string>zExceptions</string>
-                            <string>Unauthorized</string>
-                            <string>_getattr_</string>
-                            <string>script</string>
-                            <string>vat_infos</string>
-                            <string>context</string>
-                            <string>invoice</string>
-                            <string>portal</string>
-                            <string>accounting_movement_list</string>
-                            <string>len</string>
-                            <string>_getiter_</string>
-                            <string>movement</string>
-                            <string>account</string>
-                            <string>_getitem_</string>
-                            <string>float</string>
-                            <string>_write_</string>
-                            <string>invoice_movement</string>
-                            <string>aggregated_simulation_movements</string>
-                            <string>simulation_movement</string>
-                            <string>applied_rule</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <none/>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>SaleInvoiceTransaction_getVAT</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

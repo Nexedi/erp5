@@ -121,20 +121,8 @@ return context.REQUEST.RESPONSE.redirect(\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>node, payment_mode, payment, selection_index=None, uids=[], listbox_uid=[],selection_name=\'\', **kw</string> </value>
-        </item>
-        <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -143,12 +131,6 @@ return context.REQUEST.RESPONSE.redirect(\n
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

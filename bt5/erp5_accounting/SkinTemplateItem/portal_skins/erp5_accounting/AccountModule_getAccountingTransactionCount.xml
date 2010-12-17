@@ -82,20 +82,8 @@ return context.portal_simulation.getInventoryStat( **kwd )[0][\'stock_uid\']\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>selection=None, brain=None, selection_name=None, **kw</string> </value>
-        </item>
-        <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -104,12 +92,6 @@ return context.portal_simulation.getInventoryStat( **kwd )[0][\'stock_uid\']\n
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

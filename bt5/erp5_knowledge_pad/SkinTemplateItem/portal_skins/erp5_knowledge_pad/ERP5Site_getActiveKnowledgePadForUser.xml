@@ -107,74 +107,8 @@ return None, knowledge_pads\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>knowledge_pads = [], mode = None, default_pad_group=None</string> </value>
-        </item>
-        <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>knowledge_pads</string>
-                            <string>mode</string>
-                            <string>default_pad_group</string>
-                            <string>None</string>
-                            <string>MARKER</string>
-                            <string>visible_state_list</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>isAnon</string>
-                            <string>len</string>
-                            <string>_getitem_</string>
-                            <string>_getiter_</string>
-                            <string>active_pad</string>
-                            <string>active_knowledge_pad</string>
-                            <string>real_context</string>
-                            <string>knowledge_pad</string>
-                            <string>pad_state</string>
-                            <string>publication_section</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <list/>
-                <none/>
-                <none/>
-              </tuple>
-            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -183,12 +117,6 @@ return None, knowledge_pads\n
         <item>
             <key> <string>title</string> </key>
             <value> <string>Get active knowledge pad for user</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

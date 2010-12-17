@@ -154,108 +154,12 @@ return context.REQUEST.RESPONSE.redirect(destination.absolute_url() + \'?portal_
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>transformation_rules=[], listbox=[], destination=None, **kw</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>transformation_rules</string>
-                            <string>listbox</string>
-                            <string>destination</string>
-                            <string>kw</string>
-                            <string>string</string>
-                            <string>zfill</string>
-                            <string>input_data_names</string>
-                            <string>_getiter_</string>
-                            <string>level_rule</string>
-                            <string>_getitem_</string>
-                            <string>data_item</string>
-                            <string>_getattr_</string>
-                            <string>data_keys</string>
-                            <string>io_names</string>
-                            <string>new_io_names_level</string>
-                            <string>level_portal_types</string>
-                            <string>fast_input_lines</string>
-                            <string>inputline</string>
-                            <string>line</string>
-                            <string>int</string>
-                            <string>_write_</string>
-                            <string>data_name</string>
-                            <string>structured_input_data</string>
-                            <string>False</string>
-                            <string>has_1st_level</string>
-                            <string>has_2nd_level</string>
-                            <string>None</string>
-                            <string>new_1st_level_sub_items</string>
-                            <string>True</string>
-                            <string>new_1st_level_properties</string>
-                            <string>new_1st_level_key</string>
-                            <string>io_name_pair</string>
-                            <string>new_2nd_level_item</string>
-                            <string>upper_level_key</string>
-                            <string>first_level</string>
-                            <string>new_1st_level_obj</string>
-                            <string>property_title</string>
-                            <string>second_level_id</string>
-                            <string>second_level</string>
-                            <string>_inplacevar_</string>
-                            <string>new_2nd_level_obj</string>
-                            <string>context</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <list/>
-                <list/>
-                <none/>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>FastInput_generateTwoLevelObjectStructure</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

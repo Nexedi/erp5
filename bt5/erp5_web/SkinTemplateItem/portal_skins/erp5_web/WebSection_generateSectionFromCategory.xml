@@ -183,92 +183,12 @@ return context.Base_redirect(form_id,\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>category, section_id, depth=1, update_existing=0, remove_missing=0, form_id=\'view\', **kw</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>6</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>category</string>
-                            <string>section_id</string>
-                            <string>depth</string>
-                            <string>update_existing</string>
-                            <string>remove_missing</string>
-                            <string>form_id</string>
-                            <string>kw</string>
-                            <string>ZODB.POSException</string>
-                            <string>ConflictError</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>translateString</string>
-                            <string>category_tool</string>
-                            <string>section_count</string>
-                            <string>failed_list</string>
-                            <string>valid_char</string>
-                            <string>getNiceID</string>
-                            <string>None</string>
-                            <string>base_category_id</string>
-                            <string>createWebSectionFromCategoryValue</string>
-                            <string>my_category_value</string>
-                            <string>getattr</string>
-                            <string>section_value</string>
-                            <string>category_url</string>
-                            <string>dict</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <int>1</int>
-                <int>0</int>
-                <int>0</int>
-                <string>view</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>WebSection_generateSectionFromCategory</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

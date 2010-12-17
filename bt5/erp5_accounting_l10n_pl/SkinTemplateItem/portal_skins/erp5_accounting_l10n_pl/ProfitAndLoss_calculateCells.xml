@@ -128,115 +128,12 @@ return pl\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>getInventory</string>
-                            <string>getCredit</string>
-                            <string>getDebit</string>
-                            <string>getBalance</string>
-                            <string>PL</string>
-                            <string>pl</string>
-                            <string>_write_</string>
-                            <string>AI</string>
-                            <string>AII</string>
-                            <string>AIII</string>
-                            <string>AIV</string>
-                            <string>A</string>
-                            <string>BI</string>
-                            <string>BII</string>
-                            <string>BIII</string>
-                            <string>BIV</string>
-                            <string>BV</string>
-                            <string>BVI</string>
-                            <string>BVII</string>
-                            <string>BVIII</string>
-                            <string>B</string>
-                            <string>C</string>
-                            <string>max</string>
-                            <string>DI</string>
-                            <string>DII</string>
-                            <string>DIII</string>
-                            <string>D</string>
-                            <string>EI</string>
-                            <string>EII</string>
-                            <string>EIII</string>
-                            <string>E</string>
-                            <string>F</string>
-                            <string>GI</string>
-                            <string>GII</string>
-                            <string>GIII</string>
-                            <string>GIV</string>
-                            <string>GV</string>
-                            <string>G</string>
-                            <string>HI</string>
-                            <string>HII</string>
-                            <string>HIII</string>
-                            <string>HIV</string>
-                            <string>H</string>
-                            <string>I</string>
-                            <string>JI</string>
-                            <string>JII</string>
-                            <string>J</string>
-                            <string>K</string>
-                            <string>L</string>
-                            <string>M</string>
-                            <string>N</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>ProfitAndLoss_calculateCells</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

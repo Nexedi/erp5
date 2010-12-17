@@ -78,99 +78,12 @@ return article.Base_redirect(\'\', keep_items = dict(portal_status_message=porta
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>classification=None, effective_date=None, function_list=None, group_list=None, language=None, publication_section_list=None, reference=None, site_list=None, subject_list=None, text_content=None, title=None, version=None, **kw</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>12</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>classification</string>
-                            <string>effective_date</string>
-                            <string>function_list</string>
-                            <string>group_list</string>
-                            <string>language</string>
-                            <string>publication_section_list</string>
-                            <string>reference</string>
-                            <string>site_list</string>
-                            <string>subject_list</string>
-                            <string>text_content</string>
-                            <string>title</string>
-                            <string>version</string>
-                            <string>kw</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal</string>
-                            <string>portal_type</string>
-                            <string>module</string>
-                            <string>authenticated_member</string>
-                            <string>contributor_list</string>
-                            <string>None</string>
-                            <string>article</string>
-                            <string>portal_status_message</string>
-                            <string>dict</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>WebSection_newBlogMessage</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

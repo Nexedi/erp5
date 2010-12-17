@@ -131,94 +131,12 @@ return result_list\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>from_date, to_date, node_category, **kw</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>from_date</string>
-                            <string>to_date</string>
-                            <string>node_category</string>
-                            <string>kw</string>
-                            <string>Products.PythonScripts.standard</string>
-                            <string>Object</string>
-                            <string>_getattr_</string>
-                            <string>container</string>
-                            <string>request</string>
-                            <string>context</string>
-                            <string>portal</string>
-                            <string>stool</string>
-                            <string>person_value_list</string>
-                            <string>dict</string>
-                            <string>total_time_per_resource</string>
-                            <string>total_time</string>
-                            <string>result_list</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>inventory</string>
-                            <string>presence_resource_uid_list</string>
-                            <string>person</string>
-                            <string>result_dict</string>
-                            <string>person_total</string>
-                            <string>person_planned_time</string>
-                            <string>resource</string>
-                            <string>ValueError</string>
-                            <string>person_time</string>
-                            <string>_write_</string>
-                            <string>_inplacevar_</string>
-                            <string>_apply_</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>PersonModule_getLeaveRequestReportLineList</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

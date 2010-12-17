@@ -186,12 +186,6 @@ return result_list\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>to_date=None, from_date=None, **kw</string> </value>
         </item>
@@ -207,99 +201,8 @@ return result_list\n
             </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>to_date</string>
-                            <string>from_date</string>
-                            <string>kw</string>
-                            <string>context</string>
-                            <string>self</string>
-                            <string>_getattr_</string>
-                            <string>assignment_list</string>
-                            <string>calendar_uid_list</string>
-                            <string>_getiter_</string>
-                            <string>assignment</string>
-                            <string>node</string>
-                            <string>default_source</string>
-                            <string>portal_simulation</string>
-                            <string>portal_type</string>
-                            <string>None</string>
-                            <string>resource</string>
-                            <string>src__</string>
-                            <string>simulation_state</string>
-                            <string>movement_list</string>
-                            <string>result_list</string>
-                            <string>DateTime</string>
-                            <string>date_list</string>
-                            <string>quantity_list</string>
-                            <string>mvt_list</string>
-                            <string>flush_list</string>
-                            <string>movement</string>
-                            <string>default_range</string>
-                            <string>next_start_date</string>
-                            <string>next_stop_date</string>
-                            <string>next_quantity</string>
-                            <string>next_relative_url</string>
-                            <string>_getitem_</string>
-                            <string>i</string>
-                            <string>len</string>
-                            <string>len_date_list</string>
-                            <string>current_date</string>
-                            <string>_inplacevar_</string>
-                            <string>j</string>
-                            <string>new_quantity_list</string>
-                            <string>new_mvt_list</string>
-                            <string>range</string>
-                            <string>max</string>
-                            <string>min</string>
-                            <string>k</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <none/>
-                <none/>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Person_getAvailableTimeMovementList</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

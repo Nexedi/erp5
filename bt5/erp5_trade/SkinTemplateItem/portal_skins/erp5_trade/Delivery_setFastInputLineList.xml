@@ -136,99 +136,12 @@ return context.Base_redirect(kw[\'form_id\'], keep_items=dict(\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>listbox, **kw</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>listbox</string>
-                            <string>kw</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>translateString</string>
-                            <string>Products.ERP5Type.Log</string>
-                            <string>log</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>x</string>
-                            <string>line_portal_type_list</string>
-                            <string>_getitem_</string>
-                            <string>line_portal_type</string>
-                            <string>cell_portal_type_list</string>
-                            <string>cell_portal_type</string>
-                            <string>per_resource_line_dict</string>
-                            <string>line</string>
-                            <string>None</string>
-                            <string>line_id</string>
-                            <string>product</string>
-                            <string>source_document</string>
-                            <string>edit_kw</string>
-                            <string>_write_</string>
-                            <string>_apply_</string>
-                            <string>key</string>
-                            <string>trade_document_line</string>
-                            <string>variation_category_list</string>
-                            <string>base_id</string>
-                            <string>list</string>
-                            <string>cell_key_list</string>
-                            <string>cell_key</string>
-                            <string>sorted_cell_key</string>
-                            <string>cell</string>
-                            <string>dict</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Delivery_setFastInputLineList</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

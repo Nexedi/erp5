@@ -238,12 +238,6 @@ return context.SaleOrder_paymentRedirect(field_my_comment, field_my_payment_mode
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>field_my_buy_quantity=None, field_my_shipping_method=None, field_my_comment=None, field_my_payment_mode=None, **kw</string> </value>
         </item>
@@ -257,89 +251,12 @@ return context.SaleOrder_paymentRedirect(field_my_comment, field_my_payment_mode
             </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>field_my_buy_quantity</string>
-                            <string>field_my_shipping_method</string>
-                            <string>field_my_comment</string>
-                            <string>field_my_payment_mode</string>
-                            <string>kw</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>request</string>
-                            <string>translateString</string>
-                            <string>quantity</string>
-                            <string>shipping_method</string>
-                            <string>True</string>
-                            <string>shopping_cart_items</string>
-                            <string>filter</string>
-                            <string>shopping_cart_products_items</string>
-                            <string>shopping_cart</string>
-                            <string>None</string>
-                            <string>isinstance</string>
-                            <string>str</string>
-                            <string>counter</string>
-                            <string>_getiter_</string>
-                            <string>order_line</string>
-                            <string>int</string>
-                            <string>_getitem_</string>
-                            <string>new_quantity</string>
-                            <string>_inplacevar_</string>
-                            <string>getattr</string>
-                            <string>shipping</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>SaleOrder_editShoppingCart</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
             <value> <string>Update shopping cart</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

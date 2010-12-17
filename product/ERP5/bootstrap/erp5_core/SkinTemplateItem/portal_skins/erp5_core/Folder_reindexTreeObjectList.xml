@@ -133,108 +133,12 @@ if tree_id_list is not None:\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>tree_id=None, tree_id_list=None, folder_tag=None, folder_after_tag=None, object_tag=None, object_after_tag=None, object_priority=1, sql_catalog_id=None, passive_commit=1, tree_tag=None, tree_after_tag=None</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>11</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>tree_id</string>
-                            <string>tree_id_list</string>
-                            <string>folder_tag</string>
-                            <string>folder_after_tag</string>
-                            <string>object_tag</string>
-                            <string>object_after_tag</string>
-                            <string>object_priority</string>
-                            <string>sql_catalog_id</string>
-                            <string>passive_commit</string>
-                            <string>tree_tag</string>
-                            <string>tree_after_tag</string>
-                            <string>Products.ERP5Type.Log</string>
-                            <string>log</string>
-                            <string>context</string>
-                            <string>folder</string>
-                            <string>None</string>
-                            <string>ValueError</string>
-                            <string>_getattr_</string>
-                            <string>activate_kw</string>
-                            <string>_getiter_</string>
-                            <string>key</string>
-                            <string>value</string>
-                            <string>BUNDLE_ITEM_COUNT</string>
-                            <string>folder_id</string>
-                            <string>Folder_reindexObjectList</string>
-                            <string>$list0</string>
-                            <string>x</string>
-                            <string>id_list</string>
-                            <string>id_list_list</string>
-                            <string>xrange</string>
-                            <string>len</string>
-                            <string>bundle_index</string>
-                            <string>_getitem_</string>
-                            <string>remaining_object_id_count</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <int>1</int>
-                <none/>
-                <int>1</int>
-                <none/>
-                <none/>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Folder_reindexTreeObjectList</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

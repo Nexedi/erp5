@@ -134,103 +134,12 @@ return redirect_document.Base_redirect(form_id,\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>form_id, dialog_id, **kw</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>form_id</string>
-                            <string>dialog_id</string>
-                            <string>kw</string>
-                            <string>Products.Formulator.Errors</string>
-                            <string>FormValidationError</string>
-                            <string>Products.DCWorkflow.DCWorkflow</string>
-                            <string>ValidationFailed</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>translateString</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal</string>
-                            <string>request</string>
-                            <string>getattr</string>
-                            <string>form</string>
-                            <string>editable_mode</string>
-                            <string>validation_errors</string>
-                            <string>field_errors</string>
-                            <string>doaction_param_list</string>
-                            <string>MARKER</string>
-                            <string>_getiter_</string>
-                            <string>f</string>
-                            <string>k</string>
-                            <string>v</string>
-                            <string>_getitem_</string>
-                            <string>_write_</string>
-                            <string>listbox</string>
-                            <string>None</string>
-                            <string>listbox_line_list</string>
-                            <string>listbox_keys</string>
-                            <string>key</string>
-                            <string>listbox_line</string>
-                            <string>tuple</string>
-                            <string>_apply_</string>
-                            <string>error_message</string>
-                            <string>message</string>
-                            <string>same_type</string>
-                            <string>str</string>
-                            <string>portal_status_message</string>
-                            <string>redirect_document_path</string>
-                            <string>redirect_document</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Workflow_statusModify</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

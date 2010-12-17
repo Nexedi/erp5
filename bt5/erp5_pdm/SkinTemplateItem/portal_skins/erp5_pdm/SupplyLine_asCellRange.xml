@@ -159,102 +159,12 @@ return cell_range\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>base_id=\'path\', matrixbox=0, display_base_category=1, option_variation=0, **kw</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>base_id</string>
-                            <string>matrixbox</string>
-                            <string>display_base_category</string>
-                            <string>option_variation</string>
-                            <string>kw</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal</string>
-                            <string>Base_translateString</string>
-                            <string>cell_range</string>
-                            <string>add_predicate</string>
-                            <string>no_option_base_category_list</string>
-                            <string>base_category_list</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>x</string>
-                            <string>option_base_category_list</string>
-                            <string>base_category_list_list</string>
-                            <string>selected_base_category_list</string>
-                            <string>_getitem_</string>
-                            <string>len</string>
-                            <string>property_id</string>
-                            <string>map</string>
-                            <string>price_parameter</string>
-                            <string>option_base_id_begin_with</string>
-                            <string>predicate_list</string>
-                            <string>pred_ids</string>
-                            <string>predicate</string>
-                            <string>predicate_criterion_list</string>
-                            <string>predicate_title</string>
-                            <string>criterion</string>
-                            <string>min_qty</string>
-                            <string>max_qty</string>
-                            <string>None</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <string>path</string>
-                <int>0</int>
-                <int>1</int>
-                <int>0</int>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>SupplyLine_asCellRange</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

@@ -84,20 +84,8 @@ return portal.portal_simulation.getInventoryAssetPrice( **params )\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>brain=None, selection=None, omit_asset_increase=0, omit_asset_decrease=0, selection_name=None, **kw</string> </value>
-        </item>
-        <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -106,12 +94,6 @@ return portal.portal_simulation.getInventoryAssetPrice( **params )\n
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

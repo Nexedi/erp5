@@ -176,92 +176,12 @@ return result\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>person_first_name,person_last_name,person_title,person_start_date,person_birthplace</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>5</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>person_first_name</string>
-                            <string>person_last_name</string>
-                            <string>person_title</string>
-                            <string>person_start_date</string>
-                            <string>person_birthplace</string>
-                            <string>Products.ZSQLCatalog.SQLCatalog</string>
-                            <string>ComplexQuery</string>
-                            <string>Query</string>
-                            <string>string</string>
-                            <string>capitalize</string>
-                            <string>upper</string>
-                            <string>lower</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal</string>
-                            <string>result</string>
-                            <string>person_module</string>
-                            <string>person_title_reversed</string>
-                            <string>None</string>
-                            <string>query</string>
-                            <string>DateTime</string>
-                            <string>select_expression</string>
-                            <string>candidate_list</string>
-                            <string>_getiter_</string>
-                            <string>candidate</string>
-                            <string>candidate_first_name</string>
-                            <string>candidate_last_name</string>
-                            <string>candidate_start_date</string>
-                            <string>candidate_birthplace_address_city</string>
-                            <string>str</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>PersonModule_getBestCandidateList</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

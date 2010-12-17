@@ -149,81 +149,12 @@ return html\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>getOwnerHTML</string>
-                            <string>website</string>
-                            <string>getReferenceHTML</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>uid</string>
-                            <string>url</string>
-                            <string>hasattr</string>
-                            <string>title</string>
-                            <string>portal_type</string>
-                            <string>popup</string>
-                            <string>isinstance</string>
-                            <string>unicode</string>
-                            <string>found</string>
-                            <string>owner_html</string>
-                            <string>date_renderer</string>
-                            <string>modification_date</string>
-                            <string>local_parameter_dict</string>
-                            <string>html</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Base_getSummaryAsHTML</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

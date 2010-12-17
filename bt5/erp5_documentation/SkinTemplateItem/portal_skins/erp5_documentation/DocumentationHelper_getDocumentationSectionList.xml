@@ -312,109 +312,12 @@ return result\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>getTitle</string>
-                            <string>compareFileName</string>
-                            <string>remove_duplicates</string>
-                            <string>Products.ERP5Form.Report</string>
-                            <string>ReportSection</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>REQUEST</string>
-                            <string>True</string>
-                            <string>portal_skin</string>
-                            <string>result</string>
-                            <string>root_class_name</string>
-                            <string>class_methods_list</string>
-                            <string>property_sheets_list</string>
-                            <string>documentation_helper</string>
-                            <string>section_list</string>
-                            <string>dict</string>
-                            <string>_getiter_</string>
-                            <string>section</string>
-                            <string>uri</string>
-                            <string>uri_object</string>
-                            <string>None</string>
-                            <string>child_uri</string>
-                            <string>class_name</string>
-                            <string>results</string>
-                            <string>_inplacevar_</string>
-                            <string>_getitem_</string>
-                            <string>sub_child_uri</string>
-                            <string>getattr</string>
-                            <string>child_uri_title</string>
-                            <string>class_iterate_list</string>
-                            <string>section_class_name</string>
-                            <string>sub_displayed_class</string>
-                            <string>sub_child_object</string>
-                            <string>sub_child_section</string>
-                            <string>appendix_description</string>
-                            <string>classmethods</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>x</string>
-                            <string>class_list</string>
-                            <string>zip</string>
-                            <string>propertysheet</string>
-                            <string>class_method_description</string>
-                            <string>classmethod</string>
-                            <string>property_sheet_description</string>
-                            <string>propertysheets</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>DocumentationHelper_getDocumentationSectionList</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

@@ -247,79 +247,8 @@ context.Base_redirect(\'SaleOrder_viewThankYouMessage\')\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>DateTime</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>request</string>
-                            <string>web_site</string>
-                            <string>isAnon</string>
-                            <string>translateString</string>
-                            <string>shopping_cart</string>
-                            <string>True</string>
-                            <string>shopping_cart_item_list</string>
-                            <string>customer</string>
-                            <string>buyer</string>
-                            <string>msg</string>
-                            <string>None</string>
-                            <string>ValueError</string>
-                            <string>portal_type</string>
-                            <string>module</string>
-                            <string>sale_order</string>
-                            <string>_getiter_</string>
-                            <string>order_line</string>
-                            <string>resource</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -328,12 +257,6 @@ context.Base_redirect(\'SaleOrder_viewThankYouMessage\')\n
         <item>
             <key> <string>title</string> </key>
             <value> <string>Finalize order</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

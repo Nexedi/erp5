@@ -108,89 +108,12 @@ return \'\' # Nothing to display\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>box=None, box_relative_url=None, is_gadget_mode=0, parent_web_section_url=None, editable_mode=None, web_section_url=None</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>6</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>box</string>
-                            <string>box_relative_url</string>
-                            <string>is_gadget_mode</string>
-                            <string>parent_web_section_url</string>
-                            <string>editable_mode</string>
-                            <string>web_section_url</string>
-                            <string>random</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>request</string>
-                            <string>portal</string>
-                            <string>preferences</string>
-                            <string>None</string>
-                            <string>current_web_site</string>
-                            <string>web_section</string>
-                            <string>web_page_list</string>
-                            <string>len</string>
-                            <string>web_page_len</string>
-                            <string>web_page_index</string>
-                            <string>_getitem_</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <none/>
-                <none/>
-                <int>0</int>
-                <none/>
-                <none/>
-                <none/>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>ERP5Site_viewRandomPageGadget</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

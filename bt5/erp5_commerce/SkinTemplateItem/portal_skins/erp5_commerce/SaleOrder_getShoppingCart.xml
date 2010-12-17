@@ -86,12 +86,6 @@ else:\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>action=\'\', new_shopping_cart=None</string> </value>
         </item>
@@ -104,78 +98,12 @@ else:\n
             </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>action</string>
-                            <string>new_shopping_cart</string>
-                            <string>DateTime</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>request</string>
-                            <string>expire_timeout_days</string>
-                            <string>None</string>
-                            <string>session_id</string>
-                            <string>portal_sessions</string>
-                            <string>now</string>
-                            <string>shopping_cart_id</string>
-                            <string>_getitem_</string>
-                            <string>session</string>
-                            <string>Products.ERP5Type.Document</string>
-                            <string>newTempOrder</string>
-                            <string>web_site</string>
-                            <string>shopping_cart</string>
-                            <string>_write_</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <string></string>
-                <none/>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>SaleOrder_getShoppingCart</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
             <value> <string>Get shopping cart for customer</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

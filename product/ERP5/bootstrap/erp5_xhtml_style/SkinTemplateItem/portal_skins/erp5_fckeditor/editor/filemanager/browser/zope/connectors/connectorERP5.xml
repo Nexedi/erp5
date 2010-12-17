@@ -709,12 +709,6 @@ else :\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>Command=\'\',Type=\'\',CurrentFolder=\'\',NewFolderName=\'\'</string> </value>
         </item>
@@ -727,117 +721,8 @@ else :\n
             </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>Command</string>
-                            <string>Type</string>
-                            <string>CurrentFolder</string>
-                            <string>NewFolderName</string>
-                            <string>Products.PythonScripts.standard</string>
-                            <string>html_quote</string>
-                            <string>Products.CMFCore.utils</string>
-                            <string>getToolByName</string>
-                            <string>ConfigUserFilesPath</string>
-                            <string>unpublishedStates</string>
-                            <string>None</string>
-                            <string>rolesSeeUnpublishedContent</string>
-                            <string>context</string>
-                            <string>props</string>
-                            <string>hasattr</string>
-                            <string>_getattr_</string>
-                            <string>getattr</string>
-                            <string>ConfigAllowedExtensions</string>
-                            <string>ConfigDeniedExtensions</string>
-                            <string>linkbyuid</string>
-                            <string>ERP5_FOLDER_TYPE</string>
-                            <string>charsetSite</string>
-                            <string>RemoveFromStart</string>
-                            <string>utf8Encode</string>
-                            <string>utf8Decode</string>
-                            <string>ConvertToXmlAttribute</string>
-                            <string>fckCreateValidZopeId</string>
-                            <string>portal_path</string>
-                            <string>GetUrlFromPath</string>
-                            <string>RemoveExtension</string>
-                            <string>IsAllowedExt</string>
-                            <string>FindExtension</string>
-                            <string>CreateXmlHeader</string>
-                            <string>CreateXmlFooter</string>
-                            <string>xmlString</string>
-                            <string>CreateXmlErrorNode</string>
-                            <string>GetFoldersAndFiles</string>
-                            <string>GetFolders</string>
-                            <string>CreateFolder</string>
-                            <string>UploadFile</string>
-                            <string>request</string>
-                            <string>RESPONSE</string>
-                            <string>dicoRequest</string>
-                            <string>message_error</string>
-                            <string>portal_url</string>
-                            <string>server_url</string>
-                            <string>sUserFilesPath</string>
-                            <string>_getitem_</string>
-                            <string>sCurrentFolder</string>
-                            <string>sCommand</string>
-                            <string>sResourceType</string>
-                            <string>sFolderName</string>
-                            <string>sData</string>
-                            <string>sTitle</string>
-                            <string>chaineHtmlUpload</string>
-                            <string>xmlHeader</string>
-                            <string>xmlBody</string>
-                            <string>xmlFooter</string>
-                            <string>sErrorNumber</string>
-                            <string>sErrorDescription</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <string></string>
-                <string></string>
-                <string></string>
-                <string></string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>connectorERP5</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

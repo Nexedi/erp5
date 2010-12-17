@@ -251,103 +251,12 @@ return unicodeDict(data_dict)\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>translateString</string>
-                            <string>request</string>
-                            <string>quantity_renderer</string>
-                            <string>model</string>
-                            <string>getFieldAsLineList</string>
-                            <string>getFieldAsString</string>
-                            <string>getSocialCodeId</string>
-                            <string>getCareerId</string>
-                            <string>getCollectiveAgreementId</string>
-                            <string>getSalaryLevelId</string>
-                            <string>getCareerCoefficientId</string>
-                            <string>getHiringDateId</string>
-                            <string>getPriceCurrencyId</string>
-                            <string>salaire_net_imposable</string>
-                            <string>getTaxableNetPayId</string>
-                            <string>total_employee_tax</string>
-                            <string>getTotalEmployeeTaxId</string>
-                            <string>total_employer_tax</string>
-                            <string>getTotalEmployerTaxId</string>
-                            <string>preferred_date_order</string>
-                            <string>separator</string>
-                            <string>getOrderedDate</string>
-                            <string>getPaymentConditionText</string>
-                            <string>gross_salary</string>
-                            <string>year_to_date_gross_salary</string>
-                            <string>year_to_date_slice_a</string>
-                            <string>worked_hour_count</string>
-                            <string>year_to_date_worked_hour_count</string>
-                            <string>over_time_small_rate</string>
-                            <string>over_time_big_rate</string>
-                            <string>None</string>
-                            <string>bonus_worked_hour_count</string>
-                            <string>year_to_date_bonus_worked_hour_count</string>
-                            <string>year_to_date_bonus_worked_hour_amount</string>
-                            <string>year_to_date_taxable_net_salary</string>
-                            <string>unicodeDict</string>
-                            <string>source_section</string>
-                            <string>str</string>
-                            <string>data_dict</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>PaySheetTransaction_getOtherInformationsDataDict</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

@@ -100,12 +100,6 @@ portal.portal_notifications.sendMessage(\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>active_process_url, skin_name, localizer_language, title, request_other, form_path, user_name, format</string> </value>
         </item>
@@ -118,86 +112,12 @@ portal.portal_notifications.sendMessage(\n
             </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>8</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>active_process_url</string>
-                            <string>skin_name</string>
-                            <string>localizer_language</string>
-                            <string>title</string>
-                            <string>request_other</string>
-                            <string>form_path</string>
-                            <string>user_name</string>
-                            <string>format</string>
-                            <string>_getattr_</string>
-                            <string>container</string>
-                            <string>request</string>
-                            <string>context</string>
-                            <string>portal</string>
-                            <string>ap</string>
-                            <string>N_</string>
-                            <string>_write_</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>r</string>
-                            <string>report_section_list</string>
-                            <string>dummyReportMethod</string>
-                            <string>dict</string>
-                            <string>_getitem_</string>
-                            <string>report_data</string>
-                            <string>x</string>
-                            <string>len</string>
-                            <string>attachment_name</string>
-                            <string>attachment_list</string>
-                            <string>False</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Base_report</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

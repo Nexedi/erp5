@@ -208,12 +208,6 @@ for M0_bis in M0_bis_list:\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>
@@ -227,90 +221,8 @@ for M0_bis in M0_bis_list:\n
             </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>state_change</string>
-                            <string>_getitem_</string>
-                            <string>request_eform</string>
-                            <string>_getattr_</string>
-                            <string>portal</string>
-                            <string>organisation_module</string>
-                            <string>date</string>
-                            <string>duration</string>
-                            <string>int</string>
-                            <string>duration_length</string>
-                            <string>beginning_date</string>
-                            <string>year</string>
-                            <string>month</string>
-                            <string>day</string>
-                            <string>stop_year</string>
-                            <string>organisation</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>x</string>
-                            <string>M0_bis_list</string>
-                            <string>len</string>
-                            <string>m0_bis</string>
-                            <string>m0_bis_activity_list</string>
-                            <string>m0_bis_activities</string>
-                            <string>attachLocationYearInfo</string>
-                            <string>default_address_city</string>
-                            <string>group</string>
-                            <string>new_registry_number</string>
-                            <string>context</string>
-                            <string>person_module</string>
-                            <string>destination_form_uid</string>
-                            <string>assignment</string>
-                            <string>assignment_list</string>
-                            <string>str</string>
-                            <string>history_list</string>
-                            <string>history</string>
-                            <string>M0_bis</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>createOrganisationFromM0</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

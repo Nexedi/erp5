@@ -136,102 +136,12 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>form_id, selection_index=0, selection_name=\'\', ignore_layout=0, editable_mode=1</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>5</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>form_id</string>
-                            <string>selection_index</string>
-                            <string>selection_name</string>
-                            <string>ignore_layout</string>
-                            <string>editable_mode</string>
-                            <string>Products.Formulator.Errors</string>
-                            <string>ValidationError</string>
-                            <string>FormValidationError</string>
-                            <string>ZTUtils</string>
-                            <string>make_query</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>request</string>
-                            <string>getattr</string>
-                            <string>form</string>
-                            <string>edit_order</string>
-                            <string>kw</string>
-                            <string>_getiter_</string>
-                            <string>f</string>
-                            <string>k</string>
-                            <string>None</string>
-                            <string>v</string>
-                            <string>_getitem_</string>
-                            <string>_write_</string>
-                            <string>listbox</string>
-                            <string>listbox_field</string>
-                            <string>gv</string>
-                            <string>map</string>
-                            <string>hidden_attributes</string>
-                            <string>property</string>
-                            <string>_apply_</string>
-                            <string>validation_errors</string>
-                            <string>field_errors</string>
-                            <string>False</string>
-                            <string>redirect_url</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <int>0</int>
-                <string></string>
-                <int>0</int>
-                <int>1</int>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Predicate_edit</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

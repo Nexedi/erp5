@@ -108,83 +108,12 @@ return printed\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>kw</string>
-                            <string>_print_</string>
-                            <string>_print</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>getObjectFromArg</string>
-                            <string>kw_value_list</string>
-                            <string>len</string>
-                            <string>kw_len</string>
-                            <string>object_a</string>
-                            <string>_getitem_</string>
-                            <string>object_b</string>
-                            <string>ValueError</string>
-                            <string>diff_recursive</string>
-                            <string>_getiter_</string>
-                            <string>diff_dict</string>
-                            <string>missing_in_a_dict</string>
-                            <string>missing_in_b_dict</string>
-                            <string>id</string>
-                            <string>diff</string>
-                            <string>line</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>diff</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

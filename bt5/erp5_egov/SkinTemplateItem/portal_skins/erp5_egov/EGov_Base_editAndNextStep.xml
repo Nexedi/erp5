@@ -194,12 +194,6 @@ return context.Base_redirect(next_url, keep_items = dict(portal_status_message=m
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>form_id, selection_index=0, selection_name=\'\', dialog_id=\'\', ignore_layout=0, editable_mode=1, silent_mode=0, field_prefix=\'my_\', **kw</string> </value>
         </item>
@@ -212,115 +206,8 @@ return context.Base_redirect(next_url, keep_items = dict(portal_status_message=m
             </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>8</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>form_id</string>
-                            <string>selection_index</string>
-                            <string>selection_name</string>
-                            <string>dialog_id</string>
-                            <string>ignore_layout</string>
-                            <string>editable_mode</string>
-                            <string>silent_mode</string>
-                            <string>field_prefix</string>
-                            <string>kw</string>
-                            <string>Products.DCWorkflow.DCWorkflow</string>
-                            <string>ValidationFailed</string>
-                            <string>Products.CMFCore.utils</string>
-                            <string>getToolByName</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>request</string>
-                            <string>message</string>
-                            <string>translateString</string>
-                            <string>_apply_</string>
-                            <string>_getiter_</string>
-                            <string>result</string>
-                            <string>mode</string>
-                            <string>attachment_count</string>
-                            <string>bad_file</string>
-                            <string>encapsulated_editor_list</string>
-                            <string>same_type</string>
-                            <string>_getitem_</string>
-                            <string>attachment_title_list</string>
-                            <string>attachment_file_list</string>
-                            <string>zip</string>
-                            <string>attachment_list</string>
-                            <string>type_dict</string>
-                            <string>type_allowed_content_type_list</string>
-                            <string>range</string>
-                            <string>len</string>
-                            <string>i</string>
-                            <string>getattr</string>
-                            <string>None</string>
-                            <string>type</string>
-                            <string>title</string>
-                            <string>type_object</string>
-                            <string>_write_</string>
-                            <string>attachment</string>
-                            <string>portal</string>
-                            <string>attachment_portal_type</string>
-                            <string>document_new_content_kw</string>
-                            <string>_inplacevar_</string>
-                            <string>container</string>
-                            <string>document</string>
-                            <string>document_edit_kw</string>
-                            <string>dict</string>
-                            <string>next_url_dict</string>
-                            <string>base_edit_result</string>
-                            <string>next_url</string>
-                            <string>submit_action</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <int>0</int>
-                <string></string>
-                <string></string>
-                <int>0</int>
-                <int>1</int>
-                <int>0</int>
-                <string>my_</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>EGov_Base_editAndNextStep</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

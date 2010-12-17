@@ -147,81 +147,12 @@ return getSiteMapItemTree(context, depth=depth)\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>depth=1, include_subsection=None, include_document=None, property_mapping=(\'translated_title\',), exclude_default_document = False, include_site_default_page = False</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>6</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>depth</string>
-                            <string>include_subsection</string>
-                            <string>include_document</string>
-                            <string>property_mapping</string>
-                            <string>exclude_default_document</string>
-                            <string>include_site_default_page</string>
-                            <string>mapObject</string>
-                            <string>None</string>
-                            <string>getSiteMapItemTree</string>
-                            <string>context</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <int>1</int>
-                <none/>
-                <none/>
-                <tuple>
-                  <string>translated_title</string>
-                </tuple>
-                <int>0</int>
-                <int>0</int>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>WebSection_getSiteMapTree</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

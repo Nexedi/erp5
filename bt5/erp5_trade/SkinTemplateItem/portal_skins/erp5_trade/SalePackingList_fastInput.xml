@@ -168,125 +168,12 @@ context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>form_id=\'\',selection_index=None,selection_name=\'\',dialog_category=\'object_exchange\',container_count=0,container_type=\'\',gross_weight=0,listbox=[],cancel_url=\'\',next_container_int_index=1,**kw</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>10</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>form_id</string>
-                            <string>selection_index</string>
-                            <string>selection_name</string>
-                            <string>dialog_category</string>
-                            <string>container_count</string>
-                            <string>container_type</string>
-                            <string>gross_weight</string>
-                            <string>listbox</string>
-                            <string>cancel_url</string>
-                            <string>next_container_int_index</string>
-                            <string>kw</string>
-                            <string>ZTUtils</string>
-                            <string>make_query</string>
-                            <string>context</string>
-                            <string>delivery</string>
-                            <string>next_container_number</string>
-                            <string>desired_lines</string>
-                            <string>quantity_unit_dict</string>
-                            <string>_getiter_</string>
-                            <string>listitem</string>
-                            <string>_getitem_</string>
-                            <string>movement_relative_url</string>
-                            <string>container_quantity</string>
-                            <string>_getattr_</string>
-                            <string>movement</string>
-                            <string>None</string>
-                            <string>resource</string>
-                            <string>_write_</string>
-                            <string>range</string>
-                            <string>container_number</string>
-                            <string>str</string>
-                            <string>new_container_id</string>
-                            <string>int</string>
-                            <string>container</string>
-                            <string>_inplacevar_</string>
-                            <string>resource_url</string>
-                            <string>line_variation_base_category_dict</string>
-                            <string>line_variation_category_list</string>
-                            <string>variation_category_list</string>
-                            <string>quantity</string>
-                            <string>variation_item</string>
-                            <string>variation_base_category_items</string>
-                            <string>len</string>
-                            <string>line_variation_base_category_list</string>
-                            <string>new_container_line_id</string>
-                            <string>container_line</string>
-                            <string>cell_key</string>
-                            <string>base_id</string>
-                            <string>_apply_</string>
-                            <string>cell</string>
-                            <string>url_params</string>
-                            <string>redirect_url</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <string></string>
-                <none/>
-                <string></string>
-                <string>object_exchange</string>
-                <int>0</int>
-                <string></string>
-                <int>0</int>
-                <list/>
-                <string></string>
-                <int>1</int>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>SalePackingList_fastInput</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

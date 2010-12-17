@@ -144,96 +144,8 @@ return web_site.Base_redirect("view", \n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>web_site_theme_id, web_site_theme_title, css_text, js_text, html_text, main_div_class_name, apply_web_site_theme=None, **kw</string> </value>
-        </item>
-        <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>7</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>web_site_theme_id</string>
-                            <string>web_site_theme_title</string>
-                            <string>css_text</string>
-                            <string>js_text</string>
-                            <string>html_text</string>
-                            <string>main_div_class_name</string>
-                            <string>apply_web_site_theme</string>
-                            <string>kw</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal_skins</string>
-                            <string>erp5_development</string>
-                            <string>None</string>
-                            <string>MARKER</string>
-                            <string>page_template_header</string>
-                            <string>theme_id</string>
-                            <string>main_template_id</string>
-                            <string>default_form_group</string>
-                            <string>web_site</string>
-                            <string>skin_folder</string>
-                            <string>_getitem_</string>
-                            <string>getattr</string>
-                            <string>css_folder</string>
-                            <string>image_folder</string>
-                            <string>js_folder</string>
-                            <string>css_id</string>
-                            <string>css_body</string>
-                            <string>_inplacevar_</string>
-                            <string>js_id</string>
-                            <string>js_body</string>
-                            <string>css_tales</string>
-                            <string>js_tales</string>
-                            <string>configuration_form_id</string>
-                            <string>configuration_form</string>
-                            <string>field</string>
-                            <string>dict</string>
-                            <string>content_layout_form_id</string>
-                            <string>layout_form</string>
-                            <string>_getiter_</string>
-                            <string>form_group</string>
-                            <string>layout_form_id</string>
-                            <string>portal_status_message</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <none/>
-              </tuple>
-            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -242,12 +154,6 @@ return web_site.Base_redirect("view", \n
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

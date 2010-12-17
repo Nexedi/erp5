@@ -237,12 +237,6 @@ raise NotImplementedError\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>form_id=\'view\', dialog_id=None, import_file=None, import_file_line_script=\'Base_importFileLineDefaultScript\', listbox=None, **kw</string> </value>
         </item>
@@ -255,120 +249,8 @@ raise NotImplementedError\n
             </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>5</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>form_id</string>
-                            <string>dialog_id</string>
-                            <string>import_file</string>
-                            <string>import_file_line_script</string>
-                            <string>listbox</string>
-                            <string>kw</string>
-                            <string>Products.ERP5Type.Document</string>
-                            <string>newTempFile</string>
-                            <string>Products.ERP5OOo.OOoUtils</string>
-                            <string>OOoParser</string>
-                            <string>string</string>
-                            <string>_getattr_</string>
-                            <string>container</string>
-                            <string>request</string>
-                            <string>getSpreadsheet</string>
-                            <string>cleanUid</string>
-                            <string>None</string>
-                            <string>len</string>
-                            <string>spreadsheets</string>
-                            <string>context</string>
-                            <string>session_id</string>
-                            <string>_getitem_</string>
-                            <string>session</string>
-                            <string>temp_file</string>
-                            <string>DateTime</string>
-                            <string>timestamp</string>
-                            <string>temp_import_file_name</string>
-                            <string>_write_</string>
-                            <string>temp_file_name</string>
-                            <string>mapping</string>
-                            <string>listbox_ordered_lines</string>
-                            <string>_getiter_</string>
-                            <string>line</string>
-                            <string>listbox_id</string>
-                            <string>portal_type_property</string>
-                            <string>same_type</string>
-                            <string>dict</string>
-                            <string>listbox_dict</string>
-                            <string>listbox_key</string>
-                            <string>getattr</string>
-                            <string>spreadsheet_name</string>
-                            <string>column_name</string>
-                            <string>portal_type</string>
-                            <string>property</string>
-                            <string>AttributeError</string>
-                            <string>active_process_value</string>
-                            <string>active_process_path</string>
-                            <string>sheet_name</string>
-                            <string>sheet_data</string>
-                            <string>column_index</string>
-                            <string>range</string>
-                            <string>column_id</string>
-                            <string>column_mapping</string>
-                            <string>property_dict</string>
-                            <string>column_title</string>
-                            <string>imported_line_property_dict</string>
-                            <string>line_property_index</string>
-                            <string>property_value</string>
-                            <string>property_id</string>
-                            <string>tag</string>
-                            <string>active_object</string>
-                            <string>NotImplementedError</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <string>view</string>
-                <none/>
-                <none/>
-                <string>Base_importFileLineDefaultScript</string>
-                <none/>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Base_importFile</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

@@ -125,120 +125,12 @@ return discussion_thread.Base_redirect(form_id,\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>title, text_content, form_id=\'view\', predecessor=None, description=None, subject_list=None, classification=None, group_list=None, site_list=None, send_notification_text=None, reference=None,**kw</string> </value>
         </item>
         <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>11</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>title</string>
-                            <string>text_content</string>
-                            <string>form_id</string>
-                            <string>predecessor</string>
-                            <string>description</string>
-                            <string>subject_list</string>
-                            <string>classification</string>
-                            <string>group_list</string>
-                            <string>site_list</string>
-                            <string>send_notification_text</string>
-                            <string>reference</string>
-                            <string>kw</string>
-                            <string>None</string>
-                            <string>MARKER</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal</string>
-                            <string>person</string>
-                            <string>version</string>
-                            <string>language</string>
-                            <string>user_assignment_dict</string>
-                            <string>_getitem_</string>
-                            <string>discussion_thread</string>
-                            <string>discussion_post</string>
-                            <string>portal_status_message</string>
-                            <string>email_list</string>
-                            <string>notification_list</string>
-                            <string>_getiter_</string>
-                            <string>notification</string>
-                            <string>person_list</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>x</string>
-                            <string>email_from</string>
-                            <string>email_subject</string>
-                            <string>email_template</string>
-                            <string>email_body</string>
-                            <string>email_to</string>
-                            <string>DateTime</string>
-                            <string>mail_headers</string>
-                            <string>mail_source</string>
-                            <string>dict</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <string>view</string>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>DiscussionThreadModule_createNewDiscussionThread</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

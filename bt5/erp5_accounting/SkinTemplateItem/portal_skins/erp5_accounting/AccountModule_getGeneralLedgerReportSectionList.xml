@@ -463,128 +463,12 @@ return report_section_list\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>Products.ZSQLCatalog.SQLCatalog</string>
-                            <string>Query</string>
-                            <string>Products.ERP5Form.Report</string>
-                            <string>ReportSection</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal</string>
-                            <string>request</string>
-                            <string>cat_tool</string>
-                            <string>sim_tool</string>
-                            <string>Base_translateString</string>
-                            <string>_getitem_</string>
-                            <string>at_date</string>
-                            <string>section_category</string>
-                            <string>section_uid</string>
-                            <string>simulation_state</string>
-                            <string>hide_analytic</string>
-                            <string>None</string>
-                            <string>from_date</string>
-                            <string>mirror_section_category_list</string>
-                            <string>mirror_section</string>
-                            <string>gap_list</string>
-                            <string>_getiter_</string>
-                            <string>gap</string>
-                            <string>False</string>
-                            <string>display_categories</string>
-                            <string>period_start_date</string>
-                            <string>gap_root</string>
-                            <string>currency</string>
-                            <string>precision</string>
-                            <string>True</string>
-                            <string>_write_</string>
-                            <string>dict</string>
-                            <string>params</string>
-                            <string>project</string>
-                            <string>funding_category</string>
-                            <string>function_category</string>
-                            <string>mirror_section_uid</string>
-                            <string>default_selection_params</string>
-                            <string>analytic_column_list</string>
-                            <string>account_columns</string>
-                            <string>len</string>
-                            <string>_inplacevar_</string>
-                            <string>traverse</string>
-                            <string>account_name_cache</string>
-                            <string>getAccountName</string>
-                            <string>getObject</string>
-                            <string>title_for_uid_cache</string>
-                            <string>getTitleForUid</string>
-                            <string>getFullAccountName</string>
-                            <string>account_type_to_group_by_node</string>
-                            <string>profit_and_loss_account_type</string>
-                            <string>account_type_value</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>category</string>
-                            <string>account_type_to_group_by_payment</string>
-                            <string>account_type_to_group_by_mirror_section</string>
-                            <string>report_section_list</string>
-                            <string>existing_section_dict</string>
-                            <string>_apply_</string>
-                            <string>inventory</string>
-                            <string>key</string>
-                            <string>selection_params</string>
-                            <string>max</string>
-                            <string>total_params</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>AccountModule_getGeneralLedgerReportSectionList</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>
