@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PDFTypeInformation" module="Products.ERP5Type.Document.PDFTypeInformation"/>
-        <tuple/>
-      </tuple>
+      <global name="PDF Type" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -67,6 +64,10 @@
         <item>
             <key> <string>resolution</string> </key>
             <value> <int>600</int> </value>
+        </item>
+        <item>
+            <key> <string>type_class</string> </key>
+            <value> <string>EGovTypeInformation</string> </value>
         </item>
       </dictionary>
     </pickle>

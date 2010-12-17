@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -264,6 +261,8 @@ for history in history_list:\n
                             <string>Products.ZSQLCatalog.SQLCatalog</string>
                             <string>ComplexQuery</string>
                             <string>Query</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
                             <string>_getitem_</string>
                             <string>request_eform</string>
                             <string>_getattr_</string>
@@ -284,7 +283,6 @@ for history in history_list:\n
                             <string>person</string>
                             <string>person_list</string>
                             <string>len</string>
-                            <string>ValidationFailed</string>
                             <string>corporate_registration_code</string>
                             <string>organisation</string>
                             <string>organisation_list</string>

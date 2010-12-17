@@ -2,19 +2,10 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="DTMLDocument" module="OFS.DTMLDocument"/>
-        <tuple/>
-      </tuple>
+      <global name="DTMLDocument" module="OFS.DTMLDocument"/>
     </pickle>
     <pickle>
       <dictionary>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
         <item>
             <key> <string>__name__</string> </key>
             <value> <string>P2_css.css</string> </value>

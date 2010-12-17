@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ERP5Report" module="Products.ERP5Form.Report"/>
-        <tuple/>
-      </tuple>
+      <global name="ERP5Report" module="Products.ERP5Form.Report"/>
     </pickle>
     <pickle>
       <dictionary>

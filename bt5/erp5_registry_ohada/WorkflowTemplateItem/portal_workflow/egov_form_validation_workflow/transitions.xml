@@ -2,19 +2,10 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="Transitions" module="Products.DCWorkflow.Transitions"/>
-        <tuple/>
-      </tuple>
+      <global name="Transitions" module="Products.DCWorkflow.Transitions"/>
     </pickle>
     <pickle>
       <dictionary>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
         <item>
             <key> <string>_mapping</string> </key>
             <value>

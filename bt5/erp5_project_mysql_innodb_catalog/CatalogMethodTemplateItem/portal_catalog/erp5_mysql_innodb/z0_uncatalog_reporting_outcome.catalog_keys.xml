@@ -8,6 +8,4 @@
  <item key="_filter_expression_archive" type="str">
   <value>python: getattr(here, 'getOutcomeDescription', None) is not None</value>
  </item>
- <item key="_filter_type_archive" type="tuple">
- </item>
 </catalog_method>

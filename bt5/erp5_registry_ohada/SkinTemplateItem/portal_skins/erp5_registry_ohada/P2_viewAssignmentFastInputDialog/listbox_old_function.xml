@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ListField" module="Products.Formulator.StandardFields"/>
-        <tuple/>
-      </tuple>
+      <global name="ListField" module="Products.Formulator.StandardFields"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -235,7 +232,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string encoding="base64">QWN0aW9ubmFpcmUgZGUgc29jacOpdMOp</string>
+                          <string>Actionnaire de société</string>
                           <string>corporation/shareholder</string>
                         </tuple>
                         <tuple>
@@ -243,7 +240,7 @@
                           <string>corporation/executive/ceo</string>
                         </tuple>
                         <tuple>
-                          <string encoding="base64">R8OpcmFudA==</string>
+                          <string>Gérant</string>
                           <string>corporation/executive/manager</string>
                         </tuple>
                         <tuple>

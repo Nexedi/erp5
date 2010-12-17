@@ -2,22 +2,13 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="File" module="OFS.Image"/>
-        <tuple/>
-      </tuple>
+      <global name="File" module="OFS.Image"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
             <value> <string>ts82272081.0</string> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -244,10 +235,6 @@ AABtZXRhLnhtbFBLAQIUABQACAAIAMiG0zbQn91qwggAAJwJAAAYAAAAAAAAAAAAAAAAABscAABU
 aHVtYm5haWxzL3RodW1ibmFpbC5wbmdQSwECFAAUAAgACADIhtM20deZZ7EEAADTHAAADAAAAAAA
 AAAAAAAAAAAjJQAAc2V0dGluZ3MueG1sUEsBAhQAFAAIAAgAyIbTNoP3gpxPAQAArQcAABUAAAAA
 AAAAAAAAAAAADioAAE1FVEEtSU5GL21hbmlmZXN0LnhtbFBLBQYAAAAAEAAQACgEAACgKwAAAAA=</string> </value>
-        </item>
-        <item>
-            <key> <string>isIndexable</string> </key>
-            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>

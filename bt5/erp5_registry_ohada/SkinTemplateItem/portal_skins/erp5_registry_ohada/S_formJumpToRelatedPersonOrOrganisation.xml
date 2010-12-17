@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -145,10 +142,6 @@ return context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>S_formJumpToRelatedPersonOrOrganisation</string> </value>
-        </item>
-        <item>
-            <key> <string>isIndexable</string> </key>
-            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
