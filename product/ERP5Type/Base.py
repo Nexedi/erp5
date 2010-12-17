@@ -937,7 +937,9 @@ class Base( CopyContainer,
         portal_types = getToolByName(portal, 'portal_types', None)
         generated_bid = set()
         econtext = createExpressionContext(object=self, portal=portal)
-        for pid, ps in PropertySheet.__dict__.iteritems():
+        # Use 'items' instead of 'iteritems' because PropertySheet.__dict__ may
+        # be modified by another thread (that, for example, installs a BT).
+        for pid, ps in PropertySheet.__dict__.items():
           if pid[0] != '_':
             base_category_list = []
             for cat in getattr(ps, '_categories', ()):
