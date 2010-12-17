@@ -31,8 +31,10 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 
 from Products.ERP5.Document.MappedValue import MappedValue
+from Products.ERP5.Document.Amount import Amount
 
-class Path(MappedValue):
+
+class Path(MappedValue, Amount):
   """
     A Path defines a planning element. A path is the combination of
 
