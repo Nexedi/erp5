@@ -560,11 +560,11 @@ class BaseTemplateItem(Implicit, Persistent):
       # PythonScript covers both Zope Python scripts
       # and ERP5 Python Scripts
       if isinstance(obj, PythonScript):
-        # XXX forward compatibility: set to None instead of deleting '_code'
-        #     so that old BT code can import recent BT
-        obj._code = None
-        attr_set.update((#'func_code', 'func_defaults', '_code',
+        attr_set.update(('func_code', 'func_defaults', '_code',
                          '_lazy_compilation', 'Python_magic'))
+        for attr in 'errors', 'warnings', '_proxy_roles':
+          if not obj.__dict__.get(attr, 1):
+            delattr(obj, attr)
       #elif classname == 'SQL' and klass.__module__== 'Products.ZSQLMethods':
       #  attr_set.update(('_arg', 'template'))
       elif interfaces.IIdGenerator.providedBy(obj):

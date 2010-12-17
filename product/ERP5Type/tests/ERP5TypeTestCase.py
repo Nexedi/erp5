@@ -1271,7 +1271,7 @@ def optimize():
 
   # Delay the compilations of Python Scripts until they are really executed.
   from Products.PythonScripts.PythonScript import PythonScript
-  # In the future, Python Scripts will be exported without those 2 attributes:
+  # Python Scripts are exported without those 2 attributes:
   PythonScript.func_code = lazy_func_prop('func_code', None)
   PythonScript.func_defaults = lazy_func_prop('func_defaults', None)
 
@@ -1295,19 +1295,6 @@ def optimize():
       # It needs a _filepath, and has an acquisition wrapper.
       self._filepath = self.get_filepath()
   PythonScript._makeFunction = _makeFunction
-
-  # XXX Previous implementation of this 'optimize' function requires that
-  #     Python Scripts always contain up-to-date data for 'func_code' and
-  #     'func_defaults' properties, so make sure we always export them.
-  #     This compatibility code is not required for normal ERP5 instances
-  #     because scripts are compiled at BT installation.
-  from Products.ERP5.Document.BusinessTemplate import BaseTemplateItem
-  BaseTemplateItem_removeProperties = BaseTemplateItem.removeProperties
-  def removeProperties(self, obj, export):
-    if export and isinstance(obj, PythonScript):
-      obj.func_code # trigger compilation if needed
-    return BaseTemplateItem_removeProperties(self, obj, export)
-  BaseTemplateItem.removeProperties = removeProperties
 
   # Do not reindex portal types sub objects by default
   # We will probably disable reindexing for other types later
