@@ -7,33 +7,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_arg</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="Args" module="Shared.DC.ZRDB.Aqueduct"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>_data</string> </key>
-                        <value>
-                          <dictionary/>
-                        </value>
-                    </item>
-                    <item>
-                        <key> <string>_keys</string> </key>
-                        <value>
-                          <list/>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
             <key> <string>_col</string> </key>
             <value>
               <tuple/>
@@ -142,103 +115,6 @@ CREATE TABLE `catalog` (\n
   KEY `event_state` (`event_state`)\n
 ) TYPE=InnoDB;\n
 </string> </value>
-        </item>
-        <item>
-            <key> <string>template</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="__newobj__" module="copy_reg"/>
-                </klass>
-                <tuple>
-                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
-                </tuple>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>__name__</string> </key>
-                        <value> <string encoding="cdata"><![CDATA[
-
-<string>
-
-]]></string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_vars</string> </key>
-                        <value>
-                          <dictionary/>
-                        </value>
-                    </item>
-                    <item>
-                        <key> <string>globals</string> </key>
-                        <value>
-                          <dictionary/>
-                        </value>
-                    </item>
-                    <item>
-                        <key> <string>raw</string> </key>
-                        <value> <string># Host:\n
-# Database: test\n
-# Table: \'catalog\'\n
-#\n
-CREATE TABLE `catalog` (\n
-  `uid` BIGINT UNSIGNED NOT NULL,\n
-  `security_uid` INT UNSIGNED,\n
-  `owner` varbinary(255) NOT NULL default \'\',\n
-  `viewable_owner` varbinary(255) NOT NULL default \'\',\n
-  `path` varchar(255) NOT NULL default \'\',\n
-  `relative_url` varchar(255) NOT NULL default \'\',\n
-  `parent_uid` BIGINT UNSIGNED default \'0\',\n
-  `id` varchar(255) default \'\',\n
-  `description` text,\n
-  `title` varchar(255) default \'\',\n
-  `meta_type` varchar(255) default \'\',\n
-  `portal_type` varchar(255) default \'\',\n
-  `opportunity_state` varchar(255) default \'\',\n
-  `corporate_registration_code` varchar(255),\n
-  `ean13_code` varchar(255),\n
-  `validation_state` varchar(255) default \'\',\n
-  `simulation_state` varchar(255) default \'\',\n
-  `causality_state` varchar(255) default \'\',\n
-  `invoice_state` varchar(255) default \'\',\n
-  `payment_state` varchar(255) default \'\',\n
-  `event_state` varchar(255) default \'\',\n
-  `immobilisation_state` varchar(255) default \'\',\n
-  `reference` varchar(255) binary default \'\',\n
-  `grouping_reference` varchar(255) default \'\',\n
-  `source_reference` varchar(255) default \'\',\n
-  `destination_reference` varchar(255) default \'\',\n
-  `string_index` varchar(255),\n
-  `int_index` INT,\n
-  `float_index` real,\n
-  `has_cell_content` bool,\n
-  `creation_date` datetime,\n
-  `modification_date` datetime,\n
-  `indexation_timestamp` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,\n
-  PRIMARY KEY  (`uid`),\n
-  KEY `security_uid` (`security_uid`),\n
-  KEY `owner` (`owner`),\n
-  KEY `viewable_owner` (`viewable_owner`),\n
-  KEY `Parent` (`parent_uid`),\n
-  KEY `Path` (`path`),\n
-  KEY `Title` (`title`),\n
-  KEY `Reference` (`reference`),\n
-  KEY `relative_url` (`relative_url`),\n
-  KEY `Portal Type` (`portal_type`),\n
-  KEY `opportunity_state` (`opportunity_state`),\n
-  KEY `validation_state` (`validation_state`),\n
-  KEY `simulation_state` (`simulation_state`),\n
-  KEY `causality_state` (`causality_state`),\n
-  KEY `invoice_state` (`invoice_state`),\n
-  KEY `payment_state` (`payment_state`),\n
-  KEY `event_state` (`event_state`)\n
-) TYPE=InnoDB;\n
-</string> </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
         </item>
         <item>
             <key> <string>title</string> </key>

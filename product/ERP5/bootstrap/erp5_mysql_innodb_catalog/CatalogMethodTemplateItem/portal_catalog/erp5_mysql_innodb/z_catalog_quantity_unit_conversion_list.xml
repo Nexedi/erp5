@@ -7,49 +7,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_arg</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="Args" module="Shared.DC.ZRDB.Aqueduct"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>_data</string> </key>
-                        <value>
-                          <dictionary>
-                            <item>
-                                <key> <string>getQuantityUnitConversionDefinitionRowList</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                            <item>
-                                <key> <string>uid</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                          </dictionary>
-                        </value>
-                    </item>
-                    <item>
-                        <key> <string>_keys</string> </key>
-                        <value>
-                          <list>
-                            <string>uid</string>
-                            <string>getQuantityUnitConversionDefinitionRowList</string>
-                          </list>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
             <key> <string>arguments_src</string> </key>
             <value> <string>uid\r\n
 getQuantityUnitConversionDefinitionRowList\r\n
@@ -107,88 +64,6 @@ VALUES\n
 </dtml-let>
 
 ]]></string> </value>
-        </item>
-        <item>
-            <key> <string>template</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="__newobj__" module="copy_reg"/>
-                </klass>
-                <tuple>
-                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
-                </tuple>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>__name__</string> </key>
-                        <value> <string encoding="cdata"><![CDATA[
-
-<string>
-
-]]></string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_vars</string> </key>
-                        <value>
-                          <dictionary/>
-                        </value>
-                    </item>
-                    <item>
-                        <key> <string>globals</string> </key>
-                        <value>
-                          <dictionary/>
-                        </value>
-                    </item>
-                    <item>
-                        <key> <string>raw</string> </key>
-                        <value> <string encoding="cdata"><![CDATA[
-
-<dtml-let quantity_unit_conversion_dict="{}" value_list="[]">\n
-  <dtml-in getQuantityUnitConversionDefinitionRowList\n
- prefix="loop">\n
-    <dtml-if loop_item>\n
-      <dtml-comment>\n
-       Make sure that we get no duplicates, and also aggregate the uids of the modified resources for deletion\n
-      </dtml-comment>\n
-      <dtml-in loop_item prefix="inner">\n
-        <dtml-call expr="quantity_unit_conversion_dict.setdefault(inner_item[\'resource_uid\'], {}).setdefault(inner_item[\'quantity_unit_uid\'], inner_item)">\n
-      </dtml-in>\n
-    </dtml-if>\n
-  </dtml-in>\n
-\n
-<dtml-if quantity_unit_conversion_dict>\n
-DELETE FROM `quantity_unit_conversion` WHERE\n
-  <dtml-sqltest "quantity_unit_conversion_dict.keys()" column="resource_uid" type="int" multiple>;\n
-\n
-\n
-  <dtml-var sql_delimiter>\n
-\n
-<dtml-in "quantity_unit_conversion_dict.values()" prefix="loop">\n
-  <dtml-call "value_list.extend(loop_item.values())">\n
-</dtml-in>\n
-\n
-INSERT INTO `quantity_unit_conversion`\n
-VALUES\n
-    <dtml-in "value_list" prefix="loop">\n
-(\n
-  <dtml-sqlvar expr="loop_item[\'uid\']" type="int" optional>,\n
-  <dtml-sqlvar expr="loop_item[\'resource_uid\']" type="int">,\n
-  <dtml-sqlvar expr="loop_item[\'quantity_unit_uid\']" type="int">,\n
-  <dtml-sqlvar expr="loop_item[\'quantity\']" type="float">\n
-)\n
-<dtml-unless sequence-end>,</dtml-unless>\n
-    </dtml-in>\n
-</dtml-if>\n
-\n
-</dtml-let>
-
-]]></string> </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -7,42 +7,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_arg</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="Args" module="Shared.DC.ZRDB.Aqueduct"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>_data</string> </key>
-                        <value>
-                          <dictionary>
-                            <item>
-                                <key> <string>row_dict_dict_list</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                          </dictionary>
-                        </value>
-                    </item>
-                    <item>
-                        <key> <string>_keys</string> </key>
-                        <value>
-                          <list>
-                            <string>row_dict_dict_list</string>
-                          </list>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
             <key> <string>allow_simple_one_argument_traversal</string> </key>
             <value>
               <none/>
@@ -119,77 +83,6 @@ VALUES\n
 </dtml-let>
 
 ]]></string> </value>
-        </item>
-        <item>
-            <key> <string>template</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="__newobj__" module="copy_reg"/>
-                </klass>
-                <tuple>
-                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
-                </tuple>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>__name__</string> </key>
-                        <value> <string encoding="cdata"><![CDATA[
-
-<string>
-
-]]></string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_vars</string> </key>
-                        <value>
-                          <dictionary/>
-                        </value>
-                    </item>
-                    <item>
-                        <key> <string>globals</string> </key>
-                        <value>
-                          <dictionary/>
-                        </value>
-                    </item>
-                    <item>
-                        <key> <string>raw</string> </key>
-                        <value> <string encoding="cdata"><![CDATA[
-
-<dtml-let row_list="[]">\n
-<dtml-in row_dict_dict_list prefix="outer">\n
-DELETE FROM `transformation` WHERE\n
-  <dtml-sqltest expr="outer_item[\'uid\']" column="uid" type="int">\n
-  AND\n
-  <dtml-sqltest expr="outer_item[\'variation_text\']" column="variation_text" type="string">;\n
-<dtml-var sql_delimiter>\n
-<dtml-call "row_list.extend(outer_item[\'row_dict_list\'])">\n
-</dtml-in>\n
-\n
-<dtml-if "len(row_list)>0">\n
-<dtml-var sql_delimiter>\n
-\n
-INSERT INTO `transformation`\n
-VALUES\n
-    <dtml-in row_list prefix="loop">\n
-(\n
-  <dtml-sqlvar expr="loop_item[\'uid\']" type="int">,\n
-  <dtml-sqlvar expr="loop_item[\'variation_text\']" type="string">,\n
-  <dtml-sqlvar expr="loop_item[\'transformed_uid\']" type="int">,\n
-  <dtml-sqlvar expr="loop_item[\'transformed_variation_text\']" type="string">,\n
-  <dtml-sqlvar expr="loop_item[\'quantity\']" type="float">\n
-)\n
-<dtml-unless sequence-end>,</dtml-unless>\n
-    </dtml-in>\n
-</dtml-if>\n
-</dtml-let>
-
-]]></string> </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
         </item>
         <item>
             <key> <string>title</string> </key>

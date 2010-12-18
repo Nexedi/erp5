@@ -7,56 +7,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_arg</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="Args" module="Shared.DC.ZRDB.Aqueduct"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>_data</string> </key>
-                        <value>
-                          <dictionary>
-                            <item>
-                                <key> <string>parent_uid</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                            <item>
-                                <key> <string>query</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                            <item>
-                                <key> <string>sort_on</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                          </dictionary>
-                        </value>
-                    </item>
-                    <item>
-                        <key> <string>_keys</string> </key>
-                        <value>
-                          <list>
-                            <string>sort_on</string>
-                            <string>query</string>
-                            <string>parent_uid</string>
-                          </list>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
             <key> <string>allow_simple_one_argument_traversal</string> </key>
             <value>
               <none/>
@@ -121,63 +71,6 @@ SELECT * FROM catalog WHERE <dtml-sqltest parent_uid op=eq column=catalog.parent
 </dtml-if>
 
 ]]></string> </value>
-        </item>
-        <item>
-            <key> <string>template</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="__newobj__" module="copy_reg"/>
-                </klass>
-                <tuple>
-                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
-                </tuple>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>__name__</string> </key>
-                        <value> <string encoding="cdata"><![CDATA[
-
-<string>
-
-]]></string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_vars</string> </key>
-                        <value>
-                          <dictionary/>
-                        </value>
-                    </item>
-                    <item>
-                        <key> <string>globals</string> </key>
-                        <value>
-                          <dictionary/>
-                        </value>
-                    </item>
-                    <item>
-                        <key> <string>raw</string> </key>
-                        <value> <string encoding="cdata"><![CDATA[
-
-<dtml-if sort_on>\n
-<dtml-if query>\n
-SELECT DISTINCT catalog.* FROM catalog, category, roles_and_users WHERE catalog.uid=category.uid AND catalog.uid=roles_and_users.uid AND <dtml-var query> AND <dtml-sqltest parent_uid op=eq column=catalog.parent_uid type=int> ORDER BY <dtml-var sort_on>\n
-<dtml-else>\n
-SELECT * FROM catalog WHERE <dtml-sqltest parent_uid op=eq column=catalog.parent_uid type=int> ORDER BY <dtml-var sort_on>\n
-</dtml-if>\n
-<dtml-else>\n
-<dtml-if query>\n
-SELECT DISTINCT catalog.* FROM catalog, category, roles_and_users WHERE <dtml-sqltest parent_uid op=eq column=catalog.parent_uid type=int> AND catalog.uid=category.uid AND catalog.uid=roles_and_users.uid AND <dtml-var query>\n
-<dtml-else>\n
-SELECT * FROM catalog WHERE <dtml-sqltest parent_uid op=eq column=catalog.parent_uid type=int>\n
-</dtml-if>\n
-</dtml-if>
-
-]]></string> </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
