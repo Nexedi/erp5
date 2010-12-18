@@ -127,28 +127,32 @@ class Immutable:
         return self.value
 
 class String(Scalar):
+
+    encoding = None
+
     def __init__(self, v, mapping, encoding=''):
-        encoding, v = convert(v)
-        self.encoding=encoding
         self._v=v
         self.mapping = mapping
+
     def __str__(self,indent=0,map_value=0):
-        v = self.value()
-        if map_value:
-            # This is used when strings represent references which need to be converted
-            if self.encoding == 'base64':
-                v = self.mapping.convertBase64(v)
+        encoding = self.encoding
+        if encoding is None:
+            # lazy conversion
+            if map_value:
+                # This is used when strings represent references which need to
+                # be converted.
+                encoding = 'base64'
+                v = base64.encodestring(self._v)[:-1]
+                self._v = self.mapping.convertBase64(v)
             else:
-                # Make sure we never produce this kind of xml output
-                # XXX: In fact, this can happen when DemoStorage is used
-                #      See notes in XMLExportImport.exportXML
-                raise NotImplementedError
+                encoding, self._v = convert(self._v)
+            self.encoding = encoding
+        v = self.value()
         id = ''
-        encoding=''
-        if hasattr(self, 'encoding'):
-            if self.encoding != 'repr':
-                # JPS repr is default encoding
-                encoding=' encoding="%s"' % self.encoding
+        if encoding == 'repr':
+            encoding = '' # JPS repr is default encoding
+        else:
+            encoding = ' encoding="%s"' % encoding
         name=string.lower(self.__class__.__name__)
         result = '<%s%s%s>%s</%s>' % (name, id, encoding, v, name)
         if hasattr(self, 'id'):
