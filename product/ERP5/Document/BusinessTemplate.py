@@ -565,8 +565,8 @@ class BaseTemplateItem(Implicit, Persistent):
         for attr in 'errors', 'warnings', '_proxy_roles':
           if not obj.__dict__.get(attr, 1):
             delattr(obj, attr)
-      #elif classname == 'SQL' and klass.__module__== 'Products.ZSQLMethods':
-      #  attr_set.update(('_arg', 'template'))
+      elif classname == 'SQL' and klass.__module__== 'Products.ZSQLMethods.SQL':
+        attr_set.update(('_arg', 'template'))
       elif interfaces.IIdGenerator.providedBy(obj):
         attr_set.update(('last_max_id_dict', 'last_id_dict'))
 
