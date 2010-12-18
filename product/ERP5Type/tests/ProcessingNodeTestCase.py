@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-import base64, errno, select, socket, time
+import base64, errno, select, socket, sys, time
 from threading import Thread
 import Lifetime
 import transaction
 from BTrees.OIBTree import OIBTree
 from Testing import ZopeTestCase
+from zLOG import LOG, ERROR
 from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
 from Products.ERP5Type.tests import backportUnittest
 from Products.ERP5Type.tests.utils import createZServer
@@ -190,6 +191,11 @@ class ProcessingNodeTestCase(backportUnittest.TestCase, ZopeTestCase.TestCase):
           portal = self.app[self.app.test_portal_name]
         except (AttributeError, KeyError):
           continue
-        portal.portal_activities.process_timer(None, None)
+        try:
+          portal.portal_activities.process_timer(None, None)
+        except (KeyboardInterrupt, SystemExit): # BACK: Not needed for
+          raise                                 #       Python >= 2.5
+        except Exception:
+          LOG('Invoking Activity Tool', ERROR, '', error=sys.exc_info())
     except KeyboardInterrupt:
       pass
