@@ -51,7 +51,6 @@
                                                   \'jquery/ui/js/jquery-ui.js\',\n
                                                   \'jquery/plugin/jqcharts/jgcharts.min.js\',\n
                                                   \'jquery/plugin/colorpicker/jquery.colorPicker.min.js\',\n
-                                                  \'http://jqueryui.com/themeroller/themeswitchertool/\',\n
                                                   \'jquery/plugin/elastic/jquery.elastic.min.js\',\n
                                                   \'jquery/plugin/sheet/jquery.sheet.erp5.js\',\n
 ];\n

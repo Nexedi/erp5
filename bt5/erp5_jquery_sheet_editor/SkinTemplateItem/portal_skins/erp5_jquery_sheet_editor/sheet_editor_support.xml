@@ -46,7 +46,6 @@
 <script type="text/javascript" src="jquery/ui/js/jquery-ui.js"></script>\n
 <script type="text/javascript" src="jquery/plugin/jqcharts/jgcharts.min.js"></script>\n
 <script type="text/javascript" src="jquery/plugin/colorpicker/jquery.colorPicker.min.js"></script>\n
-<script type="text/javascript" src="http://jqueryui.com/themeroller/themeswitchertool/"></script>\n
 <script type="text/javascript" src="jquery/plugin/elastic/jquery.elastic.min.js"></script>\n
                         \n
 <script type="text/javascript">\n
@@ -60,8 +59,6 @@ $(function() {\n
    inlineMenu: inlineMenu($.sheet.instance),\n
    urlGet: \'./getTextContent\',\n
  });\n
-\n
- $(\'#themeSwitcher\').themeswitcher();\n
  });\n
 \n
  function inlineMenu(instance) {\n
@@ -101,7 +98,6 @@ $(function() {\n
  }\n
 </script>\n
 <div id="jQuerySheet0" style="height: 400px;"></div>\n
-<span id="themeSwitcher"></span>\n
 <span id="inlineMenu" style="display: none;">\n
 <span>\n
 <a href="#" onclick="sheetInstance.controlFactory.addRow(); return false;" title="Insert Row After Selected">\n
