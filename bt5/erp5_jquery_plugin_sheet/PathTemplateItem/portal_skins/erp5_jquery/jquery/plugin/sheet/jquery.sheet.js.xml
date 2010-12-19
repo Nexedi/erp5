@@ -95,7 +95,7 @@ jQuery.fn.extend({\n
       caseInsensitive:  false,              //bool, this makes all the calculations engine user functions case sensitive/insensitive\n
       resizable:      true,             //bool, makes the $(obj).sheet(); object resizeable, also adds a resizable formula textarea at top of sheet\n
       autoFiller:     false,              //bool, the little guy that hangs out to the bottom right of a selected cell, users can click and drag the value to other cells\n
-      minSize:      {rows: 15, cols: 5},      //object - {rows: int, cols: int}, Makes the sheet stay at a certain size when loaded in edit mode, to make modification more productive\n
+      minSize:      {rows: 1, cols: 1},      //object - {rows: int, cols: int}, Makes the sheet stay at a certain size when loaded in edit mode, to make modification more productive\n
       forceColWidthsOnStartup:true            //bool, makes cell widths load from pre-made colgroup/col objects, use this if you plan on making the col items, makes widths more stable on startup\n
     }, settings);\n
     \n
