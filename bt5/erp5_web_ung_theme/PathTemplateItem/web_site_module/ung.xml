@@ -159,6 +159,10 @@
             <value> <string>erp5_web_ung_content_layout</string> </value>
         </item>
         <item>
+            <key> <string>custom_render_method_id</string> </key>
+            <value> <string>WebSection_renderer</string> </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value>
               <none/>

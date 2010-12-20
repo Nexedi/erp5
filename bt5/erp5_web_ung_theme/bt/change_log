@@ -1,3 +1,7 @@
+2010-12-20 gabriel
+* Initial implementation to share documents in UNG.
+* Added redirect to be possible open the document with the key.
+
 2010-12-16 gabriel
 * Implemented feature to change the state of Document via UNG Theme
 
