@@ -74,12 +74,6 @@
   <td>Votre page d\'accueil est en cours de préparation</td>\n
   <td></td>\n
 </tr>\n
-<tr>\n
-  <td>waitForTextPresent</td>\n
-  <td>Cet onglet ne contient aucun gadget</td>\n
-  <td></td>\n
-</tr>\n
-\n
 <span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities"> Wait for activities</span>\n
 <tr>\n
   <td>openAndWait</td>\n
