@@ -246,7 +246,7 @@ class EssendexGateway(XMLObject):
 
       #Create the new sms in activities
       module = self.getDefaultModule("Short Message")
-      module.activate(activity='SQLQueue').EventModule_pushNewSMS(
+      module.activate(activity='SQLQueue').SMSTool_pushNewSMS(
                               message_id=xml['MessageId'],
                               sender=parsePhoneNumber(xml['From']),
                               recipient=parsePhoneNumber(xml['To']),
