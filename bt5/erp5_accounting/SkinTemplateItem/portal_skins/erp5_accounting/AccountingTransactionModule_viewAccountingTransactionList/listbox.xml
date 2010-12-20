@@ -576,7 +576,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:[(\'section_category\', here.portal_preferences.getPreferredAccountingTransactionSectionCategory()), (\'section_category_strict\', here.portal_preferences.getPreferredAccountingSectionCategoryStrict())]</string> </value>
+            <value> <string>python:[(\'section_category\', preferences.getPreferredAccountingTransactionSectionCategory()), (\'section_category_strict\', preferences.getPreferredAccountingSectionCategoryStrict())]</string> </value>
         </item>
       </dictionary>
     </pickle>
