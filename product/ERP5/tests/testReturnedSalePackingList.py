@@ -33,7 +33,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
-from testPackingList import TestPackingListMixin
+from Products.ERP5.tests.testPackingList import TestPackingListMixin
 from DateTime import DateTime
 from Products.ERP5Type.Errors import UnsupportedWorkflowMethod 
 from Products.ERP5.tests.utils import newSimulationExpectedFailure
