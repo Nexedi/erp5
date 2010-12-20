@@ -873,7 +873,19 @@ a#loading_message {\n
 \n
 iframe#field_my_text_content___Frame {\n
   height: 489px !important;\n
-}
+}\n
+\n
+div#login_form {\n
+  font-family: Arial,Helvetica,sans-serif;\n
+  font-size: 12px;\n
+  margin: 0;\n
+  padding: 0;\n
+}\n
+\n
+div#login_form input {\n
+    vertical-align: middle; \n
+}\n
+
 
 ]]></string> </value>
         </item>

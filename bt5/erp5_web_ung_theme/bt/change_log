@@ -1,4 +1,5 @@
 2010-12-20 gabriel
+* Added page to Login and script to Logout
 * Initial implementation to share documents in UNG.
 * Added redirect to be possible open the document with the key.
 

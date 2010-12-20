@@ -264,6 +264,15 @@ $(document).ready(function(){\n
    event.preventDefault();\n
    showNotImplementedMessage("a#left_message");\n
  });\n
+ $("a#login").click(function(event){\n
+   event.preventDefault();\n
+   $("div.header-left div.field input, div.main-right, div.main-left").hide();\n
+   if ($("div#login_form").html() == null){\n
+     $.get("WebSection_loginDialog", function(data){\n
+       $("div.header-left fieldset.widget").append("<p>" + data + "</p>")\n
+     });\n
+   }\n
+ });\n
  return false;\n
 });
 

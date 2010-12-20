@@ -36,19 +36,14 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<tal:block tal:define="website here/getWebSiteValue;\n
-                       enctype string:multipart/form-data;\n
-                       portal_path python:website.absolute_url();">\n
- <a id="right_message">Not Implemented yet</a>\n
- <tal:block tal:condition="here/portal_membership/isAnonymousUser">\n
-   <a id="login" tal:attributes="href string: #">Sign in</a>\n
-  </tal:block>\n
- <tal:block tal:condition="python:not here.portal_membership.isAnonymousUser()">\n
-   <a tal:content="here/portal_membership/getAuthenticatedMember"/>\n
- </tal:block>\n
- | <a id="settings" href="#">Settings</a> | <a id="help" href="#">Help</a> |\n
- <a tal:attributes="href string:${portal_path}/WebSite_logout">Sign out</a>\n
-</tal:block>
+<div id="login_form">\n
+<h4>Log in</h4>\n
+<label for="name" class="required">Name</label><br/>\n
+<input type="text" name="__ac_name" id="name" tal:attributes="value python: request.get(\'__ac_name\') or \'\'" /><br/>\n
+<label for="password">Password</label><br/>\n
+<input type="password" name="__ac_password" id="password" /><br/>\n
+<input type="submit" name="logged_in:method" class="submit" value="Login">\n
+</div>
 
 ]]></unicode> </value>
         </item>
@@ -62,7 +57,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSection_viewUserNavigationWidget</string> </value>
+            <value> <string>WebSection_loginDialog</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
