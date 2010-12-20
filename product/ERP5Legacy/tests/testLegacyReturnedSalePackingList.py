@@ -33,10 +33,9 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
-from testPackingList import TestPackingListMixin
+from testLegacyPackingList import TestPackingListMixin
 from DateTime import DateTime
 from Products.ERP5Type.Errors import UnsupportedWorkflowMethod 
-from Products.ERP5.tests.utils import newSimulationExpectedFailure
 
 class ReturnedSalePackingListMixin(TestPackingListMixin):
   """Mixing class with steps to test returned sale packing lists.
@@ -432,7 +431,6 @@ class TestReturnedSalePackingList(ReturnedSalePackingListMixin, ERP5TypeTestCase
   run_all_test = 1
   quiet = 0
 
-  @newSimulationExpectedFailure
   def test_01_ReturnedSalePackingListWithInventory(self, quiet=quiet,
                                                    run=run_all_test):
     """
@@ -460,7 +458,6 @@ class TestReturnedSalePackingList(ReturnedSalePackingListMixin, ERP5TypeTestCase
     sequence_list.play(self, quiet=quiet)
 
 
-  @newSimulationExpectedFailure
   def test_02_ReturnedSalePackingListWorkflow(self, quiet=quiet,
                                                    run=run_all_test):
     """
@@ -490,7 +487,6 @@ class TestReturnedSalePackingList(ReturnedSalePackingListMixin, ERP5TypeTestCase
     sequence_list.play(self, quiet=quiet)
     
     
-  @newSimulationExpectedFailure
   def test_03_ReturnedSalePackingListWorkflowFail(self, quiet=quiet,
                                                    run=run_all_test):
     """
