@@ -36,6 +36,7 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 from DateTime import DateTime
 from zLOG import LOG
 from Products.ERP5.Document.ImmobilisationMovement import UNIMMOBILISING_METHOD, NO_CHANGE_METHOD
+from Products.ERP5.tests.utils import newSimulationExpectedFailure
 
 
 class TestImmobilisationMixin(ERP5TypeTestCase):
@@ -3617,8 +3618,8 @@ class TestImmobilisation(TestImmobilisationMixin):
                         'group/group A',
                     preferred_accounting_transaction_currency=\
                         'currency_module/EUR')
-    wf_tool = self.getWorkflowTool()
-    wf_tool.doActionFor(preference,'enable_action',wf_id='preference_workflow')
+    if preference.getPreferenceState() == 'disabled':
+      preference.enable()
     transaction.commit()
     self.tic()
     # Now we can check several Accounting methods
@@ -3636,6 +3637,7 @@ class TestImmobilisation(TestImmobilisationMixin):
     self.assertEquals(5000.0,account.AccountModule_getTotalSourceDebit(brain=account))
     self.assertEquals(0.0,account.AccountModule_getTotalSourceCredit(brain=account))
 
+  @newSimulationExpectedFailure
   def test_19_TestAccountingBuildingAndDivergence(self, quiet=0, run=run_all_test):
     if not run: return
     if not quiet:
@@ -3729,6 +3731,7 @@ class TestImmobilisation(TestImmobilisationMixin):
                   parameter_dict = parameter_dict,
                   destination_section = self.getOrganisationModule()["A"])
 
+  @newSimulationExpectedFailure
   def test_20_TestAccountingAcceptDecisionSolver(self, quiet=0, run=run_all_test):
     if not run: return
     if not quiet:
