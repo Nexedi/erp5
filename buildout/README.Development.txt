@@ -13,7 +13,7 @@ Create your working directory ~/buildout.devel:
 
 Now checkout the buildout:
 
-~/erp5.buildout/parts/subversion/bin/svn https://svn.erp5.org/repos/public/erp5/trunk/ ~/buildout.devel/checkout
+~/erp5.buildout/parts/subversion/bin/svn https://svn.erp5.org/repos/public/erp5/trunk/buildout/ ~/buildout.devel/checkout
 
 Start simple http server there:
 
