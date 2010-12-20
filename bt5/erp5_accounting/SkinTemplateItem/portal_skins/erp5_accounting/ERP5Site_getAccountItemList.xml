@@ -1,0 +1,184 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>\'\'\'Returns all validated accounts + all accounts used by this group on existing\n
+movements.\n
+\n
+\'\'\'\n
+from Products.ERP5Type.Cache import CachingMethod\n
+\n
+portal = context.getPortalObject()\n
+\n
+def getAccountItemList(section_category,\n
+                       section_category_strict,\n
+                       from_date,\n
+                       lang):\n
+\n
+  def sorted(seq, key):\n
+    seq = seq[::]\n
+    seq.sort(key=key)\n
+    return seq\n
+\n
+  account_dict = dict()\n
+  for account in portal.account_module.searchFolder(\n
+                            portal_type=\'Account\',\n
+                            validation_state=(\'validated\',), ):\n
+    account = account.getObject()\n
+\n
+    account_dict[account.getUid()] = [\n
+        account.Account_getFormattedTitle(),\n
+        account.getRelativeUrl(), ]\n
+\n
+  search_kw = dict(\n
+      portal_type=portal.getPortalAccountingMovementTypeList(),\n
+      ignore_group_by=True,\n
+      group_by_node=True,)\n
+  if from_date:\n
+    search_kw[\'from_date\'] = from_date\n
+  if section_category_strict:\n
+    search_kw[\'section_category_strict_membership\'] = section_category\n
+  else:\n
+    search_kw[\'section_category\'] = section_category\n
+\n
+  # add to this the accounts that have been used in accounting transactions.\n
+  for brain in portal.portal_simulation.getCurrentInventoryList( **search_kw ):\n
+    if brain.node_uid and brain.node_uid not in account_dict:\n
+      account = portal.portal_catalog.getObject(brain.node_uid)\n
+      account_dict[brain.node_uid] = [\n
+        account.Account_getFormattedTitle(),\n
+        account.getRelativeUrl(), ]\n
+\n
+  return [(\'\', \'\')] + sorted(account_dict.values(),\n
+                key=lambda item: item[1])\n
+\n
+getAccountItemList = CachingMethod(getAccountItemList,\n
+                                   id=script.getId(),\n
+                                   cache_factory=\'erp5_content_long\')\n
+\n
+return getAccountItemList(section_category,\n
+                          section_category_strict,\n
+                          lang=portal.Localizer.get_selected_language(),\n
+                          from_date=from_date)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>section_category, section_category_strict, from_date</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>3</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>section_category</string>
+                            <string>section_category_strict</string>
+                            <string>from_date</string>
+                            <string>Products.ERP5Type.Cache</string>
+                            <string>CachingMethod</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>getAccountItemList</string>
+                            <string>script</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Site_getAccountItemList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

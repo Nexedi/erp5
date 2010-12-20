@@ -265,13 +265,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -284,19 +278,13 @@
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.AccountingTransactionLine_getNodeItemList()</string> </value>
+            <value> <string>python: context.ERP5Site_getAccountItemList(section_category=request.get(\'your_section_category\', preferences.getPreferredAccountingTransactionSectionCategory()), section_category_strict=request.get(\'your_section_category_strict\', preferences.getPreferredAccountingSectionCategoryStrict()), from_date=request.get(\'your_from_date\', preferences.getPreferredAccountingTransactionFromDate()))</string> </value>
         </item>
       </dictionary>
     </pickle>
