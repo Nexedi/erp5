@@ -76,19 +76,16 @@ payment_value = context.restrictedTraverse(payment)\n
 if not payment_value.BankAccount_isOpened():\n
   return {\'error_code\':2} # closed account\n
 \n
-resource = payment_value.getPriceCurrencyValue()\n
-\n
-if resource is None :\n
-  raise AttributeError, \'No currency defined on %s\' % payment\n
-\n
-# Next, check the balance of the account\n
-account_balance = resource.getAvailableInventory(payment=payment, src__=src__)\n
-if src__ :\n
-  return account_balance \n
+account_balance = payment_value.BankAccount_getAvailablePosition(src__=src__)\n
+if src__:\n
+  return account_balance\n
+# XXX: BankAccount_getAvailablePosition returns position as a string for some reason...\n
+account_balance = float(account_balance)\n
 \n
 if account_balance - quantity < 0 :\n
   return {\'error_code\':1, \'balance\':account_balance} # insufficient balance\n
 \n
+payment_value.serialize()\n
 return {\'error_code\':0, \'balance\':account_balance} # ok\n
 
 
@@ -148,10 +145,8 @@ return {\'error_code\':0, \'balance\':account_balance} # ok\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>payment_value</string>
-                            <string>resource</string>
-                            <string>None</string>
-                            <string>AttributeError</string>
                             <string>account_balance</string>
+                            <string>float</string>
                           </tuple>
                         </value>
                     </item>
