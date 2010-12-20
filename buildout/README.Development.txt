@@ -27,6 +27,7 @@ Now create directory to simulate extending over the network:
 And create profile there:
 
   $ cat > ~/buildout.devel/work/buildout.cfg
+[buildout]
 extends = http://localhost:9000/buildout-2.12.cfg
 extends-cache = extends-cache
 ^D
