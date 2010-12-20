@@ -95,7 +95,7 @@ class EssendexGateway(XMLObject):
     security.declarePrivate("_transformPhoneUrlToGatewayNumber")
     def _transformPhoneUrlToGatewayNumber(self,phone):
       """Transform url of phone number to a valid phone number (gateway side)"""
-      return phone.replace('tel:', '').replace('+','')
+      return phone.replace('tel:', '').replace('+','').replace('(0)','').replace('-','')
 
     security.declareProtected(Permissions.ManagePortal, 'send')
     def send(self, text,recipient,sender=None, message_type="text",test=False,**kw):
