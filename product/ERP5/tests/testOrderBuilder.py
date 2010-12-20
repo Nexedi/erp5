@@ -33,8 +33,8 @@ import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
 from Products.ERP5Type.tests.Sequence import SequenceList
-
 from Products.ERP5.tests.testOrder import TestOrderMixin
+from Products.ERP5.tests.utils import newSimulationExpectedFailure
 
 class TestOrderBuilderMixin(TestOrderMixin):
 
@@ -374,6 +374,7 @@ class TestOrderBuilder(TestOrderBuilderMixin, ERP5TypeTestCase):
   def getTitle(self):
     return "Order Builder"
 
+  @newSimulationExpectedFailure
   def test_01_simpleOrderBuilder(self, quiet=0, run=run_all_test):
     """
     Test simple Order Builder
@@ -391,6 +392,7 @@ class TestOrderBuilder(TestOrderBuilderMixin, ERP5TypeTestCase):
     sequence_list.addSequenceString(self.common_sequence_string)
     sequence_list.play(self)
 
+  @newSimulationExpectedFailure
   def test_01a_simpleOrderBuilderVariatedResource(self, quiet=0, run=run_all_test):
     """
     Test simple Order Builder for Variated Resource
@@ -431,6 +433,7 @@ class TestOrderBuilder(TestOrderBuilderMixin, ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  @newSimulationExpectedFailure
   def test_02_maxDelayResourceOrderBuilder(self, quiet=0, run=run_all_test):
     """
     Test max_delay impact on generated order start date
@@ -453,6 +456,7 @@ class TestOrderBuilder(TestOrderBuilderMixin, ERP5TypeTestCase):
     sequence_list.addSequenceString(self.common_sequence_string)
     sequence_list.play(self)
 
+  @newSimulationExpectedFailure
   def test_03_minFlowResourceOrderBuilder(self, quiet=0, run=run_all_test):
     """
     Test min_flow impact on generated order line quantity
