@@ -3256,7 +3256,7 @@ def urlnormNormaliseUrl(url, base_url=None):
   """
   try:
     url = urlnorm.norm(url)
-  except AttributeError:
+  except (AttributeError, urlnorm.InvalidUrl):
     # This url is not valid, a better Exception will
     # be raised
     return
