@@ -245,6 +245,7 @@ user_pref("capability.principal.codebase.p1.subjectName", "");""" % \
       os.environ['DISPLAY'] = ':%s' %xvfb_display
     os.environ['MOZ_NO_REMOTE'] = '1'
     os.environ['HOME'] = self.profile_dir
+    os.environ['LC_ALL'] = 'C'
     # check if old zelenium or new zelenium
     try:
       urllib2.urlopen("%s/portal_tests/core/scripts/selenium-version.js" % self.portal_url)
