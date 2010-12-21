@@ -70,11 +70,8 @@ class TestCommerce(ERP5TypeTestCase):
   > implement Person_getApplicableDiscountList (actually just return None)
   > implement Person_getApplicableTaxList (actually always return a tax of 20%)
   > SaleOrder_externalPaymentHandler is totally empty
-  > SaleOrder_finalizeShopping doesnt check if the payment is successful or not
   > Fix proxy for SaleOrder_finalizeShopping anonym and normal user cant use it
   > SaleOrder_getAvailableShippingResourceList have hardcoded
-  > SaleOrder_isConsistent the usage must be more generic or rename it
-  > SaleOrder_isShippingRequired this script just return 1 ...
 
   Not tested :
   Person_getApplicableDiscountList
@@ -120,6 +117,7 @@ class TestCommerce(ERP5TypeTestCase):
     product_module = self.portal.product_module
     currency_module = self.portal.currency_module
     sale_order_module = self.portal.sale_order_module
+    condition_module = self.portal.sale_trade_condition_module
     currency_module.manage_permission('Access contents information',
                                      roles=['Anonymous'], acquire=0)
     product_module.manage_permission('Access contents information',
@@ -159,6 +157,12 @@ class TestCommerce(ERP5TypeTestCase):
     shipping.setProductLine('shipping')
     shipping.validate()
     shipping.publish()
+    
+    # add default trade condition
+    condition = condition_module.newContent(id="default_trade_condition",
+                                            portal_type="Sale Trade Condition",
+                                            specialise="business_process_module/erp5_default_business_process")
+    condition.validate()
 
     # validate default order rule
     rule = self.getRule(reference='default_order_rule')
@@ -184,6 +188,7 @@ class TestCommerce(ERP5TypeTestCase):
     self.clearModule(self.portal.product_module)
     self.clearModule(self.portal.sale_order_module)
     self.clearModule(self.portal.currency_module)
+    self.clearModule(self.portal.sale_trade_condition_module)
     self.portal.portal_caches.clearAllCache()
 
   def createDefaultOrganisation(self):
@@ -351,6 +356,12 @@ class TestCommerce(ERP5TypeTestCase):
     order_line.setQuantity(1)
     transaction.commit()
     self.tic()
+    
+  def doFakePayment(self):
+    """Simulate a payment"""
+    
+    #Set the shopping cart payed
+    self.website.SaleOrder_setShoppingCartBuyer()
 
   def test_01_AddResourceToShoppingCart(self):
     """
@@ -588,7 +599,6 @@ class TestCommerce(ERP5TypeTestCase):
     # Check if the Shopping Cart is empty
     self.assertEquals(0, len(self.website.SaleOrder_getShoppingCartItemList()))
 
-  @newSimulationExpectedFailure
   def test_11_finalizeShopping(self):
     """
       Test the SaleOrder_finalizeShopping script
@@ -603,7 +613,10 @@ class TestCommerce(ERP5TypeTestCase):
 
     self.assertEquals(2, len(self.website.SaleOrder_getShoppingCartItemList()))
     self.assertEquals(0, len(self.portal.sale_order_module.contentValues()))
-
+  
+    #Simulate payment
+    self.doFakePayment()
+    
     self.website.SaleOrder_finalizeShopping()
     transaction.commit()
     self.tic()
@@ -682,7 +695,6 @@ class TestCommerce(ERP5TypeTestCase):
     self.assertEquals(currency.getShortTitle(),
                  self.website.WebSite_getShoppingCartDefaultCurrencySymbol())
 
-  @newSimulationExpectedFailure
   def test_16_simulatePaypalPayment(self):
     """
       Test all the scripts related to paypal
@@ -726,9 +738,8 @@ class TestCommerce(ERP5TypeTestCase):
     #6 : paypal step 3 : check if this token is confirmed by paypal
     error = self.website.WebSection_checkPaypalIdentification()
     self.assertEquals(error, None)
-
     url_location = request.RESPONSE.getHeader('location')
-    self.assertTrue('/SaleOrder_viewAsWeb' in url_location)
+    self.assertTrue('/checkout' in url_location)
 
     #7 : paypal step 4 : validate the payment
     self.assertEquals(1,
@@ -920,8 +931,7 @@ class TestCommerce(ERP5TypeTestCase):
     product = self.getDefaultProduct()
     self.assertEquals(product.Resource_getShopUrl(),
                  '%s/%s' % (product.absolute_url(), 'Resource_viewAsShop'))
-
-  @newSimulationExpectedFailure
+  
   def test_28_finalizeShoppingWithComment(self):
     """
       Testing if the comment added during the checkout will be set on the sale
@@ -932,7 +942,8 @@ class TestCommerce(ERP5TypeTestCase):
     self.website.Resource_addToShoppingCart(self.getDefaultProduct(),
                                            quantity=1)
 
-    self.website.SaleOrder_paymentRedirect(field_my_comment=comment)
+    self.website.SaleOrder_paymentRedirect(field_my_comment=comment)    
+    self.doFakePayment()
     self.website.SaleOrder_finalizeShopping()
     transaction.commit()
     self.tic()
