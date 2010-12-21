@@ -61,7 +61,8 @@ class ActivityConnection(Connection):
         result = Connection.connect(self, s)
         # the call above will set self._v_database_connection, and it won't
         # have disappeared by now.
-        self._v_database_connection.setSortKey( (0,) )
+        # We need to put back this code as soon as problems are solved XXX
+        #self._v_database_connection.setSortKey( (0,) )
         return result
 
 InitializeClass(ActivityConnection)
