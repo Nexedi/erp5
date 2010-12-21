@@ -259,10 +259,16 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     content_tree = etree.XML(content_xml)
     span_list = content_tree.xpath('//text:reference-mark-start[@text:name="week"]/following-sibling::text:span',
                                    namespaces=content_tree.nsmap)
-    self.assertEquals(1, len(span_list))
-    span = span_list[0]
-    self.assertEquals('line1', span.text)
-    self.assertEquals('line2', span[0].tail)
+    if span_list:
+      self.assertEquals(1, len(span_list))
+      span = span_list[0]
+      self.assertEquals('line1', span.text)
+      self.assertEquals('line2', span[0].tail)
+    else:
+      reference_mark_node = content_tree.xpath('//text:reference-mark-start[@text:name="week"][1]',
+                                               namespaces=content_tree.nsmap)[0]
+      self.assertEquals('line1', reference_mark_node.tail)
+      self.assertEquals('line2', reference_mark_node.getnext().tail)
     self._validate(odf_document)
 
   def test_01_Paragraph_08_Field_Format(self):
