@@ -14,7 +14,6 @@
                 <string>editable_columns</string>
                 <string>lines</string>
                 <string>list_method</string>
-                <string>selection_name</string>
                 <string>sort</string>
                 <string>title</string>
               </list>
@@ -148,10 +147,6 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>foo_line_selection</string> </value>
-                </item>
-                <item>
                     <key> <string>sort</string> </key>
                     <value>
                       <list>
@@ -178,10 +173,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
+      <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
     <pickle>
       <dictionary>

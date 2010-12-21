@@ -466,6 +466,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>page_navigation_template</string> </key>
+                    <value> <string>ListBox_viewSliderPageNavigationRenderer</string> </value>
+                </item>
+                <item>
                     <key> <string>page_template</string> </key>
                     <value> <string></string> </value>
                 </item>
