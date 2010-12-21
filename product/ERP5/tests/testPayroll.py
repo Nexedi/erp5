@@ -1871,7 +1871,7 @@ class TestPayrollMixin(TestTradeModelLineMixin):
 class TestPayroll(TestPayrollMixin):
 
   def test_modelGetCell(self):
-    '''
+    """
       Model objects have a overload method called getCell. This method first
       call the XMLMatrix.getCell and if the cell is not found, call
       getCell method in all it's inherited model until the cell is found or
@@ -1882,7 +1882,7 @@ class TestPayroll(TestPayrollMixin):
       more about this on :
         - http://en.wikipedia.org/wiki/Breadth-first_search
         - http://en.wikipedia.org/wiki/Depth-first_search
-    '''
+    """
     sequence_list = SequenceList()
     sequence_string = """
                CreateModelTree
@@ -1974,11 +1974,11 @@ class TestPayroll(TestPayrollMixin):
     sequence_list.play(self)
 
   def test_intermediateLines(self):
-    '''
+    """
       Intermediate lines are paysheet model lines usefull to calcul, but we
       don't want to have on paysheet. So a checkbox on paysheet model lines
       permit to create it or not (created by default)
-    '''
+    """
     sequence_list = SequenceList()
     sequence_string = """
                CreateUrssafService
@@ -2095,10 +2095,10 @@ class TestPayroll(TestPayrollMixin):
     sequence_list.play(self)
 
   def test_sliceOnModelLine(self):
-    '''
+    """
       It's possible to define some slices on model, and use it on model lines.
       Check that works and that after appy transformation, amounts are goods
-    '''
+    """
     sequence_list = SequenceList()
     sequence_string = self.COMMON_BASIC_DOCUMENT_CREATION_SEQUENCE_STRING + """
                CreateUrssafService
@@ -2206,7 +2206,7 @@ class TestPayroll(TestPayrollMixin):
     sequence_list.play(self)
 
   def test_predicateOnModelLine(self):
-    '''
+    """
       Check predicates can be used on model lines to select a line or not.
       1 - employee have married marital status so Sickness Insurance tax
           should be applied, and Old age insurance should not be
@@ -2214,7 +2214,7 @@ class TestPayroll(TestPayrollMixin):
           the transformation, Sickness Insurance tax sould not be
           applied (and it's movements should be removed) but Old age insurance
           should be applied (and two movements should be created).
-    '''
+    """
     sequence_list = SequenceList()
     sequence_string = self.COMMON_BASIC_DOCUMENT_CREATION_SEQUENCE_STRING + """
                CreateOldAgeInsuranaceService
@@ -2268,7 +2268,7 @@ class TestPayroll(TestPayrollMixin):
     sequence_list.play(self)
 
   def test_modelSubObjectInheritance(self):
-    '''
+    """
       check that a model can inherite some datas from another
       the ineritance rules are the following :
        - a DATA could be a model_line, annotation_line, ratio_line
@@ -2280,7 +2280,7 @@ class TestPayroll(TestPayrollMixin):
            model will not entered in the calcul. The other will.
          o This will be repeated on each parent model and on each parent of
            the parent model,... until there is no parent model to inherite
-    '''
+    """
     sequence_list = SequenceList()
     sequence_string = """
                CreateModelTree
@@ -3175,11 +3175,11 @@ class TestPayroll(TestPayrollMixin):
     sequence_list.play(self)
 
   def test_modelWithoutDateValidity(self):
-    ''' Check that if no DATE are defined on a model, the behavior is that 
+    """ Check that if no DATE are defined on a model, the behavior is that 
     this model is always valid. (XXX check if it's what we want)
     So check that a line is created after calling calculation script, even if
     there is no start_date or stop_date
-    '''
+    """
     sequence_list = SequenceList()
     sequence_string = """
                CreatePriceCurrency
