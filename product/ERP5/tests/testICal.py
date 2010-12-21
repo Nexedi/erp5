@@ -108,10 +108,10 @@ class TestICal(ERP5TypeTestCase):
     self.tic()
     
     feed_dict = self.getICalFeed(module)
-    self.assertTrue('BEGIN:VCALENDAR' in feed_dict.keys())
-    self.assertTrue('END:VCALENDAR' in feed_dict.keys())
-    self.assertTrue('BEGIN:VEVENT' in feed_dict.keys())
-    self.assertTrue('END:VEVENT' in feed_dict.keys())
+    self.assertTrue('BEGIN:VCALENDAR' in feed_dict)
+    self.assertTrue('END:VCALENDAR' in feed_dict)
+    self.assertTrue('BEGIN:VEVENT' in feed_dict)
+    self.assertTrue('END:VEVENT' in feed_dict)
     self.assertEquals(feed_dict['SUMMARY'], 'Event One')
     # if not set start date, it must be same as creation date
     # if not set end date, it must be same as start date
@@ -122,7 +122,7 @@ class TestICal(ERP5TypeTestCase):
     self.assertEquals(feed_dict['URL'],  event.absolute_url())
     self.assertEquals(feed_dict['UID'], 'uuid%s' % event.getUid())
     # there is no description
-    self.assertFalse('DESCRIPTION' in feed_dict.keys())
+    self.assertFalse('DESCRIPTION' in feed_dict)
     # current workflow state - draft
     self.assertEquals(feed_dict['STATUS'], 'TENTATIVE')
     
@@ -183,10 +183,10 @@ class TestICal(ERP5TypeTestCase):
    
    # current workflow state - draft
     feed_dict = self.getICalFeed(module)
-    self.assertTrue('BEGIN:VCALENDAR' in feed_dict.keys())
-    self.assertTrue('END:VCALENDAR' in feed_dict.keys())
-    self.assertTrue('BEGIN:VTODO' in feed_dict.keys())
-    self.assertTrue('END:VTODO' in feed_dict.keys())
+    self.assertTrue('BEGIN:VCALENDAR' in feed_dict)
+    self.assertTrue('END:VCALENDAR' in feed_dict)
+    self.assertTrue('BEGIN:VTODO' in feed_dict)
+    self.assertTrue('END:VTODO' in feed_dict)
     self.assertEquals(feed_dict['SUMMARY'], 'Task One')
     self.assertEquals(feed_dict['STATUS'], 'NEEDS-ACTION')
     self.assertEquals(feed_dict.get('PERCENT-COMPLETE', '0'), '0') # when it is zero it doesn't have to be there
@@ -261,10 +261,10 @@ class TestICal(ERP5TypeTestCase):
     feed_string = self.portal.person_module.Test_view()
     feed_dict = self.parseICalFeed(feed_string)
   
-    self.assertTrue('BEGIN:VCALENDAR' in feed_dict.keys())
-    self.assertTrue('END:VCALENDAR' in feed_dict.keys())
-    self.assertTrue('BEGIN:VJOURNAL' in feed_dict.keys())
-    self.assertTrue('END:VJOURNAL' in feed_dict.keys())
+    self.assertTrue('BEGIN:VCALENDAR' in feed_dict)
+    self.assertTrue('END:VCALENDAR' in feed_dict)
+    self.assertTrue('BEGIN:VJOURNAL' in feed_dict)
+    self.assertTrue('END:VJOURNAL' in feed_dict)
     self.assertEquals(feed_dict['SUMMARY'], 'One')
     self.assertEquals(feed_dict['DESCRIPTION'], 'Person One')
     self.assertEquals(feed_dict['CREATED'], one.getCreationDate().HTML4().replace('-','').replace(':',''))  
