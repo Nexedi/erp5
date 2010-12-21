@@ -160,7 +160,7 @@ class DiscoverableMixin(CachedConvertableMixin):
       portal_type = input_parameter_dict.get('portal_type')
     if not portal_type:
       # Read discovered portal_type
-      portal_type = kw.pop('portal_type')
+      portal_type = kw.pop('portal_type', None)
     if portal_type and portal_type != self.getPortalType():
       # Reingestion is required to update portal_type
       return self.migratePortalType(portal_type)
