@@ -37,6 +37,7 @@ from Products.CMFCore import permissions as CMFCorePermissions
 from Products.ERP5Type.Core.Folder import Folder
 from Products.CMFActivity.ActiveResult import ActiveResult
 from Products.CMFActivity.ActiveObject import DEFAULT_ACTIVITY
+from Products.CMFActivity.ActivityConnection import ActivityConnection
 from Products.PythonScripts.Utility import allow_class
 from AccessControl import ClassSecurityInfo, Permissions
 from AccessControl.SecurityManagement import newSecurityManager
@@ -45,8 +46,7 @@ from AccessControl.SecurityManagement import setSecurityManager
 from AccessControl.SecurityManagement import getSecurityManager
 from Products.CMFCore.utils import UniqueObject, _getAuthenticatedUser, getToolByName
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
-from Acquisition import aq_base
-from Acquisition import aq_inner
+from Acquisition import aq_base, aq_inner, aq_parent
 from ActivityBuffer import ActivityBuffer
 from ActivityRuntimeEnvironment import BaseMessage
 from zExceptions import ExceptionFormatter
@@ -547,14 +547,29 @@ class ActivityTool (Folder, UniqueObject):
                 meta_types.append(meta_type)
         return meta_types
 
+    def maybeMigrateConnectionClass(self):
+      connection_id = 'cmf_activity_sql_connection'
+      sql_connection = getattr(self, connection_id, None)
+      if (sql_connection is not None and
+          not isinstance(sql_connection, ActivityConnection)):
+        # SQL Connection migration is needed
+        LOG('ActivityTool', WARNING, "Migrating MySQL Connection class")
+        parent = aq_parent(aq_inner(sql_connection))
+        parent._delObject(sql_connection.getId())
+        new_sql_connection = ActivityConnection(connection_id,
+                                                sql_connection.title,
+                                                sql_connection.connection_string)
+        parent._setObject(connection_id, new_sql_connection)
+
     def initialize(self):
       global is_initialized
       from Activity import RAMQueue, RAMDict, SQLQueue, SQLDict
       # Initialize each queue
       for activity in activity_dict.itervalues():
         activity.initialize(self)
+      self.maybeMigrateConnectionClass()
       is_initialized = True
-      
+
     security.declareProtected(Permissions.manage_properties, 'isSubscribed')
     def isSubscribed(self):
         """

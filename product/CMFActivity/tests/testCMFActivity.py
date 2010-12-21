@@ -39,6 +39,7 @@ from Products.CMFActivity.ActiveObject import INVOKE_ERROR_STATE,\
                                               VALIDATE_ERROR_STATE
 from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
 from Products.CMFActivity.Activity.SQLDict import SQLDict
+import Products.CMFActivity.ActivityTool
 from Products.CMFActivity.Errors import ActivityPendingError, ActivityFlushError
 from erp5.portal_type import Organisation
 from AccessControl.SecurityManagement import newSecurityManager
@@ -3826,6 +3827,51 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
         self.assertFalse(activity_tool.getMessageList())
     finally:
       del activity_tool.__class__.doSomething
+
+  def test_connection_migration(self):
+    """
+    Make sure the cmf_activity_sql_connection is automatically migrated from
+    the ZMySQLDA Connection class to ActivityConnection
+    """
+    # replace the activity connector with a standard ZMySQLDA one
+    portal = self.portal
+    activity_tool = portal.portal_activities
+    stdconn = self.portal.cmf_activity_sql_connection
+    portal._delObject('cmf_activity_sql_connection')
+    portal.manage_addProduct['ZMySQLDA'].manage_addZMySQLConnection(
+        stdconn.id,
+        stdconn.title,
+        stdconn.connection_string,
+    )
+    oldconn = portal.cmf_activity_sql_connection
+    self.assertEquals(oldconn.meta_type, 'Z MySQL Database Connection')
+    # de-initialize and check that migration of the connection happens
+    # automatically
+    Products.CMFActivity.ActivityTool.is_initialized = False
+    activity_tool.activate(activity='SQLQueue').getId()
+    self.tic()
+    newconn = portal.cmf_activity_sql_connection
+    self.assertEquals(newconn.meta_type, 'CMFActivity Database Connection')
+
+  def test_connection_installable(self):
+    """
+    Test if the cmf_activity_sql_connector can be installed
+    """
+    # delete the activity connection
+    portal = self.portal
+    activity_tool = portal.portal_activities
+    stdconn = self.portal.cmf_activity_sql_connection
+    portal._delObject('cmf_activity_sql_connection')
+    # check the installation form can be rendered
+    portal.manage_addProduct['CMFActivity'].connectionAdd(
+        portal.REQUEST
+    )
+    # check it can be installed
+    portal.manage_addProduct['CMFActivity'].manage_addActivityConnection(
+        stdconn.id,
+        stdconn.title,
+        stdconn.connection_string
+    )
 
 def test_suite():
   suite = unittest.TestSuite()

@@ -40,8 +40,10 @@ document_classes = updateGlobals(this_module, globals(),
 # Finish installation
 def initialize( context ):
   # Define object classes and tools
-  import ActivityTool, ActiveProcess
-  object_classes = (ActiveProcess.ActiveProcess, )
+  import ActivityTool, ActiveProcess, ActivityConnection
+  object_classes = (ActiveProcess.ActiveProcess,
+                    #ActivityConnection.ActivityConnection
+                    )
   portal_tools = (ActivityTool.ActivityTool, )
   content_classes = ()
   content_constructors = ()
@@ -50,6 +52,15 @@ def initialize( context ):
                     portal_tools=portal_tools,
                     content_constructors=content_constructors,
                     content_classes=content_classes)
+
+  # register manually instead of using object_classes above so we can reuse
+  # the ZMySQLDA icon without having to carry the gif around in our own product
+  context.registerClass(
+        ActivityConnection.ActivityConnection,
+        permission='Add Z MySQL Database Connections', # reuse the permission
+        constructors=(ActivityConnection.manage_addActivityConnectionForm,
+                      ActivityConnection.manage_addActivityConnection),
+  )
 
 # This is used by a script (external method) that can be run
 # to set up CMFActivity in an existing CMF Site instance.
