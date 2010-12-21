@@ -36,9 +36,11 @@ from Testing import ZopeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import install_product_quiet
+from Products.ERP5Type.tests.ERP5TypeTestCase import _getConversionServerDict
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5OOo.OOoUtils import OOoParser
 from Products.ERP5.Document.Document import ConversionError
+from Products.ERP5Form.PreferenceTool import Priority
 from DateTime import DateTime
 import transaction
 
@@ -63,7 +65,7 @@ def makeFileUpload(name):
   path = makeFilePath(name)
   return FileUploadTest(path, name)
 
-class TestOOoImportMixin(object):
+class TestOOoImportMixin(ERP5TypeTestCase):
   gender_base_cat_id    = 'gender'
   function_base_cat_id  = 'function'
 
@@ -72,13 +74,12 @@ class TestOOoImportMixin(object):
       Initialize the ERP5 site.
     """
     self.login()
-
-    # Enable oood on localhost:8008
-    # This should probably become a test runner option
     self.pref = self.portal.portal_preferences.newContent(
-                          portal_type='Preference')
-    self.pref.setPreferredOoodocServerAddress('localhost')
-    self.pref.setPreferredOoodocServerPortNumber(8008)
+                          portal_type='System Preference')
+    conversion_dict = _getConversionServerDict()
+    self.pref.setPreferredOoodocServerAddress(conversion_dict['hostname'])
+    self.pref.setPreferredOoodocServerPortNumber(conversion_dict['port'])
+    self.pref.setPriority(Priority.SITE)
     self.pref.enable()
 
     # create browser_id_manager
@@ -120,7 +121,7 @@ class TestOOoImportMixin(object):
     transaction.commit()
     self.tic()
 
-class TestOOoImport(TestOOoImportMixin, ERP5TypeTestCase):
+class TestOOoImport(TestOOoImportMixin):
   """
     ERP5  test import object list from OOo Document
   """
@@ -1035,7 +1036,7 @@ class TestOOoImport(TestOOoImportMixin, ERP5TypeTestCase):
     if not_ok:
       self.fail('Spreadsheet not read!')
 
-class TestOOoImportWeb(TestOOoImportMixin, ERP5TypeTestCase):
+class TestOOoImportWeb(TestOOoImportMixin):
   def getTitle(self):
     """
       Return the title of the current test set.
