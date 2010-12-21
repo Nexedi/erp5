@@ -154,7 +154,13 @@ class DiscoverableMixin(CachedConvertableMixin):
           if value not in (None, ''):
             kw[key]=value
     # Prepare the content edit parameters
-    portal_type = kw.pop('portal_type', None)
+    portal_type = None
+    if input_parameter_dict is not None:
+      # User decision take precedence, never try to change this value
+      portal_type = input_parameter_dict.get('portal_type')
+    if not portal_type:
+      # Read discovered portal_type
+      portal_type = kw.pop('portal_type')
     if portal_type and portal_type != self.getPortalType():
       # Reingestion is required to update portal_type
       return self.migratePortalType(portal_type)
