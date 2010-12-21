@@ -112,7 +112,7 @@
 \n
 <tr>\n
   <td>open</td>\n
-  <td>${base_url}/foo_module/0/getProperty?key=local_title</td>\n
+  <td>${base_url}/foo_module/0/Foo_getLocalTitle</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
