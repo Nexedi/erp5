@@ -1945,6 +1945,25 @@ return result
     self.assertEquals(new_doc.getData(), 'Hello World!')
     self.assertEquals(new_doc.getValidationState(), 'submitted')
 
+  def test_User_Portal_Type_parameter_is_honoured(self):
+    """Check that given portal_type is always honoured
+    """
+    path = makeFilePath('import_region_category.xls')
+    data = open(path, 'r').read()
+
+    document = self.portal.portal_contributions.newContent(
+                                      filename='import_region_category.xls',
+                                      data=data,
+                                      content_type='application/vnd.ms-excel',
+                                      reference='I.want.a.pdf',
+                                      portal_type='PDF')
+    transaction.commit()
+    self.tic()# Discover metadata will try change the portal_type
+    # but user decision take precedence: PDF must be created
+    result_list = self.portal.portal_catalog(reference='I.want.a.pdf')
+    self.assertEquals(len(result_list), 1)
+    self.assertEquals(result_list[0].getPortalType(), 'PDF')
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestIngestion))
