@@ -88,16 +88,28 @@ class TestArchive(InventoryAPITestCase):
     user = uf.getUserById('seb').__of__(uf)
     newSecurityManager(None, user)
 
-  def getSQLPathList(self,connection_id=None):
+  def getSQLPathList(self,connection_id='erp5_sql_connection'):
     """
     Give the full list of path in the catalog
     """
-    if connection_id is None:
-      sql_connection = self.getSQLConnection()
-    else:
-      sql_connection = getattr(self.getPortal(),connection_id)
-    sql = 'select path from catalog'
-    result = sql_connection.manage_test(sql)
+    portal = self.getPortal()
+    zsql_method_id = "Base_zGetTestPath"
+    portal_skins_custom = self.getPortal().portal_skins.custom
+    zsql_method = getattr(portal_skins_custom, zsql_method_id, None)
+    if zsql_method is None:
+      portal_skins_custom.manage_addProduct['ZSQLMethods']\
+               .manage_addZSQLMethod(
+          id = zsql_method_id,
+          title = '',
+          connection_id = connection_id,
+          arguments = "",
+          template = "select path from catalog")
+      zsql_method = portal_skins_custom[zsql_method_id]
+      zsql_method.max_rows_ = 0
+    # it is mandatory to provide connection_id, or the
+    # zsql method will look at preference and use the one
+    # defined by the archive
+    result = zsql_method(connection_id=connection_id)
     path_list = map(lambda x: x['path'],result)
     return path_list
 
