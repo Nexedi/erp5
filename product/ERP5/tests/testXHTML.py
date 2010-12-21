@@ -68,7 +68,6 @@ class TestXHTML(ERP5TypeTestCase):
       'erp5_trade',
 
       'erp5_pdf_editor',
-      'erp5_pdf_style',
       'erp5_pdm',
       'erp5_accounting',
       'erp5_invoicing',

@@ -81,7 +81,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
   def getBusinessTemplateList(self):
     return ('erp5_base',
             'erp5_csv_style',
-            'erp5_pdf_style',
             )
 
   def getTitle(self):
@@ -357,7 +356,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     skins_tool = self.getSkinsTool()
     for skin_name, selection in skins_tool.getSkinPaths():
       if skin_name == 'View':
-        self.failIf('erp5_pdf_style' in selection)
         self.failIf('erp5_csv_style' in selection)
         self.failIf('erp5_core' not in selection)
         self.failIf('erp5_xhtml_style' not in selection)
@@ -365,9 +363,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
         self.failIf('erp5_xhtml_style' in selection)
         self.failIf('erp5_csv_style' in selection)
         self.failIf('erp5_core' not in selection)
-        self.failIf('erp5_pdf_style' not in selection)
       if skin_name == 'CSV':
-        self.failIf('erp5_pdf_style' in selection)
         self.failIf('erp5_xhtml_style' in selection)
         self.failIf('erp5_core' not in selection)
         self.failIf('erp5_csv_style' not in selection)

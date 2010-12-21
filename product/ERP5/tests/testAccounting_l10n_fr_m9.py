@@ -65,7 +65,6 @@ class TestAccounting_l10n_M9(ERP5TypeTestCase):
              'erp5_trade',
              'erp5_invoicing',
              'erp5_pdm',
-             'erp5_pdf_style',
              'erp5_accounting',
              'erp5_accounting_l10n_fr_m9',
            )
