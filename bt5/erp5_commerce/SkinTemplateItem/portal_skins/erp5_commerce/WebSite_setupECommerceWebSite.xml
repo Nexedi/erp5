@@ -66,6 +66,7 @@ for id in object_id_list:\n
 cart_section = context.newContent(portal_type=\'Web Section\', title=\'Cart\', id=\'cart\')\n
 account_section = context.newContent(portal_type=\'Web Section\', title=\'My account\', id=\'account\')\n
 register_section = context.newContent(portal_type=\'Web Section\', title=\'Register\', id=\'register\')\n
+checkout_section = context.newContent(portal_type=\'Web Section\', title=\'Checkout\', id=\'checkout\')\n
 \n
 # make some visible by default\n
 cart_section.setVisible(True)\n
@@ -88,6 +89,9 @@ account_section.setProperty(\'ecommerce_product_list\', False)\n
 register_section.setCustomRenderMethodId(\'WebSite_viewRegistrationDialog\')\n
 register_section.setProperty(\'ecommerce_default_content\', True)\n
 register_section.setProperty(\'ecommerce_product_list\', False)\n
+checkout_section.setCustomRenderMethodId(\'SaleOrder_viewConfirmAsWeb\')\n
+checkout_section.setProperty(\'ecommerce_default_content\', True)\n
+checkout_section.setProperty(\'ecommerce_product_list\', False)\n
 \n
 context.Base_redirect(\'\', keep_items={\n
    \'portal_status_message\': translateString("Your web site is now an ecommerce plateform.", mapping = dict())\n
