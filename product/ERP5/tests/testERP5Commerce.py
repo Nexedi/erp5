@@ -34,7 +34,6 @@ import urllib
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import FileUpload
-from Products.ERP5.tests.utils import newSimulationExpectedFailure
 
 SESSION_ID = "12345678"
 LANGUAGE_LIST = ('en', 'fr', 'de', 'bg',)
@@ -91,6 +90,7 @@ class TestCommerce(ERP5TypeTestCase):
   Product_getRelatedDescription
   Person_editPersonalInformation
   """
+  business_process = 'business_process_module/erp5_default_business_process'
 
   def getTitle(self):
     return "E-Commerce System"
@@ -157,11 +157,11 @@ class TestCommerce(ERP5TypeTestCase):
     shipping.setProductLine('shipping')
     shipping.validate()
     shipping.publish()
-    
+
     # add default trade condition
     condition = condition_module.newContent(id="default_trade_condition",
                                             portal_type="Sale Trade Condition",
-                                            specialise="business_process_module/erp5_default_business_process")
+                                            specialise=self.business_process)
     condition.validate()
 
     # validate default order rule

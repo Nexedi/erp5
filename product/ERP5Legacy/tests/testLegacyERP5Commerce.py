@@ -28,4 +28,6 @@
 
 from Products.ERP5Legacy.tests import Legacy_getBusinessTemplateList
 from Products.ERP5.tests.testERP5Commerce import *
+
+TestCommerce.business_process = None
 Legacy_getBusinessTemplateList(TestCommerce)
