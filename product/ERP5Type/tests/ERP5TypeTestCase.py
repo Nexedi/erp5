@@ -973,10 +973,7 @@ class ERP5TypeTestCase(ProcessingNodeTestCase, PortalTestCase):
             del self.portal, self.app
             ZopeTestCase.close(app)
       except:
-        f = StringIO()
-        traceback.print_exc(file=f)
-        ZopeTestCase._print(f.getvalue())
-        f.close()
+        ZopeTestCase._print(traceback.format_exc())
         failed_portal_installation[portal_name] = 1
         ZopeTestCase._print('Ran Unit test of %s (installation failed)\n'
                             % title) # run_unit_test depends on this string.
