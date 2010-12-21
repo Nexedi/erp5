@@ -202,7 +202,7 @@ class PaySheetTransaction(Invoice):
             movement_list_trade_phase_dic[trade_phase] = []
           movement_list_trade_phase_dic[trade_phase].append(movement)
       for trade_phase in movement_list_trade_phase_dic.keys():
-        business_link_list = business_process.getPathValueList(trade_phase=\
+        business_link_list = business_process.getBusinessLinkValueList(trade_phase=\
             trade_phase)
         # XXX-Aurel
         # must convert amount into simulation movement
