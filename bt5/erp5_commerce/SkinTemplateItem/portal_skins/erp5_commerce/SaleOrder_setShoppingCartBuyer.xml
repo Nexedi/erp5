@@ -51,6 +51,9 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""Set connected user as shopping cart customer"""\n
+if REQUEST is not None:\n
+  raise RuntimeError, "You can not call this script from the URL"\n
+\n
 shopping_cart = context.SaleOrder_getShoppingCart()\n
 \n
 if person is None:\n
@@ -61,7 +64,7 @@ shopping_cart.edit(destination_decision_value=person)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>person=None</string> </value>
+            <value> <string>person=None, REQUEST=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
