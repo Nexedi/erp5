@@ -8,4 +8,5 @@ Credential Update Module | view
 Credential Update | view
 Person | credential
 Person | jump_to_credential_request
+Person | jump_to_credential_update
 System Preference | credential_preference
