@@ -275,6 +275,19 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item, PropertyManager):
     if REQUEST is not None and not format:
       format = REQUEST.get('format', None)
     filename = self.getProperty('filename')
+    # Call refresh through cloudooo
+    # XXX This is a temporary implementation:
+    # Calling a webservice must be done through a WebServiceMethod
+    # and a WebServiceConnection
+    from Products.ERP5OOo.Document.OOoDocument import OOoServerProxy, enc, dec
+    server_proxy = OOoServerProxy(self)
+    extension = guess_extension(content_type).strip('.')
+    printout = dec(server_proxy.convertFile(enc(printout),
+                                        extension, # source_format
+                                        extension, # destination_format
+                                        False, # zip
+                                        True)) # refresh
+    # End of temporary implementation
     if not format:
       if REQUEST is not None and not batch_mode:
         REQUEST.RESPONSE.setHeader('Content-Type','%s' % content_type)
