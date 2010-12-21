@@ -10,12 +10,11 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>description</string>
-                <string>columns</string>
                 <string>all_columns</string>
+                <string>columns</string>
+                <string>description</string>
                 <string>list_method</string>
-                <string>selection_name</string>
+                <string>title</string>
                 <string>url_columns</string>
               </list>
             </value>
@@ -118,10 +117,6 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>class_method_selection</string> </value>
-                </item>
-                <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
@@ -148,10 +143,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
+      <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
     <pickle>
       <dictionary>

@@ -14,7 +14,6 @@
                 <string>enabled</string>
                 <string>lines</string>
                 <string>list_method</string>
-                <string>selection_name</string>
                 <string>title</string>
                 <string>url_columns</string>
               </list>
@@ -84,10 +83,6 @@
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -161,10 +156,6 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>workflow_transition_selection</string> </value>
-                </item>
-                <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
@@ -186,10 +177,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -202,10 +190,7 @@
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -218,10 +203,7 @@
   </record>
   <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -234,10 +216,7 @@
   </record>
   <record id="5" aka="AAAAAAAAAAU=">
     <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
+      <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
     <pickle>
       <dictionary>

@@ -11,11 +11,10 @@
             <value>
               <list>
                 <string>all_columns</string>
-                <string>title</string>
-                <string>selection_name</string>
                 <string>columns</string>
                 <string>description</string>
                 <string>list_method</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -117,10 +116,6 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>workflow_method_selection</string> </value>
-                </item>
-                <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
@@ -136,13 +131,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
     <pickle>
       <dictionary>
