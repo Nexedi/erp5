@@ -71,11 +71,11 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>your_deferred_style</string> </value>
+                    <value> <string>my_dialog_mode_deferred_style</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewDialogFieldLibrary</string> </value>
+                    <value> <string>Base_viewTradeFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

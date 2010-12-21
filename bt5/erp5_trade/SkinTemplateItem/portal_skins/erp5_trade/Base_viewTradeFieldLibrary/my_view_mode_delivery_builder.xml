@@ -10,13 +10,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>default</string>
+                <string>title</string>
+                <string>items</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_view_mode_listbox_deliverable</string> </value>
+            <value> <string>my_view_mode_delivery_builder</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -53,18 +54,18 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -79,15 +80,19 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_deliverable</string> </value>
+                    <value> <string>my_list_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewTradeFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Delivery Builder</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -103,7 +108,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: cell.getDeliverable()</string> </value>
+            <value> <string>python: [(\'\',\'\')] + [(q.getTitle(),q.getRelativeUrl()) for q in context.portal_catalog(portal_type=\'Delivery Builder\', sort_on=((\'title\',\'ascending\'),))]</string> </value>
         </item>
       </dictionary>
     </pickle>

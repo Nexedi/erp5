@@ -11,13 +11,12 @@
             <value>
               <list>
                 <string>title</string>
-                <string>items</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_view_mode_delivery_builder_list</string> </value>
+            <value> <string>my_view_mode_min_delay</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -62,12 +61,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>items</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -80,7 +73,7 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_multi_list_field</string> </value>
+                    <value> <string>my_float_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -92,23 +85,10 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Delivery Builders</string> </value>
+                    <value> <string>Delay (min)</string> </value>
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: [(\'\',\'\')] + [(q.getTitle(),q.getRelativeUrl()) for q in context.portal_catalog(portal_type=\'Delivery Builder\', sort_on=((\'title\',\'ascending\'),))]</string> </value>
         </item>
       </dictionary>
     </pickle>

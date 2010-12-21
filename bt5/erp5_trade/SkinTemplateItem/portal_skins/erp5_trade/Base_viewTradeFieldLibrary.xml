@@ -117,7 +117,6 @@
                         <string>my_report_mode_at_date</string>
                         <string>my_report_mode_site_title</string>
                         <string>my_view_mode_listbox_variation_category_item_list</string>
-                        <string>my_view_mode_quantity</string>
                         <string>my_view_mode_quantity_unit</string>
                         <string>my_view_mode_resource_title</string>
                         <string>my_view_mode_variation_category_list</string>
@@ -130,7 +129,6 @@
                         <string>my_view_mode_read_only_resource_title</string>
                         <string>my_view_mode_read_only_title</string>
                         <string>my_view_mode_line_quantity_unit</string>
-                        <string>my_view_mode_referential_date</string>
                         <string>my_view_mode_contained_total_quantity</string>
                         <string>my_view_mode_gross_weight</string>
                         <string>my_view_mode_serial_number</string>
@@ -244,22 +242,16 @@
                         <string>my_view_mode_trade_condition_specialise_title_list</string>
                         <string>my_view_mode_efficiency</string>
                         <string>my_view_mode_end_of</string>
-                        <string>my_view_mode_lead_time</string>
                         <string>my_view_mode_payment_mode</string>
-                        <string>my_view_mode_wait_time</string>
                         <string>my_view_mode_batch_quantity</string>
                         <string>my_view_mode_completed_state_list</string>
-                        <string>my_view_mode_deliverable</string>
-                        <string>my_view_mode_delivery_builder_list</string>
                         <string>my_view_mode_destination_method_id</string>
                         <string>my_view_mode_frozen_state_list</string>
-                        <string>my_view_mode_order_builder_list</string>
                         <string>my_view_mode_source_method_id</string>
                         <string>my_view_mode_trade_phase</string>
                         <string>my_view_mode_business_process_specialise_title_list</string>
                         <string>my_view_mode_listbox_delivery_builder_title_list</string>
                         <string>my_view_mode_listbox_order_builder_title_list</string>
-                        <string>my_view_mode_listbox_deliverable</string>
                         <string>my_view_mode_purchase_trade_condition_specialise_title</string>
                         <string>my_view_mode_destination_section</string>
                         <string>my_view_mode_payment_additional_term</string>
@@ -303,6 +295,11 @@
                         <string>my_view_mode_movement_listbox_quantity</string>
                         <string>my_view_mode_target_delivery</string>
                         <string>my_view_mode_internal_trade_condition_specialise_title</string>
+                        <string>my_view_mode_delivery_builder</string>
+                        <string>my_view_mode_max_delay</string>
+                        <string>my_view_mode_min_delay</string>
+                        <string>my_view_mode_movement_quantity</string>
+                        <string>my_view_mode_quantity</string>
                       </list>
                     </value>
                 </item>

@@ -11,15 +11,12 @@
             <value>
               <list>
                 <string>title</string>
-                <string>css_class</string>
-                <string>input_style</string>
-                <string>display_width</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_view_mode_wait_time</string> </value>
+            <value> <string>my_view_mode_max_delay</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -56,12 +53,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>display_width</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -81,10 +72,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>css_class</string> </key>
-                    <value> <string>figure</string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_float_field</string> </value>
                 </item>
@@ -93,32 +80,15 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>input_style</string> </key>
-                    <value> <string>-1 234.5</string> </value>
-                </item>
-                <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Wait Time</string> </value>
+                    <value> <string>Delay (max)</string> </value>
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: preferences.getPreference(\'preferred_quantity_field_width\', 5)</string> </value>
         </item>
       </dictionary>
     </pickle>
