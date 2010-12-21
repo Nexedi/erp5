@@ -1344,9 +1344,6 @@ class Base( CopyContainer,
     defined on this object.
     If an accessor exists for this property, the accessor will be called,
     default value will be passed to the accessor as first positional argument.
-
-    XXX Usage of getProperty is BAD. It should either be removed
-    or reused
     """
     accessor_name = 'get' + UpperCase(key)
     aq_self = aq_base(self)
