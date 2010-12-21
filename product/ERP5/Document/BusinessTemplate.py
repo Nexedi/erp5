@@ -4688,12 +4688,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       gen = generator_class()
       # update activity tool first if necessary
       if self.getTitle() == 'erp5_core' and self.getTemplateUpdateTool():
-        if not site.hasObject('portal_activities'):
-          create_activities = True
-          LOG('Business Template', 0, 'Updating Activity Tool')
-        else:
-          create_activities = False
-        gen.setupLastTools(site, update=1, create_activities=create_activities)
+        gen.setupLastTools(site)
       if not force:
         if len(object_to_update) == 0:
           # check if we have to update tools

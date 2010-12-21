@@ -1573,25 +1573,18 @@ class ERP5Generator(PortalGenerator):
         reindex=reindex, **kw)
     return p
 
-  def setupLastTools(self, p, **kw):
+  def setupLastTools(self, p, create_activities=True, **kw):
     """
     Set up finals tools
     We want to set the activity tool only at the end to
     make sure that we do not put un the queue the full reindexation
     """
     # Add Activity Tool
-    if kw.get('create_activities', False):
-      if not p.hasObject('portal_activities'):
-        addTool = p.manage_addProduct['CMFActivity'].manage_addTool
-        addTool('CMF Activity Tool', None) # Allow user to select active/passive
+    if create_activities and not p.hasObject('portal_activities'):
+      addTool = p.manage_addProduct['CMFActivity'].manage_addTool
+      addTool('CMF Activity Tool', None) # Allow user to select active/passive
       # Initialize Activities
-      portal_activities = getToolByName(p, 'portal_activities', None)
-      if portal_activities is not None:
-        if kw.get('update', 0):
-          keep = 1
-        else:
-          keep = 0
-        portal_activities.manageClearActivities(keep=keep)
+      p.portal_activities.manageClearActivities(keep=0)
 
     # Add several other tools, only at the end in order
     # to make sure that they will be reindexed
