@@ -1,0 +1,53 @@
+<html>
+  <head><title>Add CMFActivity Database Connection</title></head>
+  <body bgcolor="#FFFFFF" link="#000099" vlink="#555555" alink="#77003B">
+
+    <h2>Add CMFActivity Database Connection</h2>
+
+    <form action="manage_addActivityConnection" method="POST">
+      <table cellspacing="2">
+        <tr>
+          <th align="LEFT" valign="TOP">Id</th>
+          <td align="LEFT" valign="TOP">
+            <input type="TEXT" name="id" size="40"
+                value="cmf_activity_sql_connection">
+          </td>
+        </tr>
+        <tr>
+          <th align="LEFT" valign="TOP"><em>Title</em></th>
+          <td align="LEFT" valign="TOP">
+            <input type="TEXT" name="title" size="40"
+                value="CMFActivity Database Connection">
+          </td>
+        </tr>
+        <tr>
+          <th align="LEFT" valign="TOP">
+              Enter a Database Connection String
+              <a href="#1"><sup>1</sup></a></th>
+          <td align="LEFT" valign="TOP">
+            <input type="TEXT" name="connection_string" size="40">
+          </td>
+        </tr>
+        <tr>
+          <th align="LEFT" valign="TOP">Connect immediately</th>
+          <td align="LEFT" valign="TOP">
+            <input name="check" type="CHECKBOX" value="YES" CHECKED>
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><br><input type="SUBMIT" value="Add"></td>
+        </tr>
+      </table>
+    </form>
+
+
+
+<dt><a hname="1"><sup>1</sup></a> Connection Strings</dt>
+<dd>
+    The connection string used for the CMFActivity Database Connection
+    has the same syntax as for ZMySQLDA.
+</dd></dl>
+
+  </body>
+</html>
