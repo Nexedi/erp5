@@ -58,6 +58,11 @@
   <td>${base_url}/view</td>\n
   <td></td>\n
 </tr>\n
+<tr>\n
+  <td>waitForCondition</td>\n
+  <td>selenium.isTextPresent("Your tab is empty.")</td>\n
+  <td>30000</td> \n
+</tr>\n
 \n
 <!--  add "Feed Reader" gadget to front-->\n
 <tr>\n
@@ -133,9 +138,7 @@
 \n
 </tbody></table>\n
 </body>\n
-</html>\n
-\n
-
+</html>
 
 ]]></unicode> </value>
         </item>
