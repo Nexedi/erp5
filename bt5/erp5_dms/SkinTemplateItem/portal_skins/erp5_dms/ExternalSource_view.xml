@@ -68,9 +68,7 @@
                 <item>
                     <key> <string>bottom (Preview)</string> </key>
                     <value>
-                      <list>
-                        <string></string>
-                      </list>
+		      <list/>
                     </value>
                 </item>
                 <item>
