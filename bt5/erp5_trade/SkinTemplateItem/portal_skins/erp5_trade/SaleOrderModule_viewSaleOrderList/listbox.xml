@@ -289,7 +289,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>sale_order_selection</string> </value>
+                    <value> <string>sale_order_module_view_sale_order_list_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>

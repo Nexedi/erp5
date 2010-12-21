@@ -10,13 +10,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>columns</string>
                 <string>editable_columns</string>
+                <string>list_method</string>
+                <string>report_root_list</string>
                 <string>sort</string>
                 <string>title</string>
-                <string>report_root_list</string>
-                <string>selection_name</string>
-                <string>list_method</string>
-                <string>columns</string>
               </list>
             </value>
         </item>
@@ -191,10 +190,6 @@
                         </tuple>
                       </list>
                     </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>sale_packing_list_movement_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>

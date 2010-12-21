@@ -10,12 +10,11 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>columns</string>
                 <string>editable_columns</string>
+                <string>list_method</string>
                 <string>sort</string>
                 <string>title</string>
-                <string>selection_name</string>
-                <string>list_method</string>
-                <string>columns</string>
                 <string>url_columns</string>
               </list>
             </value>
@@ -164,10 +163,6 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>delivery_view_aggregated_amount_list_selection</string> </value>
-                </item>
-                <item>
                     <key> <string>sort</string> </key>
                     <value>
                       <list>
@@ -185,6 +180,12 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Applied Model Lines</string> </value>
+                </item>
+                <item>
+                    <key> <string>url_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
               </dictionary>
             </value>
