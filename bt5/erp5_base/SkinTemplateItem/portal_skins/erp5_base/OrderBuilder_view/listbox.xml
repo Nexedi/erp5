@@ -13,7 +13,6 @@
                 <string>columns</string>
                 <string>editable_columns</string>
                 <string>list_method</string>
-                <string>selection_name</string>
                 <string>sort</string>
                 <string>title</string>
               </list>
@@ -67,10 +66,6 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -155,10 +150,6 @@
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>movement_group_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
