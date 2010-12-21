@@ -56,7 +56,7 @@ params[\'stat\'] = 1\n
 params[\'omit_output\'] = 1\n
 params[\'omit_input\'] = 0\n
 \n
-if params.get(\'operation_date\', {}).get(\'query\'):\n
+if (params.get(\'operation_date\') or {}).get(\'query\'):\n
   buildSQLQuery = context.portal_catalog.buildSQLQuery\n
   params[\'source_section_where_expression\'] = buildSQLQuery(\n
             **{\'delivery.start_date\': params[\'operation_date\']})[\'where_expression\']\n
