@@ -262,7 +262,7 @@ def getExtraSqlConnectionStringList():
   """Return list of extra available SQL connection string
   """
   return os.environ.get('extra_sql_connection_string_list',
-                        'test2 test2:test3 test3').split(':')
+                        'test2 test2,test3 test3').split(',')
 
 instance_random = random.Random(hash(os.environ['INSTANCE_HOME']))
 
