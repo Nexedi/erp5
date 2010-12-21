@@ -30,6 +30,8 @@
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
      _getConversionServerDict
+import urlnorm # This library is imported to detect lack of
+               # urlnorm availibility in python environment
 
 import transaction
 
