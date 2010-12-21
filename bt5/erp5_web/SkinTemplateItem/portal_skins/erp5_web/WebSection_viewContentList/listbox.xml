@@ -17,7 +17,6 @@
                 <string>list_method</string>
                 <string>portal_types</string>
                 <string>search</string>
-                <string>selection_name</string>
                 <string>sort</string>
                 <string>title</string>
               </list>
@@ -170,10 +169,6 @@
                     <value> <int>1</int> </value>
                 </item>
                 <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>section_content_selection</string> </value>
-                </item>
-                <item>
                     <key> <string>sort</string> </key>
                     <value>
                       <list>
@@ -200,10 +195,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
+      <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
     <pickle>
       <dictionary>
