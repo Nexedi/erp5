@@ -28,6 +28,7 @@
 
 import os
 import unittest
+import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
@@ -46,6 +47,12 @@ class FunctionalTestRunner(FunctionalTestRunnerBase):
 os.environ['erp5_tests_portal_id'] = 'erp5_portal'
 
 class TestZelenium(ERP5TypeTestCase):
+    def afterSetUp(self):
+        # create browser_id_manager
+        if not "browser_id_manager" in self.portal.objectIds():
+          self.portal.manage_addProduct['Sessions'].constructBrowserIdManager()
+        transaction.commit()
+
     def getBusinessTemplateList(self):
         """
           Return the list of business templates.
