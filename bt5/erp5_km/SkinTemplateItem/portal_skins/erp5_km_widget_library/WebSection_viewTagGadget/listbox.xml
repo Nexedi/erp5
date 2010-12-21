@@ -23,7 +23,6 @@
                 <string>search</string>
                 <string>search_columns</string>
                 <string>select</string>
-                <string>selection_name</string>
                 <string>sort</string>
                 <string>sort_columns</string>
                 <string>title</string>
@@ -129,10 +128,6 @@
                 </item>
                 <item>
                     <key> <string>select</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -245,10 +240,6 @@
                 <item>
                     <key> <string>select</string> </key>
                     <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>web_view_my_content_selection_gadget</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
