@@ -36,6 +36,8 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Subversion import _dtmldir
 from Products.ERP5Type.DiffUtils import DiffFile
 from Products.ERP5Subversion.SubversionClient import newSubversionClient
+from zLOG import LOG, WARNING
+from App.config import getConfiguration
 import os, re
 from DateTime import DateTime
 from cPickle import dumps, loads
@@ -422,8 +424,11 @@ class SubversionTool(BaseTool):
     wc_list = self.getPortalObject().portal_preferences\
     .getPreferredSubversionWorkingCopyList()
     if not wc_list or len(wc_list) == 0 :
-      raise SubversionPreferencesError, \
-      'Please set at least one Subversion Working Copy in preferences first.'
+      LOG('SubvertionTool', WARNING,
+          'working copy path is not specified in preferences. '
+          '<instance_home>/bt5 directory is used by default.')
+      instance_home = getConfiguration().instancehome
+      wc_list = [os.path.join(instance_home, 'bt5'),]
     bt_name = business_template.getTitle()
     join = os.path.join
     isdir = os.path.isdir
