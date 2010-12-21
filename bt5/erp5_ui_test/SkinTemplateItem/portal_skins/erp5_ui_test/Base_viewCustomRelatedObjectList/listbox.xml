@@ -9,7 +9,9 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>selection_name</string>
+              </list>
             </value>
         </item>
         <item>
@@ -98,6 +100,10 @@
                 <item>
                     <key> <string>reverse</string> </key>
                     <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string>base_view_related_custom_object_list_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
