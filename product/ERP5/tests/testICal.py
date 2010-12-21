@@ -32,6 +32,7 @@ import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Form.Form import ERP5Form
+from Products.ERP5.tests.utils import newSimulationExpectedFailure
 
 
 class TestICal(ERP5TypeTestCase):
@@ -168,6 +169,7 @@ class TestICal(ERP5TypeTestCase):
     feed_dict = self.getICalFeed(module)
     self.assertEquals(feed_dict['STATUS'], 'CANCELLED')
 
+  @newSimulationExpectedFailure
   def test_02_renderTask(self, quiet=0, run=run_all_test):
     """
       Task - is rendered as "todo".
