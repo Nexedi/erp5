@@ -29,8 +29,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5Legacy.Document.OrderBuilder import OrderBuilder, \
-        SelectMethodError
+from Products.ERP5Legacy.OrderBuilder import OrderBuilder, SelectMethodError
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Type.CopySupport import CopyError, tryMethodCallWithTemporaryPermission
 

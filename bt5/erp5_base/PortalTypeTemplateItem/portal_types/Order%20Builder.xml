@@ -58,7 +58,7 @@
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addSimulatedDeliveryBuilder</string> </value>
+            <value> <string>addOrderBuilder</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>
