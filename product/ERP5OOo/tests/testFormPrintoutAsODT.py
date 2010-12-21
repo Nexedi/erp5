@@ -1133,7 +1133,6 @@ return []
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
-    self.assertTrue(content_xml.find("test_image.png") > 0)
     content = etree.XML(content_xml)
     image_frame_xpath = '//draw:frame[@draw:name="my_default_image_absolute_url"]'
     image_frame_list = content.xpath(image_frame_xpath, namespaces=content.nsmap)
