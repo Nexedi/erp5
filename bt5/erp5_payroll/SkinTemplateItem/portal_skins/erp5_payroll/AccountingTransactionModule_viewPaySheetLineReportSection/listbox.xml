@@ -16,7 +16,6 @@
                 <string>list_method</string>
                 <string>search</string>
                 <string>select</string>
-                <string>selection_name</string>
                 <string>stat_method</string>
                 <string>title</string>
               </list>
@@ -168,10 +167,6 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>accounting_transaction_module_paysheet_line_selection</string> </value>
-                </item>
-                <item>
                     <key> <string>stat_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
@@ -193,10 +188,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
+      <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -209,10 +201,7 @@
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
+      <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
     <pickle>
       <dictionary>

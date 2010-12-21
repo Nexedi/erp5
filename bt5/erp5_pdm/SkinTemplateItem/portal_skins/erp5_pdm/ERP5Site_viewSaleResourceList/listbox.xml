@@ -16,7 +16,6 @@
                 <string>list_action</string>
                 <string>portal_types</string>
                 <string>search_columns</string>
-                <string>selection_name</string>
                 <string>sort_columns</string>
                 <string>title</string>
               </list>
@@ -90,10 +89,6 @@
                 </item>
                 <item>
                     <key> <string>search_columns</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -279,10 +274,6 @@
                         </tuple>
                       </list>
                     </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>erp5_site_sale_resource_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort_columns</string> </key>
