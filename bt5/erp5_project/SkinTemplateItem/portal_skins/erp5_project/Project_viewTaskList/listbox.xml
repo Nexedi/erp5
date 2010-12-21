@@ -17,7 +17,6 @@
                 <string>portal_types</string>
                 <string>report_root_list</string>
                 <string>report_tree</string>
-                <string>selection_name</string>
                 <string>sort_columns</string>
                 <string>stat_method</string>
                 <string>title</string>
@@ -229,10 +228,6 @@
                     <value> <int>1</int> </value>
                 </item>
                 <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>project_task_selection</string> </value>
-                </item>
-                <item>
                     <key> <string>separate_tree_data</string> </key>
                     <value> <int>0</int> </value>
                 </item>
@@ -269,10 +264,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
+      <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -285,10 +277,7 @@
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
+      <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
     <pickle>
       <dictionary>
