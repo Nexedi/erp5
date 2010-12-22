@@ -179,9 +179,14 @@ class PortalTypeDocumentationHelper(DocumentationHelper):
     Returns the list of property sheets for the documentation helper
     """
     temp_object = self.getTempInstance(self.getId())
-    property_sheet = [obj.__name__ for obj in temp_object.property_sheets]
-    property_sheet += self.getDocumentedObject().property_sheet_list
-    return property_sheet
+    property_sheet_list = []
+    for obj in temp_object.property_sheets:
+      if isinstance(obj, basestring):
+        property_sheet_list.append(obj)
+      else:
+        property_sheet_list.append(obj.__name__)
+    property_sheet_list += self.getDocumentedObject().property_sheet_list
+    return property_sheet_list
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getPropertySheetUriList')
   def getPropertySheetUriList(self):
