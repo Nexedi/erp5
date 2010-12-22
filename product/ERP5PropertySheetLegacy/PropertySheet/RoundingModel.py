@@ -27,13 +27,10 @@
 #
 ##############################################################################
 
-from DecimalOption import DecimalOption
-
-
-class RoundingModel(DecimalOption):
+class RoundingModel:
   """Rounding Model properties and categories.
   """
-  _properties = DecimalOption._properties+(
+  _properties = (
     { 'id'          : 'rounding_method_id',
       'description' : 'The name of a python script which implements custom rounding routine.',
       'type'        : 'string',

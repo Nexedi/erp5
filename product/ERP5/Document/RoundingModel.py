@@ -52,6 +52,7 @@ class RoundingModel(Predicate):
                      PropertySheet.Predicate,
                      PropertySheet.SortIndex,
                      PropertySheet.Reference,
+                     PropertySheet.DecimalOption,
                      PropertySheet.RoundingModel,
                      )
 
