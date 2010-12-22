@@ -27,7 +27,7 @@
 #
 ##############################################################################
 
-from Products.ERP5.PropertySheet.Path import Path
+from Path import Path
 
 
 class Assignment(Path):

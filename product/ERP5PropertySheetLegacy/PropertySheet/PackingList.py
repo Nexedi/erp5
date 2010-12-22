@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2009 Nexedi KK and Contributors. All Rights Reserved.
-#                    Yusei TAHARA <yusei@nexedi.com>
+# Copyright (c) 2009 Nexedi KK, Nexedi SA and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -27,29 +25,14 @@
 #
 ##############################################################################
 
-from Products.ERP5.PropertySheet.DecimalOption import DecimalOption
+from Order import Order
 
 
-class RoundingModel(DecimalOption):
-  """Rounding Model properties and categories.
+class PackingList(Order):
+  """A property sheet class for packing list.
+
+  Packing list can be considered as a kind of small order which does not
+  need proper agreement between seller and buyer, this class inherit Order
+  property sheet class.
   """
-  _properties = DecimalOption._properties+(
-    { 'id'          : 'rounding_method_id',
-      'description' : 'The name of a python script which implements custom rounding routine.',
-      'type'        : 'string',
-      'mode'        : 'w',
-      'default'     : None,
-    },
-    { 'id'          : 'rounded_property_id',
-      'description' : 'The property name which value is rounded. Note that some property is virtual, like total_price.',
-      'type'        : 'tokens',
-      'mode'        : 'w',
-      'default'     : None,
-    },
-    { 'id'          : 'precision',
-      'description' : 'Precision value to be used for rounding, specified as a minimal unit.',
-      'type'        : 'float',
-      'mode'        : 'w',
-      'default'     : None,
-    },
-  )
+  # Just inherit Order. No additional properties are needed for now.

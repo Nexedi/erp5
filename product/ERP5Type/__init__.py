@@ -40,6 +40,20 @@ document_class_registry = {}
 # similarly for mixins
 mixin_class_registry = {}
 
+# For early phases of bootstrap (and future ZODB property sheets)
+# ERP5Type.PropertySheet becomes a dynamic module that always
+# returns a string. ERP5Type.PropertySheet.doesnotexist for example
+# is 'doesnotexist'
+# Later on, if a local property sheet is imported from a product,
+# importLocalPropertySheet will load it as ERP5Type.PropertySheet.*
+# This is mostly a backwards compatible mechanism, to ensure that
+# old class definitions will still work with properties such as
+#    property_sheets = (ERP5Type.PropertySheet.YYY, ... )
+# after transforming 'YYY' into a ZODB property sheet
+from dynamic.dynamic_module import registerDynamicModule
+PropertySheet = registerDynamicModule('Products.ERP5Type.PropertySheet',
+                                      lambda name: name)
+
 # Switch(es) for ongoing development which require single code base
 
 # Update ERP5 Globals
@@ -54,7 +68,7 @@ document_classes = updateGlobals( this_module,
                                   permissions_module=Permissions,
                                   is_erp5_type=1 )
 
-import PropertySheet, ZopePatch
+import ZopePatch
 import interfaces
 
 import Products.Localizer # So that we make sure Globals.get_request is available
