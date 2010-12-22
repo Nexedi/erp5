@@ -29,7 +29,6 @@
 """
 Products.ERP5.interfaces.movement
 """
-from Products.ERP5Type import PropertySheet
 from Products.ERP5.interfaces.amount import IAmount
 from Products.ERP5.interfaces.arrow_base import IArrowBase
 
