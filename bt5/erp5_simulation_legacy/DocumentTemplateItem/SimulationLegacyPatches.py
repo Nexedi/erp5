@@ -73,7 +73,10 @@ def patch():
   ## SimulationMovement
 
   from Products.ERP5.Document.SimulationMovement import SimulationMovement
-  del SimulationMovement.isFrozen
+  try:
+    del SimulationMovement.isFrozen
+  except AttributeError:
+    pass
 
   def isCompleted(self):
     """Zope publisher docstring. Documentation in ISimulationMovement"""
