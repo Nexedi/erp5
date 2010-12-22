@@ -108,7 +108,7 @@ class ContributionTool(BaseTool):
       the content.
 
       explicit named parameters was:
-        id - ignored argument
+        id - id of document
         portal_type - explicit portal_type parameter, must be honoured
         url - Identifier of external resource. Content will be downloaded
               from it
@@ -126,8 +126,6 @@ class ContributionTool(BaseTool):
         data - Binary representation of content
         filename - explicit filename of content
     """
-    kw.pop('id', None) # Never use hardcoded ids anymore longer
-
     # Useful for metadata discovery, keep it as it as been provided
     input_parameter_dict = kw.copy()
     # But file and data are exceptions.
@@ -144,6 +142,7 @@ class ContributionTool(BaseTool):
     container_path = kw.pop('container_path', None)
     discover_metadata = kw.pop('discover_metadata', True)
     user_login = kw.pop('user_login', None)
+    document_id = kw.pop('id', None)
     # check file_name argument for backward compatibility.
     if 'file_name' in kw:
       if 'filename' not in kw:
@@ -235,7 +234,7 @@ class ContributionTool(BaseTool):
     # Then put the file inside ourselves for a short while
     if container_path is not None:
       container = self.getPortalObject().restrictedTraverse(container_path)
-    document = self._setObject(filename, None, portal_type=portal_type,
+    document = self._setObject(document_id, None, portal_type=portal_type,
                                user_login=user_login, container=container,
                                discover_metadata=discover_metadata,
                                filename=filename,
@@ -369,7 +368,11 @@ class ContributionTool(BaseTool):
         module = container
       # There is no preexisting document - we can therefore
       # set the new object
-      document = module.newContent(portal_type=portal_type, is_indexable=0)
+      new_content_kw = {'portal_type': portal_type,
+                        'is_indexable': False}
+      if id is not None:
+        new_content_kw['id'] = id
+      document = module.newContent(**new_content_kw)
       # We can now discover metadata
       if discover_metadata:
         # Metadata disovery is done as an activity by default
