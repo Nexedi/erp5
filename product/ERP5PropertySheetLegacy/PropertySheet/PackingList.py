@@ -25,10 +25,8 @@
 #
 ##############################################################################
 
-from Order import Order
 
-
-class PackingList(Order):
+class PackingList:
   """A property sheet class for packing list.
 
   Packing list can be considered as a kind of small order which does not
