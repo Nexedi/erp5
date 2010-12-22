@@ -636,6 +636,7 @@ class TestBPMDummyDeliveryMovementMixin(TestBPMMixin):
     self.stepTic()
 
 class TestBPMisBuildableImplementation(TestBPMDummyDeliveryMovementMixin):
+  @newSimulationExpectedFailure
   def test_isBuildable_OrderedDeliveredInvoiced(self):
     """Test isBuildable for ordered, delivered and invoiced sequence
 
@@ -762,6 +763,7 @@ class TestBPMisBuildableImplementation(TestBPMDummyDeliveryMovementMixin):
     self.assertEquals(split_invoicing_simulation_movement.isBuildable(),
         False)
 
+  @newSimulationExpectedFailure
   def test_isBuildable_OrderedInvoicedDelivered(self):
     """Test isBuildable for ordered, invoiced and delivered sequence
 
@@ -1090,6 +1092,7 @@ class TestBPMisCompletedImplementation(TestBPMDummyDeliveryMovementMixin):
     self.assertEqual(self.invoice_path.isPartiallyCompleted(delivery), True)
 
 class TestBPMisFrozenImplementation(TestBPMDummyDeliveryMovementMixin):
+  @newSimulationExpectedFailure
   def test_isFrozen_OrderedDeliveredInvoiced(self):
     """Test isFrozen for ordered, delivered and invoiced sequence"""
     self._createOrderedDeliveredInvoicedBusinessProcess()
@@ -1192,6 +1195,7 @@ class TestBPMisFrozenImplementation(TestBPMDummyDeliveryMovementMixin):
     self.assertEqual(split_simulation_movement.isFrozen(), False)
     self.assertEqual(split_invoicing_simulation_movement.isFrozen(), False)
 
+  @newSimulationExpectedFailure
   def test_isFrozen_OrderedInvoicedDelivered(self):
     """Test isFrozen for ordered, invoiced and invoiced sequence"""
     self._createOrderedInvoicedDeliveredBusinessProcess()
