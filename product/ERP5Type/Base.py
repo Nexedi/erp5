@@ -581,7 +581,13 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, aq_key, portal):
       # have been migrated. This is kept for backward compatility with
       # the filesystem Property Sheet (see ERP5Type.dynamic.portal_type_class)
       if isinstance(base, basestring):
-        continue
+        # The property Sheet might be in ERP5PropertySheetLegacy,
+        # give it a try. If it's not there, no need to warn or log
+        # heavily: it just means that it will be a ZODB propertysheet
+        from Products.ERP5Type import PropertySheet
+        base = getattr(PropertySheet, base)
+        if isinstance(base, basestring):
+          continue
 
       for list_name, current_list in ps_definition_dict.items():
         try:
