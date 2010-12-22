@@ -13,7 +13,8 @@ class xml_to_text:
         return self.__name__
 
     def convert(self, data, cache, **kw):
-        out = ''.join(etree.fromstring(data).itertext()).encode('utf-8')
+        text_list = etree.fromstring(data).itertext()
+        out = ' '.join([text for text in text_list if text])
         cache.setData(out)
         return cache
 
