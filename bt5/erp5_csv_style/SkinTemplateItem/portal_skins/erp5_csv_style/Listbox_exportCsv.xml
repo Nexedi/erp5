@@ -60,6 +60,18 @@ translate = context.portal_url.getPortalObject().Localizer.erp5_ui.gettext\n
 \n
 listboxline_list = context.get_value(\'default\', render_format=\'list\', REQUEST=request)\n
 \n
+def encode(value):\n
+  if isinstance(value, bool):\n
+    return \'"%s"\' % value\n
+  if isinstance(value, (int, long, float)):\n
+    return str(value)\n
+  else:\n
+    if isinstance(value, str):\n
+      value = value.decode(\'utf-8\')\n
+    else:\n
+      value = str(value)\n
+    return \'"%s"\' % value.replace(\'"\', \'""\')\n
+\n
 for listboxline in listboxline_list:\n
   if listboxline.isTitleLine():\n
     line_result = \'\'\n
@@ -74,22 +86,11 @@ for listboxline in listboxline_list:\n
       column_property = column_item[1]\n
 \n
       if column_id is not None:\n
-        if same_type(column_id,\'\'):\n
-          column_id = column_id.replace(\'"\',\'""\')\n
-          line_result += \'"%s"\' % column_id.decode(\'utf-8\')\n
-        else:\n
-          line_result += str(column_id)\n
-\n
+        line_result += encode(column_id)\n
       line_result += str(\',\')\n
 \n
       if column_property is not None:\n
-        if same_type(column_property,\'\'):\n
-          column_property = translate(column_property.decode(\'utf-8\'))\n
-          column_property = column_property.replace(\'"\',\'""\')\n
-          line_result2 += \'"%s"\' % column_property\n
-        else:\n
-          line_result2 += str(column_property)\n
-\n
+        line_result2 += encode(column_property)\n
       line_result2 += str(\',\')\n
 \n
     if len(line_result) > 1:\n
@@ -114,15 +115,7 @@ for listboxline in listboxline_list:\n
     for column_property in listboxline.getColumnPropertyList():\n
 \n
       if column_property is not None:\n
-        if same_type(column_property,\'\'):\n
-          column_property = column_property.replace(\'"\',\'""\')\n
-          line_result += \'"%s"\' % column_property.decode(\'utf-8\')\n
-        elif same_type(column_property,1.0):\n
-          column_property = str(column_property).replace(\'.\',\',\')\n
-          line_result += \'"%s"\' % column_property\n
-        else:\n
-          line_result += str(column_property)\n
-\n
+        line_result += encode(column_property)\n
       line_result += str(\',\')\n
 \n
     if len(line_result) > 1:\n
