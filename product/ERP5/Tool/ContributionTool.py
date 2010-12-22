@@ -342,52 +342,53 @@ class ContributionTool(BaseTool):
     # document inside us at this stage. Else we
     # must find out where to store it.
     if ob is not None:
-      # Call from webdav API
-      # redefine parameters
-      portal_type = ob.getPortalType()
-      container = ob.getParentValue()
-    if not portal_type:
-      document = BaseTool.newContent(self, id=id,
-                                     portal_type=portal_type,
-                                     is_indexable=0)
+      # Called from webdav API
+      # Object is already created by PUT_factory
+      # fill the volatile cache _v_document_cache
+      # then return the document
+      document = ob
     else:
-      # We give the system a last chance to analyse the
-      # portal_type based on the document content
-      # (ex. a Memo is a kind of Text which can be identified
-      # by the fact it includes some specific content)
+      if not portal_type:
+        document = BaseTool.newContent(self, id=id,
+                                      portal_type=portal_type,
+                                      is_indexable=0)
+      elif ob is None:
+        # We give the system a last chance to analyse the
+        # portal_type based on the document content
+        # (ex. a Memo is a kind of Text which can be identified
+        # by the fact it includes some specific content)
 
-      # Now we know the portal_type, let us find the module
-      # to which we should move the document to
-      if container is None:
-        module = self.getDefaultModule(portal_type)
-      else:
-        module = container
-      # There is no preexisting document - we can therefore
-      # set the new object
-      new_content_kw = {'portal_type': portal_type,
-                        'is_indexable': False}
-      if id is not None:
-        new_content_kw['id'] = id
-      document = module.newContent(**new_content_kw)
-      # We can now discover metadata
-      if discover_metadata:
-        # Metadata disovery is done as an activity by default
-        # If we need to discoverMetadata synchronously, it must
-        # be for user interface and should thus be handled by
-        # ZODB scripts
-        document.activate(after_path_and_method_id=(document.getPath(),
-          ('convertToBaseFormat', 'Document_tryToConvertToBaseFormat'))) \
-        .discoverMetadata(filename=filename,
-                          user_login=user_login,
-                          input_parameter_dict=input_parameter_dict)
-      # Keep the document close to us - this is only useful for
-      # file upload from webdav
-      volatile_cache = getattr(self, '_v_document_cache', None)
-      if volatile_cache is None:
-        self._v_document_cache = {}
-        volatile_cache = self._v_document_cache
-      volatile_cache[document.getId()] = document.getRelativeUrl()
-
+        # Now we know the portal_type, let us find the module
+        # to which we should move the document to
+        if container is None:
+          module = self.getDefaultModule(portal_type)
+        else:
+          module = container
+        # There is no preexisting document - we can therefore
+        # set the new object
+        new_content_kw = {'portal_type': portal_type,
+                          'is_indexable': False}
+        if id is not None:
+          new_content_kw['id'] = id
+        document = module.newContent(**new_content_kw)
+        # We can now discover metadata
+        if discover_metadata:
+          # Metadata disovery is done as an activity by default
+          # If we need to discoverMetadata synchronously, it must
+          # be for user interface and should thus be handled by
+          # ZODB scripts
+          document.activate(after_path_and_method_id=(document.getPath(),
+            ('convertToBaseFormat', 'Document_tryToConvertToBaseFormat'))) \
+          .discoverMetadata(filename=filename,
+                            user_login=user_login,
+                            input_parameter_dict=input_parameter_dict)
+    # Keep the document close to us - this is only useful for
+    # file upload from webdav
+    volatile_cache = getattr(self, '_v_document_cache', None)
+    if volatile_cache is None:
+      self._v_document_cache = {}
+      volatile_cache = self._v_document_cache
+    volatile_cache[document.getId()] = document.getRelativeUrl()
     # Return document to newContent method
     return document
 
