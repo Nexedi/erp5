@@ -3254,11 +3254,11 @@ def legacyNormalizeUrl(url, base_url=None):
 def urlnormNormaliseUrl(url, base_url=None):
   """The normalisation up is delegated to urlnorm library.
   """
+  InvalidURLException = getattr(urlnorm, 'InvalidUrl', AttributeError)
   try:
     url = urlnorm.norm(url)
-  except (AttributeError, urlnorm.InvalidUrl):
-    # This url is not valid, a better Exception will
-    # be raised
+  except InvalidURLException:
+    # This url is not valid
     return
   url_split = urlparse.urlsplit(url)
   url_protocol = url_split[0]
