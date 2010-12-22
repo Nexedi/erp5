@@ -52,10 +52,7 @@
         <item>
             <key> <string>group_list</string> </key>
             <value>
-              <tuple>
-                <string>document</string>
-                <string>web_document</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -76,15 +73,22 @@
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>
+        <item>
+            <key> <string>type_class</string> </key>
+            <value> <string>TextDocument</string> </value>
+        </item>
+        <item>
+            <key> <string>type_mixin</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
       </dictionary>
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
-        <tuple/>
-      </tuple>
+      <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -101,10 +105,7 @@
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <tuple>
-        <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
-        <tuple/>
-      </tuple>
+      <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
     </pickle>
     <pickle>
       <dictionary>
