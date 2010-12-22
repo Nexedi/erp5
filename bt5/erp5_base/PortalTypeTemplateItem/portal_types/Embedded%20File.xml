@@ -85,7 +85,7 @@
         </item>
         <item>
             <key> <string>type_class</string> </key>
-            <value> <string>Image</string> </value>
+            <value> <string>EmbeddedFile</string> </value>
         </item>
         <item>
             <key> <string>type_mixin</string> </key>
