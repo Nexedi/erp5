@@ -213,18 +213,10 @@ class Folder:
     Returns -- Bare and empty object of the appropriate type (or None, if
     we don't know what to do)
     """
-    findPortalTypeName = None
-    registry = getToolByName(self, 'portal_contribution_registry', None)
-    if registry is not None:
-      findPortalTypeName = registry.findPortalTypeName
-    else:
-      # Keep backward compatibility
-      registry = getToolByName(self, 'content_type_registry', None)
-      if registry is None:
-        return None
-      findPortalTypeName = registry.findTypeName
-
-    portal_type = findPortalTypeName(name, typ, body)
+    portal = self.getPortalObject()
+    registry = portal.portal_contribution_registry
+    portal_type = registry.findPortalTypeName(filename=name,
+                                              content_type=typ)
     if portal_type is None:
       return None
 
@@ -234,7 +226,7 @@ class Folder:
     if myType is not None and not myType.allowType( portal_type ) and \
        'portal_contributions' not in self.getPhysicalPath():
       raise ValueError('Disallowed subobject type: %s' % portal_type)
-    container = self.getPortalObject().getDefaultModule(portal_type)
+    container = portal.getDefaultModule(portal_type)
     pt.constructContent(type_name=portal_type,
                         container=container,
                         id=name)
