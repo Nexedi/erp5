@@ -49,6 +49,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
 
   def afterSetUp(self):
     self.login()
+    self.setSystemPreference()
     # XML validator
     v12schema_url = os.path.join(os.path.dirname(__file__),
                                  'OpenDocument-schema-v1.2-draft9.rng')
