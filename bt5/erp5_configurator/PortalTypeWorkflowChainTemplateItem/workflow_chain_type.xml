@@ -1,0 +1,10 @@
+<workflow_chain>
+ <chain>
+  <type>Business Configuration</type>
+  <workflow>business_configuration_interaction_workflow, business_configuration_simulation_workflow, edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Configuration Save</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+</workflow_chain>

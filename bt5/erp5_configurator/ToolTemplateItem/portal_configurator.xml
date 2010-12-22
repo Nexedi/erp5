@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ConfiguratorTool" module="Products.ERP5Configurator.Tool.ConfiguratorTool"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>portal_configurator</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

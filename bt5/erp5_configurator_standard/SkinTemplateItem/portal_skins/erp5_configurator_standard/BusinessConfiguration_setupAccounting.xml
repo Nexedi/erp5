@@ -1,0 +1,194 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>configuration_save = context.restrictedTraverse(configuration_save_url)\n
+\n
+gap_info_list = context.BusinessConfiguration_getAvailableGAPList()\n
+selected_gap_info = None\n
+for gap_info in gap_info_list:\n
+  if gap_info[\'id\'] == accounting_plan:\n
+    selected_gap_info = gap_info\n
+\n
+assert selected_gap_info is not None\n
+\n
+## install accounting bt5 template based on selected accounting plan\n
+configuration_save.addConfigurationItem("Standard BT5 Configurator Item",\n
+                                        bt5_id=selected_gap_info[\'bt5\'])\n
+\n
+group_id = context.getGlobalConfigurationAttr(\'group_id\')\n
+if group_id is None:\n
+  # if group_id is not found, use \'group\'\n
+  group_id = context.getGlobalConfigurationAttr(\'group\')\n
+\n
+accounting_transaction_simulation_state_list = \'delivered stopped\' # XXX is it OK not to pass a list ?\n
+\n
+gap_account_map = context.BusinessConfiguration_getDefaultAccountList()\n
+\n
+for item in gap_account_map[accounting_plan]:\n
+  configuration_save.addConfigurationItem("Account Configurator Item", **item)\n
+\n
+## Configure accounting preferences\n
+configuration_save.addConfigurationItem(\n
+          \'Preference Configurator Item\',\n
+          object_id = \'default_configurator_preference\',\n
+          preferred_accounting_transaction_from_date = None,\n
+          preferred_accounting_transaction_at_date = None,\n
+          preferred_section_category = \'group/%s\' % group_id,\n
+          preferred_accounting_transaction_section_category = \'group/%s\' % group_id,\n
+          preferred_accounting_transaction_gap = selected_gap_info[\'root\'],\n
+          preferred_accounting_transaction_simulation_state_list\n
+                = accounting_transaction_simulation_state_list)\n
+\n
+## Configure accounting period\n
+configuration_save.addConfigurationItem("Accounting Period Configurator Item",\n
+                                        start_date=period_start_date,\n
+                                        stop_date=period_stop_date,\n
+                                        short_title=period_title)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>configuration_save_url=None, accounting_plan=\'\', period_start_date=None, period_stop_date=None, period_title=None, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>5</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>configuration_save_url</string>
+                            <string>accounting_plan</string>
+                            <string>period_start_date</string>
+                            <string>period_stop_date</string>
+                            <string>period_title</string>
+                            <string>kw</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>configuration_save</string>
+                            <string>gap_info_list</string>
+                            <string>None</string>
+                            <string>selected_gap_info</string>
+                            <string>_getiter_</string>
+                            <string>gap_info</string>
+                            <string>_getitem_</string>
+                            <string>AssertionError</string>
+                            <string>group_id</string>
+                            <string>accounting_transaction_simulation_state_list</string>
+                            <string>gap_account_map</string>
+                            <string>item</string>
+                            <string>_apply_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+                <string></string>
+                <none/>
+                <none/>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>BusinessConfiguration_setupAccounting</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

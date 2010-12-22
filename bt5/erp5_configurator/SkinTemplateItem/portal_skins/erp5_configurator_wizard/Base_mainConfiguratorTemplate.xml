@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<tal:block tal:condition="python: options.get(\'current_state\') is None">\n
+  <div id="logged_in_as">\n
+    Hello, <tal:block tal:condition="not: here/portal_membership/isAnonymousUser">\n
+             <span tal:replace="python:here.portal_membership.getAuthenticatedMember().getUserName()" />\n
+           </tal:block>\n
+  </div>\n
+  <tal:block tal:replace="structure python: options.get(\'form_html\')" /> \n
+</tal:block>\n
+\n
+<tal:block tal:condition="python: options.get(\'current_state\') is not None">\n
+  <tal:block  tal:define="business_configuration python: options.get(\'business_configuration\');\n
+                          state_info python: here.BusinessConfiguration_getUIDescription(business_configuration);\n
+                          current_state_title python: options.get(\'current_state\').getTitle() ;\n
+                          current_state_info python: filter(lambda x: x[\'state\'] == current_state_title, state_info)[0];\n
+                          form_title python: current_state_info[\'title\'];\n
+                          form_description python: current_state_info[\'description\']">\n
+\n
+  <div id="logged_in_as">\n
+    <tal:block tal:condition="not: here/portal_membership/isAnonymousUser">\n
+     <span i18n:translate="" \n
+          i18n:domain="ui">Hello</span>, \n
+      <span tal:replace="python:here.portal_membership.getAuthenticatedMember().getUserName()" />\n
+    </tal:block>\n
+  </div>\n
+\n
+  <h2 i18n:translate=""\n
+      i18n:domain="ui"\n
+      tal:content="form_title"/>\n
+  <div style="padding-left: 0.5em; font-weight: 120%;">\n
+    <b i18n:translate=""\n
+       i18n:domain="ui"\n
+       tal:content="form_description"/>\n
+  </div>\n
+\n
+  <div class="content editable">\n
+    <table style="width: 100%;">\n
+      <tr>\n
+        <td style="width: 20%; vertical-align: top; padding-top: 0em;">\n
+          <h3 i18n:translate=""\n
+              i18n:domain="ui">Installation steps</h3>\n
+          <ul>\n
+            <tal:block tal:repeat="state state_info">\n
+              <li tal:condition="python: state[\'title\'] not in [\'Payment\']"> \n
+                   <b tal:condition="python: current_state_title==state[\'state\']"\n
+                      i18n:translate=""\n
+                      i18n:domain="ui"\n
+                      tal:content="state/title"/>\n
+                   <span tal:condition="python: current_state_title!=state[\'state\']"\n
+                         i18n:translate=""\n
+                         i18n:domain="ui"\n
+                         tal:content="state/title"/>\n
+              </li>\n
+            </tal:block>\n
+          </ul>\n
+        </td>\n
+        <td style="vertical-align: top; padding-top: 1.5em; padding-left: 2em;"> \n
+          <tal:block tal:replace="structure python: options.get(\'form_html\')" /> \n
+        </td>\n
+      </tr>\n
+    </table>\n
+  </div>\n
+  </tal:block>\n
+</tal:block>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_mainConfiguratorTemplate</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

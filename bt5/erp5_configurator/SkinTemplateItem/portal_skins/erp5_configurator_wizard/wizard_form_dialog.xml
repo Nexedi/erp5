@@ -1,0 +1,147 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
+  <tal:block metal:define-macro="master"\n
+             tal:define="editable_mode python: True;\n
+             dialog_mode python: True;\n
+             dummy python: request.set(\'editable_mode\', editable_mode)">\n
+    <tal:block metal:use-macro="here/wizard_dialog_main/macros/master">\n
+      <tal:block metal:fill-slot="main">\n
+        <tal:block tal:define="field_errors python: request.get(\'field_errors\',{});\n
+                   dummy python: request.set(\'here\', here);\n
+                   dialog_actions python: here.Base_fixDialogActions(actions, dialog_category);\n
+                   current_action python: here.ERP5Site_getCurrentDialogAction(current_url, dialog_actions);">\n
+          <div class="dialog_box">\n
+            <div tal:condition="python: len(dialog_actions) > 1"\n
+              class="dialog_selector">\n
+              <label for="dialog_selector"\n
+                     tal:content="python: { \'object_exchange\': \'Select Exchange\'\n
+                     , \'object_print\'   : \'Select Print\'\n
+                     , \'object_search\'  : \'Select Search\'\n
+                     , \'object_report\'  : \'Select Report\'\n
+                     , \'object_fast_input\'  : \'Select Fast Input\'\n
+                     }.get(dialog_category, \'Select\')"\n
+                     i18n:translate="" i18n:domain="ui"></label>\n
+              <select name="select_dialog" id="dialog_selector"\n
+                      tal:attributes="onChange string:submitAction(this.form,\'Base_doDialog\')">\n
+\n
+                <tal:block tal:repeat="action dialog_actions">\n
+                  <option tal:attributes="value action/url;\n
+                          selected python: action == current_action and \'selected\' or None"\n
+                          tal:content="action/name"\n
+                          i18n:translate="" i18n:domain="ui"></option>\n
+                </tal:block>\n
+              </select>\n
+              <button type="submit" name="Base_doDialog:method">\n
+                <span class="image"></span>\n
+                <span class="description"\n
+                      i18n:translate="" i18n:domain="ui">Go</span>\n
+              </button>\n
+            </div>\n
+\n
+          <tal:block metal:define-macro="content">\n
+            <div class="content"\n
+                 tal:define="group_list python: form.Form_getGroupTitleAndId();\n
+                 gid_list   python: \' \'.join([x[\'gid\'] for x in group_list if x not in (\'bottom\', \'hidden\')]);">\n
+              <tal:block tal:repeat="group group_list">\n
+                <tal:block tal:define="gid    group/gid">\n
+                  <fieldset tal:condition="python: \'hidden\' not in gid and \'bottom\' not in gid"\n
+                            tal:attributes="class gid;">\n
+                    <legend tal:content="group/gtitle" class="group_title" />\n
+                    <tal:block tal:repeat="field python: form.get_fields_in_group(group[\'goid\'])">\n
+                      <tal:block metal:use-macro="here/field_render/macros/field_render" />\n
+                    </tal:block>\n
+                  </fieldset>\n
+                </tal:block>\n
+              </tal:block>\n
+              <p class="clear"></p>\n
+            </div>\n
+           </tal:block>\n
+\n
+          </div>\n
+        </tal:block>\n
+      </tal:block>\n
+\n
+     <tal:block metal:define-macro="bottom">\n
+      <tal:block metal:fill-slot="bottom">\n
+        <tal:block tal:define="field_errors python: request.get(\'field_errors\',{});\n
+                   dummy python: request.set(\'here\', here);\n
+                   bottom_group python: form.get_fields_in_group(\'bottom\')">\n
+          <div tal:condition="python: len(bottom_group) > 0"\n
+            class="bottom">\n
+            <tal:block tal:repeat="field bottom_group">\n
+              <tal:block tal:define="value python:request.get(field.id, None)"\n
+                         tal:replace="structure python:field.render(value, request)" />\n
+            </tal:block>\n
+          </div>\n
+        </tal:block>\n
+       </tal:block>\n
+      </tal:block>\n
+    </tal:block>\n
+  </tal:block>\n
+</tal:block>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>wizard_form_dialog</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode>Wizard forms renderer</unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ERP5TypeInformation" module="Products.ERP5Type.ERP5Type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>content_icon</string> </key>
+            <value> <string>document.gif</string> </value>
+        </item>
+        <item>
+            <key> <string>content_meta_type</string> </key>
+            <value> <string>ERP5 Account Configurator Item</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string> Setup an Accounting Account. </string> </value>
+        </item>
+        <item>
+            <key> <string>factory</string> </key>
+            <value> <string>addAccountConfiguratorItem</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>System Preference Configurator Item</string> </value>
+        </item>
+        <item>
+            <key> <string>init_script</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>permission</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_class</string> </key>
+            <value> <string>SystemPreferenceConfiguratorItem</string> </value>
+        </item>
+        <item>
+            <key> <string>type_mixin</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

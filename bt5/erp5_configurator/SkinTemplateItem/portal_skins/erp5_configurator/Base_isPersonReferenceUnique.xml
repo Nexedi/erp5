@@ -1,0 +1,191 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
+  This method is to be called from remote Express instance to check\n
+if in Express instance we can create a Person object with an unique \n
+reference within Express services.\n
+This method can also called when customer inputs its employees in Configurator.\n
+This method will check as well if provided user name is a valid \n
+one (doesn\'t contain reserved characters in it)\n
+"""\n
+request = context.REQUEST\n
+portal = context.getPortalObject()\n
+reference = kw.get(\'reference\', None)\n
+ignore_users_from_same_instance = kw.get(\'ignore_users_from_same_instance\', 0)\n
+if editor is not None:\n
+  # script is used as a form field\'s validator\n
+  reference = editor\n
+\n
+# get Business Configuration\n
+business_configuration = context.restrictedTraverse(request.get(\'business_configuration_key\'))\n
+\n
+# as every instance has a hard coded \'admin\' user (owner of ERP5 Site instance)\n
+# also check if reference is actually allowed (i.e. doesn\'t contain special symbols)?\n
+# make sure we never allow it\n
+if reference in ["admin"] or not portal.ERP5Site_isValidUserName(reference):\n
+  return 0\n
+\n
+# first check if a Business Configuration has not already "reserved" it\n
+# through a Person Configuration Item which when build will create a real\n
+# Nexedi ERP5 account.\n
+person_configurator_item_list = portal.ERP5Site_getPersonListByInsensitiveReference(\n
+                                  reference=reference,\n
+                                  portal_type=\'Person Configurator Item\')\n
+\n
+if business_configuration is not None:\n
+  # when in Configuratorm mode we the user may have created already Person Configurator Item\n
+  # in this business configuration. Make sure that going to Previous page will not stop\n
+  # validation of username uniqueness \n
+  # XXX: this should be done using a ZSQL Query rather than getting object\n
+  # there should not be a speed penalty of loading objects in RAM as in most cases\n
+  # it\'s either 0 (i.e. not used) or 1 (used)\n
+  person_configurator_item_list = filter(lambda x: x.getObject().getParentValue().getParentValue() == \n
+                                           business_configuration, \\\n
+                                           person_configurator_item_list)\n
+\n
+if len(person_configurator_item_list) > 0:\n
+  return 0\n
+\n
+# ... then check already created accounts\n
+found_user_list = portal.ERP5Site_getPersonListByInsensitiveReference(reference=reference)\n
+\n
+if len(found_user_list):\n
+  # not unique\n
+  return 0\n
+\n
+return 1\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>editor=None, request=None, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>editor</string>
+                            <string>request</string>
+                            <string>kw</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>None</string>
+                            <string>reference</string>
+                            <string>ignore_users_from_same_instance</string>
+                            <string>business_configuration</string>
+                            <string>person_configurator_item_list</string>
+                            <string>filter</string>
+                            <string>len</string>
+                            <string>found_user_list</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_isPersonReferenceUnique</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

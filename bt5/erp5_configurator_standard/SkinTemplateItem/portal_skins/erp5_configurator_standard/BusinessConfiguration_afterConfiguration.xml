@@ -1,0 +1,280 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>""" This script will be called to apply the customization. """\n
+from AccessControl import getSecurityManager\n
+from Products.ERP5Type.Log import log\n
+\n
+portal = context.getPortalObject()\n
+portal_preferences = portal.portal_preferences\n
+bt5_obj = portal.restrictedTraverse(customer_template_relative_url)\n
+username = str(getSecurityManager().getUser())\n
+N_ = context.Base_translateString\n
+isTransitionPossible = portal.portal_workflow.isTransitionPossible\n
+\n
+# disable the default preference that comes with erp5_core\n
+# all needed preferences are configured by Configurator\n
+# disable the default configurator system preference \n
+# that comes when instance is delivered\n
+preference_to_disable_list = [\'default_site_preference\', \n
+                              \'default_initial_configurator_system_preference\']\n
+\n
+for preference_to_disable in preference_to_disable_list:\n
+  preference = getattr(portal_preferences, preference_to_disable, None)\n
+  if preference is not None:\n
+    if isTransitionPossible(preference, \'disable\'):\n
+      preference.disable()\n
+\n
+if bt5_obj is not None:\n
+  # update role settings for modules which exists already\n
+  for portal_type in bt5_obj.getTemplatePortalTypeRolesList():\n
+    module_list = portal.contentValues(\n
+                    filter=dict(portal_type=portal_type))\n
+    for module in module_list:\n
+      module.updateLocalRolesOnSecurityGroups()\n
+      print "Updated Role Mappings for: %s(%s) " %(module.getTitle(), module.getPortalType())\n
+\n
+  # update path items. FIXME: local roles should be exported by business template instead\n
+  for path in bt5_obj.getTemplatePathList():\n
+    obj = portal.restrictedTraverse(path, None)\n
+    # no need to update security on categories\n
+    if obj is not None and obj.getPortalType() not in (\'Category\', \'Base Category\',):\n
+      obj.updateLocalRolesOnSecurityGroups()\n
+      print "Updated Role Mappings for: ", path, obj.getPortalType()\n
+\n
+  # validate and open all objects\n
+  for path in bt5_obj.getTemplatePathList():\n
+    obj = context.getPortalObject().restrictedTraverse(path, None)\n
+    if obj is not None and hasattr(obj, \'getPortalType\'):\n
+      if obj.getPortalType() in (\'Person\', \'Organisation\', \'Account\', \'Tax\',\n
+                                 \'Discount\', \'Service\', \'Product\',\n
+                                 \'Sale Trade Condition\', \'Purchase Trade Condition\',\n
+                                 \'Order Root Simulation Rule\', \'Delivery Root Simulation Rule\',\n
+                                 \'Trade Model Simulation Rule\', \'Accounting Transaction Root Simulation Rule\',\n
+                                 \'Invoice Transaction Simulation Rule\', \'Payment Simulation Rule\',\n
+                                 \'Invoice Root Simulation Rule\', \'Delivery Simulation Rule\', \'Invoice Simulation Rule\'):\n
+        if isTransitionPossible(obj, \'validate\'):\n
+          obj.validate()\n
+          print "Validated: ", obj.getRelativeUrl()\n
+        for period in obj.contentValues(filter={\'portal_type\':\'Accounting Period\'}):\n
+          if isTransitionPossible(period, \'start\'):\n
+            period.start()\n
+            period.updateLocalRolesOnSecurityGroups()\n
+            print "\\tOpen (Accounting Period): ", period.getRelativeUrl()\n
+\n
+        for assignment in obj.contentValues(filter={\'portal_type\':\'Assignment\'}):\n
+          if isTransitionPossible(assignment, \'open\'):\n
+            assignment.open()\n
+            assignment.updateLocalRolesOnSecurityGroups()\n
+            print "\\tOpen (assignment): ", assignment.getRelativeUrl()\n
+\n
+  # XXX: We do not care about gadgets now\n
+  #portal.ERP5Site_setupGadget()\n
+\n
+# update security settings for default preference # XXX why ???\n
+default_configurator_preference = getattr(portal_preferences,\n
+                                          \'default_configurator_preference\', None)\n
+if default_configurator_preference is not None:\n
+  default_configurator_preference.updateLocalRolesOnSecurityGroups()\n
+\n
+# set manually in \'Module Properties\' respective business_application category\n
+module_business_application_map = {\'base\': (\'currency_module\',\n
+                                            \'organisation_module\',\n
+                                            \'person_module\',),\n
+                                   \'accounting\': (\'accounting_module\',\n
+                                                  \'account_module\',),\n
+                                   \'crm\': (\'campaign_module\',\n
+                                           \'event_module\',\n
+                                           \'meeting_module\',\n
+                                           \'sale_opportunity_module\',\n
+                                           \'support_request_module\',),\n
+                                   \'dms\': (\'document_module\',\n
+                                           \'image_module\',\n
+                                           \'document_ingestion_module\',\n
+                                           \'web_page_module\',),\n
+                                   \'trade\': (\'discount_module\',\n
+                                             \'internal_packing_list_module\',\n
+                                             \'inventory_module\',\n
+                                             \'purchase_order_module\',\n
+                                             \'purchase_packing_list_module\',\n
+                                             \'purchase_trade_condition_module\',\n
+                                             \'returned_sale_packing_list_module\',\n
+                                             \'sale_order_module\',\n
+                                             \'sale_packing_list_module\',\n
+                                             \'sale_trade_condition_module\',\n
+                                             \'tax_module\',),\n
+                                   \'pdm\': (\'component_module\',\n
+                                           \'product_module\',\n
+                                           \'purchase_supply_module\',\n
+                                           \'sale_supply_module\',\n
+                                           \'service_module\',\n
+                                           \'transformation_module\',),\n
+                                   }\n
+\n
+for business_application_category_id, module_ids in module_business_application_map.items():\n
+  for module_id in module_ids:\n
+    module = getattr(portal, module_id, None)\n
+    if module is not None:\n
+      module.edit(business_application = business_application_category_id)\n
+\n
+print "Indexing translations"\n
+portal.ERP5Site_updateTranslationTable()\n
+\n
+# clear cache so user security is recalculated\n
+portal.portal_caches.clearAllCache()\n
+print "Clear cache."\n
+\n
+log("%s" % printed)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>customer_template_relative_url=None, alter_preferences=True</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>customer_template_relative_url</string>
+                            <string>alter_preferences</string>
+                            <string>_print_</string>
+                            <string>_print</string>
+                            <string>AccessControl</string>
+                            <string>getSecurityManager</string>
+                            <string>Products.ERP5Type.Log</string>
+                            <string>log</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>portal_preferences</string>
+                            <string>bt5_obj</string>
+                            <string>str</string>
+                            <string>username</string>
+                            <string>N_</string>
+                            <string>isTransitionPossible</string>
+                            <string>preference_to_disable_list</string>
+                            <string>_getiter_</string>
+                            <string>preference_to_disable</string>
+                            <string>getattr</string>
+                            <string>None</string>
+                            <string>preference</string>
+                            <string>portal_type</string>
+                            <string>dict</string>
+                            <string>module_list</string>
+                            <string>module</string>
+                            <string>path</string>
+                            <string>obj</string>
+                            <string>hasattr</string>
+                            <string>period</string>
+                            <string>assignment</string>
+                            <string>default_configurator_preference</string>
+                            <string>module_business_application_map</string>
+                            <string>business_application_category_id</string>
+                            <string>module_ids</string>
+                            <string>module_id</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+                <int>1</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>BusinessConfiguration_afterConfiguration</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

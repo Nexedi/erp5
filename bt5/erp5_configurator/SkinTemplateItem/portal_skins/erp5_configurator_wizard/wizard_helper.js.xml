@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts11215424.08</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>wizard_helper.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+displayMessage = function () {\n
+  wizard_message = document.getElementById(\'wizard_message\');\n
+  wizard_message.style.visibility = \'visible\';\n
+  if (!/MSIE/.test(navigator.userAgent)) {\n
+    if (scrapeText(wizard_message) == \'true\') {\n
+      wizard_message.innerHTML = \'<a href="next">Please click here to access ERP5 Express Configuration service.</a>\';\n
+    } else {\n
+      wizard_message.innerHTML = \'You can not access ERP5 Express Configuration service.\';\n
+    }\n
+  } else {\n
+    wizard_message.innerHTML = \'<a href="http://www.mozilla.com/firefox/">Please click here to download Firefox, because your browser may not work properly. It is free.</a>\';\n
+  }\n
+}\n
+addLoadEvent(displayMessage);\n
+\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>683</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

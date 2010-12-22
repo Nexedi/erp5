@@ -1,0 +1,1262 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>return {\'accounting_transaction_root_simulation_rule\': {\'categories\': (\'trade_phase/default/accounting\',),\n
+                                                        \'default_reference\': \'default_accounting_transaction_rule\',\n
+                                                        \'portal_type\': \'Accounting Transaction Root Simulation Rule\',\n
+                                                        \'test_method_id\': (\'Rule_testFalse\',),\n
+                                                        \'title\': \'Default Accounting Transaction Root Simulation Rule\',\n
+                                                        \'content_list\': [{\'divergence_provider\': 0,\n
+                                                                          \'id\': \'delivery_tester\',\n
+                                                                          \'matching_provider\': 1,\n
+                                                                          \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                                          \'tested_property\': (\'delivery\',),\n
+                                                                          \'title\': \'delivery divergence tester\'}]},\n
+ \'delivery_root_simulation_rule\': {\'categories\': (\'trade_phase/default/delivery\',),\n
+                                   \'default_reference\': \'default_delivery_rule\',\n
+                                   \'portal_type\': \'Delivery Root Simulation Rule\',\n
+                                   \'test_method_id\': (\'Rule_testFalse\',),\n
+                                   \'title\': \'Default Delivery Root Simulation Rule\',\n
+                                   \'content_list\': [{\'divergence_provider\': 0,\n
+                                                     \'id\': \'variation_tester\',\n
+                                                     \'matching_provider\': 0,\n
+                                                     \'portal_type\': \'Variation Divergence Tester\',\n
+                                                     \'quantity\': 0,\n
+                                                     \'tested_property\': (\'variation_category_list\',\n
+                                                                         \'variation_property_dict\'),\n
+                                                     \'title\': \'variation divergence tester\'},\n
+                                                    {\'divergence_provider\': 0,\n
+                                                     \'id\': \'use_tester\',\n
+                                                     \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                     \'tested_property\': (\'use\',),\n
+                                                     \'title\': \'use divergence tester\'},\n
+                                                    {\'id\': \'stop_date_tester\',\n
+                                                     \'portal_type\': \'DateTime Divergence Tester\',\n
+                                                     \'quantity\': 0,\n
+                                                     \'tested_property\': (\'stop_date\',),\n
+                                                     \'title\': \'stop_date divergence tester\'},\n
+                                                    {\'id\': \'start_date_tester\',\n
+                                                     \'portal_type\': \'DateTime Divergence Tester\',\n
+                                                     \'quantity\': 0,\n
+                                                     \'tested_property\': (\'start_date\',),\n
+                                                     \'title\': \'start_date divergence tester\'},\n
+                                                    {\'id\': \'specialise_tester\',\n
+                                                     \'portal_type\': \'Specialise Divergence Tester\',\n
+                                                     \'title\': \'Business Process must be consistent to make good prevision\'},\n
+                                                    {\'id\': \'source_tester\',\n
+                                                     \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                     \'tested_property\': (\'source\',),\n
+                                                     \'title\': \'source divergence tester\'},\n
+                                                    {\'id\': \'source_section_tester\',\n
+                                                     \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                     \'tested_property\': (\'source_section\',),\n
+                                                     \'title\': \'source_section divergence tester\'},\n
+                                                    {\'id\': \'source_project_tester\',\n
+                                                     \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                     \'tested_property\': (\'source_project\',),\n
+                                                     \'title\': \'source_project divergence tester\'},\n
+                                                    {\'id\': \'source_payment_tester\',\n
+                                                     \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                     \'tested_property\': (\'source_payment\',),\n
+                                                     \'title\': \'source_payment divergence tester\'},\n
+                                                    {\'id\': \'source_function_tester\',\n
+                                                     \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                     \'tested_property\': (\'source_function\',),\n
+                                                     \'title\': \'source_function divergence tester\'},\n
+                                                    {\'id\': \'source_decision_tester\',\n
+                                                     \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                     \'tested_property\': (\'source_decision\',),\n
+                                                     \'title\': \'source_decision divergence tester\'},\n
+                                                    {\'id\': \'source_administration_tester\',\n
+                                                     \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                     \'tested_property\': (\'source_administration\',),\n
+                                                     \'title\': \'source_administration divergence tester\'},\n
+                                                    {\'id\': \'source_account_tester\',\n
+                                                     \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                     \'tested_property\': (\'source_account\',),\n
+                                                     \'title\': \'source_account divergence tester\'},\n
+                                                    {\'id\': \'resource_tester\',\n
+                                                     \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                     \'tested_property\': (\'resource\',),\n
+                                                     \'title\': \'resource divergence tester\'},\n
+                                                    {\'id\': \'quantity_tester\',\n
+                                                     \'portal_type\': \'Net Converted Quantity Divergence Tester\',\n
+                                                     \'quantity_range_max\': 0,\n
+                                                     \'quantity_range_min\': 0,\n
+                                                     \'tested_property\': (\'quantity\',\n
+                                                                         \'quantity_unit\'),\n
+                                                     \'title\': \'quantity divergence tester\',\n
+                                                     \'use_delivery_ratio\': 1},\n
+                                                    {\'divergence_provider\': 0,\n
+                                                     \'id\': \'price_tester\',\n
+                                                     \'portal_type\': \'Float Divergence Tester\',\n
+                                                     \'quantity_range_max\': 0,\n
+                                                     \'quantity_range_min\': 0,\n
+                                                     \'tested_property\': (\'price\',),\n
+                                                     \'title\': \'price divergence tester\'},\n
+                                                    {\'divergence_provider\': 0,\n
+                                                     \'id\': \'price_currency_tester\',\n
+                                                     \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                     \'tested_property\': (\'price_currency\',),\n
+                                                     \'title\': \'price_currency divergence tester\'},\n
+                                                    {\'divergence_provider\': 0,\n
+                                                     \'id\': \'incoterm_tester\',\n
+                                                     \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                     \'tested_property\': (\'incoterm\',),\n
+                                                     \'title\': \'incoterm divergence tester\'},\n
+                                                    {\'id\': \'destination_tester\',\n
+                                                     \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                     \'tested_property\': (\'destination\',),\n
+                                                     \'title\': \'destination divergence tester\'},\n
+                                                    {\'id\': \'destination_section_tester\',\n
+                                                     \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                     \'tested_property\': (\'destination_section\',),\n
+                                                     \'title\': \'destination_section divergence tester\'},\n
+                                                    {\'id\': \'destination_project_tester\',\n
+                                                     \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                     \'tested_property\': (\'destination_project\',),\n
+                                                     \'title\': \'destination_project divergence tester\'},\n
+                                                    {\'id\': \'destination_payment_tester\',\n
+                                                     \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                     \'tested_property\': (\'destination_payment\',),\n
+                                                     \'title\': \'destination_payment divergence tester\'},\n
+                                                    {\'id\': \'destination_function_tester\',\n
+                                                     \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                     \'tested_property\': (\'destination_function\',),\n
+                                                     \'title\': \'destination_function divergence tester\'},\n
+                                                    {\'id\': \'destination_decision_tester\',\n
+                                                     \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                     \'tested_property\': (\'destination_decision\',),\n
+                                                     \'title\': \'destination_decision divergence tester\'},\n
+                                                    {\'id\': \'destination_administration_tester\',\n
+                                                     \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                     \'tested_property\': (\'destination_administration\',),\n
+                                                     \'title\': \'destination_administration divergence tester\'},\n
+                                                    {\'id\': \'destination_account_tester\',\n
+                                                     \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                     \'tested_property\': (\'destination_account\',),\n
+                                                     \'title\': \'destination_account divergence tester\'},\n
+                                                    {\'id\': \'description_tester\',\n
+                                                     \'portal_type\': \'String Divergence Tester\',\n
+                                                     \'tested_property\': (\'description\',),\n
+                                                     \'title\': \'description divergence tester\'},\n
+                                                    {\'divergence_provider\': 0,\n
+                                                     \'id\': \'delivery_tester\',\n
+                                                     \'matching_provider\': 1,\n
+                                                     \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                     \'tested_property\': (\'delivery\',),\n
+                                                     \'title\': \'delivery divergence tester\'},\n
+                                                    {\'divergence_provider\': 0,\n
+                                                     \'id\': \'delivery_mode_divergence_tester\',\n
+                                                     \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                     \'tested_property\': (\'delivery_mode\',),\n
+                                                     \'title\': \'delivery_mode divergence tester\'},\n
+                                                    {\'divergence_provider\': 0,\n
+                                                     \'id\': \'base_contribution_tester\',\n
+                                                     \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                     \'tested_property\': (\'base_contribution\',),\n
+                                                     \'title\': \'base_contribution divergence tester\'},\n
+                                                    {\'divergence_provider\': 0,\n
+                                                     \'id\': \'base_application_tester\',\n
+                                                     \'matching_provider\': 0,\n
+                                                     \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                     \'tested_property\': (\'base_application\',),\n
+                                                     \'title\': \'base_application divergence tester\'},\n
+                                                    {\'id\': \'aggregate_tester\',\n
+                                                     \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                     \'tested_property\': (\'aggregate\',),\n
+                                                     \'title\': \'aggregate divergence tester\'}]},\n
+ \'delivery_simulation_rule\': {\'categories\': (\'trade_phase/default/delivery\',),\n
+                              \'default_reference\': \'default_delivering_rule\',\n
+                              \'portal_type\': \'Delivery Simulation Rule\',\n
+                              \'test_method_id\': (\'SimulationMovement_testDeliverySimulationRule\',),\n
+                              \'title\': \'Default Delivery Simulation Rule\',\n
+                              \'content_list\': [{\'id\': \'source_function_tester\',\n
+                                                \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                \'tested_property\': (\'source_function\',),\n
+                                                \'title\': \'source_function divergence tester\'},\n
+                                               {\'id\': \'source_decision_tester\',\n
+                                                \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                \'tested_property\': (\'source_decision\',),\n
+                                                \'title\': \'source_decision divergence tester\'},\n
+                                               {\'id\': \'source_administration_tester\',\n
+                                                \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                \'tested_property\': (\'source_administration\',),\n
+                                                \'title\': \'source_administration divergence tester\'},\n
+                                               {\'id\': \'source_account_tester\',\n
+                                                \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                \'tested_property\': (\'source_account\',),\n
+                                                \'title\': \'source_account divergence tester\'},\n
+                                               {\'id\': \'resource_tester\',\n
+                                                \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                \'tested_property\': (\'resource\',),\n
+                                                \'title\': \'resource divergence tester\'},\n
+                                               {\'categories\': (\'solver/portal_solvers/Quantity Split Solver\',),\n
+                                                \'id\': \'quantity_tester\',\n
+                                                \'portal_type\': \'Net Converted Quantity Divergence Tester\',\n
+                                                \'quantity_range_max\': 0,\n
+                                                \'quantity_range_min\': 0,\n
+                                                \'tested_property\': (\'quantity\',\n
+                                                                    \'quantity_unit\'),\n
+                                                \'title\': \'quantity divergence tester\',\n
+                                                \'use_delivery_ratio\': 1},\n
+                                               {\'divergence_provider\': 0,\n
+                                                \'id\': \'price_tester\',\n
+                                                \'portal_type\': \'Float Divergence Tester\',\n
+                                                \'quantity_range_max\': 0,\n
+                                                \'quantity_range_min\': 0,\n
+                                                \'tested_property\': (\'price\',),\n
+                                                \'title\': \'price divergence tester\'},\n
+                                               {\'divergence_provider\': 1,\n
+                                                \'id\': \'price_currency_tester\',\n
+                                                \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                \'tested_property\': (\'price_currency\',),\n
+                                                \'title\': \'price_currency divergence tester\'},\n
+                                               {\'divergence_provider\': 0,\n
+                                                \'id\': \'incoterm_tester\',\n
+                                                \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                \'tested_property\': (\'incoterm\',),\n
+                                                \'title\': \'incoterm divergence tester\'},\n
+                                               {\'id\': \'destination_tester\',\n
+                                                \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                \'tested_property\': (\'destination\',),\n
+                                                \'title\': \'destination divergence tester\'},\n
+                                               {\'id\': \'destination_section_tester\',\n
+                                                \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                \'tested_property\': (\'destination_section\',),\n
+                                                \'title\': \'destination_section divergence tester\'},\n
+                                               {\'id\': \'destination_project_tester\',\n
+                                                \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                \'tested_property\': (\'destination_project\',),\n
+                                                \'title\': \'destination_project divergence tester\'},\n
+                                               {\'id\': \'destination_payment_tester\',\n
+                                                \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                \'tested_property\': (\'destination_payment\',),\n
+                                                \'title\': \'destination_payment divergence tester\'},\n
+                                               {\'id\': \'destination_function_tester\',\n
+                                                \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                \'tested_property\': (\'destination_function\',),\n
+                                                \'title\': \'destination_function divergence tester\'},\n
+                                               {\'id\': \'destination_decision_tester\',\n
+                                                \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                \'tested_property\': (\'destination_decision\',),\n
+                                                \'title\': \'destination_decision divergence tester\'},\n
+                                               {\'id\': \'destination_administration_tester\',\n
+                                                \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                \'tested_property\': (\'destination_administration\',),\n
+                                                \'title\': \'destination_administration divergence tester\'},\n
+                                               {\'id\': \'destination_account_tester\',\n
+                                                \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                \'tested_property\': (\'destination_account\',),\n
+                                                \'title\': \'destination_account divergence tester\'},\n
+                                               {\'id\': \'description_tester\',\n
+                                                \'portal_type\': \'String Divergence Tester\',\n
+                                                \'tested_property\': (\'description\',),\n
+                                                \'title\': \'description divergence tester\'},\n
+                                               {\'divergence_provider\': 0,\n
+                                                \'id\': \'delivery_mode_divergence_tester\',\n
+                                                \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                \'tested_property\': (\'delivery_mode\',),\n
+                                                \'title\': \'delivery_mode divergence tester\'},\n
+                                               {\'divergence_provider\': 1,\n
+                                                \'id\': \'base_contribution_tester\',\n
+                                                \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                \'tested_property\': (\'base_contribution\',),\n
+                                                \'title\': \'base_contribution divergence tester\'},\n
+                                               {\'divergence_provider\': 1,\n
+                                                \'id\': \'base_application_tester\',\n
+                                                \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                \'tested_property\': (\'base_application\',),\n
+                                                \'title\': \'base_application divergence tester\'},\n
+                                               {\'id\': \'aggregate_tester\',\n
+                                                \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                \'tested_property\': (\'aggregate\',),\n
+                                                \'title\': \'aggregate divergence tester\'},\n
+                                               {\'divergence_provider\': 0,\n
+                                                \'id\': \'variation_tester\',\n
+                                                \'portal_type\': \'Variation Divergence Tester\',\n
+                                                \'quantity\': 0,\n
+                                                \'tested_property\': (\'variation_category_list\',\n
+                                                                    \'variation_property_dict\'),\n
+                                                \'title\': \'variation divergence tester\'},\n
+                                               {\'divergence_provider\': 0,\n
+                                                \'id\': \'use_tester\',\n
+                                                \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                \'tested_property\': (\'use\',),\n
+                                                \'title\': \'use divergence tester\'},\n
+                                               {\'id\': \'stop_date_tester\',\n
+                                                \'portal_type\': \'DateTime Divergence Tester\',\n
+                                                \'quantity\': 0,\n
+                                                \'tested_property\': (\'stop_date\',),\n
+                                                \'title\': \'stop_date divergence tester\'},\n
+                                               {\'categories\': (\'solver/portal_solvers/Unify Solver\',),\n
+                                                \'id\': \'start_date_tester\',\n
+                                                \'portal_type\': \'DateTime Divergence Tester\',\n
+                                                \'quantity\': 0,\n
+                                                \'tested_property\': (\'start_date\',),\n
+                                                \'title\': \'start_date divergence tester\'},\n
+                                               {\'id\': \'specialise_tester\',\n
+                                                \'portal_type\': \'Specialise Divergence Tester\',\n
+                                                \'title\': \'Business Process must be consistent to make good prevision\'},\n
+                                               {\'id\': \'source_tester\',\n
+                                                \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                \'tested_property\': (\'source\',),\n
+                                                \'title\': \'source divergence tester\'},\n
+                                               {\'id\': \'source_section_tester\',\n
+                                                \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                \'tested_property\': (\'source_section\',),\n
+                                                \'title\': \'source_section divergence tester\'},\n
+                                               {\'id\': \'source_project_tester\',\n
+                                                \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                \'tested_property\': (\'source_project\',),\n
+                                                \'title\': \'source_project divergence tester\'},\n
+                                               {\'id\': \'source_payment_tester\',\n
+                                                \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                \'tested_property\': (\'source_payment\',),\n
+                                                \'title\': \'source_payment divergence tester\'}]},\n
+ \'invoice_root_simulation_rule\': {\'categories\': (\'trade_phase/default/invoicing\',),\n
+                                  \'default_reference\': \'default_invoice_rule\',\n
+                                  \'portal_type\': \'Invoice Root Simulation Rule\',\n
+                                  \'test_method_id\': (\'Rule_testFalse\',),\n
+                                  \'title\': \'Default Invoice Root Simulation Rule\',\n
+                                  \'content_list\': [{\'divergence_provider\': 0,\n
+                                                    \'id\': \'variation_tester\',\n
+                                                    \'matching_provider\': 0,\n
+                                                    \'portal_type\': \'Variation Divergence Tester\',\n
+                                                    \'quantity\': 0,\n
+                                                    \'tested_property\': (\'variation_category_list\',\n
+                                                                        \'variation_property_dict\'),\n
+                                                    \'title\': \'variation divergence tester\'},\n
+                                                   {\'divergence_provider\': 0,\n
+                                                    \'id\': \'use_tester\',\n
+                                                    \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                    \'tested_property\': (\'use\',),\n
+                                                    \'title\': \'use divergence tester\'},\n
+                                                   {\'id\': \'stop_date_tester\',\n
+                                                    \'portal_type\': \'DateTime Divergence Tester\',\n
+                                                    \'quantity\': 0,\n
+                                                    \'tested_property\': (\'stop_date\',),\n
+                                                    \'title\': \'stop_date divergence tester\'},\n
+                                                   {\'id\': \'start_date_tester\',\n
+                                                    \'portal_type\': \'DateTime Divergence Tester\',\n
+                                                    \'quantity\': 0,\n
+                                                    \'tested_property\': (\'start_date\',),\n
+                                                    \'title\': \'start_date divergence tester\'},\n
+                                                   {\'id\': \'specialise_tester\',\n
+                                                    \'portal_type\': \'Specialise Divergence Tester\',\n
+                                                    \'title\': \'Business Process must be consistent to make good prevision\'},\n
+                                                   {\'id\': \'source_tester\',\n
+                                                    \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                    \'tested_property\': (\'source\',),\n
+                                                    \'title\': \'source divergence tester\'},\n
+                                                   {\'id\': \'source_section_tester\',\n
+                                                    \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                    \'tested_property\': (\'source_section\',),\n
+                                                    \'title\': \'source_section divergence tester\'},\n
+                                                   {\'id\': \'source_project_tester\',\n
+                                                    \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                    \'tested_property\': (\'source_project\',),\n
+                                                    \'title\': \'source_project divergence tester\'},\n
+                                                   {\'id\': \'source_payment_tester\',\n
+                                                    \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                    \'tested_property\': (\'source_payment\',),\n
+                                                    \'title\': \'source_payment divergence tester\'},\n
+                                                   {\'id\': \'source_function_tester\',\n
+                                                    \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                    \'tested_property\': (\'source_function\',),\n
+                                                    \'title\': \'source_function divergence tester\'},\n
+                                                   {\'id\': \'source_decision_tester\',\n
+                                                    \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                    \'tested_property\': (\'source_decision\',),\n
+                                                    \'title\': \'source_decision divergence tester\'},\n
+                                                   {\'id\': \'source_administration_tester\',\n
+                                                    \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                    \'tested_property\': (\'source_administration\',),\n
+                                                    \'title\': \'source_administration divergence tester\'},\n
+                                                   {\'id\': \'source_account_tester\',\n
+                                                    \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                    \'tested_property\': (\'source_account\',),\n
+                                                    \'title\': \'source_account divergence tester\'},\n
+                                                   {\'id\': \'resource_tester\',\n
+                                                    \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                    \'tested_property\': (\'resource\',),\n
+                                                    \'title\': \'resource divergence tester\'},\n
+                                                   {\'id\': \'quantity_tester\',\n
+                                                    \'portal_type\': \'Net Converted Quantity Divergence Tester\',\n
+                                                    \'quantity_range_max\': 0,\n
+                                                    \'quantity_range_min\': 0,\n
+                                                    \'tested_property\': (\'quantity\',\n
+                                                                        \'quantity_unit\'),\n
+                                                    \'title\': \'quantity divergence tester\',\n
+                                                    \'use_delivery_ratio\': 1},\n
+                                                   {\'divergence_provider\': 0,\n
+                                                    \'id\': \'price_tester\',\n
+                                                    \'portal_type\': \'Float Divergence Tester\',\n
+                                                    \'quantity_range_max\': 0,\n
+                                                    \'quantity_range_min\': 0,\n
+                                                    \'tested_property\': (\'price\',),\n
+                                                    \'title\': \'price divergence tester\'},\n
+                                                   {\'divergence_provider\': 1,\n
+                                                    \'id\': \'price_currency_tester\',\n
+                                                    \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                    \'tested_property\': (\'price_currency\',),\n
+                                                    \'title\': \'price_currency divergence tester\'},\n
+                                                   {\'divergence_provider\': 0,\n
+                                                    \'id\': \'incoterm_tester\',\n
+                                                    \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                    \'tested_property\': (\'incoterm\',),\n
+                                                    \'title\': \'incoterm divergence tester\'},\n
+                                                   {\'id\': \'destination_tester\',\n
+                                                    \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                    \'tested_property\': (\'destination\',),\n
+                                                    \'title\': \'destination divergence tester\'},\n
+                                                   {\'id\': \'destination_section_tester\',\n
+                                                    \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                    \'tested_property\': (\'destination_section\',),\n
+                                                    \'title\': \'destination_section divergence tester\'},\n
+                                                   {\'id\': \'destination_project_tester\',\n
+                                                    \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                    \'tested_property\': (\'destination_project\',),\n
+                                                    \'title\': \'destination_project divergence tester\'},\n
+                                                   {\'id\': \'destination_payment_tester\',\n
+                                                    \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                    \'tested_property\': (\'destination_payment\',),\n
+                                                    \'title\': \'destination_payment divergence tester\'},\n
+                                                   {\'id\': \'destination_function_tester\',\n
+                                                    \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                    \'tested_property\': (\'destination_function\',),\n
+                                                    \'title\': \'destination_function divergence tester\'},\n
+                                                   {\'id\': \'destination_decision_tester\',\n
+                                                    \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                    \'tested_property\': (\'destination_decision\',),\n
+                                                    \'title\': \'destination_decision divergence tester\'},\n
+                                                   {\'id\': \'destination_administration_tester\',\n
+                                                    \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                    \'tested_property\': (\'destination_administration\',),\n
+                                                    \'title\': \'destination_administration divergence tester\'},\n
+                                                   {\'id\': \'destination_account_tester\',\n
+                                                    \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                    \'tested_property\': (\'destination_account\',),\n
+                                                    \'title\': \'destination_account divergence tester\'},\n
+                                                   {\'id\': \'description_tester\',\n
+                                                    \'portal_type\': \'String Divergence Tester\',\n
+                                                    \'tested_property\': (\'description\',),\n
+                                                    \'title\': \'description divergence tester\'},\n
+                                                   {\'divergence_provider\': 0,\n
+                                                    \'id\': \'delivery_tester\',\n
+                                                    \'matching_provider\': 1,\n
+                                                    \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                    \'tested_property\': (\'delivery\',),\n
+                                                    \'title\': \'delivery divergence tester\'},\n
+                                                   {\'divergence_provider\': 1,\n
+                                                    \'id\': \'base_contribution_tester\',\n
+                                                    \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                    \'tested_property\': (\'base_contribution\',),\n
+                                                    \'title\': \'base_contribution divergence tester\'},\n
+                                                   {\'divergence_provider\': 0,\n
+                                                    \'id\': \'base_application_tester\',\n
+                                                    \'matching_provider\': 0,\n
+                                                    \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                    \'tested_property\': (\'base_application\',),\n
+                                                    \'title\': \'base_application divergence tester\'},\n
+                                                   {\'id\': \'aggregate_tester\',\n
+                                                    \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                    \'tested_property\': (\'aggregate\',),\n
+                                                    \'title\': \'aggregate divergence tester\'}]},\n
+ \'invoice_simulation_rule\': {\'categories\': (\'trade_phase/default/invoicing\',),\n
+                             \'default_reference\': \'default_invoicing_rule\',\n
+                             \'portal_type\': \'Invoice Simulation Rule\',\n
+                             \'test_method_id\': (\'SimulationMovement_testInvoiceSimulationRule\',),\n
+                             \'title\': \'Default Invoice Simulation Rule\',\n
+                             \'content_list\': [{\'divergence_provider\': 0,\n
+                                               \'id\': \'variation_tester\',\n
+                                               \'matching_provider\': 1,\n
+                                               \'portal_type\': \'Variation Divergence Tester\',\n
+                                               \'quantity\': 0,\n
+                                               \'tested_property\': (\'variation_category_list\',\n
+                                                                   \'variation_property_dict\'),\n
+                                               \'title\': \'variation divergence tester\'},\n
+                                              {\'divergence_provider\': 0,\n
+                                               \'id\': \'use_tester\',\n
+                                               \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                               \'tested_property\': (\'use\',),\n
+                                               \'title\': \'use divergence tester\'},\n
+                                              {\'id\': \'stop_date_tester\',\n
+                                               \'portal_type\': \'DateTime Divergence Tester\',\n
+                                               \'quantity\': 0,\n
+                                               \'tested_property\': (\'stop_date\',),\n
+                                               \'title\': \'stop_date divergence tester\'},\n
+                                              {\'id\': \'start_date_tester\',\n
+                                               \'portal_type\': \'DateTime Divergence Tester\',\n
+                                               \'quantity\': 0,\n
+                                               \'tested_property\': (\'start_date\',),\n
+                                               \'title\': \'start_date divergence tester\'},\n
+                                              {\'id\': \'specialise_tester\',\n
+                                               \'portal_type\': \'Specialise Divergence Tester\',\n
+                                               \'title\': \'Business Process must be consistent to make good prevision\'},\n
+                                              {\'id\': \'source_tester\',\n
+                                               \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                               \'tested_property\': (\'source\',),\n
+                                               \'title\': \'source divergence tester\'},\n
+                                              {\'id\': \'source_section_tester\',\n
+                                               \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                               \'tested_property\': (\'source_section\',),\n
+                                               \'title\': \'source_section divergence tester\'},\n
+                                              {\'id\': \'source_project_tester\',\n
+                                               \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                               \'tested_property\': (\'source_project\',),\n
+                                               \'title\': \'source_project divergence tester\'},\n
+                                              {\'id\': \'source_payment_tester\',\n
+                                               \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                               \'tested_property\': (\'source_payment\',),\n
+                                               \'title\': \'source_payment divergence tester\'},\n
+                                              {\'id\': \'source_function_tester\',\n
+                                               \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                               \'tested_property\': (\'source_function\',),\n
+                                               \'title\': \'source_function divergence tester\'},\n
+                                              {\'id\': \'source_decision_tester\',\n
+                                               \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                               \'tested_property\': (\'source_decision\',),\n
+                                               \'title\': \'source_decision divergence tester\'},\n
+                                              {\'id\': \'source_administration_tester\',\n
+                                               \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                               \'tested_property\': (\'source_administration\',),\n
+                                               \'title\': \'source_administration divergence tester\'},\n
+                                              {\'id\': \'source_account_tester\',\n
+                                               \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                               \'tested_property\': (\'source_account\',),\n
+                                               \'title\': \'source_account divergence tester\'},\n
+                                              {\'id\': \'resource_tester\',\n
+                                               \'matching_provider\': 1,\n
+                                               \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                               \'tested_property\': (\'resource\',),\n
+                                               \'title\': \'resource divergence tester\'},\n
+                                              {\'id\': \'quantity_tester\',\n
+                                               \'portal_type\': \'Net Converted Quantity Divergence Tester\',\n
+                                               \'quantity_range_max\': 0,\n
+                                               \'quantity_range_min\': 0,\n
+                                               \'tested_property\': (\'quantity\',\n
+                                                                   \'quantity_unit\'),\n
+                                               \'title\': \'quantity divergence tester\',\n
+                                               \'use_delivery_ratio\': 1},\n
+                                              {\'divergence_provider\': 0,\n
+                                               \'id\': \'price_tester\',\n
+                                               \'portal_type\': \'Float Divergence Tester\',\n
+                                               \'quantity_range_max\': 0,\n
+                                               \'quantity_range_min\': 0,\n
+                                               \'tested_property\': (\'price\',),\n
+                                               \'title\': \'price divergence tester\'},\n
+                                              {\'divergence_provider\': 1,\n
+                                               \'id\': \'price_currency_tester\',\n
+                                               \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                               \'tested_property\': (\'price_currency\',),\n
+                                               \'title\': \'price_currency divergence tester\'},\n
+                                              {\'divergence_provider\': 0,\n
+                                               \'id\': \'incoterm_tester\',\n
+                                               \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                               \'tested_property\': (\'incoterm\',),\n
+                                               \'title\': \'incoterm divergence tester\'},\n
+                                              {\'id\': \'destination_tester\',\n
+                                               \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                               \'tested_property\': (\'destination\',),\n
+                                               \'title\': \'destination divergence tester\'},\n
+                                              {\'id\': \'destination_section_tester\',\n
+                                               \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                               \'tested_property\': (\'destination_section\',),\n
+                                               \'title\': \'destination_section divergence tester\'},\n
+                                              {\'id\': \'destination_project_tester\',\n
+                                               \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                               \'tested_property\': (\'destination_project\',),\n
+                                               \'title\': \'destination_project divergence tester\'},\n
+                                              {\'id\': \'destination_payment_tester\',\n
+                                               \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                               \'tested_property\': (\'destination_payment\',),\n
+                                               \'title\': \'destination_payment divergence tester\'},\n
+                                              {\'id\': \'destination_function_tester\',\n
+                                               \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                               \'tested_property\': (\'destination_function\',),\n
+                                               \'title\': \'destination_function divergence tester\'},\n
+                                              {\'id\': \'destination_decision_tester\',\n
+                                               \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                               \'tested_property\': (\'destination_decision\',),\n
+                                               \'title\': \'destination_decision divergence tester\'},\n
+                                              {\'id\': \'destination_administration_tester\',\n
+                                               \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                               \'tested_property\': (\'destination_administration\',),\n
+                                               \'title\': \'destination_administration divergence tester\'},\n
+                                              {\'id\': \'destination_account_tester\',\n
+                                               \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                               \'tested_property\': (\'destination_account\',),\n
+                                               \'title\': \'destination_account divergence tester\'},\n
+                                              {\'id\': \'description_tester\',\n
+                                               \'portal_type\': \'String Divergence Tester\',\n
+                                               \'tested_property\': (\'description\',),\n
+                                               \'title\': \'description divergence tester\'},\n
+                                              {\'divergence_provider\': 0,\n
+                                               \'id\': \'delivery_mode_divergence_tester\',\n
+                                               \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                               \'tested_property\': (\'delivery_mode\',),\n
+                                               \'title\': \'delivery_mode divergence tester\'},\n
+                                              {\'divergence_provider\': 1,\n
+                                               \'id\': \'base_contribution_tester\',\n
+                                               \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                               \'tested_property\': (\'base_contribution\',),\n
+                                               \'title\': \'base_contribution divergence tester\'},\n
+                                              {\'divergence_provider\': 1,\n
+                                               \'id\': \'base_application_tester\',\n
+                                               \'matching_provider\': 0,\n
+                                               \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                               \'tested_property\': (\'base_application\',),\n
+                                               \'title\': \'base_application divergence tester\'},\n
+                                              {\'id\': \'aggregate_tester\',\n
+                                               \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                               \'tested_property\': (\'aggregate\',),\n
+                                               \'title\': \'aggregate divergence tester\'}]},\n
+ \'invoice_transaction_simulation_rule\': {\'categories\': (\'trade_phase/default/accounting\',),\n
+                                         \'default_reference\': \'default_invoice_transaction_rule\',\n
+                                         \'index\': {\'movement\': {}},\n
+                                         \'portal_type\': \'Invoice Transaction Simulation Rule\',\n
+                                         \'same_total_quantity\': 0,\n
+                                         \'test_method_id\': (\'SimulationMovement_testInvoiceTransactionSimulationRule\',),\n
+                                         \'title\': \'Default Invoice Transaction Simulation Rule\',\n
+                                         \'content_list\': [{\'divergence_provider\': 0,\n
+                                                           \'id\': \'stop_date_tester\',\n
+                                                           \'matching_provider\': 0,\n
+                                                           \'portal_type\': \'DateTime Divergence Tester\',\n
+                                                           \'quantity\': 0,\n
+                                                           \'tested_property\': (\'stop_date\',),\n
+                                                           \'title\': \'stop_date divergence tester\'},\n
+                                                          {\'divergence_provider\': 0,\n
+                                                           \'id\': \'start_date_tester\',\n
+                                                           \'matching_provider\': 0,\n
+                                                           \'portal_type\': \'DateTime Divergence Tester\',\n
+                                                           \'quantity\': 0,\n
+                                                           \'tested_property\': (\'start_date\',),\n
+                                                           \'title\': \'start_date divergence tester\'},\n
+                                                          {\'id\': \'specialise_tester\',\n
+                                                           \'portal_type\': \'Specialise Divergence Tester\',\n
+                                                           \'title\': \'Business Process must be consistent to make good prevision\'},\n
+                                                          {\'decimal_alignment_enabled\': 0,\n
+                                                           \'decimal_rouding_option\': \'FLOOR\',\n
+                                                           \'divergence_provider\': 0,\n
+                                                           \'id\': \'source_total_asset_price_tester\',\n
+                                                           \'matching_provider\': 1,\n
+                                                           \'portal_type\': \'Float Divergence Tester\',\n
+                                                           \'quantity_range_max\': 0,\n
+                                                           \'quantity_range_min\': 0,\n
+                                                           \'tested_property\': (\'source_total_asset_price\',),\n
+                                                           \'title\': \'source_total_asset_price divergence tester\',\n
+                                                           \'tolerance_base\': \'Quantity\',\n
+                                                           \'updating_provider\': 1},\n
+                                                          {\'divergence_provider\': 0,\n
+                                                           \'id\': \'source_tester\',\n
+                                                           \'matching_provider\': 1,\n
+                                                           \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                           \'tested_property\': (\'source\',),\n
+                                                           \'title\': \'source divergence tester\'},\n
+                                                          {\'divergence_provider\': 0,\n
+                                                           \'id\': \'source_section_tester\',\n
+                                                           \'matching_provider\': 0,\n
+                                                           \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                           \'tested_property\': (\'source_section\',),\n
+                                                           \'title\': \'source_section divergence tester\'},\n
+                                                          {\'divergence_provider\': 0,\n
+                                                           \'id\': \'source_project_tester\',\n
+                                                           \'matching_provider\': 0,\n
+                                                           \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                           \'tested_property\': (\'source_project\',),\n
+                                                           \'title\': \'source_project divergence tester\'},\n
+                                                          {\'divergence_provider\': 0,\n
+                                                           \'id\': \'source_payment_tester\',\n
+                                                           \'matching_provider\': 0,\n
+                                                           \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                           \'tested_property\': (\'source_payment\',),\n
+                                                           \'title\': \'source_payment divergence tester\'},\n
+                                                          {\'divergence_provider\': 0,\n
+                                                           \'id\': \'source_function_tester\',\n
+                                                           \'matching_provider\': 0,\n
+                                                           \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                           \'tested_property\': (\'source_function\',),\n
+                                                           \'title\': \'source_function divergence tester\'},\n
+                                                          {\'divergence_provider\': 0,\n
+                                                           \'id\': \'source_decision_tester\',\n
+                                                           \'matching_provider\': 0,\n
+                                                           \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                           \'tested_property\': (\'source_decision\',),\n
+                                                           \'title\': \'source_decision divergence tester\'},\n
+                                                          {\'divergence_provider\': 0,\n
+                                                           \'id\': \'source_administration_tester\',\n
+                                                           \'matching_provider\': 0,\n
+                                                           \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                           \'tested_property\': (\'source_administration\',),\n
+                                                           \'title\': \'source_administration divergence tester\'},\n
+                                                          {\'divergence_provider\': 0,\n
+                                                           \'id\': \'resource_tester\',\n
+                                                           \'matching_provider\': 1,\n
+                                                           \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                           \'tested_property\': (\'resource\',),\n
+                                                           \'title\': \'resource divergence tester\'},\n
+                                                          {\'divergence_provider\': 0,\n
+                                                           \'id\': \'quantity_tester\',\n
+                                                           \'portal_type\': \'Net Converted Quantity Divergence Tester\',\n
+                                                           \'quantity_range_max\': 0,\n
+                                                           \'quantity_range_min\': 0,\n
+                                                           \'tested_property\': (\'quantity\',\n
+                                                                               \'quantity_unit\'),\n
+                                                           \'title\': \'quantity divergence tester\',\n
+                                                           \'use_delivery_ratio\': 1},\n
+                                                          {\'divergence_provider\': 0,\n
+                                                           \'id\': \'price_tester\',\n
+                                                           \'matching_provider\': 0,\n
+                                                           \'portal_type\': \'Float Divergence Tester\',\n
+                                                           \'quantity_range_max\': 0,\n
+                                                           \'quantity_range_min\': 0,\n
+                                                           \'tested_property\': (\'price\',),\n
+                                                           \'title\': \'price divergence tester\'},\n
+                                                          {\'decimal_alignment_enabled\': 0,\n
+                                                           \'decimal_rouding_option\': \'FLOOR\',\n
+                                                           \'divergence_provider\': 0,\n
+                                                           \'id\': \'destination_total_asset_price_tester\',\n
+                                                           \'matching_provider\': 1,\n
+                                                           \'portal_type\': \'Float Divergence Tester\',\n
+                                                           \'quantity_range_max\': 0,\n
+                                                           \'quantity_range_min\': 0,\n
+                                                           \'tested_property\': (\'destination_total_asset_price\',),\n
+                                                           \'title\': \'destination_total_asset_price divergence tester\',\n
+                                                           \'tolerance_base\': \'Quantity\',\n
+                                                           \'updating_provider\': 1},\n
+                                                          {\'divergence_provider\': 0,\n
+                                                           \'id\': \'destination_tester\',\n
+                                                           \'matching_provider\': 1,\n
+                                                           \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                           \'tested_property\': (\'destination\',),\n
+                                                           \'title\': \'destination divergence tester\'},\n
+                                                          {\'divergence_provider\': 0,\n
+                                                           \'id\': \'destination_section_tester\',\n
+                                                           \'matching_provider\': 0,\n
+                                                           \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                           \'tested_property\': (\'destination_section\',),\n
+                                                           \'title\': \'destination_section divergence tester\'},\n
+                                                          {\'divergence_provider\': 0,\n
+                                                           \'id\': \'destination_project_tester\',\n
+                                                           \'matching_provider\': 0,\n
+                                                           \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                           \'tested_property\': (\'destination_project\',),\n
+                                                           \'title\': \'destination_project divergence tester\'},\n
+                                                          {\'divergence_provider\': 0,\n
+                                                           \'id\': \'destination_payment_tester\',\n
+                                                           \'matching_provider\': 0,\n
+                                                           \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                           \'tested_property\': (\'destination_payment\',),\n
+                                                           \'title\': \'destination_payment divergence tester\'},\n
+                                                          {\'divergence_provider\': 0,\n
+                                                           \'id\': \'destination_function_tester\',\n
+                                                           \'matching_provider\': 0,\n
+                                                           \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                           \'tested_property\': (\'destination_function\',),\n
+                                                           \'title\': \'destination_function divergence tester\'},\n
+                                                          {\'divergence_provider\': 0,\n
+                                                           \'id\': \'destination_decision_tester\',\n
+                                                           \'matching_provider\': 0,\n
+                                                           \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                           \'tested_property\': (\'destination_decision\',),\n
+                                                           \'title\': \'destination_decision divergence tester\'},\n
+                                                          {\'divergence_provider\': 0,\n
+                                                           \'id\': \'destination_administration_tester\',\n
+                                                           \'matching_provider\': 0,\n
+                                                           \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                           \'tested_property\': (\'destination_administration\',),\n
+                                                           \'title\': \'destination_administration divergence tester\'}]},\n
+ \'order_root_simulation_rule\': {\'categories\': (\'trade_phase/default/order\',),\n
+                                \'default_reference\': \'default_order_rule\',\n
+                                \'portal_type\': \'Order Root Simulation Rule\',\n
+                                \'test_method_id\': (\'Rule_testFalse\',),\n
+                                \'title\': \'Default Order Root Simulation Rule\',\n
+                                \'content_list\': [{\'id\': \'variation_tester\',\n
+                                                  \'portal_type\': \'Variation Divergence Tester\',\n
+                                                  \'quantity\': 0,\n
+                                                  \'tested_property\': (\'variation_category_list\',\n
+                                                                      \'variation_property_dict\'),\n
+                                                  \'title\': \'variation divergence tester\'},\n
+                                                 {\'divergence_provider\': 0,\n
+                                                  \'id\': \'use_tester\',\n
+                                                  \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                  \'tested_property\': (\'use\',),\n
+                                                  \'title\': \'use divergence tester\'},\n
+                                                 {\'id\': \'stop_date_tester\',\n
+                                                  \'portal_type\': \'DateTime Divergence Tester\',\n
+                                                  \'quantity\': 0,\n
+                                                  \'tested_property\': (\'stop_date\',),\n
+                                                  \'title\': \'stop_date divergence tester\'},\n
+                                                 {\'id\': \'start_date_tester\',\n
+                                                  \'portal_type\': \'DateTime Divergence Tester\',\n
+                                                  \'quantity\': 0,\n
+                                                  \'tested_property\': (\'start_date\',),\n
+                                                  \'title\': \'start_date divergence tester\'},\n
+                                                 {\'id\': \'specialise_tester\',\n
+                                                  \'portal_type\': \'Specialise Divergence Tester\',\n
+                                                  \'title\': \'Business Process must be consistent to make good prevision\'},\n
+                                                 {\'id\': \'source_tester\',\n
+                                                  \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                  \'tested_property\': (\'source\',),\n
+                                                  \'title\': \'source divergence tester\'},\n
+                                                 {\'id\': \'source_section_tester\',\n
+                                                  \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                  \'tested_property\': (\'source_section\',),\n
+                                                  \'title\': \'source_section divergence tester\'},\n
+                                                 {\'id\': \'source_project_tester\',\n
+                                                  \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                  \'tested_property\': (\'source_project\',),\n
+                                                  \'title\': \'source_project divergence tester\'},\n
+                                                 {\'id\': \'source_payment_tester\',\n
+                                                  \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                  \'tested_property\': (\'source_payment\',),\n
+                                                  \'title\': \'source_payment divergence tester\'},\n
+                                                 {\'id\': \'source_function_tester\',\n
+                                                  \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                  \'tested_property\': (\'source_function\',),\n
+                                                  \'title\': \'source_function divergence tester\'},\n
+                                                 {\'id\': \'source_decision_tester\',\n
+                                                  \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                  \'tested_property\': (\'source_decision\',),\n
+                                                  \'title\': \'source_decision divergence tester\'},\n
+                                                 {\'id\': \'source_administration_tester\',\n
+                                                  \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                  \'tested_property\': (\'source_administration\',),\n
+                                                  \'title\': \'source_administration divergence tester\'},\n
+                                                 {\'id\': \'source_account_tester\',\n
+                                                  \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                  \'tested_property\': (\'source_account\',),\n
+                                                  \'title\': \'source_account divergence tester\'},\n
+                                                 {\'id\': \'resource_tester\',\n
+                                                  \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                  \'tested_property\': (\'resource\',),\n
+                                                  \'title\': \'resource divergence tester\'},\n
+                                                 {\'categories\': (),\n
+                                                  \'divergence_provider\': 0,\n
+                                                  \'id\': \'quantity_unit_tester\',\n
+                                                  \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                  \'tested_property\': (\'quantity_unit\',),\n
+                                                  \'title\': \'quantity unit divergence tester\'},\n
+                                                 {\'id\': \'quantity_tester\',\n
+                                                  \'portal_type\': \'Net Converted Quantity Divergence Tester\',\n
+                                                  \'quantity_range_max\': 0,\n
+                                                  \'quantity_range_min\': 0,\n
+                                                  \'tested_property\': (\'quantity\',\n
+                                                                      \'quantity_unit\'),\n
+                                                  \'title\': \'quantity divergence tester\',\n
+                                                  \'use_delivery_ratio\': 1},\n
+                                                 {\'id\': \'price_tester\',\n
+                                                  \'portal_type\': \'Float Divergence Tester\',\n
+                                                  \'quantity_range_max\': 0,\n
+                                                  \'quantity_range_min\': 0,\n
+                                                  \'tested_property\': (\'price\',),\n
+                                                  \'title\': \'price divergence tester\'},\n
+                                                 {\'id\': \'price_currency_tester\',\n
+                                                  \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                  \'tested_property\': (\'price_currency\',),\n
+                                                  \'title\': \'price_currency divergence tester\'},\n
+                                                 {\'id\': \'incoterm_tester\',\n
+                                                  \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                  \'tested_property\': (\'incoterm\',),\n
+                                                  \'title\': \'incoterm divergence tester\'},\n
+                                                 {\'id\': \'destination_tester\',\n
+                                                  \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                  \'tested_property\': (\'destination\',),\n
+                                                  \'title\': \'destination divergence tester\'},\n
+                                                 {\'id\': \'destination_section_tester\',\n
+                                                  \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                  \'tested_property\': (\'destination_section\',),\n
+                                                  \'title\': \'destination_section divergence tester\'},\n
+                                                 {\'id\': \'destination_project_tester\',\n
+                                                  \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                  \'tested_property\': (\'destination_project\',),\n
+                                                  \'title\': \'destination_project divergence tester\'},\n
+                                                 {\'id\': \'destination_payment_tester\',\n
+                                                  \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                  \'tested_property\': (\'destination_payment\',),\n
+                                                  \'title\': \'destination_payment divergence tester\'},\n
+                                                 {\'id\': \'destination_function_tester\',\n
+                                                  \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                  \'tested_property\': (\'destination_function\',),\n
+                                                  \'title\': \'destination_function divergence tester\'},\n
+                                                 {\'id\': \'destination_decision_tester\',\n
+                                                  \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                  \'tested_property\': (\'destination_decision\',),\n
+                                                  \'title\': \'destination_decision divergence tester\'},\n
+                                                 {\'id\': \'destination_administration_tester\',\n
+                                                  \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                  \'tested_property\': (\'destination_administration\',),\n
+                                                  \'title\': \'destination_administration divergence tester\'},\n
+                                                 {\'id\': \'destination_account_tester\',\n
+                                                  \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                  \'tested_property\': (\'destination_account\',),\n
+                                                  \'title\': \'destination_account divergence tester\'},\n
+                                                 {\'id\': \'description_tester\',\n
+                                                  \'portal_type\': \'String Divergence Tester\',\n
+                                                  \'tested_property\': (\'description\',),\n
+                                                  \'title\': \'description divergence tester\'},\n
+                                                 {\'divergence_provider\': 0,\n
+                                                  \'id\': \'delivery_tester\',\n
+                                                  \'matching_provider\': 1,\n
+                                                  \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                  \'tested_property\': (\'delivery\',),\n
+                                                  \'title\': \'delivery divergence tester\'},\n
+                                                 {\'divergence_provider\': 0,\n
+                                                  \'id\': \'delivery_mode_divergence_tester\',\n
+                                                  \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                  \'tested_property\': (\'delivery_mode\',),\n
+                                                  \'title\': \'delivery_mode divergence tester\'},\n
+                                                 {\'id\': \'base_contribution_tester\',\n
+                                                  \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                  \'tested_property\': (\'base_contribution\',),\n
+                                                  \'title\': \'base_contribution divergence tester\'},\n
+                                                 {\'id\': \'aggregate_tester\',\n
+                                                  \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                  \'tested_property\': (\'aggregate\',),\n
+                                                  \'title\': \'aggregate divergence tester\'}]},\n
+ \'payment_simulation_rule\': {\'categories\': (\'trade_phase/default/payment\',),\n
+                             \'default_reference\': \'default_payment_rule\',\n
+                             \'index\': {\'movement\': {}},\n
+                             \'portal_type\': \'Payment Simulation Rule\',\n
+                             \'same_total_quantity\': 0,\n
+                             \'test_method_id\': (\'SimulationMovement_testPaymentSimulationRule\',),\n
+                             \'title\': \'Default Payment Simulation Rule\',\n
+                             \'content_list\': [{\'id\': \'stop_date_tester\',\n
+                                               \'portal_type\': \'DateTime Divergence Tester\',\n
+                                               \'quantity\': 0,\n
+                                               \'tested_property\': (\'stop_date\',),\n
+                                               \'title\': \'stop_date divergence tester\'},\n
+                                              {\'id\': \'start_date_tester\',\n
+                                               \'portal_type\': \'DateTime Divergence Tester\',\n
+                                               \'quantity\': 0,\n
+                                               \'tested_property\': (\'start_date\',),\n
+                                               \'title\': \'start_date divergence tester\'},\n
+                                              {\'id\': \'specialise_tester\',\n
+                                               \'portal_type\': \'Specialise Divergence Tester\',\n
+                                               \'title\': \'Business Process must be consistent to make good prevision\'},\n
+                                              {\'id\': \'source_tester\',\n
+                                               \'matching_provider\': 1,\n
+                                               \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                               \'tested_property\': (\'source\',),\n
+                                               \'title\': \'source divergence tester\'},\n
+                                              {\'id\': \'source_section_tester\',\n
+                                               \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                               \'tested_property\': (\'source_section\',),\n
+                                               \'title\': \'source_section divergence tester\'},\n
+                                              {\'id\': \'source_project_tester\',\n
+                                               \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                               \'tested_property\': (\'source_project\',),\n
+                                               \'title\': \'source_project divergence tester\'},\n
+                                              {\'id\': \'source_payment_tester\',\n
+                                               \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                               \'tested_property\': (\'source_payment\',),\n
+                                               \'title\': \'source_payment divergence tester\'},\n
+                                              {\'id\': \'resource_tester\',\n
+                                               \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                               \'tested_property\': (\'resource\',),\n
+                                               \'title\': \'resource divergence tester\'},\n
+                                              {\'id\': \'quantity_tester\',\n
+                                               \'portal_type\': \'Net Converted Quantity Divergence Tester\',\n
+                                               \'quantity_range_max\': 0,\n
+                                               \'quantity_range_min\': 0,\n
+                                               \'tested_property\': (\'quantity\',\n
+                                                                   \'quantity_unit\'),\n
+                                               \'title\': \'quantity divergence tester\',\n
+                                               \'use_delivery_ratio\': 1},\n
+                                              {\'divergence_provider\': 0,\n
+                                               \'id\': \'price_tester\',\n
+                                               \'portal_type\': \'Float Divergence Tester\',\n
+                                               \'quantity_range_max\': 0,\n
+                                               \'quantity_range_min\': 0,\n
+                                               \'tested_property\': (\'price\',),\n
+                                               \'title\': \'price divergence tester\'},\n
+                                              {\'id\': \'payment_mode_tester\',\n
+                                               \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                               \'tested_property\': (\'payment_mode\',),\n
+                                               \'title\': \'payment_mode divergence tester\'},\n
+                                              {\'id\': \'destination_tester\',\n
+                                               \'matching_provider\': 1,\n
+                                               \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                               \'tested_property\': (\'destination\',),\n
+                                               \'title\': \'destination divergence tester\'},\n
+                                              {\'id\': \'destination_section_tester\',\n
+                                               \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                               \'tested_property\': (\'destination_section\',),\n
+                                               \'title\': \'destination_section divergence tester\'},\n
+                                              {\'id\': \'destination_project_tester\',\n
+                                               \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                               \'tested_property\': (\'destination_project\',),\n
+                                               \'title\': \'destination_project divergence tester\'},\n
+                                              {\'id\': \'destination_payment_tester\',\n
+                                               \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                               \'tested_property\': (\'destination_payment\',),\n
+                                               \'title\': \'destination_payment divergence tester\'}]},\n
+ \'trade_model_simulation_rule\': {\'default_reference\': \'default_trade_model_rule\',\n
+                                 \'portal_type\': \'Trade Model Simulation Rule\',\n
+                                 \'test_method_id\': (\'SimulationMovement_testTradeModelSimulationRule\',),\n
+                                 \'title\': \'Default Trade Model Simulation Rule\',\n
+                                 \'content_list\': [{\'divergence_provider\': 0,\n
+                                                   \'id\': \'use_tester\',\n
+                                                   \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                   \'tested_property\': (\'use\',),\n
+                                                   \'title\': \'use divergence tester\'},\n
+                                                  {\'divergence_provider\': 1,\n
+                                                   \'id\': \'stop_date_tester\',\n
+                                                   \'matching_provider\': 0,\n
+                                                   \'portal_type\': \'DateTime Divergence Tester\',\n
+                                                   \'quantity\': 0,\n
+                                                   \'tested_property\': (\'stop_date\',),\n
+                                                   \'title\': \'stop_date divergence tester\'},\n
+                                                  {\'divergence_provider\': 1,\n
+                                                   \'id\': \'start_date_tester\',\n
+                                                   \'matching_provider\': 0,\n
+                                                   \'portal_type\': \'DateTime Divergence Tester\',\n
+                                                   \'quantity\': 0,\n
+                                                   \'tested_property\': (\'start_date\',),\n
+                                                   \'title\': \'start_date divergence tester\'},\n
+                                                  {\'id\': \'specialise_tester\',\n
+                                                   \'portal_type\': \'Specialise Divergence Tester\',\n
+                                                   \'title\': \'Business Process must be consistent to make good prevision\'},\n
+                                                  {\'id\': \'source_tester\',\n
+                                                   \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                   \'tested_property\': (\'source\',),\n
+                                                   \'title\': \'source divergence tester\'},\n
+                                                  {\'id\': \'source_section_tester\',\n
+                                                   \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                   \'tested_property\': (\'source_section\',),\n
+                                                   \'title\': \'source_section divergence tester\'},\n
+                                                  {\'divergence_provider\': 1,\n
+                                                   \'id\': \'source_project_tester\',\n
+                                                   \'matching_provider\': 0,\n
+                                                   \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                   \'tested_property\': (\'source_project\',),\n
+                                                   \'title\': \'source_project divergence tester\'},\n
+                                                  {\'divergence_provider\': 0,\n
+                                                   \'id\': \'source_payment_tester\',\n
+                                                   \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                   \'tested_property\': (\'source_payment\',),\n
+                                                   \'title\': \'source_payment divergence tester\'},\n
+                                                  {\'id\': \'source_function_tester\',\n
+                                                   \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                   \'tested_property\': (\'source_function\',),\n
+                                                   \'title\': \'source_function divergence tester\'},\n
+                                                  {\'divergence_provider\': 0,\n
+                                                   \'id\': \'source_decision_tester\',\n
+                                                   \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                   \'tested_property\': (\'source_decision\',),\n
+                                                   \'title\': \'source_decision divergence tester\'},\n
+                                                  {\'divergence_provider\': 0,\n
+                                                   \'id\': \'source_administration_tester\',\n
+                                                   \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                   \'tested_property\': (\'source_administration\',),\n
+                                                   \'title\': \'source_administration divergence tester\'},\n
+                                                  {\'id\': \'source_account_tester\',\n
+                                                   \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                   \'tested_property\': (\'source_account\',),\n
+                                                   \'title\': \'source_account divergence tester\'},\n
+                                                  {\'id\': \'resource_tester\',\n
+                                                   \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                   \'tested_property\': (\'resource\',),\n
+                                                   \'title\': \'resource divergence tester\'},\n
+                                                  {\'divergence_provider\': 0,\n
+                                                   \'id\': \'reference_tester\',\n
+                                                   \'matching_provider\': 1,\n
+                                                   \'portal_type\': \'String Divergence Tester\',\n
+                                                   \'tested_property\': (\'reference\',),\n
+                                                   \'title\': \'reference divergence tester\'},\n
+                                                  {\'decimal_alignment_enabled\': 1,\n
+                                                   \'decimal_exponent\': \'0.000001\',\n
+                                                   \'decimal_rounding_option\': \'ROUND_DOWN\',\n
+                                                   \'id\': \'quantity_tester\',\n
+                                                   \'portal_type\': \'Net Converted Quantity Divergence Tester\',\n
+                                                   \'quantity_range_max\': 0,\n
+                                                   \'quantity_range_min\': 0,\n
+                                                   \'tested_property\': (\'quantity\',\n
+                                                                       \'quantity_unit\'),\n
+                                                   \'title\': \'quantity divergence tester\',\n
+                                                   \'use_delivery_ratio\': 1},\n
+                                                  {\'id\': \'price_currency_tester\',\n
+                                                   \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                   \'tested_property\': (\'price_currency\',),\n
+                                                   \'title\': \'price_currency divergence tester\'},\n
+                                                  {\'divergence_provider\': 0,\n
+                                                   \'id\': \'incoterm_tester\',\n
+                                                   \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                   \'tested_property\': (\'incoterm\',),\n
+                                                   \'title\': \'incoterm divergence tester\'},\n
+                                                  {\'id\': \'destination_tester\',\n
+                                                   \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                   \'tested_property\': (\'destination\',),\n
+                                                   \'title\': \'destination divergence tester\'},\n
+                                                  {\'id\': \'destination_section_tester\',\n
+                                                   \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                   \'tested_property\': (\'destination_section\',),\n
+                                                   \'title\': \'destination_section divergence tester\'},\n
+                                                  {\'divergence_provider\': 1,\n
+                                                   \'id\': \'destination_project_tester\',\n
+                                                   \'matching_provider\': 0,\n
+                                                   \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                   \'tested_property\': (\'destination_project\',),\n
+                                                   \'title\': \'destination_project divergence tester\'},\n
+                                                  {\'divergence_provider\': 0,\n
+                                                   \'id\': \'destination_payment_tester\',\n
+                                                   \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                   \'tested_property\': (\'destination_payment\',),\n
+                                                   \'title\': \'destination_payment divergence tester\'},\n
+                                                  {\'id\': \'destination_function_tester\',\n
+                                                   \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                   \'tested_property\': (\'destination_function\',),\n
+                                                   \'title\': \'destination_function divergence tester\'},\n
+                                                  {\'divergence_provider\': 0,\n
+                                                   \'id\': \'destination_decision_tester\',\n
+                                                   \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                   \'tested_property\': (\'destination_decision\',),\n
+                                                   \'title\': \'destination_decision divergence tester\'},\n
+                                                  {\'divergence_provider\': 0,\n
+                                                   \'id\': \'destination_administration_tester\',\n
+                                                   \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                   \'tested_property\': (\'destination_administration\',),\n
+                                                   \'title\': \'destination_administration divergence tester\'},\n
+                                                  {\'id\': \'destination_account_tester\',\n
+                                                   \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                   \'tested_property\': (\'destination_account\',),\n
+                                                   \'title\': \'destination_account divergence tester\'},\n
+                                                  {\'divergence_provider\': 0,\n
+                                                   \'id\': \'description_tester\',\n
+                                                   \'portal_type\': \'String Divergence Tester\',\n
+                                                   \'tested_property\': (\'description\',),\n
+                                                   \'title\': \'description divergence tester\'},\n
+                                                  {\'divergence_provider\': 0,\n
+                                                   \'id\': \'delivery_mode_tester\',\n
+                                                   \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                   \'tested_property\': (\'delivery_mode\',),\n
+                                                   \'title\': \'delivery_mode divergence tester\'},\n
+                                                  {\'divergence_provider\': 1,\n
+                                                   \'id\': \'base_contribution_tester\',\n
+                                                   \'matching_provider\': 0,\n
+                                                   \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                   \'tested_property\': (\'base_contribution\',),\n
+                                                   \'title\': \'base_contribution divergence tester\'},\n
+                                                  {\'divergence_provider\': 1,\n
+                                                   \'id\': \'base_application_tester\',\n
+                                                   \'matching_provider\': 0,\n
+                                                   \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                   \'tested_property\': (\'base_application\',),\n
+                                                   \'title\': \'base_application divergence tester\'},\n
+                                                  {\'id\': \'aggregate_tester\',\n
+                                                   \'portal_type\': \'Category Membership Divergence Tester\',\n
+                                                   \'tested_property\': (\'aggregate\',),\n
+                                                   \'title\': \'aggregate divergence tester\'}]}}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple/>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERPSite_getConfiguratorSimulationRuleDict</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

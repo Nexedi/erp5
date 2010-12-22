@@ -1,0 +1,130 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>delegated_list</string> </key>
+            <value>
+              <list>
+                <string>css_class</string>
+                <string>default</string>
+                <string>title</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>my_header</string> </value>
+        </item>
+        <item>
+            <key> <string>message_values</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>external_validator_failed</string> </key>
+                    <value> <string>The input failed the external validator.</string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>overrides</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>field_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>tales</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>field_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>values</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string>hidden_label</string> </value>
+                </item>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string encoding="cdata"><![CDATA[
+
+<h2 i18n:translate=""\n
+i18n:domain="ui"> Welcome to Wizard</h2>\n
+\n
+<p i18n:translate=""\n
+i18n:domain="ui"> This tool will help you configure your fresh ERP5</p>
+
+]]></string> </value>
+                </item>
+                <item>
+                    <key> <string>field_id</string> </key>
+                    <value> <string>my_label_field</string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string>Base_viewWizardFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
+                    <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string encoding="cdata"><![CDATA[
+
+&nbsp;
+
+]]></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,50 @@
+<allowed_content_type_list>
+ <portal_type id="Business Configuration">
+  <item>Configuration Save</item>
+  <item>File</item>
+  <item>Link</item>
+ </portal_type>
+ <portal_type id="Business Configuration Module">
+  <item>Business Configuration</item>
+ </portal_type>
+ <portal_type id="Categories Spreadsheet Configurator Item">
+  <item>Spreadsheet</item>
+ </portal_type>
+ <portal_type id="Configuration Save">
+  <item>Account Configurator Item</item>
+  <item>Accounting Period Configurator Item</item>
+  <item>Catalog Keyword Key Configurator Item</item>
+  <item>Categories Spreadsheet Configurator Item</item>
+  <item>Category Configurator Item</item>
+  <item>Currency Configurator Item</item>
+  <item>Customer BT5 Configurator Item</item>
+  <item>Export Customer BT5 Configurator Item</item>
+  <item>Organisation Configurator Item</item>
+  <item>Permission Configurator Item</item>
+  <item>Person Configurator Item</item>
+  <item>Portal Type Configurator Item</item>
+  <item>Portal Type Roles Spreadsheet Configurator Item</item>
+  <item>Preference Configurator Item</item>
+  <item>Role Configurator Item</item>
+  <item>Rule Configurator Item</item>
+  <item>Service Configurator Item</item>
+  <item>Site Property Configurator Item</item>
+  <item>Standard BT5 Configurator Item</item>
+  <item>System Preference Configurator Item</item>
+  <item>Workflow Security Configurator Item</item>
+ </portal_type>
+ <portal_type id="Organisation Configurator Item">
+  <item>Address</item>
+  <item>Email</item>
+  <item>Telephone</item>
+ </portal_type>
+ <portal_type id="Person Configurator Item">
+  <item>Address</item>
+  <item>Career</item>
+  <item>Email</item>
+  <item>Telephone</item>
+ </portal_type>
+ <portal_type id="Portal Type Roles Spreadsheet Configurator Item">
+  <item>Spreadsheet</item>
+ </portal_type>
+</allowed_content_type_list>

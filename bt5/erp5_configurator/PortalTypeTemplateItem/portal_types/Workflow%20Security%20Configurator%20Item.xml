@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ERP5TypeInformation" module="Products.ERP5Type.ERP5Type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>content_icon</string> </key>
+            <value> <string>document.gif</string> </value>
+        </item>
+        <item>
+            <key> <string>content_meta_type</string> </key>
+            <value> <string>ERP5 Workflow Security Configurator Item</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string> Setup workflow for different roles. Use passed OO file. </string> </value>
+        </item>
+        <item>
+            <key> <string>factory</string> </key>
+            <value> <string>addWorkflowSecurityConfiguratorItem</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Workflow Security Configurator Item</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
