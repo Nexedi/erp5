@@ -1016,9 +1016,6 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
 from Products.ERP5Type import PropertySheet
 from Products.CMFCore.Expression import Expression
 
-from Products.ERP5Type.PropertySheet.StandardProperty import StandardProperty
-from Products.ERP5Type.PropertySheet.AcquiredProperty import AcquiredProperty
-
 class TestZodbImportFilesystemPropertySheet(ERP5TypeTestCase):
   """
   Check that importing filesystem Property Sheets into ZODB the same
@@ -1044,6 +1041,9 @@ class TestZodbImportFilesystemPropertySheet(ERP5TypeTestCase):
     # meaningful because exporting a property relies on accessor which
     # returns the default value if the field value is not set
     self.filesystem_field_default_value_dict = {}
+
+    from Products.ERP5Type.PropertySheet.StandardProperty import StandardProperty
+    from Products.ERP5Type.PropertySheet.AcquiredProperty import AcquiredProperty
     for property_dict in StandardProperty._properties + AcquiredProperty._properties:
       try:
         self.filesystem_field_default_value_dict[property_dict['id']] = \
