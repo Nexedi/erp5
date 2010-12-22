@@ -40,6 +40,14 @@
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
+  <type>Embedded File</type>
+  <workflow>document_conversion_interaction_workflow, edit_workflow, embedded_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Embedded Folder</type>
+  <workflow>edit_workflow, embedded_workflow</workflow>
+ </chain>
+ <chain>
   <type>Fax</type>
   <workflow>edit_workflow</workflow>
  </chain>

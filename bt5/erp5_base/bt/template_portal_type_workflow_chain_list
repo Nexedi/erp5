@@ -14,6 +14,11 @@ Currency Exchange Line | validation_workflow
 Currency | edit_workflow
 Currency | validation_workflow
 Email | edit_workflow
+Embedded File | document_conversion_interaction_workflow
+Embedded File | edit_workflow
+Embedded File | embedded_workflow
+Embedded Folder | edit_workflow
+Embedded Folder | embedded_workflow
 Fax | edit_workflow
 File | document_conversion_interaction_workflow
 File | document_security_interaction_workflow

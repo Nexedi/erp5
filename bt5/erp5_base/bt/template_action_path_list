@@ -26,6 +26,13 @@ Delivery Causality Assignment Movement Group | view
 Delivery Tool | view
 Email | change_function
 Email | view
+Embedded File | download
+Embedded File | export
+Embedded File | file_upload
+Embedded File | fullsize_view
+Embedded File | view
+Embedded File | web_view
+Embedded Folder | view
 Fax | change_function
 Fax | view
 File | download
