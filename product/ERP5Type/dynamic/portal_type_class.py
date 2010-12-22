@@ -39,7 +39,7 @@ from Products.ERP5Type.Utils import setDefaultClassProperties
 from Products.ERP5Type import document_class_registry, mixin_class_registry
 
 from zope.interface import classImplements
-from zLOG import LOG, ERROR, INFO
+from zLOG import LOG, ERROR, INFO, WARNING
 
 def _importClass(classpath):
   try:
@@ -117,6 +117,9 @@ property_sheet_generating_portal_type_set = set()
 # import of 'Types Tool' class without any mixin, interface or
 # Property Sheet to allow the outer (which will actually be stored in
 # 'erp5.portal_type') to be fully generated.
+#
+# Solver Tool, as a TypeProvider, will also be required to access
+# site.portal_types
 core_portal_type_class_dict = {
   'Base Type':    {'type_class': 'ERP5TypeInformation',
                    'generating': False},
@@ -228,7 +231,10 @@ def generatePortalTypeClass(portal_type_name):
 
     # The Property Sheet Tool may be None if the code is updated but
     # the BT has not been upgraded yet with portal_property_sheets
-    if property_sheet_tool is not None:
+    if property_sheet_tool is None:
+      LOG("ERP5Type.dynamic", WARNING,
+          "Property Sheet Tool was not found. Please update erp5_core "
+          "Business Template")
       if portal_type is not None:
         # Get the Property Sheets defined on the portal_type and use the
         # ZODB Property Sheet rather than the filesystem only if it
@@ -237,6 +243,8 @@ def generatePortalTypeClass(portal_type_name):
         for property_sheet in portal_type.getTypePropertySheetList():
           if property_sheet in zodb_property_sheet_set:
             property_sheet_set.add(property_sheet)
+      else:
+        zodb_property_sheet_set = set()
 
       # Get the Property Sheets defined on the document and its bases
       # recursively. Fallback on the filesystem Property Sheet only and
@@ -248,7 +256,8 @@ def generatePortalTypeClass(portal_type_name):
         #
         # NOTE: The Property Sheets of a document should be given as a
         #       string from now on
-        if isinstance(property_sheet, basestring):
+        if isinstance(property_sheet, basestring) and \
+          property_sheet in zodb_property_sheet_set:
           property_sheet_name = property_sheet
           property_sheet_set.add(property_sheet_name)
 
