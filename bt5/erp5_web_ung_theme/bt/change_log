@@ -1,4 +1,5 @@
 2010-12-22 gabriel
+* Initial commit to load part of user and system preferences
 * Implemented code to allow which the user edit the document using the reference of the document shared.
 * Clean up the script to generate the UNG Domains and remove not used scripts.
 

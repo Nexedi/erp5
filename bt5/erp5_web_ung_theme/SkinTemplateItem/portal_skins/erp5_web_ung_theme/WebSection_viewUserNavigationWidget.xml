@@ -40,6 +40,7 @@
                        enctype string:multipart/form-data;\n
                        portal_path python:website.absolute_url();">\n
  <a id="right_message">Not Implemented yet</a>\n
+ <div id="preference_dialog" title="UNG Preferences"></div> \n
  <tal:block tal:condition="here/portal_membership/isAnonymousUser">\n
    <a id="login" tal:attributes="href string: #">Sign in</a>\n
   </tal:block>\n

@@ -883,9 +883,31 @@ div#login_form {\n
 }\n
 \n
 div#login_form input {\n
-    vertical-align: middle; \n
+  vertical-align: middle; \n
 }\n
-
+\n
+div#preference_dialog {\n
+  display:none;\n
+  width: 308px !important;\n
+}\n
+\n
+fieldset.center.editable, fieldset.right.editable {\n
+  border: 0;\n
+  padding: 0.15em 0.35em 0.400em;\n
+  font-size: 14px;\n
+  margin-left: -11px;\n
+}\n
+\n
+fieldset.center.editable div.field label, \n
+ fieldset.right.editable div.field label {\n
+  display: block;\n
+}\n
+\n
+span#ui-dialog-title-preference_dialog {\n
+  margin: 0;\n
+  margin-top: -3px;\n
+  margin-left: -10px;\n
+}
 
 ]]></string> </value>
         </item>
