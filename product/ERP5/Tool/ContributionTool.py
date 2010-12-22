@@ -52,10 +52,6 @@ import ContributionOpener
 opener = urllib2.build_opener(ContributionOpener.DirectoryFileHandler)
 urllib2.install_opener(opener)
 
-# A temporary hack until urllib2 supports timeout setting - XXX
-import socket
-socket.setdefaulttimeout(600) # 1 minute timeout
-
 # Global parameters
 TEMP_NEW_OBJECT_KEY = '_v_new_object'
 MAX_REPEAT = 10
