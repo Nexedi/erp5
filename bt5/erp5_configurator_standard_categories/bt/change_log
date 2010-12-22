@@ -1,0 +1,53 @@
+2010-01-14 Jérome
+* Update to new version of categories (009).
+
+2008-06-27 yusei
+* Removed unnecessary dependency.
+
+2008-06-25 yusei
+* Update to version 006.
+
+2008-06-20 yusei
+* Removed wrong product_line sub categories.
+
+2008-04-25 alex
+* Add order category
+
+2008-04-19 yo
+* Add new dependencies.
+
+2008-04-19 yo
+* Add more dependencies.
+* Remove redundant categories under product_line.
+* Bump to 5.0.
+
+2008-04-18 jerome
+* Add base_amount category
+* No longer include publication_section & classification (we configure dms now)
+
+2008-04-17 ivan
+* Use IDs for activity, nationality, regions, market_segment and salary_level
+
+2008-4-14 yusei
+* Remove product_line/service, product_line/product, resource/event. those are replaced to equivalent service documents.
+
+2008-4-11 yusei
+* Applied the latest category definition(version 004).
+
+2008-03-31 jerome
+* Add business_application/accounting
+
+2008-02-21 jerome (version 0.2)
+* don't export base categories as path, because it would erase configurated sites. Look in CustomerBT5ConfiguratorItem.build for implementation details.
+
+2008-1-9 yusei
+* Fix publication_section category.
+
+2008-1-7 yusei
+* Add classification categories for dms.
+
+2007-10-11 Ivan
+* Add business_application category
+
+2007-09-10 Ivan
+* Initial import
