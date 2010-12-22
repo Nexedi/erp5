@@ -38,10 +38,27 @@ from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from lxml import etree
-from slapos.slap.slap import Computer
-from slapos.slap.slap import ComputerPartition as SlapComputerPartition
-from slapos.slap.slap import SoftwareInstance
-from slapos.slap.slap import SoftwareRelease
+try:
+  from slapos.slap.slap import Computer
+  from slapos.slap.slap import ComputerPartition as SlapComputerPartition
+  from slapos.slap.slap import SoftwareInstance
+  from slapos.slap.slap import SoftwareRelease
+except ImportError:
+  # Do no prevent instance from starting
+  # if libs are not installed
+  class Computer:
+    def __init__(self):
+      raise ImportError
+  class SlapComputerPartition:
+    def __init__(self):
+      raise ImportError
+  class SoftwareInstance:
+    def __init__(self):
+      raise ImportError
+  class SoftwareRelease:
+    def __init__(self):
+      raise ImportError
+
 from zLOG import LOG, INFO
 import xml_marshaller
 
