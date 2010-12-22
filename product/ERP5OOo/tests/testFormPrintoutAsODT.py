@@ -1138,10 +1138,10 @@ return []
     image_frame_list = content.xpath(image_frame_xpath, namespaces=content.nsmap)
     self.assertTrue(len(image_frame_list) > 0)
     image_frame = image_frame_list[0]
-    self.assertEqual(image_frame.attrib['{%s}height' % content.nsmap['svg']],
-                     '0.838cm')
-    self.assertEqual(image_frame.attrib['{%s}width' % content.nsmap['svg']],
-                     '0.838cm')
+    height = image_frame.attrib['{%s}height' % content.nsmap['svg']]
+    self.assertTrue(height in ('0.838cm', '0.3299in'))
+    width = image_frame.attrib['{%s}width' % content.nsmap['svg']]
+    self.assertTrue(width in ('0.838cm', '0.3299in'))
     self._validate(odf_document)
 
     # 02: no image data
