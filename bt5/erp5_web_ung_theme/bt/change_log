@@ -1,3 +1,6 @@
+2010-12-22 gabriel
+* Clean up the script to generate the UNG Domains and remove not used scripts.
+
 2010-12-20 gabriel
 * Added page to Login and script to Logout
 * Initial implementation to share documents in UNG.

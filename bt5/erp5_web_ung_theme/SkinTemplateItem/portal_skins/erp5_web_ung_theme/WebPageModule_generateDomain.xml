@@ -55,18 +55,28 @@
   XXX - The generation of domains should be more dynamic because some domains is create manually.\n
 """\n
 \n
-def appendTempDomain(id, title, property_dict):\n
+def appendTempDomain(id, \n
+                     title,\n
+                     property_dict,\n
+                     parent=parent,\n
+                     membership_criterion_base_category=(),\n
+                     membership_criterion_category=()):\n
   domain = parent.generateTempDomain(id=id)\n
   domain.edit(title=title,\n
-              domain_generator_method_id = script.id)\n
+              domain_generator_method_id=script.id,\n
+              membership_criterion_base_category=membership_criterion_base_category,\n
+              membership_criterion_category=membership_criterion_category) \n
+\n
   domain.setCriterionPropertyList(property_dict.keys())\n
   for key, value in property_dict.items():\n
     domain.setCriterion(key, value)\n
-  domain_list.append(domain)\n
+\n
+  if parent.getId() == "ung_domain":\n
+    domain_list.append(domain)\n
   return domain\n
- \n
+\n
 domain_list = []\n
-validation_state_list = [\'draft\']\n
+validation_state_list = [\'draft\', \'published\', \'shared\']\n
 \n
 if depth == 1:\n
   return domain_list\n
@@ -89,7 +99,7 @@ appendTempDomain(\'owner_document_list\', \n
 \n
 appendTempDomain(\'shared_document_list\', \n
                  \'Shared by me\',\n
-                 dict(validation_state=validation_state_list))\n
+                 dict(validation_state=[\'shared\']))\n
 \n
 appendTempDomain(\'starred_document_list\',\n
                  \'Starred\',\n
@@ -104,27 +114,26 @@ domain = appendTempDomain(\'webpage_module_list\',\n
                           dict(portal_type=["Web Page", "Web Illustration", "Web Table"],\n
                                validation_state=validation_state_list))\n
 \n
-# XXX - Review code to be more dynamic\n
-webpage_subdomain = domain.generateTempDomain(id=\'subWebPage\')\n
-webpage_subdomain.edit(title="Web Page",\n
-             membership_criterion_base_category = ("webpage_module_list"),\n
-             membership_criterion_category = ("webpage_module_list"),\n
-             list_method=\'WebPageModule_getWebPageListFiltered\',\n
-             domain_generator_method_id=script.id)\n
+appendTempDomain(\'subWebPage\',\n
+                 \'Web Page\',\n
+                 dict(validation_state=validation_state_list, portal_type=["Web Page"]),\n
+                 domain,\n
+                 ("webpage_module_list",),\n
+                 ("webpage_module_list",))\n
 \n
-webtable_subdomain = domain.generateTempDomain(id=\'subWebTable\')\n
-webtable_subdomain.edit(title="Web Table",\n
-             membership_criterion_base_category = ("webpage_module_list"),\n
-             membership_criterion_category = ("webpage_module_list"),\n
-             list_method=\'WebPageModule_getWebTableListFiltered\',\n
-             domain_generator_method_id=script.id)\n
+appendTempDomain(\'subWebTable\',\n
+                 \'Web Table\',\n
+                 dict(validation_state=validation_state_list, portal_type=["Web Table"]),\n
+                 domain,\n
+                 ("webpage_module_list",),\n
+                 ("webpage_module_list",))\n
 \n
-webillustration_subdomain = domain.generateTempDomain(id=\'subWebIllustraion\')\n
-webillustration_subdomain.edit(title="Web Illustration",\n
-             membership_criterion_base_category = ("webpage_module_list"),\n
-             membership_criterion_category = ("webpage_module_list"),\n
-             list_method=\'WebPageModule_getWebIllustrationListFiltered\',\n
-             domain_generator_method_id=script.id)\n
+appendTempDomain(\'subWebIllustration\',\n
+                 \'Web Illustration\',\n
+                 dict(validation_state=validation_state_list, portal_type=["Web Illustration"]),\n
+                 domain,\n
+                 ("webpage_module_list",),\n
+                 ("webpage_module_list",))\n
 \n
 return domain_list\n
 </string> </value>
@@ -171,11 +180,6 @@ return domain_list\n
                             <string>validation_state_list</string>
                             <string>dict</string>
                             <string>domain</string>
-                            <string>_getattr_</string>
-                            <string>webpage_subdomain</string>
-                            <string>script</string>
-                            <string>webtable_subdomain</string>
-                            <string>webillustration_subdomain</string>
                           </tuple>
                         </value>
                     </item>
