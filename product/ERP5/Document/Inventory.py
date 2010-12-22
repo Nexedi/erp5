@@ -312,8 +312,9 @@ class Inventory(Delivery):
                                           sql_catalog_id = sql_catalog_id,
                                           disable_archive=disable_archive,
                                           immediate_reindex_archive=immediate_reindex_archive)
-    
-    self.portal_catalog.catalogObjectList(
+
+    if stock_object_list:
+      self.portal_catalog.catalogObjectList(
            stock_object_list, method_id_list=('z_catalog_stock_list', ),
            sql_catalog_id = sql_catalog_id,
            disable_cache=1, check_uid=0, disable_archive=disable_archive,
