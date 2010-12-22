@@ -1,5 +1,5 @@
 2010-12-22 gabriel
-* Implemented code to allow which the user edit the document using the reference of the document shared. If is a Anonymous User, one user is created to him.
+* Implemented code to allow which the user edit the document using the reference of the document shared.
 * Clean up the script to generate the UNG Domains and remove not used scripts.
 
 2010-12-20 gabriel

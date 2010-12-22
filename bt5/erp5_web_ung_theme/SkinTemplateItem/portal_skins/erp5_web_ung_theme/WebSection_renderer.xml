@@ -55,23 +55,6 @@
 """\n
 portal = context.getPortalObject()\n
 \n
-if portal.portal_membership.isAnonymousUser() and context.REQUEST.form.has_key("key"):\n
-  kw = {}\n
-  module = portal.getDefaultModule(\'Person\')\n
-  reference = str(DateTime().millis())\n
-  person = module.newContent(portal_type=\'Person\',\n
-                             description=context.REQUEST.get(\'HTTP_X_FORWARDED_FOR\',\'Found no ip\'),\n
-                             reference=reference,\n
-                             )\n
-  assignment = person.newContent(portal_type="Assignment")\n
-  assignment.open()\n
-  person.validate()\n
-  uf = getattr(portal, \'acl_users\', None)\n
-  plugin = getattr(uf, \'ung_key_auth\',None)\n
-  kw["__ac_key"] = plugin.encrypt(reference)\n
-  kw["key"] = context.REQUEST.form.get("key")\n
-  return context.Base_redirect("/", keep_items=dict(**kw)) \n
-\n
 if context.REQUEST.form.has_key("key"):\n
   webpage = context.WebSection_userFollowUpWebPage(reference=context.REQUEST.form.get("key"))\n
   webpage_id = webpage.getId()\n
@@ -134,23 +117,10 @@ else:\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
-                            <string>kw</string>
-                            <string>module</string>
-                            <string>str</string>
-                            <string>DateTime</string>
-                            <string>reference</string>
-                            <string>person</string>
-                            <string>assignment</string>
-                            <string>getattr</string>
-                            <string>None</string>
-                            <string>uf</string>
-                            <string>plugin</string>
-                            <string>_write_</string>
-                            <string>_apply_</string>
-                            <string>dict</string>
                             <string>webpage</string>
                             <string>webpage_id</string>
                             <string>editor_name</string>
+                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
