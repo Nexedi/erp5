@@ -50,30 +50,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal_type_dict = {"Web Page": ["Text", "web_page_template"],\n
-                    "Web Table": ["Spreadsheet", "web_table_template"],\n
-                    "Web Illustration": ["Drawing", "web_illustration_template"]}\n
+            <value> <string>portal = context.getPortalObject()\n
+person = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
 \n
-portal_type = context.REQUEST.form.get("portal_type")\n
-document = context.Base_contribute(file=file, \n
-                       url=None, \n
-                       portal_type=portal_type_dict.get(portal_type)[0], \n
-                       synchronous_metadata_discovery=None, \n
-                       redirect_to_document=False, \n
-                       attach_document_to_context=False, \n
-                       use_context_for_container=False, \n
-                       redirect_url=None, \n
-                       cancel_url=None, \n
-                       batch_mode=False,\n
-                       max_repeat=0, \n
-                       editable_mode=1,\n
-                       follow_up_list=None, \n
-)\n
+webpage = portal.portal_catalog.getResultValue(reference=reference)\n
+if person.getRelativeUrl() not in webpage.getFollowUpList():\n
+  value_list = webpage.getFollowUpValueList()\n
+  value_list.append(person)\n
+  webpage.setFollowUpValueList(value_list)\n
 \n
-return context.ERP5Site_createNewWebDocument(template=portal_type_dict.get(portal_type)[1],\n
-                                             selection_action=portal_type,\n
-                                             document_path=document.getPath(),\n
-                                             upload_document=1)\n
+return webpage\n
 </string> </value>
         </item>
         <item>
@@ -84,15 +70,12 @@ return context.ERP5Site_createNewWebDocument(template=portal_type_dict.get(porta
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>file, **kw</string> </value>
+            <value> <string>reference</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
-                <string>Auditor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -121,16 +104,13 @@ return context.ERP5Site_createNewWebDocument(template=portal_type_dict.get(porta
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>file</string>
-                            <string>kw</string>
-                            <string>portal_type_dict</string>
+                            <string>reference</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>portal_type</string>
-                            <string>None</string>
-                            <string>_getitem_</string>
-                            <string>False</string>
-                            <string>document</string>
+                            <string>portal</string>
+                            <string>person</string>
+                            <string>webpage</string>
+                            <string>value_list</string>
                           </tuple>
                         </value>
                     </item>
@@ -147,7 +127,7 @@ return context.ERP5Site_createNewWebDocument(template=portal_type_dict.get(porta
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSection_uploadDocument</string> </value>
+            <value> <string>WebSection_userFollowUpWebPage</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
