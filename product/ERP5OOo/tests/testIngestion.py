@@ -45,6 +45,7 @@ from Products.ERP5OOo.Document.OOoDocument import ConversionError
 from Products.ERP5OOo.OOoUtils import OOoBuilder
 from zLOG import LOG, INFO, ERROR
 from Products.CMFCore.utils import getToolByName
+from zExceptions import BadRequest
 
 # test files' home
 TEST_FILES_HOME = os.path.join(os.path.dirname(__file__), 'test_document')
@@ -1963,6 +1964,34 @@ return result
     result_list = self.portal.portal_catalog(reference='I.want.a.pdf')
     self.assertEquals(len(result_list), 1)
     self.assertEquals(result_list[0].getPortalType(), 'PDF')
+
+  def test_User_ID_parameter_is_honoured(self):
+    """Check that given id is always honoured
+    """
+    path = makeFilePath('import_region_category.xls')
+    data = open(path, 'r').read()
+
+    document = self.portal.portal_contributions.newContent(
+                                      id='this_id',
+                                      filename='import_region_category.xls',
+                                      data=data,
+                                      content_type='application/vnd.ms-excel',
+                                      reference='I.want.a.pdf',
+                                      portal_type='PDF')
+    transaction.commit()
+    self.tic()
+    result_list = self.portal.portal_catalog(reference='I.want.a.pdf',
+                                             id='this_id')
+    self.assertEquals(len(result_list), 1)
+    self.assertRaises(BadRequest,
+                      self.portal.portal_contributions.newContent,
+                      id='this_id',
+                      filename='import_region_category.xls',
+                      data=data,
+                      content_type='application/vnd.ms-excel',
+                      reference='I.want.a.pdf',
+                      portal_type='PDF')
+
 
 def test_suite():
   suite = unittest.TestSuite()
