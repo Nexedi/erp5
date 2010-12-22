@@ -41,7 +41,7 @@ from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from Products.ERP5Type.tests.testERP5Type import PropertySheetTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Form.PreferenceTool import Priority
-from Products.ERP5.PropertySheet.HtmlStylePreference import HtmlStylePreference
+from Products.ERP5PropertySheetLegacy.PropertySheet.HtmlStylePreference import HtmlStylePreference
 
 default_large_image_height, = [pref.get('default')
                                for pref in HtmlStylePreference._properties
