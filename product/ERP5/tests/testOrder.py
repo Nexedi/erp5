@@ -2886,7 +2886,8 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                               portal_type='Sale Order')
     sale_order.newContent(portal_type='Sale Order Line')
     
-    selection_name = 'sale_order_line_selection'
+    # XXX: hard coding a selection_name is bad
+    selection_name = 'SaleOrder_view_listbox_selection'
     self.assertEquals(selection_name,
         sale_order.SaleOrder_view.listbox.get_value('selection_name'))
     
