@@ -27,10 +27,8 @@
 #
 ##############################################################################
 
-from Path import Path
 
-
-class Assignment(Path):
+class Assignment:
   """
     These properties are used by Career and Assignment
   """
