@@ -121,7 +121,7 @@
                         <string>my_layout_display_header_title_widget</string>
                         <string>my_layout_display_toolbar_widget</string>
                         <string>my_layout_display_search_widget</string>
-                        <string>my_layout_search_portal_type</string>
+                        <string>my_layout_search_portal_type_list</string>
                         <string>my_layout_display_anonymous_user_registration</string>
                       </list>
                     </value>
