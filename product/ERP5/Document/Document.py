@@ -574,10 +574,10 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
       finishIngestion.
     """
     document = self
-    catalog = self.getPortalObject().portal_catalog
     if self.getReference():
+      catalog = self.getPortalObject().portal_catalog
       # Find all document with same (reference, version, language)
-      kw = dict(portal_type=self.getPortalDocumentTypeList(),
+      kw = dict(portal_type=self.getPortalType(),
                 reference=self.getReference(),
                 where_expression=SQLQuery("validation_state NOT IN ('cancelled', 'deleted')"))
       if self.getVersion():
@@ -599,9 +599,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
       # We found an existing document to update
       if existing_document is not None:
         document = existing_document
-        if existing_document.getPortalType() != self.getPortalType():
-          raise ValueError, "[DMS] Ingestion may not change the type of an existing document"
-        elif not _checkPermission(Permissions.ModifyPortalContent, existing_document):
+        if not _checkPermission(Permissions.ModifyPortalContent, existing_document):
           raise Unauthorized, "[DMS] You are not allowed to update the existing document which has the same coordinates (id %s)" % existing_document.getId()
         else:
           update_kw = {}
