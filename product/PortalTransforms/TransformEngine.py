@@ -534,4 +534,17 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             log('objectItems: catched MissingBinary exception')
             return []
 
+    # available mimetypes ####################################################
+    def listAvailableTextInputs(self):
+        """ Returns a list of mimetypes that can be used as input for textfields
+            by building a list of the inputs beginning with "text/" of all transforms.
+        """
+        available_types = []
+        candidate_transforms = [object[1] for object in self.objectItems()]
+        for candidate in candidate_transforms:
+            for input in candidate.inputs:
+                if input.startswith("text/") and input not in available_types:
+                    available_types.append(input)
+        return available_types
+
 InitializeClass(TransformTool)

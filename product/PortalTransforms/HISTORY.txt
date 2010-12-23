@@ -3,6 +3,7 @@
 
   * Use ImageMagick's 'convert' program instead of PIL to handle CMYK
     images well.
+  * Merge upstream 1.6.0-a1
 
 1.4.1-nexedi - 2009-03-03
 =========================

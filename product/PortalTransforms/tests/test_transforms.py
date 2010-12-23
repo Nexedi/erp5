@@ -179,7 +179,13 @@ TRANSFORMS_TESTINFO = (
     ('Products.PortalTransforms.transforms.image_to_pcx',
      "logo.png", "logo.pcx", None, 0
      ),
-    )
+    ('Products.PortalTransforms.transforms.markdown_to_html',
+     "markdown.txt", "markdown.html", None, 0
+     ),
+    ('Products.PortalTransforms.transforms.textile_to_html',
+     "input.textile", "textile.html", None, 0
+    ), 
+   )
 
 def initialise(transform, normalize, pattern):
     global TRANSFORMS_TESTINFO
