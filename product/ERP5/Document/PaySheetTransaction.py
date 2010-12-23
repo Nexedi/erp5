@@ -181,9 +181,10 @@ class PaySheetTransaction(Invoice):
     movement_dict = self.updateAggregatedAmountList()
     for movement in movement_dict['movement_to_delete_list']:
       parent = movement.getParentValue()
-      if parent.getPortalType() == 'Pay Sheet Line':
+      if parent.getPortalType() in ['Pay Sheet Line', 'Pay Sheet Transaction']:
         parent.manage_delObjects(movement.getId())
-      if len(parent.contentValues(portal_type='Pay Sheet Cell')) == 0:
+      if parent.getPortalType() == 'Pay Sheet Line' and \
+             len(parent.contentValues(portal_type='Pay Sheet Cell')) == 0:
         # the line contain no movements, remove it
         self.manage_delObjects(parent.getId())
     business_process_list = paysheet_model.findEffectiveSpecialiseValueList(
