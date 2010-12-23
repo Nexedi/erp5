@@ -1637,7 +1637,6 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     self.assertTrue('AZERTYY' not in safe_html)
     self.assertTrue('#FFAA44' in safe_html)
 
-  @expectedFailure
   def test_safeHTML_impossible_conversion(self):
     """Some html are not parsable.
     """
@@ -1653,11 +1652,12 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     </html>
 """
     web_page.edit(text_content=html_content)
-    from HTMLParser import ParserError
+    from HTMLParser import HTMLParseError
     try:
       web_page.asStrippedHTML()
-    except ParserError:
-      self.fail('Even BeautifulSoup is not able to parse such HTML')
+    except HTMLParseError:
+      expectedFailure(self.fail)(
+        'Even BeautifulSoup is not able to parse such HTML')
 
   def test_parallel_conversion(self):
     """Check that conversion engine is able to fill in
