@@ -2614,5 +2614,5 @@ class TestLiveStandardConfiguratorWorkflow(ERP5TypeLiveTestCase, SecurityTestCas
 import unittest
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestConfiguratorStandardWorkflow))
+  suite.addTest(unittest.makeSuite(TestLiveStandardConfiguratorWorkflow))
   return suite
