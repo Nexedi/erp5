@@ -191,6 +191,19 @@ class ContributionTool(BaseTool):
       # filename
       content_type = self.guessMimeTypeFromFilename(filename)
 
+    if portal_type and container is not None:
+      # Simplify things here and return a document immediately
+      # XXX Nicolas: This will break support of WebDAV
+      # if _setObject is not called
+      document = container.newContent(id=document_id, **kw)
+      if discover_metadata:
+        document.activate(after_path_and_method_id=(document.getPath(),
+            ('convertToBaseFormat', 'Document_tryToConvertToBaseFormat')))\
+              .discoverMetadata(filename=filename, 
+                                user_login=user_login,
+                                input_parameter_dict=input_parameter_dict)
+      return document
+
     # If the portal_type was provided, we can go faster
     if portal_type and container is None:
       # We know the portal_type, let us find the default module
