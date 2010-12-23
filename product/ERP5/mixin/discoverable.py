@@ -66,7 +66,9 @@ class DiscoverableMixin(CachedConvertableMixin):
       user_login = str(getSecurityManager().getUser())
     method = self._getTypeBasedMethod('getPropertyDictFromUserLogin',
         fallback_script_id='Document_getPropertyDictFromUserLogin')
-    return method(user_login)
+    if method is not None:
+      return method(user_login)
+    return {}
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getPropertyDictFromContent')
@@ -82,7 +84,9 @@ class DiscoverableMixin(CachedConvertableMixin):
       return {}
     method = self._getTypeBasedMethod('getPropertyDictFromContent',
         fallback_script_id='Document_getPropertyDictFromContent')
-    return method()
+    if method is not None:
+      return method()
+    return {}
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getPropertyDictFromFilename')
@@ -106,7 +110,9 @@ class DiscoverableMixin(CachedConvertableMixin):
     to getPropertyDictFromInput.
     """
     method = self._getTypeBasedMethod('getPropertyDictFromInput')
-    return method(input_parameter_dict)
+    if method is not None:
+      return method(input_parameter_dict)
+    return {}
 
   ### Metadata disovery and ingestion methods
   security.declareProtected(Permissions.ModifyPortalContent,
