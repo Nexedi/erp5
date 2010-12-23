@@ -130,9 +130,6 @@ class DownloadableMixin:
     warnings.warn('getStandardFileName() is deprecated. '
                   'use getStandardFilename() instead.')
     return self.getStandardFilename(format=format)
-    method = self._getTypeBasedMethod('getStandardFilename',
-                             fallback_script_id='Document_getStandardFilename')
-    return method(format=format)
 
   def manage_FTPget(self):
     """Return body for ftp. and WebDAV
