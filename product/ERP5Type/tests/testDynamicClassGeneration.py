@@ -1030,12 +1030,6 @@ class TestZodbImportFilesystemPropertySheet(ERP5TypeTestCase):
                                  'acquisition_sync_value')
 
   def afterSetUp(self):
-    # Get all the property sheets defined on the filesystem
-    self.filesystem_property_sheet_list = []
-    for name, klass in PropertySheet.__dict__.iteritems():
-      if name[0] != '_':
-        self.filesystem_property_sheet_list.append(klass)
-
     # Mapping between the field name of a property and the default
     # value as defined in StandardProperty and AcquiredProperty,
     # meaningful because exporting a property relies on accessor which
@@ -1189,8 +1183,13 @@ class TestZodbImportFilesystemPropertySheet(ERP5TypeTestCase):
     """
     portal = self.getPortalObject().portal_property_sheets
 
-    for filesystem_property_sheet in self.filesystem_property_sheet_list:
-      property_sheet_name = filesystem_property_sheet.__name__
+    from Products.ERP5Type import PropertySheet
+    # Get all the property sheets defined on the filesystem
+    for name, klass in PropertySheet.__dict__.iteritems():
+      if name[0] == '_':
+        continue
+      filesystem_property_sheet = klass
+      property_sheet_name = name
 
       # Rename the filesystem Property Sheet class to avoid clashing
       # with existing Property Sheets in portal_property_sheets
