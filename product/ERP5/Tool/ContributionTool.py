@@ -132,6 +132,11 @@ class ContributionTool(BaseTool):
       del input_parameter_dict['file']
     if 'data' in input_parameter_dict:
       del input_parameter_dict['data']
+    if 'container' in input_parameter_dict:
+      # Container is a persistent object
+      # keep only its path in container_path key
+      container = input_parameter_dict.pop('container')
+      input_parameter_dict['container_path'] = container.getPath()
     # pop: remove keys which are not document properties
     url = kw.pop('url', None)
     container = kw.pop('container', None)
@@ -150,6 +155,10 @@ class ContributionTool(BaseTool):
 
     document = None
     portal = self.getPortalObject()
+    if container is None and container_path:
+      # Get persistent object from its path.
+      # Container may disappear, be smoother by passing default value
+      container = portal.restrictedTraverse(container_path, None)
     # Try to find the filename
     content_type = None
     if not url:
