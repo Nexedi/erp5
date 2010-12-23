@@ -3,10 +3,16 @@
 from time import time
 from Acquisition import aq_base
 
+_marker = object()
+
 class Cache:
 
-    def __init__(self, context, _id='_v_transform_cache'):
-        self.context = context
+    def __init__(self, obj, context=None, _id='_v_transform_cache'):
+        self.obj = obj
+        if context is None:
+            self.context = obj
+        else:
+            self.context = context
         self._id =_id
 
     def _genCacheKey(self, identifier, *args):
@@ -17,17 +23,19 @@ class Cache:
         key = key.replace('+', '_')
         key = key.replace('-', '_')
         key = key.replace(' ', '_')
+        if hasattr(aq_base(self.context), 'absolute_url'):
+            return key, self.context.absolute_url()
         return key
 
     def setCache(self, key, value):
         """cache a value indexed by key"""
         if not value.isCacheable():
             return
-        context = self.context
+        obj = self.obj
         key = self._genCacheKey(key)
-        if getattr(aq_base(context), self._id, None) is None:
-            setattr(context, self._id, {})
-        getattr(context, self._id)[key] = (time(), value)
+        if getattr(aq_base(obj), self._id, None) is None:
+            setattr(obj, self._id, {})
+        getattr(obj, self._id)[key] = (time(), value)
         return key
 
     def getCache(self, key):
@@ -36,9 +44,9 @@ class Cache:
         return None if not present
         else return a tuple (time spent in cache, value)
         """
-        context = self.context
+        obj = self.obj
         key = self._genCacheKey(key)
-        dict = getattr(context, self._id, None)
+        dict = getattr(obj, self._id, None)
         if dict is None :
             return None
         try:
@@ -46,18 +54,18 @@ class Cache:
             return time() - orig_time, value
         except TypeError:
             return None
-        
+
     def purgeCache(self, key=None):
         """Remove cache
         """
-        context = self.context
+        obj = self.obj
         id = self._id
-        if not shasattr(context, id):
+        if getattr(obj, id, _marker) is _marker:
             return
         if key is None:
-            delattr(context, id)
+            delattr(obj, id)
         else:
-            cache = getattr(context, id)
+            cache = getattr(obj, id)
             key = self._genCacheKey(key)
             if cache.has_key(key):
                 del cache[key]

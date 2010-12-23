@@ -45,20 +45,23 @@ class word_to_html:
 
     def convert(self, data, cache, **kwargs):
         orig_file = 'unknown.doc'
+        doc = None
+        try:
+            doc = document(orig_file, data)
+            doc.convert()
+            html = doc.html()
 
-        doc = document(orig_file, data)
-        doc.convert()
-        html = doc.html()
+            path, images = doc.subObjects(doc.tmpdir)
+            objects = {}
+            if images:
+                doc.fixImages(path, images, objects)
 
-        path, images = doc.subObjects(doc.tmpdir)
-        objects = {}
-        if images:
-            doc.fixImages(path, images, objects)
-        doc.cleanDir(doc.tmpdir)
-
-        cache.setData(html)
-        cache.setSubObjects(objects)
-        return cache
+            cache.setData(html)
+            cache.setSubObjects(objects)
+            return cache
+        finally:
+            if doc is not None:
+                doc.cleanDir(doc.tmpdir)
 
 def register():
     return word_to_html()

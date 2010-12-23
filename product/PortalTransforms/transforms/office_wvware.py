@@ -1,7 +1,5 @@
-import re, tempfile
-import os, os.path
-from Products.PortalTransforms.libtransforms.utils import bin_search, \
-     sansext, bodyfinder, scrubHTML
+import os
+from Products.PortalTransforms.libtransforms.utils import bodyfinder, scrubHTML
 from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
 
 class document(commandtransform):

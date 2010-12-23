@@ -8,10 +8,10 @@ class TransformException(Exception):
 FB_REGISTRY = None
 
 # logging function
-from zLOG import LOG, INFO
+from zLOG import LOG, DEBUG
 #logger = logging.getLogger('PortalTransforms')
 
-def log(message, severity=INFO):
+def log(message, severity=DEBUG):
     LOG('PortalTransforms', severity, message)
     #logger.log(severity, message)
 

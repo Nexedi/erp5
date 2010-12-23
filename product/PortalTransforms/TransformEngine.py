@@ -1,19 +1,14 @@
 # -*- coding: utf-8 -*-
 from logging import DEBUG
+
+from persistent.list import PersistentList
 from zope.interface import implements
 
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 from App.class_init import default__class_init__ as InitializeClass
-from Persistence import PersistentMapping
-try:
-    from ZODB.PersistentList import PersistentList
-except ImportError:
-    from persistent.list import PersistentList
 from OFS.Folder import Folder
-
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-
+from Persistence import PersistentMapping
 from Products.CMFCore.ActionProviderBase import ActionProviderBase
 from Products.CMFCore.permissions import ManagePortal, View
 try:
@@ -22,18 +17,19 @@ except ImportError: # BACK: Zope 2.8
     registerToolInterface = lambda tool_id, tool_interface: None
 from Products.CMFCore.utils import UniqueObject
 from Products.CMFCore.utils import getToolByName
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
-from Products.PortalTransforms.libtransforms.utils import MissingBinary
-from Products.PortalTransforms import transforms
-from Products.PortalTransforms.interfaces import IDataStream
-from Products.PortalTransforms.interfaces import ITransform
-from Products.PortalTransforms.interfaces import IEngine
-from Products.PortalTransforms.interfaces import IPortalTransformsTool
 from Products.PortalTransforms.data import datastream
 from Products.PortalTransforms.chain import TransformsChain
 from Products.PortalTransforms.chain import chain
 from Products.PortalTransforms.cache import Cache
+from Products.PortalTransforms.interfaces import IDataStream
+from Products.PortalTransforms.interfaces import ITransform
+from Products.PortalTransforms.interfaces import IEngine
+from Products.PortalTransforms.interfaces import IPortalTransformsTool
+from Products.PortalTransforms.libtransforms.utils import MissingBinary
 from Products.PortalTransforms.Transform import Transform
+from Products.PortalTransforms.transforms import initialize
 from Products.PortalTransforms.utils import log
 from Products.PortalTransforms.utils import TransformException
 from Products.PortalTransforms.utils import _www
@@ -50,28 +46,25 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
     implements(IPortalTransformsTool, IEngine)
 
     meta_types = all_meta_types = (
-        { 'name'   : 'Transform',
-          'action' : 'manage_addTransformForm'},
-        { 'name'   : 'TransformsChain',
-          'action' : 'manage_addTransformsChainForm'},
+        {'name': 'Transform', 'action': 'manage_addTransformForm'},
+        {'name': 'TransformsChain', 'action': 'manage_addTransformsChainForm'},
         )
 
     manage_addTransformForm = PageTemplateFile('addTransform', _www)
-    manage_addTransformsChainForm = PageTemplateFile('addTransformsChain', _www)
+    manage_addTransformsChainForm = PageTemplateFile(
+        'addTransformsChain', _www)
     manage_cacheForm = PageTemplateFile('setCacheTime', _www)
-    manage_editTransformationPolicyForm = PageTemplateFile('editTransformationPolicy', _www)
+    manage_editTransformationPolicyForm = PageTemplateFile(
+        'editTransformationPolicy', _www)
     manage_reloadAllTransforms = PageTemplateFile('reloadAllTransforms', _www)
 
-    manage_options = ((Folder.manage_options[0],) + Folder.manage_options[2:] +
-                      (
-        { 'label'   : 'Caches',
-          'action' : 'manage_cacheForm'},
-        { 'label'   : 'Policy',
-          'action' : 'manage_editTransformationPolicyForm'},
-        { 'label'   : 'Reload transforms',
-          'action' : 'manage_reloadAllTransforms'},
-        )
-                      )
+    manage_options = (
+        (Folder.manage_options[0], ) + Folder.manage_options[2:] +
+        ({'label': 'Caches', 'action': 'manage_cacheForm'},
+         {'label': 'Policy', 'action': 'manage_editTransformationPolicyForm'},
+         {'label': 'Reload transforms',
+          'action': 'manage_reloadAllTransforms'},
+        ))
 
     security = ClassSecurityInfo()
 
@@ -81,7 +74,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         self.max_sec_in_cache = max_sec_in_cache
         self._new_style_pt = 1
 
-    # mimetype oriented conversions (iengine interface) ########################
+    # mimetype oriented conversions (iengine interface)
 
     def unregisterTransform(self, name):
         """ unregister a transform
@@ -113,7 +106,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         target_mimetype = str(target_mimetype)
 
         if object is not None:
-            cache = Cache(object)
+            cache = Cache(object, context=context)
             data = cache.getCache(target_mimetype)
             if data is not None:
                 time, data = data
@@ -126,8 +119,8 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         registry = getToolByName(self, 'mimetypes_registry')
 
         if not getattr(aq_base(registry), 'classify', None):
-            # avoid problems when importing a site with an old mimetype registry
-            # XXX return None or orig?
+            # avoid problems when importing a site with an old mimetype
+            # registry
             return None
 
         orig_mt = registry.classify(orig,
@@ -135,8 +128,9 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
                                     filename=kwargs.get('filename'))
         orig_mt = str(orig_mt)
         if not orig_mt:
-            log('Unable to guess input mime type (filename=%s, mimetype=%s)' %(
-                kwargs.get('mimetype'), kwargs.get('filename')), severity=WARNING)
+            log('Unable to guess input mime type (filename=%s, mimetype=%s)' %
+                (kwargs.get('mimetype'), kwargs.get('filename')),
+                severity=WARNING)
             return None
 
         target_mt = registry.lookup(target_mimetype)
@@ -151,9 +145,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         # If orig_mt and target_mt are the same, we only allow
         # a one-hop transform, a.k.a. filter.
         # XXX disabled filtering for now
-        filter_only = False
         if orig_mt == str(target_mt):
-            filter_only = True
             data.setData(orig)
             md = data.getMetadata()
             md['mimetype'] = str(orig_mt)
@@ -171,9 +163,9 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             path = self._findPath(orig_mt, target_mt)
 
         if not path:
-            log('NO PATH FROM %s TO %s : %s' % (orig_mt, target_mimetype, path),
-                severity=WARNING)
-            return None #XXX raise TransformError
+            log('NO PATH FROM %s TO %s : %s' %
+                (orig_mt, target_mimetype, path), severity=WARNING)
+            return None
 
         if len(path) > 1:
             ## create a chain on the fly (sly)
@@ -183,7 +175,8 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         else:
             transform = path[0]
 
-        result = transform.convert(orig, data, context=context, usedby=usedby, **kwargs)
+        result = transform.convert(orig, data, context=context,
+                                   usedby=usedby, **kwargs)
         self._setMetaData(result, transform)
 
         # set cache if possible
@@ -307,8 +300,8 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
                               (output, transform.name())
                         raise TransformException(msg)
                     if len(mto) > 1:
-                        msg = 'Wildcarding not allowed in transform\'s output '\
-                              'MIME type'
+                        msg = ("Wildcarding not allowed in transform's output "
+                               "MIME type")
                         raise TransformException(msg)
 
                     for mt2 in mto[0].mimetypes:
@@ -342,36 +335,124 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         """return the shortest path for transformation from orig mimetype to
         target mimetype
         """
-        path = []
-
         if not self._mtmap:
             return None
 
-        # naive algorithm :
-        #  find all possible paths with required transforms
-        #  take the shortest
-        #
-        # it should be enough since we should not have so much possible paths
-        shortest, winner = 9999, None
-        for path in self._getPaths(str(orig), str(target), required_transforms):
-            if len(path) < shortest:
-                winner = path
-                shortest = len(path)
+        orig = str(orig)
+        target = str(target)
+        # First, let's deal with required transforms.
+        if required_transforms:
+            # Let's decompose paths, then.
+            required_transform = required_transforms.pop(0)
+            # The first path must lead to one of the inputs supported
+            # by this first required transform.
+            # Which input types are supported by this transform ?
+            supportedInputs = {}
+            for input, outputs in self._mtmap.items():
+                for output, transforms in outputs.items():
+                    for transform in transforms:
+                        if transform.name() == required_transform:
+                            supportedInputs[input] = 'ok'
+                            # BTW, let's remember the output type
+                            transformOutput = output
+                            # and remember the transform, it is
+                            # useful later
+                            requiredTransform = transform
+            # Which of these inputs will be reachable with the
+            # shortest path ?
+            shortest = 9999 # big enough, I guess
+            shortestFirstPath = None
+            for supportedInput in supportedInputs.keys():
+                # We start from orig
+                firstOrig = orig
+                # And want to reach supportedInput
+                firstTarget = supportedInput
+                # What's the shortest path ?
+                firstPath = self._findPath(firstOrig, firstTarget)
+                if firstPath is not None:
+                    if len(firstPath) < shortest:
+                        # Here is a path which is shorter than others
+                        # which also reach the required transform.
+                        shortest = len(firstPath)
+                        shortestFirstPath = firstPath
+            if shortestFirstPath == None:
+                return None # there is no path leading to this transform
+            # Then we have to take this transform.
+            secondPath = [requiredTransform]
+            # From the output of this transform, we then have to
+            # reach our target, possible through other required
+            # transforms.
+            thirdOrig = transformOutput
+            thirdTarget = target
+            thirdPath = self._findPath(thirdOrig, thirdTarget,
+                                       required_transforms)
+            if thirdPath is None:
+                return None # no path
+            # Final result is the concatenation of these 3 parts
+            return shortestFirstPath + secondPath + thirdPath
 
-        return winner
+        if orig == target:
+            return []
 
-    def _getPaths(self, orig, target, requirements, path=None, result=None, searched_orig_list=None):
-        """return a all path for transformation from orig mimetype to
-        target mimetype
-        """
-        # don't search the same orig again, otherwise infinite loop occurs.
-        if searched_orig_list is None:
-            searched_orig_list = []
-        if orig in searched_orig_list:
+        # Now let's efficiently find the shortest path from orig
+        # to target (without required transforms).
+        # The overall idea is that we build all possible paths
+        # starting from orig and of given length. And we increment
+        # this length until one of these paths reaches our target or
+        # until all reachable types have been reached.
+        currentPathLength = 0
+        pathToType = {orig: []} # all paths we know, by end of path.
+        def typesWithPathOfLength(length):
+            '''Returns the lists of known paths of a given length'''
+            result = []
+            for type_, path in pathToType.items():
+                if len(path) == length:
+                    result.append(type_)
             return result
-        else:
-            searched_orig_list.append(orig)
+        # We will start exploring paths which start from types
+        # reachable in zero steps. That is paths which start from
+        # orig.
+        typesToStartFrom = typesWithPathOfLength(currentPathLength)
+        # Explore paths while there are new paths to be explored
+        while len(typesToStartFrom) > 0:
+            for startingType in typesToStartFrom:
+                # Where can we go in one step starting from here ?
+                outputs = self._mtmap.get(startingType)
+                if outputs:
+                    for reachedType, transforms in outputs.items():
+                        # Does this lead to a type we never reached before ?
+                        if reachedType not in pathToType.keys() and transforms:
+                            # Yes, we did not know any path reaching this type
+                            # Let's remember the path to here
+                            pathToType[reachedType] = (
+                                pathToType[startingType] + [transforms[0]])
+                            if reachedType == target:
+                                # This is the first time we reach our target.
+                                # We have our shortest path to target.
+                                return pathToType[target]
+            # We explored all possible paths of length currentPathLength
+            # Let's increment that length.
+            currentPathLength += 1
+            # What are the next types to start from ?
+            typesToStartFrom = typesWithPathOfLength(currentPathLength)
+        # We are done exploring paths starting from orig
+        # and this exploration did not reach our target.
+        # Hence there is no path from orig to target.
+        return None
 
+    def _getPaths(self, orig, target, requirements, path=None, result=None):
+        """return some of the paths for transformation from orig mimetype to
+        target mimetype with the guarantee that the shortest path is included.
+        If target is the same as orig, then returns an empty path.
+        """
+
+        shortest = 9999
+        if result:
+            for okPath in result:
+                shortest = min(shortest, len(okPath))
+
+        if orig == target:
+            return [[]]
         if path is None:
             result = []
             path = []
@@ -380,9 +461,9 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         if outputs is None:
             return result
 
-        registry = getToolByName(self, 'mimetypes_registry') 
-        mto = registry.lookup(target) 
-        # target mimetype aliases 
+        registry = getToolByName(self, 'mimetypes_registry')
+        mto = registry.lookup(target)
+        # target mimetype aliases
         target_aliases = mto[0].mimetypes
 
         path.append(None)
@@ -400,8 +481,14 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
                 if o_mt in target_aliases:
                     if not requirements:
                         result.append(path[:])
+                        if len(path[:]) < shortest:
+                            # here is a shorter one !
+                            shortest = len(path)
                 else:
-                    self._getPaths(o_mt, target, requirements, path, result, searched_orig_list)
+                    if len(path) < shortest:
+                        # keep exploring this path, it is still short enough
+                        self._getPaths(o_mt, target, requirements,
+                                       path, result)
                 if required:
                     requirements.append(name)
         path.pop()
@@ -414,14 +501,11 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         transform tool is added
         """
         Folder.manage_afterAdd(self, item, container)
-        transforms.initialize(self)
-        # XXX required?
-        #try:
-        #    # first initialization
-        #    transforms.initialize(self)
-        #except:
-        #    # may fail on copy
-        #    pass
+        try:
+            initialize(self)
+        except TransformException:
+            # may fail on copy or zexp import
+            pass
 
     security.declareProtected(ManagePortal, 'manage_addTransform')
     def manage_addTransform(self, id, module, REQUEST=None):
@@ -465,28 +549,31 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             reloaded.append((id, o.module))
         return reloaded
 
-    # Policy handling methods #################################################
+    # Policy handling methods
 
-    def manage_addPolicy(self, output_mimetype, required_transforms, REQUEST=None):
+    def manage_addPolicy(self, output_mimetype, required_transforms,
+                         REQUEST=None):
         """ add a policy for a given output mime types"""
         registry = getToolByName(self, 'mimetypes_registry')
         if not registry.lookup(output_mimetype):
             raise TransformException('Unknown MIME type')
-        if self._policies.has_key(output_mimetype):
+        if output_mimetype in self._policies:
             msg = 'A policy for output %s is yet defined' % output_mimetype
             raise TransformException(msg)
 
         required_transforms = tuple(required_transforms)
         self._policies[output_mimetype] = required_transforms
         if REQUEST is not None:
-            REQUEST['RESPONSE'].redirect(self.absolute_url()+'/manage_editTransformationPolicyForm')
+            REQUEST['RESPONSE'].redirect(self.absolute_url() +
+                '/manage_editTransformationPolicyForm')
 
     def manage_delPolicies(self, outputs, REQUEST=None):
         """ remove policies for given output mime types"""
         for mimetype in outputs:
             del self._policies[mimetype]
         if REQUEST is not None:
-            REQUEST['RESPONSE'].redirect(self.absolute_url()+'/manage_editTransformationPolicyForm')
+            REQUEST['RESPONSE'].redirect(self.absolute_url() +
+                '/manage_editTransformationPolicyForm')
 
     def listPolicies(self):
         """ return the list of defined policies
@@ -498,20 +585,21 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             self._policies = PersistentMapping()
         return self._policies.items()
 
-    # mimetype oriented conversions (iengine interface) ########################
+    # mimetype oriented conversions (iengine interface)
 
     def registerTransform(self, transform):
         """register a new transform
 
-        transform isn't a Zope Transform (the wrapper) but the wrapped transform
-        the persistence wrapper will be created here
+        transform isn't a Zope Transform (the wrapper) but the wrapped
+        transform the persistence wrapper will be created here
         """
         # needed when call from transform.transforms.initialize which
         # register non zope transform
         module = str(transform.__module__)
         transform = Transform(transform.name(), module, transform)
         if not ITransform.providedBy(transform):
-            raise TransformException('%s does not implement ITransform' % transform)
+            raise TransformException('%s does not implement ITransform' %
+                                     transform)
         name = transform.name()
         __traceback_info__ = (name, transform)
         if name not in self.objectIds():
@@ -539,8 +627,9 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
     # available mimetypes ####################################################
     def listAvailableTextInputs(self):
-        """ Returns a list of mimetypes that can be used as input for textfields
-            by building a list of the inputs beginning with "text/" of all transforms.
+        """Returns a list of mimetypes that can be used as input for textfields
+        by building a list of the inputs beginning with "text/" of all
+        transforms.
         """
         available_types = []
         candidate_transforms = [object[1] for object in self.objectItems()]

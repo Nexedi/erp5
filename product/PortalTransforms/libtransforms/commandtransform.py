@@ -87,28 +87,30 @@ class popentransform:
 
     def convert(self, data, cache, **kwargs):
         command = "%s %s" % (self.binary, self.binaryArgs)
-        if not self.useStdin:
-            tmpfile, tmpname = tempfile.mkstemp(text=False) # create tmp
-            os.write(tmpfile, data) # write data to tmp using a file descriptor
-            os.close(tmpfile)       # close it so the other process can read it
-            command = command % { 'infile' : tmpname } # apply tmp name to command
+        tmpname = None
+        try:
+            if not self.useStdin:
+                tmpfile, tmpname = tempfile.mkstemp(text=False) # create tmp
+                os.write(tmpfile, data) # write data to tmp using a file descriptor
+                os.close(tmpfile)       # close it so the other process can read it
+                command = command % { 'infile' : tmpname } # apply tmp name to command
 
-        cin, couterr = os.popen4(command, 'b')
+            cin, couterr = os.popen4(command, 'b')
 
-        if self.useStdin:
-            cin.write(str(data))
+            if self.useStdin:
+                cin.write(str(data))
 
-        status = cin.close()
+            status = cin.close()
 
-        out = self.getData(couterr)
-        couterr.close()
+            out = self.getData(couterr)
+            couterr.close()
 
-        if not self.useStdin:
-            # remove tmp file
-            os.unlink(tmpname)
-
-        cache.setData(out)
-        return cache
+            cache.setData(out)
+            return cache
+        finally:
+            if not self.useStdin and tmpname is not None:
+                # remove tmp file
+                os.unlink(tmpname)
 
 from subprocess import Popen, PIPE
 import shlex

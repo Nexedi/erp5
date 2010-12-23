@@ -5,6 +5,7 @@ from sys import modules
 from os.path import join, abspath, dirname, basename
 
 def normalize_html(s):
+    s = re.sub(r"&nbsp;", " ", s)
     s = re.sub(r"\s+", " ", s)
     s = re.sub(r"(?s)\s+<", "<", s)
     s = re.sub(r"(?s)>\s+", ">", s)

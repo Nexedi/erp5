@@ -67,6 +67,15 @@ class DummyHtmlFilter2(BaseTransform):
         data.setData("<div class='dummy'>%s</div>" % orig)
         return data
 
+
+class QuxToVHost(DummyHtmlFilter1):
+    __name__ = 'qux_to_vhost'
+
+    def convert(self, orig, data, context, **kwargs):
+        data.setData(re.sub('qux', context.REQUEST['SERVER_URL'], orig))
+        return data
+
+
 class TransformNoIO(BaseTransform):
     implements(ITransform)
 
@@ -222,6 +231,52 @@ class TestEngine(ATSiteTestCase):
         self.failUnlessEqual(out.getData(), data, out.getData())
         out = self.engine.convertTo(mt, other_data, mimetype=mt, object=self)
         self.failUnlessEqual(out.getData(), other_data, out.getData())
+
+    def testCacheWithVHost(self):
+        """Ensure that the transform cache key includes virtual
+        hosting so that transforms which are dependent on the virtual
+        hosting don't get invalid data from the cache.  This happens,
+        for example, in the resolve UID functionality used by visual
+        editors."""
+        mt = 'text/x-html-safe'
+        self.engine.registerTransform(QuxToVHost())
+        required = ['qux_to_vhost']
+        self.engine.manage_addPolicy(mt, required)
+
+        data = '<a href="qux">vhost link</a>'
+
+        out = self.engine.convertTo(
+            mt, data, mimetype='text/html', object=self.folder,
+            context=self.folder)
+        self.failUnlessEqual(
+            out.getData(), '<a href="http://nohost">vhost link</a>',
+            out.getData())
+
+        # Test when object is not a context
+        out = self.engine.convertTo(
+            mt, data, mimetype='text/html', object=self,
+            context=self.folder)
+        self.failUnlessEqual(
+            out.getData(), '<a href="http://nohost">vhost link</a>',
+            out.getData())
+
+        # Change the virtual hosting
+        self.folder.REQUEST['SERVER_URL'] = 'http://otherhost'
+
+        out = self.engine.convertTo(
+            mt, data, mimetype='text/html', object=self.folder,
+            context=self.folder)
+        self.failUnlessEqual(
+            out.getData(), '<a href="http://otherhost">vhost link</a>',
+            out.getData())
+
+        # Test when object is not a context
+        out = self.engine.convertTo(
+            mt, data, mimetype='text/html', object=self,
+            context=self.folder)
+        self.failUnlessEqual(
+            out.getData(), '<a href="http://otherhost">vhost link</a>',
+            out.getData())
 
 
 def test_suite():
