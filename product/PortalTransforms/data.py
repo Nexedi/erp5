@@ -1,10 +1,14 @@
-from Products.PortalTransforms.interfaces import idatastream
 from zope.interface import implements
+
+from Products.PortalTransforms.interfaces import IDataStream
+
 
 class datastream:
     """A transformation datastream packet"""
-    implements(idatastream)
+
     __slots__ = ('name', '_data', '_metadata')
+
+    implements(IDataStream)
 
     def __init__(self, name):
         self.__name__ = name
@@ -61,8 +65,3 @@ class datastream:
         """Set cacheable flag to yes or no
         """
         self._cacheable = bool(value)
-
-    #data = property('getData', 'setData', None, """idata.data""")
-
-    #metadata = property('getMetadata', 'setMetadata', None,
-    #"""idata.metadata""")

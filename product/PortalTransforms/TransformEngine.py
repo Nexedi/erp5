@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
-from AccessControl.Role import RoleManager
+from logging import DEBUG
+from zope.interface import implements
+
 from AccessControl import ClassSecurityInfo
-from Acquisition import Implicit
-from Acquisition import aq_parent
 from Acquisition import aq_base
-from Persistence import Persistent
 from App.class_init import default__class_init__ as InitializeClass
 from Persistence import PersistentMapping
 try:
@@ -12,20 +11,24 @@ try:
 except ImportError:
     from persistent.list import PersistentList
 from OFS.Folder import Folder
-from OFS.SimpleItem import Item
 
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Products.CMFCore.ActionProviderBase import ActionProviderBase
 from Products.CMFCore.permissions import ManagePortal, View
+try:
+    from Products.CMFCore.utils import registerToolInterface
+except ImportError: # BACK: Zope 2.8
+    registerToolInterface = lambda tool_id, tool_interface: None
 from Products.CMFCore.utils import UniqueObject
 from Products.CMFCore.utils import getToolByName
 
 from Products.PortalTransforms.libtransforms.utils import MissingBinary
 from Products.PortalTransforms import transforms
-from Products.PortalTransforms.interfaces import iengine
-from Products.PortalTransforms.interfaces import idatastream
-from Products.PortalTransforms.interfaces import itransform
+from Products.PortalTransforms.interfaces import IDataStream
+from Products.PortalTransforms.interfaces import ITransform
+from Products.PortalTransforms.interfaces import IEngine
+from Products.PortalTransforms.interfaces import IPortalTransformsTool
 from Products.PortalTransforms.data import datastream
 from Products.PortalTransforms.chain import TransformsChain
 from Products.PortalTransforms.chain import chain
@@ -33,22 +36,18 @@ from Products.PortalTransforms.cache import Cache
 from Products.PortalTransforms.Transform import Transform
 from Products.PortalTransforms.utils import log
 from Products.PortalTransforms.utils import TransformException
-from Products.PortalTransforms.utils import BadRequest
 from Products.PortalTransforms.utils import _www
 
-from zope.interface import implements
-
-__revision__ = '$Id: TransformEngine.py 6255 2006-04-11 15:29:29Z hannosch $'
 
 from zLOG import WARNING
 
 class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
-    id        = 'portal_transforms'
+    id = 'portal_transforms'
     meta_type = id.title().replace('_', ' ')
     isPrincipiaFolderish = 1 # Show up in the ZMI
 
-    implements(iengine)
+    implements(IPortalTransformsTool, IEngine)
 
     meta_types = all_meta_types = (
         { 'name'   : 'Transform',
@@ -99,7 +98,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
         * orig is an encoded string
 
-        * data an optional idatastream object. If None a new datastream will be
+        * data an optional IDataStream object. If None a new datastream will be
         created and returned
 
         * optional object argument is the object on which is bound the data.
@@ -108,7 +107,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         * additional arguments (kwargs) will be passed to the transformations.
         Some usual arguments are : filename, mimetype, encoding
 
-        return an object implementing idatastream or None if no path has been
+        return an object implementing IDataStream or None if no path has been
         found.
         """
         target_mimetype = str(target_mimetype)
@@ -185,15 +184,13 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             transform = path[0]
 
         result = transform.convert(orig, data, context=context, usedby=usedby, **kwargs)
-        assert(idatastream.providedBy(result),
-               'result doesn\'t is not an idatastream')
         self._setMetaData(result, transform)
 
         # set cache if possible
         if object is not None and result.isCacheable():
             cache.setCache(str(target_mimetype), result)
 
-        # return idatastream object
+        # return IDataStream object
         return result
 
     def getRequirementListByMimetype(self, origin_mimetype, target_mimetype):
@@ -279,7 +276,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
     def _unwrap(self, data):
         """unwrap data from an icache"""
-        if idatastream.providedBy(data):
+        if IDataStream.providedBy(data):
             data = data.getData()
         return data
 
@@ -382,6 +379,12 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         outputs = self._mtmap.get(orig)
         if outputs is None:
             return result
+
+        registry = getToolByName(self, 'mimetypes_registry') 
+        mto = registry.lookup(target) 
+        # target mimetype aliases 
+        target_aliases = mto[0].mimetypes
+
         path.append(None)
         for o_mt, transforms in outputs.items():
             for transform in transforms:
@@ -394,7 +397,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
                     # avoid infinite loop...
                     continue
                 path[-1] = transform
-                if o_mt == target:
+                if o_mt in target_aliases:
                     if not requirements:
                         result.append(path[:])
                 else:
@@ -507,8 +510,8 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         # register non zope transform
         module = str(transform.__module__)
         transform = Transform(transform.name(), module, transform)
-        if not itransform.providedBy(transform):
-            raise TransformException('%s does not implement itransform' % transform)
+        if not ITransform.providedBy(transform):
+            raise TransformException('%s does not implement ITransform' % transform)
         name = transform.name()
         __traceback_info__ = (name, transform)
         if name not in self.objectIds():
@@ -548,3 +551,4 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         return available_types
 
 InitializeClass(TransformTool)
+registerToolInterface('portal_transforms', IPortalTransformsTool)

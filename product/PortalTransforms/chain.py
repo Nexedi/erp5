@@ -1,3 +1,5 @@
+from zope.interface import implements
+
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Persistence import Persistent
 from App.class_init import default__class_init__ as InitializeClass
@@ -9,17 +11,17 @@ from AccessControl import ClassSecurityInfo
 from Products.CMFCore.permissions import ManagePortal, ManageProperties
 from Products.CMFCore.utils import getToolByName
 
-from Products.PortalTransforms.utils import TransformException, _www
-from  Products.PortalTransforms.interfaces import ichain
-from  Products.PortalTransforms.interfaces import itransform
-from zope.interface import implements
+from Products.PortalTransforms.utils import _www
+
+from Products.PortalTransforms.interfaces import IChain
+from Products.PortalTransforms.interfaces import ITransform
 
 from UserList import UserList
 
 class chain(UserList):
     """A chain of transforms used to transform data"""
 
-    implements(ichain, itransform)
+    implements(IChain, ITransform)
 
     def __init__(self, name='',*args):
         UserList.__init__(self, *args)

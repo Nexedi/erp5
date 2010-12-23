@@ -1,15 +1,12 @@
-from __future__ import nested_scopes
-
-import os, sys
-if __name__ == '__main__':
-    execfile(os.path.join(sys.path[0], 'framework.py'))
-
+import os
+import logging
 from Testing import ZopeTestCase
 from Products.Archetypes.tests.atsitetestcase import ATSiteTestCase
 
 from utils import input_file_path, output_file_path, normalize_html,\
      load, matching_inputs
 from Products.PortalTransforms.data import datastream
+from Products.PortalTransforms.interfaces import IDataStream
 from Products.PortalTransforms.interfaces import idatastream
 from Products.MimetypesRegistry.MimeTypesTool import MimeTypesTool
 from Products.PortalTransforms.TransformEngine import TransformTool
@@ -23,10 +20,14 @@ from Products.PortalTransforms.transforms.image_to_tiff import image_to_tiff
 from Products.PortalTransforms.transforms.image_to_ppm  import image_to_ppm
 from Products.PortalTransforms.transforms.image_to_pcx  import image_to_pcx
 
+from Products.PortalTransforms.transforms.textile_to_html import HAS_TEXTILE
+from Products.PortalTransforms.transforms.markdown_to_html import HAS_MARKDOWN
+
 from os.path import exists
 import sys
 # we have to set locale because lynx output is locale sensitive !
 os.environ['LC_ALL'] = 'C'
+logger = logging.getLogger('PortalTransforms')
 
 class TransformTest(ATSiteTestCase):
 
@@ -40,7 +41,7 @@ class TransformTest(ATSiteTestCase):
         input.close()
         data = datastream(self.transform.name())
         res_data = self.transform.convert(orig, data, filename=filename)
-        self.assert_(idatastream.providedBy(res_data))
+        self.assert_(IDataStream.providedBy(res_data))
         got = res_data.getData()
         try:
             output = open(output)
@@ -63,13 +64,20 @@ class TransformTest(ATSiteTestCase):
             got, expected, self.transform.name(), self.input))
         self.assertEquals(self.subobjects, len(res_data.getSubObjects()),
                           '%s\n\n!=\n\n%s\n\nIN %s(%s)' % (
-            self.subobjects, len(res_data.getSubObjects()), self.transform.name(), self.input))
+            self.subobjects, len(res_data.getSubObjects()),
+            self.transform.name(), self.input))
 
     def testSame(self):
-        self.do_convert(filename=self.input)
+        try:
+            self.do_convert(filename=self.input)
+        except MissingBinary, e:
+            pass
 
     def testSameNoFilename(self):
-        self.do_convert()
+        try:
+            self.do_convert()
+        except MissingBinary, e:
+            pass
 
     def __repr__(self):
         return self.transform.name()
@@ -179,13 +187,19 @@ TRANSFORMS_TESTINFO = (
     ('Products.PortalTransforms.transforms.image_to_pcx',
      "logo.png", "logo.pcx", None, 0
      ),
-    ('Products.PortalTransforms.transforms.markdown_to_html',
-     "markdown.txt", "markdown.html", None, 0
-     ),
-    ('Products.PortalTransforms.transforms.textile_to_html',
-     "input.textile", "textile.html", None, 0
-    ), 
    )
+if HAS_MARKDOWN:
+    TRANSFORMS_TESTINFO = TRANSFORMS_TESTINFO + (
+        ('Products.PortalTransforms.transforms.markdown_to_html',
+         "markdown.txt", "markdown.html", None, 0
+         ),
+       )
+if HAS_TEXTILE:
+    TRANSFORMS_TESTINFO = TRANSFORMS_TESTINFO + (
+        ('Products.PortalTransforms.transforms.textile_to_html',
+         "input.textile", "textile.html", None, 0
+        ), 
+       )
 
 def initialise(transform, normalize, pattern):
     global TRANSFORMS_TESTINFO
@@ -246,6 +260,3 @@ def test_suite():
     for test in make_tests():
         suite.addTest(makeSuite(test))
     return suite
-
-if __name__ == '__main__':
-    framework()

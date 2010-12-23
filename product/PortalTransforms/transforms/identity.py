@@ -4,7 +4,7 @@ A simple identity transform
 
 __revision__ = '$Id: identity.py 4787 2005-08-19 21:43:41Z dreamcatcher $'
 
-from Products.PortalTransforms.interfaces import itransform
+from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implements
 
 class IdentityTransform:
@@ -12,7 +12,7 @@ class IdentityTransform:
 
     return content unchanged.
     """
-    implements(itransform,)
+    implements(ITransform)
 
     __name__ = "rest_to_text"
 

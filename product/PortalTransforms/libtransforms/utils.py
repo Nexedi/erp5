@@ -37,19 +37,15 @@ else:
 def bin_search(binary):
     """search the bin_search_path for a given binary returning its fullname or
        raises MissingBinary"""
-    result = None
     mode   = os.R_OK | os.X_OK
     for path in bin_search_path:
         for ext in ('', ) + extensions:
             pathbin = os.path.join(path, binary) + ext
             if os.access(pathbin, mode) == 1:
-                result = pathbin
-                break
-    if not result:
-        raise MissingBinary('Unable to find binary "%s" in %s' % 
-                             (binary, os.pathsep.join(bin_search_path)))
-    else:
-        return result
+                return pathbin
+
+    raise MissingBinary('Unable to find binary "%s" in %s' % 
+                        (binary, os.pathsep.join(bin_search_path)))
 
 def getShortPathName(binary):
     if WIN32:
@@ -124,8 +120,10 @@ VALID_TAGS = { 'a'          : 1
              , 'pre'        : 1
              , 'span'       : 1
              , 'strong'     : 1
+             , 'strike'     : 1
              , 'table'      : 1
              , 'tbody'      : 1
+             , 'thead'      : 1
              , 'td'         : 1
              , 'th'         : 1
              , 'title'      : 1

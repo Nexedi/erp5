@@ -2,25 +2,22 @@
 from zLOG import ERROR
 from UserDict import UserDict
 
+from zope.interface import implements
+
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from App.class_init import default__class_init__ as InitializeClass
 from Persistence import PersistentMapping
-try:
-    from ZODB.PersistentList import PersistentList
-except ImportError:
-    from persistent.list import PersistentList
+from persistent.list import PersistentList
 from OFS.SimpleItem import SimpleItem
 from AccessControl import ClassSecurityInfo
 
 from Products.CMFCore.permissions import ManagePortal
 from Products.CMFCore.utils import getToolByName
 
-from Products.PortalTransforms.interfaces import itransform
+from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.utils import TransformException, log, _www
 from Products.PortalTransforms.transforms.broken import BrokenTransform
-from zope.interface import implements
 
-__revision__ = '$Id: Transform.py 6255 2006-04-11 15:29:29Z hannosch $'
 
 def import_from_name(module_name):
     """ import and return a module by its name """
@@ -69,10 +66,9 @@ class Transform(SimpleItem):
     additional configuration information
     """
 
-    implements(itransform)
+    implements(ITransform)
 
     meta_type = 'Transform'
-
     meta_types = all_meta_types = ()
 
     manage_options = (
@@ -120,8 +116,8 @@ class Transform(SimpleItem):
         # check this is a valid transform
         if not hasattr(transform, '__class__'):
             raise TransformException('Invalid transform : transform is not a class')
-        if not itransform.providedBy(transform):
-            raise TransformException('Invalid transform : itransform is not implemented by %s' % transform.__class__)
+        if not ITransform.providedBy(transform):
+            raise TransformException('Invalid transform : ITransform is not implemented by %s' % transform.__class__)
         if not hasattr(transform, 'inputs'):
             raise TransformException('Invalid transform : missing required "inputs" attribute')
         if not hasattr(transform, 'output'):
@@ -146,7 +142,14 @@ class Transform(SimpleItem):
         return transform
 
     def _load_transform(self):
-        m = import_from_name(self.module)
+        try:
+            m = import_from_name(self.module)
+        except ImportError, err:
+            transform = BrokenTransform(self.id, self.module, err)
+            msg = "Cannot register transform %s (ImportError), using BrokenTransform: Error\n %s" % (self.id, err)
+            self.title = 'BROKEN'
+            log(msg, severity=ERROR)
+            return transform
         if not hasattr(m, 'register'):
             msg = 'Invalid transform module %s: no register function defined' % self.module
             raise TransformException(msg)

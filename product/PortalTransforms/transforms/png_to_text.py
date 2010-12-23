@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from Products.PortalTransforms.interfaces import itransform
+from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.libtransforms.commandtransform \
     import popentransform
 from subprocess import Popen, PIPE
@@ -8,7 +8,7 @@ import tempfile
 from zope.interface import implements
 
 class png_to_text(popentransform):
-    implements(itransform)
+    implements(ITransform)
     __name__  = "png_to_text"
 
     inputs   = ('image/png',)

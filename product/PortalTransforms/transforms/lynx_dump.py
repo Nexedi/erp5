@@ -1,14 +1,14 @@
 """
 Uses lynx -dump
 """
-from Products.PortalTransforms.interfaces import itransform
+from Products.PortalTransforms.interfaces import ITransform
+from zope.interface import implements
 from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
 from Products.PortalTransforms.libtransforms.commandtransform import popentransform
 import os
-from zope.interface import implements
 
 class lynx_dump(popentransform):
-    implements(itransform)
+    implements(ITransform)
 
     __name__ = "lynx_dump"
     inputs   = ('text/html',)
@@ -22,7 +22,7 @@ class lynx_dump(popentransform):
     useStdin = True
     
 class old_lynx_dump(commandtransform):
-    implements(itransform)
+    implements(ITransform)
 
     __name__ = "lynx_dump"
     inputs   = ('text/html',)

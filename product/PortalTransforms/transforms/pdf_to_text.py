@@ -3,16 +3,16 @@
 Uses the xpdf (www.foolabs.com/xpdf)
 """
 
-from Products.PortalTransforms.interfaces import itransform
+from Products.PortalTransforms.interfaces import ITransform
+from zope.interface import implements
 from Products.PortalTransforms.libtransforms.utils import bin_search, sansext
 from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
 from Products.PortalTransforms.libtransforms.commandtransform import popentransform
 from Products.PortalTransforms.libtransforms.commandtransform import subprocesstransform
 import os
-from zope.interface import implements
 
 class pdf_to_text(subprocesstransform):
-    implements(itransform)
+    implements(ITransform)
 
     __name__ = "pdf_to_text"
     inputs   = ('application/pdf',)
@@ -26,7 +26,7 @@ class pdf_to_text(subprocesstransform):
     useStdin = True
 
 class old_pdf_to_text(commandtransform):
-    implements(itransform)
+    implements(ITransform)
 
     __name__ = "pdf_to_text"
     inputs   = ('application/pdf',)

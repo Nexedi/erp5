@@ -1,8 +1,8 @@
-from Products.PortalTransforms.interfaces import itransform
+from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implements
 
 class image_to_html:
-    implements(itransform)
+    implements(ITransform)
 
     __name__  = "image_to_html"
     inputs    = ('image/*', )

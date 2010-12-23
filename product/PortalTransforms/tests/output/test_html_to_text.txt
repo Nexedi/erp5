@@ -19,7 +19,7 @@ Copying Docutils
 Author:
 David Goodger
 Contact:
-goodger&#64;users.sourceforge.net
+goodger@users.sourceforge.net
 Date:
 2002-10-03
 Web site: http://docutils.sourceforge.net/

@@ -6,11 +6,11 @@ __revision__ = '$Id: command.py 4439 2005-06-15 16:32:36Z panjunyong $'
 
 import os.path
 from os import popen3
-from Products.PortalTransforms.interfaces import itransform
+from Products.PortalTransforms.interfaces import ITransform
+from zope.interface import implements
 from Products.PortalTransforms.libtransforms.utils import bin_search, sansext
 from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
 from Products.PortalTransforms.utils import log
-from zope.interface import implements
 
 class ExternalCommandTransform(commandtransform):
     """ Custom external command
@@ -21,7 +21,7 @@ class ExternalCommandTransform(commandtransform):
     the command line parameters) and return output on stdout.
     Input and output mime types must be set correctly !
     """
-    implements(itransform,)
+    implements(ITransform)
 
     __name__ = "command_transform"
 

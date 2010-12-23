@@ -1,6 +1,9 @@
-from zope.interface import Interface, Attribute
+from zope.interface import Interface
 
-class idatastream(Interface):
+class IPortalTransformsTool(Interface):
+    """Marker interface for the portal_transforms tool."""
+
+class IDataStream(Interface):
     """data stream, is the result of a transform"""
 
     def setData(value):
@@ -37,19 +40,9 @@ class idatastream(Interface):
         """Set cacheable flag to yes or no
         """
 
-class itransform(Interface):
+class ITransform(Interface):
     """A transformation plugin -- tranform data somehow
     must be threadsafe and stateless"""
-
-#     inputs = Attribute("""list of imimetypes (or registered rfc-2046
-#     names) this transform accepts as inputs.""")
-
-#     output = Attribute("""output imimetype as instance or rfc-2046
-#     name""")
-
-#     output_encoding = Attribute("""output encoding of this transform.
-#     If not specified, the transform should output the same encoding as received data
-#     """)
 
     def name(self):
         """return the name of the transform instance"""
@@ -67,18 +60,18 @@ class itransform(Interface):
         """
 
 
-class ichain(itransform):
+class IChain(ITransform):
 
     def registerTransform(transform, condition=None):
         """Append a transform to the chain"""
 
 
-class iengine(Interface):
+class IEngine(Interface):
 
     def registerTransform(transform):
         """register a transform
 
-        transform must implements itransform
+        transform must implements ITransform
         """
 
     def unregisterTransform(name):
@@ -123,3 +116,8 @@ class iengine(Interface):
         see convert docstring for more info on additional arguments.
         """
 
+# BBB
+idatastream = IDataStream
+ichain = IChain
+iengine = IEngine
+itransform = ITransform

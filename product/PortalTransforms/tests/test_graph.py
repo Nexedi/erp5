@@ -1,8 +1,3 @@
-import os, sys
-if __name__ == '__main__':
-    execfile(os.path.join(sys.path[0], 'framework.py'))
-
-from Testing import ZopeTestCase
 from Products.Archetypes.tests.atsitetestcase import ATSiteTestCase
 
 from utils import input_file_path
@@ -15,10 +10,17 @@ class TestGraph(ATSiteTestCase):
         self.engine = self.portal.portal_transforms
 
     def testGraph(self):
-        ### XXX Local file and expected output
         data = open(FILE_PATH, 'r').read()
-        out = self.engine.convertTo('text/plain', data, filename=FILE_PATH)
-        assert(out.getData())
+        requirements = self.engine._policies.get('text/plain', [])
+        if requirements:
+            out = self.engine.convertTo('text/plain', data, filename=FILE_PATH)
+            self.failUnless(out.getData())
+
+    def testIdentity(self):
+        orig = 'Some text'
+        converted = self.engine.convertTo(
+            'text/plain', 'Some text', mimetype='text/plain')
+        self.assertEquals(orig, str(converted))
 
 
 def test_suite():
@@ -26,6 +28,3 @@ def test_suite():
     suite = TestSuite()
     suite.addTest(makeSuite(TestGraph))
     return suite
-
-if __name__ == '__main__':
-    framework()

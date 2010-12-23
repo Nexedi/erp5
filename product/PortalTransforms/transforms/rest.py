@@ -1,7 +1,7 @@
-from Products.PortalTransforms.interfaces import itransform
+from Products.PortalTransforms.interfaces import ITransform
+from zope.interface import implements
 from reStructuredText import HTML
 import sys
-from zope.interface import implements
 
 class rest:
     r"""Converts from reST to HTML.
@@ -20,22 +20,28 @@ class rest:
     default:
 
       >>> try:
-      ...     transform.convert('.. raw:: html\n  :file: <isonum.txt>', D())
+      ...     out = transform.convert('.. raw:: html\n  :file: <isonum.txt>', D())
       ... except NotImplementedError:
       ...     print 'Good'
       ... else:
-      ...     print 'Failure'
+      ...     if "&quot;raw&quot; directive disabled." in out.value:
+      ...         print 'Good'
+      ...     else:
+      ...         print 'Failure'
       Good
 
       >>> try:
-      ...     transform.convert('.. include:: <isonum.txt>', D())
+      ...     out = transform.convert('.. include:: <isonum.txt>', D())
       ... except NotImplementedError:
       ...     print 'Good'
       ... else:
-      ...     print 'Failure'
+      ...     if "&quot;include&quot; directive disabled." in out.value:
+      ...         print 'Good'
+      ...     else:
+      ...         print 'Failure'
       Good
     """
-    implements(itransform)
+    implements(ITransform)
 
     __name__ = "rest_to_html"
     inputs  = ("text/x-rst", "text/restructured",)

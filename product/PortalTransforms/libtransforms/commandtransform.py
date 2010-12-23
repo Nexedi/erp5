@@ -5,15 +5,16 @@ import tempfile
 import re
 import shutil
 from os.path import join, basename
+
 from zope.interface import implements
 
-from Products.PortalTransforms.interfaces import itransform
 from Products.PortalTransforms.libtransforms.utils import bin_search, sansext, getShortPathName
+from Products.PortalTransforms.interfaces import ITransform
 
 class commandtransform:
     """abstract class for external command based transform
     """
-    implements(itransform)
+    implements(ITransform)
 
     def __init__(self, name=None, binary=None, **kwargs):
         if name is not None:
@@ -59,7 +60,7 @@ class popentransform:
 
     Command must read from stdin and write to stdout
     """
-    implements(itransform)
+    implements(ITransform)
 
     binaryName = ""
     binaryArgs = ""
@@ -117,7 +118,7 @@ class subprocesstransform:
 
     Command must read from stdin and write to stdout
     """
-    implements(itransform)
+    implements(ITransform)
 
     binaryName = ""
     binaryArgs = ""

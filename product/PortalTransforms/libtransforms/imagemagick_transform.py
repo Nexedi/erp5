@@ -1,10 +1,10 @@
-from Products.PortalTransforms.interfaces import itransform
+from Products.PortalTransforms.interfaces import ITransform
 import subprocess
 from zope.interface import implements
 
 
 class ImageMagickTransforms:
-    implements(itransform)
+    implements(ITransform)
     __name__  = "imagemagick_transforms"
     def __init__(self, name=None):
          if name is not None:

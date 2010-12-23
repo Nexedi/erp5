@@ -3,9 +3,9 @@ from zLOG import ERROR
 from HTMLParser import HTMLParser, HTMLParseError
 import re
 from cgi import escape
-from zope.interface import implements
 
-from Products.PortalTransforms.interfaces import itransform
+from Products.PortalTransforms.interfaces import ITransform
+from zope.interface import implements
 from Products.PortalTransforms.utils import log
 from Products.CMFDefault.utils import IllegalHTML
 from Products.CMFDefault.utils import SimpleHTMLParser
@@ -88,7 +88,8 @@ msg_pat = """
 ALLOWED_HTTP_EQUIV_VALUE_LIST = ('content-type',)
 
 def hasScript(s):
-   """
+   """Dig out evil Java/VB script inside an HTML attribute.
+
    >>> hasScript('script:evil(1);')
    True
    >>> hasScript('expression:evil(1);')
@@ -196,6 +197,7 @@ class StrippingParser(HTMLParser):
             self.result.append('<' + tag)
 
             remove_script = getattr(self,'remove_javascript',True)
+
             for k, v in attrs:
                 if remove_script and k.strip().lower().startswith('on'):
                     if not self.raise_error: continue
@@ -275,7 +277,7 @@ class SafeHTML:
         -> Flush Cache.
     """
 
-    implements(itransform)
+    implements(ITransform)
 
     __name__ = "safe_html"
     inputs   = ('text/html',)

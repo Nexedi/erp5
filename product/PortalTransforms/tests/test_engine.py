@@ -1,18 +1,15 @@
-import os, sys
-if __name__ == '__main__':
-    execfile(os.path.join(sys.path[0], 'framework.py'))
 
 from Testing import ZopeTestCase
 from Products.Archetypes.tests.atsitetestcase import ATSiteTestCase
 
+from zope.interface import implements
 from Products.PortalTransforms.utils import TransformException
-from Products.PortalTransforms.interfaces import *
+from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.chain import chain
 
 import urllib
 import time
 import re
-from zope.interface import implements
 
 class BaseTransform:
     def name(self):
@@ -20,7 +17,7 @@ class BaseTransform:
 
 
 class HtmlToText(BaseTransform):
-    implements(itransform)
+    implements(ITransform)
     inputs = ('text/html',)
     output = 'text/plain'
 
@@ -37,7 +34,7 @@ class HtmlToTextWithEncoding(HtmlToText):
     output_encoding = 'ascii'
 
 class FooToBar(BaseTransform):
-    implements(itransform)
+    implements(ITransform)
     inputs = ('text/*',)
     output = 'text/plain'
 
@@ -50,9 +47,28 @@ class FooToBar(BaseTransform):
         data.setData(orig)
         return data
 
+class DummyHtmlFilter1(BaseTransform):
+    implements(ITransform)
+    __name__ = 'dummy_html_filter1'
+    inputs = ('text/html',)
+    output = 'text/html'
+
+    def convert(self, orig, data, **kwargs):
+        data.setData("<span class='dummy'>%s</span>" % orig)
+        return data
+
+class DummyHtmlFilter2(BaseTransform):
+    implements(ITransform)
+    __name__ = 'dummy_html_filter2'
+    inputs = ('text/html',)
+    output = 'text/html'
+
+    def convert(self, orig, data, **kwargs):
+        data.setData("<div class='dummy'>%s</div>" % orig)
+        return data
 
 class TransformNoIO(BaseTransform):
-    implements(itransform)
+    implements(ITransform)
 
 class BadTransformMissingImplements(BaseTransform):
     #__implements__ = None
@@ -60,27 +76,25 @@ class BadTransformMissingImplements(BaseTransform):
     output = 'text/plain'
 
 class BadTransformBadMIMEType1(BaseTransform):
-    implements(itransform)
+    implements(ITransform)
     inputs = ('truc/muche',)
     output = 'text/plain'
 
 class BadTransformBadMIMEType2(BaseTransform):
-    implements(itransform)
+    implements(ITransform)
     inputs = ('text/plain',)
     output = 'truc/muche'
 
 class BadTransformNoInput(BaseTransform):
-    implements(itransform)
+    implements(ITransform)
     inputs = ()
     output = 'text/plain'
 
 class BadTransformWildcardOutput(BaseTransform):
-    implements(itransform)
+    implements(ITransform)
     inputs = ('text/plain',)
     output = 'text/*'
-
-
-
+    
 class TestEngine(ATSiteTestCase):
 
     def afterSetUp(self):
@@ -159,6 +173,34 @@ class TestEngine(ATSiteTestCase):
         self.failUnlessEqual(cache.getData(), "bar")
         self.failUnlessEqual(cache.name(), "hbar")
 
+    def testPolicy(self):
+        mt = 'text/x-html-safe'
+        data = '<script>this_is_unsafe();</script><p>this is safe</p>'
+        
+        cache = self.engine.convertTo(mt, data, mimetype='text/html')
+        self.failUnlessEqual(cache.getData(), '<p>this is safe</p>')
+
+        self.engine.registerTransform(DummyHtmlFilter1())
+        self.engine.registerTransform(DummyHtmlFilter2())
+        required = ['dummy_html_filter1', 'dummy_html_filter2']
+
+        self.engine.manage_addPolicy(mt, required)
+        expected_policy = [('text/x-html-safe',
+                            ('dummy_html_filter1', 'dummy_html_filter2'))]
+        self.failUnlessEqual(self.engine.listPolicies(), expected_policy)
+
+        cache = self.engine.convertTo(mt, data, mimetype='text/html')
+        self.failUnlessEqual(cache.getData(), '<div class="dummy"><span class="dummy"><p>this is safe</p></span></div>')
+
+        self.failUnlessEqual(cache.getMetadata()['mimetype'], mt)
+        self.failUnlessEqual(cache.name(), mt)
+
+        path = self.engine._findPath('text/html', mt, required)
+        self.failUnlessEqual(str(path),
+                             "[<Transform at dummy_html_filter1>, "
+                             "<Transform at dummy_html_filter2>, "
+                             "<Transform at safe_html>]")
+
     def testSame(self):
         data = "This is a test"
         mt = "text/plain"
@@ -187,6 +229,3 @@ def test_suite():
     suite = TestSuite()
     suite.addTest(makeSuite(TestEngine))
     return suite
-
-if __name__ == '__main__':
-    framework()
