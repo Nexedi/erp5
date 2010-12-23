@@ -205,15 +205,14 @@ class StrippingParser(HTMLParser):
                 elif remove_script and hasScript(v):
                     if not self.raise_error: continue
                     else: raise IllegalHTML, 'Script URI "%s" not allowed.' % v
-                elif tag.lower() == 'meta' and k.lower() == 'content' and\
-                     self.default_encoding and self.default_encoding not in v:
-                    match = charset_parser.search(v)
-                    if match is not None:
-                      self.original_charset = match.group('charset')
-                    self.result.append(' %s="%s"' % (k, 
-                  charset_parser.sub(CharsetReplacer(self.default_encoding), v)
-                                                    ,))
                 else:
+                    if tag.lower() == 'meta' and k.lower() == 'content' and \
+                     self.default_encoding and self.default_encoding not in v:
+                        match = charset_parser.search(v)
+                        if match is not None:
+                            self.original_charset = match.group('charset')
+                        v = charset_parser.sub(
+                            CharsetReplacer(self.default_encoding), v)
                     self.result.append(' %s="%s"' % (k, v))
 
             #UNUSED endTag = '</%s>' % tag
@@ -351,13 +350,11 @@ class SafeHTML:
             data.setData(orig)
             return data
 
-        html_string = orig
-        already_repaired = False
-        one_more_bullet_with_beautifulsoup = soupfromstring is not None
+        repaired = 0
         while True:
             try:
-                safe = scrubHTML(
-                    html_string,
+                orig = scrubHTML(
+                    orig,
                     valid=self.config.get('valid_tags', {}),
                     nasty=self.config.get('nasty_tags', {}),
                     remove_javascript=self.config.get('remove_javascript', True),
@@ -368,42 +365,38 @@ class SafeHTML:
                 break
             except HTMLParseError:
                 # ouch !
-                # HTMLParser is not able to parse very dirty HTML string,
-                # try to repair any broken html with help of lxml
-                if already_repaired and not one_more_bullet_with_beautifulsoup:
-                  # Even lxml nor BeautifulSoup doesn't perform miracles
-                  # so Give up !
-                  raise
-                elif already_repaired and one_more_bullet_with_beautifulsoup:
-                  # Is BeautifulSoup can perform miracles ?
-                  one_more_bullet_with_beautifulsoup = False
-                  # This function can raise the exception HTMLParseError.
-                  # So consider this parsing as last chance 
-                  # to get parsable html.
-                  repaired_html_tree = soupfromstring(html_string)
-                  html_string = tostring(repaired_html_tree,
-                                         include_meta_content_type=True,
-                                         method='xml')
-                already_repaired = True
-                encoding = kwargs.get('encoding')
-                # recover parameter is equal to True by default
-                # in lxml API. I pass the argument to improve readability
-                # of above code.
-                try:
-                    lparser = LHTMLParser(encoding=encoding, recover=True,
-                                          remove_comments=True)
-                except LookupError:
-                    # Provided encoding is not known by parser, so discard it
-                    lparser = LHTMLParser(recover=True,
-                                          remove_comments=True)
-                repaired_html_tree = etree.HTML(orig, parser=lparser)
-                html_string = tostring(repaired_html_tree,
-                                       include_meta_content_type=True,
-                                       method='xml')
+                # HTMLParser is not able to parse very dirty HTML string
+                if not repaired:
+                    # try to repair any broken html with help of lxml
+                    encoding = kwargs.get('encoding')
+                    # recover parameter is equal to True by default
+                    # in lxml API. I pass the argument to improve readability
+                    # of above code.
+                    try:
+                        lparser = LHTMLParser(encoding=encoding, recover=True,
+                                              remove_comments=True)
+                    except LookupError:
+                        # Provided encoding is not known by parser so discard it
+                        lparser = LHTMLParser(recover=True,
+                                              remove_comments=True)
+                    repaired_html_tree = etree.HTML(orig, parser=lparser)
+                elif repaired > (soupfromstring is not None):
+                    # Neither lxml nor BeautifulSoup worked so give up !
+                    raise
+                else:
+                    # Can BeautifulSoup perform miracles ?
+                    # This function may raise HTMLParseError.
+                    # So consider this parsing as last chance
+                    # to get parsable html.
+                    repaired_html_tree = soupfromstring(orig)
+                orig = tostring(repaired_html_tree,
+                                include_meta_content_type=True,
+                                method='xml')
+                repaired += 1
                 # avoid breaking now.
                 # continue into the loop with repaired html
             else:
-                data.setData(safe)
+                data.setData(orig)
                 break
         return data
 
