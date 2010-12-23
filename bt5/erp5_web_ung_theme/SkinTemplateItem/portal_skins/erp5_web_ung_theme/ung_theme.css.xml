@@ -889,6 +889,7 @@ div#login_form input {\n
 div#preference_dialog {\n
   display:none;\n
   width: 308px !important;\n
+  font-size: 14px;\n
 }\n
 \n
 fieldset.center.editable, fieldset.right.editable {\n
@@ -907,6 +908,12 @@ span#ui-dialog-title-preference_dialog {\n
   margin: 0;\n
   margin-top: -3px;\n
   margin-left: -10px;\n
+  font-size: 17px;\n
+}\n
+\n
+div#preference_dialog div.field {\n
+    padding-bottom: 1px;\n
+    padding-top: 1px;\n
 }
 
 ]]></string> </value>

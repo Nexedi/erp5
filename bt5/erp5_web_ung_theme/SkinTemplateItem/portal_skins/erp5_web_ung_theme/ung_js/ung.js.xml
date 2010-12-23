@@ -237,7 +237,7 @@ $(document).ready(function(){\n
  });\n
  $("div#preference_dialog").dialog({\n
     autoOpen: false,\n
-    height: 140,\n
+    height: 420,\n
     width: 330,\n
     modal: true,\n
  });\n
