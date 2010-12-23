@@ -114,13 +114,18 @@ class DownloadableMixin:
     """Returns the document coordinates as a standard file name. This
     method is the reverse of getPropertyDictFromFileName.
     """
-    method = self._getTypeBasedMethod('getStandardFilename',
+    try:
+      method = self._getTypeBasedMethod('getStandardFilename',
                              fallback_script_id='Document_getStandardFilename')
-    if method is None:
+    except AttributeError:
       # backward compatibility
       method = self._getTypeBasedMethod('getStandardFileName',
                              fallback_script_id='Document_getStandardFileName')
-    return method(format=format)
+    try:
+      return method(format=format)
+    except TypeError:
+      # Old versions of this script did not support 'format' parameter
+      return method()
 
   # backward compatibility
   security.declareProtected(Permissions.AccessContentsInformation,
