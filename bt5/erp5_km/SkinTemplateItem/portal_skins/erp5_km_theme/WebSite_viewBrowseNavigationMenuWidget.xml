@@ -57,13 +57,11 @@
         <tal:block i18n:translate="" i18n:domain="ui">Browse</tal:block>\n
       </a>\n
     </div>\n
-    <!--[if lte IE 6]><table><tr><td><![endif]-->\n
     <ul tal:condition="menu_item_list">\n
       <li tal:repeat="menu_item menu_item_list">\n
         <tal:block tal:condition="not:nocall:menu_item/subsection"><a tal:attributes="href menu_item/url" tal:content="menu_item/compact_translated_title | menu_item/translated_title">Menu</a></tal:block>\n
         <tal:block tal:condition="nocall:menu_item/subsection">\n
         <a tal:attributes="href menu_item/url"><tal:block tal:replace="menu_item/compact_translated_title | menu_item/translated_title">Drop-down Menu</tal:block><!--[if IE 7]><!--></a><!--<![endif]-->\n
-        <!--[if lte IE 6]><table><tr><td><![endif]-->\n
         <ul metal:define-macro="generateTree">\n
           <li tal:repeat="item menu_item/subsection">\n
             <a href="#" tal:attributes="href item/url" tal:content="item/compact_translated_title | item/translated_title">Menu subitem 1</a>\n
@@ -72,11 +70,9 @@
             </tal:recurse>\n
           </li>\n
         </ul>\n
-        <!--[if lte IE 6]></td></tr></table></a><![endif]-->\n
         </tal:block>\n
       </li>\n
     </ul>\n
-    <!--[if lte IE 6]></td></tr></table></a><![endif]-->\n
   </li>\n
 \n
   <tal:block tal:condition="static_navigation_menu">\n
@@ -85,15 +81,13 @@
     <li tal:define="sub_item_list menu_item/subsection">\n
       <a tal:attributes="href menu_item/url" >\n
         <tal:block tal:replace="menu_item/compact_translated_title | menu_item/translated_title">Menu</tal:block>\n
-        <!--[if IE 7]><!-->\n
-      </a><!--<![endif]-->\n
-      <!--[if lte IE 6]><table><tr><td><![endif]-->      \n
+      </a>\n
+ \n
         <ul tal:condition="sub_item_list">\n
           <li tal:repeat="menu_item sub_item_list" tal:attributes="class python: menu_item[\'url\'] and \'collapse-menu\' or \'\'">\n
             <tal:block tal:condition="not:nocall:menu_item/subsection"><a tal:attributes="href menu_item/url" tal:content="menu_item/compact_translated_title | menu_item/translated_title">Menu</a></tal:block>\n
             <tal:block tal:condition="nocall:menu_item/subsection">\n
             <a tal:attributes="href menu_item/url"><tal:block tal:replace="menu_item/compact_translated_title | menu_item/translated_title">Drop-down Menu</tal:block><!--[if IE 7]><!--></a><!--<![endif]-->\n
-            <!--[if lte IE 6]><table><tr><td><![endif]-->\n
             <ul>\n
               <li tal:repeat="item menu_item/subsection">\n
                 <a href="#" tal:attributes="href item/url" tal:content="item/compact_translated_title | item/translated_title">Menu subitem 1</a>\n
@@ -102,11 +96,9 @@
                 </tal:recurse>\n
               </li>\n
             </ul>\n
-            <!--[if lte IE 6]></td></tr></table></a><![endif]-->\n
             </tal:block>\n
           </li>\n
         </ul>\n
-        <!--[if lte IE 6]></td></tr></table></a><![endif]-->\n
     </li>\n
     </tal:block>\n
   </tal:block>\n
