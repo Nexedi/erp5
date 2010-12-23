@@ -219,7 +219,7 @@ class StrippingParser(HTMLParser):
                             self.original_charset = match.group('charset')
                         v = charset_parser.sub(
                             CharsetReplacer(self.default_encoding), v)
-                    self.result.append(' %s="%s"' % (k, v))
+                    self.result.append(' %s="%s"' % (k, escape(v, True)))
 
             #UNUSED endTag = '</%s>' % tag
             if safeToInt(self.valid.get(tag)):
