@@ -36,9 +36,9 @@ from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from AccessControl import Unauthorized
 from zLOG import LOG
 
-class TestConfiguratorStandardWorkflow(ERP5TypeLiveTestCase, SecurityTestCase):
+class TestLiveStandardConfiguratorWorkflow(ERP5TypeLiveTestCase, SecurityTestCase):
   """
-    Tests the express configuration.
+    Test Live Standard Configuration Workflow.
   """
   # The list of standard business templates that the configurator should force
   # to install
