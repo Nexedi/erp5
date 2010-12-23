@@ -7,6 +7,24 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Authenticated</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Member</string>
+                <string>Owner</string>
+                <string>Reviewer</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
@@ -49,7 +67,24 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Authenticated</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Member</string>
                 <string>Owner</string>
+                <string>Reviewer</string>
               </tuple>
             </value>
         </item>
@@ -154,6 +189,106 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>layout_search_portal_type</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>lines</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>layout_display_header_title_widget</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>int</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>layout_display_language_icons</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>int</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>layout_display_toolbar_widget</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>layout_display_user_widget</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>int</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>layout_force_anonymous_gadget</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>int</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>layout_display_anonymous_user_registration</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>int</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>layout_display_search_widget</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>int</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>layout_display_breadcrumb_widget</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>int</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>layout_search_portal_type_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>lines</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -209,8 +344,40 @@
             <value> <string>WebSection_viewKMMinimalThemeConfiguration</string> </value>
         </item>
         <item>
+            <key> <string>layout_display_anonymous_user_registration</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>layout_display_breadcrumb_widget</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>layout_display_header_title_widget</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>layout_display_language_icons</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>layout_display_search_widget</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>layout_display_toolbar_widget</string> </key>
+            <value> <string>display</string> </value>
+        </item>
+        <item>
+            <key> <string>layout_display_user_widget</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
             <key> <string>layout_footer_reference</string> </key>
             <value> <string>minimal_km_footer</string> </value>
+        </item>
+        <item>
+            <key> <string>layout_force_anonymous_gadget</string> </key>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>layout_max_breadcrumb_length</string> </key>
@@ -221,6 +388,36 @@
         <item>
             <key> <string>layout_navigation_menu_opacity</string> </key>
             <value> <float>1.0</float> </value>
+        </item>
+        <item>
+            <key> <string>layout_search_portal_type</string> </key>
+            <value>
+              <tuple>
+                <string>Drawing</string>
+                <string>File</string>
+                <string>Image</string>
+                <string>PDF</string>
+                <string>Presentation</string>
+                <string>Spreadsheet</string>
+                <string>Text</string>
+                <string>Web Page</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>layout_search_portal_type_list</string> </key>
+            <value>
+              <tuple>
+                <string>Drawing</string>
+                <string>File</string>
+                <string>Image</string>
+                <string>PDF</string>
+                <string>Presentation</string>
+                <string>Spreadsheet</string>
+                <string>Text</string>
+                <string>Web Page</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -265,10 +462,7 @@
   </record>
   <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
-      <tuple>
-        <global name="PersistentMapping" module="Persistence.mapping"/>
-        <tuple/>
-      </tuple>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -291,10 +485,7 @@
   </record>
   <record id="6" aka="AAAAAAAAAAY=">
     <pickle>
-      <tuple>
-        <global name="PersistentMapping" module="Persistence.mapping"/>
-        <tuple/>
-      </tuple>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
     </pickle>
     <pickle>
       <dictionary>
