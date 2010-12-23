@@ -189,7 +189,7 @@ $(document).ready(function(){\n
           },\n
    });\n
   });\n
-  if ($("a[name=\'document_state\']").text() == "draft") {\n
+  if ($("a[name=\'document_state\']").text() == "Draft") {\n
     $("div.action_menu li ul").append("<li><a id=\'share_document\' href=\'#\'>" + \n
                                       "<h6>Share this Document</h6></a></li>");\n
     $("div.action_menu li ul").css("height", 101);\n
