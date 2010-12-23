@@ -643,8 +643,7 @@ class TestDocument(TestDocumentMixin):
 
   def test_05_getCreationDate(self):
     """
-    Check getCreationDate on all document type, as those documents
-    are not associated to edit_workflow.
+    Check getCreationDate on all document types.
     """
     portal = self.getPortalObject()
     for document_type in portal.getPortalDocumentTypeList():
