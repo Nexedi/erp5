@@ -36,18 +36,18 @@ from zLOG import LOG, WARNING, INFO
 def allowAccessOnContributionRegistryPortalTypes(self):
   ''' Set Type Acquire Local Role '''
 
-  self.portal = self.getPortalObject()
-  portal_contribution_registry = self.portal.portal_contribution_registry
+  portal = self.getPortalObject()
+  portal_contribution_registry = portal.portal_contribution_registry
   pt_title_list =  [p.getDestinationPortalType()
     for p in portal_contribution_registry.contentValues()]
   exclude_pt_title_list = ['Web Page', 'DMS Ingestion', 'Default Predicate']
-  
+
   for pt_title in pt_title_list:
     if pt_title not in exclude_pt_title_list:
-      portal_type_object = self.portal.portal_types.getTypeInfo(pt_title)
+      portal_type_object = portal.portal_types.getTypeInfo(pt_title)
       #set acquired local role on the portal type
       portal_type_object.setTypeAcquireLocalRole(1)
- 
+
   return '- Access on Contribution Registry Portal Types allowed'
 
 def allowAccessOnPersonAndOrganisation(self):
