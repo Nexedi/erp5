@@ -18,12 +18,12 @@ class lynx_dump(popentransform):
 
     binaryName = "lynx"
     # XXX does -stdin work on windows?
-    binaryArgs = "-dump -crawl -stdin"
+    binaryArgs = "-dump -stdin"
     useStdin = True
     
     def getData(self, couterr):
         lines = [ line for line in couterr.readlines() ]
-        return ''.join(lines[3:])
+        return ''.join(lines)
 
 class old_lynx_dump(commandtransform):
     implements(itransform)

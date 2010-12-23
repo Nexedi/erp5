@@ -4,6 +4,11 @@ import sys
 from sgmllib import SGMLParser
 
 try:
+    # Need to be imported before win32api to avoid dll loading
+    # problems.
+    import pywintypes
+    import pythoncom
+
     import win32api
     WIN32 = True
 except ImportError:

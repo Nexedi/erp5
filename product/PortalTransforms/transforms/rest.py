@@ -4,6 +4,37 @@ import sys
 from zope.interface import implements
 
 class rest:
+    r"""Converts from reST to HTML.
+
+      >>> transform = rest()
+      >>> class D:
+      ...     def setData(self, data):
+      ...         self.value = data
+
+      >>> data = transform.convert('*hello world*', D())
+      >>> print data.value
+      <p><em>hello world</em></p>
+      <BLANKLINE>
+
+    We want the 'raw' and 'include' directives to be disabled by
+    default:
+
+      >>> try:
+      ...     transform.convert('.. raw:: html\n  :file: <isonum.txt>', D())
+      ... except NotImplementedError:
+      ...     print 'Good'
+      ... else:
+      ...     print 'Failure'
+      Good
+
+      >>> try:
+      ...     transform.convert('.. include:: <isonum.txt>', D())
+      ... except NotImplementedError:
+      ...     print 'Good'
+      ... else:
+      ...     print 'Failure'
+      Good
+    """
     implements(itransform)
 
     __name__ = "rest_to_html"

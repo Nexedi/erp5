@@ -88,6 +88,7 @@ class TransformsChain(Implicit, Item, RoleManager, Persistent):
     It follows the transform API so that a chain is itself a transform.
     """
 
+    module = 'N/A'
     meta_type = 'TransformsChain'
 
     meta_types = all_meta_types = ()
@@ -111,15 +112,6 @@ class TransformsChain(Implicit, Item, RoleManager, Persistent):
         self._object_ids = list(ids)
         self.inputs = ('application/octet-stream',)
         self.output = 'application/octet-stream'
-        self._chain = None
-
-    def __setstate__(self, state):
-        """ __setstate__ is called whenever the instance is loaded
-            from the ZODB, like when Zope is restarted.
-
-            We should rebuild the chain at this time
-        """
-        TransformsChain.inheritedAttribute('__setstate__')(self, state)
         self._chain = None
 
     def _chain_init(self):
@@ -209,7 +201,7 @@ class TransformsChain(Implicit, Item, RoleManager, Persistent):
         """ reload the module where the transformation class is defined """
         for tr in self.objectValues():
             tr.reload()
-
+        self._chain_init()
 
     # utilities #
 
