@@ -220,9 +220,9 @@ class ContributionTool(BaseTool):
     if portal_type and reference and version and language:
       portal_catalog = portal.portal_catalog
       document = portal_catalog.getResultValue(portal_type=portal_type,
-                                                reference=reference,
-                                                version=version,
-                                                language=language)
+                                               reference=reference,
+                                               version=version,
+                                               language=language)
 
       if document is not None:
         # document is already uploaded. So overrides file.
