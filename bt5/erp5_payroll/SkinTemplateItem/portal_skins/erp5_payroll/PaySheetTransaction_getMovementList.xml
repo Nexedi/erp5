@@ -116,7 +116,7 @@ for paysheet_line in paysheet_line_list:\n
 \n
     base = cell.getQuantity()\n
 \n
-    cell_contribution_share = cell.getContributionShare() or \'\'\n
+    cell_contribution_share = cell.getBaseContributionTitle('').lower() or \'\'\n
     share_dict[cell_contribution_share+\'_price\'] = cell.getPrice()\n
     share_dict[cell_contribution_share+\'_quantity\'] = cell.getQuantity()\n
     share_dict[cell_contribution_share+\'_total_price\'] = \\\n
