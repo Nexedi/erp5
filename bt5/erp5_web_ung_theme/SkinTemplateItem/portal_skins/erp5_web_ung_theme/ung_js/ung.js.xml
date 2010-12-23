@@ -189,17 +189,19 @@ $(document).ready(function(){\n
           },\n
    });\n
   });\n
-  $("div.action_menu li ul").append("<li><a id=\'share_document\' href=\'#\'>" + \n
-                                    "<h6>Share this Document</h6></a></li>");\n
-  $("div.action_menu li ul").css("height", 101);\n
-  $("div.action_menu ul li a#share_document").click(function(event){\n
-    event.preventDefault();\n
-    reference = $.ajax({\n
-                  url: \'WebSection_shareDocument\',\n
-                  async: false,\n
-                }).responseText;\n
-    alert(reference);\n
-  });\n
+  if ($("a[name=\'document_state\']").text() == "draft") {\n
+    $("div.action_menu li ul").append("<li><a id=\'share_document\' href=\'#\'>" + \n
+                                      "<h6>Share this Document</h6></a></li>");\n
+    $("div.action_menu li ul").css("height", 101);\n
+    $("div.action_menu ul li a#share_document").click(function(event){\n
+      event.preventDefault();\n
+      reference = $.ajax({\n
+                    url: \'WebSection_shareDocument\',\n
+                    async: false,\n
+                  }).responseText;\n
+      alert(reference);\n
+    });\n
+  }\n
  }\n
  $("#edit_document").dialog({\n
     autoOpen: false,\n
