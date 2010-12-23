@@ -235,6 +235,7 @@ def generatePortalTypeClass(portal_type_name):
       LOG("ERP5Type.dynamic", WARNING,
           "Property Sheet Tool was not found. Please update erp5_core "
           "Business Template")
+    else:
       if portal_type is not None:
         # Get the Property Sheets defined on the portal_type and use the
         # ZODB Property Sheet rather than the filesystem only if it
