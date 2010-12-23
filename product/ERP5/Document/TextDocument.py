@@ -148,6 +148,10 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
         text_content = self.getTextContent()
       if text_content:
         kw['format'] = format
+        convert_kw = {}
+        # PortalTransforms does not accept empty values for 'encoding' parameter
+        if charset:
+          kw['charset'] = convert_kw['encoding'] = charset
         if not self.hasConversion(**kw):
           portal_transforms = getToolByName(portal, 'portal_transforms')
           filename = self.getStandardFilename(format=format)
@@ -157,7 +161,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
                                                    object=self, context=self,
                                                    filename=filename,
                                                    mimetype=src_mimetype,
-                                                   encoding=charset)
+                                                   **convert_kw)
           if result is None:
             raise ConversionError('TextDocument conversion error. '
                                   'portal_transforms failed to convert '
