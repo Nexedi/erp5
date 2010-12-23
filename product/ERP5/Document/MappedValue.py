@@ -29,6 +29,7 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
+from Acquisition import aq_base
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.Core.Predicate import Predicate
 
@@ -38,6 +39,10 @@ _MARKER = []
 class MappedValue(Predicate):
   """
     A MappedValue allows to associate a value to a predicate
+
+  XXX Why do we redefine xxxProperty methods ?
+      When a property is defined by a property sheet with a specific storage_id,
+      they break accessors of this property when a value is mapped to it.
   """
   meta_type = 'ERP5 Mapped Value'
   portal_type = 'Mapped Value'
@@ -71,6 +76,66 @@ class MappedValue(Predicate):
     if d is _MARKER:
       return self._baseGetMappedValueBaseCategoryList(d=d)
     return self._baseGetMappedValueBaseCategoryList()
+
+  security.declareProtected( Permissions.AccessContentsInformation, 'getProperty' )
+  def getProperty(self, key, d=_MARKER, **kw):
+    """
+    Use local property instead of calling (acquired) accessor
+    whenever key is provided by the mapped value.
+
+    TODO:
+    - handle list properties (key ends with _list)
+    - add unit tests
+    """
+    if key in self.getMappedValuePropertyList():
+      result = getattr(aq_base(self), key, _MARKER)
+      if result is not _MARKER:
+        return result
+    if d is _MARKER:
+      return Predicate.getProperty(self, key, **kw) # XXX-JPS I would prefer to use always getProperty
+                                                    # Is there any reason to overload ?
+    return Predicate.getProperty(self, key, d=d, **kw)
+
+  def getPropertyList(self, key, d=None):
+    """
+    Use local property instead of calling (acquired) accessor
+    whenever key is provided by the mapped value.
+
+    TODO:
+    - add unit tests
+    """
+    if key in self.getMappedValuePropertyList():
+      result = getattr(aq_base(self), key, _MARKER)
+      if result is not _MARKER:
+        return result
+    if d is None:
+      return Predicate.getPropertyList(self, key)
+    return Predicate.getPropertyList(self, key, d=d)
+
+  def _setProperty(self, key, value, type=None, **kw):
+    """
+    Use local property instead of calling (acquired) accessor
+    whenever key is provided by the mapped value.
+
+    TODO:
+    - handle type
+    - add unit tests
+    """
+    if key in self.getMappedValuePropertyList():
+      return setattr(self, key, value)
+    return Predicate._setProperty(self, key, value, type=type, **kw)
+
+  # Check is this method should also be overriden
+  #def _setPropValue(self, key, value, **kw):
+
+  def hasProperty(self, key):
+    """
+    Use local property instead of calling (acquired) accessor
+    whenever key is provided by the mapped value.
+    """
+    if key in self.getMappedValuePropertyList():
+      return getattr(self, key, _MARKER) is not _MARKER
+    return Predicate.hasProperty(self, key)
 
   def _edit(self, **kw):
     # We must first prepare the mapped value before we do the edit
