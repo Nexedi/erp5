@@ -40,7 +40,8 @@ try:
 except ImportError:
   magic = None
 
-VALID_ORDER_KEY_LIST = ('user_login', 'content', 'filename', 'input')
+VALID_ORDER_KEY_LIST = ('user_login', 'content', 'filename', 'file_name',
+                        'input')
 
 CONTENT_INFORMATION_FORMAT = '_idiscoverable_content_information'
 
@@ -138,7 +139,7 @@ class DiscoverableMixin(CachedConvertableMixin):
         raise AttributeError, "%s is not in valid order key list" % order_id
       method_id = 'getPropertyDictFrom%s' % convertToUpperCase(order_id)
       method = getattr(self, method_id)
-      if order_id == 'filename':
+      if order_id in ('filename', 'file_name',):
         if filename is not None:
           result = method(filename)
       elif order_id == 'user_login':
