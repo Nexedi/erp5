@@ -38,7 +38,8 @@ def allowAccessOnContributionRegistryPortalTypes(self):
 
   self.portal = self.getPortalObject()
   portal_contribution_registry = self.portal.portal_contribution_registry
-  pt_title_list =  [p.getTitle() for p in portal_contribution_registry.contentValues()]
+  pt_title_list =  [p.getDestinationPortalType()
+    for p in portal_contribution_registry.contentValues()]
   exclude_pt_title_list = ['Web Page', 'DMS Ingestion', 'Default Predicate']
   
   for pt_title in pt_title_list:
