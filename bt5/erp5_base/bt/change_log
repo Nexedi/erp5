@@ -1,3 +1,6 @@
+2010-12-23 Kazuhiko
+* use my_filename instead of my_source_reference in File_view and Image_view.
+
 2010-12-22 Ivan
 * Add "Embedded File"  & "Embedded Folder" portal types
 

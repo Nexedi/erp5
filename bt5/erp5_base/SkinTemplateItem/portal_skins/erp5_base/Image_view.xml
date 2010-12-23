@@ -80,7 +80,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_source_reference</string>
+                        <string>my_filename</string>
                         <string>my_thumbnail</string>
                       </list>
                     </value>
