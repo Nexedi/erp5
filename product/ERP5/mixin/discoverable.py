@@ -210,6 +210,9 @@ class DiscoverableMixin(CachedConvertableMixin):
     Return content_type read from metadata extraction of content.
     This method is called by portal_contribution_registry
     """
+    # XXX should be cached in a transactional cache, because this method
+    # might be called several times by a single call of
+    # portal_contribution_registry.findPortalTypeName().
     mime, content = self.convert(None)
     if not content:
       return
