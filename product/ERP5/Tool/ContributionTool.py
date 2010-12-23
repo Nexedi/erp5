@@ -317,8 +317,12 @@ class ContributionTool(BaseTool):
     if filename is None:
       return {}
     property_dict = self.getMatchedFilenamePatternDict(filename)
-    method = self._getTypeBasedMethod('getPropertyDictFromFilename',
+    try:
+      method = self._getTypeBasedMethod('getPropertyDictFromFilename',
              fallback_script_id='ContributionTool_getPropertyDictFromFilename')
+    except AttributeError: # Try to use previous naming convention
+      method = self._getTypeBasedMethod('getPropertyDictFromFileName',
+             fallback_script_id='ContributionTool_getPropertyDictFromFileName')
     property_dict = method(filename, property_dict)
     return property_dict
 
