@@ -1367,6 +1367,7 @@ def setDefaultProperties(property_holder, object=None, portal=None):
       if isinstance(write_permission, Expression):
         write_permission = write_permission(econtext)
       if prop['type'] not in type_definition:
+        import pdb; pdb.set_trace()
         raise TypeError, '"%s" is invalid type for propertysheet' % \
                                             prop['type']
       if 'base_id' in prop:
