@@ -787,3 +787,14 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
     if hasattr(aq_base(container), 'isIndexContent'):
       return container.isIndexContent(self)
     return False
+
+  # backward compatibility
+  def getFilename(self, default=None):
+    if self.hasFilename():
+      return self._baseGetFilename(default)
+    elif self.hasSourceReference():
+      filename = self._baseGetSourceReference(default)
+      self._setFilename(filename)
+      return filename
+    else:
+      return default
