@@ -1186,7 +1186,7 @@ class TestZodbImportFilesystemPropertySheet(ERP5TypeTestCase):
     from Products.ERP5Type import PropertySheet
     # Get all the property sheets defined on the filesystem
     for name, klass in PropertySheet.__dict__.iteritems():
-      if name[0] == '_':
+      if name[0] == '_' or isinstance(klass, basestring):
         continue
       filesystem_property_sheet = klass
       property_sheet_name = name
