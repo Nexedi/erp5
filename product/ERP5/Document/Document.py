@@ -793,8 +793,6 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
     if self.hasFilename():
       return self._baseGetFilename(default)
     elif self.hasSourceReference():
-      filename = self._baseGetSourceReference(default)
-      self._setFilename(filename)
-      return filename
+      return self._baseGetSourceReference(default)
     else:
       return default
