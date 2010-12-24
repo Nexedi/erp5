@@ -40,6 +40,7 @@ from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from Products.CMFCore.utils import _checkPermission
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
+from Products.ERP5Type.Utils import reencodeUrlEscapes
 from Products.ERP5 import _dtmldir
 from Products.ERP5.Document.Url import no_crawl_protocol_list
 from AccessControl import Unauthorized
@@ -661,10 +662,7 @@ class ContributionTool(BaseTool):
     return file_object, filename, content_type tuple
     """
     # Quote path part of url
-    url_tuple = urlparse.urlsplit(url)
-    quoted_path = urllib.quote(url_tuple[2])
-    url = urlparse.urlunsplit((url_tuple[0], url_tuple[1], quoted_path,
-                               url_tuple[3], url_tuple[4]))
+    url = reencodeUrlEscapes(url)
     # build a new file from the url
     url_file = urllib2.urlopen(urllib2.Request(url,
                                                headers={'Accept':'*/*'}))

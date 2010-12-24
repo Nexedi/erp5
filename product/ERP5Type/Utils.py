@@ -3304,3 +3304,28 @@ def guessEncodingFromText(data, content_type='text/html'):
     raise NotImplementedError, 'No encoding detector found.'\
                                   ' You must install chardet and python-magic'
 
+_reencodeUrlEscapes_map = dict((chr(x), chr(x) in (# safe
+                                                   "!'()*-." "0123456789" "_~"
+                                                   "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                                                   "abcdefghijklmnopqrstuvwxyz"
+                                                   # reserved (maybe unsafe)
+                                                   "#$&+,/:;=?@[]")
+                                        and chr(x) or "%%%02X" % x)
+                               for x in xrange(256))
+def reencodeUrlEscapes(url):
+  """Fix a non-conformant %-escaped URL (or quote an unescaped one)
+
+  This is a Python reimplementation of 'reencode_escapes' function of Wget 1.12
+  """
+  from string import hexdigits
+  next_part = iter(url.split('%')).next
+  url = [_reencodeUrlEscapes_map[c] for c in next_part()]
+  try:
+    while True:
+      part = next_part()
+      url.append('%')
+      if len(part) < 2 or not (part[0] in hexdigits and part[1] in hexdigits):
+        url.append('25')
+      url += [_reencodeUrlEscapes_map[c] for c in part]
+  except StopIteration:
+    return ''.join(url)
