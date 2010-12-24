@@ -1273,6 +1273,13 @@ def getExistingBaseCategoryList(portal, base_cat_list):
       new_base_cat_list.append(base_cat)
   return tuple(new_base_cat_list)
 
+default_translation_property_dict = {
+  'id' : 'translation_domain',
+  'description' : '',
+  'default' : '',
+  'type' : 'string',
+  'mode' : 'w',
+}
 def setDefaultProperties(property_holder, object=None, portal=None):
     """
       This methods sets default accessors for this object as well
@@ -1305,10 +1312,11 @@ def setDefaultProperties(property_holder, object=None, portal=None):
     for prop in property_holder.__dict__.get('_properties', []):
       # Copy the dict so that Expression objects are not overwritten.
       prop_list.append(prop.copy())
-    cat_list = []
-    cat_list += property_holder.__dict__.get('_categories',[]) # Do not consider superclass _categories definition
-    constraint_list = []  # a list of declarative consistency definitions (ie. constraints)
-    constraint_list += property_holder.__dict__.get('_constraints',[]) # Do not consider superclass _constraints definition
+    # Do not consider superclass _categories definition
+    cat_list = property_holder.__dict__.get('_categories', [])
+    # a list of declarative consistency definitions (ie. constraints)
+    # Do not consider superclass _constraints definition
+    constraint_list = property_holder.__dict__.get('_constraints', [])
     for base in property_holder.property_sheets:
       for prop in base._properties:
         # Copy the dict so that Expression objects are not overwritten.
@@ -1317,7 +1325,7 @@ def setDefaultProperties(property_holder, object=None, portal=None):
         if isinstance(base._categories, (tuple, list)):
           cat_list += base._categories
         else:
-          cat_list += [base._categories]
+          cat_list.append(base._categories)
       if hasattr(base, '_constraints'):
         constraint_list += base._constraints
 
@@ -1339,7 +1347,7 @@ def setDefaultProperties(property_holder, object=None, portal=None):
     cat_list = getExistingBaseCategoryList(portal, new_cat_list)
 
     for const in constraint_list:
-      for key,value in const.items():
+      for key, value in const.iteritems():
         if isinstance(value, Expression):
           const[key] = value(econtext)
 
@@ -1348,7 +1356,7 @@ def setDefaultProperties(property_holder, object=None, portal=None):
 
     # Create default accessors for property sheets
     converted_prop_list = []
-    converted_prop_keys = {}
+    converted_prop_set = set()
     for prop in prop_list:
       read_permission = prop.get('read_permission',
                                  Permissions.AccessContentsInformation)
@@ -1363,18 +1371,17 @@ def setDefaultProperties(property_holder, object=None, portal=None):
                                             prop['type']
       if 'base_id' in prop:
         continue
-      if not converted_prop_keys.has_key(prop['id']):
+      if prop['id'] not in converted_prop_set:
         if prop['type'] != 'content':
-          converted_prop_list += [prop]
-        converted_prop_keys[prop['id']] = 1
+          converted_prop_list.append(prop)
+        converted_prop_set.add(prop['id'])
 
       # Create range accessors, if this has a range.
       if prop.get('range', 0):
         for value in ('min', 'max'):
           range_prop = prop.copy()
           del range_prop['range']
-          if 'storage_id' in range_prop:
-            del range_prop['storage_id']
+          range_prop.pop('storage_id', None)
           if range_prop.get('acquisition_accessor_id', 0):
             range_prop['acquisition_accessor_id'] = '%sRange%s' % (
                  range_prop['acquisition_accessor_id'], value.capitalize())
@@ -1405,27 +1412,19 @@ def setDefaultProperties(property_holder, object=None, portal=None):
                   portal=portal)
         # make accessor to translation_domain
         # first create default one as a normal property
-        txn_prop = {}
-        txn_prop['description'] = ''
-        txn_prop['default'] = ''
-        txn_prop['id'] = 'translation_domain'
-        txn_prop['type'] = 'string'
-        txn_prop['mode'] = 'w'
+        accessor_id = '%_translation_domain' % prop['id']
         createDefaultAccessors(
                   property_holder,
-                  '%s_%s' %(prop['id'], txn_prop['id']),
-                  prop=txn_prop,
+                  accessor_id,
+                  prop=default_translation_property_dict,
                   read_permission=read_permission,
                   write_permission=write_permission,
                   portal=portal)
         # then overload accesors getPropertyTranslationDomain
-        if prop.has_key('translation_domain'):
-          default = prop['translation_domain']
-        else:
-          default = ''
+        default = prop.get('translation_domain', '')
         createTranslationAccessors(
                         property_holder,
-                        '%s_translation_domain' % (prop['id']),
+                        accessor_id,
                         prop,
                         read_permission=read_permission,
                         write_permission=write_permission,
@@ -1448,7 +1447,8 @@ def setDefaultProperties(property_holder, object=None, portal=None):
         'mode'       : 'w'
       }
       # XXX These are only for backward compatibility.
-      if cat == 'group':        prop['storage_id'] = 'group'
+      if cat == 'group':
+        prop['storage_id'] = 'group'
       elif cat == 'site':
         prop['storage_id'] = 'location'
       createDefaultAccessors(
@@ -1486,7 +1486,8 @@ def setDefaultProperties(property_holder, object=None, portal=None):
     if object is not None and property_holder.__name__ == "Base":
                             # XXX use if possible is and real class
       base_category_list = []
-      for cat in base_category_dict.keys():
+      # first extend the Tales category definitions into base_category_list
+      for cat in base_category_dict:
         if isinstance(cat, Expression):
           result = cat(econtext)
           if isinstance(result, (list, tuple)):
@@ -1495,6 +1496,7 @@ def setDefaultProperties(property_holder, object=None, portal=None):
             base_category_list.append(result)
         else:
           base_category_list.append(cat)
+
       for cat in base_category_list:
         # Get read and write permission
         if portal is not None:
@@ -1515,21 +1517,21 @@ def setDefaultProperties(property_holder, object=None, portal=None):
         else:
           read_permission = Permissions.AccessContentsInformation
           write_permission = Permissions.ModifyPortalContent
-        # Actualy create accessors
+        # Actually create accessors
         createRelatedValueAccessors(property_holder, cat, read_permission=read_permission)
       # Unnecessary to create these accessors more than once.
       base_category_dict.clear()
 
     from Products.ERP5Type.mixin.constraint import ConstraintMixin
     property_holder.constraints = []
-    for const in constraint_list:
+    for constraint in constraint_list:
       # ZODB Property Sheets constraints are no longer defined by a
-      # dictionnary but by a ConstraintMixin, thus just append it to
+      # dictionary but by a ConstraintMixin, thus just append it to
       # the list of constraints
-      if isinstance(const, ConstraintMixin):
-        property_holder.constraints.append(const)
+      if isinstance(constraint, ConstraintMixin):
+        property_holder.constraints.append(constraint)
       else:
-        createConstraintList(property_holder, constraint_definition=const)
+        createConstraintList(property_holder, constraint_definition=constraint)
 
     # ERP5 _properties and Zope _properties are somehow different
     # The id is converted to the Zope standard - we keep the original id
@@ -1546,7 +1548,7 @@ def setDefaultProperties(property_holder, object=None, portal=None):
               and not prop.get('acquisition_copy_value'):
         # Set acquisition values as read only if no value is copied
         new_prop['mode'] = 'r'
-      new_converted_prop_list += [new_prop]
+      new_converted_prop_list.append(new_prop)
     # Set the properties of the class
     property_holder._properties = tuple(new_converted_prop_list)
     property_holder._categories = tuple(cat_list)
@@ -1565,7 +1567,7 @@ def setDefaultProperties(property_holder, object=None, portal=None):
       #if not hasattr(property_holder, prop['id']):
         # setattr(property_holder, prop['id'], None) # This makes sure no acquisition will happen
         # but is wrong when we use storage_id .....
-      storage_id = prop.get('storage_id', prop['id'])
+      #storage_id = prop.get('storage_id', prop['id'])
       #if not hasattr(BaseClass, storage_id):
         # setattr(property_holder, storage_id, None) # This breaks things with aq_dynamic
         #setattr(BaseClass, storage_id, None) # This blocks acquisition
@@ -1579,7 +1581,7 @@ def setDefaultProperties(property_holder, object=None, portal=None):
         #  pass
 
     # Create for every portal type group an accessor (like isPortalDeliveryType)
-    # In the future, this should probalby use categories
+    # In the future, this should probably use categories
     if portal is not None and object is not None: # we can not do anything without portal
       # import lately in order to avoid circular dependency
       from Products.ERP5Type.ERP5Type import ERP5TypeInformation
