@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""Proxy Role Auditor is required to create activity\n
+"""\n
+portal = context.getPortalObject()\n
+portal_type = \'Web Message\'\n
+module = portal.getDefaultModule(portal_type)\n
+\n
+translate = portal.Base_translateString\n
+\n
+edit_kw = {\'portal_type\': portal_type,\n
+           \'title\': title,\n
+           \'start_date\': DateTime(),\n
+           \'source_organisation_title\': source_organisation_title,\n
+           \'source_person_first_name\': source_person_first_name,\n
+           \'source_person_last_name\': source_person_last_name,\n
+           \'source_person_default_email_text\': source_person_default_email_text,\n
+           \'source_person_default_telephone_text\': source_person_default_telephone_text,\n
+           \'description\': description,\n
+           \'content_type\': \'text/plain\',\n
+           \'resource\': resource,\n
+           \'source_carrier\': context.getRelativeUrl(),\n
+          }\n
+connected_user = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
+if connected_user is not None:\n
+  edit_kw[\'source_value\'] = connected_user\n
+\n
+# We do not call portal_contribution for two reasons:\n
+# 1- Metadata discovery will be run by alarms with allowed user to access other documents.\n
+# 2- A proxy role can not wrap portal_contributions calls and disallow Anonymous user to create the document.\n
+module.activate(activity=\'SQLQueue\').EventModule_addWebMessage(**edit_kw)\n
+\n
+# An alarm will lately run discoverMetadata on created event, then \n
+# Fill in discoverable properties (sender, recipient, ...) and change workflow states.\n
+\n
+portal_status_message = translate(\'Your message has been successfully submitted.\')\n
+context.getParentValue().Base_redirect(keep_items={\'portal_status_message\': portal_status_message})\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>source_person_default_email_text=None, source_person_default_telephone_text=None, source_organisation_title=None, title=None, description=None, source_person_first_name=None, source_person_last_name=None, resource=None, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Auditor</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSection_addWebMessage</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

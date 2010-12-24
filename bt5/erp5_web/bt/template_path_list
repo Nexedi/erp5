@@ -1,3 +1,4 @@
+portal_alarms/fetch_incoming_web_message_list
 portal_contribution_registry/web_page_by_content
 portal_contribution_registry/webpage_extension
 portal_contribution_registry/webpage_mimetype
