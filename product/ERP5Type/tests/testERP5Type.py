@@ -1279,6 +1279,103 @@ class TestPropertySheet:
       self.assertEquals(email.getDefaultAvailableLanguage(), 'ja')
       self.assertEquals(email.getAvailableLanguageList(), ('ja', 'fr', 'en'))
 
+    SUBORDINATION_ORGANISATION_REFERENCE = '''
+          { 'id':         'subordination_organisation_reference',
+            'type':       'string',
+            'acquisition_base_category': ( 'subordination', ),
+            'acquisition_portal_type'  : ( 'Organisation', ),
+            'acquisition_copy_value'   : 0,
+            'acquisition_mask_value'   : 1,
+            'acquisition_accessor_id'  : 'getReference',
+            'acquisition_depends'      : None,
+            'mode':       'rw', }'''
+
+    def test_19c2_AcquiredStringAccessor(self):
+      """Tests an acquired string accessor.
+         We check in particular that getDefault[Property] and 
+         setDefault[Property] are working correctly
+         This test focus on acquisition_mask_value parameter
+      """
+      self._addProperty('Person', self.SUBORDINATION_ORGANISATION_REFERENCE)
+
+      person = self.getPersonModule().newContent(portal_type='Person')
+      organisation = self.getOrganisationModule()\
+                          .newContent(portal_type='Organisation')
+
+      person_reference = 'person_terry'
+      person.setSubordinationOrganisationReference(person_reference)
+      # Relation is not setted up, accessor must return
+      # local value
+      self.assertEquals(person.getSubordinationOrganisationReference(),
+                        person_reference)
+
+      person.setSubordinationValue(organisation)
+      transaction.commit()
+      self.tic()
+
+      # mask_value is True, so local value take precedence
+      self.assertEquals(person.getSubordinationOrganisationReference(),
+                        person_reference)
+
+      organisation_reference = 'organisation_terry'
+      organisation.setReference(organisation_reference)
+      self.assertEquals(person.getSubordinationOrganisationReference(),
+                        person_reference)
+      person.setSubordinationOrganisationReference(None)
+      self.assertEquals(person.getSubordinationOrganisationReference(),
+                        organisation_reference)
+
+    SUBORDINATION_ORGANISATION_SOURCE_REFERENCE = '''
+          { 'id':         'subordination_organisation_source_reference',
+            'type':       'string',
+            'acquisition_base_category': ( 'subordination', ),
+            'acquisition_portal_type'  : ( 'Organisation', ),
+            'acquisition_copy_value'   : 0,
+            'acquisition_mask_value'   : 0,
+            'acquisition_accessor_id'  : 'getSourceReference',
+            'acquisition_depends'      : None,
+            'mode':       'rw', }'''
+
+    def test_19c3_AcquiredStringAccessor(self):
+      """Tests an acquired string accessor.
+         We check in particular that getDefault[Property] and 
+         setDefault[Property] are working correctly
+         This test focus on acquisition_mask_value parameter
+      """
+      self._addProperty('Person',
+                        self.SUBORDINATION_ORGANISATION_SOURCE_REFERENCE)
+
+      person = self.getPersonModule().newContent(portal_type='Person')
+      organisation = self.getOrganisationModule()\
+                          .newContent(portal_type='Organisation')
+
+      person_reference = 'person_terry'
+      person.setSubordinationOrganisationSourceReference(person_reference)
+      # Relation is not setted up, accessor must return
+      # local value
+      self.assertEquals(person.getSubordinationOrganisationSourceReference(),
+                        person_reference)
+
+      person.setSubordinationValue(organisation)
+      transaction.commit()
+      self.tic()
+
+      # mask_value is False, acquired value take precedence
+      # Because relation exists but distant document has no
+      # value, accessors fallback on local_value to display
+      # something to the user.
+      self.assertEquals(person.getSubordinationOrganisationSourceReference(),
+                        person_reference)
+
+      organisation_reference = 'organisation_terry'
+      organisation.setSourceReference(organisation_reference)
+      self.assertEquals(person.getSubordinationOrganisationSourceReference(),
+                        organisation_reference)
+      person.setSubordinationOrganisationSourceReference(None)
+      self.assertEquals(person.getSubordinationOrganisationSourceReference(),
+                        organisation_reference)
+
+
     NAME_INCLUDED_PROPERTY_PERSON = '''
           { 'id':         'name_included_in_address',
             'type':       'boolean',
