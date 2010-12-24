@@ -222,7 +222,11 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     bt = sequence.get('copy_bt')
     self.assertEquals(bt.getTitle(), 'erp5_core')
+    # Ignore log, because PortalTransforms outputs an ERROR when it can't load
+    # a transform due to missing binary.
+    self._ignore_log_errors()
     bt.build()
+    self._catch_log_errors()
 
   def stepInstallCopyCoreBusinessTemplate(self, sequence=None,
                                   sequence_list=None, **kw):
@@ -232,7 +236,11 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     bt = sequence.get('copy_bt')
     self.assertEquals(bt.getTitle(), 'erp5_core')
     self.assertEquals(bt.getInstallationState(), 'not_installed')
+    # Ignore log, because PortalTransforms outputs an ERROR when it can't load
+    # a transform due to missing binary.
+    self._ignore_log_errors()
     bt.install()
+    self._catch_log_errors()
 
   def stepCheckOriginalAndCopyBusinessTemplate(self, sequence=None,
                                   sequence_list=None, **kw):
