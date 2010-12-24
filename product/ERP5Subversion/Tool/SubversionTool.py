@@ -424,7 +424,7 @@ class SubversionTool(BaseTool):
     wc_list = self.getPortalObject().portal_preferences\
     .getPreferredSubversionWorkingCopyList()
     if not wc_list or len(wc_list) == 0 :
-      LOG('SubvertionTool', WARNING,
+      LOG('SubversionTool', WARNING,
           'working copy path is not specified in preferences. '
           '<instance_home>/bt5 directory is used by default.')
       instance_home = getConfiguration().instancehome
