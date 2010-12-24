@@ -1111,6 +1111,7 @@ class Base( CopyContainer,
         value = getattr(self, storage_id, None)
       else:
         value = None
+      local_value = value
       # If we hold an attribute and mask_value is set, return the attribute
       if mask_value and value not in null_value:
         # Pop context
@@ -1216,6 +1217,11 @@ class Base( CopyContainer,
         result = None
       if result not in null_value:
         return result
+      elif local_value not in null_value:
+        # Nothing has been found by looking up
+        # through acquisition documents, fallback by returning
+        # at least local_value
+        return local_value
       else:
         #LOG("alt_accessor_id",0,str(alt_accessor_id))
         if alt_accessor_id is not None:
