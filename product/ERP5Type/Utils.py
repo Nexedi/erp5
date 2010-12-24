@@ -1412,7 +1412,7 @@ def setDefaultProperties(property_holder, object=None, portal=None):
                   portal=portal)
         # make accessor to translation_domain
         # first create default one as a normal property
-        accessor_id = '%_translation_domain' % prop['id']
+        accessor_id = '%s_translation_domain' % prop['id']
         createDefaultAccessors(
                   property_holder,
                   accessor_id,
