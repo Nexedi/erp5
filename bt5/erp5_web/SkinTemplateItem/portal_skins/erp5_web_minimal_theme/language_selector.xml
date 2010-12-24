@@ -37,11 +37,12 @@
             <value> <unicode encoding="cdata"><![CDATA[
 
 <tal:block tal:define="language_list here/Localizer/get_languages_map;\n
+                       available_language_list here/getAvailableLanguageList;\n
                        absolute_url here/absolute_url">\n
-<tal:block tal:repeat="language language_list" tal:condition="python:len(language_list) > 1">\n
+<tal:block tal:repeat="language language_list" tal:condition="python:len(available_language_list) > 1">\n
 <b tal:condition="language/selected"><u tal:content="language/id"/></b>\n
 <a tal:attributes="href python:\'%s/Base_doLanguage?select_language=%s\' % (absolute_url, language[\'id\'])"\n
-   tal:content="language/id" tal:condition="not:language/selected"/>\n
+   tal:content="language/id" tal:condition="python: language[\'id\'] in available_language_list and not language.get(\'selected\')"/>\n
 </tal:block>\n
 </tal:block>
 
