@@ -5,10 +5,10 @@
 #
 ##############################################################################
 
+import zope.interface
 from Acquisition import aq_base
-
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Configurator.mixin.configurator_item import ConfiguratorItemMixin
 
@@ -26,6 +26,9 @@ class PortalTypeRolesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObjec
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  # Declarative interfaces
+  zope.interface.implements(interfaces.IConfiguratorItem)
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base

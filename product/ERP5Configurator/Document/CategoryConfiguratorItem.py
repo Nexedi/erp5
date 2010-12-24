@@ -26,10 +26,10 @@
 #
 ##############################################################################
 
+import zope.interface
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
-
 from Products.ERP5Configurator.mixin.configurator_item import ConfiguratorItemMixin
 
 class CategoryConfiguratorItem(ConfiguratorItemMixin, XMLObject):
@@ -44,6 +44,9 @@ class CategoryConfiguratorItem(ConfiguratorItemMixin, XMLObject):
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  # Declarative interfaces
+  zope.interface.implements(interfaces.IConfiguratorItem)
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base

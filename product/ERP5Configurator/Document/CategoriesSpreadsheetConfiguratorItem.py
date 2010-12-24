@@ -26,12 +26,11 @@
 #
 ##############################################################################
 
+import zope.interface
 from StringIO import StringIO
-
 from Acquisition import aq_base
-
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Configurator.mixin.configurator_item import ConfiguratorItemMixin
 
@@ -53,6 +52,9 @@ class CategoriesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObject):
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  # Declarative interfaces
+  zope.interface.implements(interfaces.IConfiguratorItem)
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base

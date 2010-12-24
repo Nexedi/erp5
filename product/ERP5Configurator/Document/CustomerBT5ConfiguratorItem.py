@@ -26,8 +26,9 @@
 #
 ##############################################################################
 
+import zope.interface
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Configurator.mixin.configurator_item import ConfiguratorItemMixin
@@ -48,6 +49,9 @@ class CustomerBT5ConfiguratorItem(ConfiguratorItemMixin, XMLObject):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
+  # Declarative interfaces
+  zope.interface.implements(interfaces.IConfiguratorItem)
+
   # Declarative properties
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.XMLObject
@@ -58,7 +62,7 @@ class CustomerBT5ConfiguratorItem(ConfiguratorItemMixin, XMLObject):
     template_tool = getToolByName(self.getPortalObject(),
                                   'portal_templates')
     bt5 = template_tool.newContent(portal_type="Business Template", \
-                                   title=self.bt5_id)
+                                   title=self.bt5_title)
 
     ## ..and set it as current
     business_configuration.setSpecialise(bt5.getRelativeUrl())
