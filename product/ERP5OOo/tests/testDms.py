@@ -2122,7 +2122,7 @@ return 1
     self.assertEquals(event_list[-1].action, 'Share Document')
     self.assertEquals(event_list[-2].action, 'Reject Document')
     self.assertEquals(event_list[-3].action, 'Publish Document')
-    
+
   def test_ContributeToExistingDocument(self):
     """
       Test various cases of contributing to an existing document
@@ -2138,13 +2138,13 @@ return 1
     # passing another portal type should raise an exception
     kw['portal_type'] = "Spreadsheet"
     self.assertRaises(ValueError, self.portal.Base_contribute, **kw)
-                                           
+
     # make it read only
     document.manage_permission(Permissions.ModifyPortalContent, [])
     self.stepTic()
     kw.pop('portal_type')
     self.assertRaises(Unauthorized, self.portal.Base_contribute, **kw)
-    
+
   def test_ContributeWithMergingToExistingDocument(self):
     """
       Test various cases of merging to an existing document
