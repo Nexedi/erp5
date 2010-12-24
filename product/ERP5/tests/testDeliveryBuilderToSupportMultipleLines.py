@@ -33,6 +33,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5.tests.testInvoice import TestSaleInvoiceMixin
+from Products.ERP5.tests.utils import newSimulationExpectedFailure
 
 class TestNestedLineMixin(TestSaleInvoiceMixin):
 
@@ -281,6 +282,7 @@ class TestNestedLine(TestNestedLineMixin, ERP5TypeTestCase):
     self.assertEquals(self.new_packing_list_quantity, document.getTotalQuantity())
     self.assertEquals(self.new_packing_list_quantity, line_line.getQuantity())
 
+  @newSimulationExpectedFailure
   def test_03_AcceptingDecision(self, quiet=quiet):
     sequence_list = SequenceList()
     sequence = sequence_list.addSequenceString(self.DEFAULT_SEQUENCE + \
@@ -319,6 +321,7 @@ class TestNestedLine(TestNestedLineMixin, ERP5TypeTestCase):
     self.assertEquals(self.new_invoice_quantity, document.getTotalQuantity())
     self.assertEquals(self.new_invoice_quantity, line_line.getQuantity())
 
+  @newSimulationExpectedFailure
   def test_04_MergingMultipleSaleOrders(self, quiet=quiet):
     sequence_list = SequenceList()
     sequence = sequence_list.addSequenceString(self.DEFAULT_SEQUENCE + \

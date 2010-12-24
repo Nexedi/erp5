@@ -30,6 +30,8 @@
   Tests invoice creation from simulation.
 
 """
+import sys
+sys.modules['Products.ERP5.tests.testInvoice'] = sys.modules[__name__]
 
 import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -966,6 +968,10 @@ class TestInvoiceMixin(TestPackingListMixin,
     invoice = sequence.get('invoice')
     self._solveDeliveryGroupDivergence(invoice, 'start_date',
                                        invoice.getRelativeUrl())
+
+  def stepAdoptPrevisionQuantityInvoice(self,sequence=None, sequence_list=None):
+    invoice = sequence.get('invoice')
+    self._solveDivergence(invoice, 'quantity', 'adopt')
 
   def stepAcceptDecisionQuantityInvoice(self,sequence=None, sequence_list=None):
     invoice = sequence.get('invoice')
