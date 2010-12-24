@@ -2131,16 +2131,19 @@ return 1
     portal = self.portal
     # contribute a document, then make it not editable and check we can not contribute to it
     upload_file = makeFileUpload('TEST-en-002.doc')
-    kw = dict(file=upload_file, \
-               synchronous_metadata_discovery=True)
+    kw = dict(file=upload_file, synchronous_metadata_discovery=True)
     document = self.portal.Base_contribute(**kw)
-    self.stepTic()    
-    # passing another portal type should raise an exception
+    self.stepTic()
+    # passing another portal type allows to create a
+    # new document, but in draft state.
+    # Then User takes a decision to choose which document to publish
     kw['portal_type'] = "Spreadsheet"
-    self.assertRaises(ValueError, self.portal.Base_contribute, **kw)
+    new_document = self.portal.Base_contribute(**kw)
+    self.assertEquals(new_document.getValidationState(), 'draft')
 
     # make it read only
     document.manage_permission(Permissions.ModifyPortalContent, [])
+    new_document.manage_permission(Permissions.ModifyPortalContent, [])
     self.stepTic()
     kw.pop('portal_type')
     self.assertRaises(Unauthorized, self.portal.Base_contribute, **kw)
