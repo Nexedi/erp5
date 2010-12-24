@@ -41,8 +41,8 @@ modules = [
     'w3m_dump',
     'python',         # python source files, no dependancies
     'identity',       # identity transform, no dependancies
-    'markdown_to_html', # markdown, depends on http://surfnet.dl.sourceforge.net/sourceforge/python-markdown/markdown-1-5.py
-    'textile_to_html',# textile, depends on PyTextile http://dom.eav.free.fr/python/textile-mirror-2.0.10.tar.gz 
+    #'markdown_to_html', # markdown, depends on http://surfnet.dl.sourceforge.net/sourceforge/python-markdown/markdown-1-5.py
+    #'textile_to_html',# textile, depends on PyTextile http://dom.eav.free.fr/python/textile-mirror-2.0.10.tar.gz 
     'web_intelligent_plain_text_to_html',
     'html_to_web_intelligent_plain_text',
     ]
