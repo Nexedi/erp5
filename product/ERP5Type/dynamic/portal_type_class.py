@@ -400,13 +400,13 @@ def synchronizeDynamicModules(context, force=False):
     for class_name, klass in inspect.getmembers(erp5.portal_type,
                                                 inspect.isclass):
       klass.restoreGhostState()
+
+    # Clear accessor holders of ZODB Property Sheets
+    for property_sheet_id in erp5.accessor_holder.__dict__.keys():
+      if not property_sheet_id.startswith('__'):
+        delattr(erp5.accessor_holder, property_sheet_id)
   finally:
     Base.aq_method_lock.release()
-
-  # Clear accessor holders of ZODB Property Sheets
-  for property_sheet_id in erp5.accessor_holder.__dict__.keys():
-    if not property_sheet_id.startswith('__'):
-      delattr(erp5.accessor_holder, property_sheet_id)
 
   # Necessary because accessors are wrapped in WorkflowMethod by
   # _aq_dynamic (performed in createAccessorHolder)
