@@ -1358,86 +1358,85 @@ def setDefaultProperties(property_holder, object=None, portal=None):
                                   Permissions.ModifyPortalContent)
       if isinstance(write_permission, Expression):
         write_permission = write_permission(econtext)
-      if prop['type'] in type_definition:
-        if 'base_id' in prop:
-          continue
-        if not converted_prop_keys.has_key(prop['id']):
-          if prop['type'] != 'content':
-            converted_prop_list += [prop]
-          converted_prop_keys[prop['id']] = 1
-
-        # Create range accessors, if this has a range.
-        if prop.get('range', 0):
-          for value in ('min', 'max'):
-            range_prop = prop.copy()
-            del range_prop['range']
-            if 'storage_id' in range_prop:
-              del range_prop['storage_id']
-            if range_prop.get('acquisition_accessor_id', 0):
-              range_prop['acquisition_accessor_id'] = '%sRange%s' % (
-                   range_prop['acquisition_accessor_id'], value.capitalize())
-            range_prop['alt_accessor_id'] = (
-                                  'get' + convertToUpperCase(prop['id']),)
-            createDefaultAccessors(
-                        property_holder,
-                        '%s_range_%s' % (prop['id'], value),
-                        prop=range_prop,
-                        read_permission=read_permission,
-                        write_permission=write_permission,
-                        portal=portal)
-
-        # Create translation accesor, if translatable is set
-        if prop.get('translatable', 0):
-          # make accessors like getTranslatedProperty
-          createTranslationAccessors(
-                    property_holder,
-                    'translated_%s' % (prop['id']),
-                    prop,
-                    read_permission=read_permission,
-                    write_permission=write_permission)
-          createTranslationLanguageAccessors(
-                    property_holder,
-                    prop,
-                    read_permission=read_permission,
-                    write_permission=write_permission,
-                    portal=portal)
-          # make accessor to translation_domain
-          # first create default one as a normal property
-          txn_prop = {}
-          txn_prop['description'] = ''
-          txn_prop['default'] = ''
-          txn_prop['id'] = 'translation_domain'
-          txn_prop['type'] = 'string'
-          txn_prop['mode'] = 'w'
-          createDefaultAccessors(
-                    property_holder,
-                    '%s_%s' %(prop['id'], txn_prop['id']),
-                    prop=txn_prop,
-                    read_permission=read_permission,
-                    write_permission=write_permission,
-                    portal=portal)
-          # then overload accesors getPropertyTranslationDomain
-          if prop.has_key('translation_domain'):
-            default = prop['translation_domain']
-          else:
-            default = ''
-          createTranslationAccessors(
-                          property_holder,
-                          '%s_translation_domain' % (prop['id']),
-                          prop,
-                          read_permission=read_permission,
-                          write_permission=write_permission,
-                          default=default)
-        createDefaultAccessors(
-                        property_holder,
-                        prop['id'],
-                        prop=prop,
-                        read_permission=read_permission,
-                        write_permission=write_permission,
-                        portal=portal)
-      else:
+      if prop['type'] not in type_definition:
         raise TypeError, '"%s" is invalid type for propertysheet' % \
                                             prop['type']
+      if 'base_id' in prop:
+        continue
+      if not converted_prop_keys.has_key(prop['id']):
+        if prop['type'] != 'content':
+          converted_prop_list += [prop]
+        converted_prop_keys[prop['id']] = 1
+
+      # Create range accessors, if this has a range.
+      if prop.get('range', 0):
+        for value in ('min', 'max'):
+          range_prop = prop.copy()
+          del range_prop['range']
+          if 'storage_id' in range_prop:
+            del range_prop['storage_id']
+          if range_prop.get('acquisition_accessor_id', 0):
+            range_prop['acquisition_accessor_id'] = '%sRange%s' % (
+                 range_prop['acquisition_accessor_id'], value.capitalize())
+          range_prop['alt_accessor_id'] = (
+                                'get' + convertToUpperCase(prop['id']),)
+          createDefaultAccessors(
+                      property_holder,
+                      '%s_range_%s' % (prop['id'], value),
+                      prop=range_prop,
+                      read_permission=read_permission,
+                      write_permission=write_permission,
+                      portal=portal)
+
+      # Create translation accesor, if translatable is set
+      if prop.get('translatable', 0):
+        # make accessors like getTranslatedProperty
+        createTranslationAccessors(
+                  property_holder,
+                  'translated_%s' % (prop['id']),
+                  prop,
+                  read_permission=read_permission,
+                  write_permission=write_permission)
+        createTranslationLanguageAccessors(
+                  property_holder,
+                  prop,
+                  read_permission=read_permission,
+                  write_permission=write_permission,
+                  portal=portal)
+        # make accessor to translation_domain
+        # first create default one as a normal property
+        txn_prop = {}
+        txn_prop['description'] = ''
+        txn_prop['default'] = ''
+        txn_prop['id'] = 'translation_domain'
+        txn_prop['type'] = 'string'
+        txn_prop['mode'] = 'w'
+        createDefaultAccessors(
+                  property_holder,
+                  '%s_%s' %(prop['id'], txn_prop['id']),
+                  prop=txn_prop,
+                  read_permission=read_permission,
+                  write_permission=write_permission,
+                  portal=portal)
+        # then overload accesors getPropertyTranslationDomain
+        if prop.has_key('translation_domain'):
+          default = prop['translation_domain']
+        else:
+          default = ''
+        createTranslationAccessors(
+                        property_holder,
+                        '%s_translation_domain' % (prop['id']),
+                        prop,
+                        read_permission=read_permission,
+                        write_permission=write_permission,
+                        default=default)
+      createDefaultAccessors(
+                      property_holder,
+                      prop['id'],
+                      prop=prop,
+                      read_permission=read_permission,
+                      write_permission=write_permission,
+                      portal=portal)
     # Create Category Accessors
     for cat in cat_list:
       # Create free text accessors.
@@ -1560,25 +1559,24 @@ def setDefaultProperties(property_holder, object=None, portal=None):
     # We remove such properties here
     #from Base import Base as BaseClass
     for prop in converted_prop_list:
-      if prop['type'] in type_definition:
-        #if not hasattr(property_holder, prop['id']):
-          # setattr(property_holder, prop['id'], None) # This makes sure no acquisition will happen
-          # but is wrong when we use storage_id .....
-        storage_id = prop.get('storage_id', prop['id'])
-        #if not hasattr(BaseClass, storage_id):
-          # setattr(property_holder, storage_id, None) # This breaks things with aq_dynamic
-          #setattr(BaseClass, storage_id, None) # This blocks acquisition
+      if prop['type'] not in type_definition:
+        raise TypeError, '"%s" is invalid type for propertysheet' % \
+                                        prop['type']
+      #if not hasattr(property_holder, prop['id']):
+        # setattr(property_holder, prop['id'], None) # This makes sure no acquisition will happen
+        # but is wrong when we use storage_id .....
+      storage_id = prop.get('storage_id', prop['id'])
+      #if not hasattr(BaseClass, storage_id):
+        # setattr(property_holder, storage_id, None) # This breaks things with aq_dynamic
+        #setattr(BaseClass, storage_id, None) # This blocks acquisition
+      #else:
+        #LOG('existing property',0,str(storage_id))
+        #if prop.get('default') is not None:
+        #  # setattr(property_holder, prop['id'], prop.get('default'))
+        #  pass
         #else:
-          #LOG('existing property',0,str(storage_id))
-          #if prop.get('default') is not None:
-          #  # setattr(property_holder, prop['id'], prop.get('default'))
-          #  pass
-          #else:
-          #  # setattr(property_holder, prop['id'], defaults[prop['type']])
-          #  pass
-      else:
-          raise TypeError, '"%s" is invalid type for propertysheet' % \
-                                          prop['type']
+        #  # setattr(property_holder, prop['id'], defaults[prop['type']])
+        #  pass
 
     # Create for every portal type group an accessor (like isPortalDeliveryType)
     # In the future, this should probalby use categories
