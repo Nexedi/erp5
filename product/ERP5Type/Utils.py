@@ -1346,8 +1346,11 @@ def setDefaultProperties(property_holder, object=None, portal=None):
         new_cat_list.append(cat)
     cat_list = getExistingBaseCategoryList(portal, new_cat_list)
 
+    from Products.ERP5Type.mixin.constraint import ConstraintMixin
     for const in constraint_list:
-      for key, value in const.iteritems():
+      if isinstance(const, ConstraintMixin):
+        continue
+      for key, value in const.items():
         if isinstance(value, Expression):
           const[key] = value(econtext)
 
@@ -1522,7 +1525,6 @@ def setDefaultProperties(property_holder, object=None, portal=None):
       # Unnecessary to create these accessors more than once.
       base_category_dict.clear()
 
-    from Products.ERP5Type.mixin.constraint import ConstraintMixin
     property_holder.constraints = []
     for constraint in constraint_list:
       # ZODB Property Sheets constraints are no longer defined by a
