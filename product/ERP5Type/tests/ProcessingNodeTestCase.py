@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import base64, errno, select, socket, sys, time
+import base64, errno, os, select, socket, sys, time
 from threading import Thread
 import Lifetime
 import transaction
@@ -8,6 +8,7 @@ from Testing import ZopeTestCase
 from zLOG import LOG, ERROR
 from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
 from Products.ERP5Type.tests import backportUnittest
+from Products.ERP5Type.tests.runUnitTest import tests_home
 from Products.ERP5Type.tests.utils import createZServer
 
 
@@ -90,18 +91,19 @@ class ProcessingNodeTestCase(backportUnittest.TestCase, ZopeTestCase.TestCase):
     """Start HTTP ZServer in background"""
     utils = ZopeTestCase.utils
     if utils._Z2HOST is None:
+      log = os.path.join(tests_home, "Z2.log")
       _print = lambda hs: verbose and ZopeTestCase._print(
         "Running %s server at %s:%s\n" % (
           hs.server_protocol, hs.server_name, hs.server_port))
       try:
-        hs = createZServer()
+        hs = createZServer(log)
       except RuntimeError, e:
         ZopeTestCase._print(str(e))
       else:
         utils._Z2HOST, utils._Z2PORT = hs.server_name, hs.server_port
         _print(hs)
         try:
-          _print(createZServer(zserver_type='webdav'))
+          _print(createZServer(log, zserver_type='webdav'))
         except RuntimeError, e:
           ZopeTestCase._print(str(e))
         t = Thread(target=Lifetime.loop)
