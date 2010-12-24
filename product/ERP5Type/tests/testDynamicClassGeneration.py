@@ -1013,7 +1013,6 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
                           self.test_module.setTitle,
                           'my_property_type_validity_constraint_title')
 
-from Products.ERP5Type import PropertySheet
 from Products.CMFCore.Expression import Expression
 
 class TestZodbImportFilesystemPropertySheet(ERP5TypeTestCase):
