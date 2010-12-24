@@ -1298,7 +1298,6 @@ def setDefaultProperties(property_holder, object=None, portal=None):
     Set default attributes in current object for all properties in '_properties'
     """
     econtext = createExpressionContext(object, portal)
-    legalTypes = type_definition.keys()
     # First build the property list from the property sheet
     # and the class properties
     prop_list = []
@@ -1359,7 +1358,7 @@ def setDefaultProperties(property_holder, object=None, portal=None):
                                   Permissions.ModifyPortalContent)
       if isinstance(write_permission, Expression):
         write_permission = write_permission(econtext)
-      if prop['type'] in legalTypes:
+      if prop['type'] in type_definition:
         if 'base_id' in prop:
           continue
         if not converted_prop_keys.has_key(prop['id']):
@@ -1561,7 +1560,7 @@ def setDefaultProperties(property_holder, object=None, portal=None):
     # We remove such properties here
     #from Base import Base as BaseClass
     for prop in converted_prop_list:
-      if prop['type'] in legalTypes:
+      if prop['type'] in type_definition:
         #if not hasattr(property_holder, prop['id']):
           # setattr(property_holder, prop['id'], None) # This makes sure no acquisition will happen
           # but is wrong when we use storage_id .....
