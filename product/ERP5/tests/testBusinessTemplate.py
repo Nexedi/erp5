@@ -28,7 +28,7 @@
 ##############################################################################
 
 import unittest
-
+import logging
 import transaction
 
 from Testing import ZopeTestCase
@@ -62,6 +62,10 @@ WORKFLOW_TYPE = 'erp5_workflow'
 class DummyTypeProvider(TypeProvider):
   id = 'dummy_type_provider'
 
+from Products.MimetypesRegistry.common import MimeTypeException
+from Products.PortalTransforms.Transform import Transform
+Transform_tr_init = Transform._tr_init
+Transform_manage_beforeDelete = Transform.manage_beforeDelete
 
 class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
   """
@@ -92,6 +96,32 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     Return if we should create (1) or not (0) an activity tool.
     """
     return 1
+
+  ## Ignore errors from PortalTransforms (e.g. missing binaries)
+
+  def _catch_log_errors(self):
+    LogInterceptor._catch_log_errors(self)
+    level = self.level
+    def _tr_init(*args, **kw):
+      self.level = logging.ERROR
+      try:
+        Transform_tr_init(*args, **kw)
+      finally:
+        self.level = level
+    Transform._tr_init = _tr_init
+    def manage_beforeDelete(self, *args, **kw):
+      try:
+        Transform_manage_beforeDelete(self, *args, **kw)
+      except MimeTypeException:
+        assert self.output == 'BROKEN'
+    Transform.manage_beforeDelete = manage_beforeDelete
+
+  def _ignore_log_errors(self):
+    Transform._tr_init = Transform_tr_init
+    Transform.manage_beforeDelete = Transform_manage_beforeDelete
+    LogInterceptor._ignore_log_errors(self)
+
+  ###
 
   def afterSetUp(self):
     self.login()
@@ -222,11 +252,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     bt = sequence.get('copy_bt')
     self.assertEquals(bt.getTitle(), 'erp5_core')
-    # Ignore log, because PortalTransforms outputs an ERROR when it can't load
-    # a transform due to missing binary.
-    self._ignore_log_errors()
     bt.build()
-    self._catch_log_errors()
 
   def stepInstallCopyCoreBusinessTemplate(self, sequence=None,
                                   sequence_list=None, **kw):
@@ -236,11 +262,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     bt = sequence.get('copy_bt')
     self.assertEquals(bt.getTitle(), 'erp5_core')
     self.assertEquals(bt.getInstallationState(), 'not_installed')
-    # Ignore log, because PortalTransforms outputs an ERROR when it can't load
-    # a transform due to missing binary.
-    self._ignore_log_errors()
     bt.install()
-    self._catch_log_errors()
 
   def stepCheckOriginalAndCopyBusinessTemplate(self, sequence=None,
                                   sequence_list=None, **kw):
