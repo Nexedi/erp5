@@ -119,6 +119,8 @@ Options:
                              which shall be used in test environment.
   --sys_path=path,path       Comma-separated list of paths which will be used to
                              extend sys.path
+  --instance_home=PATH       Create/use test instance in given path
+
 When no unit test is specified, only activities are processed.
 """
 
@@ -603,6 +605,7 @@ def main():
         "zserver=",
         "products_path=",
         "sys_path=",
+        "instance_home=",
         ])
   except getopt.GetoptError, msg:
     usage(sys.stderr, msg)
@@ -697,6 +700,8 @@ def main():
       os.environ["PRODUCTS_PATH"] = arg
     elif opt == "--sys_path":
       sys.path.extend(arg.split(','))
+    elif opt == "instance_home=":
+      instance_home = os.path.abspath(arg)
 
   global tests_home
   os.environ['INSTANCE_HOME'] = instance_home
