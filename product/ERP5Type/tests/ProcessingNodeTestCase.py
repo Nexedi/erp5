@@ -8,7 +8,6 @@ from Testing import ZopeTestCase
 from zLOG import LOG, ERROR
 from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
 from Products.ERP5Type.tests import backportUnittest
-from Products.ERP5Type.tests.runUnitTest import tests_home
 from Products.ERP5Type.tests.utils import createZServer
 
 
@@ -91,6 +90,7 @@ class ProcessingNodeTestCase(backportUnittest.TestCase, ZopeTestCase.TestCase):
     """Start HTTP ZServer in background"""
     utils = ZopeTestCase.utils
     if utils._Z2HOST is None:
+      from Products.ERP5Type.tests.runUnitTest import tests_home
       log = os.path.join(tests_home, "Z2.log")
       _print = lambda hs: verbose and ZopeTestCase._print(
         "Running %s server at %s:%s\n" % (

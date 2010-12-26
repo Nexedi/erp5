@@ -146,6 +146,9 @@ def getUnitTestFile():
 def initializeInstanceHome(tests_framework_home,
                            real_instance_home,
                            instance_home):
+  assert (os.path.isabs(tests_framework_home)
+      and os.path.isabs(real_instance_home)
+      and os.path.isabs(instance_home))
   if not os.path.exists(instance_home):
     os.mkdir(instance_home)
     if not WIN:
@@ -223,23 +226,20 @@ else:
     '/usr/lib/zope2.8/lib/python',
     '/usr/lib/zope/lib/python',
   ]
+  if WIN:
+    erp5_home = os.path.sep.join(tests_framework_home.split(os.path.sep)[:-4])
+    common_paths = [os.path.join(erp5_home, 'Zope', 'lib', 'python')]
   # maybe SOFTWARE_HOME is already in sys.path
   try:
     import Zope2
   except ImportError:
-    pass
+    for software_home in common_paths:
+      if os.path.isdir(software_home):
+        break
+    else:
+      raise
   else:
-    common_paths.insert(0, os.path.dirname(os.path.dirname(Zope2.__file__)))
-  if WIN:
-    erp5_home = os.path.sep.join(
-        tests_framework_home.split(os.path.sep)[:-4])
-    common_paths.insert(0, os.path.join(erp5_home, 'Zope', 'lib', 'python'))
-
-  for software_home in common_paths:
-    if os.path.isdir(software_home):
-      break
-  else:
-    sys.exit('No Zope2 software_home found')
+    software_home = os.path.dirname(os.path.dirname(Zope2.__file__))
   os.environ['SOFTWARE_HOME'] = software_home
 
 # software_home is zope_home/lib/python, remove lib/python
@@ -254,21 +254,14 @@ if software_home not in sys.path:
 if WIN:
   real_instance_home = os.path.join(erp5_home, 'ERP5Instance')
 elif tests_framework_home.startswith('/usr/lib'):
-  if os.path.isdir('/var/lib/erp5'):
-    real_instance_home = '/var/lib/erp5'
-  else:
+  real_instance_home = '/var/lib/erp5'
+  if not os.path.isdir(real_instance_home):
     real_instance_home = '/var/lib/zope'
-elif os.environ.get('REAL_INSTANCE_HOME', None) is not None:
-  # The user Defined where is the REAL INSTANCE HOME
-  # So we should use it
-  real_instance_home = os.environ.get('REAL_INSTANCE_HOME')
+elif 'REAL_INSTANCE_HOME' in os.environ:
+  real_instance_home = os.path.abspath(os.environ['REAL_INSTANCE_HOME'])
 else:
   real_instance_home = os.path.sep.join(
       tests_framework_home.split(os.path.sep)[:-3])
-
-instance_home = os.path.join(real_instance_home, 'unit_test')
-real_tests_home = os.path.join(real_instance_home, 'tests')
-tests_home = os.path.join(instance_home, 'tests')
 
 
 class ERP5TypeTestLoader(unittest.TestLoader):
@@ -356,11 +349,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
   if "zeo_client" in os.environ and "zeo_server" in os.environ:
     _print("conflicting options: --zeo_client and --zeo_server")
     sys.exit(1)
-
-  os.environ.setdefault('INSTANCE_HOME', instance_home)
-  os.environ.setdefault('SOFTWARE_HOME', software_home)
-  os.environ.setdefault('COPY_OF_INSTANCE_HOME', instance_home)
-  os.environ.setdefault('COPY_OF_SOFTWARE_HOME', software_home)
+  instance_home =  os.environ['INSTANCE_HOME']
   os.environ.setdefault('EVENT_LOG_FILE', os.path.join(tests_home, 'zLOG.log'))
   os.environ.setdefault('EVENT_LOG_SEVERITY', '-300')
 
@@ -388,8 +377,6 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
   # On Zope 2.12, import_products() is called by ERP5TestCase before it is
   # patched by the layer.setUp() call.
   import OFS.Application
-  if os.environ.get('products_path'):
-    OFS.Application.Products.__path__ = os.environ.get('products_path').split(',')
   import_products = OFS.Application.import_products
   from Testing import ZopeTestCase # Zope 2.8: this will import custom_zodb.py
   OFS.Application.import_products = import_products
@@ -435,7 +422,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
   sys.path.extend(bt5_test_list)
   sys.path.extend(project_bt5_test_list)
 
-  sys.path.extend((real_tests_home, tests_home))
+  sys.path.extend((os.path.join(real_instance_home, 'tests'), tests_home))
 
   # Make sure that locally overridden python modules are used
   sys.path.insert(0, os.path.join(real_instance_home, 'lib', 'python'))
@@ -615,7 +602,7 @@ def main():
         "zeo_server=",
         "zserver=",
         "products_path=",
-        "sys_path="
+        "sys_path=",
         ])
   except getopt.GetoptError, msg:
     usage(sys.stderr, msg)
@@ -627,6 +614,7 @@ def main():
   os.environ["erp5_tests_recreate_catalog"] = "0"
   verbosity = 1
   debug = 0
+  instance_home = os.path.join(real_instance_home, 'unit_test')
 
   for opt, arg in opts:
     if opt in ("-v", "--verbose"):
@@ -706,11 +694,16 @@ def main():
     elif opt == "--zserver":
       os.environ["zserver"] = arg
     elif opt == "--products_path":
-      os.environ["products_path"] = arg
+      os.environ["PRODUCTS_PATH"] = arg
     elif opt == "--sys_path":
       sys.path.extend(arg.split(','))
-  
-  initializeInstanceHome(tests_framework_home, real_instance_home, instance_home)
+
+  global tests_home
+  os.environ['INSTANCE_HOME'] = instance_home
+  tests_home = os.path.join(instance_home, 'tests')
+  initializeInstanceHome(tests_framework_home,
+                         real_instance_home,
+                         instance_home)
 
   result = runUnitTestList(test_list=args,
                            verbosity=verbosity,

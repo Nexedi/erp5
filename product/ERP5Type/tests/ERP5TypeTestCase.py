@@ -292,11 +292,11 @@ class ERP5TypeTestCase(ProcessingNodeTestCase, PortalTestCase):
                           'with --update_business_templates or without --load')
 
     def getRevision(self):
+      erp5_path = os.path.join(instancehome, 'Products', 'ERP5')
       try:
         import pysvn
-        return pysvn.Client().info('%s/Products/ERP5'
-                    % os.environ['INSTANCE_HOME']).revision.number
-      except:
+        return pysvn.Client().info(erp5_path).revision.number
+      except Exception:
         return None
 
     def getTitle(self):
@@ -417,7 +417,7 @@ class ERP5TypeTestCase(ProcessingNodeTestCase, PortalTestCase):
       if bt5_path:
         bt5_path_list = bt5_path.split(',')
       else:
-        bt5_path = os.path.join(os.environ['INSTANCE_HOME'], 'bt5')
+        bt5_path = os.path.join(instancehome, 'bt5')
         bt5_path_list = bt5_path, os.path.join(bt5_path, '*')
 
       def search(path, template):
@@ -485,23 +485,6 @@ class ERP5TypeTestCase(ProcessingNodeTestCase, PortalTestCase):
       '''Sets up the fixture. Do not override,
          use the hooks instead.
       '''
-      # This is a workaround for the overwriting problem in Testing/__init__.py
-      # in Zope.  So this overwrites them again to revert the changes made by
-      # Testing.
-      # XXX: Leo: Is this still true? We need to reevaluate how we get 
-      # information from our environment.
-      try:
-        import App.config
-      except ImportError:
-        os.environ['INSTANCE_HOME'] = INSTANCE_HOME =\
-                            os.environ['COPY_OF_INSTANCE_HOME']
-        os.environ['SOFTWARE_HOME'] = SOFTWARE_HOME =\
-                            os.environ['COPY_OF_SOFTWARE_HOME']
-      else:
-        cfg = App.config.getConfiguration()
-        cfg.instancehome = os.environ['COPY_OF_INSTANCE_HOME']
-        App.config.setConfiguration(cfg)
-
       use_dummy_mail_host = os.environ.get('use_dummy_mail_host', 0)
       template_list = self.getBusinessTemplateList()
       erp5_catalog_storage = os.environ.get('erp5_catalog_storage',

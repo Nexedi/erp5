@@ -218,8 +218,8 @@ class TestManualDefaultSetup(ERP5TypeLiveTestCase):
         '-c', self.slapgrid_buildout_cfg_file, 'buildout:directory=%s'%
         self.slapgrid_buildout_directory]
     self.callAndPrint(command_list, cwd=self.slapgrid_buildout_directory,
-      remove_from_env=['COPY_OF_SOFTWARE_HOME', 'SOFTWARE_HOME', 'PYTHONPATH',
-        'ZOPE_HOME', 'CLIENT_HOME'])
+      remove_from_env=['SOFTWARE_HOME', 'PYTHONPATH',
+          'ZOPE_HOME', 'CLIENT_HOME'])
 
   def runSlapgridBuildout(self):
     command_list = [self.python_binary, '-S', self.buildout_binary, '-U', '-c',
@@ -227,7 +227,7 @@ class TestManualDefaultSetup(ERP5TypeLiveTestCase):
       'buildout:directory=%s'% self.slapgrid_buildout_directory,
       'buildout:find-links=%s' % 'https://nexedivifib1.dyn.majimoto.net:40443/'\
           'erp5/web_site_module/erpypi/']
-    self.callAndPrint(command_list, remove_from_env=['COPY_OF_SOFTWARE_HOME',
+    self.callAndPrint(command_list, remove_from_env=[
       'SOFTWARE_HOME', 'PYTHONPATH', 'ZOPE_HOME', 'CLIENT_HOME'])
 
   def shutdownSupervisor(self):
@@ -255,7 +255,7 @@ class TestManualDefaultSetup(ERP5TypeLiveTestCase):
       '--master-url', self.portal.portal_slap.absolute_url(),
       '--computer-id', sequence.get('computer').getReference(),
       '--supervisord-socket', self.supervisor_socket]
-    self.callAndPrint(command_list, remove_from_env=['COPY_OF_SOFTWARE_HOME',
+    self.callAndPrint(command_list, remove_from_env=[
       'SOFTWARE_HOME', 'PYTHONPATH', 'ZOPE_HOME', 'CLIENT_HOME'])
 
   def stepRunSlapgridWithoutAssert(self, sequence=None):
@@ -277,7 +277,7 @@ class TestManualDefaultSetup(ERP5TypeLiveTestCase):
       '--computer-id', sequence.get('computer').getReference(),
       '--supervisord-socket', self.supervisor_socket]
     return self.callAndPrint(command_list, remove_from_env=[
-        'COPY_OF_SOFTWARE_HOME', 'SOFTWARE_HOME', 'PYTHONPATH', 'ZOPE_HOME',
+        'SOFTWARE_HOME', 'PYTHONPATH', 'ZOPE_HOME',
         'CLIENT_HOME'], asserts=False)
 
   def stepPrepareTestingEnvironment(self, sequence=None):
