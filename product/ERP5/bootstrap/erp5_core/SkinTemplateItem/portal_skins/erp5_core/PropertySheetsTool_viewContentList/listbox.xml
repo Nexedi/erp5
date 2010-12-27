@@ -12,9 +12,7 @@
               <list>
                 <string>columns</string>
                 <string>hide_rows_on_no_search_criterion</string>
-                <string>list_method</string>
                 <string>portal_types</string>
-                <string>selection_name</string>
                 <string>title</string>
               </list>
             </value>
@@ -100,12 +98,6 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>list_method</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>portal_types</string> </key>
                     <value>
                       <list>
@@ -117,10 +109,6 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>portal_property_sheets_selection</string> </value>
-                </item>
-                <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
@@ -130,19 +118,6 @@
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="Method" module="Products.Formulator.MethodField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>contentValues</string> </value>
         </item>
       </dictionary>
     </pickle>

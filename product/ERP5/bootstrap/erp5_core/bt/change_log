@@ -1,3 +1,6 @@
+2010-12-27 nicolas.dumazet
+* Fix list method on portal_property_sheets view
+
 2010-12-13 nicolas.dumazet
 * Add Tool portal types for Tools added through ERP5Site.manage_addERP5Site
 
