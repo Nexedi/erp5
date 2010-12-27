@@ -90,11 +90,12 @@ class CatalogMethodWrapper(MethodWrapper):
     for parameter_id in ('selection', 'selection_name', 'select_columns',
       'reset', 'selection_index', 'list_selection_name', 'list_start',
       'list_lines', 'listbox_list_start', 'listbox_uid', 'listbox_nextPage',
-      'listbox_previousPage',
+      'listbox_previousPage', 'listbox_page_start', 'page_start',
       # Also strip common HTML field names
       # XXX: I'm not sure if those values really belong to here
       'md5_object_uid_list', 'cancel_url', 'listbox_list_selection_name',
       'form_id', 'select_language', 'select_favorite', 'select_module',
+      'portal_status_message', 'all_languages',
       'select_jump', 'select_action', 'Base_doSelect'):
       kw.pop(parameter_id, None)
     # Strip all entries which have an empty string as value (ie, an empty
