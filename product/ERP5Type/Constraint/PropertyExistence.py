@@ -45,11 +45,13 @@ class PropertyExistence(Constraint):
   """
 
   _message_id_list = ['message_no_such_property',
+                      # Only keeping this message for backward-compatibility
+                      # as it was meaningless to call a getProperty() after
+                      # hasProperty() failed
                       'message_property_not_set']
   message_no_such_property =  "Property existence error for property "\
-            "${property_id}, this document has no such property"
-  message_property_not_set = "Property existence error for property "\
-            "${property_id}, this property is not defined"
+            "${property_id}, this document has no such property or the "\
+            "property has never been set"
 
   def _checkConsistency(self, obj, fixit=0):
     """Check the object's consistency.
@@ -61,10 +63,6 @@ class PropertyExistence(Constraint):
       mapping = dict(property_id=property_id)
       if not obj.hasProperty(property_id):
         error_message_id = "message_no_such_property"
-      elif obj.getProperty(property_id) is None:
-        # If value is '', attribute is considered a defined
-        # XXX is this the default API ?
-        error_message_id = "message_property_not_set"
       else:
         error_message_id = None
 

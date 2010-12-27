@@ -36,7 +36,6 @@ class M4Constraint:
       'type'          : 'PropertyExistence',
       'title'         : None, 
       'message_no_such_property': 'The naming must be defined',
-      'message_property_not_set': 'The naming must be defined',
     },
     { 'id'            : 'corporate_registration_code_existence',
       'description'   : 'Property corporate registration code must be definied',

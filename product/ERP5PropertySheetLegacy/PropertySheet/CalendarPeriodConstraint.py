@@ -35,7 +35,6 @@ class CalendarPeriodConstraint:
 
     { 'id': 'start_date_existence',
       'description': 'Date must be defined',
-      'message_property_not_set': 'Start date must be defined',
       'message_no_such_property': 'Start date must be defined',
       'type': 'PropertyExistence',
       'start_date' : 1,
@@ -43,7 +42,6 @@ class CalendarPeriodConstraint:
 
     { 'id': 'stop_date_existence',
       'description': 'Date must be defined',
-      'message_property_not_set': 'Stop date must be defined',
       'message_no_such_property': 'Stop date must be defined',
       'type': 'PropertyExistence',
       'stop_date' : 1,

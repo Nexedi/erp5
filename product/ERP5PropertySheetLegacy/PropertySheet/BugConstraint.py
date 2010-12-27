@@ -37,7 +37,6 @@ class BugConstraint:
       'description'   : 'Title must be defined',
       'type'          : 'PropertyExistence',
       'title'         :  None,
-      'message_property_not_set': 'Title must be defined',
       'message_no_such_property' : 'Title must be defined',
     },
     { 'id'            : 'tested_existence',
@@ -45,7 +44,6 @@ class BugConstraint:
       'type'          : 'PropertyExistence',
       'tested'        :  0,
       'condition'     : "python: object.getSimulationState() in ['ready','stopped']" ,
-      'message_property_not_set': 'Tested is unchecked, Must have a Unit/Funcional test for this',
       'message_no_such_property' : 'Tested is unchecked, Must have a Unit/Funcional test for this',
     },
     { 'id'            : 'source_project_category_membership_arity',
@@ -61,7 +59,6 @@ class BugConstraint:
       'description'   : 'Property start_date must be defined',
       'type'          : 'PropertyExistence',
       'start_date'    : None,
-      'message_property_not_set': 'Begin Date must be defined',
       'message_no_such_property' : 'Begin Date must be defined' 
     },
     { 'id'            : 'date_coherency',

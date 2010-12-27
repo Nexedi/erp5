@@ -41,7 +41,6 @@ class M2Constraint:
 #      'type'          : 'PropertyExistence',
 #      'corporate_registration_code'          : None, 
 #      'message_no_such_property': 'The corporate registration must be defined',
-#      'message_property_not_set': 'The corporate registration must be defined',
 #    },
 #    { 'id'            : 'old_headquarters_existence',
 #      'description'   : 'Property old_headquarters must be definied',

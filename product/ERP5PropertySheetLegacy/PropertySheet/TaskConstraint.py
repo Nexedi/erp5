@@ -55,7 +55,6 @@ class TaskConstraint:
       'description'   : 'Property start_date must be defined',
       'type'          : 'PropertyExistence',
       'start_date'    : None,
-      'message_property_not_set': 'Begin Date must be defined',
       'message_no_such_property' : 'Begin Date must be defined' 
     },
     { 'id'            : 'date_coherency',

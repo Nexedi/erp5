@@ -35,7 +35,6 @@ class TradeConditionConstraint:
       'description'   : 'Property reference must be defined',
       'type'          : 'PropertyExistence',
       'reference'    : None,
-      "message_property_not_set" : 'Reference must be defined',
       "message_no_such_property" : 'Reference must be defined'
     },
     { 'id'            : 'date_coherency',
@@ -51,7 +50,6 @@ class TradeConditionConstraint:
       'description'   : 'Version must be defined',
       'type'          : 'PropertyExistence',
       'version'         :  None,
-      'message_property_not_set': 'Version must be defined',
       'message_no_such_property' : 'Version must be defined',
     },
   )

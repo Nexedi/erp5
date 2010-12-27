@@ -54,7 +54,6 @@ class InventoryConstraint:
       'description'   : 'Start Date must be defined',
       'type'          : 'PropertyExistence',
       'start_date'    : 1,
-      'message_property_not_set': 'Inventory Date must be defined',
       'message_no_such_property': 'Inventory Date must be defined',
     },
     { 'id'            : 'resource_on_line',

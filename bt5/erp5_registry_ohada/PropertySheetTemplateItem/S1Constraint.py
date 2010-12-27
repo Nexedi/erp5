@@ -36,7 +36,6 @@ class S1Constraint:
       'type'          : 'PropertyExistence',
       'title'         : None, 
       'message_no_such_property': 'The denomination must be defined',
-      'message_property_not_set': 'The denomination must be defined',
     },
     { 'id'            : 'hypothecation_person_title_existence',
       'description'   : 'Property hypothecation person title must be definied',

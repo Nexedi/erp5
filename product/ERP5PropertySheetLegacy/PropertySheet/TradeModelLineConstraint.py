@@ -35,7 +35,6 @@ class TradeModelLineConstraint:
       'description'   : 'Property reference must be defined',
       'type'          : 'PropertyExistence',
       'reference'    : None,
-      "message_property_not_set" : 'Reference must be defined in lines',
       "message_no_such_property" : 'Reference must be defined in lines'
     },
     { 'id'            : 'resource',

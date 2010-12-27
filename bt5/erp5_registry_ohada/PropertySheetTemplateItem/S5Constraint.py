@@ -36,7 +36,6 @@ class S5Constraint:
       'type'          : 'PropertyExistence',
       'title'         : None, 
       'message_no_such_property': 'The denomination must be defined',
-      'message_property_not_set': 'The denomination must be defined',
     },
     { 'id'            : 'inscription_person_title_existence',
       'description'   : 'Property inscription person title must be definied',

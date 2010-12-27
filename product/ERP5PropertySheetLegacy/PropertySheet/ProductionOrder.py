@@ -64,7 +64,6 @@ class ProductionOrder:
       'type'          : 'PropertyExistence',
       'start_date'    : 1,
       'message_no_such_property' : "Shipping Date must be defined",
-      'message_property_not_set' : "Shipping Date must be defined",
     },
     { 'id'            : 'date_coherency',
       'description'   : 'Stop Date must be after Start Date',
