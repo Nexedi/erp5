@@ -73,7 +73,7 @@ edit_kw = {\'portal_type\': portal_type,\n
           }\n
 connected_user = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
 if connected_user is not None:\n
-  edit_kw[\'source_value\'] = connected_user\n
+  edit_kw[\'source\'] = connected_user.getRelativeUrl()\n
 \n
 # We do not call portal_contribution for two reasons:\n
 # 1- Metadata discovery will be run by alarms with allowed user to access other documents.\n
