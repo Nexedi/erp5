@@ -60,6 +60,7 @@
          </li>\n
         </tal:block>\n
         </div>\n
+      <a id=\'sharing_url\'></a>\n
 </tal:block>
 
 ]]></unicode> </value>

@@ -1,3 +1,8 @@
+2010-12-27 gabriel
+* Fix issue with search
+* Add tag to display the document's key shared in the view page.
+* Refactor javascript code to checkall and uncheckall actions do not reload the page
+
 2010-12-22 gabriel
 * Initial commit to load part of user and system preferences
 * Implemented code to allow which the user edit the document using the reference of the document shared.

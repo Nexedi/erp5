@@ -103,6 +103,12 @@ function update(){\n
   $("a#loading_message").append(".");\n
 }\n
 \n
+function changeCheckBoxValue(value){\n
+  $("table.listbox tbody tr td.listbox-table-select-cell input").each(function(){\n
+    this.checked = value;\n
+  });\n
+}\n
+\n
 $.getJSON("Base_getPreferencePathList", function(data){\n
   preference = data.preference + \'/Preference_viewHtmlStyle?editable_mode:int=1\';\n
   system_preference = data.system_preference + \'/SystemPreference_view?editable_mode:int=1\';\n
@@ -130,11 +136,13 @@ $(document).ready(function(){\n
     }\n
     switch (getWebEditorName()) {\n
       case "WebPage_viewEditor":\n
-        $("div.content").css({"position":"fixed", "bottom": "0px", "left": "0px", "right": "0px"});\n
+        $("div.content").css({"position":"fixed", "bottom": "0px",\n
+                              "left": "0px", "right": "0px"});\n
         $("div.content").css({"top": "5em"});\n
         break;\n
       case "WebTable_viewEditor":\n
-        $("div.content").css({"position":"fixed", "bottom": "0px", "left": "0px", "right": "0px"});\n
+        $("div.content").css({"position":"fixed", "bottom": "0px",\n
+                              "left": "0px", "right": "0px"});\n
         $("div.content").css({"top": "6em"});\n
         break;\n
     }\n
@@ -192,17 +200,26 @@ $(document).ready(function(){\n
   if ($("a[name=\'document_state\']").text() == "Draft") {\n
     $("div.action_menu li ul").append("<li><a id=\'share_document\' href=\'#\'>" + \n
                                       "<h6>Share this Document</h6></a></li>");\n
-    $("div.action_menu li ul").css("height", 101);\n
     $("div.action_menu ul li a#share_document").click(function(event){\n
       event.preventDefault();\n
-      reference = $.ajax({\n
-                    url: \'WebSection_shareDocument\',\n
-                    async: false,\n
-                  }).responseText;\n
-      alert(reference);\n
+      $.ajax({\n
+              url: \'WebSection_shareDocument\',\n
+              async: false,\n
+             });\n
+      location.reload();\n
     });\n
-  }\n
- }\n
+  };\n
+  $("div.action_menu li ul").css("height",\n
+                   $("div.action_menu li ul li").length * 25.3 + "px");\n
+  if ($("a[name=\'document_state\']").text() == "Shared"){\n
+    reference = $.ajax({\n
+                       url: \'getReference\',\n
+                       async: false,\n
+                     }).responseText;\n
+    keyUrl = location.href.split("web_page_module")[0] + "?key=" + reference;\n
+    $("div.header-right fieldset.widget a#sharing_url").text(keyUrl);\n
+  };\n
+ };\n
  $("#edit_document").dialog({\n
     autoOpen: false,\n
     height: 146,\n
@@ -306,6 +323,14 @@ $(document).ready(function(){\n
        $("div.header-left fieldset.widget").append("<p>" + data + "</p>")\n
      });\n
    }\n
+ });\n
+ $("input.listbox-check-all").click(function(event){\n
+  event.preventDefault();\n
+  changeCheckBoxValue(true);\n
+ });\n
+ $("input.listbox-uncheck-all").click(function(event){\n
+  event.preventDefault();\n
+  changeCheckBoxValue(false);\n
  });\n
  return false;\n
 });

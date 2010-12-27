@@ -912,8 +912,17 @@ span#ui-dialog-title-preference_dialog {\n
 }\n
 \n
 div#preference_dialog div.field {\n
-    padding-bottom: 1px;\n
-    padding-top: 1px;\n
+  padding-bottom: 1px;\n
+  padding-top: 1px;\n
+}\n
+\n
+div.header-right fieldset.widget {\n
+  height: 29px;\n
+}\n
+\n
+div.header-right fieldset.widget a#sharing_url {\n
+  padding-top: 2px;\n
+  font-size: 11px;\n
 }
 
 ]]></string> </value>
