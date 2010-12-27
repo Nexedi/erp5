@@ -109,23 +109,6 @@ function changeCheckBoxValue(value){\n
   });\n
 }\n
 \n
-$.getJSON("Base_getPreferencePathList", function(data){\n
-  preference = data.preference + \'/Preference_viewHtmlStyle?editable_mode:int=1\';\n
-  system_preference = data.system_preference + \'/SystemPreference_view?editable_mode:int=1\';\n
-  if ($("div#preference_dialog").html() == "") {\n
-    $.get(preference, function(data){\n
-      $("div#preference_dialog").append("<fieldset class=\'center editable\'>" + \n
-                                        $(data).find(\'fieldset.center.editable\').html() +\n
-                                        "</fieldset>");\n
-    });\n
-    $.get(system_preference, function(data){\n
-      $("div#preference_dialog").append("<fieldset class=\'right editable\'>" + \n
-                                        $(data).find(\'fieldset.right.editable\').html() +\n
-                                        "</fieldset>");\n
-    });\n
-  }\n
-});\n
-\n
 $(document).ready(function(){\n
   if ($("div.gadget-column").length == 0 && window.location.href.split("?").length > 1) {\n
     parameterList = getUrlParameterList();\n
@@ -331,6 +314,22 @@ $(document).ready(function(){\n
  $("input.listbox-uncheck-all").click(function(event){\n
   event.preventDefault();\n
   changeCheckBoxValue(false);\n
+ });\n
+ $.getJSON("Base_getPreferencePathList", function(data){\n
+   preference = data.preference + \'/Preference_viewHtmlStyle?editable_mode:int=1\';\n
+   system_preference = data.system_preference + \'/SystemPreference_view?editable_mode:int=1\';\n
+   if ($("div#preference_dialog").html() == "") {\n
+     $.get(preference, function(data){\n
+       $("div#preference_dialog").append("<fieldset class=\'center editable\'>" + \n
+                                         $(data).find(\'fieldset.center.editable\').html() +\n
+                                         "</fieldset>");\n
+     });\n
+     $.get(system_preference, function(data){\n
+       $("div#preference_dialog").append("<fieldset class=\'right editable\'>" + \n
+                                         $(data).find(\'fieldset.right.editable\').html() +\n
+                                         "</fieldset>");\n
+     });\n
+  }\n
  });\n
  return false;\n
 });
