@@ -288,6 +288,56 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
     self._testSubContentReindexing(generic_supply_line, [generic_supply_cell,
       generic_supply_predicate])
 
+  def testSupplyCellPropertyAndAccessor(self, quiet=0, run=run_all_test):
+    """
+      Check that getter/setter and get/setProperty methods works the same
+      on supply cell. This test is added due to a bug introduced by revision
+      39918 of ERP5/Document/MappedValue.py.
+    """
+    supply = self._makeSupply()
+    supply_line = self._makeSupplyLine(supply)
+    supply_cell = self._makeSupplyCell(supply_line)
+
+    # User uses matrixbox to enter cells(variated data) and
+    # it uses mapped value and setProperty method. Catalog uses
+    # getter method to index cells.
+    supply_cell.setMappedValuePropertyList(
+      ['description', 'destination_reference'])
+
+    # test description property
+    self.assertEqual(supply_cell.getDescription(None), None)
+    self.assertEqual(supply_cell.getProperty('description', None), None)
+    supply_cell.setDescription('apple')
+    self.assertEqual(supply_cell.getDescription(), 'apple')
+    self.assertEqual(supply_cell.getProperty('description'), 'apple')
+    supply_cell.setProperty('description', 'lemon')
+    self.assertEqual(supply_cell.getDescription(), 'lemon')
+    self.assertEqual(supply_cell.getProperty('description'), 'lemon')
+
+    transaction.commit()
+    self.tic()
+
+    self.assertEqual(len(self.portal.portal_catalog(uid=supply_cell.getUid(), description='apple')), 0)
+    self.assertEqual(len(self.portal.portal_catalog(uid=supply_cell.getUid(), description='lemon')), 1)
+
+    # test destination_reference property which defines storage_id on
+    # property sheet
+    self.assertEqual(supply_cell.getDestinationReference(None), None)
+    self.assertEqual(supply_cell.getProperty('destination_reference', None), None)
+    supply_cell.setDestinationReference('orange')
+    self.assertEqual(supply_cell.getDestinationReference(), 'orange')
+    self.assertEqual(supply_cell.getProperty('destination_reference'), 'orange')
+    supply_cell.setProperty('destination_reference', 'banana')
+    self.assertEqual(supply_cell.getDestinationReference(), 'banana')
+    self.assertEqual(supply_cell.getProperty('destination_reference'), 'banana')
+
+    transaction.commit()
+    self.tic()
+
+    self.assertEqual(len(self.portal.portal_catalog(uid=supply_cell.getUid(), destination_reference='orange')), 0)
+    self.assertEqual(len(self.portal.portal_catalog(uid=supply_cell.getUid(), destination_reference='banana')), 1)
+
+
 class TestPurchaseSupply(TestSaleSupply):
   """
     Test Purchase Supplies usage
