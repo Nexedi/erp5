@@ -3468,7 +3468,20 @@ class PropertySheetTemplateItem(DocumentTemplateItem,
   local_file_importer_name = staticmethod(importLocalPropertySheet)
   local_file_remover_name = staticmethod(removeLocalPropertySheet)
 
-  def __init__(self, id_list, tool_id='portal_property_sheets', **kw):
+  def __init__(self, id_list, tool_id='portal_property_sheets', context=None, **kw):
+    tool = None
+    if context is not None and len(id_list):
+      # XXX looking up a tool early in the install process might
+      # cause issues. If it does, we'll have to consider moving this
+      # to build()
+      tool = getattr(context.getPortalObject(), tool_id, None)
+    if tool is not None:
+      existing_property_sheet_set = set(tool.objectIds())
+      for i, id in enumerate(id_list):
+        if id in existing_property_sheet_set:
+          # if the property sheet is on ZODB, use it.
+          id_list[i] = "%s/%s" % (tool_id, id)
+
     BaseTemplateItem.__init__(self, id_list, **kw)
 
   @staticmethod
@@ -4447,7 +4460,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self._document_item = \
           DocumentTemplateItem(self.getTemplateDocumentIdList())
       self._property_sheet_item = \
-          PropertySheetTemplateItem(self.getTemplatePropertySheetIdList())
+          PropertySheetTemplateItem(self.getTemplatePropertySheetIdList(),
+                                    context=self)
       self._constraint_item = \
           ConstraintTemplateItem(self.getTemplateConstraintIdList())
       self._extension_item = \
