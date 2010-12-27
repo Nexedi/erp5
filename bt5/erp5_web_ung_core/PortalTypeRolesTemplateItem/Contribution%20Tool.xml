@@ -1,7 +1,7 @@
 <type_roles>
   <role id='Assignor'>
    <property id='title'>UNG Contribution Role</property>
-   <multi_property id='category'>function/ung_function</multi_property>
+   <multi_property id='category'>function/ung_user</multi_property>
    <multi_property id='base_category'>function</multi_property>
   </role>
 </type_roles>

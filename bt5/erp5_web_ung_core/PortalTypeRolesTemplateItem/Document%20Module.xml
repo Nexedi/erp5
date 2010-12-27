@@ -1,12 +1,7 @@
 <type_roles>
-  <role id='Auditor'>
-   <property id='title'>Cloudooo Client</property>
-   <multi_property id='category'>group/my_group</multi_property>
-   <multi_property id='base_category'>group</multi_property>
-  </role>
   <role id='Assignor'>
    <property id='title'>UNG Client</property>
-   <multi_property id='category'>function/ung_function</multi_property>
+   <multi_property id='category'>function/ung_user</multi_property>
    <multi_property id='base_category'>function</multi_property>
   </role>
 </type_roles>

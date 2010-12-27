@@ -1,3 +1,6 @@
+2010-12-27 gabriel
+* Added Roles to Person Portal Type. This role is used to the user authenticated see the object. Missing add function that is used by Portal Types Roles.
+
 2010-12-18 gabriel
 * Added Proxy Roles
 * Added Portal Types Roles to be possible a erp5 users create manipulate Documents in UNG Web Site

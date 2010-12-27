@@ -1,11 +1,6 @@
 <type_roles>
-  <role id='Assignee'>
+  <role id='Assignee; Assignor'>
    <property id='title'>Cloudooo Contributor</property>
-   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromContent</property>
-   <multi_property id='base_category'>contributor</multi_property>
-  </role>
-  <role id='Assignee'>
-   <property id='title'>UNG Contributor</property>
    <property id='base_category_script'>ERP5Type_getSecurityCategoryFromContent</property>
    <multi_property id='base_category'>contributor</multi_property>
   </role>
