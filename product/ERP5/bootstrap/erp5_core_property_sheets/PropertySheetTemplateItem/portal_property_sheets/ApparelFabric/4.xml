@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Acquired Property" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>mode</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>elementary_type/content</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_acquired_property_id</string> </key>
+            <value>
+              <tuple>
+                <string>title</string>
+                <string>collection_list</string>
+                <string>colour_list</string>
+                <string>description</string>
+                <string>file</string>
+                <string>source_reference</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_portal_type</string> </key>
+            <value> <string>python: \'Apparel Fabric Colour Variation\'</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>default_apparel_fabric_colour_variation</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>The default colour variation for this fabric</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>4</string> </value>
+        </item>
+        <item>
+            <key> <string>mode</string> </key>
+            <value> <string>w</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Acquired Property</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

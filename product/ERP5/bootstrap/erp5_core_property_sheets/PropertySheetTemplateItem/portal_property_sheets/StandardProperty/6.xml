@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Standard Property" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>elementary_type/string</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>storage_id</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Name to be used instead of the Reference</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>6</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Standard Property</string> </value>
+        </item>
+        <item>
+            <key> <string>property_default</string> </key>
+            <value> <string>python: None</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

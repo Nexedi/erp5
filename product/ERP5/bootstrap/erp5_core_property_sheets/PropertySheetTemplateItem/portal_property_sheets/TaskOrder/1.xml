@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Acquired Property" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>mode</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>elementary_type/content</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_acquired_property_id</string> </key>
+            <value>
+              <tuple>
+                <string>quantity</string>
+                <string>quantity_unit</string>
+                <string>price</string>
+                <string>quantity_unit_title</string>
+                <string>quantity_unit_logical_path</string>
+                <string>description</string>
+                <string>resource</string>
+                <string>resource_value</string>
+                <string>resource_title</string>
+                <string>requirement</string>
+                <string>requirement_value_list</string>
+                <string>requirement_value</string>
+                <string>requirement_uid_list</string>
+                <string>requirement_logical_path</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_portal_type</string> </key>
+            <value> <string>python: (\'Task Line\',)</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>task_line</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>The default task line for a task.</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>1</string> </value>
+        </item>
+        <item>
+            <key> <string>mode</string> </key>
+            <value> <string>w</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Acquired Property</string> </value>
+        </item>
+        <item>
+            <key> <string>storage_id</string> </key>
+            <value> <string>default_task_line</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
