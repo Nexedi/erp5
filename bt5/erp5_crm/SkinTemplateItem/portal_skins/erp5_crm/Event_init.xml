@@ -50,9 +50,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># XXX Reference will be probably generated with dedicated tool\n
-# in near future\n
+            <value> <string>"""Owner Proxy Role allows anonymous users to create events\n
+through web sites.\n
 \n
+Reference will be probably generated with dedicated tool\n
+in near future\n
+"""\n
 type_definition = context.getTypeInfo()\n
 \n
 short_portal_type = type_definition.getShortTitle()\n
@@ -72,6 +75,14 @@ context.edit(content_type=context.portal_preferences.getPreferredTextFormat(),\n
         <item>
             <key> <string>_params</string> </key>
             <value> <string>*args, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Owner</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
