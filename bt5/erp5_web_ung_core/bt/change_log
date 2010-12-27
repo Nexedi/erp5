@@ -1,4 +1,5 @@
 2010-12-27 gabriel
+* Moved all Portal Type Roles from erp5_web_ung_core to erp5_web_ung_role
 * Added Roles to Person Portal Type. This role is used to the user authenticated see the object. Missing add function that is used by Portal Types Roles.
 
 2010-12-18 gabriel
