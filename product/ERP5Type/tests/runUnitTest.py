@@ -700,7 +700,7 @@ def main():
       os.environ["PRODUCTS_PATH"] = arg
     elif opt == "--sys_path":
       sys.path.extend(arg.split(','))
-    elif opt == "instance_home=":
+    elif opt == "--instance_home":
       instance_home = os.path.abspath(arg)
 
   global tests_home
