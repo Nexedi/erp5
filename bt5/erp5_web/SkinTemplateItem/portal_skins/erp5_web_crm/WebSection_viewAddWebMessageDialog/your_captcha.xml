@@ -10,7 +10,6 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>captcha_type</string>
                 <string>title</string>
               </list>
             </value>
@@ -72,10 +71,6 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key> <string>captcha_type</string> </key>
-                    <value> <string>numeric</string> </value>
-                </item>
                 <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>your_captcha</string> </value>
