@@ -116,6 +116,7 @@ class TestClassTool(ERP5TypeTestCase):
   def test_DocumentationHelperExpressionCategory(self):
     # This tests checks that Documentation Helper works with propertysheets
     # that define their categories using expressions.
+    from Products.ERP5Type import PropertySheet
     from Products.ERP5Type.Document.Movement import Movement
     from Products.ERP5Type.Document.Delivery import Delivery
     from Products.CMFCore.Expression import Expression
@@ -125,6 +126,8 @@ class TestClassTool(ERP5TypeTestCase):
     # by an expression.
     found_one = 0
     for ps in movement.property_sheets:
+      if isinstance(ps, basestring):
+        ps = getattr(PropertySheet, ps)
       for category in getattr(ps, '_categories', []):
         if isinstance(category, Expression):
           found_one = 1
