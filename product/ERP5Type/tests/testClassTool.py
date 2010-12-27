@@ -131,6 +131,7 @@ class TestClassTool(ERP5TypeTestCase):
       for category in getattr(ps, '_categories', []):
         if isinstance(category, Expression):
           found_one = 1
+          break
       if found_one:
         break
     else:
