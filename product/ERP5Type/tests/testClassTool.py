@@ -82,7 +82,9 @@ class TestClassTool(ERP5TypeTestCase):
   # Test self-documentating features of ERP5Type documents through
   # portal_classes.
   def test_AsDocumentationHelperOnDocument(self):
-    # All Documents can be turned into a documentation helper
+    """
+    All Documents can be turned into a documentation helper
+    """
     portal = self.getPortal()
     folder = portal.newContent(portal_type='Folder', id='test_folder')
     doc_helper = folder.asDocumentationHelper()
@@ -93,8 +95,10 @@ class TestClassTool(ERP5TypeTestCase):
 
 
   def test_AsDocumentationHelperOnClassTool(self):
-    # From the class tool, we can get documentation helper for classes defining
-    # a Document
+    """
+    From the class tool, we can get documentation helper for classes defining
+    a Document
+    """
     class_tool = self.getPortal().portal_classes
     class_doc_helper = class_tool.asDocumentationHelper(class_id='Folder')
     self.assertNotEquals(class_doc_helper, None)
@@ -103,7 +107,9 @@ class TestClassTool(ERP5TypeTestCase):
 
 
   def test_DocumentationHelperActivities(self):
-    # Using documentation helpers should not create any activity
+    """
+    Using documentation helpers should not create any activity
+    """
     portal = self.getPortal()
     folder = portal.newContent(portal_type='Folder', id='test_folder')
     get_transaction().commit()
@@ -114,8 +120,10 @@ class TestClassTool(ERP5TypeTestCase):
 
 
   def test_DocumentationHelperExpressionCategory(self):
-    # This tests checks that Documentation Helper works with propertysheets
-    # that define their categories using expressions.
+    """
+    This tests checks that Documentation Helper works with propertysheets
+    that define their categories using expressions.
+    """
     from Products.ERP5Type import PropertySheet
     from Products.ERP5Type.Document.Movement import Movement
     from Products.ERP5Type.Document.Delivery import Delivery
