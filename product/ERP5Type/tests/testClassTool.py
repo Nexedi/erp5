@@ -37,14 +37,14 @@ except ImportError:
   pass
 
 class TestClassTool(ERP5TypeTestCase):
-  
+
   def getTitle(self):
     return "Class Tool"
-  
+
   def afterSetUp(self):
     self.login()
     installRealClassTool(self.portal)
-    
+
   def login(self):
     uf = self.portal.acl_users
     uf._doAddUser('seb', '', ['Manager'], [])
@@ -64,7 +64,7 @@ class TestClassTool(ERP5TypeTestCase):
   def test_02_CheckFileWriteIsTransactional(self):
     portal = self.portal
     portal_classes = portal.portal_classes
-    
+
     self.assertEqual(portal_classes.getLocalDocumentList(), [],
         'Test environment is dirty. Please clean up the instance home of '
         'the test environment and fix up tests that might have left over '
@@ -111,7 +111,7 @@ class TestClassTool(ERP5TypeTestCase):
     doc_helper = folder.asDocumentationHelper()
     get_transaction().commit()
     self.assertEquals(0, len(portal.portal_activities.getMessageList()))
-   
+
 
   def test_DocumentationHelperExpressionCategory(self):
     # This tests checks that Documentation Helper works with propertysheets
@@ -122,8 +122,7 @@ class TestClassTool(ERP5TypeTestCase):
     movement = Movement('dummy_movement').__of__(
                         Delivery('dummy_delivery').__of__(self.portal))
     # This test relies on the fact that Movement class has categories defined
-    # by an expression. 
-    category_list = []
+    # by an expression.
     found_one = 0
     for ps in movement.property_sheets:
       for category in getattr(ps, '_categories', []):
