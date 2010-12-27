@@ -1,4 +1,8 @@
 2010-12-27 gabriel
+* Implemented javascript code to be possible save all changes on enabled preferences.
+* Clean up the code to remove some global variables
+
+2010-12-27 gabriel
 * Fix issue with search
 * Add tag to display the document's key shared in the view page.
 * Refactor javascript code to checkall and uncheckall actions do not reload the page

@@ -61,7 +61,7 @@ function showNotImplementedMessage(tag){\n
 }\n
 \n
 function updateWebPage(){\n
-  parameterList = getUrlParameterList();\n
+  var parameterList = getUrlParameterList();\n
   url = "Base_updateWebDocument?document_path=" + parameterList.document_path + "&webpage_path=" + parameterList.webpage_path;\n
   $.get(url, {}, function(data, textStatus, XMLHttpRequest){\n
     response = jQuery.parseJSON(data);\n
@@ -76,7 +76,6 @@ function updateWebPage(){\n
 }\n
 \n
 function checkConversion(){\n
-  parameterList = getUrlParameterList();\n
   $.get("Base_getDocumentConversionState?path=" + parameterList.document_path, {},\n
                                                function(data, textStatus, XMLHttpRequest){\n
      status = jQuery.parseJSON(data);\n
@@ -97,10 +96,6 @@ function setObjectPropertyValue(method_name, value, parameter){\n
         data: parameter + "=" + value,\n
   });\n
   return true;\n
-}\n
-\n
-function update(){\n
-  $("a#loading_message").append(".");\n
 }\n
 \n
 function changeCheckBoxValue(value){\n
@@ -141,7 +136,7 @@ $(document).ready(function(){\n
    /* XXX - Try Find a good way to the options don\'t break the css. \n
    Insert blank spaces is not a clean way*/\n
    if ($(this).text() == "Starred" || $(this).text() == "Hidden" || $(this).text() == "Trash"){\n
-     blank_space = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + \n
+     var blank_space = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + \n
                    "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp";\n
      $(this).html($(this).text() + blank_space);\n
    }\n
@@ -152,12 +147,12 @@ $(document).ready(function(){\n
      $(this).html($(this).text() + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp");\n
    })\n
    $("body").css("overflow", "hidden");\n
-   navigation_html = $("div.listbox-footer div.listbox-page-navigation").html();\n
+   var navigation_html = $("div.listbox-footer div.listbox-page-navigation").html();\n
    $("div.listbox-footer div.listbox-page-navigation").remove();\n
-   navigation_div = "<div class=\'listbox-navigation\'>" + navigation_html + "</div>";\n
+   var navigation_div = "<div class=\'listbox-navigation\'>" + navigation_html + "</div>";\n
    $("div.toolbar").append(navigation_div);\n
-   listbox_tree_html = $("div.listbox-tree").html();\n
-   listbox_tree_div = "<div class=\'listbox-tree\'>" + listbox_tree_html + "</div>";\n
+   var listbox_tree_html = $("div.listbox-tree").html();\n
+   var listbox_tree_div = "<div class=\'listbox-tree\'>" + listbox_tree_html + "</div>";\n
    $("div.listbox-tree").remove();\n
    $("div.file-quick-search").append(listbox_tree_div);\n
    var tr_length = $("div.main-right tbody tr").length;\n
@@ -239,9 +234,26 @@ $(document).ready(function(){\n
  });\n
  $("div#preference_dialog").dialog({\n
     autoOpen: false,\n
-    height: 420,\n
+    height: 436,\n
     width: 330,\n
-    modal: true,\n
+    buttons: {\n
+      "Save": function(){\n
+         var ungPreferenceArgument = $("form#ung_preference").serialize();\n
+         $.ajax({\n
+                url: ungPreferencePath + "/Base_edit",\n
+                data: ungPreferenceArgument + "&form_id=Preference_viewHtmlStyle",\n
+         });\n
+         var systemPreferenceArgument = $("form#system_preference").serialize();\n
+         $.ajax({\n
+                url: systemPreferencePath + "/Base_edit",\n
+                data: systemPreferenceArgument + "&form_id=SystemPreference_view",\n
+         });\n
+        location.reload();\n
+       },\n
+       Cancel: function() {\n
+         $(this).dialog("close");\n
+       },\n
+    }\n
  });\n
  $("p#more_properties")\n
     .click(function(){\n
@@ -316,18 +328,20 @@ $(document).ready(function(){\n
   changeCheckBoxValue(false);\n
  });\n
  $.getJSON("Base_getPreferencePathList", function(data){\n
-   preference = data.preference + \'/Preference_viewHtmlStyle?editable_mode:int=1\';\n
-   system_preference = data.system_preference + \'/SystemPreference_view?editable_mode:int=1\';\n
+   ungPreferencePath = data.preference;\n
+   systemPreferencePath = data.system_preference;\n
    if ($("div#preference_dialog").html() == "") {\n
-     $.get(preference, function(data){\n
-       $("div#preference_dialog").append("<fieldset class=\'center editable\'>" + \n
+     $.get(ungPreferencePath + \'/Preference_viewHtmlStyle?editable_mode:int=1\', function(data){\n
+       $("div#preference_dialog").append("<form id=\'ung_preference\'>" + \n
+                                         "<fieldset class=\'center editable\'>" + \n
                                          $(data).find(\'fieldset.center.editable\').html() +\n
-                                         "</fieldset>");\n
+                                         "</fieldset></form>");\n
      });\n
-     $.get(system_preference, function(data){\n
-       $("div#preference_dialog").append("<fieldset class=\'right editable\'>" + \n
+     $.get(systemPreferencePath + \'/SystemPreference_view?editable_mode:int=1\', function(data){\n
+       $("div#preference_dialog").append("<form id=\'system_preference\'>" + \n
+                                         "<fieldset class=\'right editable\'>" + \n
                                          $(data).find(\'fieldset.right.editable\').html() +\n
-                                         "</fieldset>");\n
+                                         "</fieldset></form>");\n
      });\n
   }\n
  });\n
