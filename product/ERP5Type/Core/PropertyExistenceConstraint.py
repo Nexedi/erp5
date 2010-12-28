@@ -65,7 +65,7 @@ class PropertyExistenceConstraint(ConstraintMixin):
     """
     # Check whether the property exists and has been set
     if not obj.hasProperty(property_id):
-      return "message_property_not_set"
+      return "message_no_such_property"
 
     return None
 

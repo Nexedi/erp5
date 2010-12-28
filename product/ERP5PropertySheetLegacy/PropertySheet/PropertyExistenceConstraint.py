@@ -39,10 +39,6 @@ class PropertyExistenceConstraint:
             'type': 'string',
             'description' : 'Error message when there is no such property',
             'default': 'Property existence error for property ${property_id}, '\
-                       'this document has no such property' },
-        {   'id': 'message_property_not_set',
-            'type': 'string',
-            'description' : 'Error message when the property is not set',
-            'default': 'Property existence error for property ${property_id}, '\
-                       'this property is not defined' },
+                       'this document has no such property or the property '\
+                       'has never been set' },
         )
