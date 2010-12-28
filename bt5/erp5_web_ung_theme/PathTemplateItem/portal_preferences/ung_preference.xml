@@ -10,8 +10,6 @@
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignor</string>
-                <string>Auditor</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -21,7 +19,6 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignor</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -31,7 +28,6 @@
             <key> <string>_Delete_objects_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignor</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -41,7 +37,6 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignor</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -51,8 +46,6 @@
             <key> <string>_View_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignor</string>
-                <string>Auditor</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -97,13 +90,7 @@
         <item>
             <key> <string>preferred_diff_filter_script_id</string> </key>
             <value>
-              <tuple>
-                <string>TemplateTool_filterTemplateUnicodeDiff</string>
-                <string>TemplateTool_filterPortalTypeClassDiff</string>
-                <string>TemplateTool_filterClassTupleDiff</string>
-                <string>TemplateTool_filterOOBTreeClassDiff</string>
-                <string>TemplateTool_filterAppendToListDiff</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -139,9 +126,7 @@
         <item>
             <key> <string>preferred_subversion_working_copy</string> </key>
             <value>
-              <tuple>
-                <string>/hd/ung.instance2/parts/development-site/bt5</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -151,6 +136,18 @@
                 <string>fck_editor</string>
               </tuple>
             </value>
+        </item>
+        <item>
+            <key> <string>preferred_text_format</string> </key>
+            <value>
+              <tuple>
+                <string>text/plain</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>priority</string> </key>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
