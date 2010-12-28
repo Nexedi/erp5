@@ -116,7 +116,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [\'python: []\',here.getTestTalesExpression(evaluate=0)][str(here.getTestTalesExpression(evaluate=0)).startswith(\'python\')]</string> </value>
+            <value> <string>python: [\'python: True\',here.getTestTalesExpression()][str(here.getTestTalesExpression()).startswith(\'python\')]</string> </value>
         </item>
       </dictionary>
     </pickle>
