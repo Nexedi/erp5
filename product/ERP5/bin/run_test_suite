@@ -288,7 +288,7 @@ class ERP5TypeTestSuite(TestSuite):
 
 
 sys.modules['test_suite'] = module = imp.new_module('test_suite')
-for var in TestSuite, ERP5TypeTestSuite:
+for var in SubprocessError, TestSuite, ERP5TypeTestSuite:
   setattr(module, var.__name__, var)
 
 
