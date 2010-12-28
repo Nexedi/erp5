@@ -29,11 +29,14 @@
 #
 ##############################################################################
 
+from Products.ERP5Type.Core.PropertyExistenceConstraint import \
+     PropertyExistenceConstraint
+
 from Products.ERP5Type.mixin.constraint import ConstraintMixin
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 
-class AttributeEqualityConstraint(ConstraintMixin):
+class AttributeEqualityConstraint(PropertyExistenceConstraint):
   """
   This constraint checks the values of a given attribute name on this
   object.
@@ -68,46 +71,45 @@ class AttributeEqualityConstraint(ConstraintMixin):
     """
     attribute_name = self.getConstraintAttributeName()
 
-    # If property does not exist, error will be raised by
-    # PropertyExistence Constraint, but the value has to be set at
-    # least once as there is no need to perform any check if it is the
-    # default value
-    if obj.hasProperty(attribute_name):
-      identical = True
+    error = self._checkPropertyConsistency(obj, attribute_name)
+    if error:
+      return [error]
 
-      # The expected value of the attribute is a TALES Expression
-      attribute_expected_value = self._getExpressionValue(
-        obj, self.getConstraintAttributeValue())
+    identical = True
 
-      attribute_value = obj.getProperty(attribute_name)
+    # The expected value of the attribute is a TALES Expression
+    attribute_expected_value = self._getExpressionValue(
+      obj, self.getConstraintAttributeValue())
 
-      if isinstance(attribute_expected_value, (list, tuple)):
-        # List type
-        if len(attribute_value) != len(attribute_expected_value):
-          identical = False
-        else:
-          for item in attribute_value:
-            if item not in attribute_expected_value:
-              identical = False
-              break
+    attribute_value = obj.getProperty(attribute_name)
+
+    if isinstance(attribute_expected_value, (list, tuple)):
+      # List type
+      if len(attribute_value) != len(attribute_expected_value):
+        identical = False
       else:
-        # Other primitive type
-        identical = (attribute_expected_value == attribute_value)
+        for item in attribute_value:
+          if item not in attribute_expected_value:
+            identical = False
+            break
+    else:
+      # Other primitive type
+      identical = (attribute_expected_value == attribute_value)
 
-      if not identical:
-        # Generate error and fix it if required
-        if fixit:
-          obj._setProperty(attribute_name, attribute_expected_value)
-          message_id = 'message_invalid_attribute_value_fixed'
-        else:
-          message_id = 'message_invalid_attribute_value'
+    if not identical:
+      # Generate error and fix it if required
+      if fixit:
+        obj._setProperty(attribute_name, attribute_expected_value)
+        message_id = 'message_invalid_attribute_value_fixed'
+      else:
+        message_id = 'message_invalid_attribute_value'
 
-        error = self._generateError(
-          obj, self._getMessage(message_id),
-          dict(attribute_name=attribute_name,
-               current_value=attribute_value,
-               expected_value=attribute_expected_value))
+      error = self._generateError(
+        obj, self._getMessage(message_id),
+        dict(attribute_name=attribute_name,
+             current_value=attribute_value,
+             expected_value=attribute_expected_value))
 
-        return [error]
+      return [error]
 
     return []
