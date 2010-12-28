@@ -57,26 +57,29 @@ class PropertyExistenceConstraint(ConstraintMixin):
   property_sheets = ConstraintMixin.property_sheets + \
                     (PropertySheet.PropertyExistenceConstraint,)
 
-  def _checkConsistency(self, obj, fixit=0):
+  def _checkPropertyConsistency(self, obj, property_id):
+    """
+    Check the consistency of the object only for the given Property ID
+    and is meaningful for child constraints which only need to check
+    one property
+    """
+    # Check whether the property exists and has been set
+    if not obj.hasProperty(property_id):
+      return "message_property_not_set"
+
+    return None
+
+  def _checkConsistency(self, obj, fixit=False):
     """
     Check the object's consistency.
     """
     error_list = []
     # For each attribute name, we check if defined
     for property_id in self.getConstraintPropertyList():
-      # Check existence of property
-      mapping = dict(property_id=property_id)
-      if not obj.hasProperty(property_id):
-        error_message_id = "message_no_such_property"
-      elif obj.getProperty(property_id) is None:
-        # If value is '', attribute is considered a defined
-        # XXX is this the default API ?
-        error_message_id = "message_property_not_set"
-      else:
-        error_message_id = None
-
-      if error_message_id:
+      error_message_id = self._checkPropertyConsistency(obj, property_id)
+      if error_message_id is not None:
         error_list.append(self._generateError(
-          obj, self._getMessage(error_message_id), mapping))
+          obj, self._getMessage(error_message_id),
+          dict(property_id=property_id)))
 
     return error_list
