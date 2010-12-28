@@ -244,7 +244,7 @@ class ERP5TypeTestSuite(TestSuite):
   def runUnitTest(self, *args, **kw):
     if self.instance:
       args = ('--instance_home=unit_test.%u' % self.instance,) + args
-    mysql_db_list = [string.Template(x).substitute(I=self.instance or '')
+    mysql_db_list = [string.Template(x).substitute(I=self.instance or '1')
                       for x in self.mysql_db_list]
     if len(mysql_db_list) > 1:
       kw['extra_sql_connection_string_list'] = ','.join(mysql_db_list[1:])
