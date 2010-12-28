@@ -44,6 +44,7 @@ from Products.ERP5Type.Cache import getReadOnlyTransactionCache, enableReadOnlyT
 from Products.ZSQLCatalog.SQLCatalog import SQLQuery
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
+from Products.CMFCore.Expression import Expression
 
 class Predicate(XMLObject):
   """
@@ -207,6 +208,12 @@ class Predicate(XMLObject):
 #              '%s after method %s ' % (result, test_method_id))
           if not result:
             return result
+    test_tales_expression = self.getTestTalesExpression()
+    if test_tales_expression not in (None, '', 'python: True'):
+      expression = Expression(test_tales_expression)
+      from Products.ERP5Type.Utils import createExpressionContext
+      # evaluate a tales expression with the tested value as context
+      result = expression(createExpressionContext(context))
     return result
 
   @UnrestrictedMethod

@@ -61,6 +61,13 @@ class Predicate:
             'type'        : 'lines',
             'default'     : (),
             'mode'        : 'w' },
+        {   'id'          : 'test_tales_expression',
+            'description' : 'A Tales expression to implement a simple ' \
+                            'condition in Python. Runtime context of this ' \
+                            'expression will be the tested document',
+            'type'        : 'string',
+            'default'     : 'python: True',
+            'mode'        : 'w' },
         {   'id'          : 'test_method_id',
             'description' : 'A python method to implement additional tests',
             'type'        : 'lines', # Only a list of method ids is feasable for lines
