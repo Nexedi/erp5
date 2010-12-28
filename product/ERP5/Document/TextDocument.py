@@ -30,7 +30,6 @@
 from AccessControl.ZopeGuards import guarded_getattr
 from AccessControl import ClassSecurityInfo
 from zLOG import LOG, WARNING
-from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.utils import _setCacheHeaders, _ViewEmulator
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Document import Document, ConversionError, _MARKER, DEFAULT_CONTENT_TYPE
@@ -140,8 +139,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
         # can return document without conversion
         return src_mimetype, self.getTextContent()
       portal = self.getPortalObject()
-      mime_type = getToolByName(portal, 'mimetypes_registry').\
-                                            lookupExtension('name.%s' % format)
+      mime_type = portal.mimetypes_registry.lookupExtension('name.%s' % format)
       original_mime_type = mime_type = str(mime_type)
       if text_content is None:
         # check if document has set text_content and convert if necessary
@@ -153,7 +151,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
         if charset:
           kw['charset'] = convert_kw['encoding'] = charset
         if not self.hasConversion(**kw):
-          portal_transforms = getToolByName(portal, 'portal_transforms')
+          portal_transforms = portal.portal_transforms
           filename = self.getStandardFilename(format=format)
           if mime_type == 'text/html':
             mime_type = 'text/x-html-safe'

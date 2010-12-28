@@ -36,7 +36,6 @@ import string
 from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
-from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Cache import DEFAULT_CACHE_SCOPE
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from OFS.Image import Pdata, Image as OFSImage
@@ -79,8 +78,9 @@ class CachedConvertableMixin:
     """
     if self.getOriginalDocument() is None:
       return None
-    cache_tool = getToolByName(self, 'portal_caches')
-    preference_tool = getToolByName(self, 'portal_preferences')
+    portal = self.getPortalObject()
+    cache_tool = portal.portal_caches
+    preference_tool = portal.portal_preferences
     cache_factory_name = preference_tool.getPreferredConversionCacheFactory('document_cache_factory')
     cache_factory = cache_tool.getRamCacheRoot().get(cache_factory_name)
     #XXX This conditional statement should be remove as soon as

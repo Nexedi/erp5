@@ -52,7 +52,6 @@ from zLOG import LOG, WARNING
 
 # import mixin
 from Products.ERP5.mixin.text_convertable import TextConvertableMixin
-from Products.CMFCore.utils import getToolByName
 
 def getDefaultImageQuality(portal, format=None):
   preference_tool = portal.portal_preferences
@@ -240,12 +239,12 @@ class Image(TextConvertableMixin, File, OFSImage):
     """
     Convert the image to text with portaltransforms
     """
-    mime_type = getToolByName(self, 'mimetypes_registry').\
-                                lookupExtension('name.%s' % format)
+    portal = self.getPortalObject()
+    mime_type = portal.mimetypes_registry.lookupExtension('name.%s' % format)
     mime_type = str(mime_type)
     src_mimetype = self.getContentType()
     content = self.getData()
-    portal_transforms = getToolByName(self, 'portal_transforms')
+    portal_transforms = portal.portal_transforms
     result = portal_transforms.convertToData(mime_type, content,
                                              object=self, context=self,
                                              filename=self.getTitleOrId(),
