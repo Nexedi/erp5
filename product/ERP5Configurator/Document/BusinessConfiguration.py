@@ -36,7 +36,6 @@ from zLOG import LOG, INFO
 from cStringIO import StringIO
 
 from Products.ERP5Configurator.Tool.ConfiguratorTool import _validateFormToRequest
-from Products.ERP5.Document.Url import Url
 from Products.ERP5.Document.Item import Item
 
 ## Workflow states definitions
@@ -44,7 +43,7 @@ INITIAL_STATE_TITLE = 'Start'
 DOWNLOAD_STATE_TITLE = 'Download'
 END_STATE_TITLE = 'End'
 
-class BusinessConfiguration(Item, Url):
+class BusinessConfiguration(Item):
   """
     BusinessConfiguration store the values enter by the wizard. 
   """
@@ -68,7 +67,6 @@ class BusinessConfiguration(Item, Url):
                     , PropertySheet.Arrow
                     , PropertySheet.BusinessConfiguration
                     , PropertySheet.Comment
-                    , PropertySheet.Url
                     , PropertySheet.Version
                     )
 
