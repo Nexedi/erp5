@@ -1,3 +1,6 @@
+2010-12-28 gabriel
+* Added new UNG Preference tab to preferences. For now, this tab contains one field to choose the theme for sheet editor.
+
 2010-12-27 gabriel
 * Moved all Portal Type Roles from erp5_web_ung_core to erp5_web_ung_role
 * Added Roles to Person Portal Type. This role is used to the user authenticated see the object. Missing add function that is used by Portal Types Roles.

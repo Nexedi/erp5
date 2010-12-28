@@ -1,4 +1,7 @@
 <property_sheet_list>
+ <portal_type id="Preference">
+  <item>UNGPreference</item>
+ </portal_type>
  <portal_type id="Web Illustration">
   <item>Reference</item>
   <item>SortIndex</item>
