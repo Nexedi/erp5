@@ -209,7 +209,7 @@ class Predicate(XMLObject):
           if not result:
             return result
     test_tales_expression = self.getTestTalesExpression()
-    if test_tales_expression not in (None, '', 'python: True'):
+    if test_tales_expression != 'python: True':
       expression = Expression(test_tales_expression)
       from Products.ERP5Type.Utils import createExpressionContext
       # evaluate a tales expression with the tested value as context
