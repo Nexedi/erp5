@@ -122,6 +122,15 @@ $(document).ready(function(){\n
         $("div.content").css({"position":"fixed", "bottom": "0px",\n
                               "left": "0px", "right": "0px"});\n
         $("div.content").css({"top": "6em"});\n
+        $.getJSON("Base_getPreferencePathList", function(data){\n
+          var ungPreferencePath = data.preference;\n
+          $.get(ungPreferencePath + \'/getPreferredThemeSheetEditor\', function(data){\n
+            link = $("<link>");\n
+            link.attr("id", "dynamic_css");\n
+            link.attr({type: \'text/css\', rel:\'stylesheet\', href:data});\n
+            $("head").append(link);\n
+          });\n
+        });     \n
         break;\n
     }\n
   }\n
@@ -234,19 +243,24 @@ $(document).ready(function(){\n
  });\n
  $("div#preference_dialog").dialog({\n
     autoOpen: false,\n
-    height: 436,\n
+    height: 487,\n
     width: 330,\n
     buttons: {\n
       "Save": function(){\n
-         var ungPreferenceArgument = $("form#ung_preference").serialize();\n
+         var erp5PreferenceArgument = $("form#erp5_preference").serialize();\n
          $.ajax({\n
                 url: ungPreferencePath + "/Base_edit",\n
-                data: ungPreferenceArgument + "&form_id=Preference_viewHtmlStyle",\n
+                data: erp5PreferenceArgument + "&form_id=Preference_viewHtmlStyle",\n
          });\n
          var systemPreferenceArgument = $("form#system_preference").serialize();\n
          $.ajax({\n
                 url: systemPreferencePath + "/Base_edit",\n
                 data: systemPreferenceArgument + "&form_id=SystemPreference_view",\n
+         });\n
+         var ungPreferenceArgument = $("form#ung_preference").serialize();\n
+         $.ajax({\n
+                url: ungPreferencePath + "/Base_edit",\n
+                data: ungPreferenceArgument + "&form_id=UNGPreference_view",\n
          });\n
         location.reload();\n
        },\n
@@ -332,7 +346,7 @@ $(document).ready(function(){\n
    systemPreferencePath = data.system_preference;\n
    if ($("div#preference_dialog").html() == "") {\n
      $.get(ungPreferencePath + \'/Preference_viewHtmlStyle?editable_mode:int=1\', function(data){\n
-       $("div#preference_dialog").append("<form id=\'ung_preference\'>" + \n
+       $("div#preference_dialog").append("<form id=\'erp5_preference\'>" + \n
                                          "<fieldset class=\'center editable\'>" + \n
                                          $(data).find(\'fieldset.center.editable\').html() +\n
                                          "</fieldset></form>");\n
@@ -341,6 +355,12 @@ $(document).ready(function(){\n
        $("div#preference_dialog").append("<form id=\'system_preference\'>" + \n
                                          "<fieldset class=\'right editable\'>" + \n
                                          $(data).find(\'fieldset.right.editable\').html() +\n
+                                         "</fieldset></form>");\n
+     });\n
+     $.get(ungPreferencePath + \'/UNGPreference_view?editable_mode:int=1\', function(data){\n
+       $("div#preference_dialog").append("<form id=\'ung_preference\'>" + \n
+                                         "<fieldset class=\'center editable\'>" + \n
+                                         $(data).find(\'fieldset.center.editable\').html() +\n
                                          "</fieldset></form>");\n
      });\n
   }\n

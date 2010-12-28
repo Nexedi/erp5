@@ -1,3 +1,6 @@
+2010-12-28 gabriel
+* Added javascript code to be possible choose the theme to Spreadsheet editor and save it
+
 2010-12-27 gabriel
 * Implemented javascript code to be possible save all changes on enabled preferences.
 * Clean up the code to remove some global variables
