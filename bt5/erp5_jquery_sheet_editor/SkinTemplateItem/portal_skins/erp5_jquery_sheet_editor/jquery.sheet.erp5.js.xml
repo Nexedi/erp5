@@ -38,25 +38,15 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-// This function will be called when the user click the save button. As\n
+            <value> <unicode>// This function will be called when the user click the save button. As\n
 // submitAction function may have changed the action before, it\'s better to\n
 // reset the form action to it\'s original behaviour. This is actually\n
 // usefull when the user click the back button.\n
 function clickSaveButton(act){\n
  changed = false;\n
  document.forms[0].action = act;\n
- // Here we should use\n
  document.forms[0].elements[\'field_my_text_content\'].value = $.sheet.instance[0].getSource(true);\n
-}\n
-\n
-link = $("<link>");\n
-link.attr("id", "dynamic_css");\n
-link.attr({type: \'text/css\', rel:\'stylesheet\', href:\'sheet_default_theme.css\'});\n
-$("head").append(link);
-
-]]></unicode> </value>
+}</unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
