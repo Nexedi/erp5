@@ -589,6 +589,19 @@ class TestPredicates(TestPredicateMixIn):
     self.assertSameSet(set([x.getObject() for x in predicate.searchResults(portal_type=['Person',
     'Organisation'])]), set([fabien, nexedi]))
 
+  def test_TalesExpression(self):
+    # Predicates can test that a document is member of a category
+    doc = self.createDocument(region='europe/western_europe/france',)
+
+    pred_false = self.createPredicate(
+        test_tales_expression="python: 'japan' in here.getRegion()")
+    # our document is member of france region, so the predicate is false
+    self.assertFalse(pred_false.test(doc))
+
+    pred_true = self.createPredicate(
+        test_tales_expression="python: 'france' in here.getRegion()")
+    self.assertTrue(pred_true.test(doc))
+
 
 # TODO :
 #  multi membership category
