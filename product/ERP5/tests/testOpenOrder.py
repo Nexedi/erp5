@@ -236,7 +236,7 @@ class TestOpenOrder(ERP5TypeTestCase):
     Make sure that Open Order Rule can generate simulation movements by
     following trade conditon's periodicity setting and order's forecasting term.
     """
-    open_sale_order = self.portal.sale_order_module.newContent(
+    open_sale_order = self.portal.open_sale_order_module.newContent(
       portal_type='Open Sale Order',
       specialise=self.portal.sale_trade_condition_module.trade_condition.getRelativeUrl(),
       start_date=DateTime(3000,2,9),
@@ -341,7 +341,7 @@ class TestOpenOrder(ERP5TypeTestCase):
     """
     Make sure that open sale order can create sale orders repeatedly
     """
-    open_sale_order = self.portal.sale_order_module.newContent(
+    open_sale_order = self.portal.open_sale_order_module.newContent(
       portal_type='Open Sale Order',
       specialise=self.portal.sale_trade_condition_module.trade_condition.getRelativeUrl(),
       start_date=DateTime(3000,2,9),
