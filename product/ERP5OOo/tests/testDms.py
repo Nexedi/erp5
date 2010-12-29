@@ -1536,6 +1536,7 @@ class TestDocument(TestDocumentMixin):
         <a href="javascript:DosomethingNasty()">Link</a>
         <a onClick="javascript:DosomethingNasty()">Another Link</a>
         <p>éàèù</p>
+        <p class="Th&#232;mes">Th&#232;mes</p>
       </body>
     </html>
     """.decode('utf-8').encode('iso-8859-1')
@@ -1629,7 +1630,7 @@ style=3D'color:black'>05D65812<o:p></o:p></span></p>
 <script LANGUAGE="JavaScript" type="text/javascript">
 document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.php"></sc'+'ript>');
 </script>
-<p class="Th&#232;mes"/>
+<p class="Th&#232;mes">Th&#232;mes</p>
 </BODY></HTML>
     """
     web_page.edit(text_content=html_content)
