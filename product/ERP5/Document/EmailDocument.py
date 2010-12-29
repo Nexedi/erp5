@@ -743,3 +743,8 @@ class EmailDocument(TextDocument):
       XXX - Needs to be unified with Event methods
     """
     self.MailHost.send(message)
+
+  # Because TextDocument is base_convertable and not EmailDocument.
+  # getData must be implemented like File.getData is.
+  security.declareProtected(Permissions.AccessContentsInformation, 'getData')
+  getData = File.getData
