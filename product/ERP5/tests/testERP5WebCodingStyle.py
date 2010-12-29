@@ -43,6 +43,9 @@ class CodingStyle(CodingStyleTestCase):
     """
     return ('erp5_base',
             'erp5_web',
+            'erp5_ingestion_mysql_innodb_catalog',
+            'erp5_ingestion',
+            'erp5_crm',
             )
 
 def test_suite():
