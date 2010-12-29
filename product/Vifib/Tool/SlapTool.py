@@ -104,6 +104,23 @@ class SlapTool(BaseTool):
   security = ClassSecurityInfo()
   allowed_types = ()
 
+  security.declarePrivate('manage_afterAdd')
+  def manage_afterAdd(self, item, container) :
+    """Init permissions right after creation.
+
+    Permissions in slap tool are simple:
+     o Each member can access the tool.
+     o Only manager can view and create.
+     o Anonymous can not access
+    """
+    item.manage_permission(Permissions.AddPortalContent,
+          ['Manager'])
+    item.manage_permission(Permissions.AccessContentsInformation,
+          ['Member', 'Manager'])
+    item.manage_permission(Permissions.View,
+          ['Manager',])
+    BaseTool.inheritedAttribute('manage_afterAdd')(self, item, container)
+
   ####################################################
   # Public GET methods
   ####################################################
