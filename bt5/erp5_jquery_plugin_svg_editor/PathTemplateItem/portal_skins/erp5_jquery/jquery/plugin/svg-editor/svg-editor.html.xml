@@ -49,13 +49,14 @@
 <link rel="stylesheet" href="jquery/plugin/spinbtn/JQuerySpinBtn.css" type="text/css"/>\n
 \n
 <!-- Release version of script tags: -->\n
+\n
 <script type="text/javascript" src="jquery/core/jquery.js"></script>\n
 <script type="text/javascript" src="jquery/plugin/hotkeys/jquery.hotkeys.min.js"></script>\n
 <script type="text/javascript" src="jquery/plugin/jgraduate/jquery.jgraduate.min.js"></script>\n
 <script type="text/javascript" src="jquery/plugin/svgicons/jquery.svgicons.min.js"></script>\n
 <script type="text/javascript" src="jquery/plugin/jquerybbq/jquery.bbq.min.js"></script>\n
 <script type="text/javascript" src="jquery/plugin/spinbtn/JQuerySpinBtn.min.js"></script>\n
-<script type="text/javascript" src="svgcanvas.js"></script>\n
+<script type="text/javascript" src="svgcanvas.min.js"></script>\n
 <script type="text/javascript" src="svg-editor.min.js"></script>\n
 <script type="text/javascript" src="locale/locale.min.js"></script>\n
 \n
@@ -653,7 +654,6 @@
 \t\t<div id="dialog_buttons"></div>\n
 \t</div>\n
 </div>\n
-\n
 </body>\n
 </html>
 
