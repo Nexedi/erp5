@@ -443,6 +443,8 @@ class SafeHTML:
                 # avoid breaking now.
                 # continue into the loop with repaired html
             else:
+                if isinstance(orig, unicode):
+                  orig = orig.encode('utf-8')
                 data.setData(orig)
                 break
         return data
