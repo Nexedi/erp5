@@ -390,3 +390,19 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
       LOG('TextDocument', WARNING,
                 'Usage of text_format is deprecated, use text_content instead')
       return self._setContentType(value)
+
+    def getData(self, default=_MARKER):
+      """getData must returns original content but TextDocument accepts
+      data or text_content to store original content.
+      Fallback on text_content property if data is not defined
+      """
+      if not self.hasData():
+        if default is _MARKER:
+          return self.getTextContent()
+        else:
+          return self.getTextContent(default)
+      else:
+        if default is _MARKER:
+          return File.getData(self)
+        else:
+          return File.getData(self, default)
