@@ -164,8 +164,10 @@ class StrippingParser(HTMLParser):
 
     def handle_data(self, data):
         if self.suppress: return
-        if data:
-            self.result.append(escape(data))
+        data = escape(data)
+        if self.original_charset and isinstance(data, str):
+            data = data.decode(self.original_charset)
+        self.result.append(data)
 
     def handle_charref(self, name):
         if self.suppress: return
@@ -252,6 +254,8 @@ class StrippingParser(HTMLParser):
                  k = len(self.rawdata)
              data = self.rawdata[i+9:k]
              j = k+3
+             if self.original_charset and isinstance(data, str):
+                 data = data.decode(self.original_charset)
              self.result.append("<![CDATA[%s]]>" % data)
         else:
             try:
@@ -278,11 +282,10 @@ def scrubHTML(html, valid=VALID_TAGS, nasty=NASTY_TAGS,
                              default_encoding=default_encoding)
     parser.feed(html)
     parser.close()
-    if parser.original_charset:
-      result = parser.getResult().decode(parser.original_charset)\
-                                                      .encode(default_encoding)
-      return result
-    return parser.getResult()
+    result = parser.getResult()
+    if parser.original_charset and isinstance(result, str):
+        result = result.decode(parser.original_charset).encode(default_encoding)
+    return result
 
 class SafeHTML:
     """Simple transform which uses CMFDefault functions to
