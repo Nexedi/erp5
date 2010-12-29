@@ -40,7 +40,6 @@
             <key> <string>_text</string> </key>
             <value> <unicode>$(document).ready(function(){\n
   $("button.save").click(function(event){\n
-    event.preventDefault();\n
     svg_canvas = window.frames["svgframe"].svgCanvas;\n
     $.ajax({\n
       type: "POST",\n
@@ -48,12 +47,18 @@
       data: "text=" + svg_canvas.getSvgString(),\n
    });\n
   });\n
-  svg_canvas = window.frames["svgframe"].svgCanvas;\n
   var text_content = $.ajax({\n
-               url: "getTextContent",\n
-               async: false\n
-             }).responseText;\n
-  svg_canvas.setSvgString(text_content);\n
+                             url: "getTextContent",\n
+                             async: false\n
+                            }).responseText;\n
+  window.onload = function() {\n
+   var svg_canvas = window.frames["svgframe"].svgCanvas;\n
+   var text_content = $.ajax({\n
+                             url: "getTextContent",\n
+                             async: false\n
+                            }).responseText;\n
+   svg_canvas.setSvgString(text_content);\n
+  }\n
   $("iframe#svgframe").css("border", "0px");\n
 })</unicode> </value>
         </item>

@@ -219,7 +219,7 @@
                     <key> <string>default</string> </key>
                     <value> <string encoding="cdata"><![CDATA[
 
-<iframe name="svgframe" id="svgframe" src="jquery/plugin/svg-editor/svg-editor.html" width="750" height="600"/>
+<iframe name="svgframe" id="svgframe" src="jquery/plugin/svg-editor/svg-editor.html" width="750" height="600">
 
 ]]></string> </value>
                 </item>

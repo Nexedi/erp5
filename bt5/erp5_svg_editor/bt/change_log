@@ -1,3 +1,6 @@
+2010-12-29 gabriel
+* Fix issue to reload the page and insert the text_content on svg editor
+
 2010-11-21 gabriel
 * Clear the text_content field to use SVG Editor from EditorField
 
