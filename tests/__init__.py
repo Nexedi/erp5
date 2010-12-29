@@ -26,7 +26,7 @@ class _ERP5(ERP5TypeTestSuite):
       os.symlink(os.path.join('..', 'products', product),
                  os.path.join('Products', product))
 
-  def update(self, working_copy_list=None):
+  def update(self):
     self.checkout('products', 'bt5')
     self.enableProducts()
 

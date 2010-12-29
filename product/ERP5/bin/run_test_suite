@@ -70,6 +70,7 @@ class SubprocessError(EnvironmentError):
 
 class Updater(object):
 
+  _git_svn_cache = {}
   realtime_output = True
   stdin = file(os.devnull)
 
@@ -111,10 +112,21 @@ class Updater(object):
   def _git(self, *args, **kw):
     return self.spawn('git', *args, **kw)['stdout'].strip()
 
+  def _git_find_rev(self, ref):
+    try:
+      return self._git_svn_cache[ref]
+    except KeyError:
+      r = self._git('svn', 'find-rev', ref)
+      assert r
+      ref2 = ref[0] != 'r' and 'r%u' % int(r) or r
+      self._git_svn_cache[ref] = ref2
+      self._git_svn_cache[ref2] = ref
+      return r
+
   def getRevision(self):
     if os.path.isdir('.git'):
-      h = self._git('log', '-1', '--format=%H', *self._path_list)
-      return str(int(self._git('svn', 'find-rev', h)))
+      h = self._git('log', '-1', '--format=%H', '--', *self._path_list)
+      return self._git_find_rev(h)
     if os.path.isdir('.svn'):
       stdout = self.spawn('svn', 'info', *self._path_list)['stdout']
       return str(max(map(int, SVN_CHANGED_REV.findall(stdout))))
@@ -125,8 +137,7 @@ class Updater(object):
     if os.path.isdir('.git'):
       # edit .git/info/sparse-checkout if you want sparse checkout
       if revision:
-        h = self._git('svn', 'find-rev', 'r%s' % revision)
-        assert h
+        h = self._git_find_rev('r' + revision)
         if h != self._git('rev-parse', 'HEAD'):
           self.deletePycFiles('.')
           self._git('reset', '--merge', h)
@@ -199,7 +210,9 @@ class TestSuite(Updater):
         on_stop(status_dict)
       self._pool.append(self.running.pop(test))
       self.release()
-    threading.Thread(target=run).start()
+    thread = threading.Thread(target=run)
+    thread.setDaemon(True)
+    thread.start()
 
   def update(self):
     self.checkout() # by default, update everything
@@ -341,10 +354,14 @@ def main():
   def makeSuite(revision=None):
     updater = Updater(revision)
     updater.checkout('tests')
-    tests = imp.load_module('tests', *imp.find_module('tests', ['.']))
+    for k in sys.modules.keys():
+      if k == 'tests' or k.startswith('tests.'):
+        del sys.modules[k]
+    module_name, class_name = ('tests.' + name).rsplit('.', 1)
     try:
-      suite_class = getattr(tests, name)
-    except AttributeError:
+      suite_class = getattr(__import__(module_name, None, None, [class_name]),
+                            class_name)
+    except (AttributeError, ImportError):
       parser.error("unknown test suite")
     if len(db_list) < suite_class.mysql_db_count:
       parser.error("%r suite needs %u DB (only %u given)" %
@@ -387,6 +404,7 @@ def main():
 
 
 if __name__ == '__main__':
+  sys.path[0] = ''
   if not os.isatty(0):
     killallIfParentDies()
   sys.exit(main())
