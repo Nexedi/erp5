@@ -154,6 +154,7 @@ class EmailDocument(TextDocument):
                     , PropertySheet.ItemAggregation
                     , PropertySheet.EmailHeader
                     , PropertySheet.Reference
+                    , PropertySheet.Data
                     )
 
   # Mail processing API
