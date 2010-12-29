@@ -117,13 +117,12 @@ def decode_htmlentities(s):
 
 def decode_htmlentity(m):
    entity_value = m.groupdict()['htmlentity']
-   if entity_value.lower().startswith('x'):
-      try:
-          return chr(int('0'+entity_value,16))
-      except ValueError:
-          return entity_value
    try:
-      return chr(int(entity_value))
+      if entity_value[0] in ['x','X']:
+         c = int(entity_value[1:], 16)
+      else:
+         c = int(entity_value)
+      return unichr(c)
    except ValueError:
       return entity_value
 
