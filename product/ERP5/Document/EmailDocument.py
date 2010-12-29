@@ -165,6 +165,8 @@ class EmailDocument(TextDocument):
       self._v_message = result
     return result
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'isSupportBaseDataConversion')
   def isSupportBaseDataConversion(self):
     """
     """
