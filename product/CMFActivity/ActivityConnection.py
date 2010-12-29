@@ -29,6 +29,7 @@
 from Products.ZMySQLDA.DA import Connection
 from Products.ERP5Type.Globals import InitializeClass
 from App.special_dtml import HTMLFile
+from Acquisition import aq_parent
 
 # If the sort order below doesn't work, we cannot guarantee the setSortKey()
 # call below will actually result in the activity connection being committed
@@ -41,7 +42,7 @@ def manage_addActivityConnection(self, id, title,
                                  connection_string,
                                  check=None, REQUEST=None):
     """Add a DB connection to a folder"""
-    self._setObject(id, Connection(id, title, connection_string, check))
+    self._setObject(id, ActivityConnection(id, title, connection_string, check))
     if REQUEST is not None: return self.manage_main(self,REQUEST)
 
 class ActivityConnection(Connection):
@@ -59,10 +60,13 @@ class ActivityConnection(Connection):
 
     def connect(self, s):
         result = Connection.connect(self, s)
+        if aq_parent(self) is None:
+            # Connection.connect() doesn't set _v_database_connection if there
+            # are no acquisition wrappers
+            return result
         # the call above will set self._v_database_connection, and it won't
         # have disappeared by now.
-        # We need to put back this code as soon as problems are solved XXX
-        #self._v_database_connection.setSortKey( (0,) )
+        self._v_database_connection.setSortKey( (0,) )
         return result
 
 InitializeClass(ActivityConnection)

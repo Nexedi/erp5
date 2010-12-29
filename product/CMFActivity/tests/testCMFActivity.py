@@ -3872,6 +3872,8 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
         stdconn.title,
         stdconn.connection_string
     )
+    newconn = portal.cmf_activity_sql_connection
+    self.assertEquals(newconn.meta_type, 'CMFActivity Database Connection')
 
 def test_suite():
   suite = unittest.TestSuite()
