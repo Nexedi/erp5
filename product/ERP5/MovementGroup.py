@@ -401,10 +401,11 @@ class FakeMovement:
     """
       Return average price
     """
-    total_quantity = self.getAddQuantity()
-    if total_quantity != 0:
-      return (self.getAddPrice() / total_quantity)
-    return 0.0
+    price_dict = self._getPriceDict()
+    if len(price_dict) == 1:
+      return price_dict.keys()[0]
+    return sum(price * quantity for price, quantity in price_dict.items()) / \
+           float(sum(price_dict.values()))
 
   def getAddQuantity(self):
     """
@@ -412,28 +413,35 @@ class FakeMovement:
     """
     total_quantity = 0
     for movement in self.getMovementList():
-      if getattr(movement, 'getMappedProperty', None) is not None:
-        quantity = movement.getMappedProperty('quantity')
-      else:
+      getMappedProperty = getattr(movement, 'getMappedProperty', None)
+      if getMappedProperty is None:
         quantity = movement.getQuantity()
-      if quantity != None:
+      else:
+        quantity = getMappedProperty('quantity')
+      if quantity:
         total_quantity += quantity
     return total_quantity
+
+  def _getPriceDict(self):
+    price_dict = {}
+    for movement in self.getMovementList():
+      getMappedProperty = getattr(movement, 'getMappedProperty', None)
+      if getMappedProperty is None:
+        quantity = movement.getQuantity()
+      else:
+        quantity = getMappedProperty('quantity')
+      if quantity:
+        price = movement.getPrice() or 0
+        quantity += price_dict.setdefault(price, 0)
+        price_dict[price] = quantity
+    return price_dict
 
   def getAddPrice(self):
     """
       Return total price
     """
-    total_price = 0
-    for movement in self.getMovementList():
-      if getattr(movement, 'getMappedProperty', None) is not None:
-        quantity = movement.getMappedProperty('quantity')
-      else:
-        quantity = movement.getQuantity()
-      price = movement.getPrice()
-      if (quantity is not None) and (price is not None):
-        total_price += (quantity * price)
-    return total_price
+    price_dict = self._getPriceDict()
+    return sum(price * quantity for price, quantity in price_dict.items())
 
   def recursiveReindexObject(self):
     """
