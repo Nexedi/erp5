@@ -133,6 +133,8 @@ class Updater(object):
     raise NotImplementedError
 
   def checkout(self, *path_list):
+    if not path_list:
+      path_list = '.',
     revision = self.revision
     if os.path.isdir('.git'):
       # edit .git/info/sparse-checkout if you want sparse checkout
@@ -152,7 +154,7 @@ class Updater(object):
         if path and not os.path.isdir(path):
           svn_mkdirs(path)
           self.spawn(*(args + ['--depth=empty', path]))
-      for path in path_list or ('.',):
+      for path in path_list:
         args = ['svn', 'up', '--force', '--non-interactive']
         if revision:
           args.append('-r%s' % revision)
