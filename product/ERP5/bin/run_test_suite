@@ -157,7 +157,7 @@ class Updater(object):
         if revision:
           args.append('-r%s' % revision)
         svn_mkdirs(path)
-        args += '--depth=infinity', path
+        args += '--set-depth=infinity', path
         self.deletePycFiles(path)
         try:
           status_dict = self.spawn(*args)
