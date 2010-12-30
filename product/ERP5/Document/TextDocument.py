@@ -47,6 +47,7 @@ except ImportError:
 from Products.ERP5Type.Utils import guessEncodingFromText
 
 from lxml import html as etree_html
+from lxml import etree
 
 class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
                                                             TextContent, File):
@@ -306,7 +307,15 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
 
       content_type = self.getContentType() or DEFAULT_CONTENT_TYPE
       text_content = self.getData()
-      if content_type == 'text/html':
+      if content_type.endswith('xml'):
+        try:
+          tree = etree.fromstring(text_content)
+          text_content = etree.tostring(tree, encoding='utf-8', xml_declaration=True)
+          content_type = 'application/xml'
+          message = 'Conversion to base format succeeds'
+        except etree.XMLSyntaxError:
+          message = 'Conversion to base format without codec fails'
+      elif content_type == 'text/html':
         re_match = self.charset_parser.search(text_content)
         message = 'Conversion to base format succeeds'
         if re_match is not None:
