@@ -467,11 +467,11 @@ def runLiveTest(test_list, verbosity=1, stream=None, **kw):
         result = super(DebugTextTestRunner, self)._makeResult()
         return DebugTestResult(result)
     TestRunner = DebugTextTestRunner
+  loader = ERP5TypeTestLoader()
   run_only = kw.get('run_only', None)
   if run_only is not None:
-    ERP5TypeTestLoader.filter_test_list = [re.compile(x).search
-                                            for x in run_only.split(',')]
-  suite = ERP5TypeTestLoader().loadTestsFromNames(test_list)
+    loader.filter_test_list = [re.compile(x).search for x in run_only.split(',')]
+  suite = loader.loadTestsFromNames(test_list)
   output = stream
   if stream is None:
     output = StringIO()

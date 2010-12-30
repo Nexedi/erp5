@@ -347,7 +347,7 @@ class DebugTestResult:
 
 _print = sys.stderr.write
 
-def runUnitTestList(test_list, verbosity=1, debug=0):
+def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   if "zeo_client" in os.environ and "zeo_server" in os.environ:
     _print("conflicting options: --zeo_client and --zeo_server")
     sys.exit(1)
@@ -506,7 +506,12 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
             result = super(DebugTextTestRunner, self)._makeResult()
             return DebugTestResult(result)
         TestRunner = DebugTextTestRunner
-      suite = ERP5TypeTestLoader().loadTestsFromNames(test_list)
+      loader = ERP5TypeTestLoader()
+      if run_only:
+        loader.filter_test_list = [re.compile(x).search for x in
+            run_only.split(',')]
+
+      suite = loader.loadTestsFromNames(test_list)
 
     if not isinstance(Storage, ClientStorage):
       # Remove nodes that were registered during previous execution.
@@ -617,6 +622,7 @@ def main():
   os.environ["erp5_tests_recreate_catalog"] = "0"
   verbosity = 1
   debug = 0
+  run_only = None
   instance_home = os.path.join(real_instance_home, 'unit_test')
 
   for opt, arg in opts:
@@ -663,8 +669,7 @@ def main():
     elif opt == "--erp5_catalog_storage":
       os.environ["erp5_catalog_storage"] = arg
     elif opt == "--run_only":
-      ERP5TypeTestLoader.filter_test_list = [re.compile(x).search
-                                             for x in arg.split(',')]
+      run_only = arg
     elif opt == "--update_only":
       os.environ["update_only"] = arg
       os.environ["update_business_templates"] = "1"
@@ -712,7 +717,9 @@ def main():
 
   result = runUnitTestList(test_list=args,
                            verbosity=verbosity,
-                           debug=debug)
+                           debug=debug,
+                           run_only=run_only,
+                           )
   try:
     from Testing.ZopeTestCase import profiler
   except ImportError:
