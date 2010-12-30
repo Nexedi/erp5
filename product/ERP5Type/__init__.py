@@ -163,7 +163,7 @@ ModuleSecurityInfo('Products.ERP5Type.Utils').declarePublic(
     'sortValueList', 'convertToUpperCase', 'UpperCase',
     'convertToMixedCase', 'cartesianProduct', 'sleep', 'getCommonTimeZoneList',
     'int2letter', 'getMessageIdWithContext', 'getTranslationStringWithContext',
-    'Email_parseAddressHeader')
+    'Email_parseAddressHeader', 'guessEncodingFromText')
 
 allow_module('Products.ERP5Type.Message')
 ModuleSecurityInfo('Products.ERP5Type.Message').declarePublic('translateString')
