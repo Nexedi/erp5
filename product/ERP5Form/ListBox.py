@@ -2834,8 +2834,9 @@ class ListBoxValidator(Validator.Validator):
               editable_field = editable_field_dict.get(alias)
               if editable_field is not None:
                 REQUEST.set('cell', o)
-                if editable_field.get_value('editable', REQUEST=REQUEST) \
-                                              and field.need_validate(REQUEST):
+                editable = editable_field.get_value('editable', REQUEST=REQUEST)
+                enabled = editable_field.get_value('enabled', REQUEST=REQUEST)
+                if editable and enabled and field.need_validate(REQUEST):
                   error_result_key = '%s_%s' % (editable_field.id, o.uid)
                   key = 'field_' + error_result_key
                   try:
