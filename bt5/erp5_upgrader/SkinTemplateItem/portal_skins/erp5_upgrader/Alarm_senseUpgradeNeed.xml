@@ -147,12 +147,78 @@ return\n
 ]]></string> </value>
         </item>
         <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>getattr</string>
+                            <string>context</string>
+                            <string>None</string>
+                            <string>before_script</string>
+                            <string>_getattr_</string>
+                            <string>portal_alarms</string>
+                            <string>activate</string>
+                            <string>previous_tag</string>
+                            <string>active_process</string>
+                            <string>DateTime</string>
+                            <string>launchUpgraderAlarm</string>
+                            <string>previous_method_id</string>
+                            <string>_getiter_</string>
+                            <string>alarm_id</string>
+                            <string>upgrader_alarm</string>
+                            <string>False</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>Alarm_senseUpgradeNeed</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
       </dictionary>
     </pickle>

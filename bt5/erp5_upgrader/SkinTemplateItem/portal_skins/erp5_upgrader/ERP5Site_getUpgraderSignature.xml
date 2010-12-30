@@ -603,12 +603,93 @@ else:\n
 ]]></string> </value>
         </item>
         <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string>item=None</string> </value>
         </item>
         <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>item</string>
+                            <string>True</string>
+                            <string>ALARM_DICT</string>
+                            <string>DESTINATION_RELEASE</string>
+                            <string>ZOPE_VERSION</string>
+                            <string>PYTHON_VERSION</string>
+                            <string>BT5_URL_BASE_LIST</string>
+                            <string>getattr</string>
+                            <string>context</string>
+                            <string>None</string>
+                            <string>_getattr_</string>
+                            <string>UPGRADABLE_BT5_ID_LIST</string>
+                            <string>REQUIRED_BT5_ID_LIST</string>
+                            <string>UPDATE_CATALOG_BT5_ID_LIST</string>
+                            <string>BEFORE_TRIGGERED_BT5_SCRIPT_ID_DICT</string>
+                            <string>AFTER_TRIGGERED_BT5_SCRIPT_ID_DICT</string>
+                            <string>REINSTALABLE_BT5_ID_LIST</string>
+                            <string>WORKFLOW_CHAIN_DICT</string>
+                            <string>UPDATE_ROLE_PORTAL_TYPE_LIST</string>
+                            <string>PORTAL_TYPE_PROPERTY_SHEET_LIST</string>
+                            <string>KEEP_ORIGINAL_DICT</string>
+                            <string>VALIDATION_DICT</string>
+                            <string>CATALOG_FILTER_DICT</string>
+                            <string>INTEGRITY_VERIFICATION_SCRIPT_ID_LIST</string>
+                            <string>ERP5_SITE_PROPERTY_DICT</string>
+                            <string>ALARM_TOOL_CONFIGURATION_LIST</string>
+                            <string>UPGRADE_OBJECT_CLASS_LIST</string>
+                            <string>RECATALOG</string>
+                            <string>signature_dict</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>ERP5Site_getUpgraderSignature</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
       </dictionary>
     </pickle>
