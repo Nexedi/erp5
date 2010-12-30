@@ -470,8 +470,11 @@ def runLiveTest(test_list, verbosity=1, stream=None, **kw):
   loader = ERP5TypeTestLoader()
   run_only = kw.get('run_only', None)
   if run_only is not None:
-    loader.filter_test_list = [re.compile(x).search for x in run_only.split(',')]
+    ERP5TypeTestLoader.filter_test_list = \
+        [re.compile(x).search for x in run_only.split(',')]
   suite = loader.loadTestsFromNames(test_list)
+  if run_only is not None:
+    ERP5TypeTestLoader.filter_test_list = None
   output = stream
   if stream is None:
     output = StringIO()

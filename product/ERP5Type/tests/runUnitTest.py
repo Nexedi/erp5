@@ -508,10 +508,12 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
         TestRunner = DebugTextTestRunner
       loader = ERP5TypeTestLoader()
       if run_only:
-        loader.filter_test_list = [re.compile(x).search for x in
+        ERP5TypeTestLoader.filter_test_list = [re.compile(x).search for x in
             run_only.split(',')]
 
       suite = loader.loadTestsFromNames(test_list)
+      if run_only:
+        ERP5TypeTestLoader.filter_test_list = None
 
     if not isinstance(Storage, ClientStorage):
       # Remove nodes that were registered during previous execution.
