@@ -53,12 +53,12 @@
             <value> <string encoding="cdata"><![CDATA[
 
 from Products.ERP5Type.Message import translateString\n
-from DateTime import DateTime\n
+\n
 item_list = []\n
 request = context.REQUEST\n
 total_quantity = 0.0\n
-now = DateTime().strftime(\'%d%m%y\')\n
-item_portal_type = request[\'type\']\n
+\n
+item_portal_type = kw.get(\'type\')\n
 \n
 if context.getPortalType()==\'Purchase Packing List Line\':\n
   cell_portal_type = \'Purchase Packing List Cell\'\n
@@ -91,7 +91,7 @@ for line in kw.get(\'listbox\'):\n
 \n
   if line.has_key(\'listbox_key\') and (line[\'reference\'] not in (\'\', None)):\n
     item = context.portal_catalog.getResultValue(\n
-                                    portal_type=\'Item\',\n
+                                    portal_type=item_portal_type,\n
                                     reference=line[\'reference\'])\n
     if item is not None:\n
       msg = translateString("Reference Defined On Line ${line_id} already exists",\n
@@ -141,7 +141,7 @@ for line in kw.get(\'listbox\'):\n
       # no variation, we\'ll update the line itself\n
       movement_to_update = context\n
 \n
-    if item not in movement_to_update.getAggregateValueList():\n
+    if item.getRelativeUrl() not in movement_to_update.getAggregateList():\n
       movement_to_update.setAggregateValueList(\n
         movement_to_update.getAggregateValueList() + [item])\n
 \n
@@ -161,7 +161,7 @@ if update_quantity:\n
           raise NotImplementedError(\n
             \'Quantity unit from the movement differs from quantity\'\n
             \' unit on the item\')\n
-      quantity += item.getQuantity(at_date = DateTime().Date())\n
+      quantity += item.getQuantity(at_date=DateTime())\n
     movement.setQuantity(quantity)\n
 \n
 return context.Base_redirect(form_id, keep_items=dict(\n
