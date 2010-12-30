@@ -579,7 +579,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
       # Find all document with same (reference, version, language)
       kw = dict(portal_type=self.getPortalType(),
                 reference=self.getReference(),
-                where_expression=SQLQuery("validation_state NOT IN ('cancelled', 'deleted')"))
+                where_expression=SQLQuery("validation_state NOT IN ('archived', 'cancelled', 'deleted')"))
       if self.getVersion():
         kw['version'] = self.getVersion()
       if self.getLanguage():
