@@ -147,10 +147,10 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
                  value=relative_tolerance_min))
       relative_tolerance_max = self.getProperty('tolerance_range_max')
       if relative_tolerance_max is not None and \
-             delta < relative_tolerance_max * base:
+             delta > relative_tolerance_max * base:
         return (
             prevision_value, decision_value,
-            'The difference of ${property_name} between decision and prevision is less than ${value} times of the prevision value.',
+            'The difference of ${property_name} between decision and prevision is greater than ${value} times of the prevision value.',
             dict(property_name=tested_property,
                  value=relative_tolerance_max))
 
