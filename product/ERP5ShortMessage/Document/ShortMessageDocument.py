@@ -68,7 +68,7 @@ class ShortMessageDocument(Event):
     """Get quantity of sms sended"""
     #XXX-Fx : See with JPS for a new event implementation
     #XXX-Fx : DestinationReference property must be replace by a category
-    return len(self.getDestinationReference().split(','))
+    return len(self.getDestinationList())
 
   security.declareProtected(Permissions.UseMailhostServices,
                             'isDelivered')
