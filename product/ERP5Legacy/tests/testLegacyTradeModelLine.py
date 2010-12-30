@@ -133,7 +133,7 @@ def checkTradeModelRuleSimulationExpand(self, delivery):
       total_price = expected_result_dict[use].get(line.getId())
       if total_price:
         sm = result_dict.pop(use)
-        self.assertEqual(sm.getTotalPrice(), total_price)
+        self.assertEqual(str(sm.getTotalPrice()), str(total_price))
         self.assertEqual(1, len(sm.getCausalityValueList()))
         self.assertEqual(1, len(sm.getCausalityValueList(
           portal_type='Business Path')))

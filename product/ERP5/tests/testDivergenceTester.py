@@ -139,6 +139,15 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     movement = sequence.get('movement')
     movement.setQuantity(sim_mvt.getQuantity())
 
+  def stepSetPreviousQuantityWithEpsilon(self, sequence=None, 
+                                         sequence_list=None, **kw):
+    sim_mvt = sequence.get('sim_mvt')
+    movement = sequence.get('movement')
+    prevision = sim_mvt.getQuantity()
+    decision = prevision * (1 + 1e-15)
+    self.assertNotEqual(prevision, decision)
+    movement.setQuantity(decision)
+
   def stepAddQuantityDivergenceTester(self, sequence=None, 
                                       sequence_list=None, **kw):
     """
@@ -155,17 +164,19 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     if not run: return
     sequence_list = SequenceList()
     # Create a clean packing list
-    sequence_string = ' \
-          stepGetPackingList \
-          stepCheckPackingListIsNotDivergent \
-          stepSetNewQuantity \
-          stepCheckPackingListIsNotDivergent \
-          stepAddQuantityDivergenceTester \
-          stepCheckPackingListIsDivergent \
-          stepSetPreviousQuantity \
-          stepCheckPackingListIsNotDivergent \
-          Tic \
-    '
+    sequence_string = """
+          GetPackingList
+          CheckPackingListIsNotDivergent
+          SetNewQuantity
+          CheckPackingListIsNotDivergent
+          AddQuantityDivergenceTester
+          CheckPackingListIsDivergent
+          SetPreviousQuantity
+          CheckPackingListIsNotDivergent
+          SetPreviousQuantityWithEpsilon
+          CheckPackingListIsNotDivergent
+          Tic
+    """
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=self.quiet)
 
@@ -211,19 +222,19 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     if not run: return
     sequence_list = SequenceList()
     # Create a clean packing list
-    sequence_string = ' \
-          stepGetPackingList \
-          stepCheckPackingListIsNotDivergent \
-          stepSetNewSource \
-          stepCheckPackingListIsNotDivergent \
-          stepAddCategoryDivergenceTester \
-          stepCheckPackingListIsNotDivergent \
-          stepConfigureCategoryDivergenceTesterForSource \
-          stepCheckPackingListIsDivergent \
-          stepSetPreviousSource \
-          stepCheckPackingListIsNotDivergent \
-          Tic \
-    '
+    sequence_string = """
+          GetPackingList
+          CheckPackingListIsNotDivergent
+          SetNewSource
+          CheckPackingListIsNotDivergent
+          AddCategoryDivergenceTester
+          CheckPackingListIsNotDivergent
+          ConfigureCategoryDivergenceTesterForSource
+          CheckPackingListIsDivergent
+          SetPreviousSource
+          CheckPackingListIsNotDivergent
+          Tic
+    """
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=self.quiet)
 
@@ -269,19 +280,19 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     if not run: return
     sequence_list = SequenceList()
     # Create a clean packing list
-    sequence_string = ' \
-          stepGetPackingList \
-          stepCheckPackingListIsNotDivergent \
-          stepSetNewStartDate \
-          stepCheckPackingListIsNotDivergent \
-          stepAddPropertyDivergenceTester \
-          stepCheckPackingListIsNotDivergent \
-          stepConfigurePropertyDivergenceTesterForStartDate \
-          stepCheckPackingListIsDivergent \
-          stepSetPreviousStartDate \
-          stepCheckPackingListIsNotDivergent \
-          Tic \
-    '
+    sequence_string = """
+          GetPackingList
+          CheckPackingListIsNotDivergent
+          SetNewStartDate
+          CheckPackingListIsNotDivergent
+          AddPropertyDivergenceTester
+          CheckPackingListIsNotDivergent
+          ConfigurePropertyDivergenceTesterForStartDate
+          CheckPackingListIsDivergent
+          SetPreviousStartDate
+          CheckPackingListIsNotDivergent
+          Tic
+    """
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=self.quiet)
 
@@ -319,19 +330,19 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     if not run: return
     sequence_list = SequenceList()
     # Create a clean packing list
-    sequence_string = ' \
-          stepGetPackingList \
-          stepCheckPackingListIsNotDivergent \
-          stepSetNewAggregate \
-          stepCheckPackingListIsNotDivergent \
-          stepAddCategoryDivergenceTester \
-          stepCheckPackingListIsNotDivergent \
-          stepConfigureCategoryDivergenceTesterForAggregate \
-          stepCheckPackingListIsDivergent \
-          stepSetPreviousAggregate \
-          stepCheckPackingListIsNotDivergent \
-          Tic \
-    '
+    sequence_string = """
+          GetPackingList
+          CheckPackingListIsNotDivergent
+          SetNewAggregate
+          CheckPackingListIsNotDivergent
+          AddCategoryDivergenceTester
+          CheckPackingListIsNotDivergent
+          ConfigureCategoryDivergenceTesterForAggregate
+          CheckPackingListIsDivergent
+          SetPreviousAggregate
+          CheckPackingListIsNotDivergent
+          Tic
+    """
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=self.quiet)
 

@@ -33,6 +33,9 @@ from Products.ERP5Type.Core.Predicate import Predicate
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.mixin.equivalence_tester import EquivalenceTesterMixin
 
+# On Python >= 2.6, we could compute a value based on sys.float_info.epsilon
+DEFAULT_PRECISION = 1e-12
+
 class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
   """ Compare float values, with support for rounding.
   """
@@ -79,12 +82,20 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
       prevision_value = self._round(prevision_value)
 
     delta = decision_value - prevision_value
+    if type(delta) is float:
+      # XXX: What if prevision or decision is 0 ?
+      #      How to know if the other value is negligible or not ?
+      epsilon = abs(prevision_value * DEFAULT_PRECISION)
+      __lt__ = lambda a, b: a < b - epsilon
+    else:
+      from operator import __lt__
+
     # XXX we should use appropriate property sheets and getter methods
     # for these properties.
     # Maybe, but beware of default values of quantity when doing so
     absolute_tolerance_min = self.getProperty('quantity_range_min')
     if absolute_tolerance_min is not None and \
-       delta < absolute_tolerance_min:
+       __lt__(delta, absolute_tolerance_min):
       return (
         prevision_value, decision_value,
         'The difference of ${property_name} between decision and prevision is less than ${value}.',
@@ -92,7 +103,7 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
              value=absolute_tolerance_min))
     absolute_tolerance_max = self.getProperty('quantity_range_max')
     if absolute_tolerance_max is not None and \
-       delta > absolute_tolerance_max:
+       __lt__(absolute_tolerance_max, delta):
       return (
         prevision_value, decision_value,
         'The difference of ${property_name} between decision and prevision is larger than ${value}.',

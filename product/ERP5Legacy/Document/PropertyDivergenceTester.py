@@ -33,6 +33,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.DivergenceMessage import DivergenceMessage
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5.Document.FloatEquivalenceTester import DEFAULT_PRECISION
 
 class PropertyDivergenceTester(XMLObject):
   """
@@ -88,6 +89,13 @@ class PropertyDivergenceTester(XMLObject):
       delivery_mvt_property = delivery_mvt_getProperty(tested_property_id)
       simulation_mvt_property = simulation_movement_getProperty(tested_property_id)
       if delivery_mvt_property != simulation_mvt_property:
+        try:
+          # XXX: What if prevision or decision is 0 ?
+          if abs(delivery_mvt_property - simulation_mvt_property) <= \
+             abs(simulation_mvt_property * DEFAULT_PRECISION):
+            continue
+        except TypeError:
+          pass
         message = DivergenceMessage(
                    divergence_scope='property',
                    object_relative_url=delivery_mvt.getRelativeUrl(),

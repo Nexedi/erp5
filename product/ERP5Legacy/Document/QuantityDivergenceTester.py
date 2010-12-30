@@ -32,6 +32,7 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type.DivergenceMessage import DivergenceMessage
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5.Document.FloatEquivalenceTester import DEFAULT_PRECISION
 from Products.ERP5Legacy.Document.PropertyDivergenceTester import \
                                               PropertyDivergenceTester
 
@@ -150,8 +151,7 @@ class QuantityDivergenceTester(PropertyDivergenceTester):
               ==
               Decimal(str(y)).quantize(Decimal(self.getDecimalExponent()),
                                        rounding=rounding_option))
-    else:
-      return x==y
+    return abs(x - y) <= abs(y * DEFAULT_PRECISION) # XXX: What if x or y is 0 ?
 
   def getTestedProperty(self, default=None):
     """
