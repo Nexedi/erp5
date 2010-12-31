@@ -527,8 +527,7 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
               'line_variation_category_list': 'size/product_module/2/2',
               },
               )
-    self.portal.REQUEST.set('type', 'Item')
-    packing_list_line.DeliveryLine_createItemList(listbox=listbox)
+    packing_list_line.DeliveryLine_createItemList(type='Item', listbox=listbox)
     transaction.commit()
     self.tic()
 
