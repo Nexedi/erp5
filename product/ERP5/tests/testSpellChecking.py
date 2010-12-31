@@ -88,7 +88,6 @@ class TestSpellChecking(ERP5TypeTestCase):
             #'erp5_banking_check',
             #'erp5_banking_core',
             #'erp5_banking_inventory',
-            'erp5_bpm',
             'erp5_budget',
             'erp5_calendar',
 
@@ -106,7 +105,6 @@ class TestSpellChecking(ERP5TypeTestCase):
             'erp5_immobilisation',
             'erp5_item',
             'erp5_knowledge_pad',
-            'erp5_legacy_tax_system',
             'erp5_mrp',
             'erp5_open_trade',
             'erp5_payroll',
