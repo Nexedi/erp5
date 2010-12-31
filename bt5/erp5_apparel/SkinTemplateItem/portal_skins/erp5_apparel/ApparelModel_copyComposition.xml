@@ -83,8 +83,8 @@ elif len(colour_range.contentValues(portal_type=\'Apparel Colour Range Variation
         cell = fabric.getCell(cat, base_id=\'composition\')\n
         if cell is not None:\n
           new_cell = context.newCell(cat, base_id=\'composition\',\n
-                                      portal_type=\'Mapped Value\')\n
-          new_cell.setQuantity(cell.getQuantity())\n
+                                     portal_type=\'Mapped Value\', # XXX\n
+                                     quantity=cell.getProperty(\'quantity\'))\n
       if len(poly_list):\n
         msg = context.Base_translateString(\'${count} Compositions created.\',\n
             mapping={\'count\': len(poly_list)})\n

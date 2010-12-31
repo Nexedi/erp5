@@ -152,13 +152,13 @@ class TestApparelModel(ERP5TypeTestCase):
         'composition/acrylique',
         base_id = 'composition')
     self.assertNotEquals(acrylique, None)
-    self.assertEqual(acrylique.getQuantity(), 0.88)
+    self.assertEqual(acrylique.getProperty('quantity'), 0.88)
 
     elasthane = apparel_model.getCell(
         'composition/elasthane',
         base_id = 'composition')
     self.assertNotEquals(elasthane, None)
-    self.assertEqual(elasthane.getQuantity(), 0.12)
+    self.assertEqual(elasthane.getProperty('quantity'), 0.12)
 
     # check indexes are present
     self.assertTrue(apparel_model.index.has_key('composition'))
