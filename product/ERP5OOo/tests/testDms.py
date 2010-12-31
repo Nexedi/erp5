@@ -654,15 +654,6 @@ class TestDocument(TestDocumentMixin):
       self.assertNotEquals(obj.getCreationDate(),
                            portal.CreationDate())
 
-  def test_Base_getConversionFormatItemList(self):
-    # tests Base_getConversionFormatItemList script (requires oood)
-    self.assertTrue(('Microsoft Excel 97/2000/XP', 'xls') in
-        self.portal.Base_getConversionFormatItemList(base_content_type=
-                  'application/vnd.oasis.opendocument.spreadsheet'))
-    self.assertTrue(('DocBook', 'docbook.xml') in
-        self.portal.Base_getConversionFormatItemList(base_content_type=
-                  'application/vnd.oasis.opendocument.text'))
-
   def test_06_ProcessingStateOfAClonedDocument(self):
     """
     Check that the processing state of a cloned document
