@@ -89,15 +89,14 @@ for line in kw.get(\'listbox\'):\n
                                                     mapping={\'line_id\': line[\'listbox_key\']})\n
         return context.Base_redirect(form_id,\n
                                      keep_items=dict(portal_status_message=msg))\n
-    else:\n
-      module = context.getDefaultModule(item_portal_type)\n
-      item = module.newContent(portal_type=item_portal_type,\n
-       title=line[\'title\'],\n
-       reference=item_reference,\n
-       quantity=line.get(\'quantity\'),\n
-       quantity_unit=context.getQuantityUnit(),\n
-       **item_property_dict)\n
-    \n
+    module = context.getDefaultModule(item_portal_type)\n
+    item = module.newContent(portal_type=item_portal_type,\n
+                             title=line[\'title\'],\n
+                             reference=item_reference,\n
+                             quantity=line.get(\'quantity\'),\n
+                             quantity_unit=context.getQuantityUnit(),\n
+                             **item_property_dict)\n
+\n
     line_variation_category_list = []\n
     for variation in (\n
           line.get(\'line_variation_category_list\'),\n
@@ -122,7 +121,6 @@ for line in kw.get(\'listbox\'):\n
               variation_category_list.append(variation)\n
           context.setVariationCategoryList(variation_category_list)\n
         movement_to_update = context.newCell(base_id=\'movement\',\n
-                                             portal_type=cell_portal_type,\n
                                              *line_variation_category_list)\n
         movement_to_update.edit(mapped_value_property_list=(\'quantity\', \'price\'),\n
                                 variation_category_list=line_variation_category_list)\n
