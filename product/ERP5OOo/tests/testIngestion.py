@@ -46,6 +46,7 @@ from Products.ERP5OOo.OOoUtils import OOoBuilder
 from zLOG import LOG, INFO, ERROR
 from Products.CMFCore.utils import getToolByName
 from zExceptions import BadRequest
+from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
 # test files' home
 TEST_FILES_HOME = os.path.join(os.path.dirname(__file__), 'test_document')
@@ -747,23 +748,34 @@ class TestIngestion(ERP5TypeTestCase):
                                       **kw):
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
     self.checkDocumentExportList(document, 'doc',
-                                 ['pdf', 'doc', 'rtf', 'writer.html', 'txt'])
+                                 ['pdf', 'doc', 'rtf', 'txt', 'odt'])
+    # legacy format will be replaced
+    expectedFailure(self.checkDocumentExportList)(document, 'doc',
+                                                 ['writer.html'])
 
   def stepCheckSpreadsheetDocumentExportList(self, sequence=None,
                                              sequence_list=None, **kw):
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
-    self.checkDocumentExportList(document, 'xls',
-                                 ['csv', 'calc.html', 'xls', 'calc.pdf'])
+    self.checkDocumentExportList(document, 'xls', ['csv', 'xls', 'ods', 'pdf'])
+    # legacy format will be replaced
+    expectedFailure(self.checkDocumentExportList)(document, 'xls',
+                                 ['calc.html', 'calc.pdf'])
 
   def stepCheckPresentationDocumentExportList(self, sequence=None,
                                               sequence_list=None, **kw):
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
-    self.checkDocumentExportList(document, 'ppt', ['impr.pdf', 'ppt'])
+    self.checkDocumentExportList(document, 'ppt', ['ppt', 'odp', 'pdf'])
+    # legacy format will be replaced
+    expectedFailure(self.checkDocumentExportList)(document,
+                                                 'ppt', ['impr.pdf'])
 
   def stepCheckDrawingDocumentExportList(self, sequence=None,
                                          sequence_list=None, **kw):
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
-    self.checkDocumentExportList(document, 'sxd', ['jpg', 'draw.pdf', 'svg'])
+    self.checkDocumentExportList(document, 'sxd', ['jpg', 'svg', 'pdf', 'odg'])
+    # legacy format will be replaced
+    expectedFailure(self.checkDocumentExportList)(document,
+                                                 'sxd', ['draw.pdf'])
 
   def stepExportPDF(self, sequence=None, sequence_list=None, **kw):
     """
