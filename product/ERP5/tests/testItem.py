@@ -441,8 +441,7 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
               },
               )
 
-    self.portal.REQUEST.set('type', 'Item')
-    packing_list_line.DeliveryLine_createItemList(listbox=listbox)
+    packing_list_line.DeliveryLine_createItemList(type='Item', listbox=listbox)
     transaction.commit()
     self.tic()
     self.assertEquals(
@@ -509,8 +508,7 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
               'line_variation_category_list': 'size/product_module/2/3',
               },
               )
-    self.portal.REQUEST.set('type', 'Item')
-    packing_list_line.DeliveryLine_createItemList(listbox=listbox)
+    packing_list_line.DeliveryLine_createItemList(type='Item', listbox=listbox)
     self.assertEquals(packing_list_line.getVariationCategoryList(),
                       ['size/product_module/2/3'])
     self.assertEquals(packing_list_line.getTotalQuantity(), 20)
@@ -592,8 +590,7 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
               'quantity': 15.0,
               },
               )
-    self.portal.REQUEST.set('type', 'Item')
-    packing_list_line.DeliveryLine_createItemList(listbox=listbox)
+    packing_list_line.DeliveryLine_createItemList(type='Item', listbox=listbox)
     transaction.commit()
     self.tic()
     self.assertEquals(
@@ -646,8 +643,7 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
               },
               )
 
-    self.portal.REQUEST.set('type', 'Item')
-    packing_list_line.DeliveryLine_createItemList(listbox=listbox)
+    packing_list_line.DeliveryLine_createItemList(type='Item', listbox=listbox)
     transaction.commit()
     self.tic()
     item = [x.getObject() for x in self.portal.portal_catalog(
