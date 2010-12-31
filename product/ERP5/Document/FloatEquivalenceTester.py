@@ -80,22 +80,20 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
     if self.isDecimalAlignmentEnabled():
       decision_value = self._round(decision_value)
       prevision_value = self._round(prevision_value)
-
-    delta = decision_value - prevision_value
-    if type(delta) is float:
+      epsilon = 0
+    else:
       # XXX: What if prevision or decision is 0 ?
       #      How to know if the other value is negligible or not ?
       epsilon = abs(prevision_value * DEFAULT_PRECISION)
-      __lt__ = lambda a, b: a < b - epsilon
-    else:
-      from operator import __lt__
+
+    delta = decision_value - prevision_value
 
     # XXX we should use appropriate property sheets and getter methods
     # for these properties.
     # Maybe, but beware of default values of quantity when doing so
     absolute_tolerance_min = self.getProperty('quantity_range_min')
     if absolute_tolerance_min is not None and \
-       __lt__(delta, absolute_tolerance_min):
+       delta < (absolute_tolerance_min or - epsilon):
       return (
         prevision_value, decision_value,
         'The difference of ${property_name} between decision and prevision is less than ${value}.',
@@ -103,7 +101,7 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
              value=absolute_tolerance_min))
     absolute_tolerance_max = self.getProperty('quantity_range_max')
     if absolute_tolerance_max is not None and \
-       __lt__(absolute_tolerance_max, delta):
+       delta > (absolute_tolerance_max or epsilon):
       return (
         prevision_value, decision_value,
         'The difference of ${property_name} between decision and prevision is larger than ${value}.',
