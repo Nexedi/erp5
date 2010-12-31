@@ -47,6 +47,8 @@ def _unpackData(data):
   """
   return str(data)
 
+_MARKER = object()
+
 class File(Document, CMFFile):
   """
       A File can contain raw data which can be uploaded and downloaded.
@@ -272,6 +274,23 @@ class File(Document, CMFFile):
       # for a File we can not convert
       return 'text/plain', ''
     raise NotImplementedError
+
+  # backward compatibility
+  security.declareProtected(Permissions.AccessContentsInformation, 'getFilename')
+  def getFilename(self, default=_MARKER):
+    """Fallback on getSourceReference as it was used
+    before to store filename property
+    """
+    if self.hasFilename():
+      if default is _MARKER:
+        return self._baseGetFilename()
+      else:
+        return self._baseGetFilename(default)
+    else:
+      if default is _MARKER:
+        return self._baseGetSourceReference()
+      else:
+        return self._baseGetSourceReference(default)
 
 # CMFFile also brings the IContentishInterface on CMF 2.2, remove it.
 removeIContentishInterface(File)
