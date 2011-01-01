@@ -65,12 +65,12 @@
                     <value>
                       <list>
                         <string>your_title</string>
+                        <string>your_default_email_text</string>
                         <string>your_default_telephone_text</string>
                         <string>your_default_address_street_address</string>
                         <string>your_default_address_zip_code</string>
-                        <string>your_default_address_region</string>
                         <string>your_default_address_city</string>
-                        <string>your_default_email_text</string>
+                        <string>your_default_address_region</string>
                       </list>
                     </value>
                 </item>

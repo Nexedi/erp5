@@ -129,11 +129,7 @@ Accounting Periods are used to define the range of dates in which you will be al
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-python:here.Base_translateString("Accounting Periods are used to define the range of dates in which you will be allowed to input accounting transactions.<br/>To start using the system, you have to configure the first accounting period.")
-
-]]></string> </value>
+            <value> <string>python:here.Base_translateString("Accounting Periods are used to define the range of dates in which you will be allowed to input accounting transactions. To start using the system, you have to configure the first accounting period.")</string> </value>
         </item>
       </dictionary>
     </pickle>
