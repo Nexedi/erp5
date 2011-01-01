@@ -1,0 +1,14 @@
+diff -ur groonga-storage-engine-0.4.orig/configure groonga-storage-engine-0.4/configure
+--- groonga-storage-engine-0.4.orig/configure	2010-11-24 06:23:50.000000000 +0100
++++ groonga-storage-engine-0.4/configure	2011-01-01 16:01:07.000000000 +0100
+@@ -13925,8 +13925,8 @@
+     as_fn_error "failed to run \"$ac_mysql_config\": $plugindir" "$LINENO" 5
+   fi
+   MYSQL_INC="$MYSQL_INC $($ac_mysql_config --include)"
+-  ac_mysql_major_version="`$ac_mysql_config --version | cut -b 1-3`"
+-  if test "$ac_mysql_major_version" = "5.1"; then
++  ac_mysql_major_version="`$ac_mysql_config --version | cut -b 1,3`"
++  if test $ac_mysql_major_version -lt 55; then
+     MYSQL51="-DMYSQL51"
+ 
+   fi
