@@ -95,6 +95,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
+                        <string>my_description</string>
                         <string>my_title</string>
                       </list>
                     </value>
@@ -102,9 +103,7 @@
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>my_description</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>

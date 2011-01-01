@@ -70,13 +70,9 @@
                       <list>
                         <string>your_first_name</string>
                         <string>your_last_name</string>
-                        <string>your_gender</string>
-                        <string>your_nationality</string>
                         <string>your_reference</string>
                         <string>your_password</string>
                         <string>your_password_confirm</string>
-                        <string>your_user_action</string>
-                        <string>your_function</string>
                       </list>
                     </value>
                 </item>
@@ -98,11 +94,7 @@
                       <list>
                         <string>your_default_email_text</string>
                         <string>your_default_telephone_text</string>
-                        <string>your_default_fax_text</string>
-                        <string>your_default_address_street_address</string>
-                        <string>your_default_address_zip_code</string>
-                        <string>your_default_address_city</string>
-                        <string>your_default_address_region</string>
+                        <string>your_function</string>
                       </list>
                     </value>
                 </item>

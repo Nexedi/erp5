@@ -64,11 +64,11 @@
                     <key> <string>Default</string> </key>
                     <value>
                       <list>
-                        <string>your_accounting_plan</string>
-                        <string>your_period_description</string>
                         <string>your_period_start_date</string>
                         <string>your_period_stop_date</string>
-                        <string>your_period_title</string>
+                        <string>your_accounting_plan</string>
+                        <string>your_period_description</string>
+                        <string>you_period_title</string>
                       </list>
                     </value>
                 </item>

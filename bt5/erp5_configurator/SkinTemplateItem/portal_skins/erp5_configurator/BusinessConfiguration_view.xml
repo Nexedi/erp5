@@ -76,7 +76,6 @@
                     <value>
                       <list>
                         <string>listbox</string>
-                        <string>listbox_file_and_link</string>
                       </list>
                     </value>
                 </item>
@@ -110,10 +109,10 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>configuration_state</string>
-                        <string>simulation_state</string>
+                        <string>my_configuration_state</string>
+                        <string>my_translated_simulation_state_title</string>
+                        <string>my_translated_validation_state_title</string>
                         <string>my_comment</string>
-                        <string>validation_state</string>
                       </list>
                     </value>
                 </item>

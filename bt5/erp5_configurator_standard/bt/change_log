@@ -1,2 +1,5 @@
+2010-01-01 lucas
+* Added proxy field in all forms, using base configurator field library.
+
 2010-12-23 lucas
 * Renamed the testStandardConfigurationWorkflow to testLiveStandardConfigurationWorkflow.

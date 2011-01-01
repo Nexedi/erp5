@@ -10,15 +10,16 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>default</string>
-                <string>editable</string>
+                <string>description</string>
+                <string>display_width</string>
+                <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_configuration_class_name</string> </value>
+            <value> <string>you_period_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -61,7 +62,11 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>editable</string> </key>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>display_width</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -92,16 +97,20 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>editable</string> </key>
-                    <value> <int>0</int> </value>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>display_width</string> </key>
+                    <value> <int>20</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_string_field</string> </value>
+                    <value> <string>my_empty_mode_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewConfiguratorFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -109,7 +118,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Configuration Class Name</string> </value>
+                    <value> <string>What is the name of this period?</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -125,7 +134,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getPortalType()</string> </value>
+            <value> <string>python: test(getattr(here, field.getId().replace(\'your_\',\'\',1), None) is not None,    getattr(here, field.getId().replace(\'your_\',\'\',1), \'\'), modules[\'DateTime\'].DateTime().year())</string> </value>
         </item>
       </dictionary>
     </pickle>
