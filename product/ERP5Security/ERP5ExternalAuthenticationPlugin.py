@@ -102,7 +102,7 @@ class ERP5ExternalAuthenticationPlugin(ERP5UserManager):
   def extractCredentials(self, request):
     """ Extract credentials from the request header. """
     creds = {}
-    user_id = request.getHeader(self.user_id_key)
+    user_id = getattr(request, 'getHeader', request.get_header)(self.user_id_key)
     if user_id is not None:
       creds['external_login'] = user_id
 
