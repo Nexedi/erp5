@@ -85,75 +85,8 @@ return context.ConfiguratorTool_viewRunningInstallationMessageRenderer(percentag
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>installation_status</string> </value>
-        </item>
-        <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>installation_status</string>
-                            <string>building_bt5_part_percentage</string>
-                            <string>installation_bt5_part_percentage</string>
-                            <string>activity_part_percentage</string>
-                            <string>calc_percentage</string>
-                            <string>len</string>
-                            <string>_getitem_</string>
-                            <string>is_activities_running</string>
-                            <string>is_bt5_building_running</string>
-                            <string>is_bt5_installation_running</string>
-                            <string>float</string>
-                            <string>all_bt5s</string>
-                            <string>current_bt5s</string>
-                            <string>bt5_percent_of_total</string>
-                            <string>activity_list</string>
-                            <string>max</string>
-                            <string>all_activities</string>
-                            <string>current_activities</string>
-                            <string>activity_percent_of_total</string>
-                            <string>_inplacevar_</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>int</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -162,12 +95,6 @@ return context.ConfiguratorTool_viewRunningInstallationMessageRenderer(percentag
         <item>
             <key> <string>title</string> </key>
             <value> <string>Calculate percentages and show installation message</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

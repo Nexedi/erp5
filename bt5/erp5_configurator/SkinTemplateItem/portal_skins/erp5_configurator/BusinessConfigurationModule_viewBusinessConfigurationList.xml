@@ -69,9 +69,7 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list>
-                        <string>listbox_creation_date</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
