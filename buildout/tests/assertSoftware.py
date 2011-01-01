@@ -85,7 +85,7 @@ ACCEPTABLE_GLOBAL_LIB_LIST = (
 
 SKIP_PART_LIST = (
   'parts/boost-lib-download',
-  'parts/mysql-5.1__compile__',
+  'parts/mariadb__compile__',
   'parts/openoffice-bin',
   'parts/openoffice-bin__unpack__',
 )
@@ -392,39 +392,39 @@ class AssertMysql50Tritonn(AssertSoftwareMixin):
       'libmysqlclient', 'libnsl', 'libssl', 'libz'], ['ncurses', 'zlib', 'readline', 'openssl'], [os.path.join(os.path.abspath(os.curdir),
       'parts', 'mysql-tritonn-5.0', 'lib', 'mysql')])
 
-class AssertMysql51(AssertSoftwareMixin):
+class AssertMariadb(AssertSoftwareMixin):
   def test_ld_mysqld(self):
-    self.assertLibraryList('parts/mysql-5.1/libexec/mysqld', ['libc', 'libcrypt', 'libdl', 'libgcc_s', 'libm', 'libnsl',
-      'libpthread', 'libstdc++', 'libz'], ['ncurses', 'zlib', 'readline'])
+    self.assertLibraryList('parts/mariadb/libexec/mysqld', ['libc', 'libcrypt', 'libdl', 'libgcc_s', 'libm', 'libnsl',
+      'libpthread', 'librt', 'libstdc++', 'libz'], ['ncurses', 'zlib', 'readline'])
 
   def test_ld_mysqlmanager(self):
-    self.assertLibraryList('parts/mysql-5.1/libexec/mysqlmanager', ['libc', 'libcrypt', 'libgcc_s', 'libm', 'libnsl',
-      'libpthread', 'libstdc++', 'libz'], ['ncurses', 'zlib', 'readline'])
+    self.assertLibraryList('parts/mariadb/libexec/mysqlmanager', ['libc', 'libcrypt', 'libdl', 'libgcc_s', 'libm', 'libnsl',
+      'libpthread', 'librt', 'libstdc++', 'libz'], ['ncurses', 'zlib', 'readline'])
 
   def test_ld_libmysqlclient_r(self):
-    self.assertLibraryList('parts/mysql-5.1/lib/mysql/libmysqlclient_r.so', ['libc', 'libz', 'libcrypt', 'libm', 'libnsl', 'libpthread'], ['ncurses', 'zlib', 'readline'])
+    self.assertLibraryList('parts/mariadb/lib/mysql/libmysqlclient_r.so', ['libc', 'libdl', 'librt', 'libz', 'libcrypt', 'libm', 'libnsl', 'libpthread'], ['ncurses', 'zlib', 'readline'])
 
   def test_ld_libmysqlclient(self):
-    self.assertLibraryList('parts/mysql-5.1/lib/mysql/libmysqlclient.so', ['libc', 'libz', 'libcrypt', 'libm', 'libnsl', 'libpthread'], ['ncurses', 'readline', 'zlib'])
+    self.assertLibraryList('parts/mariadb/lib/mysql/libmysqlclient.so', ['libc', 'libdl', 'librt', 'libz', 'libcrypt', 'libm', 'libnsl', 'libpthread'], ['ncurses', 'readline', 'zlib'])
 
   def test_ld_mysql(self):
-    self.assertLibraryList('parts/mysql-5.1/bin/mysql', ['libc', 'libz', 'libcrypt', 'libgcc_s', 'libm',
+    self.assertLibraryList('parts/mariadb/bin/mysql', ['libc', 'libdl', 'librt', 'libz', 'libcrypt', 'libgcc_s', 'libm',
       'libmysqlclient', 'libncursesw', 'libnsl', 'libpthread', 'libreadline',
       'libstdc++'], ['ncurses', 'zlib', 'readline'],
                            [os.path.join(os.path.abspath(os.curdir),
-      'parts', 'mysql-5.1', 'lib', 'mysql')])
+      'parts', 'mariadb', 'lib', 'mysql')])
 
   def test_ld_mysqladmin(self):
-    self.assertLibraryList('parts/mysql-5.1/bin/mysqladmin', ['libc', 'libz', 'libcrypt', 'libgcc_s', 'libm',
+    self.assertLibraryList('parts/mariadb/bin/mysqladmin', ['libc', 'libdl', 'librt', 'libz', 'libcrypt', 'libgcc_s', 'libm',
       'libmysqlclient', 'libnsl', 'libpthread', 'libstdc++'], ['ncurses', 'zlib', 'readline'],
                            [os.path.join(os.path.abspath(os.curdir),
-      'parts', 'mysql-5.1', 'lib', 'mysql')])
+      'parts', 'mariadb', 'lib', 'mysql')])
 
   def test_ld_mysqldump(self):
-    self.assertLibraryList('parts/mysql-5.1/bin/mysqldump', ['libc', 'libz', 'libcrypt', 'libm', 'libmysqlclient',
+    self.assertLibraryList('parts/mariadb/bin/mysqldump', ['libc', 'libdl', 'librt', 'libz', 'libcrypt', 'libm', 'libmysqlclient',
       'libnsl', 'libpthread'], ['ncurses', 'zlib', 'readline'],
                            [os.path.join(os.path.abspath(os.curdir),
-      'parts', 'mysql-5.1', 'lib', 'mysql')])
+      'parts', 'mariadb', 'lib', 'mysql')])
 
 class AssertSqlite3(AssertSoftwareMixin):
   """Tests for built memcached"""
@@ -1851,7 +1851,7 @@ class AssertSphinx(AssertSoftwareMixin):
       'zlib'
       ]
   core_additional_rpath_list = [
-      os.path.join(os.path.abspath(os.curdir), 'parts', 'mysql-5.1', 'lib', 'mysql')
+      os.path.join(os.path.abspath(os.curdir), 'parts', 'mariadb', 'lib', 'mysql')
       ]
 
   def test_ld_sphinx(self):
