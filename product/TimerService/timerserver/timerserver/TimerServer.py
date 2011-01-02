@@ -15,6 +15,7 @@ from ZServer.PubCore import handle
 from ZPublisher.BaseRequest import BaseRequest
 from ZPublisher.BaseResponse import BaseResponse
 from ZPublisher.HTTPRequest import HTTPRequest
+from ZPublisher.HTTPResponse import HTTPResponse
 import ZPublisher.HTTPRequest
 
 class TimerServer:
@@ -147,3 +148,17 @@ class TimerRequest(HTTPRequest):
 
         env['PATH_INFO']= '/Control_Panel/timer_service/process_timer'
         return env
+
+    def clone(self):
+        # This method is a dumb copy of Zope-2.8's one that makes timerserver
+        # works in Zope-2.12 too.
+        #
+        # Return a clone of the current request object
+        # that may be used to perform object traversal.
+        environ = self.environ.copy()
+        environ['REQUEST_METHOD'] = 'GET'
+        if self._auth:
+            environ['HTTP_AUTHORIZATION'] = self._auth
+        clone = HTTPRequest(None, environ, HTTPResponse(), clean=1)
+        clone['PARENTS'] = [self['PARENTS'][-1]]
+        return clone

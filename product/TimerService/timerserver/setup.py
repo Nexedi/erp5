@@ -23,7 +23,7 @@ except ImportError:
   from distutils.core import setup
 
 setup(name='timerserver',
-      version='2.0',
+      version=version,
       license='GPL',
       description='Timer Server for Zope',
       long_description='',
