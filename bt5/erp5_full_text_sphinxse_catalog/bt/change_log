@@ -1,2 +1,5 @@
+2011-01-02 Kazuhiko
+* split SphinxSE indexation activities from normal indexation.
+
 2010-08-19 Kazuhiko
 * initial commit

@@ -1,3 +1,5 @@
+erp5_mysql_innodb/SQLCatalog_catalogSphinxSE
+erp5_mysql_innodb/SQLCatalog_deferSphinxSEIndexing
 erp5_mysql_innodb/SQLCatalog_makeFullTextQuery
 erp5_mysql_innodb/z0_drop_sphinxse_index
 erp5_mysql_innodb/z0_uncatalog_sphinxse_index

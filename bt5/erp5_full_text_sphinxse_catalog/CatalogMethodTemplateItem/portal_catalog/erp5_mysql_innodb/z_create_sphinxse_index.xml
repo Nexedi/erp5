@@ -7,33 +7,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_arg</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="Args" module="Shared.DC.ZRDB.Aqueduct"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>_data</string> </key>
-                        <value>
-                          <dictionary/>
-                        </value>
-                    </item>
-                    <item>
-                        <key> <string>_keys</string> </key>
-                        <value>
-                          <list/>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
             <key> <string>_col</string> </key>
             <value>
               <tuple/>
@@ -100,61 +73,6 @@ CREATE TABLE `sphinxse_index` (\n
 
 
 ]]></string> </value>
-        </item>
-        <item>
-            <key> <string>template</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="__newobj__" module="copy_reg"/>
-                </klass>
-                <tuple>
-                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
-                </tuple>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>__name__</string> </key>
-                        <value> <string encoding="cdata"><![CDATA[
-
-<string>
-
-]]></string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_vars</string> </key>
-                        <value>
-                          <dictionary/>
-                        </value>
-                    </item>
-                    <item>
-                        <key> <string>globals</string> </key>
-                        <value>
-                          <dictionary/>
-                        </value>
-                    </item>
-                    <item>
-                        <key> <string>raw</string> </key>
-                        <value> <string encoding="cdata"><![CDATA[
-
-<dtml-let portal="getPortalObject()">\n
-<dtml-let catalog="portal.portal_catalog.getSQLCatalog(getId())">\n
-CREATE TABLE `sphinxse_index` (\n
-  `uid` BIGINT UNSIGNED NOT NULL,\n
-  `weight` INTEGER NOT NULL,\n
-  `sphinxse_query` VARCHAR(3072) NOT NULL,\n
-  INDEX(sphinxse_query)\n
-) ENGINE=SPHINX CONNECTION=\'sphinx://<dtml-var expr="getattr(catalog, \'sphinx_address\', getattr(portal, \'sphinx_address\', \'127.0.0.1\'))">:<dtml-var expr="getattr(catalog, \'sphinx_port\', getattr(portal, \'sphinx_port\', 9312))">/<dtml-var expr="getattr(catalog, \'sphinx_index\', getattr(portal, \'sphinx_index\', \'erp5\'))">\'\n
-</dtml-let>\n
-</dtml-let>\n
-
-
-]]></string> </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
         </item>
         <item>
             <key> <string>title</string> </key>

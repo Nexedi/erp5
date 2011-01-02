@@ -50,23 +50,19 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ZSQLCatalog.SQLCatalog import Query\n
-\n
-# XXX Should we use system preference here?\n
-if \'sphinxse_index\' in container.getCatalogSearchTableIds():\n
-  query = Query(**{\'sphinxse_query\':value})\n
-else:\n
-  query = Query(**{\'full_text.SearchableText\':value})\n
-return query\n
+            <value> <string># This script is called to separate SphinxSE indexing into a low-priority active object,\n
+# so that the important part can be finished quickly and also to serialise it because\n
+# concurrent write may cause crash of searchd.\n
+context.activate(activity=\'SQLQueue\', priority=3, serialization_tag=\'sphinxse_indexing\').SQLCatalog_catalogSphinxSE(getPath=getPath)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>value</string> </value>
+            <value> <string>getPath</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SQLCatalog_makeFullTextQuery</string> </value>
+            <value> <string>SQLCatalog_deferSphinxSEIndexing</string> </value>
         </item>
       </dictionary>
     </pickle>
