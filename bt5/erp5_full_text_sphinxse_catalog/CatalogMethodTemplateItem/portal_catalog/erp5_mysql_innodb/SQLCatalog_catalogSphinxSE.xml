@@ -51,7 +51,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Type.Utils import UpperCase\n
-from Products.ERP5.Document.Document import NotConvertedError\n
+from ZODB.POSException import ConflictError\n
 \n
 # Obtain the properties from the Z SQL Method itself, as like catalogObjectList.\n
 method = context.z_catalog_sphinxse_index_list\n
@@ -67,18 +67,21 @@ for path in getPath:\n
   if obj is None:\n
     continue\n
 \n
-  for property in property_list:\n
-    if property == \'SearchableText\':\n
-      try:\n
+  try:\n
+    tmp_dict = {}\n
+    for property in property_list:\n
+      if property == \'SearchableText\':\n
         value = obj.SearchableText()\n
-      except NotConvertedError:\n
-        failed_path_list.append(path)\n
-    else:\n
-      try:\n
+      else:\n
         value = getattr(obj, \'get%s\' % UpperCase(property))()\n
-      except AttributeError:\n
-        value = None\n
-    parameter_dict.setdefault(property, []).append(value)\n
+      tmp_dict[property] = value\n
+  except ConflictError:\n
+    raise\n
+  except:\n
+    failed_path_list.append(path)\n
+  else:\n
+    for property, value in tmp_dict.items():\n
+      parameter_dict.setdefault(property, []).append(value)\n
 \n
 if len(failed_path_list):\n
   if len(parameter_dict):\n
@@ -86,7 +89,7 @@ if len(failed_path_list):\n
     context.activate(activity=\'SQLQueue\', priority=5, serialization_tag=\'sphinxse_indexing\').SQLCatalog_catalogSphinxSE(getPath=failed_path_list)\n
   else:\n
     # if all objects are failed one, just raise an exception to avoid infinite loop.\n
-    raise NotConvertedError\n
+    raise AttributeError, \'exception raised in indexing %r\' % failed_path_list\n
 \n
 if len(parameter_dict):\n
   return method(**parameter_dict)\n
