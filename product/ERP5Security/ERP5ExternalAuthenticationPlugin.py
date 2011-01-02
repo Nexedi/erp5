@@ -102,7 +102,11 @@ class ERP5ExternalAuthenticationPlugin(ERP5UserManager):
   def extractCredentials(self, request):
     """ Extract credentials from the request header. """
     creds = {}
-    user_id = getattr(request, 'getHeader', request.get_header)(self.user_id_key)
+    getHeader = getattr(request, 'getHeader', None)
+    if getHeader is None:
+      # use get_header instead for Zope-2.8
+      getHeader = request.get_header
+    user_id = getHeader(self.user_id_key)
     if user_id is not None:
       creds['external_login'] = user_id
 
