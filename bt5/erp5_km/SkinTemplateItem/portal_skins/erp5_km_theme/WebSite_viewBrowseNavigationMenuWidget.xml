@@ -78,13 +78,14 @@
   <tal:block tal:condition="static_navigation_menu">\n
     <tal:block tal:repeat="menu_item menu_item_list">\n
 \n
-    <li tal:define="sub_item_list menu_item/subsection">\n
+    <li tal:define="sub_item_list menu_item/subsection"\n
+        tal:attributes="class python: sub_item_list and \'collapse-menu\' or \'\'">\n
       <a tal:attributes="href menu_item/url" >\n
         <tal:block tal:replace="menu_item/compact_translated_title | menu_item/translated_title">Menu</tal:block>\n
       </a>\n
  \n
         <ul tal:condition="sub_item_list">\n
-          <li tal:repeat="menu_item sub_item_list" tal:attributes="class python: menu_item[\'url\'] and \'collapse-menu\' or \'\'">\n
+          <li tal:repeat="menu_item sub_item_list">\n
             <tal:block tal:condition="not:nocall:menu_item/subsection"><a tal:attributes="href menu_item/url" tal:content="menu_item/compact_translated_title | menu_item/translated_title">Menu</a></tal:block>\n
             <tal:block tal:condition="nocall:menu_item/subsection">\n
             <a tal:attributes="href menu_item/url"><tal:block tal:replace="menu_item/compact_translated_title | menu_item/translated_title">Drop-down Menu</tal:block><!--[if IE 7]><!--></a><!--<![endif]-->\n
@@ -102,8 +103,7 @@
     </li>\n
     </tal:block>\n
   </tal:block>\n
-</tal:block>  \n
-
+</tal:block>
 
 ]]></unicode> </value>
         </item>
