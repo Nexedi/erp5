@@ -97,7 +97,7 @@ class EssendexGateway(XMLObject):
       """Transform url of phone number to a valid phone number (gateway side)"""
       phone = phone.replace('tel:', '').replace('+','').replace('(0)','').replace('-','')
       # Check that phone number can not be something not existing
-      assert not(phone.startwith('99000'))
+      assert not(phone.startswith('99000'))
       return phone
 
     security.declareProtected(Permissions.ManagePortal, 'send')
