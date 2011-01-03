@@ -1,0 +1,4 @@
+erp5_mysql_innodb/z0_drop_fulltext
+erp5_mysql_innodb/z0_uncatalog_fulltext
+erp5_mysql_innodb/z_catalog_fulltext_list
+erp5_mysql_innodb/z_create_fulltext
