@@ -1,3 +1,6 @@
+2010-01-03 lucas
+* Moved the extension ConfigurationTemplate_readOOoCalcFile to this bt5.
+
 2010-01-01 lucas
 * Added proxy field in all forms, using base configurator field library.
 
