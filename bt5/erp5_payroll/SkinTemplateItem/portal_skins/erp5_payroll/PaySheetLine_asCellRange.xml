@@ -57,14 +57,29 @@ cell_range = []\n
 if resource is not None:\n
   base_category_list = resource.getVariationBaseCategoryList()\n
   for base_category in base_category_list:\n
-    if matrixbox == 1:\n
-      # XXX matrixbox is right_display (not as listfield) => invert display and value in item\n
-      cell_range.append(map(lambda x: (x[1],x[0]), \n
-        context.getVariationCategoryItemList(base_category_list=\\\n
-            (base_category,) ) ) )\n
+    if base_category == "base_application":\n
+      base_application_variation_dict = {}\n
+      variation_list = context.getVariationCategoryList(base_category_list=(base_category,))\n
+      for variation in variation_list:\n
+        # We split at the sublevel of base_application/base_amount/payroll/XXX\n
+        base_variation = \'/\'.join(variation.split(\'/\')[:4])\n
+        base_application_variation_dict.setdefault(base_variation, []) \n
+        base_application_variation_dict[base_variation].append(variation)\n
+\n
+      for v in base_application_variation_dict.values():\n
+        if matrixbox == 1:\n
+          cell_range.append(map(lambda x: (x[1],x[0]), v))\n
+        else:\n
+          cell_range.append(v)\n
     else:\n
-      cell_range.append(context.getVariationCategoryList(base_category_list=\\\n
-          (base_category,)))\n
+      if matrixbox == 1:\n
+        # XXX matrixbox is right_display (not as listfield) => invert display and value in item\n
+        cell_range.append(map(lambda x: (x[1],x[0]), \n
+          context.getVariationCategoryItemList(base_category_list=\\\n
+              (base_category,) ) ) )\n
+      else:\n
+        cell_range.append(context.getVariationCategoryList(base_category_list=\\\n
+            (base_category,)))\n
 \n
   cell_range = filter(lambda x: x != [], cell_range )\n
 \n

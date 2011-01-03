@@ -110,7 +110,19 @@ else:\n
   variation_base_category_list = context.getVariationBaseCategoryList()\n
   variation_base_category_list.sort()\n
   for base_category in variation_base_category_list:\n
-    list_of_category_list.append(\\\n
+    if base_category == "base_application":\n
+      base_application_variation_dict = {}\n
+      variation_list = context.getVariationCategoryList(base_category_list=(base_category,))\n
+      for variation in variation_list:\n
+        # We split at the sublevel of base_application/base_amount/payroll/XXX\n
+        base_variation = \'/\'.join(variation.split(\'/\')[:4])\n
+        base_application_variation_dict.setdefault(base_variation, []) \n
+        base_application_variation_dict[base_variation].append(variation)\n
+\n
+      for v in base_application_variation_dict.values():\n
+        list_of_category_list.append(v)\n
+    else:\n
+      list_of_category_list.append(\\\n
         context.getVariationCategoryList(base_category_list=base_category))\n
   return list_of_category_list\n
 \n
