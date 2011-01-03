@@ -4,6 +4,10 @@
   <workflow>edit_workflow, hosting_subscription_workflow</workflow>
  </chain>
  <chain>
+  <type>Purchase Packing List</type>
+  <workflow>vifib_open_order_interaction_workflow</workflow>
+ </chain>
+ <chain>
   <type>Sale Order</type>
   <workflow>vifib_open_order_interaction_workflow</workflow>
  </chain>
