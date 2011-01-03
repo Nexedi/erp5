@@ -53,6 +53,19 @@
             <value> <string>from Products.ERP5Type.Utils import UpperCase\n
 from ZODB.POSException import ConflictError\n
 \n
+# Retrieves SearchableText from catalog\n
+method = context.z_catalog_sphinxse_index_list\n
+parameter_dict = {\'uid\':[], \'SearchableText\':[]}\n
+for i in context.getPortalObject().portal_catalog(path=getPath, select_expression=\'SearchableText\'):\n
+  for property in (\'uid\', \'SearchableText\'):\n
+    parameter_dict[property].append(getattr(i, property))\n
+if len(parameter_dict):\n
+  return method(**parameter_dict)\n
+return\n
+\n
+# the following is the alternate version that fails in case of errors (eg. NotConvertedError).\n
+# if we separate updating full_text table activities too, we can consider using this one.\n
+\n
 # Obtain the properties from the Z SQL Method itself, as like catalogObjectList.\n
 method = context.z_catalog_sphinxse_index_list\n
 property_list = method.arguments_src.split()\n
