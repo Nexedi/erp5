@@ -115,44 +115,46 @@ def generateTravelerCheckReference(number, original_traveler_check_reference):\n
   prefix = getTravelerCheckReferencePrefix(original_traveler_check_reference)\n
   return \'%s%06d\' % (prefix, number)\n
 \n
-def assertReferenceMatchListEmpty(match_list, destination_payment_uid):\n
+def assertReferenceMatchListEmpty(match_list, internal_bank_account_number):\n
   """\n
     Check that the list is empty, otherwise gather all conflicting references and display them in the error message.\n
     TODO: make the error message Localizer-friendly\n
   """\n
   if len(match_list) > 0:\n
-    account = context.portal_catalog(uid=destination_payment_uid)[0].getObject()\n
     matched_reference_list = []\n
     for match in match_list:\n
-      matched_reference_list.append(\'%s (%s)\' % (match.getReference(), account.getInternalBankAccountNumber()))\n
+      matched_reference_list.append(\'%s (%s)\' % (match.getReference(), internal_bank_account_number))\n
     message = Message(domain=\'ui\', message=\'The following references are already allocated : $reference_list\',\n
                       mapping={\'reference_list\': matched_reference_list})\n
     raise ValidationFailed, (message,)\n
 \n
-def checkReferenceListUniqueness(reference_list, model_uid, destination_payment_uid, unique_per_account):\n
+def checkReferenceListUniqueness(reference_list, model_uid, destination_payment_value, unique_per_account):\n
   """\n
     Check each given reference not to already exist.\n
   """\n
-  if destination_payment_uid is None or not unique_per_account:\n
-    match_list = portal.portal_catalog(portal_type=\'Check\', reference=reference_list, default_resource_uid=model_uid, simulation_state=\'!=deleted\')\n
+  catalog_kw = dict(\n
+      portal_type=\'Check\',\n
+      reference=reference_list,\n
+      simulation_state=\'!=deleted\',\n
+      default_resource_uid=model_uid,\n
+  )\n
+  if destination_payment_value is None:\n
+    destination_payment_uid = None\n
+    internal_bank_account_number = None\n
   else:\n
-    match_list = portal.portal_catalog(portal_type=\'Check\', reference=reference_list, destination_payment_uid=destination_payment_uid, default_resource_uid=model_uid,\n
-                                       simulation_state=\'!=deleted\')\n
-  assertReferenceMatchListEmpty(match_list, destination_payment_uid)\n
+    destination_payment_uid = destination_payment_value.getUid()\n
+    internal_bank_account_number = destination_payment_value.getInternalBankAccountNumber()\n
+    if unique_per_account:\n
+      catalog_kw[\'destination_payment_uid\'] = destination_payment_uid\n
+  match_list = portal.portal_catalog(**catalog_kw)\n
+  assertReferenceMatchListEmpty(match_list, internal_bank_account_number)\n
   for reference in reference_list:\n
     tag = \'check_%s_%s_%s\' % (model_uid, destination_payment_uid, reference)\n
     if encountered_check_identifiers_dict.has_key(tag):\n
-      account = context.portal_catalog(uid=destination_payment_uid)[0].getObject()\n
       message = Message(domain=\'ui\', message=\'The following references are already allocated : $reference_list\',\n
-                        mapping={\'reference_list\': [\'%s (%s)\' % (reference, account.getInternalBankAccountNumber()) ]})\n
+                        mapping={\'reference_list\': [\'%s (%s)\' % (reference, internal_bank_account_number) ]})\n
       raise ValidationFailed, (message,)\n
     encountered_check_identifiers_dict[tag] = None\n
-\n
-def checkReferenceUniqueness(reference, model_uid, destination_payment_uid, unique_per_account):\n
-  """\n
-    Check the given reference not to already exist.\n
-  """\n
-  checkReferenceListUniqueness([reference, ], model_uid, destination_payment_uid, unique_per_account=unique_per_account)\n
 \n
 start_date = checkbook_reception.getStartDate()\n
 destination = checkbook_reception.getDestination()\n
@@ -200,11 +202,9 @@ if resource.getAccountNumberEnabled():\n
   if destination_payment_value is None:\n
     message = Message(domain=\'ui\', message=\'There is not destination payment on line with id: $id\', mapping={\'id\': context.getId()})\n
     raise ValueError, (message,)\n
-  destination_payment_uid = destination_payment_value.getUid()\n
   destination_trade = line.getDestinationTrade()\n
 else:\n
   destination_payment_value = None\n
-  destination_payment_uid = None\n
 \n
 unique_per_account = resource.isUniquePerAccount()\n
 aggregate_list = []\n
@@ -221,7 +221,7 @@ for i in xrange(quantity):\n
     reference_list = [int_to_reference(x, reference_range_min) for x in range(reference_to_int(reference_range_min), last_reference_value + 1)]\n
     reference_range_max = int_to_reference(last_reference_value, reference_range_min)\n
     if check == 1:\n
-      checkReferenceListUniqueness(reference_list, model_uid, destination_payment_uid, unique_per_account)\n
+      checkReferenceListUniqueness(reference_list, model_uid, destination_payment_value, unique_per_account)\n
     if create == 1:\n
       item.setReferenceRangeMax(reference_range_max)\n
       item.setReferenceRangeMin(reference_range_min)\n
@@ -233,7 +233,6 @@ for i in xrange(quantity):\n
       if confirm_check:\n
         item.confirm()\n
       for j in reference_list:\n
-        #tag = \'check_%s_%s_%s\' % (model_uid, destination_payment_uid, j)\n
         #encountered_check_identifiers_dict[tag] = None\n
         check = item.newContent(portal_type=\'Check\', title=j, activate_kw={\'tag\': tag, \'priority\':4})\n
         context.log(\'New Sub Item created with Id\', check.getId())\n
@@ -246,7 +245,7 @@ for i in xrange(quantity):\n
   else:\n
     last_reference_value = reference_to_int(reference_range_min)\n
     if check == 1:\n
-      checkReferenceUniqueness(reference_range_min, model_uid, destination_payment_uid, unique_per_account)\n
+      checkReferenceListUniqueness([reference_range_min, ], model_uid, destination_payment_value, unique_per_account)\n
     if create == 1:\n
       item.setReference(reference_range_min)\n
       item.setResource(model)\n
@@ -258,7 +257,6 @@ for i in xrange(quantity):\n
       if confirm_check:\n
         item.setStartDate(start_date)\n
         item.confirm()\n
-      #tag = \'check_%s_%s_%s\' % (model_uid, destination_payment_uid, reference_range_min)\n
       #encountered_check_identifiers_dict[tag] = None\n
   # update reference_range_min for the next pass\n
   reference_range_min = int_to_reference(last_reference_value + 1, reference_range_min)\n
@@ -343,7 +341,6 @@ return encountered_check_identifiers_dict\n
                             <string>generateTravelerCheckReference</string>
                             <string>assertReferenceMatchListEmpty</string>
                             <string>checkReferenceListUniqueness</string>
-                            <string>checkReferenceUniqueness</string>
                             <string>start_date</string>
                             <string>destination</string>
                             <string>line</string>
@@ -366,7 +363,6 @@ return encountered_check_identifiers_dict\n
                             <string>destination_payment_value</string>
                             <string>message</string>
                             <string>ValueError</string>
-                            <string>destination_payment_uid</string>
                             <string>destination_trade</string>
                             <string>unique_per_account</string>
                             <string>aggregate_list</string>
