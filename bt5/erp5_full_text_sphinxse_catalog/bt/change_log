@@ -1,3 +1,6 @@
+2011-01-03 Kazuhiko
+* Use InnoDB with non-deferred connection for full_text table, because we don't need fulltext search function of transactionless MyISAM engine.
+
 2011-01-02 Kazuhiko
 * split SphinxSE indexation activities from normal indexation.
 
