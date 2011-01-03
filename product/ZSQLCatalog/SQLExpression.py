@@ -166,7 +166,7 @@ class SQLExpression(object):
   @profiler_decorator
   def getFromExpression(self):
     """
-      Returns a string.
+      Returns a TableDefinition stored in one of the from_expressions or None
 
       If there are nested SQLExpression, it checks that they either don't
       define any from_expression or the exact same from_expression. Otherwise,
@@ -175,7 +175,7 @@ class SQLExpression(object):
     result = self.from_expression
     for sql_expression in self.sql_expression_list:
       from_expression = sql_expression.getFromExpression()
-      if None not in (result, from_expression):
+      if from_expression not in (result, None):
         message = 'I don\'t know how to merge from_expressions'
         if DEBUG:
           message = message + '. I was created by %r, and I am working on %r (%r) out of [%s]' % (
@@ -184,6 +184,8 @@ class SQLExpression(object):
             sql_expression.query,
             ', '.join('%r (%r)' % (x, x.query) for x in self.sql_expression_list))
         raise ValueError, message
+    if result is not None:
+      result.checkTableAliases()
     return result
 
   @profiler_decorator
@@ -385,20 +387,31 @@ class SQLExpression(object):
       SQL_SELECT_ALIAS_FORMAT % (column, alias)
       for alias, column in self.getSelectDict().iteritems())
 
-  @profiler_decorator
-  def asSQLExpressionDict(self):
+  def getFromTableList(self):
     table_alias_dict = self.getTableAliasDict()
+    if not table_alias_dict:
+      return None
     from_table_list = []
     append = from_table_list.append
     for alias, table in table_alias_dict.iteritems():
       append((SQL_TABLE_FORMAT % (alias, ), SQL_TABLE_FORMAT % (table, )))
-    from_expression_dict = self.getFromExpression()
-    if from_expression_dict is not None:
-      from_expression = SQL_LIST_SEPARATOR.join(
-        from_expression_dict.get(table, '`%s` AS `%s`' % (table, alias))
-        for alias, table in table_alias_dict.iteritems())
-    else:
-      from_expression = None
+    return from_table_list
+
+  @profiler_decorator
+  def asSQLExpressionDict(self):
+    from_expression = self.getFromExpression()
+    from_table_list = self.getFromTableList()
+    assert None in (from_expression,
+                    from_table_list), ("Cannot return both a from_expression "
+                                       "and a from_table_list")
+    if from_expression is not None:
+      from_expression = from_expression.render()
+    #   from_expression_dict = from_expression
+    #   from_expression = SQL_LIST_SEPARATOR.join(
+    #     from_expression_dict.get(table, '`%s` AS `%s`' % (table, alias))
+    #     for alias, table in table_alias_dict.iteritems())
+    # else:
+    #   from_expression = None
     return {
       'where_expression': self.getWhereExpression(),
       'order_by_expression': self.getOrderByExpression(),

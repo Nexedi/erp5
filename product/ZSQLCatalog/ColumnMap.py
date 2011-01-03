@@ -27,11 +27,16 @@
 #
 ##############################################################################
 
+import re
 from zLOG import LOG, WARNING, INFO
 from interfaces.column_map import IColumnMap
 from zope.interface.verify import verifyClass
 from zope.interface import implements
-from SQLCatalog import profiler_decorator
+from Products.ZSQLCatalog.interfaces.column_map import IColumnMap
+from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
+from Products.ZSQLCatalog.TableDefinition import (PlaceHolderTableDefinition,
+                                                  TableAlias,
+                                                  InnerJoin)
 
 DEFAULT_GROUP_ID = None
 
@@ -43,12 +48,14 @@ MAPPING_TRACE = False
 #       currently, it's not possible because related_key_dict is indexed by related key name, which makes 'source_title_1' lookup fail. It should be indexed by group (probably).
 # TODO: rename all "related_key" references into "virtual_column"
 
+re_sql_as = re.compile("\s+AS\s[^)]+$", re.IGNORECASE | re.MULTILINE)
+
 class ColumnMap(object):
 
   implements(IColumnMap)
 
   @profiler_decorator
-  def __init__(self, catalog_table_name=None):
+  def __init__(self, catalog_table_name=None, table_override_map=None):
     self.catalog_table_name = catalog_table_name
     # Key: group
     # Value: set of column names
@@ -85,6 +92,10 @@ class ColumnMap(object):
     self.straight_join_table_list = []
     self.left_join_table_list = []
     self.join_query_list = []
+    self.table_override_map = table_override_map or {}
+    self.table_definition = PlaceHolderTableDefinition()
+    # We need to keep track of the original definition to do inner joins on it
+    self._inner_table_definition = self.table_definition
 
   @profiler_decorator
   def registerColumn(self, raw_column, group=DEFAULT_GROUP_ID, simple_query=None):
@@ -397,6 +408,8 @@ class ColumnMap(object):
         table_alias_number_dict[alias_table_name] = table_alias_number
       self.resolveTable(table_name, alias, group=group)
 
+    # now that we have all aliases, calculate inner joins
+    self._calculateInnerJoins()
     if MAPPING_TRACE:
       # Key: group
       # Value: 2-tuple
@@ -481,7 +494,7 @@ class ColumnMap(object):
   @profiler_decorator
   def _addJoinTable(self, table_name, group=DEFAULT_GROUP_ID):
     """
-      Declare given table as requiring to be joined with catalog table.
+      Declare given table as requiring to be joined with catalog table on uid.
 
       table_name (string)
         Table name.
@@ -504,10 +517,109 @@ class ColumnMap(object):
             for (group, table_name) in self.join_table_set]
 
   def getStraightJoinTableList(self):
+    # XXX this function is unused and should be removed
     return self.straight_join_table_list[:]
 
   def getLeftJoinTableList(self):
+    # XXX this function is unused and should be removed
     return self.left_join_table_list[:]
+
+  def _getTableOverride(self, table_name):
+    # self.table_override_map is a dictionary mapping table names to
+    # strings containing aliases of arbitrary table definitions
+    # (including subselects). So we split the alias and discard it
+    # since we do our own aliasing.
+    table_override_w_alias = self.table_override_map.get(table_name)
+    if table_override_w_alias is None:
+      return table_name
+    # XXX move the table aliasing cleanup to EntireQuery class, so we
+    # don't need SQL syntax knowledge in ColumnMap.  Normalise the AS
+    # sql keyword to remove the last aliasing in the string if present. E.g.:
+    # 
+    # '(SELECT sub_catalog.* 
+    #   FROM catalog AS sub_catalog
+    #   WHERE sub_catalog.parent_uid=183) AS catalog'
+    #
+    # becomes:
+    #
+    # '(SELECT sub_catalog.* 
+    #   FROM catalog AS sub_catalog
+    #   WHERE sub_catalog.parent_uid=183)'
+    table_override, removed = re_sql_as.subn('', table_override_w_alias)
+    assert removed < 2, ('More than one table aliasing was removed from %r' %
+                        table_override_w_alias)
+    if removed:
+      LOG('ColumnMap', WARNING,
+          'Table overrides should not contain aliasing: %r' % table_override)
+    return table_override
+
+  def makeTableAliasDefinition(self, table_name, table_alias):
+    """Make a table alias, giving a change to ColumnMap to override
+    the original table definition with another expression"""
+    table_name = self._getTableOverride(table_name)
+    assert table_name and table_alias, ("table_name (%r) and table_alias (%r) "
+                                        "must both be defined" %
+                                        (table_name, table_alias))
+    return TableAlias(table_name, table_alias)
+
+  def _setMinimalTableDefinition(self):
+    """ Set a minimal table definition: the main catalog alias
+
+    We don't do this at __init__ because we have neither the catalog
+    table name nor its intended alias at that point.
+    """
+    inner_def = self._inner_table_definition
+    if inner_def.table_definition is None:
+      try:
+        catalog_table_alias = self.getCatalogTableAlias()
+      except KeyError:
+        return False
+      inner_def.replace(self.makeTableAliasDefinition(self.catalog_table_name,
+                                                      catalog_table_alias))
+    return True
+
+  def getTableDefinition(self):
+    if self._setMinimalTableDefinition():
+      return self.table_definition
+    return None
+
+  def addJoin(self, join_definition, condition):
+    """ Replaces the current table_definition with a new one, assuming
+    it is a join definition, and replacing it's left side with the
+    previous table definition.
+
+    Effectively, this method wraps the current table definition within
+    the received join_definition.
+    """
+    assert self._setMinimalTableDefinition()
+    assert join_definition.left_tabledef is None, join_definition.left_tabledef
+    join_definition.left_tabledef = self.table_definition
+    print "@@", join_definition
+    if TESTDEBUG == True:
+      import pdb;pdb.set_trace()
+    self.table_definition = join_definition
+
+  # def getFinalTableDefinition(self):
+  #   self._calculateInnerJoins()
+  #   return self.getTableDefinition()
+
+  def _calculateInnerJoins(self):
+    self._setMinimalTableDefinition()
+    catalog_table_alias = self.getCatalogTableAlias()
+    for group, table_name in self.join_table_set:
+      table_alias = self.getTableAlias(table_name, group=group)
+      table_alias_def = self.makeTableAliasDefinition(table_name, table_alias)
+      # XXX: perhaps refactor some of the code below to do:
+      # self._inner_table_definition.addInnerJoin(TableAlias(...),
+      #                                           condition=(...))
+      self._inner_table_definition.replace(
+        InnerJoin(self._inner_table_definition.table_definition,
+                  table_alias_def,
+                  # XXX ColumnMap shouldn't have SQL knowledge
+                  condition=('`%s`.`uid` = `%s`.`uid`' %
+                             (table_alias, catalog_table_alias)),
+                  )
+        )
 
 verifyClass(IColumnMap, ColumnMap)
 

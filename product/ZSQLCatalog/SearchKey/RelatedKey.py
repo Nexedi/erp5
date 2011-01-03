@@ -37,12 +37,15 @@ from Products.ZSQLCatalog.interfaces.search_key import IRelatedKey
 from zope.interface.verify import verifyClass
 from zope.interface import implements
 from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
+from Products.ZSQLCatalog.TableDefinition import TableAlias, InnerJoin, LeftJoin
 
 BACKWARD_COMPATIBILITY = True
 
+RELATED_QUERY_SEPARATOR = "\nAND -- related query separator\n"
+
 class RelatedKey(SearchKey):
   """
-    This SearchKey handles searched on virtual columns of RelatedKey type.
+    This SearchKey handles searches on virtual columns of RelatedKey type.
     It generates joins required by the virtual column to reach the actual
     column to compare, plus a regular query on that column if needed.
   """
@@ -117,9 +120,9 @@ class RelatedKey(SearchKey):
     group = column_map.registerRelatedKey(related_column, self.real_column)
     # Each table except last one must be registered to their own group, so that
     # the same table can be used multiple time (and aliased multiple times)
-    # in the same related key. The last one must be register to related key
+    # in the same related key. The last one must be register to the related key
     # "main" group (ie, the value of the "group" variable) to be the same as
-    # the ta ble used in join_condition.
+    # the table used in join_condition.
     if table_alias_list is not None:
       assert len(self.table_list) == len(table_alias_list)
     for table_position in xrange(len(self.table_list) - 1):
@@ -144,6 +147,23 @@ class RelatedKey(SearchKey):
     # RelatedKeys.
     column_map.registerCatalog()
     return group
+
+  def stitchJoinDefinition(self, table_alias_list, join_query_list, column_map):
+    alias, table = table_alias_list[-1]
+    right = column_map.makeTableAliasDefinition(table, alias)
+    if not join_query_list:
+      # nothing to do, just return the table alias
+      assert len(table_alias_list) == 1
+      return right
+    else:
+      # create an InnerJoin of the last element of the alias list with
+      # a chain of InnerJoins of the rest of the list conditioned on
+      # the the last element of the join_query_list
+      left = self.stitchJoinDefinition(table_alias_list[:-1],
+                                       join_query_list[:-1],
+                                       column_map)
+      condition = join_query_list[-1]
+      return InnerJoin(left, right, condition)
 
   @profiler_decorator
   def buildSQLExpression(self, sql_catalog, column_map, only_group_columns, group):
@@ -170,18 +190,39 @@ class RelatedKey(SearchKey):
     table_alias_list = [(getTableAlias(related_table, group=getRelatedKeyGroup(index, group)), related_table)
                         for (index, related_table) in enumerate(related_table_list)]
     # table alias for destination table
-    table_alias_list.append((getTableAlias(destination_table, group=group), destination_table))
+    table_alias_list.append((getTableAlias(destination_table, group=group),
+                             destination_table))
 
     # map aliases to use in ZSQLMethod.
-    table_alias_dict = dict(('table_%s' % (index, ), table_alias[0])
-                            for (index, table_alias) in enumerate(table_alias_list))
+    table_alias_dict = dict(('table_%s' % (index, ), table_alias)
+                            for (index, (table_alias, table_name))
+                            in enumerate(table_alias_list))
 
     assert len(table_alias_list) == len(table_alias_dict)
 
+    query_table=column_map.getCatalogTableAlias()
     rendered_related_key = related_key(
-      query_table=column_map.getCatalogTableAlias(),
+      query_table=query_table,
+      RELATED_QUERY_SEPARATOR=RELATED_QUERY_SEPARATOR,
       src__=1,
       **table_alias_dict)
+    join_condition_list = rendered_related_key.split(RELATED_QUERY_SEPARATOR)
+    assert len(join_condition_list) == len(table_alias_list), """
+      A related key must return the same number of querying conditions as the 
+      tables it relates
+    """.strip()
+    
+    # add a left join on this related key, based on the inner-join of the
+    # related key tables.
+    query_table_join_condition = join_condition_list.pop()
+    right = self.stitchJoinDefinition(table_alias_list,
+                                      join_condition_list,
+                                      column_map)
+    table_def = LeftJoin(None,
+                         right,
+                         condition=query_table_join_condition)
+    column_map.addJoin(table_def, condition=query_table_join_condition)
+    return None # XXX decide what to do with the comment below
     # Important:
     # Former catalog separated join condition from related query.
     # Example:
