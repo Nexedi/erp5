@@ -230,7 +230,8 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
                         default_pad_group = pad_group)
     current_websection_pad, websection_pads = \
              websection.ERP5Site_getActiveKnowledgePadForUser(websection_pads,
-                                                             default_pad_group = pad_group)
+                                                              mode='web_section',			      
+                                                              default_pad_group = pad_group )
     self.assertNotEqual(base_websection_pad.getObject(),
                      current_websection_pad.getObject())
     
