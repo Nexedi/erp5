@@ -1527,7 +1527,7 @@ class TestDocument(TestDocumentMixin):
         <a href="javascript:DosomethingNasty()">Link</a>
         <a onClick="javascript:DosomethingNasty()">Another Link</a>
         <p>éàèù</p>
-        <p class="Th&#232;mes">Th&#232;mes</p>
+        <p class="Th&#232;mes Thèmes">Th&#232;mes Thèmes</p>
       </body>
     </html>
     """.decode('utf-8').encode('iso-8859-1')
