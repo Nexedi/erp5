@@ -27,9 +27,7 @@
         <item>
             <key> <string>after_script_name</string> </key>
             <value>
-              <list>
-                <string>Delivery_assertCustomPurchaseTradeCondition</string>
-              </list>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -77,7 +75,9 @@
         <item>
             <key> <string>script_name</string> </key>
             <value>
-              <tuple/>
+              <list>
+                <string>Delivery_assertCustomPurchaseTradeCondition</string>
+              </list>
             </value>
         </item>
         <item>
