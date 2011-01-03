@@ -4340,6 +4340,70 @@ VALUES
     result = connector.manage_test('select 1 as foo;')
     self.assertEquals(1, result[0].foo)
 
+  def test_SelectDictWithDynamicRelatedKey(self, 
+                                              quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Select Dict With Dynamic Related Key'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+
+    # Create some group categories
+    portal = self.getPortal()
+    portal_category = self.getCategoryTool()
+    group_category = portal_category.group
+    group_data_map = dict(nexedi=('Nexedi', 'Nexedi Group'),
+                          tiolive=('TIOLive', 'TioLive Group'),)
+    existing_group_id_list = group_category.objectIds()
+    for group_id, (title, description) in group_data_map.items():
+      if group_id in existing_group_id_list:
+        group = group_category[group_id]
+      else:
+        group = group_category.newContent(id=group_id)
+      group.edit(title=title, description=description)
+
+    # Create some orgs associated with varying association with those groups
+    module = portal.getDefaultModule('Organisation')
+    # org1 has no groups
+    org1 = module.newContent(portal_type='Organisation', title='org1')
+    # org2 has group nexedi
+    org2 = module.newContent(portal_type='Organisation', title='org2')
+    org2.setGroupList(['nexedi'])
+    # org3 has group tiolive
+    org3 = module.newContent(portal_type='Organisation', title='org3')
+    org3.setGroupList(['tiolive'])
+    # org4 has both groups
+    org4 = module.newContent(portal_type='Organisation', title='org4')
+    org4.setGroupList(['nexedi', 'tiolive'])
+    # check associations are correct
+    actual_group_title_map = dict((org.getTitle(), 
+                                   sorted(org.getGroupTitleList()))
+                                  for org in (org1, org2, org3, org4))
+    expected_group_title_map = dict(org1=[],
+                                    org2=['Nexedi'],
+                                    org3=['TIOLive'],
+                                    org4=['Nexedi', 'TIOLive'])
+    self.assertEquals(actual_group_title_map, expected_group_title_map)
+    # Flush message queue
+    transaction.commit()
+    self.tic()
+
+    org_id_list = sorted(org.getId() for org in (org1, org2, org3, org4))
+    # Try to get the organisations with the group title Nexedi to make sure
+    # searching works
+    organisation_list = [x.getObject() for x in 
+                         module.searchFolder(group_title='Nexedi',
+                                             id=org_id_list,
+                                             sort_on='title')]
+    self.assertEquals(organisation_list, [org2, org4])
+    # Now try to get all our orgs above, fetching the groups on select_dict
+    organisation_list = [x.getObject() for x in 
+                         module.searchFolder(id=org_id_list,
+                                             select_dict=dict(group_title=None),
+                                             sort_on='title')]
+    self.assertEquals(organisation_list, [org1, org2, org3, org4])
+    self.fail('So far so good')
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Catalog))
