@@ -965,13 +965,12 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     
   def test_26_SortOnUnknownKeys(self, quiet=quiet, run=run_all_test):
     if not run: return
-    if not run: return
     if not quiet:
       message = 'Test Sort On Unknow Keys'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ',0,message)
     self.assertEquals('',
-          self.getCatalogTool().buildSQLQuery(
+          self.getCatalogTool().buildSQLQuery(select_list=('uid', 'path'),
           sort_on=(('ignored', 'ascending'),))['order_by_expression'])
   
   def test_27_SortOnAmbigousKeys(self, quiet=quiet, run=run_all_test):
@@ -1036,6 +1035,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
               sort_on=(('region_title', 'descending'),))['order_by_expression'].endswith('.`title` DESC'),
               'sort_on parameter must be taken into account even if related key '
               'is not a parameter of the current query')
+
 
   def _makeOrganisation(self, **kw):
     """Creates an Organisation in it's default module and reindex it.
@@ -1343,12 +1343,14 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # catalog those objects
     transaction.commit()
     self.tic()
+    catalog_tool = self.getCatalogTool()
     self.assertEquals([ob],
-        [x.getObject() for x in self.getCatalogTool()(
-                portal_type='Organisation', SearchableText='title')])
-    self.assertEquals(1, self.getCatalogTool().countResults(
-              portal_type='Organisation', SearchableText='title')[0][0])
-    
+        [x.getObject() for x in catalog_tool(portal_type='Organisation',
+                                             SearchableText='title')])
+    self.assertEquals(1,
+                      catalog_tool.countResults(portal_type='Organisation',
+                                                SearchableText='title')[0][0])
+
     # 'different' is found in more than 50% of records
     # MySQL ignores such a word, but Tritonn does not ignore.
     try:
@@ -1981,7 +1983,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     complex_query = ComplexQuery(query1, query2, operator="AND")
     self.failIfDifferentSet([org_a.getPath() + '/default_address'],
         [x.path for x in self.getCatalogTool()(query=complex_query)])
-    # Then try without aliases
+    # Then try with aliases
     query1 = Query(parent_portal_type="Organisation", 
                    table_alias_list=(("catalog" , "parent"),))
     query2 = Query(grand_parent_portal_type="Organisation Module",
@@ -4290,11 +4292,13 @@ VALUES
     self.assertEqual(catalog.countResults(parent_uid=module_uid)[0][0],
       module_len)
 
-    self.assertEquals(catalog.countResults(from_expression={
-      'catalog': '(SELECT sub_catalog.* FROM catalog AS sub_catalog' \
-        ' WHERE sub_catalog.parent_uid=%i)' \
-        ' AS catalog' % (module_uid, ),
-    })[0][0], module_len)
+    from_expression = {
+      'catalog': '(SELECT sub_catalog.* FROM catalog AS sub_catalog'
+                 ' WHERE sub_catalog.parent_uid=%i)'
+                 ' AS catalog' % (module_uid, ),
+    }
+    count = catalog.countResults(from_expression=from_expression)[0][0]
+    self.assertEqual(count, module_len)
 
   def test_getParentUid(self, quiet=quiet):
     from Products.ERP5Type.Document.Person import Person
