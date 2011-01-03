@@ -189,24 +189,47 @@ class RelatedBaseCategory(Method):
       self.strict_membership=strict_membership
       self.related = related
 
-    def __call__(self, instance, table_0, table_1, query_table='catalog', **kw):
-      """Create the sql code for this related key."""
+    def __call__(self, instance, table_0, table_1, query_table='catalog',
+                 RELATED_QUERY_SEPARATOR=' AND ',
+                 **kw):
+      """Create the sql code for this related key.
+
+      table_0 is the category table alias
+      table_1 is the catalog table alias for the related record
+      query_table is the catalog table (alias) for the main record.
+      """
       base_category_uid = instance.portal_categories._getOb(self._id).getUid()
       expression_list = []
       append = expression_list.append
+      # category selection and strict membership condition
+      append('%s.base_category_uid = %s' % (table_0,base_category_uid))
+      if self.strict_membership:
+        append('%s.category_strict_membership = 1' % table_0)
+      # join conditions:
       if self.related:
+        # query_table record is destination of relationship.
+        # 'on' condition for category join:
         append('%s.uid = %s.uid' % (table_1,table_0))
-        if self.strict_membership:
-          append('AND %s.category_strict_membership = 1' % table_0)
-        append('AND %s.base_category_uid = %s' % (table_0,base_category_uid))
-        append('AND %s.category_uid = %s.uid' % (table_0,query_table))
+        # 'on' condition for catalog join:
+        query_table_join = '%s.category_uid = %s.uid' % (table_0,query_table)
       else:
+        # query_table record is origin of relationship (i.e. the equivalent
+        # object contains the destination in its .category attribute)
+        # 'on' condition for category join:
         append('%s.uid = %s.category_uid' % (table_1,table_0))
-        if self.strict_membership:
-          append('AND %s.category_strict_membership = 1' % table_0)
-        append('AND %s.base_category_uid = %s' % (table_0,base_category_uid))
-        append('AND %s.uid = %s.uid' % (table_0,query_table))
-      return ' '.join(expression_list)
+        # 'on' condition for catalog join:
+        query_table_join = '%s.uid = %s.uid' % (table_0,query_table)
+      category_join = '\n AND \n'.join(expression_list)
+      # Since we relate two tables, we need to return two sets of
+      # conditions: one for the (inner) join between the two tables,
+      # and one for the join between the above and the main catalog
+      # table.
+      #
+      # These conditions are separated by RELATED_QUERY_SEPARATOR,
+      # which can be passed in by the caller if it wishes to separate
+      # the join condition on the catalog to generate an explicit inner join
+      expression = category_join + RELATED_QUERY_SEPARATOR + query_table_join
+      return expression
 
 class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
     """
