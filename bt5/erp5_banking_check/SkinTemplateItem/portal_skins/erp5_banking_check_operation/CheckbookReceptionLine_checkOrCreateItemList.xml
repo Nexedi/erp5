@@ -144,8 +144,13 @@ def checkReferenceListUniqueness(reference_list, model_uid, destination_payment_
   else:\n
     destination_payment_uid = destination_payment_value.getUid()\n
     internal_bank_account_number = destination_payment_value.getInternalBankAccountNumber()\n
+    # unique_per_account is True  -> references are unique per account\n
+    # unique_per_account is False -> references are unique per country\n
     if unique_per_account:\n
       catalog_kw[\'destination_payment_uid\'] = destination_payment_uid\n
+    else:\n
+      reference_match = "%s%%" % (destination_payment_value.getReference()[:2], )\n
+      catalog_kw[\'baobab_destination_payment_reference\'] = reference_match\n
   match_list = portal.portal_catalog(**catalog_kw)\n
   assertReferenceMatchListEmpty(match_list, internal_bank_account_number)\n
   for reference in reference_list:\n
