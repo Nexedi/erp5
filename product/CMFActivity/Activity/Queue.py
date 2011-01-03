@@ -27,13 +27,10 @@
 ##############################################################################
 
 import cPickle, sys
+from hashlib import sha1 as sha_new
 from DateTime import DateTime
 from zLOG import LOG, WARNING, ERROR
 from ZODB.POSException import ConflictError
-try:
-  from hashlib import sha1 as sha_new
-except ImportError:
-  from sha import new as sha_new
 from cStringIO import StringIO
 
 import transaction

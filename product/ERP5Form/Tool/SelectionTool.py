@@ -41,10 +41,7 @@ from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Form import _dtmldir
 from Products.ERP5Form.Selection import Selection, DomainSelection
 from ZPublisher.HTTPRequest import FileUpload
-try:
-  from hashlib import md5 as md5_new
-except ImportError:
-  from md5 import new as md5_new
+from hashlib import md5 as md5_new
 import string, re
 from time import time
 from random import random

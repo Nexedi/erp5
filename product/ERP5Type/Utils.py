@@ -36,15 +36,7 @@ import warnings
 import sys
 import inspect
 import persistent
-try:
-  # Python 2.5 or later
-  from hashlib import md5 as md5_new
-  from hashlib import sha1 as sha_new
-except ImportError:
-  # Python 2.4
-  from md5 import new as md5_new
-  from sha import new as sha_new
-
+from hashlib import md5 as md5_new, sha1 as sha_new
 from Products.ERP5Type.Globals import package_home
 from Products.ERP5Type.Globals import DevelopmentMode
 from Acquisition import aq_base

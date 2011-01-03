@@ -26,23 +26,49 @@
 #
 ##############################################################################
 
-# A business template exported by Python 2.4 may contain:
-# <klass>
-#   <global id="xxx" name="_compile" module="sre"/>
-# </klass>
-#
-# A business template exported by Python 2.6 may contain:
-# <klass>
-#   <global id="xxx" name="_compile" module="re"/>
-# </klass>
-#
-# Python 2.6 provides 'sre._compile', but Python 2.4 does not provide
-# 're._compile', so we provide re._compile here for the backward
-# compatilibility.
+import sys
 
-import re
-if not hasattr(re, '_compile'):
-  import sre
+if sys.version_info < (2, 5):
+  import __builtin__, imp
+
+  def all(iterable):
+    """
+    Return True if bool(x) is True for all values x in the iterable.
+    """
+    for x in iterable:
+      if not x:
+        return False
+    return True
+  __builtin__.all = all
+
+  def any(iterable):
+    """
+    Return True if bool(x) is True for any x in the iterable.
+    """
+    for x in iterable:
+      if x:
+        return True
+    return False
+  __builtin__.any = any
+
+  import md5, sha
+  sys.modules['hashlib'] = hashlib = imp.new_module('hashlib')
+  hashlib.md5 = md5.new
+  hashlib.sha1 = sha.new
+
+  # A business template exported by Python 2.4 may contain:
+  # <klass>
+  #   <global id="xxx" name="_compile" module="sre"/>
+  # </klass>
+  #
+  # A business template exported by Python 2.6 may contain:
+  # <klass>
+  #   <global id="xxx" name="_compile" module="re"/>
+  # </klass>
+  #
+  # Python 2.6 provides 'sre._compile', but Python 2.4 does not provide
+  # 're._compile', so we provide re._compile here for the backward
+  # compatilibility.
+
+  import re, sre
   re._compile = sre._compile
-  del sre
-del re

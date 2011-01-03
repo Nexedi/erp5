@@ -28,6 +28,7 @@
 ##############################################################################
 
 import StringIO
+from hashlib import md5 as md5_new
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type import Permissions, PropertySheet
@@ -39,11 +40,6 @@ from Products.ERP5Form.PDFParser import PDFParser
 from OFS.DTMLDocument import DTMLDocument
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.Core.ActionInformation import CacheableAction
-
-try:
-  from hashlib import md5 as md5_new
-except ImportError:
-  from md5 import new as md5_new
 
 def getPropertiesCSSDict(parsed_scribus
                       , page_gap

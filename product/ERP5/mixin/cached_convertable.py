@@ -27,10 +27,7 @@
 #
 ##############################################################################
 
-try:
-  from hashlib import md5 as md5_new
-except ImportError:
-  from md5 import new as md5_new
+from hashlib import md5 as md5_new
 import string
 
 from Acquisition import aq_base

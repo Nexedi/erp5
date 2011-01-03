@@ -50,11 +50,7 @@ from Products.ERP5Type.Globals import InitializeClass, get_request
 from Products.PythonScripts.Utility import allow_class
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from warnings import warn
-
-try:
-  from hashlib import md5 as md5_new
-except ImportError:
-  from md5 import new as md5_new
+from hashlib import md5 as md5_new
 import cgi
 
 DEFAULT_LISTBOX_DISPLAY_STYLE = 'table'
