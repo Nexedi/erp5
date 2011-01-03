@@ -85,16 +85,6 @@
   <td>link=Accueil</td>\n
   <td></td>\n
 </tr>\n
-<tr>\n
-  <td>verifyTextPresent</td>\n
-  <td>Cacher les onglets</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>verifyTextPresent</td>\n
-  <td>Cet onglet ne contient aucun gadget</td>\n
-  <td></td>\n
-</tr>\n
 <!-- English -->\n
 <tr>\n
   <td>openAndWait</td>\n
@@ -106,24 +96,13 @@
   <td>Home</td>\n
   <td></td>\n
 </tr>\n
-<tr>\n
-  <td>verifyTextPresent</td>\n
-  <td>Hide tabs</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>verifyTextPresent</td>\n
-  <td>Your tab is empty</td>\n
-  <td></td>\n
-</tr>\n
+\n
 \n
 <tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/deleteKMWebSite" />\n
 \n
 </tbody></table>\n
 </body>\n
-</html>\n
-\n
-
+</html>
 
 ]]></unicode> </value>
         </item>
