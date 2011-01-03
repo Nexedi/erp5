@@ -2007,6 +2007,9 @@ msgstr "République de Corée"
 msgid "Republic of Moldova"
 msgstr "Moldavie"
 
+msgid "Required Item Types"
+msgstr "Types de lot requis"
+
 msgid "Research"
 msgstr "Recherche"
 
