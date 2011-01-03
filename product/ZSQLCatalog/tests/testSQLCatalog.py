@@ -597,7 +597,7 @@ class TestSQLCatalog(unittest.TestCase):
     select_dict = sql_expression.getSelectDict()
     self.assertTrue('ambiguous_mapping' in select_dict, select_dict)
     self.assertTrue('bar' in select_dict['ambiguous_mapping'], select_dict['ambiguous_mapping'])
-    # Doted alias: table name must get stripped. This is required to have an
+    # Dotted alias: table name must get stripped. This is required to have an
     # upgrade path from old ZSQLCatalog versions where pre-mapped columns were
     # used in their select_expression. This must only happen in the
     # "{column: None}" form, as otherwise it's the user explicitely asking for
