@@ -272,7 +272,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(t, t) for t in context.getPortalDocumentTypeList()]</string> </value>
+            <value> <string>python: [[\'Embedded File\', \'Embedded File\']] + [[t, t] for t in context.getPortalDocumentTypeList()]</string> </value>
         </item>
       </dictionary>
     </pickle>
