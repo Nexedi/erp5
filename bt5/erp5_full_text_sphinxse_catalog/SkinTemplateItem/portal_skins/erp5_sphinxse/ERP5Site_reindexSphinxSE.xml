@@ -57,19 +57,12 @@ LIMIT = 100\n
 \n
 i = 0\n
 while True:\n
-  full_text_list = portal_catalog(select_list=(\'full_text.SearchableText\',), limit=(i*LIMIT, LIMIT))\n
+  full_text_list = portal_catalog(limit=(i*LIMIT, LIMIT))\n
   if len(full_text_list) == 0:\n
     break\n
-  object_list = [dict(uid=x.uid, SearchableText=x.SearchableText) for x in full_text_list]\n
-  parameter_dict = {}\n
-  for x in object_list:\n
-    for property in (\'uid\', \'SearchableText\'):\n
-      parameter_dict.setdefault(property, []).append(x[property])\n
-  sql_catalog.z_catalog_sphinxse_index_list(**parameter_dict)\n
-  print \'Indexing %s documents...\' % (i*LIMIT + len(full_text_list))\n
+  sql_catalog.SQLCatalog_deferSphinxSEIndexing(getPath=[x.path for x in full_text_list])\n
   i += 1\n
-print \'Done.\'\n
-return printed\n
+return \'SphinxSE index will be updated in background.\'\n
 </string> </value>
         </item>
         <item>
