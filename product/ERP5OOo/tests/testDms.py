@@ -699,11 +699,9 @@ class TestDocument(TestDocumentMixin):
     Check the validation state of embedded document when its container is
     cloned
     """
-    filename = 'TEST-en-002.doc'
-    file = makeFileUpload(filename)
-    document = self.portal.portal_contributions.newContent(file=file)
+    document = self.portal.person_module.newContent(portal_type='Person')
 
-    sub_document = document.newContent(portal_type='Image')
+    sub_document = document.newContent(portal_type='Embedded File')
     self.assertEquals('embedded', sub_document.getValidationState())
     transaction.commit()
     self.tic()
@@ -716,7 +714,7 @@ class TestDocument(TestDocumentMixin):
     paste_result = container.manage_pasteObjects(cb_copy_data=clipboard)
     new_document = container[paste_result[0]['new_id']]
 
-    new_sub_document_list = new_document.contentValues(portal_type='Image')
+    new_sub_document_list = new_document.contentValues(portal_type='Embedded File')
     self.assertEquals(1, len(new_sub_document_list))
     new_sub_document = new_sub_document_list[0]
     self.assertEquals('embedded', new_sub_document.getValidationState())
