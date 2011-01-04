@@ -147,8 +147,6 @@ class StrippingParser(HTMLParser):
     Copyright (c) 2001 Zope Corporation and Contributors. All Rights Reserved.
     """
 
-    from htmlentitydefs import entitydefs # replace entitydefs from sgmllib
-
     def __init__(self, valid, nasty, remove_javascript, raise_error,
                  default_encoding):
         HTMLParser.__init__( self )
@@ -180,6 +178,15 @@ class StrippingParser(HTMLParser):
 
     def handle_entityref(self, name):
         if self.suppress: return
+        # (begin) copied from Python-2.6's HTMLParser.py
+        # Cannot use name2codepoint directly, because HTMLParser supports apos,
+        # which is not part of HTML 4
+        if self.entitydefs is None:
+            import htmlentitydefs
+            entitydefs = HTMLParser.entitydefs = {'apos':u"'"}
+            for k, v in htmlentitydefs.name2codepoint.iteritems():
+                entitydefs[k] = unichr(v)
+        # (end) copied from Python-2.6's HTMLParser.py
         if self.entitydefs.has_key(name):
             x = ';'
         else:
