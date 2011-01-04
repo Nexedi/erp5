@@ -3901,9 +3901,11 @@ class Base( CopyContainer,
             and self.hasProperty(property_id):
         input_kw[property_id] = self.getProperty(property_id)
     if getattr(self, 'hasUrlString', None) is not None and self.hasUrlString():
-      # URL is not stored on document
-      # pass required properties for portal_contributions.newContent
-      input_kw['url'] = self.asURL()
+      # try to reingest from url if data and/or filename is missing.
+      if not 'data' in input_kw or not 'filename' in input_kw:
+        # URL is not stored on document
+        # pass required properties for portal_contributions.newContent
+        input_kw['url'] = self.asURL()
 
     # Use meta transition to jump from one state to another
     # without existing transitions.
