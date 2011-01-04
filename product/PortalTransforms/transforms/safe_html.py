@@ -279,6 +279,16 @@ def scrubHTML(html, valid=VALID_TAGS, nasty=NASTY_TAGS,
                              remove_javascript=remove_javascript,
                              raise_error=raise_error,
                              default_encoding=default_encoding)
+    # HTMLParser is affected by a known bug referenced
+    # by http://bugs.python.org/issue3932 
+    # As suggested by python developpers:
+    # "Python 3.0 implicitly rejects non-unicode strings"
+    # We try to decode strings against provided codec first
+    if isinstance(html, str):
+      try:
+        html = html.decode(default_encoding)
+      except UnicodeDecodeError:
+        pass
     parser.feed(html)
     parser.close()
     result = parser.getResult()
