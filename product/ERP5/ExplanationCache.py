@@ -341,12 +341,12 @@ class ExplanationCache:
     # XXX-JPS this is only useful for production (MRP) in reality
     # whenever trade model path define time constraints within the same
     # movement generator (ie. transformation with multiple phases)
-    path_list = business_process.getTradeModelPathValueList(trade_phase=trade_phase)
+    path_list = business_process.getTradeModelPathValueList(trade_phase=trade_phase, context=business_process)
     LOG('path_list', 0, '%s' % trade_phase)
     if not len(path_list):
       raise ValueError('No Trade Model Path defines a reference data.')
 
-    path = path_list[0] 
+    path = path_list[0]
     # XXX-JPS - for now take arbitrary one
     # but we should in reality some way to configure this
     start_date, stop_date = business_process.getExpectedTradeModelPathStartAndStopDate(
