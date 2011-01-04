@@ -37,7 +37,7 @@ class DefaultImage:
       'storage_id'  : 'default_image',
       'description' : 'The default image',
       'type'        : 'content',
-      'portal_type' : ('Image',),
+      'portal_type' : ('Embedded File',),
       'acquired_property_id'      : ('file', 'path', 'absolute_url',
                                      'width', 'height'),
       'acquisition_base_category' : (),
