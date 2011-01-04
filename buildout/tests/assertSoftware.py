@@ -66,6 +66,16 @@ ACCEPTABLE_GLOBAL_LIB_LIST = (
   '/lib/libresolv.so',
   '/lib/librt.so',
   '/lib/libutil.so',
+  # i686 debian
+  '/lib/tls/i686/cmov/libc.so',
+  '/lib/tls/i686/cmov/libcrypt.so',
+  '/lib/tls/i686/cmov/libdl.so',
+  '/lib/tls/i686/cmov/libm.so',
+  '/lib/tls/i686/cmov/libnsl.so',
+  '/lib/tls/i686/cmov/libpthread.so',
+  '/lib/tls/i686/cmov/libresolv.so',
+  '/lib/tls/i686/cmov/librt.so',
+  '/lib/tls/i686/cmov/libutil.so',
   # 64 bit Linux
   '/lib64/libgcc_s.so',
   '/usr/lib64/libstdc++.so',
@@ -80,6 +90,7 @@ ACCEPTABLE_GLOBAL_LIB_LIST = (
   '/lib64/librt.so',
   '/lib64/libutil.so',
   # Arch independed Linux
+  'linux-gate.so',
   'linux-vdso.so',
 )
 
