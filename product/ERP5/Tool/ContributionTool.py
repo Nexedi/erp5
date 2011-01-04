@@ -616,25 +616,13 @@ class ContributionTool(BaseTool):
         # If this is an index document, stop crawling if crawling_depth is 0
         document.activate().crawlContent()
     except urllib2.HTTPError, error:
-      if repeat == 0 and batch_mode:
+      if repeat == 0 or not batch_mode:
         # here we must call the extendBadURLList method,--NOT Implemented--
         # which had to add this url to bad URL list, so next time we avoid
         # crawling bad URL
         raise
       if repeat > 0:
         # Catch any HTTP error
-        self.activate(at_date=DateTime() + repeat_interval).newContentFromURL(
-                          container_path=container_path, url=url,
-                          repeat=repeat - 1,
-                          repeat_interval=repeat_interval, **kw)
-    except urllib2.URLError, error:
-      if repeat == 0 and batch_mode:
-        # XXX - Call the extendBadURLList method, --NOT Implemented--
-        raise
-      #if getattr(error.reason,'args',None):
-        #if error.reason.args[0] == socket.EAI_AGAIN:
-          ## Temporary failure in name resolution - try again in 1 day
-      if repeat > 0:
         self.activate(at_date=DateTime() + repeat_interval,
                       activity="SQLQueue").newContentFromURL(
                         container_path=container_path, url=url,
