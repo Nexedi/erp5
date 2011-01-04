@@ -107,7 +107,7 @@ div.share-action-area {\n
 /* Main classes */\n
 \n
 div.main-right {\n
-  width:80%;\n
+  width:82%;\n
   float:right;\n
   border-left: 4px solid #BBCCFF;\n
 }\n
@@ -135,10 +135,10 @@ div.gadget-column div.gadget-container {\n
   background-color:#FFFFFF;\n
   margin-top:9px;\n
   text-align:left;\n
+  font-size: 14px;\n
 }\n
 \n
 div.gadget-column div.file-selection {\n
-  width:100%;\n
   background-color:#fff;\n
   padding-right:190px;\n
   margin:15px -4px -4px;\n
@@ -149,7 +149,7 @@ div.gadget-column div.file-selection div.file-quick-browser,\n
   padding-top: 5px;\n
   padding-bottom: 5px;\n
   border-bottom: 1px solid #DDD;\n
-  width:15.7em;\n
+  width:14.3em;\n
 }\n
 \n
 div.quick-search-item, td.listbox-table-domain-tree-cell a {\n
@@ -185,7 +185,7 @@ fieldset.bottom {\n
 \n
 div.listbox-content table.listbox tbody tr td {\n
   vertical-align: middle;\n
-  padding:2px;\n
+  padding:2.2px;\n
 }\n
 \n
 div.listbox-content tr {\n
@@ -335,7 +335,7 @@ div.header-right {\n
 }\n
 \n
 div.main-left, div.main-right, div.main {\n
-  margin-top: -0.5em;\n
+  margin-top: -1em;\n
   height:45em;\n
 }\n
 \n
@@ -376,7 +376,7 @@ a.ung_docs img {\n
 \n
 div.main-left {\n
   margin-left:-4px;\n
-  width: 20%;\n
+  width: 18%;\n
   float:left;\n
   background-color: #DAE6F6;\n
   height:4em;\n
@@ -923,6 +923,9 @@ div.header-right fieldset.widget {\n
 div.header-right fieldset.widget a#sharing_url {\n
   padding-top: 2px;\n
   font-size: 11px;\n
+}\n
+div.gadget-column div.gadget-container a {\n
+  padding-left: 16px;\n
 }
 
 ]]></string> </value>

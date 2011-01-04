@@ -39,6 +39,13 @@ function getWebEditorName(){\n
   return currentUrlSplitted[currentUrlSplitted.length-1];\n
 }\n
 \n
+function createBlankSpace(amount){\n
+  blankSpaceStr = "";\n
+  for (var n=1; n < amount; n++)\n
+    blankSpaceStr += "&nbsp;";\n
+  return blankSpaceStr;     \n
+}\n
+\n
 function getUrlParameterList(){\n
   var argumentList = {};\n
   resultList = window.location.href.split("?")[1].split("&");\n
@@ -141,19 +148,16 @@ $(document).ready(function(){\n
   });\n
  if ($("div.gadget-column").length == 1) {\n
    $("a.domain_selected").text($("a.tree-open").text());\n
+   $("tbody tr td.listbox-table-domain-tree-cell a").each(function(){\n
+     if ($(this).text().length == 16){\n
+       $(this).css("padding-right", "101px")\n
+     }\n
+   });\n
    $("a.tree-open, a.tree-closed").each(function(){\n
-   /* XXX - Try Find a good way to the options don\'t break the css. \n
-   Insert blank spaces is not a clean way*/\n
-   if ($(this).text() == "Starred" || $(this).text() == "Hidden" || $(this).text() == "Trash"){\n
-     var blank_space = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + \n
-                   "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp";\n
-     $(this).html($(this).text() + blank_space);\n
-   }\n
-   if ($(this).text() == "All Documents" || \n
-       $(this).text() == "Owned by me" || \n
-       $(this).text() == "Opened by me" || \n
-       $(this).text() == "Shared by me")\n
-     $(this).html($(this).text() + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp");\n
+     if ($(this).text() == "Starred" || $(this).text() == "Hidden")\n
+       $(this).html($(this).text() + createBlankSpace(11));\n
+     if ($(this).text() == "Trash")\n
+       $(this).html($(this).text() + createBlankSpace(13));\n
    })\n
    $("body").css("overflow", "hidden");\n
    var navigation_html = $("div.listbox-footer div.listbox-page-navigation").html();\n
@@ -364,6 +368,9 @@ $(document).ready(function(){\n
                                          "</fieldset></form>");\n
      });\n
   }\n
+ });\n
+ $("a#add_gadget").click(function(event){\n
+   event.preventDefault();\n
  });\n
  return false;\n
 });
