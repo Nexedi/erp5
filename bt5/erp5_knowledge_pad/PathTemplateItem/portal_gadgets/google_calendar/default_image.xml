@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Image" module="erp5.portal_type"/>
+      <global name="EmbeddedFile" module="Products.ERP5.Document.EmbeddedFile"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -858,7 +858,7 @@ XDxnf8U/y2sOnxG/JHsGP//Z</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Image</string> </value>
+            <value> <string>Embedded File</string> </value>
         </item>
         <item>
             <key> <string>size</string> </key>
