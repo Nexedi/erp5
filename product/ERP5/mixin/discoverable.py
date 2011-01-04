@@ -28,6 +28,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo, getSecurityManager
+from ZODB.POSException import ConflictError
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.CMFCore.utils import getToolByName
@@ -44,6 +45,8 @@ VALID_ORDER_KEY_LIST = ('user_login', 'content', 'filename', 'file_name',
                         'input')
 
 CONTENT_INFORMATION_FORMAT = '_idiscoverable_content_information'
+
+class ConversionError(Exception):pass
 
 class DiscoverableMixin(CachedConvertableMixin):
   """
@@ -261,7 +264,12 @@ class DiscoverableMixin(CachedConvertableMixin):
     the document title.
     """
     result = {}
-    html = self.asEntireHTML()
+    try:
+      html = self.asEntireHTML()
+    except ConflictError:
+      raise
+    except:
+      return result
     if not html:
       return result
     title_list = re.findall(self.title_parser, str(html))
