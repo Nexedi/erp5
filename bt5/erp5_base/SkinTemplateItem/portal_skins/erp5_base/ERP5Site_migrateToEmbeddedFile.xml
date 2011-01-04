@@ -59,7 +59,6 @@ context.ERP5Site_checkDataWithScript("Base_migrateToEmbeddedFile", \n
                                       tag="migrate",\n
                                       active_process=active_process.getPath())\n
 \n
-\n
 print "Migration started with process id: %s" %active_process.getPath()\n
 return printed\n
 </string> </value>

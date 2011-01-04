@@ -65,9 +65,8 @@ Organisation | Chat Address
 Organisation | Credit Card
 Organisation | Document
 Organisation | Email
+Organisation | Embedded File
 Organisation | Fax
-Organisation | File
-Organisation | Image
 Organisation | Link
 Organisation | Telephone
 Person Module | Person
@@ -78,9 +77,8 @@ Person | Career
 Person | Chat Address
 Person | Credit Card
 Person | Email
+Person | Embedded File
 Person | Fax
-Person | File
-Person | Image
 Person | Link
 Person | Telephone
 Query Module | Query
