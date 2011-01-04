@@ -83,6 +83,10 @@ ACCEPTABLE_GLOBAL_LIB_LIST = (
   'linux-vdso.so',
 )
 
+IGNORABLE_LINKED_LIB_LIST = (
+  'libdl',
+)
+
 SKIP_PART_LIST = (
   'parts/boost-lib-download',
   'parts/mariadb__compile__',
@@ -180,7 +184,13 @@ class AssertSoftwareMixin(unittest.TestCase):
     parts_name = getattr(self, 'parts_name', 'parts')
     elf_dict = readElfAsDict(path)
     if library_list is not None:
-      self.assertEqual(sorted(library_list), elf_dict['library_list'], path)
+      expected_library_list = elf_dict['library_list']
+      for lib in IGNORABLE_LINKED_LIB_LIST:
+        if lib in library_list:
+          library_list.remove(lib)
+        if lib in expected_library_list:
+          expected_library_list.remove(lib)
+      self.assertEqual(sorted(library_list), expected_library_list, path)
     if software_list is not None:
       soft_dir = os.path.join(os.path.abspath(os.curdir), parts_name)
       runpath_list = [os.path.join(soft_dir, software, 'lib') for
