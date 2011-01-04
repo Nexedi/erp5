@@ -541,7 +541,8 @@ class ContributionTool(BaseTool):
       url_registry_tool.registerURL(url, None, context=container)
 
   security.declareProtected(Permissions.AddPortalContent, 'updateContentFromURL')
-  def updateContentFromURL(self, content, repeat=MAX_REPEAT, crawling_depth=0):
+  def updateContentFromURL(self, content, repeat=MAX_REPEAT, crawling_depth=0,
+                           repeat_interval=1, batch_mode=True):
     """
       Updates an existing content.
     """
@@ -555,20 +556,11 @@ class ContributionTool(BaseTool):
       try:
         url = content.asURL()
         file_object, filename, content_type = self._openURL(url)
-      except urllib2.HTTPError, error:
-        if repeat == 0:
-          # XXX - Call the extendBadURLList method,--NOT Implemented--
-          # IDEA : ajouter l'url en question dans une list "bad_url_list" puis lors du crawling au lieu que de boucler sur 
-          #        la liste des url extraites de la page web on fait un test supplementaire qui verifie que l'url n'est pas 
-          #        dans la liste bad_url_lis
-          raise
-        content.activate(at_date=DateTime() + 1).updateContentFromURL(repeat=repeat - 1)
-        return
       except urllib2.URLError, error:
-        if repeat == 0:
+        if repeat == 0 or not batch_mode:
           # XXX - Call the extendBadURLList method,--NOT Implemented--
           raise
-        content.activate(at_date=DateTime() + 1).updateContentFromURL(repeat=repeat - 1)
+        content.activate(at_date=DateTime() + repeat_interval).updateContentFromURL(repeat=repeat - 1)
         return
 
       content._edit(file=file_object, content_type=content_type)

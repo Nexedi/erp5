@@ -758,7 +758,8 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
     if method is not None: method()
 
   security.declareProtected(Permissions.ModifyPortalContent, 'updateContentFromURL')
-  def updateContentFromURL(self, repeat=MAX_REPEAT, crawling_depth=0):
+  def updateContentFromURL(self, repeat=MAX_REPEAT, crawling_depth=0,
+                           repeat_interval=1, batch_mode=True):
     """
       Download and update content of this document from its source URL.
       Implementation is handled by ContributionTool.

@@ -94,7 +94,8 @@ class IUploadable(Interface):
     passed to IConvertable.convert or to IDownloadable.index_html
     """
 
-  def updateContentFromURL(url=None, repeat=MAX_REPEAT, crawling_depth=0):
+  def updateContentFromURL(url=None, repeat=MAX_REPEAT, crawling_depth=0,
+                           repeat_interval=1, batch_mode=True):
     """
     Download and update content of this document from the specified URL.
     If no url is specified, Document which support the IUrlGetter
@@ -103,10 +104,14 @@ class IUploadable(Interface):
     url -- optional URL to download the updated content from.
            required whenever document does not implement IUrlGetter
 
-    repeat -- optional max number of retries for download
-
     crawling_depth -- optional crawling depth for documents which 
                       implement ICrawlable
+
+    repeat -- optional max number of retries for download
+
+    repeat_interval -- optional interval between repeats
+
+    batch_mode -- optional specify False if used in a user interface
 
     NOTE: implementation is normally delegated to ContributionTool.
 
