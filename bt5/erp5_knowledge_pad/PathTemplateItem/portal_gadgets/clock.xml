@@ -192,10 +192,6 @@
             <value> <string>synchronous</string> </value>
         </item>
         <item>
-            <key> <string>thumbnail_image</string> </key>
-            <value> <string>/home/ivan/.mdk-folders/documents/Pictures/6_1191697714.jpg</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Clock</string> </value>
         </item>
