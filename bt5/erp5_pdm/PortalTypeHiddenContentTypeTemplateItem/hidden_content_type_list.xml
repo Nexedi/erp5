@@ -1,6 +1,6 @@
 <hidden_content_type_list>
  <portal_type id="Component">
-  <item>Image</item>
+  <item>Embedded File</item>
   <item>Internal Supply Line</item>
   <item>Purchase Supply Line</item>
   <item>Sale Supply Line</item>
@@ -17,7 +17,7 @@
   <item>Measure Cell</item>
  </portal_type>
  <portal_type id="Product">
-  <item>Image</item>
+  <item>Embedded File</item>
   <item>Internal Supply Line</item>
   <item>Purchase Supply Line</item>
   <item>Sale Supply Line</item>

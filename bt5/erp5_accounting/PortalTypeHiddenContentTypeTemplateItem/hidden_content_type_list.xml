@@ -3,15 +3,13 @@
   <item>Accounting Transaction Line</item>
  </portal_type>
  <portal_type id="Accounting Transaction">
-  <item>File</item>
-  <item>Image</item>
+  <item>Embedded File</item>
  </portal_type>
  <portal_type id="Accounting Transaction Module">
   <item>Balance Transaction</item>
  </portal_type>
  <portal_type id="Payment Transaction">
-  <item>File</item>
-  <item>Image</item>
+  <item>Embedded File</item>
  </portal_type>
  <portal_type id="Preference">
   <item>Accounting Transaction</item>
@@ -20,11 +18,9 @@
   <item>Sale Invoice Transaction</item>
  </portal_type>
  <portal_type id="Purchase Invoice Transaction">
-  <item>File</item>
-  <item>Image</item>
+  <item>Embedded File</item>
  </portal_type>
  <portal_type id="Sale Invoice Transaction">
-  <item>File</item>
-  <item>Image</item>
+  <item>Embedded File</item>
  </portal_type>
 </hidden_content_type_list>
