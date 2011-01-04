@@ -1531,9 +1531,23 @@ class TestDocument(TestDocumentMixin):
       </body>
     </html>
     """.decode('utf-8').encode('iso-8859-1')
-    web_page.edit(text_content=html_content)
+    # content encoded into another codec
+    # than utf-8 comes from necessarily an external file
+    # (Ingestion, or FileField), not from user interface 
+    # which is always utf-8.
+    # Edit web_page with a file to force conversion to base_format
+    # as it is done in reality
 
-    # Check that outputed stripped html is safe
+    # Mimic the behaviour of a FileUpload from WebPage_view
+    file_like = StringIO.StringIO()
+    file_like.write(html_content)
+    setattr(file_like, 'filename', 'something.htm')
+    web_page.edit(file=file_like)
+    # run conversion to base format
+    transaction.commit() 
+    self.tic()
+
+    # Check that outputted stripped html is safe
     safe_html = web_page.asStrippedHTML()
     self.assertTrue('My splendid title' in safe_html)
     self.assertTrue('script' not in safe_html, safe_html)
