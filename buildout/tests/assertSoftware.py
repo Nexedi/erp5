@@ -2156,6 +2156,37 @@ class AssertM4(AssertSoftwareMixin):
       ], [
       ])
 
+class AssertStunnel(AssertSoftwareMixin):
+  def test_ld_stunnel(self):
+    self.assertLibraryList('parts/stunnel/bin/stunnel', [
+      'libc',
+      'libcrypto',
+      'libdl',
+      'libnsl',
+      'libpthread',
+      'libssl',
+      'libutil',
+      'libz',
+      ], [
+      'openssl',
+      'zlib',
+      ])
+
+  def test_ld_libstunnel(self):
+    self.assertLibraryList('parts/stunnel/lib/stunnel/libstunnel.so', [
+      'libc',
+      'libcrypto',
+      'libdl',
+      'libnsl',
+      'libpthread',
+      'libssl',
+      'libutil',
+      'libz',
+      ], [
+      'openssl',
+      'zlib',
+      ])
+
 # tests for Zope-2.12 buildout only
 if python_version >= '2.6':
   class AssertPython26(AssertSoftwareMixin):
