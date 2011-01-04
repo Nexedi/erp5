@@ -118,7 +118,9 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -131,7 +133,7 @@
                 <item>
                     <key> <string>enabled</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -152,12 +154,14 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>items</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -271,7 +275,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getLayoutProperty(\'layout_display_search_widget\',True)</string> </value>
+            <value> <string>python: here.getLayoutProperty(\'layout_search_default_portal_type\',"all")</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -284,7 +288,33 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:[[ context.Base_translateString(\'All Documents\'), \'all\'], [context.Base_translateString(\'Everything\'), \'\']] + [[context.Base_translateString(x), x] for x in context.getLayoutProperty(\'layout_search_portal_type_list\', [])]</string> </value>
+            <value> <string>python: here.getLayoutProperty(\'layout_display_search_widget\',True)</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: here.getLayoutProperty(\'layout_search_default_portal_type\',"") != ""</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python:[[context.Base_translateString(\'All Documents\'), \'all\'], [context.Base_translateString(\'Everything\'), \'\']] + [[context.Base_translateString(x), x] for x in context.getLayoutProperty(\'layout_search_portal_type_list\', [])]</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -12,14 +12,13 @@
               <list>
                 <string>description</string>
                 <string>items</string>
-                <string>size</string>
                 <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_layout_search_portal_type_list</string> </value>
+            <value> <string>my_layout_search_default_portal_type</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -74,10 +73,6 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>size</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -94,11 +89,11 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Define list of available portal type</string> </value>
+                    <value> <string>Force the fast search to a defined portal type. Else we display a list of portal type.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_multi_list_field</string> </value>
+                    <value> <string>my_list_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -111,16 +106,12 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>size</string> </key>
-                    <value> <int>5</int> </value>
-                </item>
-                <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Search Portal Type</string> </value>
+                    <value> <string>Default Search Portal Type</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -136,7 +127,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [[context.Base_translateString(x),  x] for x in context.getPortalDocumentTypeList()]</string> </value>
+            <value> <string>python: [["",""],[context.Base_translateString(\'All Documents\'), \'all\'],] + [[context.Base_translateString(x), x]  for x in context.getPortalDocumentTypeList()]</string> </value>
         </item>
       </dictionary>
     </pickle>
