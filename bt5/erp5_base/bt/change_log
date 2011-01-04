@@ -1,3 +1,6 @@
+2011-01-04 Ivan
+* Add upgrader alarm that is able to handle migration of embedded "File" & "Image" objects to "Embedded File" portal type
+
 2010-12-23 Kazuhiko
 * use my_filename instead of my_source_reference in File_view and Image_view.
 
