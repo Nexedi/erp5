@@ -1275,7 +1275,7 @@ class TestCRMMailSend(BaseTestCRM):
     filename = 'sample_attachment.txt'
     # txt
     document_txt = add_document(filename,
-                                self.portal.person_module['me'], 'File')
+                                self.portal.person_module['me'], 'Embedded File')
 
     transaction.commit()
     self.tic()
@@ -1334,7 +1334,7 @@ class TestCRMMailSend(BaseTestCRM):
     # gif
     filename = 'sample_attachment.gif'
     document_gif = add_document(filename,
-                                self.portal.person_module['me'], 'Image')
+                                self.portal.person_module['me'], 'Embedded File')
 
     transaction.commit()
     self.tic()
