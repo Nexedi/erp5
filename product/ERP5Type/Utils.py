@@ -3293,8 +3293,13 @@ def guessEncodingFromText(data, content_type='text/html'):
     enconding_detector = magic.Magic(mime_encoding=True)
     return enconding_detector.from_buffer(data)
   else:
-    raise NotImplementedError, 'No encoding detector found.'\
-                                  ' You must install chardet and python-magic'
+    if chardet is None:
+      message = 'No encoding detector found.'\
+                ' You must install chardet and python-magic'
+    else:
+      message = 'No suitable encoding detector found.'\
+                ' You must install python-magic'
+    raise NotImplementedError, message
 
 _reencodeUrlEscapes_map = dict((chr(x), chr(x) in (# safe
                                                    "!'()*-." "0123456789" "_~"
