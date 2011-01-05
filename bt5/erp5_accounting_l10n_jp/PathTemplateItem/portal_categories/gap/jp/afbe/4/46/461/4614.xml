@@ -10,31 +10,20 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>gap/jp/afbe/2/21/211</string>
+                <string>gap/jp/afbe/4/46/461/4613</string>
+                <string>gap/jp/afbe/4/46/461/4614</string>
               </tuple>
             </value>
         </item>
         <item>
-            <key> <string>codification</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>effective_date</string> </key>
+            <key> <string>description</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>211</string> </value>
-        </item>
-        <item>
-            <key> <string>int_index</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>4614</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -42,11 +31,11 @@
         </item>
         <item>
             <key> <string>short_title</string> </key>
-            <value> <string>土地</string> </value>
+            <value> <string>裏書譲渡手形</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>土地</string> </value>
+            <value> <string>裏書譲渡手形</string> </value>
         </item>
       </dictionary>
     </pickle>
