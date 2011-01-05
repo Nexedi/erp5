@@ -716,7 +716,6 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     default_parametrs['where_expression'] = ""
     default_parametrs['order_by_expression'] = None
     
-    #import pdb; pdb.set_trace()
     # check that we retrieve our 2 organisations by default.
     kw = default_parametrs.copy()
     kw.update( portal_catalog.buildSQLQuery(
