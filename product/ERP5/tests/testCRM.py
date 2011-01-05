@@ -54,6 +54,7 @@ meeting_module
 organisation_module
 person_module
 sale_opportunity_module
+portal_categories/resource
 """.strip().splitlines()
 
 class BaseTestCRM(ERP5TypeTestCase):
@@ -74,7 +75,7 @@ class BaseTestCRM(ERP5TypeTestCase):
       self.portal._setObject('MailHost', DummyMailHost('MailHost'))
     # clear modules if necessary
     for module_name in clear_module_name_list:
-      module = getattr(self.portal, module_name)
+      module = self.portal.unrestrictedTraverse(module_name)
       module.manage_delObjects(list(module.objectIds()))
 
     self.stepTic()
@@ -387,6 +388,62 @@ class TestCRM(BaseTestCRM):
                                         new_support_request.getReference())
 
 
+  @expectedFailure
+  def test_Event_getResourceItemList(self):
+    """Event_getResourceItemList returns
+    category item list with base category in path, just
+    like resource.getCategoryChildItemList(base=True) does.
+    This is not the expected behaviour because it
+    duplicates the base_category in categories_list:
+      - resource/resource/my_category_id
+    This test checks that relative_url return
+    by Event_getResourceItemList are consistent.
+    Check also the support of backward compatibility to not break UI
+    if resource is already defined with base_category
+    in its relative_url value.
+    """
+    # create resource categories.
+    resource = self.portal.portal_categories.resource
+    for i in range(3):
+      resource.newContent(portal_type='Category',
+                          title='Title%s' % i,
+                          id=i)
+    # create a person like a resource to declare it as a resource
+    person = self.portal.person_module.newContent(portal_type='Person')
+    # Configure system preference.
+    portal_preferences = self.portal.portal_preferences
+    system_preference = portal_preferences.getActiveSystemPreference()
+    if system_preference is None:
+      system_preference = portal_preferences.newContent(
+                                              portal_type='System Preference')
+      system_preference.enable()
+    resource_list = [category.getRelativeUrl() \
+                                      for category in resource.contentValues()]
+    resource_list.append(person.getRelativeUrl())
+    system_preference.setPreferredEventResourceList(resource_list)
+    transaction.commit()
+    self.tic()
+    # Then create One event and play with it
+    portal_type = 'Visit'
+    module = self.portal.getDefaultModule(portal_type)
+    event = module.newContent(portal_type=portal_type,
+                              resource='0')
+    self.assertTrue(event.getResourceValue() is not None)
+    self.assertTrue(event.getResource() in\
+                       [item[1] for item in event.Event_getResourceItemList()])
+    # Check Backward compatibility support
+    # When base_category value is stored in categories_list
+    # resource/resource/my_category_id instead of resource/my_category_id
+    event.setResource('resource/0')
+    self.assertTrue(event.getResourceValue() is not None)
+    self.assertTrue(event.getResource() in\
+                       [item[1] for item in event.Event_getResourceItemList()])
+
+    # Check that relation with an object which
+    # is not a Category works.
+    event.setResourceValue(person)
+    self.assertTrue(event.getResource() in\
+                       [item[1] for item in event.Event_getResourceItemList()])
 
 class TestCRMMailIngestion(BaseTestCRM):
   """Test Mail Ingestion for standalone CRM.
