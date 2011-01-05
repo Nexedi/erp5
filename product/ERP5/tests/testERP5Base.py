@@ -1255,7 +1255,7 @@ class TestERP5Base(ERP5TypeTestCase):
     # We can add Images inside Persons and Organisation
     for entity in (self.getPersonModule().newContent(portal_type='Person'),
         self.getOrganisationModule().newContent(portal_type='Organisation')):
-      image = entity.newContent(portal_type='Image')
+      image = entity.newContent(portal_type='Embedded File')
       self.assertEquals([], image.checkConsistency())
       image.view() # viewing the image does not cause error
 

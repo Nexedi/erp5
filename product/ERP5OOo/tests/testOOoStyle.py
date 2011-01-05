@@ -71,7 +71,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     person_module.pers.setCareerRole(None)
 
     if person_module.pers._getOb('img', None) is None:
-      person_module.pers.newContent(portal_type='Image', id='img')
+      person_module.pers.newContent(portal_type='Embedded File', id='img')
 
     if person_module._getOb('pers_without_image', None) is None:
       person = person_module.newContent(

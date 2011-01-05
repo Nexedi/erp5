@@ -310,7 +310,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     parent_dir = os.path.dirname(current_dir)
     image_path = os.path.join(parent_dir, 'www', 'form_printout_icon.png')
     file_data = FileUpload(image_path, 'rb')
-    image = person1.newContent(portal_type='Image')
+    image = person1.newContent(portal_type='Embedded File')
     image.edit(file=file_data)
 
     foo_printout = image.Foo_viewAsODGPrintout
