@@ -146,13 +146,16 @@ $(document).ready(function(){\n
    event.preventDefault();\n
    $("#upload_document").dialog("open");\n
   });\n
- if ($("div.gadget-column").length == 1) {\n
-   $("a.domain_selected").text($("a.tree-open").text());\n
-   $("tbody tr td.listbox-table-domain-tree-cell a").each(function(){\n
+  $("tbody tr td.listbox-table-domain-tree-cell a").each(function(){\n
      if ($(this).text().length == 16){\n
        $(this).css("padding-right", "101px")\n
      }\n
-   });\n
+     if ($(this).text().length > 16){\n
+       $(this).css("padding-right", "35px")\n
+     }\n
+  });\n
+  if ($("div.gadget-column").length == 1) {\n
+   $("a.domain_selected").text($("a.tree-open").text());\n
    $("a.tree-open, a.tree-closed").each(function(){\n
      if ($(this).text() == "Starred" || $(this).text() == "Hidden")\n
        $(this).html($(this).text() + createBlankSpace(11));\n

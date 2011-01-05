@@ -835,7 +835,7 @@ table.listbox-table-domain-tree {\n
 \n
 td.listbox-table-domain-tree-cell a {\n
   padding-bottom: 3px;\n
-  padding-right: 125.3px;\n
+  padding-right: 102px;\n
   padding-top: 3px;\n
 }\n
 \n
