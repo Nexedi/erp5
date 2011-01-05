@@ -181,7 +181,7 @@ class StrippingParser(HTMLParser):
         # (begin) copied from Python-2.6's HTMLParser.py
         # Cannot use name2codepoint directly, because HTMLParser supports apos,
         # which is not part of HTML 4
-        if self.entitydefs is None:
+        if getattr(self, 'entitydefs', None) is None:
             import htmlentitydefs
             entitydefs = HTMLParser.entitydefs = {'apos':u"'"}
             for k, v in htmlentitydefs.name2codepoint.iteritems():
