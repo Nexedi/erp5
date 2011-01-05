@@ -67,11 +67,16 @@ for send_partition in computer_dict[\'partition_list\']:\n
   if partition is None:\n
     partition = context.newContent(portal_type=\'Computer Partition\')\n
     partition.markFree()\n
-  partition.edit(default_network_address_ip_address = send_partition[\'addr\'],\n
-          default_network_address_netmask = send_partition[\'netmask\'],\n
-          reference = send_partition[\'reference\'],)\n
-  partition.getDefaultNetworkAddressValue().edit(\n
-      network_interface = send_partition[\'tap\'][\'name\'])\n
+  partition.edit(reference=send_partition[\'reference\'])\n
+  network_interface = send_partition[\'tap\'][\'name\']\n
+  # XXX: non optimal way to "update" partition interface, update = delete + insert\n
+  partition.deleteContent(list(partition.objectIds(portal_type=\'Internet Protocol Address\')))\n
+  for address in send_partition[\'address_list\']:\n
+    partition.newContent(portal_type=\'Internet Protocol Address\',\n
+      network_interface=network_interface,\n
+      ip_address=address[\'addr\'],\n
+      netmask=address[\'netmask\'],\n
+      )\n
 </string> </value>
         </item>
         <item>
@@ -126,6 +131,9 @@ for send_partition in computer_dict[\'partition_list\']:\n
                             <string>send_partition</string>
                             <string>None</string>
                             <string>partition</string>
+                            <string>network_interface</string>
+                            <string>list</string>
+                            <string>address</string>
                           </tuple>
                         </value>
                     </item>
