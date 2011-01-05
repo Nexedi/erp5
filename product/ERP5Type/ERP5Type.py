@@ -598,7 +598,12 @@ class ERP5TypeInformation(XMLObject,
       return self.objectValues(meta_type='ERP5 Action Information')
 
     def getIcon(self):
-      return self.getTypeIcon()
+      try:
+        return self.getTypeIcon()
+      except AttributeError:
+        # do not fail if the property is missing: getTypeIcon is used in the ZMI
+        # and we always want to display the ZMI no matter what
+        return ''
 
     def getTypeInfo(self, *args):
       if args:
