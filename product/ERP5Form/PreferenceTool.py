@@ -53,6 +53,8 @@ class Priority:
   USER  = 3
 
 def updatePreferenceClassPropertySheetList():
+  # XXX obsolete, and now handled in dynamic.portal_type_class
+
   from Products.ERP5Form.Document.Preference import Preference
   # 'Static' property sheets defined on the class
   class_property_sheet_list = Preference.property_sheets
@@ -61,7 +63,7 @@ def updatePreferenceClassPropertySheetList():
   for id in dir(PropertySheet):
     if id.endswith('Preference'):
       ps = getattr(PropertySheet, id)
-      if ps not in property_sheets:
+      if not isinstance(ps, basestring) and ps not in property_sheets:
         property_sheets.append(ps)
   class_property_sheet_list = tuple(property_sheets)
   Preference.property_sheets = class_property_sheet_list
@@ -78,6 +80,17 @@ def createPreferenceToolAccessorList(portal) :
   """
   property_list = []
 
+  # 'Static' property sheets defined on the class
+  # The Preference class should be imported from the common location
+  # in ERP5Type since it could be overloaded in another product
+  from Products.ERP5Type.Document.Preference import Preference
+  for property_sheet in Preference.property_sheets:
+    if not isinstance(property_sheet, basestring):
+      property_list += property_sheet._properties
+
+  if not len(property_list):
+    return
+
   # 'Dynamic' property sheets added by portal_type
   pref_portal_type = portal.portal_types.getTypeInfo('Preference')
   if pref_portal_type is None:
@@ -87,12 +100,6 @@ def createPreferenceToolAccessorList(portal) :
     pref_portal_type.updatePropertySheetDefinitionDict(
       {'_properties': property_list})
 
-  # 'Static' property sheets defined on the class
-  # The Preference class should be imported from the common location
-  # in ERP5Type since it could be overloaded in another product
-  from Products.ERP5Type.Document.Preference import Preference
-  for property_sheet in Preference.property_sheets:
-    property_list += property_sheet._properties
 
   # Generate common method names
   for prop in property_list:
@@ -201,6 +208,8 @@ class PreferenceTool(BaseTool):
     return default
 
   def _aq_dynamic(self, id):
+    # XXX as soon as zodb property sheets are put everywhere, this can
+    # be safely deleted
     base_value = PreferenceTool.inheritedAttribute('_aq_dynamic')(self, id)
     if not PreferenceTool.aq_preference_generated:
       updatePreferenceClassPropertySheetList()
