@@ -122,7 +122,7 @@ class TestCRM(BaseTestCRM):
       self.assertEqual(related_event.getTitle(), 'New Title')
       self.assertEqual(related_event.getDescription(), 'New Desc')
       self.assertEqual(related_event.getFollowUpValue(), ticket)
- 
+
   def test_Event_CreateRelatedEventUnauthorized(self):
     # test that we don't get Unauthorized error when invoking the "Create
     # Related Event" without add permission on the module,
@@ -134,7 +134,7 @@ class TestCRM(BaseTestCRM):
                       portal_type='Letter',
                       title='New Title',
                       description='New Desc')
-    
+
   def test_Ticket_CreateRelatedEvent(self):
     # test action to create a related event from a ticket
     event_module_url = self.portal.event_module.absolute_url()
@@ -171,7 +171,7 @@ class TestCRM(BaseTestCRM):
                            title='New Title',
                            description='New Desc',
                            direction='incoming')
-   
+
   def test_PersonModule_CreateRelatedEventSelectionParams(self):
     # create related event from selected persons.
     person_module = self.portal.person_module
@@ -318,7 +318,7 @@ class TestCRM(BaseTestCRM):
       transaction.commit()
       self.tic()
       self.assertEqual(len(event.getCausalityRelatedValueList()), 0)
-      
+
     # if create_event option is true, it create a new event.
     for portal_type in event_type_list:
       ticket = self.portal.meeting_module.newContent(portal_type='Meeting',
