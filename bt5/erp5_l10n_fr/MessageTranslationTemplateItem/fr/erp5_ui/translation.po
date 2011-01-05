@@ -12168,6 +12168,9 @@ msgstr "Votre réf."
 msgid "Your account was successfully created."
 msgstr "Votre compte a été créé avec succès."
 
+msgid "Your message has been successfully submitted."
+msgstr "Votre message a été envoyé avec succès."
+
 msgid "Your report is attached.\n"
 msgstr "Votre rapport est en pièce jointes.\n"
 
