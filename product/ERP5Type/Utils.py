@@ -3282,7 +3282,7 @@ def guessEncodingFromText(data, content_type='text/html'):
     chardet = None
   try:
     import magic
-  except:
+  except ImportError:
     magic = None
   if chardet is not None and content_type == 'text/html':
     # chardet works fine on html document
