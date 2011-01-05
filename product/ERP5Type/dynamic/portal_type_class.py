@@ -265,10 +265,10 @@ def generatePortalTypeClass(portal_type_name):
         #
         # NOTE: The Property Sheets of a document should be given as a
         #       string from now on
-        if isinstance(property_sheet, basestring) and \
-          property_sheet in zodb_property_sheet_set:
-          property_sheet_name = property_sheet
-          property_sheet_set.add(property_sheet_name)
+        if not isinstance(property_sheet, basestring):
+          property_sheet = property_sheet.__name__
+        if property_sheet in zodb_property_sheet_set:
+          property_sheet_set.add(property_sheet)
 
     import erp5
 
