@@ -154,8 +154,6 @@ class EntireQuery(object):
       #append = sql_expression_list.append
       # for join_query in column_map.iterJoinQueryList():
       #   append(join_query.asSQLExpression(sql_catalog, column_map, only_group_columns))
-      # print "@@@ jql: %r, jtal: %r" % (column_map.join_query_list,
-      #                                  column_map.getJoinTableAliasList())
       # join_table_list = column_map.getJoinTableAliasList()
       # if len(join_table_list):
       #   # XXX: Is there any special rule to observe when joining tables ?

@@ -315,6 +315,7 @@ class ColumnMap(object):
 
   @profiler_decorator
   def build(self, sql_catalog):
+    join_query_to_build_list = []
     catalog_table_name = self.catalog_table_name
     if catalog_table_name is None:
       return
@@ -330,7 +331,8 @@ class ColumnMap(object):
         if related_key_definition is not None:
           join_query = sql_catalog.getSearchKey(column_name, 'RelatedKey').buildQuery(sql_catalog=sql_catalog, related_key_definition=related_key_definition)
           join_query.registerColumnMap(sql_catalog, self)
-          self._addJoinQuery(join_query)
+          #self._addJoinQuery(join_query)
+          join_query_to_build_list.append(join_query)
 
     # List all possible tables, with all used column for each
     for group, column_set in self.registry.iteritems():
@@ -408,8 +410,17 @@ class ColumnMap(object):
         table_alias_number_dict[alias_table_name] = table_alias_number
       self.resolveTable(table_name, alias, group=group)
 
-    # now that we have all aliases, calculate inner joins
+    # now that we have all aliases, calculate inner joins comming from
+    # non-RelatedKey relationships (like full_text).
     self._calculateInnerJoins()
+    # and all left joins that did not come from explicit queries
+    # (i.e. joins comming from 'sort_on', 'select_dict', etc.)
+    for join_query in join_query_to_build_list:
+      # XXX ugly use of inner attribute of join_query. Please Refactor:
+      join_query.search_key.buildSQLExpression(sql_catalog=sql_catalog,
+                                               column_map=self,
+                                               only_group_columns=False,
+                                               group=join_query.group,)
     if MAPPING_TRACE:
       # Key: group
       # Value: 2-tuple
@@ -486,6 +497,8 @@ class ColumnMap(object):
     return self.table_alias_dict[(group, table_name)]
 
   def _addJoinQuery(self, query):
+    raise RuntimeError('Implicit Join Requested: %r. Please add an explicit '
+                       'join instead' % (query,))
     self.join_query_list.append(query)
 
   def iterJoinQueryList(self):
@@ -594,9 +607,6 @@ class ColumnMap(object):
     assert self._setMinimalTableDefinition()
     assert join_definition.left_tabledef is None, join_definition.left_tabledef
     join_definition.left_tabledef = self.table_definition
-    print "@@", join_definition
-    if TESTDEBUG == True:
-      import pdb;pdb.set_trace()
     self.table_definition = join_definition
 
   # def getFinalTableDefinition(self):
