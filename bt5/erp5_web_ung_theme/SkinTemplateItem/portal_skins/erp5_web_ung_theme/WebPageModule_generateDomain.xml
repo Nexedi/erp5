@@ -50,9 +50,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
   This script generates a sections list to filter the document on UNG Docs.\n
-  XXX - The generation of domains should be more dynamic because some domains is create manually.\n
 """\n
 \n
 def getAvailableSubjectList(subject_list=()):\n
@@ -93,28 +94,28 @@ def appendTempDomain(id, \n
   for key, value in property_dict.items():\n
     domain.setCriterion(key, value)\n
 \n
-  return domain\n
+  domain_list.append(domain)\n
 \n
 domain_list = []\n
+\n
+if depth > 1:\n
+  return domain_list\n
+\n
 validation_state_list = [\'draft\', \'published\', \'shared\']\n
-\n
-subject_domain = appendTempDomain(\'by_subject\',\n
-                          \'By Subject\',\n
-                          dict(validation_state=validation_state_list))\n
-\n
-domain_list.append(subject_domain)\n
 \n
 for subject in getAvailableSubjectList():\n
   appendTempDomain("subject_" + subject,\n
                    subject.capitalize(),\n
                    dict(subject=subject),\n
-                   subject_domain,\n
+                   parent,\n
                    ("by_subject",),\n
                    ("by_subject",))\n
 \n
 \n
 return domain_list\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
