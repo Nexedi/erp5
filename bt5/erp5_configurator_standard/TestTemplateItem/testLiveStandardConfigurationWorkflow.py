@@ -139,7 +139,9 @@ class TestLiveStandardConfiguratorWorkflow(ERP5TypeLiveTestCase, SecurityTestCas
     module = self.portal.business_configuration_module
     business_configuration = module.newContent(
                                portal_type="Business Configuration",
-                               title='Test Configurator Standard Workflow')
+                               title='Test Configurator Standard Workflow',
+                               user_interface_description_file_id='basic_configuration_ui_description.ods',
+                               configuration_after_script_id='BusinessConfiguration_afterConfiguration')
     next_dict = {}
     sequence.edit(business_configuration=business_configuration, 
                   next_dict=next_dict)
@@ -236,8 +238,7 @@ class TestLiveStandardConfiguratorWorkflow(ERP5TypeLiveTestCase, SecurityTestCas
     custom_bt5_config_item = custom_bt5_config_save['1']
     self.assertEquals(custom_bt5_config_item.getPortalType(),
                       'Customer BT5 Configurator Item')
-
-    self.assertEquals(custom_bt5_config_item.bt5_id,
+    self.assertEquals(custom_bt5_config_item.bt5_title,
           '_'.join(business_configuration.getTitle().strip().lower().split()))
 
   def _stepCheckOrganisationConfiguratorItem(self, business_configuration,
@@ -674,14 +675,14 @@ class TestLiveStandardConfiguratorWorkflow(ERP5TypeLiveTestCase, SecurityTestCas
     # check for links
     link_list = business_configuration.searchFolder(portal_type="Link")
     # XXX FIXME Too poor check, it should verify if links are correnct.
-    self.assertEquals(2, len(link_list))
+    self.assertEquals(3, len(link_list))
 
     # check for links
     file_list = business_configuration.searchFolder(portal_type="File")
     # XXX FIXME Too poor check, it should verify if file are correnct.
-    self.assertEquals(2, len(file_list))
-    file_title_list = ('%s_copy.bt5' % self.standard_bt5_list[0],
-                       '%s' % bc_id,)
+    self.assertEquals(1, len(file_list))
+
+    file_title_list = ('%s' % bc_id,)
     self.assertSameSet(file_title_list, [f.getTitle() for f in file_list])
 
   def stepCheckInstanceIsConfiguredFrance(self, sequence=None,  sequence_list=None, **kw):
