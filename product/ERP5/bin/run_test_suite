@@ -320,7 +320,8 @@ def safeRpcCall(function, *args):
 
 def getOptionParser():
   from optparse import OptionParser
-  parser = OptionParser(usage="%prog [options] <SUITE>[=<MAX_INSTANCES>]")
+  parser = OptionParser(
+    usage="%prog [options] [SUITE_CLASS@]<SUITE_NAME>[=<MAX_INSTANCES>]")
   _ = parser.add_option
   _("--master", help="URL of ERP5 instance, used as master node")
   _("--mysql_db_list", help="comma-separated list of connection strings")
@@ -334,10 +335,14 @@ def main():
   try:
     name, = args
     if '=' in name:
-      name, max_instance_count = name.split('=')
+      name, max_instance_count = name.rsplit('=', 1)
       max_instance_count = int(max_instance_count)
     else:
       max_instance_count = 1
+    if '@' in name:
+      suite_class_name, name = name.split('@', 1)
+    else:
+      suite_class_name = name
   except ValueError:
     parser.error("invalid arguments")
   db_list = options.mysql_db_list
@@ -359,7 +364,7 @@ def main():
     for k in sys.modules.keys():
       if k == 'tests' or k.startswith('tests.'):
         del sys.modules[k]
-    module_name, class_name = ('tests.' + name).rsplit('.', 1)
+    module_name, class_name = ('tests.' + suite_class_name).rsplit('.', 1)
     try:
       suite_class = getattr(__import__(module_name, None, None, [class_name]),
                             class_name)
