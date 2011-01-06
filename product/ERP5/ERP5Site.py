@@ -780,6 +780,14 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     return self._getPortalGroupedTypeList('document')
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                              'getPortalEmbeddedDocumentTypeList')
+  def getPortalEmbeddedDocumentTypeList(self):
+    """
+      Return embedded document types.
+    """
+    return self._getPortalGroupedTypeList('embedded_document')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalWebDocumentTypeList')
   def getPortalWebDocumentTypeList(self):
     """
