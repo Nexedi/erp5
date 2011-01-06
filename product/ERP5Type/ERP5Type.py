@@ -264,7 +264,7 @@ class ERP5TypeInformation(XMLObject,
       # CRM
       'event', 'ticket',
       # DMS
-      'document', 'web_document', 'file_document',
+      'document', 'web_document', 'file_document', 'embedded_document',
       'recent_document', 'my_document', 'template_document',
       'crawler_index',
       # Solvers and simulation
