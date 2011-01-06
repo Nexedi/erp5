@@ -822,7 +822,10 @@ div.listbox-domain-tree-container select {\n
 \n
 div.listbox-tree {\n
   font-size: 13px;\n
-  width: 103%;\n
+  width: 98.7%;\n
+  overflow-y: hidden;\n
+  overflow-x: hidden;\n
+  height: 233px;\n
 }\n
 \n
 div.listbox-tree-mode-selection {\n
@@ -835,7 +838,7 @@ table.listbox-table-domain-tree {\n
 \n
 td.listbox-table-domain-tree-cell a {\n
   padding-bottom: 3px;\n
-  padding-right: 102px;\n
+  padding-right: 69px;\n
   padding-top: 3px;\n
 }\n
 \n

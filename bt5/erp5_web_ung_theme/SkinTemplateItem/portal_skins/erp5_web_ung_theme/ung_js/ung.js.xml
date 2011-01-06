@@ -148,7 +148,7 @@ $(document).ready(function(){\n
   });\n
   $("tbody tr td.listbox-table-domain-tree-cell a").each(function(){\n
      if ($(this).text().length == 16){\n
-       $(this).css("padding-right", "101px")\n
+       $(this).css("padding-right", "82px")\n
      }\n
      if ($(this).text().length > 16){\n
        $(this).css("padding-right", "35px")\n
@@ -162,6 +162,18 @@ $(document).ready(function(){\n
      if ($(this).text() == "Trash")\n
        $(this).html($(this).text() + createBlankSpace(13));\n
    })\n
+   var listboxTreeHeight = $("div.listbox-tree").css("height").replace("px", "");\n
+   var domainTreeHeight = $("div.listbox-domain-tree-container").css("height").replace("px", "");\n
+   if (parseInt(listboxTreeHeight) > parseInt(domainTreeHeight)){\n
+     window.onload = function() {\n
+       $("div.listbox-tree").css("height", $("div.listbox-domain-tree-container").css("height"));\n
+     }\n
+   }\n
+   if (parseInt(domainTreeHeight) > 233) {\n
+     window.onload = function() {\n
+       $("div.listbox-tree").css("overflow-y", "scroll");\n
+     }\n
+   }\n
    $("body").css("overflow", "hidden");\n
    var navigation_html = $("div.listbox-footer div.listbox-page-navigation").html();\n
    $("div.listbox-footer div.listbox-page-navigation").remove();\n
