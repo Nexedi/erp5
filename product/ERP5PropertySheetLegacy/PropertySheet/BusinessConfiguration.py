@@ -35,8 +35,13 @@ class BusinessConfiguration:
       'description' : 'Defines the Id of the script to be ran after'
                       'the configuration.',
       'type'        : 'string',
-      'default'     : 'BusinessConfiguration_afterConfiguration',
       'mode'        : 'w' },
+    { 'id'          : 'user_interface_description_file_id',
+      'description' : 'Defines the Id of the file which has the description of'
+                      'the user interface.',
+      'type'        : 'string',
+      'mode'        : 'w' },
+
   )
 
   _categories = ("current_state", "resource", "specialise")
