@@ -63,7 +63,7 @@ class Transition(XMLObject):
     Execute transition.
     """
     # Call the before script
-    #self._executeBeforeScript(document)
+    self._executeBeforeScript(document)
 
     # Modify the state
     self._changeState(document)
@@ -122,6 +122,18 @@ class Transition(XMLObject):
       form_kw = {}
     script_id = self.getAfterScriptId()
     if script_id is not None:
+      script = getattr(document, script_id)
+      script(**form_kw)
+
+  def _executeBeforeScript(self, document, form_kw=None):
+    """
+    Execute pre transition script.
+    """
+    if form_kw is None:
+      form_kw = {}
+    script_id = self.getBeforeScriptId()
+    if script_id is not None:
+      import pdb;pdb.set_trace()
       script = getattr(document, script_id)
       script(**form_kw)
 
