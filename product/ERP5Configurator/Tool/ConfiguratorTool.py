@@ -33,6 +33,7 @@ from Products.ERP5Type.Globals import DTMLFile
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as \
     ConstantGetter
 from Products.ERP5Type.Tool.BaseTool import BaseTool
+from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type import Permissions
 from Products.ERP5Configurator import _dtmldir
 from Products.CMFCore.utils import getToolByName
@@ -145,7 +146,8 @@ class ConfiguratorTool(BaseTool):
   def login(self, REQUEST):
     """ Login client and show next form. """
     password = REQUEST.get('field_my_ac_key', '')
-    if self._isCorrectConfigurationKey(password):
+    bc = REQUEST.get('field_your_business_configuration')
+    if self._isCorrectConfigurationKey(password, bc):
       # set user preferred configuration language
       user_preferred_language = REQUEST.get(
           'field_my_user_preferred_language', None)
@@ -165,7 +167,6 @@ class ConfiguratorTool(BaseTool):
                                  __ac_key,
                                  expires = expires)
       REQUEST.set('__ac_key', __ac_key)
-      bc = REQUEST.get('field_your_business_configuration')
       REQUEST.RESPONSE.setCookie(BUSINESS_CONFIGURATION_COOKIE_NAME, 
                                  bc, 
                                  expires = expires)
@@ -176,12 +177,26 @@ class ConfiguratorTool(BaseTool):
                    self.Base_translateString('Incorrect Configuration Key'))
       return self.view()
 
-  def _isCorrectConfigurationKey(self, password=None):
+  def _isCorrectConfigurationKey(self, password=None,
+                                       business_configuration=None):
     """ Is configuration key correct """
     if password is None:
       password = self.REQUEST.get('__ac_key', None)
+    else:
+      password = quote(encodestring(password))
     # Not still not finished yet.
-    return 1
+    if business_configuration is None:
+      business_configuration = self.REQUEST.get(BUSINESS_CONFIGURATION_COOKIE_NAME, None)
+    if None not in [password, business_configuration]:
+      def is_key_valid(password, business_configuration):
+        bc = self.getPortalObject().unrestrictedTraverse(business_configuration)
+        return quote(encodestring(bc.getReference(''))) == password
+      return CachingMethod(is_key_valid, 
+                           "ConfiguratorTool_is_key_valid", 
+                           cache_factory='erp5_content_long')(
+                                     password, business_configuration)
+    return False
+
 
   #security.declareProtected(Permissions.ModifyPortalContent, 'next')
   def next(self, REQUEST):
