@@ -8,6 +8,7 @@
   <item>Business Configuration</item>
  </portal_type>
  <portal_type id="Categories Spreadsheet Configurator Item">
+  <item>File</item>
   <item>Spreadsheet</item>
  </portal_type>
  <portal_type id="Configuration Save">
