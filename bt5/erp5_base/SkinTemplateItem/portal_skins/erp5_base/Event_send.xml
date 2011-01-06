@@ -95,7 +95,7 @@ elif same_type(to_url, \'\'):\n
 # Attachments\n
 if attachment_list is None:\n
   attachment_list = []\n
-document_type_list = [\'Embedded File\'] + list(context.getPortalDocumentTypeList())\n
+document_type_list = list(context.getPortalEmbeddedDocumentTypeList()) + list(context.getPortalDocumentTypeList())\n
 for attachment in context.getAggregateValueList(portal_type=document_type_list):\n
   mime_type, content = attachment.getMimeTypeAndContent()\n
   name = attachment.getFilename()\n
