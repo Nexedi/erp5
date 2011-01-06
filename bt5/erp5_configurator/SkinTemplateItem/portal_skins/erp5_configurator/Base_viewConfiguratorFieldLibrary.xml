@@ -114,6 +114,7 @@
                         <string>my_empty_mode_default_address_city</string>
                         <string>my_empty_mode_default_address_region</string>
                         <string>my_empty_mode_default_address_zip_code</string>
+                        <string>my_view_mode_user_interface_description_file_id</string>
                         <string>my_view_mode_reference</string>
                       </list>
                     </value>
