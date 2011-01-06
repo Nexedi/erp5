@@ -28,63 +28,24 @@
 ##############################################################################
 
 
+import os
 from DateTime import DateTime
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.ERP5TypeLiveTestCase import ERP5TypeLiveTestCase
 from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
+from Products.ERP5Type.tests.utils import FileUpload
 from AccessControl import Unauthorized
 from zLOG import LOG
 
-class TestLiveStandardConfiguratorWorkflow(ERP5TypeLiveTestCase, SecurityTestCase):
+
+class TestLiveConfiguratorWorkflowMixin(ERP5TypeLiveTestCase, SecurityTestCase):
   """
-    Test Live Standard Configuration Workflow.
+    Configurator Mixin Class
   """
   # The list of standard business templates that the configurator should force
   # to install
   standard_bt5_list = ('erp5_configurator_standard_categories',)
-
-  DEFAULT_SEQUENCE_LIST = """
-      stepCreateBusinessConfiguration 
-      stepTic
-      stepSetStandardWorkflow
-      stepTic
-      stepConfiguratorNext
-      stepTic
-      stepCheckBT5ConfiguratorItem
-      stepCheckConfigureOrganisationForm
-      stepSetupOrganisationConfiguratorItem%(country)s
-      stepConfiguratorNext
-      stepTic
-      stepCheckConfigureUserAccountNumberForm
-      stepCheckOrganisationConfiguratorItem%(country)s
-      stepSetupUserAccounNumberSix
-      stepConfiguratorNext
-      stepTic
-      stepCheckConfigureMultipleUserAccountForm
-      stepSetupMultipleUserAccountSix
-      stepConfiguratorNext
-      stepTic
-      stepCheckMultiplePersonConfigurationItem
-      stepCheckConfigureAccountingForm
-      stepSetupAccountingConfiguration%(country)s
-      stepConfiguratorNext
-      stepTic
-      stepCheckAccountingConfigurationItemList%(country)s
-      stepCheckConfigurePreferenceForm
-      stepSetupPreferenceConfiguration%(country)s
-      stepConfiguratorNext
-      stepTic
-      stepCheckPreferenceConfigurationItemList%(country)s
-      stepCheckConfigureInstallationForm
-      stepSetupInstallConfiguration
-      stepConfiguratorNext
-      stepCheckInstallConfiguration
-      stepTic
-      stepStartConfigurationInstallation
-      stepTic
-      stepCheckInstanceIsConfigured%(country)s
-  """
 
   def afterSetUp(self):
     newId = self.portal.portal_ids.generateNewId
@@ -130,34 +91,22 @@ class TestLiveStandardConfiguratorWorkflow(ERP5TypeLiveTestCase, SecurityTestCas
     # it is required by SecurityTestCase
     self.workflow_tool = self.portal.portal_workflow
 
-  def stepCleanUpRequest(self, sequence=None, sequence_list=None, **kw):
-    """ Restore clean up the request """
-    self.app.REQUEST.other = self.app.REQUEST.default_other.copy()
+  def setBusinessConfigurationWorkflow(self, business_configuration, workflow):
+    """ Set configurator workflow """
+    business_configuration.setResource(workflow)
 
-  def stepCreateBusinessConfiguration(self,  sequence=None, sequence_list=None, **kw):
-    """ Create one Business Configuration """
-    module = self.portal.business_configuration_module
-    business_configuration = module.newContent(
-                               portal_type="Business Configuration",
-                               title='Test Configurator Standard Workflow',
-                               user_interface_description_file_id='basic_configuration_ui_description.ods',
-                               configuration_after_script_id='BusinessConfiguration_afterConfiguration')
-    next_dict = {}
-    sequence.edit(business_configuration=business_configuration, 
-                  next_dict=next_dict)
-
-  def stepSetStandardWorkflow(self, sequence=None, sequence_list=None, **kw):
-    """ Set Standard Workflow into Business Configuration """
-    business_configuration = sequence.get("business_configuration")
-    business_configuration.setResource("workflow_module/erp5_standard_workflow")
-
-  # utility methods for things that are likely to change in the future
   def assertCurrentStep(self, step_title, server_response):
     """ Checks the current step title. """
     self.assertTrue(
       '<h2>%s</h2>' % step_title in server_response['data'],
       'Unable to guess current step title (expected:%s) in: \n%s' %
       (step_title, server_response))
+
+  ### STEPS
+
+  def stepCleanUpRequest(self, sequence=None, sequence_list=None, **kw):
+    """ Restore clean up the request """
+    self.app.REQUEST.other = self.app.REQUEST.default_other.copy()
 
   def stepConfiguratorNext(self, sequence=None, sequence_list=None, **kw):
     """ Go Next into Configuration """
@@ -174,6 +123,181 @@ class TestLiveStandardConfiguratorWorkflow(ERP5TypeLiveTestCase, SecurityTestCas
     response_dict = self.portal.portal_configurator._previous(
                             business_configuration, next_dict)
     sequence.edit(response_dict=response_dict)
+
+  def stepCheckBT5ConfiguratorItem(self, sequence=None, sequence_list=None, **kw):
+    """ Check if the Configuration Item list is correct """
+    business_configuration = sequence.get("business_configuration")
+    # second one: install some standard business templates
+    standard_bt5_config_save = business_configuration['1']
+    self.assertEquals(len(self.standard_bt5_list),
+          len(standard_bt5_config_save.contentValues(
+                  portal_type='Standard BT5 Configurator Item')))
+    self.assertEquals(
+      set(self.standard_bt5_list),
+      set([x.bt5_id for x in standard_bt5_config_save.contentValues()]))
+
+    # third one: we create a business template to store customer configuration
+    custom_bt5_config_save = business_configuration['2']
+    custom_bt5_config_item = custom_bt5_config_save['1']
+    self.assertEquals(custom_bt5_config_item.getPortalType(),
+                      'Customer BT5 Configurator Item')
+    self.assertEquals(custom_bt5_config_item.bt5_title,
+          '_'.join(business_configuration.getTitle().strip().lower().split()))
+
+
+class TestLiveConsultingConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
+  """
+    Test Live Consulting Configuration Workflow
+  """
+
+  DEFAULT_SEQUENCE_LIST = """
+      stepCreateBusinessConfiguration 
+      stepTic
+      stepSetConsultingWorkflow
+      stepTic
+      stepConfiguratorNext
+      stepTic
+      stepCheckBT5ConfiguratorItem
+
+      stepCheckConfigureCategoriesForm
+      stepSetupCategoriesConfiguratorItem
+      stepConfiguratorNext
+      stepTic
+      stepCheckXXXForm
+      """
+
+  def afterSetUp(self):
+    TestLiveConfiguratorWorkflowMixin.afterSetUp(self)
+    categories_file_id = 'consulting_configurator_sample_categories.ods'
+    categories_file_obj = getattr(self.portal, categories_file_id)
+
+    self.categories_file_path = '/tmp/%s' % categories_file_id
+    temp_file = open(self.categories_file_path, 'w+b')
+    try:
+      temp_file.write(str(categories_file_obj))
+    finally:
+      temp_file.close()
+
+    self.categories_file_upload = FileUpload(self.categories_file_path,
+                                             categories_file_id)
+
+  def beforeTearDown(self):
+    os.remove(self.categories_file_path)
+
+  def stepCreateBusinessConfiguration(self,  sequence=None, sequence_list=None, **kw):
+    """ Create one Business Configuration """
+    module = self.portal.business_configuration_module
+    business_configuration = module.newContent(
+                               portal_type="Business Configuration",
+                               title='Test Configurator Consulting Workflow',
+                               user_interface_description_file_id='consulting_configuration_ui_description.ods',
+                               configuration_after_script_id='')
+    next_dict = {}
+    sequence.edit(business_configuration=business_configuration, 
+                  next_dict=next_dict)
+
+  def stepSetConsultingWorkflow(self, sequence=None, sequence_list=None, **kw):
+    """ Set Standard Workflow into Business Configuration """
+    business_configuration = sequence.get("business_configuration")
+    self.setBusinessConfigurationWorkflow(business_configuration,
+                                   "workflow_module/erp5_consulting_workflow")
+
+  def stepCheckConfigureCategoriesForm(self, sequence=None, sequence_list=None, **kw):
+    """ Check if Confire Organisation step was showed """
+    response_dict = sequence.get("response_dict")
+    if 'command' in response_dict:
+      self.assertEquals('show', response_dict['command'])
+    self.assertEquals(None, response_dict['previous'])
+    self.assertEquals('Configure Categories', response_dict['next'])
+    self.assertCurrentStep('Your categories', response_dict)
+
+  def stepSetupCategoriesConfiguratorItem(self, sequence=None, sequence_list=None, **kw):
+    """ Load the categories """
+    next_dict = dict(field_your_categories_spreadsheet=self.categories_file_upload)
+    next_dict.update(**kw)
+    sequence.edit(next_dict=next_dict)
+
+  # XXX: To be written
+  def stepCheckXXXForm(self, sequence=None, sequence_list=None, **kw):
+    response_dict = sequence.get("response_dict")
+    if 'command' in response_dict:
+      self.assertEquals('show', response_dict['command'])
+    self.assertEquals('Configure user accounts number', response_dict['next'])
+    self.assertEquals('Previous', response_dict['previous'])
+    self.assertCurrentStep('Number of user accounts', response_dict)
+
+
+  def test_consulting_workflow(self):
+    """ Test the consulting workflow configuration"""
+    sequence_list = SequenceList()
+    sequence_string = self.DEFAULT_SEQUENCE_LIST
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+
+class TestLiveStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
+  """
+    Test Live Standard Configuration Workflow.
+  """
+  DEFAULT_SEQUENCE_LIST = """
+      stepCreateBusinessConfiguration 
+      stepTic
+      stepSetStandardWorkflow
+      stepTic
+      stepConfiguratorNext
+      stepTic
+      stepCheckBT5ConfiguratorItem
+      stepCheckConfigureOrganisationForm
+      stepSetupOrganisationConfiguratorItem%(country)s
+      stepConfiguratorNext
+      stepTic
+      stepCheckConfigureUserAccountNumberForm
+      stepCheckOrganisationConfiguratorItem%(country)s
+      stepSetupUserAccounNumberSix
+      stepConfiguratorNext
+      stepTic
+      stepCheckConfigureMultipleUserAccountForm
+      stepSetupMultipleUserAccountSix
+      stepConfiguratorNext
+      stepTic
+      stepCheckMultiplePersonConfigurationItem
+      stepCheckConfigureAccountingForm
+      stepSetupAccountingConfiguration%(country)s
+      stepConfiguratorNext
+      stepTic
+      stepCheckAccountingConfigurationItemList%(country)s
+      stepCheckConfigurePreferenceForm
+      stepSetupPreferenceConfiguration%(country)s
+      stepConfiguratorNext
+      stepTic
+      stepCheckPreferenceConfigurationItemList%(country)s
+      stepCheckConfigureInstallationForm
+      stepSetupInstallConfiguration
+      stepConfiguratorNext
+      stepCheckInstallConfiguration
+      stepTic
+      stepStartConfigurationInstallation
+      stepTic
+      stepCheckInstanceIsConfigured%(country)s
+  """
+
+  def stepCreateBusinessConfiguration(self,  sequence=None, sequence_list=None, **kw):
+    """ Create one Business Configuration """
+    module = self.portal.business_configuration_module
+    business_configuration = module.newContent(
+                               portal_type="Business Configuration",
+                               title='Test Configurator Standard Workflow',
+                               user_interface_description_file_id='basic_configuration_ui_description.ods',
+                               configuration_after_script_id='BusinessConfiguration_afterConfiguration')
+    next_dict = {}
+    sequence.edit(business_configuration=business_configuration, 
+                  next_dict=next_dict)
+
+  def stepSetStandardWorkflow(self, sequence=None, sequence_list=None, **kw):
+    """ Set Standard Workflow into Business Configuration """
+    business_configuration = sequence.get("business_configuration")
+    self.setBusinessConfigurationWorkflow(business_configuration,
+                                    "workflow_module/erp5_standard_workflow")
 
   def stepCheckConfigureOrganisationForm(self, sequence=None, sequence_list=None, **kw):
     """ Check if Confire Organisation step was showed """
@@ -216,30 +340,10 @@ class TestLiveStandardConfiguratorWorkflow(ERP5TypeLiveTestCase, SecurityTestCas
     response_dict = sequence.get("response_dict")
     if 'command' in response_dict:
       self.assertEquals('show', response_dict['command'])
-    #import pdb; pdb.set_trace()
+
     self.assertEquals('Configure user accounts number', response_dict['next'])
     self.assertEquals('Previous', response_dict['previous'])
     self.assertCurrentStep('Number of user accounts', response_dict)
-
-  def stepCheckBT5ConfiguratorItem(self, sequence=None, sequence_list=None, **kw):
-    """ Check if the Configuration Item list is correct """
-    business_configuration = sequence.get("business_configuration")
-    # second one: install some standard business templates
-    standard_bt5_config_save = business_configuration['1']
-    self.assertEquals(len(self.standard_bt5_list),
-          len(standard_bt5_config_save.contentValues(
-                  portal_type='Standard BT5 Configurator Item')))
-    self.assertEquals(
-      set(self.standard_bt5_list),
-      set([x.bt5_id for x in standard_bt5_config_save.contentValues()]))
-
-    # third one: we create a business template to store customer configuration
-    custom_bt5_config_save = business_configuration['2']
-    custom_bt5_config_item = custom_bt5_config_save['1']
-    self.assertEquals(custom_bt5_config_item.getPortalType(),
-                      'Customer BT5 Configurator Item')
-    self.assertEquals(custom_bt5_config_item.bt5_title,
-          '_'.join(business_configuration.getTitle().strip().lower().split()))
 
   def _stepCheckOrganisationConfiguratorItem(self, business_configuration,
                                                    default_address_city,
@@ -2615,5 +2719,6 @@ class TestLiveStandardConfiguratorWorkflow(ERP5TypeLiveTestCase, SecurityTestCas
 import unittest
 def test_suite():
   suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestLiveConsultingConfiguratorWorkflow))
   suite.addTest(unittest.makeSuite(TestLiveStandardConfiguratorWorkflow))
   return suite
