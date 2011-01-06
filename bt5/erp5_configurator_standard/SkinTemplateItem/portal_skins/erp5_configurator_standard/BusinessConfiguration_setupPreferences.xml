@@ -244,85 +244,8 @@ for bt5_id in preferred_language_list:\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>kw</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal</string>
-                            <string>None</string>
-                            <string>configuration_save_url</string>
-                            <string>preferred_event_sender_email</string>
-                            <string>preferred_date_order</string>
-                            <string>preferred_language_list</string>
-                            <string>configuration_save</string>
-                            <string>business_configuration</string>
-                            <string>company_email</string>
-                            <string>_getitem_</string>
-                            <string>currency_info</string>
-                            <string>_getiter_</string>
-                            <string>currency_reference</string>
-                            <string>currency_base_unit_quantity</string>
-                            <string>currency_title</string>
-                            <string>organisation_configurator_item</string>
-                            <string>organisation_configurator_item_obj</string>
-                            <string>service_list</string>
-                            <string>dict</string>
-                            <string>prefs</string>
-                            <string>_apply_</string>
-                            <string>True</string>
-                            <string>system_prefs</string>
-                            <string>bt5_id</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -331,12 +254,6 @@ for bt5_id in preferred_language_list:\n
         <item>
             <key> <string>title</string> </key>
             <value> <string>Configure global ERP5 preferences</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

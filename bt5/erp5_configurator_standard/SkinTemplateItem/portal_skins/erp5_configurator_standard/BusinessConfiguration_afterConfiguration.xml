@@ -177,102 +177,12 @@ log("%s" % printed)\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>customer_template_relative_url=None, alter_preferences=True</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>customer_template_relative_url</string>
-                            <string>alter_preferences</string>
-                            <string>_print_</string>
-                            <string>_print</string>
-                            <string>AccessControl</string>
-                            <string>getSecurityManager</string>
-                            <string>Products.ERP5Type.Log</string>
-                            <string>log</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal</string>
-                            <string>portal_preferences</string>
-                            <string>bt5_obj</string>
-                            <string>str</string>
-                            <string>username</string>
-                            <string>N_</string>
-                            <string>isTransitionPossible</string>
-                            <string>preference_to_disable_list</string>
-                            <string>_getiter_</string>
-                            <string>preference_to_disable</string>
-                            <string>getattr</string>
-                            <string>None</string>
-                            <string>preference</string>
-                            <string>portal_type</string>
-                            <string>dict</string>
-                            <string>module_list</string>
-                            <string>module</string>
-                            <string>path</string>
-                            <string>obj</string>
-                            <string>hasattr</string>
-                            <string>period</string>
-                            <string>assignment</string>
-                            <string>default_configurator_preference</string>
-                            <string>module_business_application_map</string>
-                            <string>business_application_category_id</string>
-                            <string>module_ids</string>
-                            <string>module_id</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <none/>
-                <int>1</int>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>BusinessConfiguration_afterConfiguration</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>
