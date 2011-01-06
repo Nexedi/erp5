@@ -74,7 +74,7 @@ business_configuration = context.restrictedTraverse(request.get(\'business_confi
 # as every instance has a hard coded \'admin\' user (owner of ERP5 Site instance)\n
 # also check if reference is actually allowed (i.e. doesn\'t contain special symbols)?\n
 # make sure we never allow it\n
-if reference in ["admin"] or not portal.ERP5Site_isValidUserName(reference):\n
+if reference in ["admin"]:\n
   return 0\n
 \n
 # first check if a Business Configuration has not already "reserved" it\n
@@ -111,79 +111,12 @@ return 1\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>editor=None, request=None, **kw</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>editor</string>
-                            <string>request</string>
-                            <string>kw</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal</string>
-                            <string>None</string>
-                            <string>reference</string>
-                            <string>ignore_users_from_same_instance</string>
-                            <string>business_configuration</string>
-                            <string>person_configurator_item_list</string>
-                            <string>filter</string>
-                            <string>len</string>
-                            <string>found_user_list</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <none/>
-                <none/>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Base_isPersonReferenceUnique</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>
