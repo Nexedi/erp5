@@ -133,7 +133,6 @@ class Transition(XMLObject):
       form_kw = {}
     script_id = self.getBeforeScriptId()
     if script_id is not None:
-      import pdb;pdb.set_trace()
       script = getattr(document, script_id)
       script(**form_kw)
 
