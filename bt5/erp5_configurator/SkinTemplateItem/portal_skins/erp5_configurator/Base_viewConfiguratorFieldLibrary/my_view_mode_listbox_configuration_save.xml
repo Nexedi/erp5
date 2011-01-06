@@ -128,6 +128,14 @@
                           <string>Configuration Save</string>
                           <string>Configuration Save</string>
                         </tuple>
+                        <tuple>
+                          <string>File</string>
+                          <string>File</string>
+                        </tuple>
+                        <tuple>
+                          <string>Link</string>
+                          <string>Link</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -149,7 +157,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Configuration Saves</string> </value>
+                    <value> <string>Configuration Items</string> </value>
                 </item>
               </dictionary>
             </value>
