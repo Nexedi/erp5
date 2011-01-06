@@ -46,6 +46,10 @@
             <value> <string>BusinessConfiguration_setupStandardBT5</string> </value>
         </item>
         <item>
+            <key> <string>before_script_id</string> </key>
+            <value> <string>BusinessConfiguration_setupStandardInit</string> </value>
+        </item>
+        <item>
             <key> <string>categories</string> </key>
             <value>
               <tuple>
