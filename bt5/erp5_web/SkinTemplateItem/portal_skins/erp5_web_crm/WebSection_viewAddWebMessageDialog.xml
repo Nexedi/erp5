@@ -93,7 +93,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>text_content</string>
+                        <string>your_text_content</string>
                         <string>your_source_person_first_name</string>
                         <string>your_source_person_last_name</string>
                         <string>your_source_person_default_email_text</string>

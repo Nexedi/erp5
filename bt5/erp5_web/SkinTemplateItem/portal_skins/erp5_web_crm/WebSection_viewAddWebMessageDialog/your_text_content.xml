@@ -19,7 +19,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>text_content</string> </value>
+            <value> <string>your_text_content</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
