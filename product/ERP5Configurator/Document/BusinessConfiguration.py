@@ -119,19 +119,25 @@ class BusinessConfiguration(Item):
     next_state = self.unrestrictedTraverse(transition.getDestination())
     ## it's possible that we have already saved a configuration save object 
     ## in workflow_history for this state so we use it
-    root_conf_save = self._getConfSaveForStateFromWorkflowHistory()
-    if root_conf_save is None:
+    configuration_save = self._getConfSaveForStateFromWorkflowHistory()
+    if configuration_save is None:
       ## we haven't saved any configuration save for this state so create new one
-      root_conf_save = self.newContent(portal_type='Configuration Save')
+      configuration_save = self.newContent(portal_type='Configuration Save')
     else:
       ## we have already created configuration save for this state
       ## so remove from it already existing configuration items
-      if root_conf_save!=self: ## don't delete ourselves
-        existing_conf_items = root_conf_save.objectIds()
+      if configuration_save != self: ## don't delete ourselves
+        existing_conf_items = configuration_save.objectIds()
         existing_conf_items = map(None, existing_conf_items)
-        root_conf_save.manage_delObjects(existing_conf_items)
+        configuration_save.manage_delObjects(existing_conf_items)
+
+    modified_form_kw = {}
+    for k in form_kw.keys():
+      if form_kw[k].__class__.__name__ != 'FileUpload':
+        modified_form_kw[k] = form_kw[k]
+    configuration_save.edit(**modified_form_kw) 
     ## Add some variables so we can get use them in workflow after scripts
-    form_kw['configuration_save_url'] = root_conf_save.getRelativeUrl()
+    form_kw['configuration_save_url'] = configuration_save.getRelativeUrl()
     form_kw['transition'] = transition.getRelativeUrl()
     current_state.executeTransition(transition, self, form_kw=form_kw)
 
