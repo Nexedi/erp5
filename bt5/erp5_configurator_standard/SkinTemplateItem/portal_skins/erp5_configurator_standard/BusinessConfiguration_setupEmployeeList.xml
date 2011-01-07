@@ -78,7 +78,7 @@ else:\n
       new_key = key.replace("field_your_", "")\n
       employee_kw[new_key] = kw[key][employee_counter]\n
     # add an emlpoyee\n
-    function= employee_kw.pop(\'function\', None)\n
+    function = employee_kw.pop(\'function\', None)\n
     employee_kw.pop(\'password_confirm\', None)\n
     configuration_save.addConfigurationItem("Person Configurator Item", \n
                                             organisation_id = organisation_id,\n
