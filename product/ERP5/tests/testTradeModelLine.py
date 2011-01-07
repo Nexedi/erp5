@@ -180,9 +180,13 @@ class TestTradeModelLineMixin(TestBPMMixin, UserDict):
       order.newContent(portal_type=self.order_line_portal_type, **line_kw)
     return order
 
+  def getAggregatedAmountList(self, amount_generator, *args, **kw):
+    return amount_generator.getAggregatedAmountList(*args, **kw)
+
   def getAggregatedAmountDict(self, amount_generator, partial_check=False,
+                              ignore_empty_amounts=False,
                               **expected_amount_dict):
-    amount_list = amount_generator.getAggregatedAmountList()
+    amount_list = self.getAggregatedAmountList(amount_generator)
     amount_dict = {}
     for amount in amount_list:
       reference = amount.getReference()
@@ -789,7 +793,7 @@ return lambda *args, **kw: 1""")
     order = self.createOrder(trade_condition, (
       dict(),
       ))
-    self.assertEqual([], order.getAggregatedAmountList())
+    self.assertEqual([], self.getAggregatedAmountList(order))
     for line in trade_condition.objectValues():
       line.setBaseApplication(fixed_quantity)
     amount_list = order.getAggregatedAmountList()
