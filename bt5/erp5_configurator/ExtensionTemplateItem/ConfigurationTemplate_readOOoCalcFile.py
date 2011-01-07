@@ -27,14 +27,20 @@
 #
 ##############################################################################
 
+# This extension should be replaced by a clever parser provided by
+# ERP5OOo or probably by CloudOOo itself.
+
 import StringIO
 
-def read(self, filename):
+def read(self, filename, data):
   """
   Return a OOCalc as a StringIO
   """
-  oo_template_file = getattr(self, filename)
-  fp = StringIO.StringIO(oo_template_file)
+  if data is None:
+    oo_template_file = getattr(self, filename)
+    fp = StringIO.StringIO(oo_template_file)
+  else:
+    fp = StringIO.StringIO(data)
   fp.filename = filename
   return fp
 
@@ -67,10 +73,10 @@ def getIdFromString(string):
           break
   return clean_id
 
-def convert(self, filename):
+def convert(self, filename, data=None):
   from Products.ERP5OOo.OOoUtils import OOoParser
   OOoParser = OOoParser()
-  import_file = read(self, filename)
+  import_file = read(self, filename, data)
 
   # Extract tables from the speadsheet file
   OOoParser.openFile(import_file)
