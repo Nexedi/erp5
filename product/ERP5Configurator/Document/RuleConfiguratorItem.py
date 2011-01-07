@@ -65,7 +65,7 @@ class RuleConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                                                 sort_order='descending',
                                                 reference=reference)
       if len(result):
-        value['version'] = int(result[0].getVersion()) + 1
+        value['version'] = int(result[0].getVersion(0)) + 1
       rule = portal.portal_rules.newContent(**value)
 
       content_list = value.pop('content_list')
