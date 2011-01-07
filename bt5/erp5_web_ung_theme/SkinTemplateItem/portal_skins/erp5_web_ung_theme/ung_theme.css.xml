@@ -687,7 +687,8 @@ div#edit_document fieldset label {\n
 }\n
 \n
 span#ui-dialog-title-edit_document, \n
- span#ui-dialog-title-upload_document {\n
+ span#ui-dialog-title-upload_document,\n
+ span#ui-dialog-title-gadget-listbox{\n
   font-size:17px;\n
   margin-left:-8px;\n
   margin-top:-3px;\n
@@ -823,8 +824,7 @@ div.listbox-domain-tree-container select {\n
 div.listbox-tree {\n
   font-size: 13px;\n
   width: 98.7%;\n
-  overflow-y: hidden;\n
-  overflow-x: hidden;\n
+  overflow: hidden;\n
   height: 233px;\n
 }\n
 \n
@@ -927,8 +927,25 @@ div.header-right fieldset.widget a#sharing_url {\n
   padding-top: 2px;\n
   font-size: 11px;\n
 }\n
+\n
 div.gadget-column div.gadget-container a {\n
   padding-left: 16px;\n
+}\n
+\n
+div.gadget-listbox {\n
+  display: none;\n
+}\n
+\n
+table#gadget-table tbody tr img {\n
+  float: right;\n
+}\n
+\n
+table#gadget-table tbody tr {\n
+  font-size: 15px;\n
+}\n
+\n
+table#gadget-table {\n
+  width: 100%;\n
 }
 
 ]]></string> </value>

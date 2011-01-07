@@ -260,10 +260,22 @@ $(document).ready(function(){\n
     width: 346,\n
     modal: true,\n
  });\n
+ $("div.gadget-listbox").dialog({\n
+    autoOpen: false,\n
+    height: 416,\n
+    width: 500,\n
+    modal: true,\n
+    buttons: {\n
+      "Add": function(){\n
+         window.location.reload();\n
+       },\n
+    }\n
+ });\n
  $("div#preference_dialog").dialog({\n
     autoOpen: false,\n
     height: 487,\n
     width: 330,\n
+    modal:true,\n
     buttons: {\n
       "Save": function(){\n
          var erp5PreferenceArgument = $("form#erp5_preference").serialize();\n
@@ -386,6 +398,32 @@ $(document).ready(function(){\n
  });\n
  $("a#add_gadget").click(function(event){\n
    event.preventDefault();\n
+   $("div.gadget-listbox").dialog("open");\n
+ });\n
+ $.getJSON("WebSection_getGadgetPathList", function(data){\n
+   gadgetList = jQuery(data);\n
+   gadgetList.each(function(){\n
+     $("div.gadget-listbox table#gadget-table")\n
+       .append($(\'<tr>\')\n
+          .append($(\'<td>\')\n
+            .append($(\'<input>\')\n
+                .attr(\'type\', \'checkbox\')\n
+                .attr(\'id\', this.id)\n
+            )\n
+          )\n
+          .append($(\'<td>\')\n
+             .append($(\'<a>\')\n
+                .text(this.title)\n
+             )\n
+          )\n
+          .append($(\'<td>\')\n
+            .append($(\'<img>\')\n
+               .attr(\'src\', this.image_url)\n
+                .text(this.title)\n
+            )\n
+          )\n
+       );\n
+   });\n
  });\n
  return false;\n
 });
