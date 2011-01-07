@@ -461,11 +461,7 @@ class BusinessConfiguration(Item):
         kw["tag"] = bt_file.getTitle()
 
     if execute_after_setup_script:
-      customer_template = self.getSpecialiseValue()
-      customer_template_relative_url = customer_template.getRelativeUrl()
-      self.activate(**kw).ERP5Site_afterConfigurationSetup(
-                customer_template_relative_url=customer_template_relative_url,
-                alter_preferences=True)
+      self.activate(**kw).ERP5Site_afterConfigurationSetup()
       LOG("Business Configuration", INFO,
           "After setup script called (force) for %s : %s" %
                     (self.getRelativeUrl(), self.getSpecialise()))
