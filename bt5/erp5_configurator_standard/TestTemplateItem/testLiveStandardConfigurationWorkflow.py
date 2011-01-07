@@ -36,8 +36,7 @@ from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from Products.ERP5Type.tests.utils import FileUpload
 from AccessControl import Unauthorized
-from zLOG import LOG
-
+import transaction
 
 class TestLiveConfiguratorWorkflowMixin(ERP5TypeLiveTestCase, SecurityTestCase):
   """
@@ -189,9 +188,7 @@ class TestLiveConsultingConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     module = self.portal.business_configuration_module
     business_configuration = module.newContent(
                                portal_type="Business Configuration",
-                               title='Test Configurator Consulting Workflow',
-                               user_interface_description_file_id='consulting_configuration_ui_description.ods',
-                               configuration_after_script_id='')
+                               title='Test Configurator Consulting Workflow')
     next_dict = {}
     sequence.edit(business_configuration=business_configuration, 
                   next_dict=next_dict)
@@ -286,9 +283,7 @@ class TestLiveStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     module = self.portal.business_configuration_module
     business_configuration = module.newContent(
                                portal_type="Business Configuration",
-                               title='Test Configurator Standard Workflow',
-                               user_interface_description_file_id='basic_configuration_ui_description.ods',
-                               configuration_after_script_id='BusinessConfiguration_afterConfiguration')
+                               title='Test Configurator Standard Workflow')
     next_dict = {}
     sequence.edit(business_configuration=business_configuration, 
                   next_dict=next_dict)
@@ -485,8 +480,8 @@ class TestLiveStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     business_configuration = sequence.get("business_configuration")
 
     person_number_business_configuration_save = business_configuration['4']
-    self.assertEquals(6,
-        person_number_business_configuration_save.company_employees_number)
+    self.assertEquals(6, business_configuration.getGlobalConfigurationAttr(
+                             "company_employees_number"))
     self.assertEquals(0,
         len(person_number_business_configuration_save.contentValues()))
     person_business_configuration_save = business_configuration['5']
@@ -1146,7 +1141,7 @@ class TestLiveStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     delivery.confirm()
     delivery.start()
     delivery.stop()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     # inventories of that resource are index in grams
