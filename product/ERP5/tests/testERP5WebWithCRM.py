@@ -106,7 +106,7 @@ class TestERP5WebWithCRM(ERP5TypeTestCase):
                'source_person_last_name': 'Doe',
                'source_person_default_email_text': 'John.Doe@example.com',
                'source_person_default_telephone_text': '34343434',
-               'description': 'I want ERP5 for my company',
+               'text_content': 'I want ERP5 for my company',
               }
     web_section.WebSection_addWebMessage(**form_kw)
     transaction.commit()
@@ -137,7 +137,7 @@ class TestERP5WebWithCRM(ERP5TypeTestCase):
                'source_person_last_name': 'Doe',
                'source_person_default_email_text': 'John.Doe@example.com',
                'source_person_default_telephone_text': '34343434',
-               'description': 'I want ERP5 for my company',
+               'text_content': 'I want ERP5 for my company',
               }
     web_section.WebSection_addWebMessage(**form_kw)
     transaction.commit()
