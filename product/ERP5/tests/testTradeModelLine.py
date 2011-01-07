@@ -184,7 +184,6 @@ class TestTradeModelLineMixin(TestBPMMixin, UserDict):
     return amount_generator.getAggregatedAmountList(*args, **kw)
 
   def getAggregatedAmountDict(self, amount_generator, partial_check=False,
-                              ignore_empty_amounts=False,
                               **expected_amount_dict):
     amount_list = self.getAggregatedAmountList(amount_generator)
     amount_dict = {}
