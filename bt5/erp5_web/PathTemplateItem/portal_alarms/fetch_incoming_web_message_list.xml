@@ -26,7 +26,9 @@ Web Message can be created by Anonymous Users</string> </value>
         </item>
         <item>
             <key> <string>periodicity_day_frequency</string> </key>
-            <value> <int>7</int> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>periodicity_hour</string> </key>
@@ -35,6 +37,10 @@ Web Message can be created by Anonymous Users</string> </value>
                 <int>7</int>
               </tuple>
             </value>
+        </item>
+        <item>
+            <key> <string>periodicity_hour_frequency</string> </key>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>periodicity_minute</string> </key>
