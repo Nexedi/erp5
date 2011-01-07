@@ -1,0 +1,671 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+<head>\n
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
+<title>Configuration Standard</title>\n
+</head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="3">Standard Configuration</td></tr>\n
+</thead><tbody>\n
+\n
+<span metal:use-macro="container/Zuite_viewConfiguratorTestMacroLibrary/macros/init_test_environment" />\n
+\n
+<tr>\n
+  <td>store</td>\n
+  <td>${base_url}/portal_configurator</td>\n
+  <td>configurator_base_url</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/Zuite_setUpConfigurationTest</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Init Ok</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<!-- Set longer timeout as it takes time at configurator side to prepare everything needed. -->\n
+<tr>\n
+  <td>setTimeout</td>\n
+  <td>1200000</td>\n
+  <td></td>\n
+</tr>\n
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities" />\n
+<!-- Restore defaults -->\n
+<tr>\n
+  <td>setTimeout</td>\n
+  <td>30000</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+   <td>pause</td>\n
+   <td>45000</td>\n
+   <td></td>\n
+</tr>\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${configurator_base_url}/view</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>ERP5 Configuration</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Welcome to Configurator</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>This tool will help you configure your fresh ERP5</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Language</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Configurator Key</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>ERP5 Configuration</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_ac_key"]</td>\n
+  <td>wrong_configuration_key</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//input[@name="Base_callDialogMethod:method"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Incorrect Configuration Key</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_ac_key"]</td>\n
+  <td tal:content="python:\n
+        here.Zuite_getConfigurationTestDict()[\'configuration_key\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>//select[@name="field_your_business_configuration"]</td>\n
+  <td>STANDARD_CONFIGURATOR_TEST</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//input[@name="Base_callDialogMethod:method"]</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<!-- First Page (Organisation) -->\n
+<span metal:use-macro="container/Zuite_viewConfiguratorTestMacroLibrary/macros/configurator_frame_check"> Frame Checks</span>\n
+<span metal:use-macro="container/Zuite_viewConfiguratorTestMacroLibrary/macros/configurator_page1_check"> Page 1 Checks</span>\n
+\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_your_title"]</td>\n
+  <td tal:content="python:\n
+        here.Zuite_getConfigurationTestDict()[\'customer_organisation_title\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_your_default_email_text"]</td>\n
+  <td tal:content="python:\n
+        here.Zuite_getConfigurationTestDict()[\'customer_organisation_email\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_your_default_telephone_text"]</td>\n
+  <td tal:content="python:\n
+        here.Zuite_getConfigurationTestDict()[\'customer_organisation_telephone\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//textarea[@name="field_your_default_address_street_address"]</td>\n
+  <td tal:content="python:\n
+      here.Zuite_getConfigurationTestDict()[\'customer_organisation_street_address\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_your_default_address_zip_code"]</td>\n
+  <td tal:content="python:\n
+      here.Zuite_getConfigurationTestDict()[\'customer_organisation_zip_code\']"></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>select</td>\n
+  <td>//select[@name="field_your_default_address_region"]</td>\n
+  <td tal:content="python:\n
+      here.Zuite_getConfigurationTestDict()[\'customer_organisation_region\']"></td>\n
+</tr>\n
+\n
+<!-- Next page to check validation works -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//input[@name="next:method"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Input is required but no input given.</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+<!-- Check that what was previously entered is returned -->\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//input[@name="field_your_title"]</td>\n
+  <td tal:content="python:\n
+        here.Zuite_getConfigurationTestDict()[\'customer_organisation_title\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//input[@name="field_your_default_email_text"]</td>\n
+  <td tal:content="python:\n
+        here.Zuite_getConfigurationTestDict()[\'customer_organisation_email\']"></td>\n
+\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//input[@name="field_your_default_telephone_text"]</td>\n
+  <td tal:content="python:\n
+        here.Zuite_getConfigurationTestDict()[\'customer_organisation_telephone\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//textarea[@name="field_your_default_address_street_address"]</td>\n
+  <td tal:content="python:\n
+      here.Zuite_getConfigurationTestDict()[\'customer_organisation_street_address\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//input[@name="field_your_default_address_zip_code"]</td>\n
+  <td tal:content="python:\n
+      here.Zuite_getConfigurationTestDict()[\'customer_organisation_zip_code\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//select[@name="field_your_default_address_region"]</td>\n
+  <td tal:content="python:\n
+      here.Zuite_getConfigurationTestDict()[\'customer_organisation_region_category\']"></td>\n
+</tr>\n
+<!-- Fill in rest details-->\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_your_default_address_city"]</td>\n
+  <td tal:content="python:\n
+      here.Zuite_getConfigurationTestDict()[\'customer_organisation_city\']"></td>\n
+</tr>\n
+\n
+<!-- Go Second page  (User Accounts)-->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//input[@name="next:method"]</td>\n
+  <td></td>\n
+</tr>\n
+<span metal:use-macro="container/Zuite_viewConfiguratorTestMacroLibrary/macros/configurator_frame_check"> Frame Checks</span>\n
+<span metal:use-macro="container/Zuite_viewConfiguratorTestMacroLibrary/macros/configurator_page2_check"> Frame Checks</span>\n
+\n
+<!-- Go to Previous page (Organisation) and check that it\'s all saved-->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//input[@name="previous:method"]</td>\n
+  <td></td>\n
+</tr>\n
+<span metal:use-macro="container/Zuite_viewConfiguratorTestMacroLibrary/macros/configurator_frame_check"> Frame Checks</span>\n
+<span metal:use-macro="container/Zuite_viewConfiguratorTestMacroLibrary/macros/configurator_page1_check"> Page 1 Checks</span>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//input[@name="field_your_title"]</td>\n
+  <td tal:content="python:\n
+        here.Zuite_getConfigurationTestDict()[\'customer_organisation_title\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//input[@name="field_your_default_email_text"]</td>\n
+  <td tal:content="python:\n
+        here.Zuite_getConfigurationTestDict()[\'customer_organisation_email\']"></td>\n
+\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//input[@name="field_your_default_telephone_text"]</td>\n
+  <td tal:content="python:\n
+        here.Zuite_getConfigurationTestDict()[\'customer_organisation_telephone\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//textarea[@name="field_your_default_address_street_address"]</td>\n
+  <td tal:content="python:\n
+      here.Zuite_getConfigurationTestDict()[\'customer_organisation_street_address\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//input[@name="field_your_default_address_zip_code"]</td>\n
+  <td tal:content="python:\n
+      here.Zuite_getConfigurationTestDict()[\'customer_organisation_zip_code\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//select[@name="field_your_default_address_region"]</td>\n
+  <td tal:content="python:\n
+      here.Zuite_getConfigurationTestDict()[\'customer_organisation_region_category\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//input[@name="field_your_default_address_city"]</td>\n
+  <td tal:content="python:\n
+      here.Zuite_getConfigurationTestDict()[\'customer_organisation_city\']"></td>\n
+</tr>\n
+\n
+\n
+<!-- Go to Next page (User Accounts)-->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//input[@name="next:method"]</td>\n
+  <td></td>\n
+</tr>\n
+<span metal:use-macro="container/Zuite_viewConfiguratorTestMacroLibrary/macros/configurator_frame_check"> Frame Checks</span>\n
+<span metal:use-macro="container/Zuite_viewConfiguratorTestMacroLibrary/macros/configurator_page2_check"> Page 2 Checks</span>\n
+\n
+<tr>\n
+  <td>select</td>\n
+  <td>//select[@name="field_your_company_employees_number"]</td>\n
+  <td tal:content="python:\n
+      here.Zuite_getConfigurationTestDict()[\'customer_company_employees_number\']"></td>\n
+</tr>\n
+\n
+<!-- Go to Next page (User configurations)-->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//input[@name="next:method"]</td>\n
+  <td></td>\n
+</tr>\n
+<span metal:use-macro="container/Zuite_viewConfiguratorTestMacroLibrary/macros/configurator_frame_check"> Frame Checks</span>\n
+<span metal:use-macro="container/Zuite_viewConfiguratorTestMacroLibrary/macros/configurator_page3_check"> Page 3 Checks</span>\n
+\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_your_first_name"]</td>\n
+  <td tal:content="python:\n
+        here.Zuite_getConfigurationTestDict()[\'customer_user1_first_name\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_your_last_name"]</td>\n
+  <td tal:content="python:\n
+        here.Zuite_getConfigurationTestDict()[\'customer_user1_last_name\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_your_reference"]</td>\n
+  <td tal:content="python:\n
+        here.Zuite_getConfigurationTestDict()[\'customer_user1_used_reference\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_your_password"]</td>\n
+  <td tal:content="python:\n
+        here.Zuite_getConfigurationTestDict()[\'customer_user1_password\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_your_password_confirm"]</td>\n
+  <td tal:content="python:\n
+        here.Zuite_getConfigurationTestDict()[\'customer_user1_password\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>//select[@name="field_your_function"]</td>\n
+  <td tal:content="python:\n
+        here.Zuite_getConfigurationTestDict()[\'customer_user1_function\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_your_default_email_text"]</td>\n
+  <td tal:content="python:\n
+        here.Zuite_getConfigurationTestDict()[\'customer_user1_email\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//input[@name="next:method"]</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<!-- Check that it\'s impossible to use an user id which\n
+     exists already at server (witch) side)-->\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>User login is either already used or contains invalid characters</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Please try another one</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_your_reference"]</td>\n
+  <td tal:content="python:\n
+        here.Zuite_getConfigurationTestDict()[\'customer_user1_reference\']"></td>\n
+</tr>\n
+\n
+\n
+<!-- Go to Next page (Accounting)-->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//input[@name="next:method"]</td>\n
+  <td></td>\n
+</tr>\n
+<span metal:use-macro="container/Zuite_viewConfiguratorTestMacroLibrary/macros/configurator_frame_check"> Frame Checks</span>\n
+<span metal:use-macro="container/Zuite_viewConfiguratorTestMacroLibrary/macros/configurator_page4_check"> Page 4 Checks</span>\n
+\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//input[@name="subfield_field_your_period_start_date_year"]</td>\n
+  <td tal:content="python:\n
+    modules[\'DateTime\'].DateTime(modules[\'DateTime\'].DateTime().year(), 1, 1).strftime(\'%Y\')"></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//input[@name="subfield_field_your_period_start_date_month"]</td>\n
+  <td>01</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//input[@name="subfield_field_your_period_start_date_day"]</td>\n
+  <td>01</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//input[@name="subfield_field_your_period_stop_date_year"]</td>\n
+  <td tal:content="python:\n
+    modules[\'DateTime\'].DateTime(modules[\'DateTime\'].DateTime().year(), 1, 1).strftime(\'%Y\')"></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//input[@name="subfield_field_your_period_stop_date_month"]</td>\n
+  <td>12</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//input[@name="subfield_field_your_period_stop_date_day"]</td>\n
+  <td>31</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//input[@name="field_your_period_title"]</td>\n
+  <td tal:content="python:\n
+    modules[\'DateTime\'].DateTime(modules[\'DateTime\'].DateTime().year(), 1, 1).strftime(\'%Y\')"></td>\n
+</tr>\n
+\n
+\n
+<!-- Go to Next page (Application preferences)-->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//input[@name="next:method"]</td>\n
+  <td></td>\n
+</tr>\n
+<span metal:use-macro="container/Zuite_viewConfiguratorTestMacroLibrary/macros/configurator_frame_check"> Frame Checks</span>\n
+<span metal:use-macro="container/Zuite_viewConfiguratorTestMacroLibrary/macros/configurator_page5_check"> Page 5 Checks</span>\n
+\n
+<tr>\n
+  <td>select</td>\n
+  <td>//select[@name="field_your_price_currency"]</td>\n
+  <td tal:content="python:\n
+      here.Zuite_getConfigurationTestDict()[\'customer_organisation_currency\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>//select[@name="field_your_preferred_date_order"]</td>\n
+  <td tal:content="python:\n
+      here.Zuite_getConfigurationTestDict()[\'customer_datetime_format\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>addSelection</td>\n
+  <td>//select[@name="field_your_lang"]</td>\n
+  <td>label=French</td>\n
+</tr>\n
+\n
+<!-- Go to Next page (ERP5 Express installation)-->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//input[@name="next:method"]</td>\n
+  <td></td>\n
+</tr>\n
+<span metal:use-macro="container/Zuite_viewConfiguratorTestMacroLibrary/macros/configurator_frame_check"> Frame Checks</span>\n
+<span metal:use-macro="container/Zuite_viewConfiguratorTestMacroLibrary/macros/configurator_page6_check"> Page 6 Checks</span>\n
+\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//input[@name="next:method"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>waitForCondition</td>\n
+  <td>selenium.isTextPresent("ERP5 configuration process is running.")</td>\n
+  <td>10000</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Please be patient and do not move from current page until you get</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>confirmation that the installation is over.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>It will last approximately 5 to 10 minutes.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>waitForCondition</td>\n
+  <td>selenium.isTextPresent("Configuration is over. Enjoy your new ERP5 system!")</td>\n
+  <td>1000000</td> <!-- set timeout reasonably as it takes time to finish installation-->\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Please click link below.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>You will be redirected to a form in which you can login using</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>one of yours newly created ERP5 user accounts.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Start using your new ERP5 system</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<!-- login with functional test user -->\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/logout</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/login_form</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="__ac_name"]</td>\n
+  <td tal:content="python:\n
+        here.Zuite_getConfigurationTestDict()[\'functional_test_username\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="__ac_password"]</td>\n
+  <td tal:content="python:\n
+      here.Zuite_getConfigurationTestDict()[\'functional_test_password\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//input[@name="logged_in:method"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/view</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>pause</td>\n
+  <td>5000</td>\n
+  <td></td>\n
+</tr>\n
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities">\n
+Wait for activities</span>\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/view</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td tal:content="python:\n
+        here.Zuite_getConfigurationTestDict()[\'functional_test_username\']"></td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+<!-- login with newly created user from Express configuration -->\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/logout</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/login_form</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="__ac_name"]</td>\n
+  <td tal:content="python:\n
+        here.Zuite_getConfigurationTestDict()[\'customer_user1_reference\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="__ac_password"]</td>\n
+  <td tal:content="python:\n
+        here.Zuite_getConfigurationTestDict()[\'customer_user1_password\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//input[@name="logged_in:method"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/view</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td tal:content="python:\n
+        here.Zuite_getConfigurationTestDict()[\'customer_user1_reference\']"></td>\n
+  <td></td>\n
+</tr>\n
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities" />\n
+<span metal:use-macro="container/Zuite_viewConfiguratorTestMacroLibrary/macros/restore_test_environment" />\n
+\n
+</tbody></table>\n
+</body>\n
+</html>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>testStandardConfigurationProcess</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

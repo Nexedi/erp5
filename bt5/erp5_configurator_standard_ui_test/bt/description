@@ -1,0 +1,4 @@
+This contains zelenium tests for express instances. That includes:
+
+* tests for configurator
+* tests for basic configuration expected
