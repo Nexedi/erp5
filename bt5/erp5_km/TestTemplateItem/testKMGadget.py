@@ -208,7 +208,7 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
                         website.ERP5Site_getKnowledgePadListForUser())
     
     # check Web Section
-    pad_group = None
+    pad_group = 'default_section_pad' #None
     websection = self.websection
     websection.ERP5Site_createDefaultKnowledgePadListForUser(
                         mode='web_section',
@@ -230,10 +230,10 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
                         default_pad_group = pad_group)
     current_websection_pad, websection_pads = \
              websection.ERP5Site_getActiveKnowledgePadForUser(websection_pads,
-                                                              mode='web_section',			      
+                                                              mode='web_section',      
                                                               default_pad_group = pad_group )
     self.assertNotEqual(base_websection_pad.getObject(),
-                     current_websection_pad.getObject())
+                        current_websection_pad.getObject())
     
     # check unstick
     websection.WebSection_unStickKnowledgePad(current_websection_pad.getRelativeUrl(), '')
