@@ -103,7 +103,6 @@
                         <string>my_configuration_state</string>
                         <string>my_translated_simulation_state_title</string>
                         <string>my_translated_validation_state_title</string>
-                        <string>my_user_interface_description_file_id</string>
                       </list>
                     </value>
                 </item>
@@ -114,6 +113,7 @@
                         <string>my_resource_title</string>
                         <string>my_specialise_title</string>
                         <string>my_configuration_after_script_id</string>
+                        <string>my_user_interface_description_file_id</string>
                         <string>my_comment</string>
                       </list>
                     </value>
