@@ -82,9 +82,9 @@ class PortalTypeRolesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObjec
     if getattr(aq_self, '_spreadsheet_cache', None) is None:
       role_dict = dict()
       info_dict = self.ConfigurationTemplate_readOOCalcFile(
-                      'default_portal_type_roles_spreadsheet')
-      for sheet_name, table in self.ConfigurationTemplate_readOOCalcFile(
-                          'default_portal_type_roles_spreadsheet').items():
+                      "portal_roles_spreadsheet.ods",
+                      data=self.getDefaultPortalTypeRolesSpreadsheetData())
+      for sheet_name, table in info_dict.items():
         for line in table:
           if 'Portal_Type' in line:
             ptype_role_list = role_dict.setdefault(line['Portal_Type'], [])
