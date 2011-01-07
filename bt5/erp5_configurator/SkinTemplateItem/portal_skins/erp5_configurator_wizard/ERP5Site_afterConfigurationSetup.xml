@@ -55,14 +55,14 @@
 after_script_id = context.getConfigurationAfterScriptId()\n
 after_script = getattr(context, after_script_id, None)\n
 if after_script is not None:\n
-  return after_script(customer_template_relative_url, alter_preferences)\n
+  return after_script()\n
 \n
 log("After script not found for %s." % context.getRelativeUrl())\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>customer_template_relative_url=None, alter_preferences=True</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
