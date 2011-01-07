@@ -308,21 +308,22 @@ def DCWorkflowDefinition_executeTransition(self, ob, tdef=None, kwargs=None):
     validation_exc = None
 
     # Figure out the old and new states.
-    old_sdef = self._getWorkflowStateOf(ob)
-    old_state = old_sdef.getId()
+    old_state = self._getWorkflowStateOf(ob, True)
     if tdef is None:
         new_state = self.initial_state
+        if not new_state:
+            # Do nothing if there is no initial state. We may want to create
+            # workflows with no state at all, only for worklists.
+            return
         former_status = {}
     else:
-        new_state = tdef.new_state_id
-        if not new_state:
-            # Stay in same state.
-            new_state = old_state
+        new_state = tdef.new_state_id or old_state
         former_status = self._getStatusOf(ob)
-    new_sdef = self.states.get(new_state, None)
-    if new_sdef is None:
-        raise WorkflowException, (
-            'Destination state undefined: ' + new_state)
+    old_sdef = self.states[old_state]
+    try:
+        new_sdef = self.states[new_state]
+    except KeyError:
+        raise WorkflowException('Destination state undefined: ' + new_state)
 
     # Execute the "before" script.
     before_script_success = 1
