@@ -1,3 +1,4 @@
+import warnings
 from Products.ERP5.mixin import composition
 from Products.ERP5.ERP5Site import ERP5Site
 
@@ -30,6 +31,24 @@ def patch():
     return ('Business Path',)
 
   ERP5Site.getPortalBusinessPathTypeList = getPortalBusinessPathTypeList
+
+  ## AmountGeneratorMixin
+
+  class true:
+    def __nonzero__(self):
+      warnings.warn("Default value for 'generate_empty_amounts' parameter"
+                    " is False for new simulation", DeprecationWarning)
+      return True
+  true = true()
+
+  from Products.ERP5.mixin.amount_generator import AmountGeneratorMixin
+  for method_id in ('getAggregatedAmountList',): # getGeneratedAmountList
+    m = getattr(AmountGeneratorMixin, method_id)
+    f = m.im_func
+    f = type(f)(f.func_code, f.func_globals, f.func_name,
+                f.func_defaults[:3] + (true,), f.func_closure)
+    m = type(m)(f, None, AmountGeneratorMixin)
+    setattr(AmountGeneratorMixin, method_id, m)
 
   ## CompositionMixin
 

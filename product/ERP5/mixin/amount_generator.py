@@ -148,7 +148,8 @@ class AmountGeneratorMixin:
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getGeneratedAmountList')
   def getGeneratedAmountList(self, amount_list=None, rounding=False,
-                             amount_generator_type_list=None):
+                             amount_generator_type_list=None,
+                             generate_empty_amounts=False):
     """
     Implementation of a generic transformation algorithm which is
     applicable to payroll, tax generation and BOMs. Return the
@@ -291,7 +292,7 @@ class AmountGeneratorMixin:
           quantity *= property_dict.pop('quantity', 1)
         except TypeError: # None or ''
           pass
-        if not quantity:
+        if not (quantity or generate_empty_amounts):
           continue
         # Backward compatibility
         if getattr(self.aq_base, 'create_line', None) == 0:
@@ -337,7 +338,8 @@ class AmountGeneratorMixin:
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getAggregatedAmountList')
   def getAggregatedAmountList(self, amount_list=None, rounding=False,
-                              amount_generator_type_list=None):
+                              amount_generator_type_list=None,
+                              generate_empty_amounts=False):
     """
     Implementation of a generic transformation algorith which is
     applicable to payroll, tax generation and BOMs. Return the
@@ -348,7 +350,8 @@ class AmountGeneratorMixin:
     """
     generated_amount_list = self.getGeneratedAmountList(
       amount_list=amount_list, rounding=rounding,
-      amount_generator_type_list=amount_generator_type_list)
+      amount_generator_type_list=amount_generator_type_list,
+      generate_empty_amounts=generate_empty_amounts)
     # XXX: Do we handle rounding correctly ?
     #      What to do if only total price is rounded ??
     aggregate_dict = {}
@@ -363,7 +366,10 @@ class AmountGeneratorMixin:
       else:
         aggregate[1] += amount.getQuantity()
     for amount, quantity in aggregate_dict.itervalues():
-      amount._setQuantity(quantity)
+      if quantity or generate_empty_amounts:
+        amount._setQuantity(quantity)
+      else:
+        result_list.remove(amount)
     if 0:
       print 'getAggregatedAmountList(%r) -> (%s)' % (
         self.getRelativeUrl(),
