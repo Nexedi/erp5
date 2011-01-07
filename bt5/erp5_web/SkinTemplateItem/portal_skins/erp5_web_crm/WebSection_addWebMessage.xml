@@ -66,7 +66,7 @@ edit_kw = {\'portal_type\': portal_type,\n
            \'source_person_last_name\': source_person_last_name,\n
            \'source_person_default_email_text\': source_person_default_email_text,\n
            \'source_person_default_telephone_text\': source_person_default_telephone_text,\n
-           \'description\': description,\n
+           \'text_content\': text_content,\n
            \'content_type\': \'text/plain\',\n
            \'resource\': resource,\n
            \'source_carrier\': context.getRelativeUrl(),\n
@@ -89,7 +89,7 @@ context.getParentValue().Base_redirect(keep_items={\'portal_status_message\': po
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>source_person_default_email_text=None, source_person_default_telephone_text=None, source_organisation_title=None, title=None, description=None, source_person_first_name=None, source_person_last_name=None, resource=None, **kw</string> </value>
+            <value> <string>source_person_default_email_text=None, source_person_default_telephone_text=None, source_organisation_title=None, title=None, text_content=None, source_person_first_name=None, source_person_last_name=None, resource=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
