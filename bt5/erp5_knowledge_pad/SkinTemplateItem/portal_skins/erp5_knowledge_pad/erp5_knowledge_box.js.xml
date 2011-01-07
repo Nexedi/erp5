@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93010596.68</string> </value>
+            <value> <string>ts94407027.22</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>application/x-javascript</string> </value>
+            <value> <string>application/javascript</string> </value>
         </item>
         <item>
             <key> <string>data</string> </key>
@@ -40,22 +40,19 @@ var is_knowledge_template_used = 0;\n
 var invisible_gadgets={};\n
 \n
 function createCustomKnowledgePadOnServer(){\n
-  url = "ERP5Site_createDefaultKnowledgePadListForUser";\n
-  d = MochiKit.Async.doSimpleXMLHttpRequest(url, \n
-                 {\'mode\': mode,\n
-                  \'default_pad_group\': default_pad_group});\n
+  d = MochiKit.Async.doSimpleXMLHttpRequest("ERP5Site_createDefaultKnowledgePadListForUser", \n
+                                            {\'mode\': mode,\n
+                                             \'default_pad_group\': default_pad_group});\n
   d.addCallback(handleServerSuccess);\n
   function handleServerSuccess(res){\n
     response = res.responseText;\n
-    window.location=cancel_url + \'/view?active_pad_url=\'+response;\n
-  }\n
+    window.location=cancel_url + \'/view?active_pad_url=\'+response;}\n
 }\n
 \n
 function showCreateDefaultKnowledgePadWarningMessage(){\n
   user_choice = confirm("In order to complete operation you must have your own tab on server instead of the default one which you are currently using and which you can not change.Is it OK to create new one for you now?");\n
   if (user_choice==true){\n
-    createCustomKnowledgePadOnServer();\n
-  }\n
+    createCustomKnowledgePadOnServer();}\n
 }\n
 \n
 function handleServerError(res){\n
@@ -63,11 +60,10 @@ function handleServerError(res){\n
 };\n
 \n
 function createCookie(name, value, days, path) {\n
-  if (days) {\n
-          var date = new Date();\n
-          date.setTime(date.getTime()+(days*24*60*60*1000));\n
-          var expires = "; expires="+date.toGMTString();\n
-  }\n
+  if (days){\n
+    var date = new Date();\n
+    date.setTime(date.getTime()+(days*24*60*60*1000));\n
+    var expires = "; expires="+date.toGMTString();}\n
   else var expires = "";\n
   if (!path){var path=\'/\';}\n
   document.cookie = name+"="+value+expires+"; path="+path;\n
@@ -76,59 +72,57 @@ function createCookie(name, value, days, path) {\n
 function updater(url, box_relative_url, dom_id, \n
                  parent_web_section_url, editable_mode, additionnal_request_params){\n
   /* request box content from server */\n
- request_params = {};\n
- /* getting parameters for the request in the form\'s hidden inputs */\n
- inputs =  getElement(dom_id).getElementsByTagName(\'input\');\n
- forEach(inputs, function (input){\n
-   if(input.type == \'hidden\'){\n
-     // turn \'gadget_form_id\' into \'form_id\'\n
-     if(input.name == \'gadget_form_id\'){\n
-       request_params[\'form_id\'] = input.value;}\n
-     else if(input.name.substring(input.name.length,input.name.length-5) == \':list\'){\n
-       if(typeof(request_params[input.name]) == \'undefined\'){\n
-         request_params[input.name] = new Array()\n
-       }\n
-       request_params[input.name].push(input.value);\n
-     }\n
-     else{\n
-       request_params[input.name] = input.value;\n
-     }\n
-   }\n
-});\n
-\n
- /*getting parameters for request from the parameter additionnal_request_params*/\n
- forEach(keys(additionnal_request_params), function (key){\n
-   request_params[key] = additionnal_request_params[key];\n
- });\n
-\n
- request_params[\'box_relative_url\'] = box_relative_url;\n
- request_params[\'parent_web_section_url\'] = parent_web_section_url; \n
- request_params[\'is_gadget_mode:int\'] = 1; \n
- request_params[\'editable_mode:int\'] = editable_mode; \n
-\n
- getElement(dom_id).style.opacity = 0.5;\n
- d = MochiKit.Async.doSimpleXMLHttpRequest(url, request_params);\n
- d.addCallbacks(handleServerSuccess, handleServerError);\n
- function handleServerSuccess(res){\n
-      content_type = res.getResponseHeader(\'Content-Type\');\n
-      if(content_type.search("application/json")!=-1){\n
-        /* server returned JSON which may contain HTML & JavaScript */\n
-        text = res.responseText \n
-        json_dict = evalJSON(text);\n
-        html = json_dict[\'body\'];\n
-        eval(json_dict[\'javascript\']);\n
+  request_params = {};\n
+  /* getting parameters for the request in the form\'s hidden inputs */\n
+  inputs =  MochiKit.DOM.getElement(dom_id).getElementsByTagName(\'input\');\n
+  forEach(inputs, function (input){\n
+    if(input.type == \'hidden\'){\n
+      // turn \'gadget_form_id\' into \'form_id\'\n
+      if(input.name == \'gadget_form_id\'){\n
+        request_params[\'form_id\'] = input.value;}\n
+      else if(input.name.substring(input.name.length,input.name.length-5) == \':list\'){\n
+        if(typeof(request_params[input.name]) == \'undefined\'){\n
+          request_params[input.name] = new Array()\n
+        }\n
+        request_params[input.name].push(input.value);\n
       }\n
       else{\n
-        /* server returned HTML */\n
-        html = res.responseText;\n
+        request_params[input.name] = input.value;\n
       }\n
+    }\n
+  });\n
+\n
+  /*getting parameters for request from the parameter additionnal_request_params*/\n
+  forEach(keys(additionnal_request_params), function (key){\n
+    request_params[key] = additionnal_request_params[key];\n
+  });\n
+\n
+  request_params[\'box_relative_url\'] = box_relative_url;\n
+  request_params[\'parent_web_section_url\'] = parent_web_section_url; \n
+  request_params[\'is_gadget_mode:int\'] = 1; \n
+  request_params[\'editable_mode:int\'] = editable_mode; \n
+\n
+  MochiKit.DOM.getElement(dom_id).style.opacity = 0.5;\n
+  d = MochiKit.Async.doSimpleXMLHttpRequest(url, request_params);\n
+  d.addCallbacks(handleServerSuccess, handleServerError);\n
+  function handleServerSuccess(res){\n
+    content_type = res.getResponseHeader(\'Content-Type\');\n
+    if(content_type.search("application/json")!=-1){\n
+      /* server returned JSON which may contain HTML & JavaScript */\n
+      text = res.responseText \n
+      json_dict = evalJSON(text);\n
+      html = json_dict[\'body\'];\n
+      eval(json_dict[\'javascript\']);}\n
+    else{\n
+      /* server returned HTML */\n
+      html = res.responseText;}\n
       /* set HTML as returned from server */\n
-      getElement(dom_id).innerHTML = html;\n
-      getElement(dom_id).style.opacity = 1.0;};\n
+    MochiKit.DOM.getElement(dom_id).innerHTML = html;\n
+    MochiKit.DOM.getElement(dom_id).style.opacity = 1.0;};\n
       \n
- function handleServerError(res){\n
-      getElement(dom_id).innerHTML = \'Server side error.\';\n
-      getElement(dom_id).style.opacity = 1.0;};\n
+  function handleServerError(res){\n
+    MochiKit.DOM.getElement(dom_id).innerHTML = \'Server side error.\';\n
+    MochiKit.DOM.getElement(dom_id).style.opacity = 1.0;};\n
 }\n
 \n
 function checkForActivitiesOnServer(timeout, return_url, mode, default_pad_group){\n
@@ -152,27 +146,24 @@ function stickPadOnWebSection(create_url,\n
                               cancel_url){\n
   /* stick pad on Web Section and then check if \n
      activities are over and refresh current page */\n
-  d = doSimpleXMLHttpRequest(\n
-           create_url, \n
-           {\'knowledge_pad_url\': knowledge_pad_url,\n
-            \'cancel_url\': cancel_url});\n
+  d = MochiKit.Async.doSimpleXMLHttpRequest(create_url, \n
+                                            {\'knowledge_pad_url\': knowledge_pad_url,\n
+                                             \'cancel_url\': cancel_url});\n
   d.addCallbacks(handleServerSuccess, handleServerError);\n
   function handleServerSuccess(res){\n
-      window.location=cancel_url+\'?active_pad_url=\'+res.responseText;\n
-      };\n
+    window.location=cancel_url+\'?active_pad_url=\'+res.responseText;};\n
 };\n
 \n
 function createDefaultPadOnServer(timeout, create_url,\n
                                   default_pad_group, return_url, mode){\n
   /* create default tab on server and then check if \n
      activities are over and refresh current page */\n
-  d = doSimpleXMLHttpRequest(\n
-           create_url, \n
-           {\'default_pad_group\': default_pad_group,\n
-            \'mode\': mode});\n
+  d = MochiKit.Async.doSimpleXMLHttpRequest(create_url, \n
+                                            {\'default_pad_group\': default_pad_group,\n
+                                             \'mode\': mode});\n
   d.addCallbacks(handleServerSuccess, handleServerError);\n
   function handleServerSuccess(res){\n
-      checkForActivitiesOnServer(timeout, return_url, mode, default_pad_group);};\n
+    checkForActivitiesOnServer(timeout, return_url, mode, default_pad_group);};\n
 };\n
 \n
 // This function can be used to submit gadget preferences form whenever\n
@@ -215,8 +206,7 @@ function submitAsynchronousGadgetPreferenceForm(\n
   // iterate over all possible form elements within edit form,\n
   // collect them and send to server\n
   var request_str = "?box_relative_url=" + box_relative_url+ "&form_fields_main_prefix=" + form_fields_main_prefix + "&";\n
-  var url="KnowledgeBox_baseEdit";\n
-  forEach(getElementsByTagAndClassName(\'input\', null, form_dom_id) , function (item) {\n
+  forEach(MochiKit.DOM.getElementsByTagAndClassName(\'input\', null, form_dom_id) , function (item) {\n
     if (item.type == "checkbox"){\n
       if (item.checked){request_str+=item.name + \':boolean=True&\';}\n
       else {request_str+=item.name + \':boolean=False&\';}}\n
@@ -225,10 +215,10 @@ function submitAsynchronousGadgetPreferenceForm(\n
     if (item.type == "text"){request_str+=item.name + \'=\' + item.value + \'&\';}\n
     if (item.type == "password"){request_str+=item.name + \'=\' + item.value + \'&\';}\n
   });\n
-  forEach(getElementsByTagAndClassName(\'select\', null, form_dom_id), function (item) {\n
+  forEach(MochiKit.DOM.getElementsByTagAndClassName(\'select\', null, form_dom_id), function (item) {\n
     //support multifield in gadget edit form\n
     if (item.multiple){\n
-      forEach(getElementsByTagAndClassName(\'option\', null, item), function (selection) {\n
+      forEach(MochiKit.DOM.getElementsByTagAndClassName(\'option\', null, item), function (selection) {\n
         if(selection.selected){\n
           request_str+=item.name + \'=\' + selection.value + \'&\';\n
         }\n
@@ -239,23 +229,23 @@ function submitAsynchronousGadgetPreferenceForm(\n
   });\n
 \n
   /* save form preferences to remote server*/\n
-  url = url + request_str;\n
+  url = "KnowledgeBox_baseEdit" + request_str;\n
   d = MochiKit.Async.doSimpleXMLHttpRequest(url);\n
   d.addCallback(handleServerSuccess);\n
   function handleServerSuccess(res){\n
     /* update content view area back from server */\n
     updater(view_form_url, box_relative_url, visual_block_dom_id);\n
-    toggle(form_dom_id);}\n
+    MochiKit.Visual.toggle(form_dom_id);}\n
   };\n
 \n
 function updateServerBoxColumnLayout(container){\n
   // read columns structure from DOM  ..\n
   var columns_arr = new Array;\n
-  var columns = getElementsByTagAndClassName(\'div\', \'portal-column\');\n
+  var columns = MochiKit.DOM.getElementsByTagAndClassName("div", "portal-column");\n
   // sort alphabetically as it\'s required to get proper layout from DOM\n
   columns.sort(keyComparator("id")); \n
   for (var i = 0; i < columns.length; i++){\n
-    column_items = getElementsByTagAndClassName(\'div\', \'block\', columns[i]);\n
+    column_items = MochiKit.DOM.getElementsByTagAndClassName("div", "block", columns[i]);\n
     var items_arr = new Array;\n
     for (var j = 0; j < column_items.length; j++){\n
         items_arr[j] = column_items[j].id;};\n
@@ -266,25 +256,25 @@ function updateServerBoxColumnLayout(container){\n
   // XXX: This may bloat ZODB as everry change is a chnage to an ZODB object.\n
   if (layout!=last_layout){\n
     last_layout = layout;\n
-    doSimpleXMLHttpRequest("KnowledgePad_saveBoxColumnLayout", {user_layout: layout});\n
+    MochiKit.Async.doSimpleXMLHttpRequest("KnowledgePad_saveBoxColumnLayout", {user_layout: layout});\n
     }\n
   return\n
 }\n
 \n
 function addBoxToServer(url, dom_id, gadget_relative_url){\n
   /* add gadget to knowledge pad */\n
-  d = doSimpleXMLHttpRequest(url, {gadget_relative_url: gadget_relative_url});\n
+  d = MochiKit.Async.doSimpleXMLHttpRequest(url, {gadget_relative_url: gadget_relative_url});\n
   d.addCallback(handleServerSuccess);\n
   function handleServerSuccess(res){\n
-    button = getElement(dom_id);\n
+    button = MochiKit.DOM.getElement(dom_id);\n
     button.innerHTML = res.responseText;\n
     button.disabled = true;}\n
 }\n
 \n
 function showAddNewPadPopup(){\n
-   toggleElementById(\'add_new_tab_dialog\'); \n
-   // set focus on new Pad title after toggle effect is over \n
-   setTimeout("MochiKit.DOM.getElement(\'new_pad_title\').focus()", 500 );\n
+  MochiKit.Visual.toggle(\'add_new_tab_dialog\');\n
+  // set focus on new Pad title after toggle effect is over \n
+  setTimeout("MochiKit.DOM.getElement(\'new_pad_title\').focus()", 500 );\n
 }\n
 \n
 function showRenamePadPopup(knowledge_pad_relative_url, knowledge_pad_title_dom_id){\n
@@ -292,9 +282,9 @@ function showRenamePadPopup(knowledge_pad_relative_url, knowledge_pad_title_dom_
   active_knowledge_pad_relative_url = knowledge_pad_relative_url;\n
   active_knowledge_pad_title_dom_id = knowledge_pad_title_dom_id;\n
   // init rename dialog input field to current active pad\n
-  getElement("new_knowledge_pad_title").value = getElement(knowledge_pad_title_dom_id).innerHTML;\n
+  MochiKit.DOM.getElement("new_knowledge_pad_title").value = MochiKit.DOM.getElement(knowledge_pad_title_dom_id).innerHTML;\n
   // show rename dialog\n
-  toggleElementById(\'rename_tab_dialog\');\n
+  MochiKit.Visual.toggle("rename_tab_dialog");\n
   // set focus on new Pad title after toggle effect is over \n
   setTimeout("MochiKit.DOM.getElement(\'new_knowledge_pad_title\').focus()", 500 );\n
 }\n
@@ -302,7 +292,7 @@ function showRenamePadPopup(knowledge_pad_relative_url, knowledge_pad_title_dom_
 function loadPadFromServer(pad_relative_url, selected_pad_dom_id, mode){\n
   /* Load Pad from server */\n
   //  show some animation\n
-  getElement("loading-wrapper").style.display="block";\n
+  MochiKit.DOM.getElement("loading-wrapper").style.display="block";\n
   \n
   d = MochiKit.Async.loadJSONDoc(\'KnowledgePag_getPadAsJSON\', \n
                                  {\'pad_relative_url\':pad_relative_url,\n
@@ -310,14 +300,14 @@ function loadPadFromServer(pad_relative_url, selected_pad_dom_id, mode){\n
   d.addCallbacks(handleServerSuccess, metadataFetchFailed);\n
 \n
   // set old pad to not selected\n
-  pads_container = getElement("tabs");\n
-  old_selected_pad = getFirstElementByTagAndClassName("li", "tab_selected", pads_container);\n
+  pads_container = MochiKit.DOM.getElement("tabs");\n
+  old_selected_pad = MochiKit.DOM.getFirstElementByTagAndClassName("li", "tab_selected", pads_container);\n
   old_selected_pad.setAttribute("class", "tab");\n
-  pad_actions = getFirstElementByTagAndClassName("div", "pad-actions", old_selected_pad);\n
+  pad_actions = MochiKit.DOM.getFirstElementByTagAndClassName("div", "pad-actions", old_selected_pad);\n
   pad_actions.style.display="none";\n
   \n
   // set new selected pad class \n
-  new_selected_pad = getElement(selected_pad_dom_id);\n
+  new_selected_pad = MochiKit.DOM.getElement(selected_pad_dom_id);\n
   new_selected_pad.setAttribute("class", "tab tab_selected");\n
   \n
   // enable "settings" for this pad and hide instant switch\n
@@ -332,14 +322,14 @@ function loadPadFromServer(pad_relative_url, selected_pad_dom_id, mode){\n
   function handleServerSuccess(meta){\n
     body = meta.body\n
     javascript = meta.javascript\n
-    body_element = getElement(\'pad-body-wrapper\');\n
+    body_element = MochiKit.DOM.getElement(\'pad-body-wrapper\');\n
     body_element.innerHTML = body;\n
     // init new Pad\n
     initialize();\n
     // execute JS code provided by server\n
     eval(javascript);\n
     // give some timeout as we can be sometimes two fast loading a tab\n
-    setTimeout("getElement(\'loading-wrapper\').style.display=\'none\';", 250 );\n
+    setTimeout("MochiKit.DOM.getElement(\'loading-wrapper\').style.display=\'none\';", 250 );\n
   }\n
 }\n
 \n
@@ -364,7 +354,7 @@ function addPadOnServer(create_url,\n
                         mode,\n
                         cancel_url){\n
   /* add pad on server */\n
-  pad_title = getElement(\'new_pad_title\');\n
+  pad_title = MochiKit.DOM.getElement(\'new_pad_title\');\n
   pad_title_value = pad_title.value\n
   window.location = create_url + \'?redirect_url=\' + cancel_url + \'&mode=\' + mode + \'&pad_title=\'+pad_title_value ;\n
 };\n
@@ -377,7 +367,7 @@ function removeKnowledgePadFromServer(knowledge_pad_relative_url, mode){\n
     var user_choice = true;\n
     user_choice = confirm("Are you sure you want to remove this pad from your home?");\n
     if (user_choice==true){\n
-      location.href=\'ERP5Site_deleteKnowledgePad?knowledge_pad_relative_url=\' + knowledge_pad_relative_url+\'&mode=\'+mode;}\n
+      location.href="ERP5Site_deleteKnowledgePad?knowledge_pad_relative_url=" + knowledge_pad_relative_url+"&mode="+mode;}\n
     }\n
 }\n
 \n
@@ -394,28 +384,23 @@ function renameKnowledgePadToServer(){\n
     showCreateDefaultKnowledgePadWarningMessage();}\n
   else{\n
     // rename it locally and update server asynchonously\n
-    title_element = getElement(active_knowledge_pad_title_dom_id)\n
-    input_element = getElement("new_knowledge_pad_title")\n
+    title_element = MochiKit.DOM.getElement(active_knowledge_pad_title_dom_id)\n
+    input_element = MochiKit.DOM.getElement("new_knowledge_pad_title")\n
     var knowledge_pad_title = input_element.value;\n
     title_element.innerHTML = knowledge_pad_title;\n
-    doSimpleXMLHttpRequest("ERP5Site_renameKnowledgePad", \n
-                          {knowledge_pad_relative_url: active_knowledge_pad_relative_url,\n
-                           knowledge_pad_title: knowledge_pad_title});\n
+    MochiKit.Async.doSimpleXMLHttpRequest("ERP5Site_renameKnowledgePad", \n
+                                          {knowledge_pad_relative_url: active_knowledge_pad_relative_url,\n
+                                           knowledge_pad_title: knowledge_pad_title});\n
   }\n
   //anyway toggle show dialog\n
-  toggle("rename_tab_dialog");\n
-}\n
-\n
-function toggleElementById(dom_id){\n
-  /* Toggle element by its Id. */\n
-  MochiKit.Visual.toggle(dom_id);\n
+  MochiKit.Visual.toggle("rename_tab_dialog");\n
 }\n
 \n
 function initialize(){\n
   // define sortable columns\n
   if (is_knowledge_template_used==0){\n
     // allow drag and drop only if we are dealing with a pad we can modify\n
-    var sortables = getElementsByTagAndClassName(\'div\', \'portal-column\');\n
+    var sortables = MochiKit.DOM.getElementsByTagAndClassName(\'div\', \'portal-column\');\n
     forEach(sortables, function (item) {\n
       // eliminate undraggable columns by checking exact match\n
       if (item.className==\'portal-column\'){\n
@@ -435,41 +420,41 @@ function initialize(){\n
     })}\n
 \n
   // enable show/hide tabs\n
-  tabs = getElement(\'tabs\');\n
-  tabs_switcher = getElement(\'tabs_switcher\');\n
-  add_gadget = getElement(\'add_new_gadget_link\')\n
+  tabs = MochiKit.DOM.getElement(\'tabs\');\n
+  tabs_switcher = MochiKit.DOM.getElement("tabs_switcher");\n
+  add_gadget = MochiKit.DOM.getElement("add_new_gadget_link")\n
   if(tabs_switcher){\n
     connect(tabs_switcher, \'onclick\', function (){\n
       var is_tabs_visible=0;\n
       if(tabs.style.display!=\'block\'){\n
         is_tabs_visible=1;\n
-        getElement("tab_switcher_visible").style.display = "block";\n
-        getElement("tab_switcher_hidden").style.display = "none";\n
+        MochiKit.DOM.getElement("tab_switcher_visible").style.display = "block";\n
+        MochiKit.DOM.getElement("tab_switcher_hidden").style.display = "none";\n
         add_gadget.className = "border_bottom1px";\n
         tabs_switcher.className = "border_bottom1px";\n
       }\n
       else{\n
-        getElement("tab_switcher_hidden").style.display = "block";\n
-        getElement("tab_switcher_visible").style.display = "none";\n
+        MochiKit.DOM.getElement("tab_switcher_hidden").style.display = "block";\n
+        MochiKit.DOM.getElement("tab_switcher_visible").style.display = "none";\n
         add_gadget.className = "border_bottom0px";\n
         tabs_switcher.className = "border_bottom0px";\n
       }\n
-      toggle(tabs);\n
+      MochiKit.Visual.toggle(tabs);\n
       createCookie("is_tabs_visible", is_tabs_visible, 365);\n
     });}\n
 \n
   // for each box (gadget) add respective event handlers\n
-  var boxes = getElementsByTagAndClassName(\'div\', \'block\');\n
+  var boxes = MochiKit.DOM.getElementsByTagAndClassName("div", "block");\n
   forEach(boxes, function (box) {\n
-     var edit = getFirstElementByTagAndClassName(\'a\',\n
+     var edit = MochiKit.DOM.getFirstElementByTagAndClassName(\'a\',\n
                                                  \'block-edit-form\', box);\n
-     var edit_form = getFirstElementByTagAndClassName(\'div\', \n
+     var edit_form = MochiKit.DOM.getFirstElementByTagAndClassName(\'div\', \n
                                                       \'edit-form\', box);\n
-     var remove = getFirstElementByTagAndClassName(\'a\', \n
+     var remove = MochiKit.DOM.getFirstElementByTagAndClassName(\'a\', \n
                                                    \'block-remove\', box);\n
-     var minimize = getFirstElementByTagAndClassName(\'a\', \n
+     var minimize = MochiKit.DOM.getFirstElementByTagAndClassName(\'a\', \n
                                                      \'block-minimize\', box);\n
-     var minimize_wrapper = getFirstElementByTagAndClassName(\'div\', \n
+     var minimize_wrapper = MochiKit.DOM.getFirstElementByTagAndClassName(\'div\', \n
                                                              \'minimize_wrapper\', box);\n
      if(minimize){\n
        connect(minimize, \'onclick\', function (){\n
@@ -477,7 +462,7 @@ function initialize(){\n
            showCreateDefaultKnowledgePadWarningMessage();}\n
          else{\n
            // togle DOM element (locally)\n
-           toggle(minimize_wrapper);\n
+           MochiKit.Visual.toggle(minimize_wrapper);\n
            js_dom_id = box.id + \'_content\';\n
            js_code = invisible_gadgets[js_dom_id];\n
            if (js_code!=undefined){\n
@@ -485,14 +470,14 @@ function initialize(){\n
              // gadget is now visible, i.e. no need to query server just toggle locally dom\n
              delete invisible_gadgets[js_dom_id];}\n
            // update server \n
-           doSimpleXMLHttpRequest("KnowledgeBox_toggleVisibility", \n
-                                  {box_relative_url: box.id});}});\n
+           MochiKit.Async.doSimpleXMLHttpRequest("KnowledgeBox_toggleVisibility", \n
+                                                 {box_relative_url: box.id});}});\n
        }\n
      if(edit){\n
        connect(edit, \'onclick\', function (){\n
          if (is_knowledge_template_used){\n
            showCreateDefaultKnowledgePadWarningMessage();}\n
-         else{toggle(edit_form);}});\n
+         else{MochiKit.Visual.toggle(edit_form);}});\n
       }\n
 \n
      if(remove){\n
@@ -502,9 +487,9 @@ function initialize(){\n
          else{\n
               user_choice = confirm("Are you sure you want to remove this gadget from your personalized page?");\n
               if (user_choice==true){\n
-                toggle(box);\n
-                doSimpleXMLHttpRequest("KnowledgePad_deleteBox", \n
-                                     {box_relative_url: box.id});}}});\n
+                MochiKit.Visual.toggle(box);\n
+                MochiKit.Async.doSimpleXMLHttpRequest("KnowledgePad_deleteBox", \n
+                                                      {box_relative_url: box.id});}}});\n
       }\n
   });\n
 }\n
@@ -521,7 +506,7 @@ MochiKit.DOM.addLoadEvent(initialize);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>19630</int> </value>
+            <value> <int>20374</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
