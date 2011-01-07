@@ -56,7 +56,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Configure organisation</string> </value>
+            <value> <string>Configure Organisation</string> </value>
         </item>
         <item>
             <key> <string>transition_form_id</string> </key>

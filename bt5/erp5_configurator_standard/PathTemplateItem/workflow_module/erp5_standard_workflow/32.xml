@@ -79,7 +79,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Configure preferences</string> </value>
+            <value> <string>Configure ERP5 Preferences</string> </value>
         </item>
         <item>
             <key> <string>transition_form_id</string> </key>
