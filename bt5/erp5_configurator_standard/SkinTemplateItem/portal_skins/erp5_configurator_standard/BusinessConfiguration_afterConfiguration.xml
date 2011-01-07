@@ -85,7 +85,7 @@ if business_template is not None:\n
       print "Updated Role Mappings for: %s(%s) " %(module.getTitle(), module.getPortalType())\n
 \n
   # update path items. FIXME: local roles should be exported by business template instead\n
-  for path in business_templates.getTemplatePathList():\n
+  for path in business_template.getTemplatePathList():\n
     obj = portal.restrictedTraverse(path, None)\n
     # no need to update security on categories\n
     if obj is not None and obj.getPortalType() not in (\'Category\', \'Base Category\',):\n
