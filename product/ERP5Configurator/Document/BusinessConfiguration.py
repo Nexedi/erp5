@@ -130,8 +130,6 @@ class BusinessConfiguration(Item):
         existing_conf_items = root_conf_save.objectIds()
         existing_conf_items = map(None, existing_conf_items)
         root_conf_save.manage_delObjects(existing_conf_items)
-    ## save ...
-    root_conf_save.edit(**form_kw)
     ## Add some variables so we can get use them in workflow after scripts
     form_kw['configuration_save_url'] = root_conf_save.getRelativeUrl()
     form_kw['transition'] = transition.getRelativeUrl()
