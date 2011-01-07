@@ -35,7 +35,7 @@ class PortalTypeRolesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObjec
                     , PropertySheet.XMLObject
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore
-                    , PropertySheet.PortalTypeRolesSpreadsheetConfiguratorItem
+                    , PropertySheet.ConfiguratorItemSpreadsheet
                     )
 
   def build(self, business_configuration):
@@ -83,7 +83,7 @@ class PortalTypeRolesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObjec
       role_dict = dict()
       info_dict = self.ConfigurationTemplate_readOOCalcFile(
                       "portal_roles_spreadsheet.ods",
-                      data=self.getDefaultPortalTypeRolesSpreadsheetData())
+                      data=self.getDefaultConfigurationSpreadsheetData())
       for sheet_name, table in info_dict.items():
         for line in table:
           if 'Portal_Type' in line:
@@ -93,14 +93,14 @@ class PortalTypeRolesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObjec
       aq_self._spreadsheet_cache = role_dict
 
   security.declareProtected(Permissions.ModifyPortalContent,
-                           'setDefaultPortalTypeRolesSpreadsheetFile')
-  def setDefaultPortalTypeRolesSpreadsheetFile(self, *args, **kw):
+                           'setDefaultConfigurationSpreadsheetFile')
+  def setDefaultConfigurationSpreadsheetFile(self, *args, **kw):
     """Reset the spreadsheet cache."""
-    self._setDefaultPortalTypeRolesSpreadsheetFile(*args, **kw)
+    self._setDefaultConfigurationSpreadsheetFile(*args, **kw)
     self._spreadsheet_cache = None
     self.reindexObject()
 
   security.declareProtected(Permissions.ModifyPortalContent,
-                           'setPortalTypeRolesSpreadsheetFile')
-  setPortalTypeRolesSpreadsheetFile = setDefaultPortalTypeRolesSpreadsheetFile
+                           'setConfigurationSpreadsheetFile')
+  setConfigurationSpreadsheetFile = setDefaultConfigurationSpreadsheetFile
 
