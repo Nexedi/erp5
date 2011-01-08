@@ -201,13 +201,8 @@ def TemplateTool_reinstallBT5(self, bt5_title, update_catalog=0):
     BusinessTemplate_getModifiedObject = \
       aq_base(portal.BusinessTemplate_getModifiedObject)
 
-  install_kw = {}
-  listbox_object_list = BusinessTemplate_getModifiedObject.__of__(installed_bt5)()
-  for listbox_line in listbox_object_list:
-    install_kw[listbox_line.object_id] = listbox_line.choice_item_list[0][1]
   # Call reinstall
-  installed_bt5.reinstall(object_to_update=install_kw,
-                          update_catalog=update_catalog)
+  installed_bt5.reinstall(update_catalog=update_catalog)
   log("Reinstalled %s" % (bt5_title,))
 
 def ERP5Site_changeAuthoredDocumentListOwnership(self, old_owner, new_owner):
