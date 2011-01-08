@@ -427,7 +427,7 @@ class SafeHTML:
             except IllegalHTML, inst:
                 data.setData(msg_pat % ("Error", str(inst)))
                 break
-            except HTMLParseError:
+            except (HTMLParseError, UnicodeDecodeError):
                 if repeat:
                     raise # try to repair only on first pass
                 # ouch !
