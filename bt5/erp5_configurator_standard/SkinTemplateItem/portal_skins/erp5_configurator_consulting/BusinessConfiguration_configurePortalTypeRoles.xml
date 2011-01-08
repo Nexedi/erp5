@@ -57,7 +57,7 @@ context.setGlobalConfigurationAttr(\n
 \n
 configuration_save.setIntIndex(1000)\n
 configuration_save.addConfigurationItem("Portal Type Roles Spreadsheet Configurator Item",\n
-                                        portal_type_roles_spreadsheet_file=portal_type_roles_spreadsheet)\n
+                                        configuration_spreadsheet_file=portal_type_roles_spreadsheet)\n
 </string> </value>
         </item>
         <item>

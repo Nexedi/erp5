@@ -75,6 +75,7 @@
                     <value>
                       <list>
                         <string>your_portal_type_roles_spreadsheet</string>
+                        <string>your_explanation</string>
                       </list>
                     </value>
                 </item>

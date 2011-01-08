@@ -72,6 +72,7 @@
                         <string>your_default_address_city</string>
                         <string>your_default_address_region</string>
                         <string>your_group</string>
+                        <string>your_default_fax_text</string>
                       </list>
                     </value>
                 </item>

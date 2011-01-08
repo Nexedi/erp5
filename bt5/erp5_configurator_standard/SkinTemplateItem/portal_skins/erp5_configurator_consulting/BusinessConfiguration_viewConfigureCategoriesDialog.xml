@@ -74,7 +74,8 @@
                     <key> <string>Default</string> </key>
                     <value>
                       <list>
-                        <string>your_categories_spreadsheet</string>
+                        <string>your_configuration_spreadsheet</string>
+                        <string>your_explanation</string>
                       </list>
                     </value>
                 </item>
