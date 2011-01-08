@@ -263,7 +263,7 @@ $(document).ready(function(){\n
  $("div.gadget-listbox").dialog({\n
     autoOpen: false,\n
     height: 416,\n
-    width: 500,\n
+    width: 600,\n
     modal: true,\n
     buttons: {\n
       "Add": function(){\n

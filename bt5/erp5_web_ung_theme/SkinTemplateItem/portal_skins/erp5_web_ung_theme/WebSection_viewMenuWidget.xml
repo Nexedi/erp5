@@ -80,17 +80,14 @@
    </fieldset>\n
   </form> \n
   </div>\n
-   <div class="file-selection">\n
+  <div class="file-selection">\n
    <div class="file-quick-search"></div>\n
-  <div class="file-quick-browser">\n
-  <div class="quick-search-item">ERP5</div>\n
-  <div class="quick-search-item">SANEF</div>\n
-  <div class="quick-search-item">New</div>\n
-  </div>\n
   </div>\n
   <div class="gadget-container">\n
-       Here go the gadgets\n
-  </div>\n
+    <a href="#" id="add_gadget">Add Gadget</a>\n
+    <div class="gadget-listbox" id="gadget-listbox" title="Add Gadget">\n
+      <table id="gadget-table"></table>\n
+    </div>\n
 </div>
 
 ]]></unicode> </value>

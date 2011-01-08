@@ -58,7 +58,7 @@ gadget_list = context.portal_catalog(portal_type="Gadget")\n
 \n
 gadget_data_list = []\n
 for gadget in gadget_list:\n
-  image_url = gadget.getRelativeUrl() + "/default_image?resolution=75.0&display=thumbnail&format=png"\n
+  image_url = gadget.getRelativeUrl() + "/default_image?resolution=75.0&display=xsmall&format=png"\n
   gadget_data_list.append(dict(title=gadget.getTitle(),\n
                                image_url=image_url,\n
                                id=gadget.getId()))\n
