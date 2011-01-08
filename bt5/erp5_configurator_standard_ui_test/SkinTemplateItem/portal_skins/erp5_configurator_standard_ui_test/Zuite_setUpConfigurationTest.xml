@@ -91,7 +91,7 @@ business_configuration = context.business_configuration_module.newContent(\n
                             title=bc_id,\n
                             reference=configuration_info[\'configuration_key\'])\n
 \n
-business_configuration.setResource("workflow_module/erp5_standard_workflow")\n
+business_configuration.setResource(workflow_path)\n
 \n
 # (Re)Create the Person with already used login.\n
 kw = dict(portal_type="Person",\n
@@ -111,7 +111,7 @@ return "### Init Ok ###"\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>workflow_path="workflow_module/erp5_standard_workflow"</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>

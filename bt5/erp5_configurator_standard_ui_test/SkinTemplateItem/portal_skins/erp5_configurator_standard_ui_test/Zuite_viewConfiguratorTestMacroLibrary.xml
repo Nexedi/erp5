@@ -149,6 +149,115 @@
   </tr>\n
 </tal:block>\n
 \n
+<tal:block metal:define-macro="configurator_consulting_frame_check">\n
+\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>ERP5 Configuration</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Hello</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Installation steps</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Your categories</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Your roles settings</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Number of user accounts</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>User accounts configuration</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Accounting</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Application preferences</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>ERP5 installation</td>\n
+    <td></td>\n
+  </tr>\n
+</tal:block>\n
+\n
+<tal:block metal:define-macro="configurator_consulting_page1_check">\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Your Categories</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Upload your categories spreadsheet.</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Categories Spreadsheet</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyElementPresent</td>\n
+    <td>//input[@name="next:method"]</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyValue</td>\n
+    <td>//input[@name="next:method"]</td>\n
+    <td>Configure Categories</td>\n
+  </tr>\n
+</tal:block>\n
+\n
+<tal:block metal:define-macro="configurator_consulting_page2_check">\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Your roles settings</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Upload your roles settings spreadsheet.</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Portal Type Roles Spreadsheet</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyElementPresent</td>\n
+    <td>//input[@name="next:method"]</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyValue</td>\n
+    <td>//input[@name="next:method"]</td>\n
+    <td>Configure Rules</td>\n
+  </tr>\n
+</tal:block>\n
 \n
 <tal:block metal:define-macro="configurator_page1_check">\n
   <tr>\n
