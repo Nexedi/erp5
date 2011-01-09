@@ -100,8 +100,6 @@ if business_template is not None:\n
       if obj.getPortalType() in (\'Person\', \n
                                  \'Organisation\', \n
                                  \'Account\', \n
-                                 \'Tax\',\n
-                                 \'Discount\', \n
                                  \'Service\', \'Product\',\n
                                  \'Sale Trade Condition\', \n
                                  \'Purchase Trade Condition\',\n
@@ -157,8 +155,7 @@ module_business_application_map = {\'base\': (\'currency_module\',\n
                                            \'image_module\',\n
                                            \'document_ingestion_module\',\n
                                            \'web_page_module\',),\n
-                                   \'trade\': (\'discount_module\',\n
-                                             \'internal_packing_list_module\',\n
+                                   \'trade\': (\'internal_packing_list_module\',\n
                                              \'inventory_module\',\n
                                              \'purchase_order_module\',\n
                                              \'purchase_packing_list_module\',\n
@@ -166,8 +163,7 @@ module_business_application_map = {\'base\': (\'currency_module\',\n
                                              \'returned_sale_packing_list_module\',\n
                                              \'sale_order_module\',\n
                                              \'sale_packing_list_module\',\n
-                                             \'sale_trade_condition_module\',\n
-                                             \'tax_module\',),\n
+                                             \'sale_trade_condition_module\'),\n
                                    \'pdm\': (\'component_module\',\n
                                            \'product_module\',\n
                                            \'purchase_supply_module\',\n

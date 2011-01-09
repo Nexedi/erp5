@@ -1253,10 +1253,6 @@ class TestLiveStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
         self.portal.internal_packing_list_module.getBusinessApplicationTitle())
     self.assertEquals('Trade',
         self.portal.returned_sale_packing_list_module.getBusinessApplicationTitle())
-    self.assertEquals('Trade',
-        self.portal.discount_module.getBusinessApplicationTitle())
-    self.assertEquals('Trade',
-        self.portal.tax_module.getBusinessApplicationTitle())
     self.assertEquals(set([self.portal.sale_order_module,
                        self.portal.purchase_order_module,
                        self.portal.sale_trade_condition_module,
@@ -1266,8 +1262,6 @@ class TestLiveStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
                        self.portal.internal_packing_list_module,
                        self.portal.returned_sale_packing_list_module,
                        self.portal.inventory_module,
-                       self.portal.discount_module,
-                       self.portal.tax_module,
                        ba.trade]),
          set(ba.trade.getBusinessApplicationRelatedValueList()))
 
@@ -2659,18 +2653,6 @@ class TestLiveStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
       self.failUnlessUserCanPassWorkflowTransition(
                     username, 'confirm_action', pl)
 
-  def stepViewAccessTaxModule(self, sequence=None, sequence_list=None, **kw):
-    for username in self.all_username_list:
-      self.assertUserCanViewDocument(username, self.portal.tax_module)
-      self.assertUserCanAccessDocument(username, self.portal.tax_module)
-      self.assertUserCanAddDocument(username, self.portal.tax_module)
-
-  def stepAddTax(self, sequence=None, sequence_list=None, **kw):
-    tax = self.portal.tax_module.newContent(portal_type='Tax')
-    for username in self.all_username_list:
-      self.assertUserCanViewDocument(username, tax)
-      self.assertUserCanAccessDocument(username, tax)
-
   # }}}
   # web
   def stepWebSiteModule(self, sequence=None, sequence_list=None, **kw):
@@ -2779,8 +2761,6 @@ class TestLiveStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
       stepViewAccessAddSalePackingList
       stepViewAccessPurchaseOrder
       stepPurchasePackingList
-      stepViewAccessTaxModule
-      stepAddTax
       stepWebSiteModule
       stepPortalContributionsTool
       stepConfiguredPropertySheets
