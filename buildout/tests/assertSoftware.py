@@ -2218,19 +2218,12 @@ if python_version >= '2.6':
         'bzip2',
         'gdbm',
         'gettext',
-        'libdb',
         'ncurses',
         'openssl',
         'readline',
         'sqlite3',
         'zlib',
         ]
-    def test_ld_dyn_bsddb(self):
-      self.assertLibraryList(self.python_path+'/lib/python%s/lib-dynload/_bsddb.so' % python_version, [
-        'libc',
-        'libdb-4.5',
-        'libpthread',
-        ], self.rpath_list)
     def test_ld_dyn_dbm(self):
       self.assertLibraryList(self.python_path+'/lib/python%s/lib-dynload/dbm.so' % python_version, [
         'libc',
@@ -2330,19 +2323,12 @@ elif python_version == '2.4':
         'bzip2',
         'gdbm',
         'gettext',
-        'libdb',
         'ncurses',
         'openssl',
         'readline',
         'sqlite3',
         'zlib',
         ]
-    def test_ld_dyn_bsddb(self):
-      self.assertLibraryList(self.python_path+'/lib/python%s/lib-dynload/_bsddb.so' % python_version, [
-        'libc',
-        'libdb-4.5',
-        'libpthread',
-        ], self.rpath_list)
     def test_ld_dyn_dbm(self):
       self.assertLibraryList(self.python_path+'/lib/python%s/lib-dynload/dbm.so' % python_version, [
         'libc',
