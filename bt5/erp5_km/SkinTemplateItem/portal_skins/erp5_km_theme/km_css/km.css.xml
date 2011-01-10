@@ -772,6 +772,9 @@ div.document div.content div.text blockquote, pre{\n
 div.document div.content div.text a{\n
   color: #686868;\n
 }\n
+div.document div.content div.text a:hover{\n
+  color: #000000;\n
+}\n
 \n
 /* Web Toolbar */\n
 div.web-toolbar{\n
