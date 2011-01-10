@@ -64,7 +64,7 @@ class SMSTool(BaseTool):
                         test=False, **kw)
     if getattr(self, 'SMSTool_afterSend'):
       # We need to use activities in order to avoid any conflict
-      send_activate_kw = {}
+      send_activate_kw = {'activity':'SQLQueue'}
       if activate_kw is not None:
         send_activate_kw.update(**activate_kw)
       self.activate(**send_activate_kw).SMSTool_afterSend(
