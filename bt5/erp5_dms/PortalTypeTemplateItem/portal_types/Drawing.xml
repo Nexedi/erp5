@@ -7,31 +7,12 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_property_domain_dict</string> </key>
-            <value>
-              <dictionary>
-                <item>
-                    <key> <string>short_title</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
-                </item>
-              </dictionary>
-            </value>
-        </item>
-        <item>
             <key> <string>acquire_local_roles</string> </key>
             <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>content_icon</string> </key>
-            <value> <string>file_icon.gif</string> </value>
+            <value> <string>drawing_icon.png</string> </value>
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
@@ -104,39 +85,21 @@
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
-    </pickle>
-    <pickle>
-      <dictionary>
         <item>
-            <key> <string>domain_name</string> </key>
-            <value> <string>erp5_content</string> </value>
+            <key> <string>type_class</string> </key>
+            <value> <string>OOoDocument</string> </value>
         </item>
         <item>
-            <key> <string>property_name</string> </key>
-            <value> <string>short_title</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>domain_name</string> </key>
-            <value> <string>erp5_content</string> </value>
+            <key> <string>type_interface</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
-            <key> <string>property_name</string> </key>
-            <value> <string>title</string> </value>
+            <key> <string>type_mixin</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
       </dictionary>
     </pickle>
