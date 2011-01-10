@@ -314,7 +314,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:not(request.get(\'list_mode\', False) or request.get(\'dialog_mode\', False)</string> </value>
+            <value> <string>python:not(request.get(\'list_mode\', False) or request.get(\'dialog_mode\', False))</string> </value>
         </item>
       </dictionary>
     </pickle>
