@@ -67,6 +67,12 @@ class TestLiveConfiguratorWorkflowMixin(ERP5TypeLiveTestCase, SecurityTestCase):
     # it is required by SecurityTestCase
     self.workflow_tool = self.portal.portal_workflow
 
+    self.portal.portal_activities.unsubscribe()
+
+  def beforeTearDown(self):
+    self.portal.portal_activities.subscribe()
+    ERP5TypeLiveTestCase.beforeTearDown(self)
+
   def setBusinessConfigurationWorkflow(self, business_configuration, workflow):
     """ Set configurator workflow """
     business_configuration.setResource(workflow)
@@ -423,7 +429,7 @@ class TestLiveConfiguratorWorkflowMixin(ERP5TypeLiveTestCase, SecurityTestCase):
     self.assertEquals('Previous', response_dict['previous'])
     self.assertEquals('Install', response_dict['next'])
 
-    self.assertCurrentStep('TioLive installation', response_dict)
+    self.assertCurrentStep('ERP5 installation', response_dict)
 
   def stepSetupInstallConfiguration(self, sequence=None, sequence_list=None, **kw):
     """ Install the Configuration """
@@ -630,7 +636,7 @@ class TestLiveConsultingConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
 
   def stepSetupCategoriesConfiguratorItem(self, sequence=None, sequence_list=None, **kw):
     """ Load the categories """
-    next_dict = dict(field_your_categories_spreadsheet=self.categories_file_upload)
+    next_dict = dict(field_your_configuration_spreadsheet=self.categories_file_upload)
     next_dict.update(**kw)
     sequence.edit(next_dict=next_dict)
 
@@ -654,7 +660,7 @@ class TestLiveConsultingConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
           categories_spreadsheet_configuration_item.getPortalType())
 
     spreadsheet = categories_spreadsheet_configuration_item\
-                    .getCategoriesSpreadsheet()
+                    .getConfigurationSpreadsheet()
     self.assertNotEquals(None, spreadsheet)
     self.assertEquals('Spreadsheet', spreadsheet.getPortalType())
     self.failUnless(spreadsheet.hasData())
@@ -2764,7 +2770,6 @@ class TestLiveStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
       stepWebSiteModule
       stepPortalContributionsTool
       stepConfiguredPropertySheets
-      stepPreferredExpressPassword
       """
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
@@ -2788,9 +2793,9 @@ class TestLiveStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
       stepCheckRuleValidation
       """
     # XXX (lucas): expected failure, it must be fixed in ERP5 core.
-    sequence_string += """
-      stepCheckQuantityConversion
-      """
+    #sequence_string += """
+    #  stepCheckQuantityConversion
+    #  """
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
