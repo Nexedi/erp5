@@ -455,7 +455,7 @@ div.jSheetControls#jSheetControls_0 {\n
 }\n
 \n
 \n
-div.toolbar button, div.gadget-action input {\n
+div.toolbar button, div.gadget-action input#upload {\n
   color: #333333;\n
   border: 1px solid #BBBBBB;\n
   background-image: url(\'<dtml-var expr="portal_url()">/ung_images/button_background.png\');\n
@@ -548,7 +548,7 @@ div.toolbar button, div.gadget-action input {\n
   line-height:28px;\n
 }\n
 \n
-div.gadget-column input {\n
+div.gadget-column input#upload {\n
   left:1em;\n
   position:relative;\n
   top:0.5em;\n
@@ -949,7 +949,7 @@ table#gadget-table {\n
 }\n
 \n
 div.gadget-action div.front_pad {\n
-  font-size: 10px;\n
+  font-size: 12px;\n
   width: 240px;\n
 }\n
 \n
@@ -959,6 +959,19 @@ h3.handle {\n
 \n
 div.portal-column {\n
   width: 100% !important;\n
+}\n
+\n
+div#page_wrapper div.minimize_wrapper div.edit-form fieldset.left,\n
+  div#page_wrapper div.minimize_wrapper div.edit-form fieldset.left label {\n
+  display: inline !important;\n
+}\n
+\n
+div.edit-form button {\n
+  margin-top: -1.5em !important;\n
+}\n
+\n
+div.edit-form {\n
+    padding-left: 0 !important;\n
 }
 
 ]]></string> </value>

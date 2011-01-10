@@ -111,7 +111,7 @@ function changeCheckBoxValue(value){\n
   });\n
 }\n
 \n
-$(document).ready(function(){\n
+$().ready(function(){\n
   if ($("div.gadget-column").length == 0 && window.location.href.split("?").length > 1) {\n
     parameterList = getUrlParameterList();\n
     if (parameterList.hasOwnProperty("upload_document") == true){\n
@@ -447,7 +447,8 @@ $(document).ready(function(){\n
    event.preventDefault();\n
    $("div.gadget-listbox").dialog("open");\n
  });\n
- $("div#page_wrapper div#portal-column-1.portal-column, div#page_wrapper div#portal-column-2.portal-column").remove();\n
+  $("div#page_wrapper div#portal-column-1.portal-column, div#page_wrapper div#portal-column-2.portal-column, div.front_pad div.minimize_wrapper p").remove();\n
+\n
  return false;\n
 });
 
