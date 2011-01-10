@@ -200,8 +200,10 @@ class TestPayrollMixin(TestTradeModelLineMixin):
             'grade/worker',
             'grade/engineer',
             'quantity_unit/time/month',
+            'product_line/base_salary',
             'product_line/labour',
             'product_line/state_insurance',
+            'product_line/payroll_tax_1',
             'use/payroll/tax',
             'use/payroll/base_salary',
             'use/payroll/output',
@@ -2467,7 +2469,7 @@ class TestPayroll(TestPayrollMixin):
                       variation_category_list=('contribution_share/employee',
                                                'contribution_share/employer'))
 
-    business_process = self.createBPMRelated()
+    business_process = self.createBusinessProcess()
     employer = self.portal.organisation_module.newContent(
                       portal_type='Organisation',
                       title='Employer',
@@ -2631,7 +2633,7 @@ class TestPayroll(TestPayrollMixin):
                                                'salary_range/france/slice_a',
                                                'salary_range/france/slice_b'))
 
-    business_process = self.createBPMRelated()
+    business_process = self.createBusinessProcess()
     employer = self.portal.organisation_module.newContent(
                       portal_type='Organisation',
                       title='Employer',
@@ -2856,7 +2858,7 @@ class TestPayroll(TestPayrollMixin):
                       variation_category_list=('contribution_share/employee',
                                                'contribution_share/employer'))
 
-    business_process = self.createBPMRelated()
+    business_process = self.createBusinessProcess()
     employer = self.portal.organisation_module.newContent(
                       portal_type='Organisation',
                       title='Employer',
@@ -2998,39 +3000,6 @@ class TestPayroll(TestPayrollMixin):
             line_list[-1],
             total_price=3000 + 2000 - (2000 * .5) - (3000 * .5))
 
-  def createBPMRelated(self):
-    #raise ValueError
-    business_process = self.createBusinessProcess()
-    business_link = self.createBusinessLink(business_process)
-
-
-    business_process.newContent(portal_type='Trade Model Path',
-                                trade_phase_list=['default/order',],
-                                trade_date='trade_phase/default/order',
-                                reference="path_order",
-                                efficiency=1.0,
-                                )
-    business_process.newContent(portal_type='Trade Model Path',
-                                trade_phase_list=['default/delivery',],
-                                trade_date='trade_phase/default/order',
-                                reference="path_delivery",
-                                efficiency=1.0,
-                                )
-    business_process.newContent(portal_type='Trade Model Path',
-                                trade_phase_list=['default/invoicing',],
-                                trade_date='trade_phase/default/delivery',
-                                reference="path_invoicing",
-                                efficiency=1.0,
-                                )
-    business_process.newContent(portal_type='Trade Model Path',
-                                trade_phase_list=['default/accounting',],
-                                trade_date='trade_phase/default/accounting',
-                                reference="path_accounting",
-                                efficiency=1.0,
-                                )
-    return business_process
-
-
   def test_AccountingLineGeneration(self):
     currency_module = self.getCurrencyModule()
     if not hasattr(currency_module, 'EUR'):
@@ -3085,124 +3054,57 @@ class TestPayroll(TestPayrollMixin):
                           title='Payroll Taxes',
                           account_type='liability/payable',)
 
-    business_process = self.createBPMRelated()
+    business_process = self.createBusinessProcess()
 
-    # create an invoice transaction rule for pay sheets.
-    rule = self.portal.portal_rules.newContent(
-      portal_type='Invoice Transaction Simulation Rule',
-      title='Simulation Rule for PaySheet Accounting',
-      reference='paysheet_transaction_rule',
-      test_method_id='SimulationMovement_testInvoiceTransactionSimulationRule')
-    # matching provider for source and destination
-    for category in ('resource', 'source', 'destination',
-                     'destination_total_asset_price',
-                     'source_total_asset_price'):
-      rule.newContent(
-        portal_type='Category Membership Divergence Tester',
-        title='%s divergence tester' % category,
-        tested_property=category,
-        divergence_provider=False,
-        matching_provider=True)
-    # non-matching/non-divergence provider quantity divergence tester
-    # (i.e. only used for expand)
-    rule.newContent(
-      portal_type='Net Converted Quantity Divergence Tester',
-      title='quantity divergence tester',
-      tested_property='quantity',
-      quantity=0,
-      divergence_provider=False,
-      matching_provider=False)
-    # divergence provider for date
-    for property_id in ('start_date', 'stop_date'):
-      rule.newContent(
-        portal_type='DateTime Divergence Tester',
-        title='%s divergence tester' % property_id,
-        tested_property=property_id,
-        quantity=0,
-        divergence_provider=True,
-        matching_provider=False)
-    for category in ('source_administration', 'source_decision', 'source_function', 'source_payment', 'source_project', 'source_section', 'destination_administration', 'destination_decision', 'destination_function', 'destination_payment', 'destination_project', 'destination_section'):
-      rule.newContent(
-        portal_type='Category Membership Divergence Tester',
-        title='%s divergence tester' % category,
-        tested_property=category,
-        divergence_provider=True,
-        matching_provider=False)
-    rule.newContent(
-      portal_type='Float Divergence Tester',
-      title='price divergence tester',
-      tested_property='price',
-      quantity=0,
-      divergence_provider=True,
-      matching_provider=False)
-    rule.newContent(portal_type='Predicate',
-      title='Employee Share',
-      string_index='contribution_share',
-      int_index=1,
-      membership_criterion_base_category_list=('contribution_share',),
-      membership_criterion_category_list=('contribution_share/employee',))
-    rule.newContent(portal_type='Predicate',
-      title='Employer Share',
-      string_index='contribution_share',
-      int_index=2,
-      membership_criterion_base_category_list=('contribution_share',),
-      membership_criterion_category_list=('contribution_share/employer',))
+    kw = dict(business_process=business_process,
+              trade_phase='default/accounting',
+              trade_date='trade_phase/default/invoicing',
+              membership_criterion_base_category_list=['contribution_share',
+                                                       'product_line'],
+              criterion_property_dict={'portal_type': 'Simulation Movement'})
 
-    rule.newContent(portal_type='Predicate',
-      title='Base Salary',
-      string_index='service',
-      int_index=1,
-      membership_criterion_base_category_list=('product_line',),
-      membership_criterion_category_list=('product_line/base_salary',))
-    rule.newContent(portal_type='Predicate',
-      title='Payroll Tax 1',
-      string_index='service',
-      int_index=2,
-      membership_criterion_base_category_list=('product_line',),
-      membership_criterion_category_list=('product_line/payroll_tax_1',))
-    self.stepTic()
+    # Employee Share * Base Salary
+    self.createTradeModelPath(reference='payroll_base_1',
+       efficiency=1,
+       destination_value=account_payroll_wages_expense,
+       membership_criterion_category_list=['contribution_share/employee',
+                                           'product_line/base_salary'],
+       **kw)
+    self.createTradeModelPath(reference='payroll_base_2',
+       efficiency=-1,
+       destination_value=account_net_wages,
+       membership_criterion_category_list=['contribution_share/employee',
+                                           'product_line/base_salary'],
+       **kw)
+    # Employer Share * Payroll Tax 1
+    self.createTradeModelPath(reference='payroll_employer_tax1',
+       efficiency=1,
+       destination_value=account_payroll_taxes,
+       membership_criterion_category_list=['contribution_share/employer',
+                                      'product_line/payroll_tax_1'],
+       **kw)
+    self.createTradeModelPath(reference='payroll_employer_tax2',
+       efficiency=-1,
+       destination_value=account_payroll_taxes_expense,
+       membership_criterion_category_list=['contribution_share/employer',
+                                           'product_line/payroll_tax_1'],
+       **kw)
 
-    cell_list = rule.contentValues(portal_type='Accounting Rule Cell')
-    self.assertEquals(4, len(cell_list))
-
-    employee_base_salary = rule._getOb('movement_0_0')
-    self.assertEquals('Employee Share * Base Salary',
-                      employee_base_salary.getTitle())
-    employee_base_salary.newContent(
-                      portal_type='Accounting Rule Cell Line',
-                      destination_debit=1,
-                      destination_value=account_payroll_wages_expense)
-    employee_base_salary.newContent(
-                      portal_type='Accounting Rule Cell Line',
-                      destination_credit=1,
-                      destination_value=account_net_wages)
-
-    employer_tax = rule._getOb('movement_1_1')
-    self.assertEquals('Employer Share * Payroll Tax 1',
-                      employer_tax.getTitle())
-    employer_tax.newContent(
-                      portal_type='Accounting Rule Cell Line',
-                      destination_debit=1,
-                      destination_value=account_payroll_taxes)
-    employer_tax.newContent(
-                      portal_type='Accounting Rule Cell Line',
-                      destination_credit=1,
-                      destination_value=account_payroll_taxes_expense)
-
-    employee_tax = rule._getOb('movement_0_1')
-    self.assertEquals('Employee Share * Payroll Tax 1',
-                      employee_tax.getTitle())
-    employee_tax.newContent(
-                      portal_type='Accounting Rule Cell Line',
-                      destination_debit=1,
-                      destination_value=account_payroll_taxes)
-    employee_tax.newContent(
-                      portal_type='Accounting Rule Cell Line',
-                      destination_credit=1,
-                      generate_prevision_script_id=\
-      'SimulationMovement_generatePrevisionForEmployeeSharePaySheetMovement',
-                      destination_value=account_net_wages)
-    rule.validate()
+    # Employee Share * Payroll Tax 1
+    self.createTradeModelPath(reference='payroll_employee_tax1',
+       efficiency=1,
+       destination_value=account_payroll_taxes,
+       membership_criterion_category_list=['contribution_share/employee',
+                                           'product_line/payroll_tax_1'],
+       **kw)
+    self.createTradeModelPath(reference='payroll_employee_tax2',
+       efficiency=-1,
+       destination_value=account_net_wages,
+       source_method_id=\
+        'SimulationMovement_generatePrevisionForEmployeeSharePaySheetMovement',
+       membership_criterion_category_list=['contribution_share/employee',
+                                           'product_line/payroll_tax_1'],
+       **kw)
 
     # create a pay sheet
     eur = self.portal.currency_module.EUR
