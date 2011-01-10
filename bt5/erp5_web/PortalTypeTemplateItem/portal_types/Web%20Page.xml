@@ -93,7 +93,7 @@
                 <string>version</string>
                 <string>short_title</string>
                 <string>subject_list</string>
-                <string>source_reference</string>
+                <string>filename</string>
                 <string>source_project_title</string>
               </tuple>
             </value>
@@ -101,6 +101,22 @@
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>type_class</string> </key>
+            <value> <string>TextDocument</string> </value>
+        </item>
+        <item>
+            <key> <string>type_interface</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_mixin</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
       </dictionary>
     </pickle>

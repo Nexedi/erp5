@@ -31,7 +31,7 @@
         </item>
         <item>
             <key> <string>content_icon</string> </key>
-            <value> <string>file_icon.gif</string> </value>
+            <value> <string>file_icon.png</string> </value>
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
@@ -94,7 +94,7 @@
                 <string>version</string>
                 <string>short_title</string>
                 <string>subject_list</string>
-                <string>source_reference</string>
+                <string>filename</string>
                 <string>source_project_title</string>
               </tuple>
             </value>
@@ -102,6 +102,22 @@
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>type_class</string> </key>
+            <value> <string>File</string> </value>
+        </item>
+        <item>
+            <key> <string>type_interface</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_mixin</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
       </dictionary>
     </pickle>

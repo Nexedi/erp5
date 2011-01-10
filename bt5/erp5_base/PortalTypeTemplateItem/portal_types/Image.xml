@@ -31,7 +31,7 @@
         </item>
         <item>
             <key> <string>content_icon</string> </key>
-            <value> <string>image_icon.gif</string> </value>
+            <value> <string>image_icon.png</string> </value>
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
@@ -74,6 +74,10 @@
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>type_class</string> </key>
+            <value> <string>Image</string> </value>
         </item>
       </dictionary>
     </pickle>
