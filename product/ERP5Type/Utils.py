@@ -57,6 +57,15 @@ from Products.PageTemplates.Expressions import getEngine
 from Products.PageTemplates.Expressions import SecureModuleImporter
 from Products.ZCatalog.Lazy import LazyMap
 
+try:
+  import chardet
+except ImportError:
+  chardet = None
+try:
+  import magic
+except ImportError:
+  magic = None
+
 def simple_decorator(decorator):
   """Decorator to turn simple function into well-behaved decorator
 
@@ -3276,14 +3285,6 @@ def guessEncodingFromText(data, content_type='text/html'):
   By default python-magic is used
   XXX this implementation must migrate to cloudooo
   """
-  try:
-    import chardet
-  except ImportError:
-    chardet = None
-  try:
-    import magic
-  except ImportError:
-    magic = None
   if chardet is not None and content_type == 'text/html':
     # chardet works fine on html document
     return chardet.detect(data).get('encoding', None)
