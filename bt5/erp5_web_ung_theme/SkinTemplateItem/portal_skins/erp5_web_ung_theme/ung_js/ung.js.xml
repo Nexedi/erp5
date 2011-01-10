@@ -151,7 +151,7 @@ $(document).ready(function(){\n
        $(this).css("padding-right", "82px")\n
      }\n
      if ($(this).text().length > 16){\n
-       $(this).css("padding-right", "35px")\n
+       $(this).css("padding-right", "24px")\n
      }\n
   });\n
   if ($("div.gadget-column").length == 1) {\n
@@ -221,7 +221,7 @@ $(document).ready(function(){\n
     reference = $.ajax({\n
                        url: \'getReference\',\n
                        async: false,\n
-                     }).responseText;\n
+                      }).responseText;\n
     keyUrl = location.href.split("web_page_module")[0] + "?key=" + reference;\n
     $("div.header-right fieldset.widget a#sharing_url").text(keyUrl);\n
   };\n
@@ -267,7 +267,24 @@ $(document).ready(function(){\n
     modal: true,\n
     buttons: {\n
       "Add": function(){\n
-         window.location.reload();\n
+         var gadgetId = null;\n
+         $("table#gadget-table tbody tr td input").each(function(){\n
+             if (this.checked){\n
+                gadgetId = $(this).attr("id");\n
+                return false;\n
+             };\n
+         });\n
+         if (gadgetId == null){\n
+           $(this).dialog("close");\n
+         };\n
+         var tabTitle = $("div#tabs ul li.tab_selected span").html();\n
+         $.ajax({\n
+            url:"WebSection_addGadget",\n
+            data: "tab_title=" + tabTitle + "&gadget_id=" + gadgetId,\n
+            success: function(data) {\n
+              window.location.reload();\n
+            }\n
+         });\n
        },\n
     }\n
  });\n
@@ -396,10 +413,6 @@ $(document).ready(function(){\n
      });\n
   }\n
  });\n
- $("a#add_gadget").click(function(event){\n
-   event.preventDefault();\n
-   $("div.gadget-listbox").dialog("open");\n
- });\n
  $.getJSON("WebSection_getGadgetPathList", function(data){\n
    gadgetList = jQuery(data);\n
    gadgetList.each(function(){\n
@@ -425,6 +438,16 @@ $(document).ready(function(){\n
        );\n
    });\n
  });\n
+ $("span#knowledge_pad_module_8_titlean").text("1");\n
+ if ($("#tab-list-container #tabs ul li").length > 2) {\n
+   $("li#add_new_tab_dialog_link.tab").hide()\n
+ };\n
+ $("div#add_new_gadget_link a#add-gadgets").removeAttr("onclick");\n
+ $("div#add_new_gadget_link a#add-gadgets").click(function(event){\n
+   event.preventDefault();\n
+   $("div.gadget-listbox").dialog("open");\n
+ });\n
+ $("div#page_wrapper div#portal-column-1.portal-column, div#page_wrapper div#portal-column-2.portal-column").remove();\n
  return false;\n
 });
 

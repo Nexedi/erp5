@@ -107,7 +107,7 @@ div.share-action-area {\n
 /* Main classes */\n
 \n
 div.main-right {\n
-  width:82%;\n
+  width:80.5%;\n
   float:right;\n
   border-left: 4px solid #BBCCFF;\n
 }\n
@@ -376,7 +376,7 @@ a.ung_docs img {\n
 \n
 div.main-left {\n
   margin-left:-4px;\n
-  width: 18%;\n
+  width: 19.5%;\n
   float:left;\n
   background-color: #DAE6F6;\n
   height:4em;\n
@@ -823,7 +823,7 @@ div.listbox-domain-tree-container select {\n
 \n
 div.listbox-tree {\n
   font-size: 13px;\n
-  width: 98.7%;\n
+  width: 106.7%;\n
   overflow: hidden;\n
   height: 233px;\n
 }\n
@@ -946,6 +946,19 @@ table#gadget-table tbody tr {\n
 \n
 table#gadget-table {\n
   width: 100%;\n
+}\n
+\n
+div.gadget-action div.front_pad {\n
+  font-size: 10px;\n
+  width: 240px;\n
+}\n
+\n
+h3.handle {\n
+  color: #222222 !important;\n
+}\n
+\n
+div.portal-column {\n
+  width: 100% !important;\n
 }
 
 ]]></string> </value>

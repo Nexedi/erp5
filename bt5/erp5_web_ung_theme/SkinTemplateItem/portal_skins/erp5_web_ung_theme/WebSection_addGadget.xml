@@ -50,50 +50,25 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Redirect connected user to UNG Web Site or to document using the key \n
-"""\n
-portal = context.getPortalObject()\n
+            <value> <string>portal_catalog = context.portal_catalog\n
 \n
-request = context.REQUEST\n
+website_uid = context.getUid()\n
+knowledge_pad = portal_catalog.getResultValue(portal_type="Knowledge Pad",\n
+                                              publication_section_uid=website_uid,\n
+                                              validation_state="visible")\n
 \n
-if request.form.has_key("key"):\n
-  webpage = context.WebSection_userFollowUpWebPage(reference=context.REQUEST.form.get("key"))\n
-  webpage_id = webpage.getId()\n
-  editor_name = context.Base_getEditorViewName(webpage.getPortalType())\n
-  return context.Base_redirect("/web_page_module/%s/%s" % (webpage_id, editor_name),\n
-                              keep_items=dict(editable_mode=1))\n
+knowledge_box = knowledge_pad.newContent(portal_type="Knowledge Box")\n
 \n
-else:\n
-  portal_type_list = request.form.get("portal_type")\n
-  searchable_text = request.form.get("SearchableText")\n
-  return context.Base_redirect("unfoldDomain", \n
-                               keep_items = dict(domain_url="ung_domain/all_documents",\n
-                                                 form_id="erp5_web_ung_layout",\n
-                                                 list_selection_name="ung_document_list_selection",\n
-                                                 domain_depth=0,\n
-                                                 SearchableText=searchable_text,\n
-                                                 portal_type=portal_type_list,\n
-                                                 reset=1))\n
+knowledge_box.setSpecialise("portal_gadgets/%s" % gadget_id)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <value> <string>tab_title, gadget_id</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSection_renderer</string> </value>
+            <value> <string>WebSection_addGadget</string> </value>
         </item>
       </dictionary>
     </pickle>
