@@ -151,8 +151,7 @@ class EssendexGateway(XMLObject):
         #just a test, no message id
         return None
       else:
-        LOG("Unknow SMS gateway result",INFO, result)
-        return None
+        raise ValueError("Unknown result", 0, result)
 
     security.declareProtected(Permissions.ManagePortal, 'getMessageStatus')
     def getMessageStatus(self, message_id):
