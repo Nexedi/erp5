@@ -58,7 +58,7 @@ from SearchText import isAdvancedSearchText, dequote
 try:
   from Products.CMFActivity.ActiveObject import ActiveObject
 except ImportError:
-  ActiveObject = ExtensionClass.Base 
+  ActiveObject = ExtensionClass.Base
 
 
 PROFILING_ENABLED = False
@@ -274,7 +274,7 @@ class Catalog(Folder,
  """
 
   implements(ISearchKeyCatalog)
-  
+
 
   meta_type = "SQLCatalog"
   icon = 'misc_/ZCatalog/ZCatalog.gif' # FIXME: use a different icon
@@ -471,12 +471,12 @@ class Catalog(Folder,
       'type': 'lines',
       'mode': 'w' },
     { 'id'      : 'sql_catalog_keyword_search_keys',
-      'description' : 'Columns which should be considered as full text search',
+      'description' : 'Columns which should be considered as keyword search',
       'type'    : 'multiple selection',
       'select_variable' : 'getColumnIds',
       'mode'    : 'w' },
     { 'id'      : 'sql_catalog_datetime_search_keys',
-      'description' : 'Columns which should be considered as full text search',
+      'description' : 'Columns which should be considered as datetime search',
       'type'    : 'multiple selection',
       'select_variable' : 'getColumnIds',
       'mode'    : 'w' },
@@ -779,7 +779,7 @@ class Catalog(Folder,
       - if the security exist the security uid is returned and the second
         element is None for not recreate the security in roles_and_user
         table of the database.
-                                   
+
       We try to create a unique security (to reduce number of lines)
       and to assign security only to root document
     """
@@ -934,7 +934,7 @@ class Catalog(Folder,
     Note: brain is defined in Z SQL Method object
     """
     # this method used to be __getitem__(self, uid) but was found to hurt more
-    # than it helped: It would be inadvertently called by 
+    # than it helped: It would be inadvertently called by
     # (un)restrictedTraverse and if there was any error in rendering the SQL
     # expression or contacting the database, an error different from KeyError
     # would be raised, causing confusion.
@@ -1126,7 +1126,7 @@ class Catalog(Folder,
     if force_new_buffer or thread_key not in uid_buffer_dict:
       uid_buffer_dict[thread_key] = UidBuffer()
     return uid_buffer_dict[thread_key]
-  
+
   # the cataloging API
   def produceUid(self):
     """
@@ -1342,7 +1342,7 @@ class Catalog(Folder,
     'object' is the object to be catalogged."""
     self._catalogObjectList([object])
 
-  def catalogObjectList(self, object_list, method_id_list=None, 
+  def catalogObjectList(self, object_list, method_id_list=None,
                         disable_cache=0, check_uid=1, idxs=None):
     """Add objects to the Catalog by calling all SQL methods and
     providing needed arguments.
@@ -1357,7 +1357,7 @@ class Catalog(Folder,
     Each element of 'object_list' is an object to be catalogged.
 
     'uid' is the unique Catalog identifier for this object.
-    
+
     Note that this method calls _catalogObjectList with fragments of
     the object list, because calling _catalogObjectList with too many
     objects at a time bloats the process's memory consumption, due to
@@ -1368,8 +1368,8 @@ class Catalog(Folder,
                               disable_cache=disable_cache,
                               check_uid=check_uid,
                               idxs=idxs)
-    
-  def _catalogObjectList(self, object_list, method_id_list=None, 
+
+  def _catalogObjectList(self, object_list, method_id_list=None,
                          disable_cache=0, check_uid=1, idxs=None):
     """This is the real method to catalog objects.
 
@@ -1379,7 +1379,7 @@ class Catalog(Folder,
     #LOG('catalogObjectList', 0, 'called with %r' % (object_list,))
 
     if idxs not in (None, []):
-      LOG('ZSLQCatalog.SQLCatalog:catalogObjectList', WARNING, 
+      LOG('ZSLQCatalog.SQLCatalog:catalogObjectList', WARNING,
           'idxs is ignored in this function and is only provided to be compatible with CMFCatalogAware.reindexObject.')
 
     if not self.isIndexable():
@@ -2440,7 +2440,7 @@ class Catalog(Folder,
   def queryResults(self, sql_method, REQUEST=None, src__=0, build_sql_query_method=None, **kw):
     sql_kw = self._queryResults(REQUEST=REQUEST, build_sql_query_method=build_sql_query_method, **kw)
     return sql_method(src__=src__, **sql_kw)
-      
+
   def searchResults(self, REQUEST=None, **kw):
     """ Returns a list of brains from a set of constraints on variables """
     method = getattr(self, self.sql_search_results)
@@ -2477,7 +2477,7 @@ class Catalog(Folder,
     """
     method = getattr(self, self.sql_read_recorded_object_list)
     return method(catalog=catalog)
-   
+
   # Filtering
   def manage_editFilter(self, REQUEST=None, RESPONSE=None, URL1=None):
     """
@@ -2581,7 +2581,7 @@ class Catalog(Folder,
     return None
 
   def setFilterExpression(self, method_name, expression):
-    """ Set the Expression for a certain method name. This allow set 
+    """ Set the Expression for a certain method name. This allow set
         expressions by scripts.
     """
     if withCMF:
@@ -2626,7 +2626,7 @@ class Catalog(Folder,
   def getFilterDict(self):
     """
       Utility Method.
-      Filter Dict is a dictionary and used at Python Scripts, 
+      Filter Dict is a dictionary and used at Python Scripts,
       This method returns a filter dict as a dictionary.
     """
     if withCMF:
