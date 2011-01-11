@@ -35,7 +35,7 @@ from DateTime import DateTime
 import transaction
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 
-class TestPayrollMixin(TestTradeModelLineMixin):
+class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
   BUSINESS_PATH_CREATION_SEQUENCE_STRING = """
                CreateBusinessProcess
                CreateBusinessLink
