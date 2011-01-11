@@ -138,12 +138,14 @@ class TestPayrollMixin(TestTradeModelLineMixin):
     for module in (
       self.portal.organisation_module,
       self.portal.person_module,
+      self.portal.account_module,
       self.portal.paysheet_model_module,
       self.portal.accounting_module,
-      self.portal.business_process_module,
       self.portal.service_module,
       self.portal.portal_simulation,):
       module.manage_delObjects(list(module.objectIds()))
+      
+    self.portal.business_process_module.manage_delObjects(list([x for x in self.portal.business_process_module.objectIds() if x != "erp5_default_business_process"]))
 
 
   def login(self):
@@ -2469,7 +2471,7 @@ class TestPayroll(TestPayrollMixin):
                       variation_category_list=('contribution_share/employee',
                                                'contribution_share/employer'))
 
-    business_process = self.createBusinessProcess()
+    self.createPayrollBusinesProcess()
     employer = self.portal.organisation_module.newContent(
                       portal_type='Organisation',
                       title='Employer',
@@ -2494,6 +2496,7 @@ class TestPayroll(TestPayrollMixin):
     ps1 = self.portal.accounting_module.newContent(
                       portal_type='Pay Sheet Transaction',
                       title='Employee 1',
+                      specialise_value=self.business_process,
                       destination_section_value=employer,
                       source_section_value=employee1,
                       start_date=DateTime(2006, 1, 1),)
@@ -2522,6 +2525,7 @@ class TestPayroll(TestPayrollMixin):
                       portal_type='Pay Sheet Transaction',
                       title='Employee 2',
                       destination_section_value=employer,
+                      specialise_value=self.business_process,
                       source_section_value=employee2,
                       start_date=DateTime(2006, 1, 1),)
     line = ps2.newContent(portal_type='Pay Sheet Line',
@@ -2633,7 +2637,7 @@ class TestPayroll(TestPayrollMixin):
                                                'salary_range/france/slice_a',
                                                'salary_range/france/slice_b'))
 
-    business_process = self.createBusinessProcess()
+    self.createPayrollBusinesProcess()
     employer = self.portal.organisation_module.newContent(
                       portal_type='Organisation',
                       title='Employer',
@@ -2658,7 +2662,7 @@ class TestPayroll(TestPayrollMixin):
     ps1 = self.portal.accounting_module.newContent(
                       portal_type='Pay Sheet Transaction',
                       title='Employee 1',
-                      specialise_value=business_process,
+                      specialise_value=self.business_process,
                       destination_section_value=employer,
                       source_section_value=employee1,
                       start_date=DateTime(2006, 1, 1),)
@@ -2714,7 +2718,7 @@ class TestPayroll(TestPayrollMixin):
     ps2 = self.portal.accounting_module.newContent(
                       portal_type='Pay Sheet Transaction',
                       title='Employee 2',
-                      specialise_value=business_process,
+                      specialise_value=self.business_process,
                       destination_section_value=employer,
                       source_section_value=employee2,
                       start_date=DateTime(2006, 1, 1),)
@@ -2858,7 +2862,7 @@ class TestPayroll(TestPayrollMixin):
                       variation_category_list=('contribution_share/employee',
                                                'contribution_share/employer'))
 
-    business_process = self.createBusinessProcess()
+    self.createPayrollBusinesProcess()
     employer = self.portal.organisation_module.newContent(
                       portal_type='Organisation',
                       title='Employer',
@@ -2887,7 +2891,7 @@ class TestPayroll(TestPayrollMixin):
     ps1 = self.portal.accounting_module.newContent(
                       portal_type='Pay Sheet Transaction',
                       title='Employee 1',
-                      specialise_value=business_process,
+                      specialise_value=self.business_process,
                       destination_section_value=employer,
                       source_section_value=employee1,
                       payment_condition_source_payment_value=employee1_ba,
@@ -2928,7 +2932,7 @@ class TestPayroll(TestPayrollMixin):
     ps2 = self.portal.accounting_module.newContent(
                       portal_type='Pay Sheet Transaction',
                       title='Employee 2',
-                      specialise_value=business_process,
+                      specialise_value=self.business_process,
                       destination_section_value=employer,
                       source_section_value=employee2,
                       payment_condition_source_payment_value=employee2_ba,
@@ -3000,35 +3004,37 @@ class TestPayroll(TestPayrollMixin):
             line_list[-1],
             total_price=3000 + 2000 - (2000 * .5) - (3000 * .5))
 
-  def test_AccountingLineGeneration(self):
+
+  def createPayrollBusinesProcess(self): 
     currency_module = self.getCurrencyModule()
     if not hasattr(currency_module, 'EUR'):
       currency_module.newContent(
           portal_type = 'Currency',
           reference = "EUR", id = "EUR", base_unit_quantity=0.001 )
+
     # create services
-    base_salary = self.portal.service_module.newContent(
+    self.base_salary = self.portal.service_module.newContent(
       portal_type='Service',
       title='Base Salary',
       product_line='base_salary',
       variation_base_category_list=('contribution_share',),
       variation_category_list=('contribution_share/employee',
                                'contribution_share/employer'))
-    bonus = self.portal.service_module.newContent(
+    self.bonus = self.portal.service_module.newContent(
       portal_type='Service',
       title='Bonus',
       product_line='base_salary',
       variation_base_category_list=('contribution_share',),
       variation_category_list=('contribution_share/employee',
                                'contribution_share/employer'))
-    deductions = self.portal.service_module.newContent(
+    self.deductions = self.portal.service_module.newContent(
       portal_type='Service',
       title='Deductions',
       product_line='base_salary',
       variation_base_category_list=('contribution_share',),
       variation_category_list=('contribution_share/employee',
                                'contribution_share/employer'))
-    tax1 = self.portal.service_module.newContent(
+    self.tax1 = self.portal.service_module.newContent(
       portal_type='Service',
       title='Tax1',
       product_line='payroll_tax_1',
@@ -3037,26 +3043,26 @@ class TestPayroll(TestPayrollMixin):
                                'contribution_share/employer'))
 
     # create accounts
-    account_payroll_wages_expense = self.portal.account_module.newContent(
+    self.account_payroll_wages_expense = self.portal.account_module.newContent(
                           portal_type='Account',
                           title='Payroll Wages (expense)',
                           account_type='expense',)
-    account_payroll_taxes_expense = self.portal.account_module.newContent(
+    self.account_payroll_taxes_expense = self.portal.account_module.newContent(
                           portal_type='Account',
                           title='Payroll Taxes (expense)',
                           account_type='expense',)
-    account_net_wages = self.portal.account_module.newContent(
+    self.account_net_wages = self.portal.account_module.newContent(
                           portal_type='Account',
                           title='Net Wages',
                           account_type='liability/payable',)
-    account_payroll_taxes = self.portal.account_module.newContent(
+    self.account_payroll_taxes = self.portal.account_module.newContent(
                           portal_type='Account',
                           title='Payroll Taxes',
                           account_type='liability/payable',)
 
-    business_process = self.createBusinessProcess()
+    self.business_process = self.createBusinessProcess()
 
-    kw = dict(business_process=business_process,
+    kw = dict(business_process=self.business_process,
               trade_phase='default/accounting',
               trade_date='trade_phase/default/invoicing',
               membership_criterion_base_category_list=['contribution_share',
@@ -3066,26 +3072,26 @@ class TestPayroll(TestPayrollMixin):
     # Employee Share * Base Salary
     self.createTradeModelPath(reference='payroll_base_1',
        efficiency=1,
-       destination_value=account_payroll_wages_expense,
+       destination_value=self.account_payroll_wages_expense,
        membership_criterion_category_list=['contribution_share/employee',
                                            'product_line/base_salary'],
        **kw)
     self.createTradeModelPath(reference='payroll_base_2',
        efficiency=-1,
-       destination_value=account_net_wages,
+       destination_value=self.account_net_wages,
        membership_criterion_category_list=['contribution_share/employee',
                                            'product_line/base_salary'],
        **kw)
     # Employer Share * Payroll Tax 1
     self.createTradeModelPath(reference='payroll_employer_tax1',
        efficiency=1,
-       destination_value=account_payroll_taxes,
+       destination_value=self.account_payroll_taxes,
        membership_criterion_category_list=['contribution_share/employer',
                                       'product_line/payroll_tax_1'],
        **kw)
     self.createTradeModelPath(reference='payroll_employer_tax2',
        efficiency=-1,
-       destination_value=account_payroll_taxes_expense,
+       destination_value=self.account_payroll_taxes_expense,
        membership_criterion_category_list=['contribution_share/employer',
                                            'product_line/payroll_tax_1'],
        **kw)
@@ -3093,20 +3099,22 @@ class TestPayroll(TestPayrollMixin):
     # Employee Share * Payroll Tax 1
     self.createTradeModelPath(reference='payroll_employee_tax1',
        efficiency=1,
-       destination_value=account_payroll_taxes,
+       destination_value=self.account_payroll_taxes,
        membership_criterion_category_list=['contribution_share/employee',
                                            'product_line/payroll_tax_1'],
        **kw)
     self.createTradeModelPath(reference='payroll_employee_tax2',
        efficiency=-1,
-       destination_value=account_net_wages,
+       destination_value=self.account_net_wages,
        source_method_id=\
         'SimulationMovement_generatePrevisionForEmployeeSharePaySheetMovement',
        membership_criterion_category_list=['contribution_share/employee',
                                            'product_line/payroll_tax_1'],
        **kw)
 
+  def test_AccountingLineGeneration(self):
     # create a pay sheet
+    self.createPayrollBusinesProcess()
     eur = self.portal.currency_module.EUR
     employer = self.portal.organisation_module.newContent(
                       portal_type='Organisation',
@@ -3124,7 +3132,7 @@ class TestPayroll(TestPayrollMixin):
 
     ps = self.portal.accounting_module.newContent(
                       portal_type='Pay Sheet Transaction',
-                      specialise_value=business_process,
+                      specialise_value=self.business_process,
                       price_currency_value=eur,
                       resource_value=eur,
                       title='Employee 1',
@@ -3135,7 +3143,7 @@ class TestPayroll(TestPayrollMixin):
     # base salary = 2000
     line = ps.newContent(portal_type='Pay Sheet Line',
                    title='Base salary',
-                   resource_value=base_salary,
+                   resource_value=self.base_salary,
                    destination_value=employee,
                    variation_category_list=('contribution_share/employee',
                                             'contribution_share/employer'))
@@ -3155,7 +3163,7 @@ class TestPayroll(TestPayrollMixin):
     # base_salary += 100 (bonus)
     line = ps.newContent(portal_type='Pay Sheet Line',
                    title='Bonus',
-                   resource_value=bonus,
+                   resource_value=self.bonus,
                    destination_value=employee,
                    variation_category_list=('contribution_share/employee',
                                             'contribution_share/employer'))
@@ -3175,7 +3183,7 @@ class TestPayroll(TestPayrollMixin):
     # base_salary -= 50 (deductions)   => base_salary == 2050
     line = ps.newContent(portal_type='Pay Sheet Line',
                    title='Deduction',
-                   resource_value=deductions,
+                   resource_value=self.deductions,
                    destination_value=employee,
                    variation_category_list=('contribution_share/employee',
                                             'contribution_share/employer'))
@@ -3196,7 +3204,7 @@ class TestPayroll(TestPayrollMixin):
     #        20% for employer ( 410 )
     line = ps.newContent(portal_type='Pay Sheet Line',
                    title='Tax 1',
-                   resource_value=tax1,
+                   resource_value=self.tax1,
                    source_section_value=provider,
                    destination_value=employee,
                    variation_category_list=('contribution_share/employee',
@@ -3229,23 +3237,23 @@ class TestPayroll(TestPayrollMixin):
     self.assertEquals(len(accounting_line_list), 4)
 
     line = [l for l in accounting_line_list
-            if l.getDestinationValue() == account_payroll_wages_expense][0]
+            if l.getDestinationValue() == self.account_payroll_wages_expense][0]
     self.assertEquals(2050, line.getDestinationDebit())
     self.assertEquals(employer, line.getDestinationSectionValue())
 
     line = [l for l in accounting_line_list
-            if l.getDestinationValue() == account_net_wages][0]
+            if l.getDestinationValue() == self.account_net_wages][0]
     self.assertEquals(2050 - 205, line.getDestinationCredit())
     self.assertEquals(employer, line.getDestinationSectionValue())
     self.assertEquals(employee, line.getSourceSectionValue())
 
     line = [l for l in accounting_line_list
-            if l.getDestinationValue() == account_payroll_taxes_expense][0]
+            if l.getDestinationValue() == self.account_payroll_taxes_expense][0]
     self.assertEquals(410, line.getDestinationDebit())
     self.assertEquals(employer, line.getDestinationSectionValue())
 
     line = [l for l in accounting_line_list
-            if l.getDestinationValue() == account_payroll_taxes][0]
+            if l.getDestinationValue() == self.account_payroll_taxes][0]
     self.assertEquals(410 + 205, line.getDestinationCredit())
     self.assertEquals(employer, line.getDestinationSectionValue())
     self.assertEquals(provider, line.getSourceSectionValue())
