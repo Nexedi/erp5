@@ -80,7 +80,7 @@ class DownloadableMixin:
       format = None
     self._checkConversionFormatPermission(format, **kw)
     mime, data = self.convert(format, **kw)
-    if not format and mime != "":
+    if not format:
       # Guess the format from original mimetype
       mimetypes_registry = getToolByName(self.getPortalObject(),
                                                           'mimetypes_registry')
