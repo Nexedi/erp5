@@ -1598,6 +1598,129 @@ class TestClosingPeriod(AccountingTestCase):
     section_balance_transaction.reindexObject()
     transaction.commit()
     self.tic()
+  
+  def test_MultipleSectionIndependant(self):
+    stool = self.portal.portal_simulation
+    period_main_section = self.main_section.newContent(portal_type='Accounting Period')
+    period_main_section.setStartDate(DateTime(2006, 1, 1))
+    period_main_section.setStopDate(DateTime(2006, 12, 31))
+    period_main_section.start()
+    
+    period_section = self.section.newContent(portal_type='Accounting Period')
+    period_section.setStartDate(DateTime(2006, 1, 1))
+    period_section.setStopDate(DateTime(2006, 12, 31))
+    period_section.start()
+
+    transaction_main = self._makeOne(
+        start_date=DateTime(2006, 1, 2),
+        portal_type='Purchase Invoice Transaction',
+        destination_section_value=self.main_section,
+        source_section_value=self.organisation_module.client_1,
+        simulation_state='delivered',
+        lines=(dict(destination_value=self.account_module.goods_purchase,
+                    destination_debit=30),
+               dict(destination_value=self.account_module.payable,
+                    destination_credit=30)))
+
+    transaction_section = self._makeOne(
+        start_date=DateTime(2006, 1, 2),
+        portal_type='Purchase Invoice Transaction',
+        destination_section_value=self.section,
+        source_section_value=self.organisation_module.client_1,
+        simulation_state='stopped',
+        lines=(dict(destination_value=self.account_module.goods_purchase,
+                    destination_debit=20),
+               dict(destination_value=self.account_module.payable,
+                    destination_credit=20)))
+
+    transaction_section.deliver()
+    transaction.commit()
+    self.tic()
+
+    pl = self.portal.account_module.newContent(
+              portal_type='Account',
+              account_type='equity')
+    self.portal.portal_workflow.doActionFor(period_main_section, 'stop_action',
+              profit_and_loss_account=pl.getRelativeUrl())
+    
+    transaction.commit()
+    self.tic()
+    
+    created_balance_transaction_list = self.portal.accounting_module.contentValues(
+                                    portal_type='Balance Transaction')
+    self.assertEquals(1, len(created_balance_transaction_list))
+
+    self.assertEquals(30, stool.getInventory(
+                              section_uid=self.main_section.getUid(),
+                              node_uid=pl.getUid()))
+    self.assertEquals(-30, stool.getInventory(
+                              section_uid=self.main_section.getUid(),
+                              node_uid=self.portal.account_module.payable.getUid()))
+
+    # Section is not impacted at the moment
+    self.assertEquals(0, stool.getInventory(
+                              section_uid=self.section.getUid(),
+                              node_uid=pl.getUid()))
+    self.assertEquals(-20, stool.getInventory(
+                              section_uid=self.section.getUid(),
+                              node_uid=self.portal.account_module.payable.getUid()))
+
+    # Close section's period
+    self.portal.portal_workflow.doActionFor(period_section, 'stop_action',
+              profit_and_loss_account=pl.getRelativeUrl())
+    
+    transaction.commit()
+    self.tic()
+    
+    created_balance_transaction_list = self.portal.accounting_module.contentValues(
+                                    portal_type='Balance Transaction')
+    self.assertEquals(2, len(created_balance_transaction_list))
+    
+    # section is now impacted
+    self.assertEquals(20, stool.getInventory(
+                              section_uid=self.section.getUid(),
+                              node_uid=pl.getUid()))
+    self.assertEquals(-20, stool.getInventory(
+                              section_uid=self.section.getUid(),
+                              node_uid=self.portal.account_module.payable.getUid()))
+    
+    self.assertEquals(30, stool.getInventory(
+                              section_uid=self.main_section.getUid(),
+                              node_uid=pl.getUid()))
+    self.assertEquals(-30, stool.getInventory(
+                              section_uid=self.main_section.getUid(),
+                              node_uid=self.portal.account_module.payable.getUid()))
+
+  def test_MultipleSectionEmpty(self):
+    period = self.main_section.newContent(portal_type='Accounting Period')
+    period.setStartDate(DateTime(2006, 1, 1))
+    period.setStopDate(DateTime(2006, 12, 31))
+    period.start()
+    
+    transaction_main = self._makeOne(
+        start_date=DateTime(2006, 1, 2),
+        portal_type='Purchase Invoice Transaction',
+        destination_section_value=self.main_section,
+        source_section_value=self.organisation_module.client_1,
+        simulation_state='delivered',
+        lines=(dict(destination_value=self.account_module.goods_purchase,
+                    destination_debit=30),
+               dict(destination_value=self.account_module.payable,
+                    destination_credit=30)))
+    
+    pl = self.portal.account_module.newContent(
+              portal_type='Account',
+              account_type='equity')
+    self.portal.portal_workflow.doActionFor(period, 'stop_action',
+              profit_and_loss_account=pl.getRelativeUrl())
+
+    transaction.commit()
+    self.tic()
+    
+    created_balance_transaction_list = self.portal.accounting_module.contentValues(
+                                    portal_type='Balance Transaction')
+    self.assertEquals(1, len(created_balance_transaction_list))
+    # no balance transaction has been created for section
 
   def test_SecondAccountingPeriod(self):
     """Tests having two accounting periods.
