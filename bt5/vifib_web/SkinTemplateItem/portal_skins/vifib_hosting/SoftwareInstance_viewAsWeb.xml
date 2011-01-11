@@ -75,6 +75,7 @@
                     <key> <string>center</string> </key>
                     <value>
                       <list>
+                        <string>my_text_content</string>
                         <string>my_start_button</string>
                         <string>my_stop_button</string>
                         <string>my_destroy_button</string>
