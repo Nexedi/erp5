@@ -949,12 +949,20 @@ table#gadget-table {\n
 }\n
 \n
 div.gadget-action div.front_pad {\n
-  font-size: 12px;\n
+  font-size: 10px;\n
   width: 240px;\n
 }\n
 \n
 h3.handle {\n
   color: #222222 !important;\n
+  background: white !important;\n
+  font-size: 13px;\n
+  border-bottom: 0px !important;\n
+}\n
+\n
+div.block div.content {\n
+  border-top: 0px !important;\n
+  border-bottom: 1px solid #DDDDDD !important;\n
 }\n
 \n
 div.portal-column {\n
@@ -971,7 +979,33 @@ div.edit-form button {\n
 }\n
 \n
 div.edit-form {\n
-    padding-left: 0 !important;\n
+  padding-left: 0 !important;\n
+}\n
+\n
+h3.handle span.handle {\n
+  background: white !important;\n
+}\n
+\n
+a.block-minimize {\n
+  background-image: url("../ung_images/icon_minimize.png") !important;\n
+}\n
+\n
+a.block-remove {\n
+  background-image: url("../ung_images/icon_remove.png") !important;\n
+}\n
+\n
+table#navigation_table td#tab-switcher-container,\n
+ table#navigation_table td#tab-list-container {\n
+  display: none !important;\n
+}\n
+\n
+table#navigation_table div#add_new_gadget_link {\n
+  border-bottom: 0px;\n
+  padding-top: 5px;\n
+}\n
+\n
+div.front_pad div#page_wrapper {\n
+  margin: -0.5em 0 0 !important;\n
 }
 
 ]]></string> </value>

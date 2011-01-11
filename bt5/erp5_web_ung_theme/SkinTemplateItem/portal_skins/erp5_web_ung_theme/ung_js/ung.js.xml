@@ -447,7 +447,7 @@ $().ready(function(){\n
    event.preventDefault();\n
    $("div.gadget-listbox").dialog("open");\n
  });\n
-  $("div#page_wrapper div#portal-column-1.portal-column, div#page_wrapper div#portal-column-2.portal-column, div.front_pad div.minimize_wrapper p").remove();\n
+ $("div#page_wrapper div#portal-column-1.portal-column, div#page_wrapper div#portal-column-2.portal-column").remove();\n
 \n
  return false;\n
 });
