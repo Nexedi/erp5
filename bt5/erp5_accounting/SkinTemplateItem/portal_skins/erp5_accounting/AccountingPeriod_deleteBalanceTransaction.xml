@@ -50,29 +50,24 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Create a balance transaction\n
-"""\n
-accounting_period = sci[\'object\']\n
+            <value> <string>assert context.getSimulationState() == \'started\'\n
+id_list = []\n
+for balance_transaction in context.getCausalityRelatedValueList(\n
+                     portal_type=\'Balance Transaction\'):\n
+  id_list.append(balance_transaction.getId())\n
+  assert balance_transaction.getParentValue().getId() == \'accounting_module\'\n
 \n
-# we only create a balance transaction for top level accounting periods\n
-if accounting_period.getParentValue().getPortalType() == accounting_period.getPortalType():\n
-  return\n
-\n
-portal = accounting_period.getPortalObject()\n
-profit_and_loss_account = portal.portal_workflow.getInfoFor(\n
-                            accounting_period, \'profit_and_loss_account\')\n
-\n
-accounting_period.activate(after_method_id=\'unindexObject\').AccountingPeriod_createBalanceTransaction(\n
-                       profit_and_loss_account=profit_and_loss_account)\n
+if id_list:\n
+  balance_transaction.getParentValue().manage_delObjects(id_list)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>sci</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>createBalanceTransaction</string> </value>
+            <value> <string>AccountingPeriod_deleteBalanceTransaction</string> </value>
         </item>
       </dictionary>
     </pickle>
