@@ -101,6 +101,10 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
 
   def afterSetUp(self):
     super(TestCMFActivity, self).afterSetUp()
+    from Products.CMFActivity.ActivityRuntimeEnvironment import BaseMessage
+    # Set 'max_retry' to a known value so that we can test the feature
+    BaseMessage.max_retry = property(lambda self:
+      self.activity_kw.get('max_retry', 5))
     self.login()
     portal = self.portal
     # trap outgoing e-mails

@@ -485,6 +485,12 @@ class ERP5TypeTestCase(ProcessingNodeTestCase, PortalTestCase):
       '''Sets up the fixture. Do not override,
          use the hooks instead.
       '''
+      from Products.CMFActivity.ActivityRuntimeEnvironment import BaseMessage
+      # Activities in unit tests shall never fail.
+      # Let's be a litte tolerant for the moment.
+      BaseMessage.max_retry = property(lambda self:
+        self.activity_kw.get('max_retry', 1))
+
       use_dummy_mail_host = os.environ.get('use_dummy_mail_host', 0)
       template_list = self.getBusinessTemplateList()
       erp5_catalog_storage = os.environ.get('erp5_catalog_storage',
