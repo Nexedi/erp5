@@ -15,6 +15,14 @@
             </value>
         </item>
         <item>
+            <key> <string>delegated_message_list</string> </key>
+            <value>
+              <list>
+                <string>external_validator_failed</string>
+              </list>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>your_reference</string> </value>
         </item>
@@ -24,7 +32,7 @@
               <dictionary>
                 <item>
                     <key> <string>external_validator_failed</string> </key>
-                    <value> <string>The input failed the external validator.</string> </value>
+                    <value> <string>User login is either already used or contains invalid characters. Please try another one.</string> </value>
                 </item>
               </dictionary>
             </value>
