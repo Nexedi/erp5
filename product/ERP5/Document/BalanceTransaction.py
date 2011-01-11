@@ -67,7 +67,7 @@ class InventoryKey(UserDict):
   def __cmp__(self, other):
     # this is basically here so that we can see if two inventory keys are
     # equals.
-    if tuple(self.keys()) != tuple(other.keys()):
+    if sorted(self.keys()) != sorted(other.keys()):
       return -1
     for k, v in self.items():
       if v != other[k]:
