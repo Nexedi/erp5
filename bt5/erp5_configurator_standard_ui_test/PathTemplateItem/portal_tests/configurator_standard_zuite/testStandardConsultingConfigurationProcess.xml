@@ -677,6 +677,28 @@ Wait for activities</span>\n
 </tr>\n
 <span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities" />\n
 <span metal:use-macro="container/Zuite_viewConfiguratorTestMacroLibrary/macros/restore_test_environment" />\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/login_form</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="__ac_name"]</td>\n
+  <td tal:content="python:\n
+        here.Zuite_getConfigurationTestDict()[\'functional_test_username\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="__ac_password"]</td>\n
+  <td tal:content="python:\n
+      here.Zuite_getConfigurationTestDict()[\'functional_test_password\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//input[@name="logged_in:method"]</td>\n
+  <td></td>\n
+</tr>\n
 \n
 </tbody></table>\n
 </body>\n
