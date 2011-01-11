@@ -30,6 +30,8 @@
               <tuple>
                 <string>delete</string>
                 <string>delete_action</string>
+                <string>publish</string>
+                <string>publish_action</string>
                 <string>validate</string>
                 <string>validate_action</string>
               </tuple>
