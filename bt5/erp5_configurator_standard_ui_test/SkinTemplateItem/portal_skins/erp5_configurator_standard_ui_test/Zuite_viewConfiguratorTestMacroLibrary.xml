@@ -144,7 +144,7 @@
   </tr>\n
   <tr>\n
     <td>verifyTextPresent</td>\n
-    <td>TioLive installation</td>\n
+    <td>ERP5 installation</td>\n
     <td></td>\n
   </tr>\n
 </tal:block>\n
@@ -168,7 +168,7 @@
   </tr>\n
   <tr>\n
     <td>verifyTextPresent</td>\n
-    <td>Your categories</td>\n
+    <td>Your Categories</td>\n
     <td></td>\n
   </tr>\n
   <tr>\n
@@ -255,7 +255,7 @@
   <tr>\n
     <td>verifyValue</td>\n
     <td>//input[@name="next:method"]</td>\n
-    <td>Configure Rules</td>\n
+    <td>Configure Roles</td>\n
   </tr>\n
 </tal:block>\n
 \n
@@ -309,7 +309,7 @@
   <tr>\n
     <td>verifyValue</td>\n
     <td>//input[@name="next:method"]</td>\n
-    <td>Configure organisation</td>\n
+    <td>Configure Organisation</td>\n
   </tr>\n
 \n
 </tal:block>\n
@@ -324,7 +324,7 @@
   </tr>\n
   <tr>\n
     <td>verifyTextPresent</td>\n
-    <td>Enter the number of user accounts you want to create. In your company, each person using TioLive should have his own user account.</td>\n
+    <td>Enter the number of user accounts you want to create. In your company, each person using ERP5 should have his own user account.</td>\n
     <td></td>\n
   </tr>\n
   <tr>\n
@@ -364,7 +364,7 @@
   </tr>\n
   <tr>\n
     <td>verifyTextPresent</td>\n
-    <td>Fill in detailled information for each TioLive user.</td>\n
+    <td>Fill in detailled information for each ERP5 user.</td>\n
     <td></td>\n
   </tr>\n
   <tr>\n
@@ -374,7 +374,7 @@
   </tr>\n
   <tr>\n
     <td>verifyTextPresent</td>\n
-    <td> Fill in detailled information for each TioLive user.</td>\n
+    <td> Fill in detailled information for each ERP5 user.</td>\n
     <td></td>\n
   </tr>\n
   <tr>\n
@@ -508,7 +508,7 @@
   </tr>\n
   <tr>\n
     <td>verifyTextPresent</td>\n
-    <td>Define some global preferences for your TioLive application.</td>\n
+    <td>Define some global preferences for your ERP5 application.</td>\n
     <td></td>\n
   </tr>\n
   <tr>\n
@@ -540,7 +540,7 @@
   <tr>\n
     <td>verifyValue</td>\n
     <td>//input[@name="next:method"]</td>\n
-    <td>Configure preferences</td>\n
+    <td>Configure ERP5 Preferences</td>\n
   </tr>\n
   <tr>\n
     <td>verifyValue</td>\n
@@ -558,7 +558,7 @@
 \n
   <tr>\n
     <td>verifyTextPresent</td>\n
-    <td>TioLive installation</td>\n
+    <td>ERP5 installation</td>\n
     <td></td>\n
   </tr>\n
   <tr>\n
