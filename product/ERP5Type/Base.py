@@ -3878,6 +3878,10 @@ class Base( CopyContainer,
       newklass = getattr(erp5.portal_type, portal_type)
       assert klass != newklass
       self.__class__ = newklass
+      self._p_changed = True
+      # this might look useless, but it is necessary to explicitely record
+      # the change in the parent container, because the class has changed
+      setattr(self.getParentValue(), self.getId(), self)
 
   security.declareProtected(Permissions.DeletePortalContent,
                             'migratePortalType')

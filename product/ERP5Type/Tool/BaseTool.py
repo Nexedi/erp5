@@ -96,7 +96,7 @@ class BaseTool (UniqueObject, Folder):
         from Products.ERP5Type import document_class_registry
         document_class_name = portal_type.replace(' ', '')
         if document_class_name in document_class_registry:
-          type_definition.setTypeClass(document_class_name)
+          type_definition.type_class = document_class_name
         else:
           from Products.ERP5.Document.Document import NotConvertedError
           raise NotConvertedError( 
