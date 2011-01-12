@@ -1041,14 +1041,15 @@ class ActivityTool (Folder, UniqueObject):
       finally:
         global_activity_buffer_lock.release()
       thread_activity_buffer = global_activity_buffer[my_instance_key]
-      if my_thread_key not in thread_activity_buffer:
+      try:
+        return thread_activity_buffer[my_thread_key]
+      except KeyError:
         if create_if_not_found:
-          buffer = ActivityBuffer(activity_tool=self)
+          buffer = ActivityBuffer()
         else:
           buffer = None
         thread_activity_buffer[my_thread_key] = buffer
-      activity_buffer = thread_activity_buffer[my_thread_key]
-      return activity_buffer
+        return buffer
 
     security.declarePrivate('activateObject')
     def activateObject(self, object, activity, active_process, **kw):

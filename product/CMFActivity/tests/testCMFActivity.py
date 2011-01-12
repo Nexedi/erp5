@@ -3832,6 +3832,19 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     finally:
       del activity_tool.__class__.doSomething
 
+  def test_126_beforeCommitHook(self):
+    """
+    Check it is possible to activate an object from a before commit hook
+    """
+    def doSomething(person):
+      person.activate(activity='SQLDict')._setFirstName('John')
+      person.activate(activity='SQLQueue')._setLastName('Smith')
+    person = self.portal.person_module.newContent()
+    transaction.get().addBeforeCommitHook(doSomething, (person,))
+    transaction.commit()
+    self.tic()
+    self.assertEqual(person.getTitle(), 'John Smith')
+
   def test_connection_migration(self):
     """
     Make sure the cmf_activity_sql_connection is automatically migrated from
