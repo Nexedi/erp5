@@ -448,7 +448,10 @@ $().ready(function(){\n
    $("div.gadget-listbox").dialog("open");\n
  });\n
  $("div#page_wrapper div#portal-column-1.portal-column, div#page_wrapper div#portal-column-2.portal-column").remove();\n
-\n
+ if (screen.width == 1024){\n
+   $("div.listbox-tree, div.gadget-action div.front_pad").css("width", "79%");\n
+   $("td.listbox-table-domain-tree-cell a").css("padding-right", "25px");\n
+ }\n
  return false;\n
 });
 

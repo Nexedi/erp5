@@ -107,7 +107,7 @@ div.share-action-area {\n
 /* Main classes */\n
 \n
 div.main-right {\n
-  width:80.5%;\n
+  width:82%;\n
   float:right;\n
   border-left: 4px solid #BBCCFF;\n
 }\n
@@ -131,16 +131,8 @@ div.gadget-column {\n
   margin-left:-4px;\n
 }\n
 \n
-div.gadget-column div.gadget-container {\n
-  background-color:#FFFFFF;\n
-  margin-top:9px;\n
-  text-align:left;\n
-  font-size: 14px;\n
-}\n
-\n
 div.gadget-column div.file-selection {\n
   background-color:#fff;\n
-  padding-right:190px;\n
   margin:15px -4px -4px;\n
 }\n
 \n
@@ -376,7 +368,7 @@ a.ung_docs img {\n
 \n
 div.main-left {\n
   margin-left:-4px;\n
-  width: 19.5%;\n
+  width: 18%;\n
   float:left;\n
   background-color: #DAE6F6;\n
   height:4em;\n
@@ -823,7 +815,7 @@ div.listbox-domain-tree-container select {\n
 \n
 div.listbox-tree {\n
   font-size: 13px;\n
-  width: 106.7%;\n
+  width: 98.7%;\n
   overflow: hidden;\n
   height: 233px;\n
 }\n
@@ -928,10 +920,6 @@ div.header-right fieldset.widget a#sharing_url {\n
   font-size: 11px;\n
 }\n
 \n
-div.gadget-column div.gadget-container a {\n
-  padding-left: 16px;\n
-}\n
-\n
 div.gadget-listbox {\n
   display: none;\n
 }\n
@@ -950,13 +938,12 @@ table#gadget-table {\n
 \n
 div.gadget-action div.front_pad {\n
   font-size: 10px;\n
-  width: 240px;\n
 }\n
 \n
 h3.handle {\n
   color: #222222 !important;\n
   background: white !important;\n
-  font-size: 13px;\n
+  font-size: 13px !important;\n
   border-bottom: 0px !important;\n
 }\n
 \n
@@ -992,6 +979,10 @@ a.block-minimize {\n
 \n
 a.block-remove {\n
   background-image: url("../ung_images/icon_remove.png") !important;\n
+}\n
+\n
+a.block-edit-form {\n
+  background-image: url("../ung_images/icon_edit.png") !important;\n
 }\n
 \n
 table#navigation_table td#tab-switcher-container,\n
