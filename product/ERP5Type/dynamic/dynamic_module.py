@@ -6,13 +6,16 @@ class DynamicModule(ModuleType):
   # it's useful to have such a generic utility
   # please subclass it if you need ERP5-specific behaviors
 
+  __file__ = __file__
+
   def __init__(self, name, factory, doc=None):
     super(DynamicModule, self).__init__(name, doc=doc)
     self._factory = factory
 
   def __getattr__(self, name):
-    if name == '__path__':
-      raise AttributeError('%s does not have __path__' % (self,))
+    if name[:2] == '__':
+      raise AttributeError('%r module has no attribute %r'
+                           % (self.__name__, name))
     obj = self._factory(name)
     # _factory can return an instance, a constant, or a class
     if isinstance(obj, type):
