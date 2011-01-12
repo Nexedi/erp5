@@ -509,6 +509,6 @@ class TestInvoiceVAT(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  #suite.addTest(unittest.makeSuite(TestInvoiceVAT))
+  suite.addTest(unittest.makeSuite(TestInvoiceVAT))
   return suite
 

@@ -30,7 +30,7 @@
 import unittest
 import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5OOo.tests.testFormPrintout import TestFormPrintoutMixin
+from Products.ERP5OOo.tests.TestFormPrintoutMixin import TestFormPrintoutMixin
 from Products.ERP5OOo.OOoUtils import OOoBuilder
 from Products.ERP5OOo.tests.utils import Validator
 from Products.ERP5Type.tests.utils import FileUpload
