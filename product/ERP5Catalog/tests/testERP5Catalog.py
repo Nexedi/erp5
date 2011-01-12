@@ -4339,8 +4339,7 @@ VALUES
     result = connector.manage_test('select 1 as foo;')
     self.assertEquals(1, result[0].foo)
 
-  def test_SelectDictWithDynamicRelatedKey(self, 
-                                              quiet=quiet, run=run_all_test):
+  def test_SelectDictWithDynamicRelatedKey(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Select Dict With Dynamic Related Key'
@@ -4387,21 +4386,58 @@ VALUES
     transaction.commit()
     self.tic()
 
+    # we will restrict our search to orgs with these ids to be resilient
+    # to preexisting orgs:
     org_id_list = sorted(org.getId() for org in (org1, org2, org3, org4))
+    # and we'll sort on title to make the output predictable
+    search_kw = dict(id=org_id_list,
+                     sort_on='title')
     # Try to get the organisations with the group title Nexedi to make sure
-    # searching works
+    # searching works correctly
     organisation_list = [x.getObject() for x in 
-                         module.searchFolder(group_title='Nexedi',
-                                             id=org_id_list,
-                                             sort_on='title')]
+                         module.searchFolder(strict_group_title='Nexedi',
+                                             **search_kw)]
     self.assertEquals(organisation_list, [org2, org4])
-    # Now try to get all our orgs above, fetching the groups on select_dict
+    # Now lets fetch the titles of groups of the above orgs using select_dict.
+    search_kw.update(select_dict=dict(strict_group_title=None))
+    records = module.searchFolder(**search_kw)
+    # by default the catalog only returns items containing the
+    # relationship we asked for (group). Besides, some entries will
+    # appear many times, according to the number of relationships each
+    # catalog entry has in that related key.
+    results = [(rec.title, rec.strict_group_title or '-None-')
+               for rec in records]
+    self.assertEquals(sorted(results), 
+                      [('org2', 'Nexedi'),
+                       ('org3', 'TIOLive'),
+                       ('org4', 'Nexedi'),
+                       ('org4', 'TIOLive')])
+    # But if we demand a left-join on that column, then we'll have all
+    # orgs we created. They'll still be repeated according to their
+    # relationships, though.
+    search_kw.update(left_join_list=('strict_group_title',))
+    records = module.searchFolder(**search_kw)
+    results = [(rec.title, rec.strict_group_title or '-None-')
+               for rec in records]
+    self.assertEquals(sorted(results), 
+                      [('org1', '-None-'),
+                       ('org2', 'Nexedi'),
+                       ('org3', 'TIOLive'),
+                       ('org4', 'Nexedi'),
+                       ('org4', 'TIOLive')])
+    # To get only one of each org, we need to group by one of the
+    # catalog keys.
+
+    # Note that this relies on a non-standard behaviour
+    # of MySQL: If a selected column is not present in the GROUP BY
+    # clause, only the first ocurrence is taken.  Other databases,
+    # like Oracle, assume that selected columns are either GROUPed BY
+    # or are inside an aggregation function (COUNT, SUM, GROUP_CONCAT,
+    # ...), and consider the query to be in error otherwise.
+    search_kw.update(group_by_list=('uid',))
     organisation_list = [x.getObject() for x in 
-                         module.searchFolder(id=org_id_list,
-                                             select_dict=dict(group_title=None),
-                                             sort_on='title')]
+                         module.searchFolder(**search_kw)]
     self.assertEquals(organisation_list, [org1, org2, org3, org4])
-    self.fail('So far so good')
 
 def test_suite():
   suite = unittest.TestSuite()
