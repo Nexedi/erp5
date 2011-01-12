@@ -35,7 +35,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>SaleOrder_setCustomerInformation</string> </value>
+            <value> <string>WebSection_addSelectedSoftwareProductToShoppingCart</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -60,8 +60,9 @@
             <value>
               <list>
                 <string>normal</string>
-                <string>left</string>
                 <string>right</string>
+                <string>center</string>
+                <string>bottom</string>
                 <string>hidden</string>
               </list>
             </value>
@@ -71,19 +72,24 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>hidden</string> </key>
+                    <key> <string>bottom</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key> <string>left</string> </key>
+                    <key> <string>center</string> </key>
                     <value>
                       <list>
-                        <string>your_last_name</string>
-                        <string>your_first_name</string>
-                        <string>your_career_subordination_title</string>
-                        <string>your_default_email_text</string>
+                        <string>listbox</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list>
+                        <string>listbox_getSummaryAsHTML</string>
                       </list>
                     </value>
                 </item>
@@ -98,12 +104,7 @@
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>your_default_telephone_text</string>
-                        <string>your_default_address_street_address</string>
-                        <string>your_default_address_zip_code</string>
-                        <string>your_default_address_city</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -111,7 +112,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleOrder_viewCustomerInformationDialog</string> </value>
+            <value> <string>WebSection_viewServiceChoiceDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -119,7 +120,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>WebSection_viewCustomerInformationsDialog</string> </value>
+            <value> <string>WebSection_viewServiceChoiceDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -135,7 +136,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Continue</string> </value>
+            <value> <string>Order</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

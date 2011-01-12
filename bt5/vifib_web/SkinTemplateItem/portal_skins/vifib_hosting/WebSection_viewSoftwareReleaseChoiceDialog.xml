@@ -110,7 +110,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleOrder_viewSoftwareReleaseChoiceDialog</string> </value>
+            <value> <string>WebSection_viewSoftwareReleaseChoiceDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>

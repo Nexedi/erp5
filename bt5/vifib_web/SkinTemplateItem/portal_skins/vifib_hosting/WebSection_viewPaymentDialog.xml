@@ -35,7 +35,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>SaleOrder_externalPaymentHandler</string> </value>
+            <value> <string>WebSection_doPaypalPayment</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -60,8 +60,6 @@
             <value>
               <list>
                 <string>normal</string>
-                <string>right</string>
-                <string>center</string>
                 <string>bottom</string>
                 <string>hidden</string>
               </list>
@@ -78,12 +76,6 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>center</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
                     <key> <string>hidden</string> </key>
                     <value>
                       <list/>
@@ -94,23 +86,9 @@
                     <value>
                       <list>
                         <string>my_description</string>
-                        <string>my_summary_title</string>
                         <string>my_summary</string>
-                        <string>my_person_information_summary_title</string>
-                        <string>my_source_title</string>
-                        <string>my_career_subordination_title</string>
-                        <string>my_default_address_street_address</string>
-                        <string>my_default_address_zip_code</string>
-                        <string>my_default_address_city</string>
-                        <string>my_default_telephone_text</string>
-                        <string>buy_on_paypal_button</string>
+                        <string>your_token</string>
                       </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>right</string> </key>
-                    <value>
-                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -118,7 +96,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleOrder_viewSummaryDialog</string> </value>
+            <value> <string>WebSection_viewPaymentDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -126,7 +104,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>SaleOrder_viewSummaryDialog</string> </value>
+            <value> <string>SaleOrder_viewPaymentDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -142,7 +120,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Fake External Payment</string> </value>
+            <value> <string>Checkout</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

@@ -35,7 +35,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>WebSection_doPaypalPayment</string> </value>
+            <value> <string>SaleOrder_setCustomerInformation</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -60,7 +60,8 @@
             <value>
               <list>
                 <string>normal</string>
-                <string>bottom</string>
+                <string>left</string>
+                <string>right</string>
                 <string>hidden</string>
               </list>
             </value>
@@ -70,15 +71,20 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>bottom</string> </key>
+                    <key> <string>hidden</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key> <string>hidden</string> </key>
+                    <key> <string>left</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>your_last_name</string>
+                        <string>your_first_name</string>
+                        <string>your_career_subordination_title</string>
+                        <string>your_default_email_text</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -86,8 +92,17 @@
                     <value>
                       <list>
                         <string>my_description</string>
-                        <string>my_summary</string>
-                        <string>your_token</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>right</string> </key>
+                    <value>
+                      <list>
+                        <string>your_default_telephone_text</string>
+                        <string>your_default_address_street_address</string>
+                        <string>your_default_address_zip_code</string>
+                        <string>your_default_address_city</string>
                       </list>
                     </value>
                 </item>
@@ -96,7 +111,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleOrder_viewPaymentDialog</string> </value>
+            <value> <string>WebSection_viewCustomerInformationDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -104,7 +119,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>SaleOrder_viewPaymentDialog</string> </value>
+            <value> <string>WebSection_viewCustomerInformationsDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -120,7 +135,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Checkout</string> </value>
+            <value> <string>Continue</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
