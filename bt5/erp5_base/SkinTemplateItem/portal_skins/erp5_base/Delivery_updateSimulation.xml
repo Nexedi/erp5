@@ -52,7 +52,6 @@
             <key> <string>_body</string> </key>
             <value> <string>delivery = context\n
 delivery_path = delivery.getPath()\n
-path_and_method_id = (delivery_path, (\'immediateReindexObject\',\'recursiveImmediateReindexObject\'))\n
 expand_tag = delivery_path + \'_expand\'\n
 tag = delivery_path + \'_updateAppliedRule\'\n
 \n
@@ -71,11 +70,10 @@ activate_kw = { \n
 # Serialization is required for avoiding parallel executions of updateAppliedRule\n
 # which may generate multiple Root Applied Rules.\n
 delivery.activate(\n
-    after_path_and_method_id=path_and_method_id,\n
     after_tag=expand_tag,\n
     tag=tag,\n
     priority=priority,\n
-    serialization_tag=delivery_path,\n
+    serialization_tag=tag,\n
     ).Delivery_updateAppliedRule(activate_kw=activate_kw)\n
 </string> </value>
         </item>

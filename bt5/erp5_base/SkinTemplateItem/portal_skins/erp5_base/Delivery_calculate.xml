@@ -50,18 +50,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># Note that delivery may have no causality state.\n
-# For instance, Accounting Transaction Lines\n
-# can be contained in a Accounting Rule Cell\n
-# of a Invoice Transaction Rule, and none of\n
-# these provide a causality workflow, but\n
-# Accounting Transaction Line is also a\n
-# possible child of a Accounting Transaction\n
-# in the Accounting Transaction Module\n
-\n
-portal = context.getPortalObject()\n
+            <value> <string>portal = context.getPortalObject()\n
 if portal.portal_workflow.isTransitionPossible(context, \'calculate\'):\n
-  context.calculate()\n
+  context.calculate(**kw)\n
 else:\n
   # Make sure no other node is moving the delivery\n
   # to \'diverged\' or \'solved\' state.\n
@@ -70,7 +61,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

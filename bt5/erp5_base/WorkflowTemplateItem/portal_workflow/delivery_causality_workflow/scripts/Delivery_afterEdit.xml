@@ -52,7 +52,8 @@
             <key> <string>_body</string> </key>
             <value> <string>delivery = state_change[\'object\']\n
 activate_kw = state_change[\'kwargs\'].get(\'activate_kw\') or {}\n
-delivery.activate(**activate_kw).updateCausalityState()\n
+tag = delivery.getPath() + \'_calculate\'\n
+delivery.activate(after_tag=tag, **activate_kw).updateCausalityState()\n
 </string> </value>
         </item>
         <item>

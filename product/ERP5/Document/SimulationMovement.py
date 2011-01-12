@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+import transaction
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
@@ -240,6 +241,35 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
 
   #######################################################
   # Causality Workflow Methods
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'calculate')
+  def calculate(self):
+    """Move related delivery in 'calculating' state by activity
+
+    Activity to update causality state is delayed until all related simulation
+    movement are reindexed.
+    This method should be only called by
+    simulation_movement_causality_interaction_workflow.
+    """
+    delivery = self.getDeliveryValue()
+    if delivery is not None:
+      delivery = delivery.getRootDeliveryValue()
+      tv = getTransactionalVariable()
+      path = self.getPath()
+      delivery_path = delivery.getPath()
+      key = 'SimulationMovement.calculate', delivery_path
+      try:
+        tv[key].append(path)
+      except KeyError:
+        tv[key] = [path]
+        def before_commit():
+          method_id_list = ('immediateReindexObject',
+                            'recursiveImmediateReindexObject')
+          tag = delivery_path + '_calculate'
+          delivery.activate(tag=tag).Delivery_calculate(activate_kw=
+            {'after_path_and_method_id': (tv[key], method_id_list)})
+          tv[key] = None # disallow further calls to 'calculate'
+        transaction.get().addBeforeCommitHook(before_commit)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'expand')
   def expand(self, force=0, **kw):

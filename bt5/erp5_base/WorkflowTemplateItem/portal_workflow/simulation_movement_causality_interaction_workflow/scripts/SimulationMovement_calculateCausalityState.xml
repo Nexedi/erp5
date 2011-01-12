@@ -50,15 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>simulation_movement = state_change[\'object\']\n
-\n
-# It is not quite useful to invoke the method calculate when a newly created\n
-# simulation movement is not indexed yet, so it is better to wait for the indexing\n
-# to be done.\n
-path = simulation_movement.getPath()\n
-method_id_list = (\'immediateReindexObject\', \'recursiveImmediateReindexObject\')\n
-simulation_movement.activate(after_path_and_method_id=(path, method_id_list)) \\\n
-    .SimulationMovement_calculateCausalityState()\n
+            <value> <string>state_change[\'object\'].calculate()\n
 </string> </value>
         </item>
         <item>
