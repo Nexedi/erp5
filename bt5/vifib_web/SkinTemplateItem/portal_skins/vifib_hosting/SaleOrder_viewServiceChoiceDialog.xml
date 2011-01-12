@@ -82,7 +82,6 @@
                     <value>
                       <list>
                         <string>listbox</string>
-                        <string>release_listbox_container</string>
                       </list>
                     </value>
                 </item>
@@ -99,7 +98,6 @@
                     <value>
                       <list>
                         <string>my_description</string>
-                        <string>my_additionnal_html</string>
                       </list>
                     </value>
                 </item>
