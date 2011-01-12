@@ -98,6 +98,13 @@ class PythonScript(XMLObject, ZopePythonScript):
       """
       self.write(value)
 
+    def _setParameterSignature(self, value):
+      """
+      override to call ZopePythonScript methods to force compiling code
+      """
+      self._baseSetParameterSignature(value)
+      self._compile()
+
     def _setProxyRoleList(self, value):
       """
       override to call ZopePythonScript methods
