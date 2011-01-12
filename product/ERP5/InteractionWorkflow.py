@@ -303,14 +303,22 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
 
               # Execute Before Commit
               for script_name in tdef.before_commit_script_name:
-                script = self.scripts[script_name]
-                transaction.get().addBeforeCommitHook(script, (sci,))
+                del sci.object
+                transaction.get().addBeforeCommitHook(self._before_commit,
+                  (sci, ob.getPhysicalPath(), script_name))
 
               # Execute "activity" scripts
               for script_name in tdef.activate_script_name:
                 self.activate(activity='SQLQueue')\
                     .activeScript(script_name, ob.getRelativeUrl(),
                                   status, tdef.id)
+
+    def _before_commit(self, sci, path, script_name):
+      try:
+        sci.object = self.unrestrictedTraverse(path)
+      except KeyError:
+        return
+      self.scripts[script_name](sci)
 
     security.declarePrivate('activeScript')
     def activeScript(self, script_name, ob_url, status, tdef_id):
