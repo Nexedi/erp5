@@ -284,18 +284,3 @@ class IColumnMap(Interface):
       Return a copy of the table alias list for tables requiring a join with
       catalog table.
     """
-
-  def getStraightJoinTableList():
-    """
-      Returns the list of tables used this search and which
-      need to be joined with the main table using explicit
-      indices.
-    """
-
-  def getLeftJoinTableList():
-    """
-      Returns the list of tables used this search and which
-      need to be LEFT joined with the main table using explicit
-      indices.
-    """
-

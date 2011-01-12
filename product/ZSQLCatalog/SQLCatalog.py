@@ -2296,6 +2296,8 @@ class Catalog(Folder,
         select_dict = None
     elif isinstance(select_dict, (list, tuple)):
       select_dict = dict([(x, None) for x in select_dict])
+    # Handle left_join_list
+    left_join_list = kw.pop('left_join_list', ())
     # Handle order_by_list
     order_by_list = kw.pop('order_by_list', None)
     sort_on = kw.pop('sort_on', None)
@@ -2333,6 +2335,7 @@ class Catalog(Folder,
       order_by_override_list=order_by_override_list,
       group_by_list=group_by_list,
       select_dict=select_dict,
+      left_join_list=left_join_list,
       limit=limit,
       catalog_table_name=query_table,
       extra_column_list=extra_column_list,

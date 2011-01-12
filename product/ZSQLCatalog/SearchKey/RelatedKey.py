@@ -215,14 +215,15 @@ class RelatedKey(SearchKey):
     # add a left join on this related key, based on the inner-join of the
     # related key tables.
     query_table_join_condition = join_condition_list.pop()
-    right = self.stitchJoinDefinition(table_alias_list,
-                                      join_condition_list,
-                                      column_map)
-    table_def = LeftJoin(None,
-                         right,
-                         condition=query_table_join_condition)
-    column_map.addJoin(table_def, condition=query_table_join_condition)
-    return None # XXX decide what to do with the comment below
+    right_side = self.stitchJoinDefinition(table_alias_list,
+                                           join_condition_list,
+                                           column_map)
+    column_map.addRelatedKeyJoin(self.column,
+                                 right_side=right_side,
+                                 condition=query_table_join_condition)
+    return None
+    # XXX decide what to do with the comment below and the rest of the code.
+    # possibly we need to move all the code above into .registerColumnMap()
     # Important:
     # Former catalog separated join condition from related query.
     # Example:

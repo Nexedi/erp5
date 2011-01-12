@@ -36,7 +36,8 @@ from Products.ZSQLCatalog.interfaces.column_map import IColumnMap
 from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
 from Products.ZSQLCatalog.TableDefinition import (PlaceHolderTableDefinition,
                                                   TableAlias,
-                                                  InnerJoin)
+                                                  InnerJoin,
+                                                  LeftJoin)
 
 DEFAULT_GROUP_ID = None
 
@@ -55,7 +56,10 @@ class ColumnMap(object):
   implements(IColumnMap)
 
   @profiler_decorator
-  def __init__(self, catalog_table_name=None, table_override_map=None):
+  def __init__(self,
+               catalog_table_name=None,
+               table_override_map=None,
+               left_join_list=None):
     self.catalog_table_name = catalog_table_name
     # Key: group
     # Value: set of column names
@@ -89,18 +93,19 @@ class ColumnMap(object):
     # Entries: column name
     self.column_ignore_set = set()
     self.join_table_set = set()
-    self.straight_join_table_list = []
-    self.left_join_table_list = []
     self.join_query_list = []
     self.table_override_map = table_override_map or {}
     self.table_definition = PlaceHolderTableDefinition()
     # We need to keep track of the original definition to do inner joins on it
     self._inner_table_definition = self.table_definition
+    self.left_join_list = left_join_list
 
   @profiler_decorator
   def registerColumn(self, raw_column, group=DEFAULT_GROUP_ID, simple_query=None):
     assert ' as ' not in raw_column.lower()
     # Sanitize input: extract column from raw column (might contain COUNT, ...).
+    # XXX This is not enough to parse something like: 
+    # GROUP_CONCAT(DISTINCT foo ORDER BY bar)
     if '(' in raw_column:
       function, column = raw_column.split('(')
       column = column.strip()
@@ -529,14 +534,6 @@ class ColumnMap(object):
     return [self.getTableAlias(table_name, group=group)
             for (group, table_name) in self.join_table_set]
 
-  def getStraightJoinTableList(self):
-    # XXX this function is unused and should be removed
-    return self.straight_join_table_list[:]
-
-  def getLeftJoinTableList(self):
-    # XXX this function is unused and should be removed
-    return self.left_join_table_list[:]
-
   def _getTableOverride(self, table_name):
     # self.table_override_map is a dictionary mapping table names to
     # strings containing aliases of arbitrary table definitions
@@ -545,9 +542,12 @@ class ColumnMap(object):
     table_override_w_alias = self.table_override_map.get(table_name)
     if table_override_w_alias is None:
       return table_name
-    # XXX move the table aliasing cleanup to EntireQuery class, so we
-    # don't need SQL syntax knowledge in ColumnMap.  Normalise the AS
-    # sql keyword to remove the last aliasing in the string if present. E.g.:
+    # XXX move the cleanup of table alias overrides to EntireQuery
+    # class or ZSQLCatalog, so we don't need SQL syntax knowledge in
+    # ColumnMap. 
+    #
+    # Normalise the AS sql keyword to remove the last
+    # aliasing in the string if present. E.g.:
     # 
     # '(SELECT sub_catalog.* 
     #   FROM catalog AS sub_catalog
@@ -596,17 +596,23 @@ class ColumnMap(object):
       return self.table_definition
     return None
 
-  def addJoin(self, join_definition, condition):
-    """ Replaces the current table_definition with a new one, assuming
-    it is a join definition, and replacing it's left side with the
-    previous table definition.
-
-    Effectively, this method wraps the current table definition within
-    the received join_definition.
+  def addRelatedKeyJoin(self, related_key_id, right_side, condition):
+    """ Wraps the current table_definition in the left-side of a new join.
+    Use an InnerJoin or a LeftJoin depending on whether the related_key_id is
+    in the left_join_list or not.
     """
+    # XXX: to fix TestERP5Catalog.test_56_CreateUidDuringClearCatalog,
+    # Create here a list of joins and try to merge each new entry into
+    # one of the pre-existing entries by comparing their right-sides.
+    # XXX 2: This is the place were we could do ordering of inner and left
+    # joins so as to get better performance. For instance, a quick win is to
+    # add all inner-joins first, and all left-joins later. We could also decide
+    # on the order of left-joins based on the order of self.left_join_list or
+    # even a catalog property/configuration.
     assert self._setMinimalTableDefinition()
-    assert join_definition.left_tabledef is None, join_definition.left_tabledef
-    join_definition.left_tabledef = self.table_definition
+    Join = (related_key_id in self.left_join_list) and LeftJoin or InnerJoin
+    join_definition = Join(self.table_definition, right_side,
+                           condition=condition)
     self.table_definition = join_definition
 
   # def getFinalTableDefinition(self):

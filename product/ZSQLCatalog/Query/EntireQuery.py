@@ -54,15 +54,22 @@ class EntireQuery(object):
   column_map = None
 
   @profiler_decorator
-  def __init__(self, query, order_by_list=(), group_by_list=(),
-               select_dict=None, limit=None, catalog_table_name=None,
-               extra_column_list=(), from_expression=None,
+  def __init__(self, query,
+               order_by_list=(),
+               group_by_list=(),
+               select_dict=None,
+               left_join_list=(),
+               limit=None,
+               catalog_table_name=None,
+               extra_column_list=(),
+               from_expression=None,
                order_by_override_list=None):
     self.query = query
     self.order_by_list = list(order_by_list)
     self.order_by_override_set = frozenset(order_by_override_list)
     self.group_by_list = list(group_by_list)
     self.select_dict = defaultDict(select_dict)
+    self.left_join_list = left_join_list
     self.limit = limit
     self.catalog_table_name = catalog_table_name
     self.extra_column_list = list(extra_column_list)
@@ -79,7 +86,9 @@ class EntireQuery(object):
       # method or do it here ?
       # Column Map was not built yet, do it.
       column_map = ColumnMap(catalog_table_name=self.catalog_table_name,
-                             table_override_map=self.from_expression)
+                             table_override_map=self.from_expression,
+                             left_join_list=self.left_join_list,
+                            )
       self.column_map = column_map
       for extra_column in self.extra_column_list:
         table, column = extra_column.replace('`', '').split('.')
