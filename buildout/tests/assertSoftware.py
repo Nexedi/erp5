@@ -66,6 +66,17 @@ ACCEPTABLE_GLOBAL_LIB_LIST = (
   '/lib/libresolv.so',
   '/lib/librt.so',
   '/lib/libutil.so',
+  # i686 Mandriva
+  '/lib/i686/libgcc_s.so',
+  '/lib/i686/ld-linux.so',
+  '/lib/i686/libc.so',
+  '/lib/i686/libcrypt.so',
+  '/lib/i686/libdl.so',
+  '/lib/i686/libm.so',
+  '/lib/i686/libnsl.so',
+  '/lib/i686/libpthread.so',
+  '/lib/i686/libresolv.so',
+  '/lib/i686/librt.so',
   # i686 debian
   '/lib/tls/i686/cmov/libc.so',
   '/lib/tls/i686/cmov/libcrypt.so',
