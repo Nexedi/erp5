@@ -64,17 +64,6 @@ class InventoryKey(UserDict):
   def __hash__(self):
     return hash(tuple(self.items()))
 
-  def __cmp__(self, other):
-    # this is basically here so that we can see if two inventory keys are
-    # equals.
-    if sorted(self.keys()) != sorted(other.keys()):
-      return -1
-    for k, v in self.items():
-      if v != other[k]:
-        return -1
-    return 0
-
-
 
 class BalanceTransaction(AccountingTransaction, Inventory):
   """Balance Transaction 
