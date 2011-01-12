@@ -690,7 +690,8 @@ class ERP5TypeTestCase(ProcessingNodeTestCase, PortalTestCase):
         class_tool.importPropertySheet(property_sheet_name)
 
       # We set the property sheet on the portal type
-      ti = self.getTypesTool().getTypeInfo(portal_type_name)
+      types_tool = self.getTypesTool()
+      ti = types_tool.getTypeInfo(portal_type_name)
       property_sheet_set = set(ti.getTypePropertySheetList())
       property_sheet_set.add(property_sheet_name)
       ti._setTypePropertySheetList(list(property_sheet_set))
@@ -699,7 +700,7 @@ class ERP5TypeTestCase(ProcessingNodeTestCase, PortalTestCase):
       self._added_property_sheets.setdefault(
                     portal_type_name, []).append(property_sheet_name)
       # reset aq_dynamic cache
-      _aq_reset()
+      types_tool.resetDynamicDocuments()
 
     def getRule(self, **kw):
       return self.portal.portal_rules.searchFolder(

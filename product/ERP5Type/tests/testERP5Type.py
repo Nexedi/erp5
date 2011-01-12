@@ -69,7 +69,6 @@ class PropertySheetTestCase(ERP5TypeTestCase):
     """Clean up """
     transaction.abort()
     ttool = self.getTypesTool()
-    class_tool = self.getClassTool()
     # remove all property sheet we added to type informations
     for ti_name, psheet_list in self._added_property_sheets.items():
       ti = ttool.getTypeInfo(ti_name)
@@ -82,7 +81,7 @@ class PropertySheetTestCase(ERP5TypeTestCase):
           removeLocalPropertySheet(psheet)
       ti._setTypePropertySheetList(list(property_sheet_set))
     transaction.commit()
-    _aq_reset()
+    ttool.resetDynamicDocuments()
     ERP5TypeTestCase.tearDown(self)
     
   def _addProperty(self, portal_type_name, property_definition_code):
