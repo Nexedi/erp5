@@ -21,7 +21,7 @@ class BaseMessage:
 
   delay = __property(delay=None)
   # None means infinite retry
-  max_retry = __property(max_retry=5)
+  max_retry = __property(max_retry=3)
   # For errors happening after message invocation (ConflictError),
   # should we retry quickly without increasing 'retry' count ?
   conflict_retry = __property(conflict_retry=True)
