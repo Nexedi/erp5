@@ -103,6 +103,7 @@ SKIP_PART_LIST = (
   'parts/mariadb__compile__',
   'parts/openoffice-bin',
   'parts/openoffice-bin__unpack__',
+  'parts/products-erp5',
 )
 
 def readElfAsDict(f):
@@ -2372,10 +2373,23 @@ class AssertElfLinkedInternally(AssertSoftwareMixin):
     develop_eggs_dir = os.path.join(os.path.abspath(os.curdir), 'develop-eggs')
     for root in (parts_dir, develop_eggs_dir):
       for dirpath, dirlist, filelist in os.walk(root):
+
+        # stuff in parts/*/share/ will only be static things
+        if 'share' in dirpath or '.svn' in dirpath:
+          continue
+
         for filename in filelist:
           # skip some not needed places
           if any([q in dirpath for q in SKIP_PART_LIST]):
             continue
+
+          # we only care about two kind of files:
+          # 1. files without extensions
+          # 2. .so files
+          spl = filename.rsplit('.', 1)
+          if len(spl) > 1 and 'so' not in spl:
+            continue
+
           filename = os.path.join(dirpath, filename)
           link_list = readLddInfoList(filename)
           bad_link_list = [q for q in link_list if not q.startswith(parts_dir) \
