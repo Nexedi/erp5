@@ -697,6 +697,8 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, ptype, prop_holder,
               method_id_list = filter(method_id_matcher.match, method_id_list)
             else:
               # Single method
+              # XXX What if the method does not exist ?
+              #     It's not consistent with regexp based filters.
               method_id_list = [imethod_id]
             for method_id in method_id_list:
               if getattr(klass, method_id, _MARKER) is not _MARKER:

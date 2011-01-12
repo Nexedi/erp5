@@ -65,15 +65,20 @@ class TransformedResource(AmountGeneratorLine):
     def getMappedValuePropertyList(self):
       result = self._baseGetMappedValuePropertyList()
       if not result:
+        # Since MappedValue does not inherit Amount, and type class of
+        # Transformation {Operation,Transformed Resource} Cell
+        # was changed to TransformedResource as a workaround,
+        # we also need to check if 'self' has a quantity.
+        # Otherwise, generated amounts could have 0 quantity
+        # (overridden by cells that only define variation).
         result = ['quantity']
         # Take into account variation_property_list for each variation
         # for which hasProperty is true...
         # FIXME: Why the resource and not the model line itself ? Or both ??
         resource = self.getDefaultResourceValue()
         if resource is not None:
-          # XXX Using getattr directly is a hack. See MappedValue.__doc__
-          result.extend(key for key in resource.getVariationPropertyList()
-                            if getattr(self, key, self) is not self)
+          result += resource.getVariationPropertyList()
+        result = filter(self.hasProperty, result)
       return result
 
     def getMappedValueBaseCategoryList(self):
