@@ -22,6 +22,7 @@ from Products.ERP5Type import Globals
 import App
 from types import StringTypes
 from AccessControl import getSecurityManager, ClassSecurityInfo
+from Acquisition import aq_base
 from Products.CMFCore.utils import getToolByName
 from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
 from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD
@@ -303,9 +304,8 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
 
               # Execute Before Commit
               for script_name in tdef.before_commit_script_name:
-                del sci.object
                 transaction.get().addBeforeCommitHook(self._before_commit,
-                  (sci, ob.getPhysicalPath(), script_name))
+                                                      (sci, script_name))
 
               # Execute "activity" scripts
               for script_name in tdef.activate_script_name:
@@ -313,12 +313,14 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
                     .activeScript(script_name, ob.getRelativeUrl(),
                                   status, tdef.id)
 
-    def _before_commit(self, sci, path, script_name):
-      try:
-        sci.object = self.unrestrictedTraverse(path)
-      except KeyError:
-        return
-      self.scripts[script_name](sci)
+    def _before_commit(self, sci, script_name):
+      # check the object still exists before calling the script
+      ob = sci.object
+      while ob.isTempObject():
+        ob = ob.getParentValue()
+      if aq_base(self.unrestrictedTraverse(ob.getPhysicalPath(), None)) is \
+         aq_base(ob):
+        self.scripts[script_name](sci)
 
     security.declarePrivate('activeScript')
     def activeScript(self, script_name, ob_url, status, tdef_id):
