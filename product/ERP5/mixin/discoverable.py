@@ -216,7 +216,7 @@ class DiscoverableMixin(CachedConvertableMixin):
     # XXX should be cached in a transactional cache, because this method
     # might be called several times by a single call of
     # portal_contribution_registry.findPortalTypeName().
-    content = self.getBaseData()
+    content = self.getData()
     if not content:
       return
     if magic is not None:
