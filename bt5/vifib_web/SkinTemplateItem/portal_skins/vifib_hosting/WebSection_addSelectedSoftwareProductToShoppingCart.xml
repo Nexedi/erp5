@@ -55,7 +55,6 @@
 """Add selected product to the cart and continue"""\n
 portal = context.getPortalObject()\n
 prefered_resource = portal.portal_preferences.getPreferredInstanceSetupResource()\n
-service = portal.restrictedTraverse(prefered_resource)\n
 \n
 ##Get item list\n
 item_list = []\n
@@ -159,7 +158,6 @@ context.WebSection_viewNextStep()\n
                             <string>context</string>
                             <string>portal</string>
                             <string>prefered_resource</string>
-                            <string>service</string>
                             <string>item_list</string>
                             <string>$list0</string>
                             <string>_getiter_</string>
