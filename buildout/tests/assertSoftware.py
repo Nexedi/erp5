@@ -149,7 +149,7 @@ def readLddInfoList(f):
   link_list = []
   a = link_list.append
   result = popen.communicate()[0]
-  if 'not a dynamic executable' in result:
+  if 'not a dynamic executable' in result or 'cannot read header' in result:
     return link_list
   for line in result.split('\n'):
     line = line.strip()
