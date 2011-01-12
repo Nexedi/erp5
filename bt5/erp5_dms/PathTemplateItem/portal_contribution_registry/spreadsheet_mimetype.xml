@@ -14,26 +14,20 @@
                     <key> <string>content_type</string> </key>
                     <value>
                       <list>
-                        <string>text/plain</string>
-                        <string>application/vnd.oasis.opendocument.text</string>
-                        <string>application/vnd.oasis.opendocument.text-template</string>
-                        <string>application/vnd.oasis.opendocument.text-web</string>
-                        <string>application/vnd.oasis.opendocument.text-master</string>
-                        <string>application/vnd.sun.xml.writer</string>
-                        <string>application/vnd.sun.xml.writer.template</string>
-                        <string>application/vnd.sun.xml.writer.global</string>
-                        <string>application/vnd.stardivision.writer</string>
-                        <string>application/msword</string>
-                        <string>application/vnd.ms-word</string>
-                        <string>application/x-doc</string>
-                        <string>application/rtf</string>
-                        <string>text/rtf</string>
-                        <string>application/vnd.wordperfect</string>
-                        <string>application/wordperfect</string>
-                        <string>application/vnd.openxmlformats-officedocument.wordprocessingml.document</string>
-                        <string>application/vnd.ms-word.document.macroenabled.12</string>
-                        <string>application/vnd.openxmlformats-officedocument.wordprocessingml.template</string>
-                        <string>application/vnd.ms-word.template.macroenabled.12</string>
+                        <string>application/vnd.oasis.opendocument.spreadsheet</string>
+                        <string>application/vnd.oasis.opendocument.spreadsheet-template</string>
+                        <string>application/vnd.sun.xml.calc</string>
+                        <string>application/vnd.sun.xml.calc.template</string>
+                        <string>application/vnd.stardivision.calc</string>
+                        <string>application/vnd.stardivision.chart</string>
+                        <string>application/msexcel</string>
+                        <string>application/vnd.ms-excel</string>
+                        <string>application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</string>
+                        <string>application/vnd.ms-excel.sheet.macroenabled.12</string>
+                        <string>application/vnd.openxmlformats-officedocument.spreadsheetml.template</string>
+                        <string>application/vnd.ms-excel.template.macroenabled.12</string>
+                        <string>application/vnd.ms-excel.sheet.binary.macroenabled.12</string>
+                        <string>application/x-dbf</string>
                       </list>
                     </value>
                 </item>
@@ -56,11 +50,11 @@
         </item>
         <item>
             <key> <string>destination_portal_type</string> </key>
-            <value> <string>Text</string> </value>
+            <value> <string>Spreadsheet</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>text_by_conent_type</string> </value>
+            <value> <string>spreadsheet_mimetype</string> </value>
         </item>
         <item>
             <key> <string>int_index</string> </key>
@@ -78,7 +72,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Text by content type</string> </value>
+            <value> <string>Spreadsheet by mimetype</string> </value>
         </item>
       </dictionary>
     </pickle>
