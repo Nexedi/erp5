@@ -225,7 +225,7 @@ class AmountGeneratorMixin:
           continue
         key = cell.getCellAggregateKey()
         try:
-          application_dict = cell_aggregate[key]
+          property_dict = cell_aggregate[key]
         except KeyError:
           cell_aggregate[key] = property_dict = {
             'base_application_set': set(),
