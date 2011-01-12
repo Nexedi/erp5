@@ -79,7 +79,7 @@ class StandardProperty(XMLObject):
       if category.startswith('elementary_type/'):
         return category.split('elementary_type/')[1]
 
-    return None
+    return getattr(self, 'elementary_type', None)
 
   getStorageId = BaseGetter('getStorageId', 'storage_id', 'string')
 
