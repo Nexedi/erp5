@@ -54,7 +54,8 @@
 document = state_change[\'object\']\n
 if document.getReference() is not None:\n
   cache_tool = document.getPortalObject().portal_caches\n
-  cache_tool.clearCache(cache_factory_list=(\'erp5_content_short\', ))\n
+  cache_tool.clearCache(cache_factory_list=(\'erp5_content_short\', ),\n
+                        before_commit=True)\n
 </string> </value>
         </item>
         <item>
