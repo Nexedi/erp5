@@ -27,8 +27,6 @@
 ##############################################################################
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from DateTime import DateTime
-import transaction
 
 class TestUNG(ERP5TypeTestCase):
   """
@@ -65,25 +63,43 @@ class TestUNG(ERP5TypeTestCase):
             'erp5_web_ung_role',
             'erp5_web_ung_theme')
 
-  def createDocumentUsingTemplate(self, template):
+  def assertCreateDocumentUsingTemplate(self, template, **kw):
+    web_page_module = self.portal.web_page_module
     self.portal.ERP5Site_createNewWebDocument(template)
-    transaction.commit()
-    self.tic()
+    self.stepTic()
+    web_page_search = web_page_module.searchFolder(**kw)
+    self.assertEquals(1, len(web_page_search))
+
+  def getTitleListToBySubjectDomain(self):
+    parent = self.portal.portal_domains.ung_domain.by_subject
+    return [domain.getTitle() for domain in self.portal.WebPageModule_generateDomain(0, parent)]
 
   def testERP5Site_createNewWebDocument(self):
     """
       Test if the script creates the objects using Templates correctly
       XXX - Refactor tests to better validate the creation of objects
     """
-    self.createDocumentUsingTemplate("web_page_template")
-    web_page_search = self.portal.portal_catalog(portal_type="Web Page",
-                                                reference="default-Web.Page.Reference")
-    self.assertEquals(2, len(web_page_search))
-    self.createDocumentUsingTemplate("web_table_template")
-    web_table_search = self.portal.portal_catalog(portal_type="Web Table",
-                                                reference="default-Web.Table.Reference")
-    self.assertEquals(2, len(web_table_search))
-    self.createDocumentUsingTemplate("web_illustration_template")
-    web_illustration_search = self.portal.portal_catalog(portal_type="Web Illustration",
-                                                reference="default-Web.Illustration.Reference")
-    self.assertEquals(2, len(web_illustration_search))
+    web_page_module = self.portal.web_page_module
+    self.assertCreateDocumentUsingTemplate("web_page_template", 
+                                           portal_type="Web Page",
+                                           reference="default-Web.Page.Reference")
+    self.assertCreateDocumentUsingTemplate("web_table_template", 
+                                           portal_type="Web Table",
+                                           reference="default-Web.Table.Reference")
+    self.assertCreateDocumentUsingTemplate("web_illustration_template", 
+                                           portal_type="Web Illustration",
+                                           reference="default-Web.Illustration.Reference")
+
+  def testWebPageModule_generateDomain(self):
+    """
+      Test if script WebPageModule_generateDomain generates the list of domains 
+      correctly
+    """
+    web_page = self.portal.web_page_module.newContent(portal_type="Web Page")
+    self.stepTic()
+    title_list = self.getTitleListToBySubjectDomain()
+    self.assertFalse("Ung" in title_list)
+    web_page.setSubjectList("Ung")
+    self.stepTic()
+    title_list = self.getTitleListToBySubjectDomain()
+    self.assertTrue("Ung" in title_list, title_list)
