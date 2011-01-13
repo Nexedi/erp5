@@ -72,3 +72,16 @@ if sys.version_info < (2, 5):
 
   import re, sre
   re._compile = sre._compile
+
+  # Monkey-patch pprint to sort keys of dictionaries
+  class _ordered_dict(dict):
+    def iteritems(self):
+      return sorted(self.items())
+
+  import pprint as _pprint
+  orig_safe_repr = _pprint._safe_repr
+  def _safe_repr(object, context, maxlevels, level):
+    if type(object) is dict:
+      object = _ordered_dict(object)
+    return orig_safe_repr(object, context, maxlevels, level)
+  _pprint._safe_repr = _safe_repr
