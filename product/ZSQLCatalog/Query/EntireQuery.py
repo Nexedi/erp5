@@ -159,10 +159,15 @@ class EntireQuery(object):
       sql_expression_list = [self.query.asSQLExpression(sql_catalog,
                                                         column_map,
                                                         only_group_columns)]
+      append = sql_expression_list.append
+      for join_query in column_map.iterJoinQueryList():
+        append(join_query.asSQLExpression(sql_catalog,
+                                          column_map, 
+                                          only_group_columns))
       # generate join expression based on column_map.getJoinTableAliasList
-      #append = sql_expression_list.append
-      # for join_query in column_map.iterJoinQueryList():
-      #   append(join_query.asSQLExpression(sql_catalog, column_map, only_group_columns))
+      # XXX: This is now done by ColumnMap to its table_definition,
+      # during build()
+      #
       # join_table_list = column_map.getJoinTableAliasList()
       # if len(join_table_list):
       #   # XXX: Is there any special rule to observe when joining tables ?
@@ -178,10 +183,14 @@ class EntireQuery(object):
       #     where_pattern % (x, ) for x in join_table_list
       #   )))
       self.from_expression = column_map.getTableDefinition()
+      table_alias_dict = column_map.getTableAliasDict()
+      assert ((self.from_expression is None) !=
+              (table_alias_dict is None)), ("Got both a from_expression "
+                                            "and a table_alias_dict")
       self.sql_expression_list = sql_expression_list
     return SQLExpression(
       self,
-      table_alias_dict=None, # column_map.getTableAliasDict(),
+      table_alias_dict=table_alias_dict,
       from_expression=self.from_expression,
       order_by_list=self.order_by_list,
       group_by_list=self.group_by_list,

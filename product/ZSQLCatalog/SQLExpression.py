@@ -131,9 +131,6 @@ class SQLExpression(object):
         raise ValueError, 'Unrecognized "limit" value: %r' % (limit, )
     else:
       self.limit = (limit, )
-    if from_expression is not None:
-      warnings.warn("Providing a 'from_expression' is deprecated.",
-                    DeprecationWarning)
     self.from_expression = from_expression
 
   @profiler_decorator

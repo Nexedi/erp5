@@ -32,7 +32,7 @@
 
 SQL_SELECT_ALIAS_FORMAT = '%s AS `%s`'
 
-TESTDEBUG = False
+from Products.ZSQLCatalog.Query.SQLQuery import SQLQuery
 
 def escapeTable(table):
   return "`%s`" % table.replace('`', r'\`')
@@ -63,6 +63,20 @@ class TableDefinition(object):
   def render(self):
     raise NotImplementedError('should be implemented by subclasses')
 
+  def getJoinConditionQueryList(self):
+    """Return a list of SQLQuery objects containing all conditions
+    used in this table definition.
+
+    This is a deprecated method that is here only to accomodate the
+    fact that not all RelatedKey methods have been migrated.
+    """
+    query_list = []
+    self._extendJoinConditionQueryList(query_list)
+    return query_list
+
+  def _extendJoinConditionQueryList(self, query_list):
+    raise NotImplementedError('should be implemented by subclasses')
+
 class PlaceHolderTableDefinition(TableDefinition):
   """Table Definition that simply holds an inner table definition and
   delegates to it the rendering.
@@ -89,6 +103,9 @@ class PlaceHolderTableDefinition(TableDefinition):
     assert self.table_definition is not None, "table definition wasn't set"
     return self.table_definition.render()
 
+  def _extendJoinConditionQueryList(self, query_list):
+    assert self.table_definition is not None, "table definition wasn't set"
+    return self.table_definition._extendJoinConditionQueryList(query_list)
 
 class TableAlias(TableDefinition):
   """Definition of a table alias as a FROM expression"""
@@ -117,6 +134,9 @@ class TableAlias(TableDefinition):
 
   def __repr__(self):
     return '<%s %r AS %r>' % (self.__class__.__name__, self.table, self.alias)
+
+  def _extendJoinConditionQueryList(self, query_list):
+    pass
 
 JOIN_FORMAT = """
   (
@@ -160,6 +180,11 @@ class InnerJoin(TableDefinition):
                                         self.left_tabledef,
                                         self.right_tabledef,
                                         self.condition)
+
+  def _extendJoinConditionQueryList(self, query_list):
+    self.left_tabledef._extendJoinConditionQueryList(query_list)
+    self.right_tabledef._extendJoinConditionQueryList(query_list)
+    query_list.append(SQLQuery(self.condition))
 
 class LeftJoin(InnerJoin):
   """Definition of a left-join as a FROM expression"""

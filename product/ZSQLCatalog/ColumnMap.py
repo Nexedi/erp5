@@ -28,6 +28,7 @@
 ##############################################################################
 
 import re
+import itertools
 from zLOG import LOG, WARNING, INFO
 from interfaces.column_map import IColumnMap
 from zope.interface.verify import verifyClass
@@ -93,6 +94,8 @@ class ColumnMap(object):
     # Entries: column name
     self.column_ignore_set = set()
     self.join_table_set = set()
+    # BBB: Remove join_query_list and its uses when all RelatedKey methods have
+    # been converted to properly return each Join condition separately.
     self.join_query_list = []
     self.table_override_map = table_override_map or {}
     self.table_definition = PlaceHolderTableDefinition()
@@ -336,7 +339,6 @@ class ColumnMap(object):
         if related_key_definition is not None:
           join_query = sql_catalog.getSearchKey(column_name, 'RelatedKey').buildQuery(sql_catalog=sql_catalog, related_key_definition=related_key_definition)
           join_query.registerColumnMap(sql_catalog, self)
-          #self._addJoinQuery(join_query)
           join_query_to_build_list.append(join_query)
 
     # List all possible tables, with all used column for each
@@ -422,6 +424,8 @@ class ColumnMap(object):
     # (i.e. joins comming from 'sort_on', 'select_dict', etc.)
     for join_query in join_query_to_build_list:
       # XXX ugly use of inner attribute of join_query. Please Refactor:
+      # search_keys don't actually return SQLExpressions, but they add
+      # join definitions in the column_map
       join_query.search_key.buildSQLExpression(sql_catalog=sql_catalog,
                                                column_map=self,
                                                only_group_columns=False,
@@ -471,7 +475,11 @@ class ColumnMap(object):
     return self.table_alias_dict[(group, self.catalog_table_name)]
 
   def getTableAliasDict(self):
-    return self.table_map.copy()
+    if self.join_query_list:
+      # BBB: Using implicit joins
+      return self.table_map.copy()
+    else:
+      return None
 
   @profiler_decorator
   def resolveColumn(self, column, table_name, group=DEFAULT_GROUP_ID):
@@ -501,13 +509,26 @@ class ColumnMap(object):
   def getTableAlias(self, table_name, group=DEFAULT_GROUP_ID):
     return self.table_alias_dict[(group, table_name)]
 
-  def _addJoinQuery(self, query):
-    raise RuntimeError('Implicit Join Requested: %r. Please add an explicit '
-                       'join instead' % (query,))
+  def _addJoinQueryForColumn(self, column, query):
+    # BBB: This is a backward compatibility method that will be
+    # removed in the future, when all related key methods have been adapted
+    # to provide all Join conditions separately
+    if column in self.left_join_list:
+      raise RuntimeError('Left Join requested for column: %r, but rendered '
+                         'join query is not compatible and would result in an '
+                         'Implicit Inner Join:\n%s' % 
+                         (column, query,))
     self.join_query_list.append(query)
 
   def iterJoinQueryList(self):
-    return iter(self.join_query_list)
+    if self.join_query_list:
+      # BBB: one or more RelatedKey methods weren't converted, so we got
+      # queries for an implicit inner join. Return them, and all the other
+      # queries we were using in our table definition
+      return itertools.chain(self.join_query_list,
+                             self.table_definition.getJoinConditionQueryList())
+    return []
+    
 
   @profiler_decorator
   def _addJoinTable(self, table_name, group=DEFAULT_GROUP_ID):
@@ -592,25 +613,35 @@ class ColumnMap(object):
     return True
 
   def getTableDefinition(self):
-    if self._setMinimalTableDefinition():
-      return self.table_definition
-    return None
+    if not self._setMinimalTableDefinition():
+      raise RuntimeError("ColumnMap.build() must be called first!")
+    if self.join_query_list:
+      # BBB: One of the RelatedKeys registered an implicit join, do
+      # not return a table definition, self.getTableAliasDict() should
+      # be used instead
+      return None
+    return self.table_definition
 
-  def addRelatedKeyJoin(self, related_key_id, right_side, condition):
-    """ Wraps the current table_definition in the left-side of a new join.
-    Use an InnerJoin or a LeftJoin depending on whether the related_key_id is
-    in the left_join_list or not.
+  def addRelatedKeyJoin(self, column, right_side, condition):
+    """ Wraps the current table_definition in the left-side of a new
+    join.  Use an InnerJoin or a LeftJoin depending on whether the
+    column is in the left_join_list or not.
     """
-    # XXX: to fix TestERP5Catalog.test_56_CreateUidDuringClearCatalog,
-    # Create here a list of joins and try to merge each new entry into
-    # one of the pre-existing entries by comparing their right-sides.
+    # XXX: to fix TestERP5Catalog.test_52_QueryAndTableAlias, create
+    # here a list of joins and try to merge each new entry into one of
+    # the pre-existing entries by comparing their right-sides.
+    # 
     # XXX 2: This is the place were we could do ordering of inner and left
     # joins so as to get better performance. For instance, a quick win is to
     # add all inner-joins first, and all left-joins later. We could also decide
     # on the order of left-joins based on the order of self.left_join_list or
-    # even a catalog property/configuration.
+    # even a catalog property/configuration/script.
+    #
+    # XXX 3: This is also the place where we could check if explicit
+    # table aliases should cause some of these table definitions to be
+    # collapsed into others.
     assert self._setMinimalTableDefinition()
-    Join = (related_key_id in self.left_join_list) and LeftJoin or InnerJoin
+    Join = (column in self.left_join_list) and LeftJoin or InnerJoin
     join_definition = Join(self.table_definition, right_side,
                            condition=condition)
     self.table_definition = join_definition
