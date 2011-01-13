@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Model for which the modeling has to been done (in the task list of the modelists).</string> </value>
+            <value> <string>Model for which the modelling has to been done (in the task list of the modelists).</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

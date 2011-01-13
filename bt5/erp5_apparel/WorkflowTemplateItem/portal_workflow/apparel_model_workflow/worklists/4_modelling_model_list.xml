@@ -18,7 +18,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-apparel_model_module/view?validation_state=modeling&local_roles=%(local_roles)s&reset=1
+apparel_model_module/view?validation_state=modelling&local_roles=%(local_roles)s&reset=1
 
 ]]></string> </value>
         </item>
@@ -34,7 +34,7 @@ apparel_model_module/view?validation_state=modeling&local_roles=%(local_roles)s&
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>4_modeling_model_list</string> </value>
+            <value> <string>4_modelling_model_list</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
@@ -82,7 +82,7 @@ apparel_model_module/view?validation_state=modeling&local_roles=%(local_roles)s&
                     <key> <string>validation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>modeling</string>
+                        <string>modelling</string>
                       </tuple>
                     </value>
                 </item>

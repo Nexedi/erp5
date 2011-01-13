@@ -928,9 +928,6 @@ msgstr "Ascendente"
 msgid "Ask For Analyse"
 msgstr ""
 
-msgid "Ask For Modeling"
-msgstr ""
-
 msgid "Ask For Prototyping"
 msgstr ""
 
@@ -5468,9 +5465,6 @@ msgid "Model Line"
 msgstr ""
 
 msgid "Model Line Calculation Script"
-msgstr ""
-
-msgid "Modeling"
 msgstr ""
 
 msgid "Modification Date"
@@ -10472,9 +10466,6 @@ msgstr "Validar Mensagem"
 
 msgid "Validate Message [transition in notification_message_workflow]"
 msgstr "Validar Mensagem"
-
-msgid "Validate Modeling"
-msgstr ""
 
 msgid "Validate Pricing"
 msgstr ""

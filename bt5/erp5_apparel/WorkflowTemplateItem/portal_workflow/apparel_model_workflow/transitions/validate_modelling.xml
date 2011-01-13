@@ -24,7 +24,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Ask for a pattern study by the modelists team</string> </value>
+            <value> <string>Validate the model pattern.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -34,11 +34,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ask_for_modeling</string> </value>
+            <value> <string>validate_modelling</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string>modeling</string> </value>
+            <value> <string>designed</string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
@@ -46,7 +46,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Ask For Modeling</string> </value>
+            <value> <string>Validate Modelling</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

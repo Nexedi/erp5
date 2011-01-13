@@ -1017,7 +1017,7 @@ msgstr "Croissant"
 msgid "Ask For Analyse"
 msgstr "Demander l'analyse"
 
-msgid "Ask For Modeling"
+msgid "Ask For Modelling"
 msgstr "Demander l'étude de modélisme"
 
 msgid "Ask For Prototyping"
@@ -6013,7 +6013,7 @@ msgstr "Ligne de modèle"
 msgid "Model Line Calculation Script"
 msgstr "Script de calcul"
 
-msgid "Modeling"
+msgid "Modelling"
 msgstr "Etude Modélisme"
 
 msgid "Modification Date"
@@ -11727,7 +11727,7 @@ msgstr "Valider le message"
 msgid "Validate Message [transition in notification_message_workflow]"
 msgstr "Valider le message"
 
-msgid "Validate Modeling"
+msgid "Validate Modelling"
 msgstr "Valider le modélisme"
 
 msgid "Validate Pricing"
