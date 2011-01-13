@@ -5690,21 +5690,42 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
   def test_updateBusinessTemplateFromUrl_simple(self):
     """
      Test updateBusinessTemplateFromUrl method
+
+     By default if a new business template has revision >= previous one
+     the new bt5 is not installed, only imported.
     """
     template_tool = self.portal.portal_templates
     old_bt = template_tool.getInstalledBusinessTemplate('erp5_csv_style')
+    # change revision to an old revision
+    old_bt.setRevision(0.0001)
     url = 'https://svn.erp5.org/repos/public/erp5/trunk/bt5/erp5_csv_style'
     template_tool.updateBusinessTemplateFromUrl(url)
     new_bt = template_tool.getInstalledBusinessTemplate('erp5_csv_style')
-
     self.assertNotEquals(old_bt, new_bt)
     self.assertEquals('erp5_csv_style', new_bt.getTitle())
+
+    # Test Another time with definning an ID
     old_bt = new_bt
+    old_bt.setRevision(0.0002)
     template_tool.updateBusinessTemplateFromUrl(url, id="new_erp5_csv_style")
     new_bt = template_tool.getInstalledBusinessTemplate('erp5_csv_style')
     self.assertNotEquals(old_bt, new_bt)
     self.assertEquals('erp5_csv_style', new_bt.getTitle())
     self.assertEquals('new_erp5_csv_style', new_bt.getId())
+    
+    # Test if the new instance with same revision is not installed.
+    old_bt = new_bt
+    template_tool.updateBusinessTemplateFromUrl(url, id="not_installed_bt5")
+    new_bt = template_tool.getInstalledBusinessTemplate('erp5_csv_style')
+    self.assertEquals(old_bt, new_bt)
+    self.assertEquals('erp5_csv_style', new_bt.getTitle())
+    self.assertEquals('new_erp5_csv_style', new_bt.getId())
+    not_installed_bt5 = getattr(template_tool, "not_installed_bt5", None)
+    self.assertNotEquals(not_installed_bt5, None)
+    self.assertEquals('erp5_csv_style', not_installed_bt5.getTitle())
+    self.assertEquals(not_installed_bt5.getInstallationState(), 
+                      "not_installed")
+    self.assertEquals(not_installed_bt5.getRevision(), new_bt.getRevision())
 
   def test_updateBusinessTemplateFromUrl_keep_list(self):
     """

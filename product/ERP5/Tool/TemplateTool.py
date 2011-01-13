@@ -1199,6 +1199,12 @@ class TemplateTool (BaseTool):
         install_kw = dict.fromkeys(imported_bt5.getItemsList(), 'install')
       else:
         install_kw = {}
+        previous_bt5 = self.getInstalledBusinessTemplate(bt_title)
+        if previous_bt5 is not None and \
+            (imported_bt5.getRevision() <= previous_bt5.getRevision()):
+          log("%s is already installed with same or newer revision." % bt_title)
+          return imported_bt5
+
       for listbox_line in listbox_object_list:
         item = listbox_line.object_id
         state = listbox_line.object_state
