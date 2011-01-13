@@ -41,11 +41,11 @@
         </item>
         <item>
             <key> <string>destination_portal_type</string> </key>
-            <value> <string>Draw</string> </value>
+            <value> <string>Drawing</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>draw_mimetype</string> </value>
+            <value> <string>drawing_mimetype</string> </value>
         </item>
         <item>
             <key> <string>int_index</string> </key>
@@ -63,7 +63,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Draw by mimetype</string> </value>
+            <value> <string>Drawing by mimetype</string> </value>
         </item>
       </dictionary>
     </pickle>
