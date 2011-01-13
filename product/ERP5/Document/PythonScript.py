@@ -96,6 +96,8 @@ class PythonScript(XMLObject, ZopePythonScript):
       """
       override to call ZopePythonScript methods to initialize code
       """
+      if value is None:
+        value = ''
       self.write(value)
 
     def _setParameterSignature(self, value):
