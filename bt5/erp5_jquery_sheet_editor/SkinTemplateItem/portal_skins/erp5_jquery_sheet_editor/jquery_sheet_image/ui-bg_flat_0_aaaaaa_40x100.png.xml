@@ -12,11 +12,11 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts92501871.63</string> </value>
+            <value> <string>ts94923458.17</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
-            <value> <string>05_inset_soft.png</string> </value>
+            <value> <string>ui-bg_flat_0_aaaaaa_40x100.png</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -24,9 +24,10 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAAEAAABkCAYAAAEwK2r2AAAAVUlEQVQYlbWOSwrAMAhEx/F3/2N5
-qnbjIoSkpIVuHg6MT1FVFwFgCTMDMxN092UFW4GIgBHRApLnu89Q1faZWUdV7ZOHlq/H30NERpAc
-pylO5T8eugH20g7p+LALDQAAAABJRU5ErkJggg==</string> </value>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAACgAAABkCAYAAAD0ZHJ6AAAAe0lEQVRoge3OMQHAIBAAMcC/kjdZ
+JHTI0A4XBdkz86wfO18H3hRUBVVBVVAVVAVVQVVQFVQFVUFVUBVUBVVBVVAVVAVVQVVQFVQFVUFV
+UBVUBVVBVVAVVAVVQVVQFVQFVUFVUBVUBVVBVVAVVAVVQVVQFVQFVUFVUBVUF8O8A8WdY6opAAAA
+AElFTkSuQmCC</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -38,15 +39,15 @@ pylO5T8eugH20g7p+LALDQAAAABJRU5ErkJggg==</string> </value>
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>142</int> </value>
+            <value> <int>180</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>ui-bg_flat_0_aaaaaa_40x100.png</string> </value>
         </item>
         <item>
             <key> <string>width</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>40</int> </value>
         </item>
       </dictionary>
     </pickle>

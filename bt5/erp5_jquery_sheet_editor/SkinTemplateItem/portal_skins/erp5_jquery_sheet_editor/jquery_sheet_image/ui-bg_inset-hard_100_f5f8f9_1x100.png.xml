@@ -12,11 +12,11 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts92501942.09</string> </value>
+            <value> <string>ts94923510.12</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
-            <value> <string>02_glass.png</string> </value>
+            <value> <string>ui-bg_inset-hard_100_f5f8f9_1x100.png</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -24,12 +24,12 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAAEAAAGQCAYAAABvWArbAAAANElEQVQ4jWN4+PDhfyYGBgaGUWKU
-GCWGLfHnzx8MMUZGRmQCIcHExISsBI01SowSo8TgJABiKQnKbW5lAgAAAABJRU5ErkJggg==</string> </value>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAAEAAABkCAYAAABHLFpgAAAAL0lEQVQYlWP4+uPnfyYGBgaGYU0w
+MjIwMDEwMDIwMeIUY4RLMDDC9DIOjHNpSwAAYLAEuHMRX+4AAAAASUVORK5CYII=</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
-            <value> <int>400</int> </value>
+            <value> <int>100</int> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
@@ -37,11 +37,11 @@ GCWGLfHnzx8MMUZGRmQCIcHExISsBI01SowSo8TgJABiKQnKbW5lAgAAAABJRU5ErkJggg==</string
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>109</int> </value>
+            <value> <int>104</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>ui-bg_inset-hard_100_f5f8f9_1x100.png</string> </value>
         </item>
         <item>
             <key> <string>width</string> </key>
