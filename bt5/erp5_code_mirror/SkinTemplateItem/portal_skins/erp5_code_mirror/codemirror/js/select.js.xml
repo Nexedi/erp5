@@ -1,0 +1,716 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts87948228.95</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>select.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Functionality for finding, storing, and restoring selections\n
+ *\n
+ * This does not provide a generic API, just the minimal functionality\n
+ * required by the CodeMirror system.\n
+ */\n
+\n
+// Namespace object.\n
+var select = {};\n
+\n
+(function() {\n
+  select.ie_selection = document.selection && document.selection.createRangeCollection;\n
+\n
+  // Find the \'top-level\' (defined as \'a direct child of the node\n
+  // passed as the top argument\') node that the given node is\n
+  // contained in. Return null if the given node is not inside the top\n
+  // node.\n
+  function topLevelNodeAt(node, top) {\n
+    while (node && node.parentNode != top)\n
+      node = node.parentNode;\n
+    return node;\n
+  }\n
+\n
+  // Find the top-level node that contains the node before this one.\n
+  function topLevelNodeBefore(node, top) {\n
+    while (!node.previousSibling && node.parentNode != top)\n
+      node = node.parentNode;\n
+    return topLevelNodeAt(node.previousSibling, top);\n
+  }\n
+\n
+  var fourSpaces = "\\u00a0\\u00a0\\u00a0\\u00a0";\n
+\n
+  select.scrollToNode = function(node, cursor) {\n
+    if (!node) return;\n
+    var element = node, body = document.body,\n
+        html = document.documentElement,\n
+        atEnd = !element.nextSibling || !element.nextSibling.nextSibling\n
+                || !element.nextSibling.nextSibling.nextSibling;\n
+    // In Opera (and recent Webkit versions), BR elements *always*\n
+    // have a offsetTop property of zero.\n
+    var compensateHack = 0;\n
+    while (element && !element.offsetTop) {\n
+      compensateHack++;\n
+      element = element.previousSibling;\n
+    }\n
+    // atEnd is another kludge for these browsers -- if the cursor is\n
+    // at the end of the document, and the node doesn\'t have an\n
+    // offset, just scroll to the end.\n
+    if (compensateHack == 0) atEnd = false;\n
+\n
+    // WebKit has a bad habit of (sometimes) happily returning bogus\n
+    // offsets when the document has just been changed. This seems to\n
+    // always be 5/5, so we don\'t use those.\n
+    if (webkit && element && element.offsetTop == 5 && element.offsetLeft == 5)\n
+      return;\n
+\n
+    var y = compensateHack * (element ? element.offsetHeight : 0), x = 0,\n
+        width = (node ? node.offsetWidth : 0), pos = element;\n
+    while (pos && pos.offsetParent) {\n
+      y += pos.offsetTop;\n
+      // Don\'t count X offset for <br> nodes\n
+      if (!isBR(pos))\n
+        x += pos.offsetLeft;\n
+      pos = pos.offsetParent;\n
+    }\n
+\n
+    var scroll_x = body.scrollLeft || html.scrollLeft || 0,\n
+        scroll_y = body.scrollTop || html.scrollTop || 0,\n
+        scroll = false, screen_width = window.innerWidth || html.clientWidth || 0;\n
+\n
+    if (cursor || width < screen_width) {\n
+      if (cursor) {\n
+        var off = select.offsetInNode(node), size = nodeText(node).length;\n
+        if (size) x += width * (off / size);\n
+      }\n
+      var screen_x = x - scroll_x;\n
+      if (screen_x < 0 || screen_x > screen_width) {\n
+        scroll_x = x;\n
+        scroll = true;\n
+      }\n
+    }\n
+    var screen_y = y - scroll_y;\n
+    if (screen_y < 0 || atEnd || screen_y > (window.innerHeight || html.clientHeight || 0) - 50) {\n
+      scroll_y = atEnd ? 1e6 : y;\n
+      scroll = true;\n
+    }\n
+    if (scroll) window.scrollTo(scroll_x, scroll_y);\n
+  };\n
+\n
+  select.scrollToCursor = function(container) {\n
+    select.scrollToNode(select.selectionTopNode(container, true) || container.firstChild, true);\n
+  };\n
+\n
+  // Used to prevent restoring a selection when we do not need to.\n
+  var currentSelection = null;\n
+\n
+  select.snapshotChanged = function() {\n
+    if (currentSelection) currentSelection.changed = true;\n
+  };\n
+\n
+  // This is called by the code in editor.js whenever it is replacing\n
+  // a text node. The function sees whether the given oldNode is part\n
+  // of the current selection, and updates this selection if it is.\n
+  // Because nodes are often only partially replaced, the length of\n
+  // the part that gets replaced has to be taken into account -- the\n
+  // selection might stay in the oldNode if the newNode is smaller\n
+  // than the selection\'s offset. The offset argument is needed in\n
+  // case the selection does move to the new object, and the given\n
+  // length is not the whole length of the new node (part of it might\n
+  // have been used to replace another node).\n
+  select.snapshotReplaceNode = function(from, to, length, offset) {\n
+    if (!currentSelection) return;\n
+\n
+    function replace(point) {\n
+      if (from == point.node) {\n
+        currentSelection.changed = true;\n
+        if (length && point.offset > length) {\n
+          point.offset -= length;\n
+        }\n
+        else {\n
+          point.node = to;\n
+          point.offset += (offset || 0);\n
+        }\n
+      }\n
+    }\n
+    replace(currentSelection.start);\n
+    replace(currentSelection.end);\n
+  };\n
+\n
+  select.snapshotMove = function(from, to, distance, relative, ifAtStart) {\n
+    if (!currentSelection) return;\n
+\n
+    function move(point) {\n
+      if (from == point.node && (!ifAtStart || point.offset == 0)) {\n
+        currentSelection.changed = true;\n
+        point.node = to;\n
+        if (relative) point.offset = Math.max(0, point.offset + distance);\n
+        else point.offset = distance;\n
+      }\n
+    }\n
+    move(currentSelection.start);\n
+    move(currentSelection.end);\n
+  };\n
+\n
+  // Most functions are defined in two ways, one for the IE selection\n
+  // model, one for the W3C one.\n
+  if (select.ie_selection) {\n
+    function selectionNode(start) {\n
+      var range = document.selection.createRange();\n
+      range.collapse(start);\n
+\n
+      function nodeAfter(node) {\n
+        var found = null;\n
+        while (!found && node) {\n
+          found = node.nextSibling;\n
+          node = node.parentNode;\n
+        }\n
+        return nodeAtStartOf(found);\n
+      }\n
+\n
+      function nodeAtStartOf(node) {\n
+        while (node && node.firstChild) node = node.firstChild;\n
+        return {node: node, offset: 0};\n
+      }\n
+\n
+      var containing = range.parentElement();\n
+      if (!isAncestor(document.body, containing)) return null;\n
+      if (!containing.firstChild) return nodeAtStartOf(containing);\n
+\n
+      var working = range.duplicate();\n
+      working.moveToElementText(containing);\n
+      working.collapse(true);\n
+      for (var cur = containing.firstChild; cur; cur = cur.nextSibling) {\n
+        if (cur.nodeType == 3) {\n
+          var size = cur.nodeValue.length;\n
+          working.move("character", size);\n
+        }\n
+        else {\n
+          working.moveToElementText(cur);\n
+          working.collapse(false);\n
+        }\n
+\n
+        var dir = range.compareEndPoints("StartToStart", working);\n
+        if (dir == 0) return nodeAfter(cur);\n
+        if (dir == 1) continue;\n
+        if (cur.nodeType != 3) return nodeAtStartOf(cur);\n
+\n
+        working.setEndPoint("StartToEnd", range);\n
+        return {node: cur, offset: size - working.text.length};\n
+      }\n
+      return nodeAfter(containing);\n
+    }\n
+\n
+    select.markSelection = function() {\n
+      currentSelection = null;\n
+      var sel = document.selection;\n
+      if (!sel) return;\n
+      var start = selectionNode(true),\n
+          end = selectionNode(false);\n
+      if (!start || !end) return;\n
+      currentSelection = {start: start, end: end, changed: false};\n
+    };\n
+\n
+    select.selectMarked = function() {\n
+      if (!currentSelection || !currentSelection.changed) return;\n
+\n
+      function makeRange(point) {\n
+        var range = document.body.createTextRange(),\n
+            node = point.node;\n
+        if (!node) {\n
+          range.moveToElementText(document.body);\n
+          range.collapse(false);\n
+        }\n
+        else if (node.nodeType == 3) {\n
+          range.moveToElementText(node.parentNode);\n
+          var offset = point.offset;\n
+          while (node.previousSibling) {\n
+            node = node.previousSibling;\n
+            offset += (node.innerText || "").length;\n
+          }\n
+          range.move("character", offset);\n
+        }\n
+        else {\n
+          range.moveToElementText(node);\n
+          range.collapse(true);\n
+        }\n
+        return range;\n
+      }\n
+\n
+      var start = makeRange(currentSelection.start), end = makeRange(currentSelection.end);\n
+      start.setEndPoint("StartToEnd", end);\n
+      start.select();\n
+    };\n
+\n
+    select.offsetInNode = function(node) {\n
+      var sel = document.selection;\n
+      if (!sel) return 0;\n
+      var range = sel.createRange(), range2 = range.duplicate();\n
+      try {range2.moveToElementText(node);} catch(e){return 0;}\n
+      range.setEndPoint("StartToStart", range2);\n
+      return range.text.length;\n
+    };\n
+\n
+    // Get the top-level node that one end of the cursor is inside or\n
+    // after. Note that this returns false for \'no cursor\', and null\n
+    // for \'start of document\'.\n
+    select.selectionTopNode = function(container, start) {\n
+      var selection = document.selection;\n
+      if (!selection) return false;\n
+\n
+      var range = selection.createRange(), range2 = range.duplicate();\n
+      range.collapse(start);\n
+      var around = range.parentElement();\n
+      if (around && isAncestor(container, around)) {\n
+        // Only use this node if the selection is not at its start.\n
+        range2.moveToElementText(around);\n
+        if (range.compareEndPoints("StartToStart", range2) == 1)\n
+          return topLevelNodeAt(around, container);\n
+      }\n
+\n
+      // Move the start of a range to the start of a node,\n
+      // compensating for the fact that you can\'t call\n
+      // moveToElementText with text nodes.\n
+      function moveToNodeStart(range, node) {\n
+        if (node.nodeType == 3) {\n
+          var count = 0, cur = node.previousSibling;\n
+          while (cur && cur.nodeType == 3) {\n
+            count += cur.nodeValue.length;\n
+            cur = cur.previousSibling;\n
+          }\n
+          if (cur) {\n
+            try{range.moveToElementText(cur);}\n
+            catch(e){return false;}\n
+            range.collapse(false);\n
+          }\n
+          else range.moveToElementText(node.parentNode);\n
+          if (count) range.move("character", count);\n
+        }\n
+        else {\n
+          try{range.moveToElementText(node);}\n
+          catch(e){return false;}\n
+        }\n
+        return true;\n
+      }\n
+\n
+      // Do a binary search through the container object, comparing\n
+      // the start of each node to the selection\n
+      var start = 0, end = container.childNodes.length - 1;\n
+      while (start < end) {\n
+        var middle = Math.ceil((end + start) / 2), node = container.childNodes[middle];\n
+        if (!node) return false; // Don\'t ask. IE6 manages this sometimes.\n
+        if (!moveToNodeStart(range2, node)) return false;\n
+        if (range.compareEndPoints("StartToStart", range2) == 1)\n
+          start = middle;\n
+        else\n
+          end = middle - 1;\n
+      }\n
+      \n
+      if (start == 0) {\n
+        var test1 = selection.createRange(), test2 = test1.duplicate();\n
+        test2.moveToElementText(container);\n
+        if (test1.compareEndPoints("StartToStart", test2) == 0)\n
+          return null;\n
+      }\n
+      return container.childNodes[start] || null;\n
+    };\n
+\n
+    // Place the cursor after this.start. This is only useful when\n
+    // manually moving the cursor instead of restoring it to its old\n
+    // position.\n
+    select.focusAfterNode = function(node, container) {\n
+      var range = document.body.createTextRange();\n
+      range.moveToElementText(node || container);\n
+      range.collapse(!node);\n
+      range.select();\n
+    };\n
+\n
+    select.somethingSelected = function() {\n
+      var sel = document.selection;\n
+      return sel && (sel.createRange().text != "");\n
+    };\n
+\n
+    function insertAtCursor(html) {\n
+      var selection = document.selection;\n
+      if (selection) {\n
+        var range = selection.createRange();\n
+        range.pasteHTML(html);\n
+        range.collapse(false);\n
+        range.select();\n
+      }\n
+    }\n
+\n
+    // Used to normalize the effect of the enter key, since browsers\n
+    // do widely different things when pressing enter in designMode.\n
+    select.insertNewlineAtCursor = function() {\n
+      insertAtCursor("<br>");\n
+    };\n
+\n
+    select.insertTabAtCursor = function() {\n
+      insertAtCursor(fourSpaces);\n
+    };\n
+\n
+    // Get the BR node at the start of the line on which the cursor\n
+    // currently is, and the offset into the line. Returns null as\n
+    // node if cursor is on first line.\n
+    select.cursorPos = function(container, start) {\n
+      var selection = document.selection;\n
+      if (!selection) return null;\n
+\n
+      var topNode = select.selectionTopNode(container, start);\n
+      while (topNode && !isBR(topNode))\n
+        topNode = topNode.previousSibling;\n
+\n
+      var range = selection.createRange(), range2 = range.duplicate();\n
+      range.collapse(start);\n
+      if (topNode) {\n
+        range2.moveToElementText(topNode);\n
+        range2.collapse(false);\n
+      }\n
+      else {\n
+        // When nothing is selected, we can get all kinds of funky errors here.\n
+        try { range2.moveToElementText(container); }\n
+        catch (e) { return null; }\n
+        range2.collapse(true);\n
+      }\n
+      range.setEndPoint("StartToStart", range2);\n
+\n
+      return {node: topNode, offset: range.text.length};\n
+    };\n
+\n
+    select.setCursorPos = function(container, from, to) {\n
+      function rangeAt(pos) {\n
+        var range = document.body.createTextRange();\n
+        if (!pos.node) {\n
+          range.moveToElementText(container);\n
+          range.collapse(true);\n
+        }\n
+        else {\n
+          range.moveToElementText(pos.node);\n
+          range.collapse(false);\n
+        }\n
+        range.move("character", pos.offset);\n
+        return range;\n
+      }\n
+\n
+      var range = rangeAt(from);\n
+      if (to && to != from)\n
+        range.setEndPoint("EndToEnd", rangeAt(to));\n
+      range.select();\n
+    }\n
+\n
+    // Some hacks for storing and re-storing the selection when the editor loses and regains focus.\n
+    select.getBookmark = function (container) {\n
+      var from = select.cursorPos(container, true), to = select.cursorPos(container, false);\n
+      if (from && to) return {from: from, to: to};\n
+    };\n
+\n
+    // Restore a stored selection.\n
+    select.setBookmark = function(container, mark) {\n
+      if (!mark) return;\n
+      select.setCursorPos(container, mark.from, mark.to);\n
+    };\n
+  }\n
+  // W3C model\n
+  else {\n
+    // Find the node right at the cursor, not one of its\n
+    // ancestors with a suitable offset. This goes down the DOM tree\n
+    // until a \'leaf\' is reached (or is it *up* the DOM tree?).\n
+    function innerNode(node, offset) {\n
+      while (node.nodeType != 3 && !isBR(node)) {\n
+        var newNode = node.childNodes[offset] || node.nextSibling;\n
+        offset = 0;\n
+        while (!newNode && node.parentNode) {\n
+          node = node.parentNode;\n
+          newNode = node.nextSibling;\n
+        }\n
+        node = newNode;\n
+        if (!newNode) break;\n
+      }\n
+      return {node: node, offset: offset};\n
+    }\n
+\n
+    // Store start and end nodes, and offsets within these, and refer\n
+    // back to the selection object from those nodes, so that this\n
+    // object can be updated when the nodes are replaced before the\n
+    // selection is restored.\n
+    select.markSelection = function () {\n
+      var selection = window.getSelection();\n
+      if (!selection || selection.rangeCount == 0)\n
+        return (currentSelection = null);\n
+      var range = selection.getRangeAt(0);\n
+\n
+      currentSelection = {\n
+        start: innerNode(range.startContainer, range.startOffset),\n
+        end: innerNode(range.endContainer, range.endOffset),\n
+        changed: false\n
+      };\n
+    };\n
+\n
+    select.selectMarked = function () {\n
+      var cs = currentSelection;\n
+      // on webkit-based browsers, it is apparently possible that the\n
+      // selection gets reset even when a node that is not one of the\n
+      // endpoints get messed with. the most common situation where\n
+      // this occurs is when a selection is deleted or overwitten. we\n
+      // check for that here.\n
+      function focusIssue() {\n
+        if (cs.start.node == cs.end.node && cs.start.offset == cs.end.offset) {\n
+          var selection = window.getSelection();\n
+          if (!selection || selection.rangeCount == 0) return true;\n
+          var range = selection.getRangeAt(0), point = innerNode(range.startContainer, range.startOffset);\n
+          return cs.start.node != point.node || cs.start.offset != point.offset;\n
+        }\n
+      }\n
+      if (!cs || !(cs.changed || (webkit && focusIssue()))) return;\n
+      var range = document.createRange();\n
+\n
+      function setPoint(point, which) {\n
+        if (point.node) {\n
+          // Some magic to generalize the setting of the start and end\n
+          // of a range.\n
+          if (point.offset == 0)\n
+            range["set" + which + "Before"](point.node);\n
+          else\n
+            range["set" + which](point.node, point.offset);\n
+        }\n
+        else {\n
+          range.setStartAfter(document.body.lastChild || document.body);\n
+        }\n
+      }\n
+\n
+      setPoint(cs.end, "End");\n
+      setPoint(cs.start, "Start");\n
+      selectRange(range);\n
+    };\n
+\n
+    // Helper for selecting a range object.\n
+    function selectRange(range) {\n
+      var selection = window.getSelection();\n
+      if (!selection) return;\n
+      selection.removeAllRanges();\n
+      selection.addRange(range);\n
+    }\n
+    function selectionRange() {\n
+      var selection = window.getSelection();\n
+      if (!selection || selection.rangeCount == 0)\n
+        return false;\n
+      else\n
+        return selection.getRangeAt(0);\n
+    }\n
+\n
+    // Finding the top-level node at the cursor in the W3C is, as you\n
+    // can see, quite an involved process.\n
+    select.selectionTopNode = function(container, start) {\n
+      var range = selectionRange();\n
+      if (!range) return false;\n
+\n
+      var node = start ? range.startContainer : range.endContainer;\n
+      var offset = start ? range.startOffset : range.endOffset;\n
+      // Work around (yet another) bug in Opera\'s selection model.\n
+      if (window.opera && !start && range.endContainer == container && range.endOffset == range.startOffset + 1 &&\n
+          container.childNodes[range.startOffset] && isBR(container.childNodes[range.startOffset]))\n
+        offset--;\n
+\n
+      // For text nodes, we look at the node itself if the cursor is\n
+      // inside, or at the node before it if the cursor is at the\n
+      // start.\n
+      if (node.nodeType == 3){\n
+        if (offset > 0)\n
+          return topLevelNodeAt(node, container);\n
+        else\n
+          return topLevelNodeBefore(node, container);\n
+      }\n
+      // Occasionally, browsers will return the HTML node as\n
+      // selection. If the offset is 0, we take the start of the frame\n
+      // (\'after null\'), otherwise, we take the last node.\n
+      else if (node.nodeName.toUpperCase() == "HTML") {\n
+        return (offset == 1 ? null : container.lastChild);\n
+      }\n
+      // If the given node is our \'container\', we just look up the\n
+      // correct node by using the offset.\n
+      else if (node == container) {\n
+        return (offset == 0) ? null : node.childNodes[offset - 1];\n
+      }\n
+      // In any other case, we have a regular node. If the cursor is\n
+      // at the end of the node, we use the node itself, if it is at\n
+      // the start, we use the node before it, and in any other\n
+      // case, we look up the child before the cursor and use that.\n
+      else {\n
+        if (offset == node.childNodes.length)\n
+          return topLevelNodeAt(node, container);\n
+        else if (offset == 0)\n
+          return topLevelNodeBefore(node, container);\n
+        else\n
+          return topLevelNodeAt(node.childNodes[offset - 1], container);\n
+      }\n
+    };\n
+\n
+    select.focusAfterNode = function(node, container) {\n
+      var range = document.createRange();\n
+      range.setStartBefore(container.firstChild || container);\n
+      // In Opera, setting the end of a range at the end of a line\n
+      // (before a BR) will cause the cursor to appear on the next\n
+      // line, so we set the end inside of the start node when\n
+      // possible.\n
+      if (node && !node.firstChild)\n
+        range.setEndAfter(node);\n
+      else if (node)\n
+        range.setEnd(node, node.childNodes.length);\n
+      else\n
+        range.setEndBefore(container.firstChild || container);\n
+      range.collapse(false);\n
+      selectRange(range);\n
+    };\n
+\n
+    select.somethingSelected = function() {\n
+      var range = selectionRange();\n
+      return range && !range.collapsed;\n
+    };\n
+\n
+    select.offsetInNode = function(node) {\n
+      var range = selectionRange();\n
+      if (!range) return 0;\n
+      range = range.cloneRange();\n
+      range.setStartBefore(node);\n
+      return range.toString().length;\n
+    };\n
+\n
+    function insertNodeAtCursor(node) {\n
+      var range = selectionRange();\n
+      if (!range) return;\n
+\n
+      range.deleteContents();\n
+      range.insertNode(node);\n
+      webkitLastLineHack(document.body);\n
+\n
+      // work around weirdness where Opera will magically insert a new\n
+      // BR node when a BR node inside a span is moved around. makes\n
+      // sure the BR ends up outside of spans.\n
+      if (window.opera && isBR(node) && isSpan(node.parentNode)) {\n
+        var next = node.nextSibling, p = node.parentNode, outer = p.parentNode;\n
+        outer.insertBefore(node, p.nextSibling);\n
+        var textAfter = "";\n
+        for (; next && next.nodeType == 3; next = next.nextSibling) {\n
+          textAfter += next.nodeValue;\n
+          removeElement(next);\n
+        }\n
+        outer.insertBefore(makePartSpan(textAfter, document), node.nextSibling);\n
+      }\n
+      range = document.createRange();\n
+      range.selectNode(node);\n
+      range.collapse(false);\n
+      selectRange(range);\n
+    }\n
+\n
+    select.insertNewlineAtCursor = function() {\n
+      insertNodeAtCursor(document.createElement("BR"));\n
+    };\n
+\n
+    select.insertTabAtCursor = function() {\n
+      insertNodeAtCursor(document.createTextNode(fourSpaces));\n
+    };\n
+\n
+    select.cursorPos = function(container, start) {\n
+      var range = selectionRange();\n
+      if (!range) return;\n
+\n
+      var topNode = select.selectionTopNode(container, start);\n
+      while (topNode && !isBR(topNode))\n
+        topNode = topNode.previousSibling;\n
+\n
+      range = range.cloneRange();\n
+      range.collapse(start);\n
+      if (topNode)\n
+        range.setStartAfter(topNode);\n
+      else\n
+        range.setStartBefore(container);\n
+\n
+      var text = range.toString();\n
+      return {node: topNode, offset: text.length};\n
+    };\n
+\n
+    select.setCursorPos = function(container, from, to) {\n
+      var range = document.createRange();\n
+\n
+      function setPoint(node, offset, side) {\n
+        if (offset == 0 && node && !node.nextSibling) {\n
+          range["set" + side + "After"](node);\n
+          return true;\n
+        }\n
+\n
+        if (!node)\n
+          node = container.firstChild;\n
+        else\n
+          node = node.nextSibling;\n
+\n
+        if (!node) return;\n
+\n
+        if (offset == 0) {\n
+          range["set" + side + "Before"](node);\n
+          return true;\n
+        }\n
+\n
+        var backlog = []\n
+        function decompose(node) {\n
+          if (node.nodeType == 3)\n
+            backlog.push(node);\n
+          else\n
+            forEach(node.childNodes, decompose);\n
+        }\n
+        while (true) {\n
+          while (node && !backlog.length) {\n
+            decompose(node);\n
+            node = node.nextSibling;\n
+          }\n
+          var cur = backlog.shift();\n
+          if (!cur) return false;\n
+\n
+          var length = cur.nodeValue.length;\n
+          if (length >= offset) {\n
+            range["set" + side](cur, offset);\n
+            return true;\n
+          }\n
+          offset -= length;\n
+        }\n
+      }\n
+\n
+      to = to || from;\n
+      if (setPoint(to.node, to.offset, "End") && setPoint(from.node, from.offset, "Start"))\n
+        selectRange(range);\n
+    };\n
+  }\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>23211</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

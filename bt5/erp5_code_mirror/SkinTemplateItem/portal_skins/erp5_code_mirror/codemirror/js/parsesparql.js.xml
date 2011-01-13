@@ -1,0 +1,206 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts87948228.95</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>parsesparql.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+var SparqlParser = Editor.Parser = (function() {\n
+  function wordRegexp(words) {\n
+    return new RegExp("^(?:" + words.join("|") + ")$", "i");\n
+  }\n
+  var ops = wordRegexp(["str", "lang", "langmatches", "datatype", "bound", "sameterm", "isiri", "isuri",\n
+                        "isblank", "isliteral", "union", "a"]);\n
+  var keywords = wordRegexp(["base", "prefix", "select", "distinct", "reduced", "construct", "describe",\n
+                             "ask", "from", "named", "where", "order", "limit", "offset", "filter", "optional",\n
+                             "graph", "by", "asc", "desc"]);\n
+  var operatorChars = /[*+\\-<>=&|]/;\n
+\n
+  var tokenizeSparql = (function() {\n
+    function normal(source, setState) {\n
+      var ch = source.next();\n
+      if (ch == "$" || ch == "?") {\n
+        source.nextWhileMatches(/[\\w\\d]/);\n
+        return "sp-var";\n
+      }\n
+      else if (ch == "<" && !source.matches(/[\\s\\u00a0=]/)) {\n
+        source.nextWhileMatches(/[^\\s\\u00a0>]/);\n
+        if (source.equals(">")) source.next();\n
+        return "sp-uri";\n
+      }\n
+      else if (ch == "\\"" || ch == "\'") {\n
+        setState(inLiteral(ch));\n
+        return null;\n
+      }\n
+      else if (/[{}\\(\\),\\.;\\[\\]]/.test(ch)) {\n
+        return "sp-punc";\n
+      }\n
+      else if (ch == "#") {\n
+        while (!source.endOfLine()) source.next();\n
+        return "sp-comment";\n
+      }\n
+      else if (operatorChars.test(ch)) {\n
+        source.nextWhileMatches(operatorChars);\n
+        return "sp-operator";\n
+      }\n
+      else if (ch == ":") {\n
+        source.nextWhileMatches(/[\\w\\d\\._\\-]/);\n
+        return "sp-prefixed";\n
+      }\n
+      else {\n
+        source.nextWhileMatches(/[_\\w\\d]/);\n
+        if (source.equals(":")) {\n
+          source.next();\n
+          source.nextWhileMatches(/[\\w\\d_\\-]/);\n
+          return "sp-prefixed";\n
+        }\n
+        var word = source.get(), type;\n
+        if (ops.test(word))\n
+          type = "sp-operator";\n
+        else if (keywords.test(word))\n
+          type = "sp-keyword";\n
+        else\n
+          type = "sp-word";\n
+        return {style: type, content: word};\n
+      }\n
+    }\n
+\n
+    function inLiteral(quote) {\n
+      return function(source, setState) {\n
+        var escaped = false;\n
+        while (!source.endOfLine()) {\n
+          var ch = source.next();\n
+          if (ch == quote && !escaped) {\n
+            setState(normal);\n
+            break;\n
+          }\n
+          escaped = !escaped && ch == "\\\\";\n
+        }\n
+        return "sp-literal";\n
+      };\n
+    }\n
+\n
+    return function(source, startState) {\n
+      return tokenizer(source, startState || normal);\n
+    };\n
+  })();\n
+\n
+  function indentSparql(context) {\n
+    return function(nextChars) {\n
+      var firstChar = nextChars && nextChars.charAt(0);\n
+      if (/[\\]\\}]/.test(firstChar))\n
+        while (context && context.type == "pattern") context = context.prev;\n
+\n
+      var closing = context && firstChar == matching[context.type];\n
+      if (!context)\n
+        return 0;\n
+      else if (context.type == "pattern")\n
+        return context.col;\n
+      else if (context.align)\n
+        return context.col - (closing ? context.width : 0);\n
+      else\n
+        return context.indent + (closing ? 0 : indentUnit);\n
+    }\n
+  }\n
+\n
+  function parseSparql(source) {\n
+    var tokens = tokenizeSparql(source);\n
+    var context = null, indent = 0, col = 0;\n
+    function pushContext(type, width) {\n
+      context = {prev: context, indent: indent, col: col, type: type, width: width};\n
+    }\n
+    function popContext() {\n
+      context = context.prev;\n
+    }\n
+\n
+    var iter = {\n
+      next: function() {\n
+        var token = tokens.next(), type = token.style, content = token.content, width = token.value.length;\n
+\n
+        if (content == "\\n") {\n
+          token.indentation = indentSparql(context);\n
+          indent = col = 0;\n
+          if (context && context.align == null) context.align = false;\n
+        }\n
+        else if (type == "whitespace" && col == 0) {\n
+          indent = width;\n
+        }\n
+        else if (type != "sp-comment" && context && context.align == null) {\n
+          context.align = true;\n
+        }\n
+\n
+        if (content != "\\n") col += width;\n
+\n
+        if (/[\\[\\{\\(]/.test(content)) {\n
+          pushContext(content, width);\n
+        }\n
+        else if (/[\\]\\}\\)]/.test(content)) {\n
+          while (context && context.type == "pattern")\n
+            popContext();\n
+          if (context && content == matching[context.type])\n
+            popContext();\n
+        }\n
+        else if (content == "." && context && context.type == "pattern") {\n
+          popContext();\n
+        }\n
+        else if ((type == "sp-word" || type == "sp-prefixed" || type == "sp-uri" || type == "sp-var" || type == "sp-literal") &&\n
+                 context && /[\\{\\[]/.test(context.type)) {\n
+          pushContext("pattern", width);\n
+        }\n
+\n
+        return token;\n
+      },\n
+\n
+      copy: function() {\n
+        var _context = context, _indent = indent, _col = col, _tokenState = tokens.state;\n
+        return function(source) {\n
+          tokens = tokenizeSparql(source, _tokenState);\n
+          context = _context;\n
+          indent = _indent;\n
+          col = _col;\n
+          return iter;\n
+        };\n
+      }\n
+    };\n
+    return iter;\n
+  }\n
+\n
+  return {make: parseSparql, electricChars: "}]"};\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5147</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

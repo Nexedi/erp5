@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts87948228.93</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>schemecolors.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>html {\n
+  cursor: text;\n
+  width: 100%;\n
+  height: 100%;\n
+  background-color: white;\n
+}\n
+\n
+.editbox {\n
+  width: 100%;\n
+  height: 100%;\n
+  margin: 0pt;\n
+  padding: 0;\n
+  font-family: monospace;\n
+  font-size: 10pt;\n
+  color: black;\n
+}\n
+\n
+\n
+\n
+pre.code, .editbox {\n
+  color: #666666;\n
+}\n
+\n
+.editbox p {\n
+  margin: 0;\n
+}\n
+\n
+span.scheme-string\t{color: green;}\n
+span.scheme-number\t{color: blue;}\n
+span.scheme-boolean     {color: darkred;}\n
+span.scheme-character\t{color: orange;}\n
+span.scheme-symbol\t{color: steelblue;}\n
+span.scheme-punctuation {color: black;}\n
+span.scheme-lparen      {color: black;}\n
+span.scheme-rparen      {color: black;}\n
+span.scheme-comment     { color: orange; }\n
+\n
+span.good-matching-paren { \n
+    font-weight: bold;\n
+    color: #3399FF;  \n
+}\n
+span.bad-matching-paren {\n
+    font-weight: bold;\n
+    color: red;\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>787</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

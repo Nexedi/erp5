@@ -1,0 +1,253 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts87948228.92</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>tokenizeometa.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Tokenizer for JavaScript code */\n
+\n
+var tokenizeJavaScript = (function() {\n
+  // Advance the stream until the given character (not preceded by a\n
+  // backslash) is encountered, or the end of the line is reached.\n
+  function nextUntilUnescaped(source, end) {\n
+    var escaped = false;\n
+    while (!source.endOfLine()) {\n
+      var next = source.next();\n
+      if (next == end && !escaped)\n
+        return false;\n
+      escaped = !escaped && next == "\\\\";\n
+    }\n
+    return escaped;\n
+  }\n
+\n
+  // A map of JavaScript\'s keywords. The a/b/c keyword distinction is\n
+  // very rough, but it gives the parser enough information to parse\n
+  // correct code correctly (we don\'t care that much how we parse\n
+  // incorrect code). The style information included in these objects\n
+  // is used by the highlighter to pick the correct CSS style for a\n
+  // token.\n
+  var keywords = function(){\n
+    function result(type, style){\n
+      return {type: type, style: "js-" + style};\n
+    }\n
+    // keywords that take a parenthised expression, and then a\n
+    // statement (if)\n
+    var keywordA = result("keyword a", "keyword");\n
+    // keywords that take just a statement (else)\n
+    var keywordB = result("keyword b", "keyword");\n
+    // keywords that optionally take an expression, and form a\n
+    // statement (return)\n
+    var keywordC = result("keyword c", "keyword");\n
+    var operator = result("operator", "keyword");\n
+    var atom = result("atom", "atom");\n
+    return {\n
+      "if": keywordA, "while": keywordA, "with": keywordA,\n
+      "else": keywordB, "do": keywordB, "try": keywordB, "finally": keywordB,\n
+      "return": keywordC, "break": keywordC, "continue": keywordC, "new": keywordC, "delete": keywordC, "throw": keywordC,\n
+      "in": operator, "typeof": operator, "instanceof": operator,\n
+      "var": result("var", "keyword"), "function": result("function", "keyword"), "catch": result("catch", "keyword"),\n
+      "for": result("for", "keyword"), "switch": result("switch", "keyword"),\n
+      "case": result("case", "keyword"), "default": result("default", "keyword"),\n
+      "true": atom, "false": atom, "null": atom, "undefined": atom, "NaN": atom, "Infinity": atom,\n
+      "ometa": keywordB\n
+    };\n
+  }();\n
+\n
+  // Some helper regexps\n
+  var isOperatorChar = /[+\\-*&%=<>!?|~]/;\n
+  var isHexDigit = /[0-9A-Fa-f]/;\n
+  var isWordChar = /[\\w\\$_]/;\n
+\n
+  // Wrapper around jsToken that helps maintain parser state (whether\n
+  // we are inside of a multi-line comment and whether the next token\n
+  // could be a regular expression).\n
+  function jsTokenState(inside, regexp) {\n
+    return function(source, setState) {\n
+      var newInside = inside;\n
+      var type = jsToken(inside, regexp, source, function(c) {newInside = c;});\n
+      var newRegexp = type.type == "operator" || type.type == "keyword c" || type.type.match(/^[\\[{}\\(,;:]$/);\n
+      if (newRegexp != regexp || newInside != inside)\n
+        setState(jsTokenState(newInside, newRegexp));\n
+      return type;\n
+    };\n
+  }\n
+\n
+  // The token reader, intended to be used by the tokenizer from\n
+  // tokenize.js (through jsTokenState). Advances the source stream\n
+  // over a token, and returns an object containing the type and style\n
+  // of that token.\n
+  function jsToken(inside, regexp, source, setInside) {\n
+    function readHexNumber(){\n
+      source.next(); // skip the \'x\'\n
+      source.nextWhileMatches(isHexDigit);\n
+      return {type: "number", style: "js-atom"};\n
+    }\n
+\n
+    function readNumber() {\n
+      source.nextWhileMatches(/[0-9]/);\n
+      if (source.equals(".")){\n
+        source.next();\n
+        source.nextWhileMatches(/[0-9]/);\n
+      }\n
+      if (source.equals("e") || source.equals("E")){\n
+        source.next();\n
+        if (source.equals("-"))\n
+          source.next();\n
+        source.nextWhileMatches(/[0-9]/);\n
+      }\n
+      return {type: "number", style: "js-atom"};\n
+    }\n
+    // Read a word, look it up in keywords. If not found, it is a\n
+    // variable, otherwise it is a keyword of the type found.\n
+    function readWord() {\n
+      source.nextWhileMatches(isWordChar);\n
+      var word = source.get();\n
+      var known = keywords.hasOwnProperty(word) && keywords.propertyIsEnumerable(word) && keywords[word];\n
+      return known ? {type: known.type, style: known.style, content: word} :\n
+      {type: "variable", style: "js-variable", content: word};\n
+    }\n
+    function readRegexp() {\n
+      nextUntilUnescaped(source, "/");\n
+      source.nextWhileMatches(/[gi]/);\n
+      return {type: "regexp", style: "js-string"};\n
+    }\n
+    // Mutli-line comments are tricky. We want to return the newlines\n
+    // embedded in them as regular newline tokens, and then continue\n
+    // returning a comment token for every line of the comment. So\n
+    // some state has to be saved (inside) to indicate whether we are\n
+    // inside a /* */ sequence.\n
+    function readMultilineComment(start){\n
+      var newInside = "/*";\n
+      var maybeEnd = (start == "*");\n
+      while (true) {\n
+        if (source.endOfLine())\n
+          break;\n
+        var next = source.next();\n
+        if (next == "/" && maybeEnd){\n
+          newInside = null;\n
+          break;\n
+        }\n
+        maybeEnd = (next == "*");\n
+      }\n
+      setInside(newInside);\n
+      return {type: "comment", style: "js-comment"};\n
+    }\n
+    function readMultilineString(start, quotes) {\n
+      var newInside = quotes;\n
+      var quote = quotes.charAt(0);\n
+      var maybeEnd = (start == quote);\n
+      while (true) {\n
+        if (source.endOfLine())\n
+          break;\n
+        var next = source.next();\n
+        if (next == quote && source.peek() == quote && maybeEnd) {\n
+          source.next();\n
+          newInside = null;\n
+          break;\n
+        }\n
+        maybeEnd = (next == quote);\n
+      }\n
+      setInside(newInside);\n
+      return {type: "multilineString", style: "js-string"};\n
+    }\n
+    function readOperator() {\n
+      source.nextWhileMatches(isOperatorChar);\n
+      return {type: "operator", style: "js-operator"};\n
+    }\n
+    function readString(quote) {\n
+      var endBackSlash = nextUntilUnescaped(source, quote);\n
+      setInside(endBackSlash ? quote : null);\n
+      return {type: "string", style: "js-string"};\n
+    }\n
+    function readOmetaIdentifierString() {\n
+      source.nextWhileMatches(isWordChar);\n
+      return {type: "string", style: "js-string"};\n
+    }\n
+    function readOmetaBinding() {\n
+      source.nextWhileMatches(isWordChar);\n
+      return {type: "variable", style: "ometa-binding"};\n
+    }\n
+\n
+    // Fetch the next token. Dispatches on first character in the\n
+    // stream, or first two characters when the first is a slash.\n
+    if (inside == "\\"" || inside == "\'")\n
+      return readString(inside);\n
+    var ch = source.next();\n
+    if (inside == "/*")\n
+      return readMultilineComment(ch);\n
+    if (inside == \'"""\' || inside == "\'\'\'")\n
+      return readMultilineString(ch, inside);\n
+    if (ch == \'"\' && source.lookAhead(\'""\', true) || ch == "\'" && source.lookAhead("\'\'", true))\n
+      return readMultilineString(\'-\', ch+ch+ch); // work as far as \'-\' is not \'"\' nor "\'"\n
+    else if (ch == "\\"" || ch == "\'")\n
+      return readString(ch);\n
+    else if (ch == "`" || ch == "#" )\n
+      return readOmetaIdentifierString();\n
+    else if (ch == \':\' && isWordChar.test(source.peek())) \n
+      return readOmetaBinding();\n
+    // with punctuation, the type of the token is the symbol itself\n
+    else if (/[\\[\\]{}\\(\\),;\\:\\.]/.test(ch))\n
+      return {type: ch, style: "js-punctuation"};\n
+    else if (ch == "0" && (source.equals("x") || source.equals("X")))\n
+      return readHexNumber();\n
+    else if (/[0-9]/.test(ch))\n
+      return readNumber();\n
+    else if (ch == "/"){\n
+      if (source.equals("*"))\n
+      { source.next(); return readMultilineComment(ch); }\n
+      else if (source.equals("/"))\n
+      { nextUntilUnescaped(source, null); return {type: "comment", style: "js-comment"};}\n
+      else if (regexp)\n
+        return readRegexp();\n
+      else\n
+        return readOperator();\n
+    }\n
+    else if (isOperatorChar.test(ch))\n
+      return readOperator();\n
+    else\n
+      return readWord();\n
+  }\n
+\n
+  // The external interface to the tokenizer.\n
+  return function(source, startState) {\n
+    return tokenizer(source, startState || jsTokenState(false, true));\n
+  };\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8070</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

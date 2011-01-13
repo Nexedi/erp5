@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts87948228.96</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>unittests.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/**\n
+ * Test Harness for CodeMirror\n
+ * JS-unit compatible tests here.  The two available assertions are\n
+ * assertEquals (strict equality) and assertEquivalent (looser equivalency).\n
+ *\n
+ * \'editor\' is a global object for the CodeMirror editor shared between all\n
+ * tests.  After manipulating it in each test, try to restore it to\n
+ * approximately its original state.\n
+ */\n
+\n
+function testSetGet() {\n
+  var code = \'It was the best of times.\\nIt was the worst of times.\';\n
+  editor.setCode(code);\n
+  assertEquals(code, editor.getCode());\n
+  editor.setCode(\'\');\n
+  assertEquals(\'\', editor.getCode());\n
+}\n
+\n
+function testSetStylesheet() {\n
+  function cssStatus() {\n
+    // Returns a list of tuples, for each CSS link return the filename and\n
+    // whether it is enabled.\n
+    links = editor.win.document.getElementsByTagName(\'link\');\n
+    css = [];\n
+    for (var x = 0, link; link = links[x]; x++) {\n
+      if (link.rel.indexOf("stylesheet") !== -1) {\n
+        css.push([link.href.substring(link.href.lastIndexOf(\'/\') + 1),\n
+                 !link.disabled])\n
+      }\n
+    }\n
+    return css;\n
+  }\n
+  assertEquivalent([], cssStatus());\n
+  editor.setStylesheet(\'css/jscolors.css\');\n
+  assertEquivalent([[\'jscolors.css\', true]], cssStatus());\n
+  editor.setStylesheet([\'css/csscolors.css\', \'css/xmlcolors.css\']);\n
+  assertEquivalent([[\'jscolors.css\', false], [\'csscolors.css\', true], [\'xmlcolors.css\', true]], cssStatus());\n
+  editor.setStylesheet([]);\n
+  assertEquivalent([[\'jscolors.css\', false], [\'csscolors.css\', false], [\'xmlcolors.css\', false]], cssStatus());\n
+}\n
+\n
+// Update this list of tests as new ones are added.\n
+var tests = [\'testSetGet\', \'testSetStylesheet\'];\n
+\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1630</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

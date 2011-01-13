@@ -1,0 +1,277 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts87948228.93</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>parseplsql.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+var PlsqlParser = Editor.Parser = (function() {\n
+\n
+  function wordRegexp(words) {\n
+    return new RegExp("^(?:" + words.join("|") + ")$", "i");\n
+  }\n
+\n
+  var functions = wordRegexp([\n
+"abs","acos","add_months","ascii","asin","atan","atan2","average",\n
+"bfilename",\n
+"ceil","chartorowid","chr","concat","convert","cos","cosh","count",\n
+"decode","deref","dual","dump","dup_val_on_index",\n
+"empty","error","exp",\n
+"false","floor","found",\n
+"glb","greatest",\n
+"hextoraw",\n
+"initcap","instr","instrb","isopen",\n
+"last_day","least","lenght","lenghtb","ln","lower","lpad","ltrim","lub",\n
+"make_ref","max","min","mod","months_between",\n
+"new_time","next_day","nextval","nls_charset_decl_len","nls_charset_id","nls_charset_name","nls_initcap","nls_lower",\n
+"nls_sort","nls_upper","nlssort","no_data_found","notfound","null","nvl",\n
+"others",\n
+"power",\n
+"rawtohex","reftohex","round","rowcount","rowidtochar","rpad","rtrim",\n
+"sign","sin","sinh","soundex","sqlcode","sqlerrm","sqrt","stddev","substr","substrb","sum","sysdate",\n
+"tan","tanh","to_char","to_date","to_label","to_multi_byte","to_number","to_single_byte","translate","true","trunc",\n
+"uid","upper","user","userenv",\n
+"variance","vsize"\n
+\n
+  ]);\n
+\n
+  var keywords = wordRegexp([\n
+"abort","accept","access","add","all","alter","and","any","array","arraylen","as","asc","assert","assign","at","attributes","audit",\n
+"authorization","avg",\n
+"base_table","begin","between","binary_integer","body","boolean","by",\n
+"case","cast","char","char_base","check","close","cluster","clusters","colauth","column","comment","commit","compress","connect",\n
+"connected","constant","constraint","crash","create","current","currval","cursor",\n
+"data_base","database","date","dba","deallocate","debugoff","debugon","decimal","declare","default","definition","delay","delete",\n
+"desc","digits","dispose","distinct","do","drop",\n
+"else","elsif","enable","end","entry","escape","exception","exception_init","exchange","exclusive","exists","exit","external",\n
+"fast","fetch","file","for","force","form","from","function",\n
+"generic","goto","grant","group",\n
+"having",\n
+"identified","if","immediate","in","increment","index","indexes","indicator","initial","initrans","insert","interface","intersect",\n
+"into","is",\n
+"key",\n
+"level","library","like","limited","local","lock","log","logging","long","loop",\n
+"master","maxextents","maxtrans","member","minextents","minus","mislabel","mode","modify","multiset",\n
+"new","next","no","noaudit","nocompress","nologging","noparallel","not","nowait","number_base",\n
+"object","of","off","offline","on","online","only","open","option","or","order","out",\n
+"package","parallel","partition","pctfree","pctincrease","pctused","pls_integer","positive","positiven","pragma","primary","prior",\n
+"private","privileges","procedure","public",\n
+"raise","range","raw","read","rebuild","record","ref","references","refresh","release","rename","replace","resource","restrict","return",\n
+"returning","reverse","revoke","rollback","row","rowid","rowlabel","rownum","rows","run",\n
+"savepoint","schema","segment","select","separate","session","set","share","snapshot","some","space","split","sql","start","statement",\n
+"storage","subtype","successful","synonym",\n
+"tabauth","table","tables","tablespace","task","terminate","then","to","trigger","truncate","type",\n
+"union","unique","unlimited","unrecoverable","unusable","update","use","using",\n
+"validate","value","values","variable","view","views",\n
+"when","whenever","where","while","with","work"\n
+  ]);\n
+\n
+  var types = wordRegexp([\n
+"bfile","blob",\n
+"character","clob",\n
+"dec",\n
+"float",\n
+"int","integer",\n
+"mlslabel",\n
+"natural","naturaln","nchar","nclob","number","numeric","nvarchar2",\n
+"real","rowtype",\n
+"signtype","smallint","string",\n
+"varchar","varchar2"\n
+  ]);\n
+\n
+  var operators = wordRegexp([\n
+    ":=", "<", "<=", "==", "!=", "<>", ">", ">=", "like", "rlike", "in", "xor", "between"\n
+  ]);\n
+\n
+  var operatorChars = /[*+\\-<>=&|:\\/]/;\n
+\n
+  var tokenizeSql = (function() {\n
+    function normal(source, setState) {\n
+      var ch = source.next();\n
+      if (ch == "@" || ch == "$") {\n
+        source.nextWhileMatches(/[\\w\\d]/);\n
+        return "plsql-var";\n
+      }\n
+      else if (ch == "\\"" || ch == "\'" || ch == "`") {\n
+        setState(inLiteral(ch));\n
+        return null;\n
+      }\n
+      else if (ch == "," || ch == ";") {\n
+        return "plsql-separator"\n
+      }\n
+      else if (ch == \'-\') {\n
+        if (source.peek() == "-") {\n
+          while (!source.endOfLine()) source.next();\n
+          return "plsql-comment";\n
+        }\n
+        else if (/\\d/.test(source.peek())) {\n
+          source.nextWhileMatches(/\\d/);\n
+          if (source.peek() == \'.\') {\n
+            source.next();\n
+            source.nextWhileMatches(/\\d/);\n
+          }\n
+          return "plsql-number";\n
+        }\n
+        else\n
+          return "plsql-operator";\n
+      }\n
+      else if (operatorChars.test(ch)) {\n
+        source.nextWhileMatches(operatorChars);\n
+        return "plsql-operator";\n
+      }\n
+      else if (/\\d/.test(ch)) {\n
+        source.nextWhileMatches(/\\d/);\n
+        if (source.peek() == \'.\') {\n
+          source.next();\n
+          source.nextWhileMatches(/\\d/);\n
+        }\n
+        return "plsql-number";\n
+      }\n
+      else if (/[()]/.test(ch)) {\n
+        return "plsql-punctuation";\n
+      }\n
+      else {\n
+        source.nextWhileMatches(/[_\\w\\d]/);\n
+        var word = source.get(), type;\n
+        if (operators.test(word))\n
+          type = "plsql-operator";\n
+        else if (keywords.test(word))\n
+          type = "plsql-keyword";\n
+        else if (functions.test(word))\n
+          type = "plsql-function";\n
+        else if (types.test(word))\n
+          type = "plsql-type";\n
+        else\n
+          type = "plsql-word";\n
+        return {style: type, content: word};\n
+      }\n
+    }\n
+\n
+    function inLiteral(quote) {\n
+      return function(source, setState) {\n
+        var escaped = false;\n
+        while (!source.endOfLine()) {\n
+          var ch = source.next();\n
+          if (ch == quote && !escaped) {\n
+            setState(normal);\n
+            break;\n
+          }\n
+          escaped = !escaped && ch == "\\\\";\n
+        }\n
+        return quote == "`" ? "plsql-word" : "plsql-literal";\n
+      };\n
+    }\n
+\n
+    return function(source, startState) {\n
+      return tokenizer(source, startState || normal);\n
+    };\n
+  })();\n
+\n
+  function indentSql(context) {\n
+    return function(nextChars) {\n
+      var firstChar = nextChars && nextChars.charAt(0);\n
+      var closing = context && firstChar == context.type;\n
+      if (!context)\n
+        return 0;\n
+      else if (context.align)\n
+        return context.col - (closing ? context.width : 0);\n
+      else\n
+        return context.indent + (closing ? 0 : indentUnit);\n
+    }\n
+  }\n
+\n
+  function parseSql(source) {\n
+    var tokens = tokenizeSql(source);\n
+    var context = null, indent = 0, col = 0;\n
+    function pushContext(type, width, align) {\n
+      context = {prev: context, indent: indent, col: col, type: type, width: width, align: align};\n
+    }\n
+    function popContext() {\n
+      context = context.prev;\n
+    }\n
+\n
+    var iter = {\n
+      next: function() {\n
+        var token = tokens.next();\n
+        var type = token.style, content = token.content, width = token.value.length;\n
+\n
+        if (content == "\\n") {\n
+          token.indentation = indentSql(context);\n
+          indent = col = 0;\n
+          if (context && context.align == null) context.align = false;\n
+        }\n
+        else if (type == "whitespace" && col == 0) {\n
+          indent = width;\n
+        }\n
+        else if (!context && type != "plsql-comment") {\n
+          pushContext(";", 0, false);\n
+        }\n
+\n
+        if (content != "\\n") col += width;\n
+\n
+        if (type == "plsql-punctuation") {\n
+          if (content == "(")\n
+            pushContext(")", width);\n
+          else if (content == ")")\n
+            popContext();\n
+        }\n
+        else if (type == "plsql-separator" && content == ";" && context && !context.prev) {\n
+          popContext();\n
+        }\n
+\n
+        return token;\n
+      },\n
+\n
+      copy: function() {\n
+        var _context = context, _indent = indent, _col = col, _tokenState = tokens.state;\n
+        return function(source) {\n
+          tokens = tokenizeSql(source, _tokenState);\n
+          context = _context;\n
+          indent = _indent;\n
+          col = _col;\n
+          return iter;\n
+        };\n
+      }\n
+    };\n
+    return iter;\n
+  }\n
+\n
+  return {make: parseSql, electricChars: ")"};\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8244</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

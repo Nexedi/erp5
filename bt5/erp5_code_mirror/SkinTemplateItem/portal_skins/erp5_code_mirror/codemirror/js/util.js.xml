@@ -1,0 +1,174 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts87948228.96</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>util.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* A few useful utility functions. */\n
+\n
+// Capture a method on an object.\n
+function method(obj, name) {\n
+  return function() {obj[name].apply(obj, arguments);};\n
+}\n
+\n
+// The value used to signal the end of a sequence in iterators.\n
+var StopIteration = {toString: function() {return "StopIteration"}};\n
+\n
+// Apply a function to each element in a sequence.\n
+function forEach(iter, f) {\n
+  if (iter.next) {\n
+    try {while (true) f(iter.next());}\n
+    catch (e) {if (e != StopIteration) throw e;}\n
+  }\n
+  else {\n
+    for (var i = 0; i < iter.length; i++)\n
+      f(iter[i]);\n
+  }\n
+}\n
+\n
+// Map a function over a sequence, producing an array of results.\n
+function map(iter, f) {\n
+  var accum = [];\n
+  forEach(iter, function(val) {accum.push(f(val));});\n
+  return accum;\n
+}\n
+\n
+// Create a predicate function that tests a string againsts a given\n
+// regular expression. No longer used but might be used by 3rd party\n
+// parsers.\n
+function matcher(regexp){\n
+  return function(value){return regexp.test(value);};\n
+}\n
+\n
+// Test whether a DOM node has a certain CSS class. Much faster than\n
+// the MochiKit equivalent, for some reason.\n
+function hasClass(element, className){\n
+  var classes = element.className;\n
+  return classes && new RegExp("(^| )" + className + "($| )").test(classes);\n
+}\n
+\n
+// Insert a DOM node after another node.\n
+function insertAfter(newNode, oldNode) {\n
+  var parent = oldNode.parentNode;\n
+  parent.insertBefore(newNode, oldNode.nextSibling);\n
+  return newNode;\n
+}\n
+\n
+function removeElement(node) {\n
+  if (node.parentNode)\n
+    node.parentNode.removeChild(node);\n
+}\n
+\n
+function clearElement(node) {\n
+  while (node.firstChild)\n
+    node.removeChild(node.firstChild);\n
+}\n
+\n
+// Check whether a node is contained in another one.\n
+function isAncestor(node, child) {\n
+  while (child = child.parentNode) {\n
+    if (node == child)\n
+      return true;\n
+  }\n
+  return false;\n
+}\n
+\n
+// The non-breaking space character.\n
+var nbsp = "\\u00a0";\n
+var matching = {"{": "}", "[": "]", "(": ")",\n
+                "}": "{", "]": "[", ")": "("};\n
+\n
+// Standardize a few unportable event properties.\n
+function normalizeEvent(event) {\n
+  if (!event.stopPropagation) {\n
+    event.stopPropagation = function() {this.cancelBubble = true;};\n
+    event.preventDefault = function() {this.returnValue = false;};\n
+  }\n
+  if (!event.stop) {\n
+    event.stop = function() {\n
+      this.stopPropagation();\n
+      this.preventDefault();\n
+    };\n
+  }\n
+\n
+  if (event.type == "keypress") {\n
+    event.code = (event.charCode == null) ? event.keyCode : event.charCode;\n
+    event.character = String.fromCharCode(event.code);\n
+  }\n
+  return event;\n
+}\n
+\n
+// Portably register event handlers.\n
+function addEventHandler(node, type, handler, removeFunc) {\n
+  function wrapHandler(event) {\n
+    handler(normalizeEvent(event || window.event));\n
+  }\n
+  if (typeof node.addEventListener == "function") {\n
+    node.addEventListener(type, wrapHandler, false);\n
+    if (removeFunc) return function() {node.removeEventListener(type, wrapHandler, false);};\n
+  }\n
+  else {\n
+    node.attachEvent("on" + type, wrapHandler);\n
+    if (removeFunc) return function() {node.detachEvent("on" + type, wrapHandler);};\n
+  }\n
+}\n
+\n
+function nodeText(node) {\n
+  return node.textContent || node.innerText || node.nodeValue || "";\n
+}\n
+\n
+function nodeTop(node) {\n
+  var top = 0;\n
+  while (node.offsetParent) {\n
+    top += node.offsetTop;\n
+    node = node.offsetParent;\n
+  }\n
+  return top;\n
+}\n
+\n
+function isBR(node) {\n
+  var nn = node.nodeName;\n
+  return nn == "BR" || nn == "br";\n
+}\n
+function isSpan(node) {\n
+  var nn = node.nodeName;\n
+  return nn == "SPAN" || nn == "span";\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3491</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts87948228.94</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>xqcolors-dark.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>\n
+.editbox {\n
+  margin: .4em;\n
+  padding: 0;\n
+  font-family: monospace;\n
+  font-size: 10pt;\n
+  color: white;\n
+  background-color: black;\n
+  line-height: 16px;\n
+}\n
+\n
+span.word {\n
+    color:white;\n
+}\n
+\n
+span.xqueryKeyword {\n
+  color: #ffbd40; \n
+  /* font-weight: bold; */\n
+}\n
+\n
+span.xqueryComment {\n
+  color: #CDCDCD;\n
+  font-style:italic;\n
+}\n
+\n
+span.xqueryModifier {\n
+color:#6c8cd5;\n
+  font-weight: bold;\n
+}\n
+\n
+span.xqueryType {\n
+  color:#6c8cd5;\n
+  font-weight: bold;\n
+}\n
+\n
+span.xqueryAtom {\n
+  color:#6c8cd5;\n
+  font-weight: bold;  \n
+}\n
+\n
+span.xqueryString {\n
+  color: #9fee00;\n
+}\n
+\n
+span.xqueryRegexp {\n
+  color: rgb(128,0,64);\n
+}\n
+\n
+span.xqueryNumber {\n
+  color: rgb(255,0,0); \n
+}\n
+\n
+span.xqueryVariable {\n
+\n
+}\n
+\n
+span.xqueryFunction {\n
+    color:#FFF700;\n
+}\n
+\n
+span.xqueryLocalvariable {\n
+    color: white;\n
+}\n
+\n
+span.xqueryProperty\n
+{\n
+  color: white;\n
+}\n
+\n
+span.xqueryOperator {\n
+  color: orange;\n
+}\n
+\n
+span.xqueryPunctuation {\n
+    color: white;\n
+}\n
+\n
+span.xquery-doc-directive {\n
+    color: white; \n
+}\n
+\n
+span.xml-tagname {\n
+    color: #ffbd40; ;\n
+}\n
+\n
+span.xml-attribute {\n
+    color: #FFF700;\n
+}\n
+\n
+span.xml-attribute-value {\n
+    color: #FFF700;\n
+    font-style:italic;\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1091</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

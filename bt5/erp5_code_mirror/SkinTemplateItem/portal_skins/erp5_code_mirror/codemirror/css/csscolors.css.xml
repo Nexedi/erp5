@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts87948228.94</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>csscolors.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>html {\n
+  cursor: text;\n
+}\n
+\n
+.editbox {\n
+  margin: .4em;\n
+  padding: 0;\n
+  font-family: monospace;\n
+  font-size: 10pt;\n
+  color: black;\n
+}\n
+\n
+pre.code, .editbox {\n
+  color: #666;\n
+}\n
+\n
+.editbox p {\n
+  margin: 0;\n
+}\n
+\n
+span.css-at {\n
+  color: #708;\n
+}\n
+\n
+span.css-unit {\n
+  color: #281;\n
+}\n
+\n
+span.css-value {\n
+  color: #708;\n
+}\n
+\n
+span.css-identifier {\n
+  color: black;\n
+}\n
+\n
+span.css-selector {\n
+  color: #11B;\n
+}\n
+\n
+span.css-important {\n
+  color: #00F;\n
+}\n
+\n
+span.css-colorcode {\n
+  color: #299;\n
+}\n
+\n
+span.css-comment {\n
+  color: #A70;\n
+}\n
+\n
+span.css-string {\n
+  color: #A22;\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>529</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

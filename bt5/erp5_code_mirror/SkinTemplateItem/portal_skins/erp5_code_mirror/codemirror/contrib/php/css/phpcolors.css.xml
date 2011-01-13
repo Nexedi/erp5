@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts87948228.92</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>phpcolors.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\n
+Copyright (c) 2008-2009 Yahoo! Inc. All rights reserved.\n
+The copyrights embodied in the content of this file are licensed by\n
+Yahoo! Inc. under the BSD (revised) open source license\n
+\n
+@author Dan Vlad Dascalescu <dandv@yahoo-inc.com>\n
+*/\n
+\n
+html {\n
+  cursor: text;\n
+}\n
+\n
+.editbox {\n
+  margin: .4em;\n
+  padding: 0;\n
+  font-family: monospace;\n
+  font-size: 10pt;\n
+}\n
+\n
+/*We should define specific styles for every element of the syntax.\n
+  the setting below will cause some annoying color to show through if we missed\n
+  defining a style for a token. This is also the "color" of the whitespace and\n
+  of the cursor.\n
+*/\n
+pre.code, .editbox {\n
+  color: red;\n
+}\n
+\n
+.editbox p {\n
+  margin: 0;\n
+}\n
+\n
+span.php-punctuation {\n
+  color: blue;\n
+}\n
+\n
+span.php-keyword {\n
+  color: #770088;\n
+  font-weight: bold;\n
+}\n
+\n
+span.php-operator {\n
+  color: blue;\n
+}\n
+\n
+/* __FILE__ etc.; http://php.net/manual/en/reserved.php */\n
+span.php-compile-time-constant {\n
+  color: #776088;\n
+  font-weight: bold;\n
+}\n
+\n
+/* output of get_defined_constants(). Differs from http://php.net/manual/en/reserved.constants.php */\n
+span.php-predefined-constant {\n
+  color: darkgreen;\n
+  font-weight: bold;\n
+}\n
+\n
+/* PHP reserved "language constructs"... echo() etc.; http://php.net/manual/en/reserved.php */\n
+span.php-reserved-language-construct {\n
+  color: green;\n
+  font-weight: bold;\n
+}\n
+\n
+/* PHP built-in functions: glob(), chr() etc.; output of get_defined_functions()["internal"] */\n
+span.php-predefined-function {\n
+  color: green;\n
+}\n
+\n
+/* PHP predefined classes: PDO, Exception etc.; output of get_declared_classes() and different from http://php.net/manual/en/reserved.classes.php */\n
+span.php-predefined-class {\n
+  color: green;\n
+}\n
+\n
+span.php-atom {\n
+  color: #228811;\n
+}\n
+\n
+/* class, interface, namespace or function names, but not $variables */\n
+span.php-t_string {\n
+  color: black;\n
+}\n
+\n
+span.php-variable {\n
+  color: black;\n
+  font-weight: bold;\n
+}\n
+\n
+\n
+span.js-localvariable {\n
+  color: #004499;\n
+}\n
+\n
+span.php-comment {\n
+  color: #AA7700;\n
+  font-stretch: condensed;\n
+/*  font-style: italic;  This causes line height to slightly change, getting line numbers out of sync */\n
+}\n
+\n
+span.php-string-single-quoted {\n
+  color: #AA2222;\n
+}\n
+/* double quoted strings allow interpolation */\n
+span.php-string-double-quoted {\n
+  color: #AA2222;\n
+  font-weight: bold;\n
+}\n
+\n
+span.syntax-error {\n
+  background-color: red;\n
+}\n
+\n
+span.deprecated {\n
+  font-size: smaller;\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2325</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

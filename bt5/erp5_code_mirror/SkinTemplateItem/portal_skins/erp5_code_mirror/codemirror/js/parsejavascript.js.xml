@@ -1,0 +1,403 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts87948228.95</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>parsejavascript.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Parse function for JavaScript. Makes use of the tokenizer from\n
+ * tokenizejavascript.js. Note that your parsers do not have to be\n
+ * this complicated -- if you don\'t want to recognize local variables,\n
+ * in many languages it is enough to just look for braces, semicolons,\n
+ * parentheses, etc, and know when you are inside a string or comment.\n
+ *\n
+ * See manual.html for more info about the parser interface.\n
+ */\n
+\n
+var JSParser = Editor.Parser = (function() {\n
+  // Token types that can be considered to be atoms.\n
+  var atomicTypes = {"atom": true, "number": true, "variable": true, "string": true, "regexp": true};\n
+  // Setting that can be used to have JSON data indent properly.\n
+  var json = false;\n
+  // Constructor for the lexical context objects.\n
+  function JSLexical(indented, column, type, align, prev, info) {\n
+    // indentation at start of this line\n
+    this.indented = indented;\n
+    // column at which this scope was opened\n
+    this.column = column;\n
+    // type of scope (\'vardef\', \'stat\' (statement), \'form\' (special form), \'[\', \'{\', or \'(\')\n
+    this.type = type;\n
+    // \'[\', \'{\', or \'(\' blocks that have any text after their opening\n
+    // character are said to be \'aligned\' -- any lines below are\n
+    // indented all the way to the opening character.\n
+    if (align != null)\n
+      this.align = align;\n
+    // Parent scope, if any.\n
+    this.prev = prev;\n
+    this.info = info;\n
+  }\n
+\n
+  // My favourite JavaScript indentation rules.\n
+  function indentJS(lexical) {\n
+    return function(firstChars) {\n
+      var firstChar = firstChars && firstChars.charAt(0), type = lexical.type;\n
+      var closing = firstChar == type;\n
+      if (type == "vardef")\n
+        return lexical.indented + 4;\n
+      else if (type == "form" && firstChar == "{")\n
+        return lexical.indented;\n
+      else if (type == "stat" || type == "form")\n
+        return lexical.indented + indentUnit;\n
+      else if (lexical.info == "switch" && !closing)\n
+        return lexical.indented + (/^(?:case|default)\\b/.test(firstChars) ? indentUnit : 2 * indentUnit);\n
+      else if (lexical.align)\n
+        return lexical.column - (closing ? 1 : 0);\n
+      else\n
+        return lexical.indented + (closing ? 0 : indentUnit);\n
+    };\n
+  }\n
+\n
+  // The parser-iterator-producing function itself.\n
+  function parseJS(input, basecolumn) {\n
+    // Wrap the input in a token stream\n
+    var tokens = tokenizeJavaScript(input);\n
+    // The parser state. cc is a stack of actions that have to be\n
+    // performed to finish the current statement. For example we might\n
+    // know that we still need to find a closing parenthesis and a\n
+    // semicolon. Actions at the end of the stack go first. It is\n
+    // initialized with an infinitely looping action that consumes\n
+    // whole statements.\n
+    var cc = [json ? expressions : statements];\n
+    // Context contains information about the current local scope, the\n
+    // variables defined in that, and the scopes above it.\n
+    var context = null;\n
+    // The lexical scope, used mostly for indentation.\n
+    var lexical = new JSLexical((basecolumn || 0) - indentUnit, 0, "block", false);\n
+    // Current column, and the indentation at the start of the current\n
+    // line. Used to create lexical scope objects.\n
+    var column = 0;\n
+    var indented = 0;\n
+    // Variables which are used by the mark, cont, and pass functions\n
+    // below to communicate with the driver loop in the \'next\'\n
+    // function.\n
+    var consume, marked;\n
+  \n
+    // The iterator object.\n
+    var parser = {next: next, copy: copy};\n
+\n
+    function next(){\n
+      // Start by performing any \'lexical\' actions (adjusting the\n
+      // lexical variable), or the operations below will be working\n
+      // with the wrong lexical state.\n
+      while(cc[cc.length - 1].lex)\n
+        cc.pop()();\n
+\n
+      // Fetch a token.\n
+      var token = tokens.next();\n
+\n
+      // Adjust column and indented.\n
+      if (token.type == "whitespace" && column == 0)\n
+        indented = token.value.length;\n
+      column += token.value.length;\n
+      if (token.content == "\\n"){\n
+        indented = column = 0;\n
+        // If the lexical scope\'s align property is still undefined at\n
+        // the end of the line, it is an un-aligned scope.\n
+        if (!("align" in lexical))\n
+          lexical.align = false;\n
+        // Newline tokens get an indentation function associated with\n
+        // them.\n
+        token.indentation = indentJS(lexical);\n
+      }\n
+      // No more processing for meaningless tokens.\n
+      if (token.type == "whitespace" || token.type == "comment")\n
+        return token;\n
+      // When a meaningful token is found and the lexical scope\'s\n
+      // align is undefined, it is an aligned scope.\n
+      if (!("align" in lexical))\n
+        lexical.align = true;\n
+\n
+      // Execute actions until one \'consumes\' the token and we can\n
+      // return it.\n
+      while(true) {\n
+        consume = marked = false;\n
+        // Take and execute the topmost action.\n
+        cc.pop()(token.type, token.content);\n
+        if (consume){\n
+          // Marked is used to change the style of the current token.\n
+          if (marked)\n
+            token.style = marked;\n
+          // Here we differentiate between local and global variables.\n
+          else if (token.type == "variable" && inScope(token.content))\n
+            token.style = "js-localvariable";\n
+          return token;\n
+        }\n
+      }\n
+    }\n
+\n
+    // This makes a copy of the parser state. It stores all the\n
+    // stateful variables in a closure, and returns a function that\n
+    // will restore them when called with a new input stream. Note\n
+    // that the cc array has to be copied, because it is contantly\n
+    // being modified. Lexical objects are not mutated, and context\n
+    // objects are not mutated in a harmful way, so they can be shared\n
+    // between runs of the parser.\n
+    function copy(){\n
+      var _context = context, _lexical = lexical, _cc = cc.concat([]), _tokenState = tokens.state;\n
+  \n
+      return function copyParser(input){\n
+        context = _context;\n
+        lexical = _lexical;\n
+        cc = _cc.concat([]); // copies the array\n
+        column = indented = 0;\n
+        tokens = tokenizeJavaScript(input, _tokenState);\n
+        return parser;\n
+      };\n
+    }\n
+\n
+    // Helper function for pushing a number of actions onto the cc\n
+    // stack in reverse order.\n
+    function push(fs){\n
+      for (var i = fs.length - 1; i >= 0; i--)\n
+        cc.push(fs[i]);\n
+    }\n
+    // cont and pass are used by the action functions to add other\n
+    // actions to the stack. cont will cause the current token to be\n
+    // consumed, pass will leave it for the next action.\n
+    function cont(){\n
+      push(arguments);\n
+      consume = true;\n
+    }\n
+    function pass(){\n
+      push(arguments);\n
+      consume = false;\n
+    }\n
+    // Used to change the style of the current token.\n
+    function mark(style){\n
+      marked = style;\n
+    }\n
+\n
+    // Push a new scope. Will automatically link the current scope.\n
+    function pushcontext(){\n
+      context = {prev: context, vars: {"this": true, "arguments": true}};\n
+    }\n
+    // Pop off the current scope.\n
+    function popcontext(){\n
+      context = context.prev;\n
+    }\n
+    // Register a variable in the current scope.\n
+    function register(varname){\n
+      if (context){\n
+        mark("js-variabledef");\n
+        context.vars[varname] = true;\n
+      }\n
+    }\n
+    // Check whether a variable is defined in the current scope.\n
+    function inScope(varname){\n
+      var cursor = context;\n
+      while (cursor) {\n
+        if (cursor.vars[varname])\n
+          return true;\n
+        cursor = cursor.prev;\n
+      }\n
+      return false;\n
+    }\n
+  \n
+    // Push a new lexical context of the given type.\n
+    function pushlex(type, info) {\n
+      var result = function(){\n
+        lexical = new JSLexical(indented, column, type, null, lexical, info)\n
+      };\n
+      result.lex = true;\n
+      return result;\n
+    }\n
+    // Pop off the current lexical context.\n
+    function poplex(){\n
+      if (lexical.type == ")")\n
+        indented = lexical.indented;\n
+      lexical = lexical.prev;\n
+    }\n
+    poplex.lex = true;\n
+    // The \'lex\' flag on these actions is used by the \'next\' function\n
+    // to know they can (and have to) be ran before moving on to the\n
+    // next token.\n
+  \n
+    // Creates an action that discards tokens until it finds one of\n
+    // the given type.\n
+    function expect(wanted){\n
+      return function expecting(type){\n
+        if (type == wanted) cont();\n
+        else if (wanted == ";") pass();\n
+        else cont(arguments.callee);\n
+      };\n
+    }\n
+\n
+    // Looks for a statement, and then calls itself.\n
+    function statements(type){\n
+      return pass(statement, statements);\n
+    }\n
+    function expressions(type){\n
+      return pass(expression, expressions);\n
+    }\n
+    // Dispatches various types of statements based on the type of the\n
+    // current token.\n
+    function statement(type){\n
+      if (type == "var") cont(pushlex("vardef"), vardef1, expect(";"), poplex);\n
+      else if (type == "keyword a") cont(pushlex("form"), expression, statement, poplex);\n
+      else if (type == "keyword b") cont(pushlex("form"), statement, poplex);\n
+      else if (type == "{") cont(pushlex("}"), block, poplex);\n
+      else if (type == ";") cont();\n
+      else if (type == "function") cont(functiondef);\n
+      else if (type == "for") cont(pushlex("form"), expect("("), pushlex(")"), forspec1, expect(")"), poplex, statement, poplex);\n
+      else if (type == "variable") cont(pushlex("stat"), maybelabel);\n
+      else if (type == "switch") cont(pushlex("form"), expression, pushlex("}", "switch"), expect("{"), block, poplex, poplex);\n
+      else if (type == "case") cont(expression, expect(":"));\n
+      else if (type == "default") cont(expect(":"));\n
+      else if (type == "catch") cont(pushlex("form"), pushcontext, expect("("), funarg, expect(")"), statement, poplex, popcontext);\n
+      else pass(pushlex("stat"), expression, expect(";"), poplex);\n
+    }\n
+    // Dispatch expression types.\n
+    function expression(type){\n
+      if (atomicTypes.hasOwnProperty(type)) cont(maybeoperator);\n
+      else if (type == "function") cont(functiondef);\n
+      else if (type == "keyword c") cont(expression);\n
+      else if (type == "(") cont(pushlex(")"), expression, expect(")"), poplex, maybeoperator);\n
+      else if (type == "operator") cont(expression);\n
+      else if (type == "[") cont(pushlex("]"), commasep(expression, "]"), poplex, maybeoperator);\n
+      else if (type == "{") cont(pushlex("}"), commasep(objprop, "}"), poplex, maybeoperator);\n
+      else cont();\n
+    }\n
+    // Called for places where operators, function calls, or\n
+    // subscripts are valid. Will skip on to the next action if none\n
+    // is found.\n
+    function maybeoperator(type, value){\n
+      if (type == "operator" && /\\+\\+|--/.test(value)) cont(maybeoperator);\n
+      else if (type == "operator") cont(expression);\n
+      else if (type == ";") pass();\n
+      else if (type == "(") cont(pushlex(")"), commasep(expression, ")"), poplex, maybeoperator);\n
+      else if (type == ".") cont(property, maybeoperator);\n
+      else if (type == "[") cont(pushlex("]"), expression, expect("]"), poplex, maybeoperator);\n
+    }\n
+    // When a statement starts with a variable name, it might be a\n
+    // label. If no colon follows, it\'s a regular statement.\n
+    function maybelabel(type){\n
+      if (type == ":") cont(poplex, statement);\n
+      else pass(maybeoperator, expect(";"), poplex);\n
+    }\n
+    // Property names need to have their style adjusted -- the\n
+    // tokenizer thinks they are variables.\n
+    function property(type){\n
+      if (type == "variable") {mark("js-property"); cont();}\n
+    }\n
+    // This parses a property and its value in an object literal.\n
+    function objprop(type){\n
+      if (type == "variable") mark("js-property");\n
+      if (atomicTypes.hasOwnProperty(type)) cont(expect(":"), expression);\n
+    }\n
+    // Parses a comma-separated list of the things that are recognized\n
+    // by the \'what\' argument.\n
+    function commasep(what, end){\n
+      function proceed(type) {\n
+        if (type == ",") cont(what, proceed);\n
+        else if (type == end) cont();\n
+        else cont(expect(end));\n
+      }\n
+      return function commaSeparated(type) {\n
+        if (type == end) cont();\n
+        else pass(what, proceed);\n
+      };\n
+    }\n
+    // Look for statements until a closing brace is found.\n
+    function block(type){\n
+      if (type == "}") cont();\n
+      else pass(statement, block);\n
+    }\n
+    // Variable definitions are split into two actions -- 1 looks for\n
+    // a name or the end of the definition, 2 looks for an \'=\' sign or\n
+    // a comma.\n
+    function vardef1(type, value){\n
+      if (type == "variable"){register(value); cont(vardef2);}\n
+      else cont();\n
+    }\n
+    function vardef2(type, value){\n
+      if (value == "=") cont(expression, vardef2);\n
+      else if (type == ",") cont(vardef1);\n
+    }\n
+    // For loops.\n
+    function forspec1(type){\n
+      if (type == "var") cont(vardef1, forspec2);\n
+      else if (type == ";") pass(forspec2);\n
+      else if (type == "variable") cont(formaybein);\n
+      else pass(forspec2);\n
+    }\n
+    function formaybein(type, value){\n
+      if (value == "in") cont(expression);\n
+      else cont(maybeoperator, forspec2);\n
+    }\n
+    function forspec2(type, value){\n
+      if (type == ";") cont(forspec3);\n
+      else if (value == "in") cont(expression);\n
+      else cont(expression, expect(";"), forspec3);\n
+    }\n
+    function forspec3(type) {\n
+      if (type == ")") pass();\n
+      else cont(expression);\n
+    }\n
+    // A function definition creates a new context, and the variables\n
+    // in its argument list have to be added to this context.\n
+    function functiondef(type, value){\n
+      if (type == "variable"){register(value); cont(functiondef);}\n
+      else if (type == "(") cont(pushcontext, commasep(funarg, ")"), statement, popcontext);\n
+    }\n
+    function funarg(type, value){\n
+      if (type == "variable"){register(value); cont();}\n
+    }\n
+  \n
+    return parser;\n
+  }\n
+\n
+  return {\n
+    make: parseJS,\n
+    electricChars: "{}:",\n
+    configure: function(obj) {\n
+      if (obj.json != null) json = obj.json;\n
+    }\n
+  };\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>13942</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

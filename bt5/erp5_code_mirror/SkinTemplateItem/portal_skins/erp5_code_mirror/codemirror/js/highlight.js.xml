@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts87948228.95</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>highlight.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+// Minimal framing needed to use CodeMirror-style parsers to highlight\n
+// code. Load this along with tokenize.js, stringstream.js, and your\n
+// parser. Then call highlightText, passing a string as the first\n
+// argument, and as the second argument either a callback function\n
+// that will be called with an array of SPAN nodes for every line in\n
+// the code, or a DOM node to which to append these spans, and\n
+// optionally (not needed if you only loaded one parser) a parser\n
+// object.\n
+\n
+// Stuff from util.js that the parsers are using.\n
+var StopIteration = {toString: function() {return "StopIteration"}};\n
+\n
+var Editor = {};\n
+var indentUnit = 2;\n
+\n
+(function(){\n
+  function normaliseString(string) {\n
+    var tab = "";\n
+    for (var i = 0; i < indentUnit; i++) tab += " ";\n
+\n
+    string = string.replace(/\\t/g, tab).replace(/\\u00a0/g, " ").replace(/\\r\\n?/g, "\\n");\n
+    var pos = 0, parts = [], lines = string.split("\\n");\n
+    for (var line = 0; line < lines.length; line++) {\n
+      if (line != 0) parts.push("\\n");\n
+      parts.push(lines[line]);\n
+    }\n
+\n
+    return {\n
+      next: function() {\n
+        if (pos < parts.length) return parts[pos++];\n
+        else throw StopIteration;\n
+      }\n
+    };\n
+  }\n
+\n
+  window.highlightText = function(string, callback, parser) {\n
+    parser = (parser || Editor.Parser).make(stringStream(normaliseString(string)));\n
+    var line = [];\n
+    if (callback.nodeType == 1) {\n
+      var node = callback;\n
+      callback = function(line) {\n
+        for (var i = 0; i < line.length; i++)\n
+          node.appendChild(line[i]);\n
+        node.appendChild(document.createElement("BR"));\n
+      };\n
+    }\n
+\n
+    try {\n
+      while (true) {\n
+        var token = parser.next();\n
+        if (token.value == "\\n") {\n
+          callback(line);\n
+          line = [];\n
+        }\n
+        else {\n
+          var span = document.createElement("SPAN");\n
+          span.className = token.style;\n
+          span.appendChild(document.createTextNode(token.value));\n
+          line.push(span);\n
+        }\n
+      }\n
+    }\n
+    catch (e) {\n
+      if (e != StopIteration) throw e;\n
+    }\n
+    if (line.length) callback(line);\n
+  }\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2091</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

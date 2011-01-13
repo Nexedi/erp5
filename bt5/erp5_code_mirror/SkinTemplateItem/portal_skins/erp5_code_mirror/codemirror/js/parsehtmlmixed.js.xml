@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts87948228.95</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>parsehtmlmixed.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+var HTMLMixedParser = Editor.Parser = (function() {\n
+  if (!(CSSParser && JSParser && XMLParser))\n
+    throw new Error("CSS, JS, and XML parsers must be loaded for HTML mixed mode to work.");\n
+  XMLParser.configure({useHTMLKludges: true});\n
+\n
+  function parseMixed(stream) {\n
+    var htmlParser = XMLParser.make(stream), localParser = null, inTag = false;\n
+    var iter = {next: top, copy: copy};\n
+\n
+    function top() {\n
+      var token = htmlParser.next();\n
+      if (token.content == "<")\n
+        inTag = true;\n
+      else if (token.style == "xml-tagname" && inTag === true)\n
+        inTag = token.content.toLowerCase();\n
+      else if (token.content == ">") {\n
+        if (inTag == "script")\n
+          iter.next = local(JSParser, "</script");\n
+        else if (inTag == "style")\n
+          iter.next = local(CSSParser, "</style");\n
+        inTag = false;\n
+      }\n
+      return token;\n
+    }\n
+    function local(parser, tag) {\n
+      var baseIndent = htmlParser.indentation();\n
+      localParser = parser.make(stream, baseIndent + indentUnit);\n
+      return function() {\n
+        if (stream.lookAhead(tag, false, false, true)) {\n
+          localParser = null;\n
+          iter.next = top;\n
+          return top();\n
+        }\n
+\n
+        var token = localParser.next();\n
+        var lt = token.value.lastIndexOf("<"), sz = Math.min(token.value.length - lt, tag.length);\n
+        if (lt != -1 && token.value.slice(lt, lt + sz).toLowerCase() == tag.slice(0, sz) &&\n
+            stream.lookAhead(tag.slice(sz), false, false, true)) {\n
+          stream.push(token.value.slice(lt));\n
+          token.value = token.value.slice(0, lt);\n
+        }\n
+\n
+        if (token.indentation) {\n
+          var oldIndent = token.indentation;\n
+          token.indentation = function(chars) {\n
+            if (chars == "</")\n
+              return baseIndent;\n
+            else\n
+              return oldIndent(chars);\n
+          }\n
+        }\n
+\n
+        return token;\n
+      };\n
+    }\n
+\n
+    function copy() {\n
+      var _html = htmlParser.copy(), _local = localParser && localParser.copy(),\n
+          _next = iter.next, _inTag = inTag;\n
+      return function(_stream) {\n
+        stream = _stream;\n
+        htmlParser = _html(_stream);\n
+        localParser = _local && _local(_stream);\n
+        iter.next = _next;\n
+        inTag = _inTag;\n
+        return iter;\n
+      };\n
+    }\n
+    return iter;\n
+  }\n
+\n
+  return {make: parseMixed, electricChars: "{}/:"};\n
+\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2372</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

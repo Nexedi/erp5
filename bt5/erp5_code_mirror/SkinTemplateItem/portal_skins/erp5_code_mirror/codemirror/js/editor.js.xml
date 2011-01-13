@@ -1,0 +1,1637 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts87948228.95</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>editor.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* The Editor object manages the content of the editable frame. It\n
+ * catches events, colours nodes, and indents lines. This file also\n
+ * holds some functions for transforming arbitrary DOM structures into\n
+ * plain sequences of <span> and <br> elements\n
+ */\n
+\n
+var internetExplorer = document.selection && window.ActiveXObject && /MSIE/.test(navigator.userAgent);\n
+var webkit = /AppleWebKit/.test(navigator.userAgent);\n
+var safari = /Apple Computers, Inc/.test(navigator.vendor);\n
+var gecko = /gecko\\/(\\d{8})/i.test(navigator.userAgent);\n
+var mac = /Mac/.test(navigator.platform);\n
+\n
+// TODO this is related to the backspace-at-end-of-line bug. Remove\n
+// this if Opera gets their act together, make the version check more\n
+// broad if they don\'t.\n
+var brokenOpera = window.opera && /Version\\/10.[56]/.test(navigator.userAgent);\n
+// TODO remove this once WebKit 533 becomes less common.\n
+var slowWebkit = /AppleWebKit\\/533/.test(navigator.userAgent);\n
+\n
+// Make sure a string does not contain two consecutive \'collapseable\'\n
+// whitespace characters.\n
+function makeWhiteSpace(n) {\n
+  var buffer = [], nb = true;\n
+  for (; n > 0; n--) {\n
+    buffer.push((nb || n == 1) ? nbsp : " ");\n
+    nb ^= true;\n
+  }\n
+  return buffer.join("");\n
+}\n
+\n
+// Create a set of white-space characters that will not be collapsed\n
+// by the browser, but will not break text-wrapping either.\n
+function fixSpaces(string) {\n
+  if (string.charAt(0) == " ") string = nbsp + string.slice(1);\n
+  return string.replace(/\\t/g, function() {return makeWhiteSpace(indentUnit);})\n
+    .replace(/[ \\u00a0]{2,}/g, function(s) {return makeWhiteSpace(s.length);});\n
+}\n
+\n
+function cleanText(text) {\n
+  return text.replace(/\\u00a0/g, " ");\n
+}\n
+\n
+// Create a SPAN node with the expected properties for document part\n
+// spans.\n
+function makePartSpan(value) {\n
+  var text = value;\n
+  if (value.nodeType == 3) text = value.nodeValue;\n
+  else value = document.createTextNode(text);\n
+\n
+  var span = document.createElement("SPAN");\n
+  span.isPart = true;\n
+  span.appendChild(value);\n
+  span.currentText = text;\n
+  return span;\n
+}\n
+\n
+// On webkit, when the last BR of the document does not have text\n
+// behind it, the cursor can not be put on the line after it. This\n
+// makes pressing enter at the end of the document occasionally do\n
+// nothing (or at least seem to do nothing). To work around it, this\n
+// function makes sure the document ends with a span containing a\n
+// zero-width space character. The traverseDOM iterator filters such\n
+// character out again, so that the parsers won\'t see them. This\n
+// function is called from a few strategic places to make sure the\n
+// zwsp is restored after the highlighting process eats it.\n
+var webkitLastLineHack = webkit ?\n
+  function(container) {\n
+    var last = container.lastChild;\n
+    if (!last || !last.hackBR) {\n
+      var br = document.createElement("BR");\n
+      br.hackBR = true;\n
+      container.appendChild(br);\n
+    }\n
+  } : function() {};\n
+\n
+var Editor = (function(){\n
+  // The HTML elements whose content should be suffixed by a newline\n
+  // when converting them to flat text.\n
+  var newlineElements = {"P": true, "DIV": true, "LI": true};\n
+\n
+  function asEditorLines(string) {\n
+    var tab = makeWhiteSpace(indentUnit);\n
+    return map(string.replace(/\\t/g, tab).replace(/\\u00a0/g, " ").replace(/\\r\\n?/g, "\\n").split("\\n"), fixSpaces);\n
+  }\n
+\n
+  // Helper function for traverseDOM. Flattens an arbitrary DOM node\n
+  // into an array of textnodes and <br> tags.\n
+  function simplifyDOM(root, atEnd) {\n
+    var result = [];\n
+    var leaving = true;\n
+\n
+    function simplifyNode(node, top) {\n
+      if (node.nodeType == 3) {\n
+        var text = node.nodeValue = fixSpaces(node.nodeValue.replace(/\\r/g, "").replace(/\\n/g, " "));\n
+        if (text.length) leaving = false;\n
+        result.push(node);\n
+      }\n
+      else if (isBR(node) && node.childNodes.length == 0) {\n
+        leaving = true;\n
+        result.push(node);\n
+      }\n
+      else {\n
+        for (var n = node.firstChild; n; n = n.nextSibling) simplifyNode(n);\n
+        if (!leaving && newlineElements.hasOwnProperty(node.nodeName.toUpperCase())) {\n
+          leaving = true;\n
+          if (!atEnd || !top)\n
+            result.push(document.createElement("BR"));\n
+        }\n
+      }\n
+    }\n
+\n
+    simplifyNode(root, true);\n
+    return result;\n
+  }\n
+\n
+  // Creates a MochiKit-style iterator that goes over a series of DOM\n
+  // nodes. The values it yields are strings, the textual content of\n
+  // the nodes. It makes sure that all nodes up to and including the\n
+  // one whose text is being yielded have been \'normalized\' to be just\n
+  // <span> and <br> elements.\n
+  function traverseDOM(start){\n
+    var nodeQueue = [];\n
+\n
+    // Create a function that can be used to insert nodes after the\n
+    // one given as argument.\n
+    function pointAt(node){\n
+      var parent = node.parentNode;\n
+      var next = node.nextSibling;\n
+      return function(newnode) {\n
+        parent.insertBefore(newnode, next);\n
+      };\n
+    }\n
+    var point = null;\n
+\n
+    // This an Opera-specific hack -- always insert an empty span\n
+    // between two BRs, because Opera\'s cursor code gets terribly\n
+    // confused when the cursor is between two BRs.\n
+    var afterBR = true;\n
+\n
+    // Insert a normalized node at the current point. If it is a text\n
+    // node, wrap it in a <span>, and give that span a currentText\n
+    // property -- this is used to cache the nodeValue, because\n
+    // directly accessing nodeValue is horribly slow on some browsers.\n
+    // The dirty property is used by the highlighter to determine\n
+    // which parts of the document have to be re-highlighted.\n
+    function insertPart(part){\n
+      var text = "\\n";\n
+      if (part.nodeType == 3) {\n
+        select.snapshotChanged();\n
+        part = makePartSpan(part);\n
+        text = part.currentText;\n
+        afterBR = false;\n
+      }\n
+      else {\n
+        if (afterBR && window.opera)\n
+          point(makePartSpan(""));\n
+        afterBR = true;\n
+      }\n
+      part.dirty = true;\n
+      nodeQueue.push(part);\n
+      point(part);\n
+      return text;\n
+    }\n
+\n
+    // Extract the text and newlines from a DOM node, insert them into\n
+    // the document, and return the textual content. Used to replace\n
+    // non-normalized nodes.\n
+    function writeNode(node, end) {\n
+      var simplified = simplifyDOM(node, end);\n
+      for (var i = 0; i < simplified.length; i++)\n
+        simplified[i] = insertPart(simplified[i]);\n
+      return simplified.join("");\n
+    }\n
+\n
+    // Check whether a node is a normalized <span> element.\n
+    function partNode(node){\n
+      if (node.isPart && node.childNodes.length == 1 && node.firstChild.nodeType == 3) {\n
+        node.currentText = node.firstChild.nodeValue;\n
+        return !/[\\n\\t\\r]/.test(node.currentText);\n
+      }\n
+      return false;\n
+    }\n
+\n
+    // Advance to next node, return string for current node.\n
+    function next() {\n
+      if (!start) throw StopIteration;\n
+      var node = start;\n
+      start = node.nextSibling;\n
+\n
+      if (partNode(node)){\n
+        nodeQueue.push(node);\n
+        afterBR = false;\n
+        return node.currentText;\n
+      }\n
+      else if (isBR(node)) {\n
+        if (afterBR && window.opera)\n
+          node.parentNode.insertBefore(makePartSpan(""), node);\n
+        nodeQueue.push(node);\n
+        afterBR = true;\n
+        return "\\n";\n
+      }\n
+      else {\n
+        var end = !node.nextSibling;\n
+        point = pointAt(node);\n
+        removeElement(node);\n
+        return writeNode(node, end);\n
+      }\n
+    }\n
+\n
+    // MochiKit iterators are objects with a next function that\n
+    // returns the next value or throws StopIteration when there are\n
+    // no more values.\n
+    return {next: next, nodes: nodeQueue};\n
+  }\n
+\n
+  // Determine the text size of a processed node.\n
+  function nodeSize(node) {\n
+    return isBR(node) ? 1 : node.currentText.length;\n
+  }\n
+\n
+  // Search backwards through the top-level nodes until the next BR or\n
+  // the start of the frame.\n
+  function startOfLine(node) {\n
+    while (node && !isBR(node)) node = node.previousSibling;\n
+    return node;\n
+  }\n
+  function endOfLine(node, container) {\n
+    if (!node) node = container.firstChild;\n
+    else if (isBR(node)) node = node.nextSibling;\n
+\n
+    while (node && !isBR(node)) node = node.nextSibling;\n
+    return node;\n
+  }\n
+\n
+  function time() {return new Date().getTime();}\n
+\n
+  // Client interface for searching the content of the editor. Create\n
+  // these by calling CodeMirror.getSearchCursor. To use, call\n
+  // findNext on the resulting object -- this returns a boolean\n
+  // indicating whether anything was found, and can be called again to\n
+  // skip to the next find. Use the select and replace methods to\n
+  // actually do something with the found locations.\n
+  function SearchCursor(editor, string, from, caseFold) {\n
+    this.editor = editor;\n
+    this.history = editor.history;\n
+    this.history.commit();\n
+    this.valid = !!string;\n
+    this.atOccurrence = false;\n
+    if (caseFold == undefined) caseFold = string == string.toLowerCase();\n
+\n
+    function getText(node){\n
+      var line = cleanText(editor.history.textAfter(node));\n
+      return (caseFold ? line.toLowerCase() : line);\n
+    }\n
+\n
+    var topPos = {node: null, offset: 0};\n
+    if (from && typeof from == "object" && typeof from.character == "number") {\n
+      editor.checkLine(from.line);\n
+      var pos = {node: from.line, offset: from.character};\n
+      this.pos = {from: pos, to: pos};\n
+    }\n
+    else if (from) {\n
+      this.pos = {from: select.cursorPos(editor.container, true) || topPos,\n
+                  to: select.cursorPos(editor.container, false) || topPos};\n
+    }\n
+    else {\n
+      this.pos = {from: topPos, to: topPos};\n
+    }\n
+\n
+    if (caseFold) string = string.toLowerCase();\n
+    // Create a matcher function based on the kind of string we have.\n
+    var target = string.split("\\n");\n
+    this.matches = (target.length == 1) ?\n
+      // For one-line strings, searching can be done simply by calling\n
+      // indexOf or lastIndexOf on the current line.\n
+      function(reverse, node, offset) {\n
+        var line = getText(node), len = string.length, match;\n
+        if (reverse ? (offset >= len && (match = line.lastIndexOf(string, offset - len)) != -1)\n
+                    : (match = line.indexOf(string, offset)) != -1)\n
+          return {from: {node: node, offset: match},\n
+                  to: {node: node, offset: match + len}};\n
+      } :\n
+      // Multi-line strings require internal iteration over lines, and\n
+      // some clunky checks to make sure the first match ends at the\n
+      // end of the line and the last match starts at the start.\n
+      function(reverse, node, offset) {\n
+        var idx = (reverse ? target.length - 1 : 0), match = target[idx], line = getText(node);\n
+        var offsetA = (reverse ? line.indexOf(match) + match.length : line.lastIndexOf(match));\n
+        if (reverse ? offsetA >= offset || offsetA != match.length\n
+                    : offsetA <= offset || offsetA != line.length - match.length)\n
+          return;\n
+\n
+        var pos = node;\n
+        while (true) {\n
+          if (reverse && !pos) return;\n
+          pos = (reverse ? this.history.nodeBefore(pos) : this.history.nodeAfter(pos) );\n
+          if (!reverse && !pos) return;\n
+\n
+          line = getText(pos);\n
+          match = target[reverse ? --idx : ++idx];\n
+\n
+          if (idx > 0 && idx < target.length - 1) {\n
+            if (line != match) return;\n
+            else continue;\n
+          }\n
+          var offsetB = (reverse ? line.lastIndexOf(match) : line.indexOf(match) + match.length);\n
+          if (reverse ? offsetB != line.length - match.length : offsetB != match.length)\n
+            return;\n
+          return {from: {node: reverse ? pos : node, offset: reverse ? offsetB : offsetA},\n
+                  to: {node: reverse ? node : pos, offset: reverse ? offsetA : offsetB}};\n
+        }\n
+      };\n
+  }\n
+\n
+  SearchCursor.prototype = {\n
+    findNext: function() {return this.find(false);},\n
+    findPrevious: function() {return this.find(true);},\n
+\n
+    find: function(reverse) {\n
+      if (!this.valid) return false;\n
+\n
+      var self = this, pos = reverse ? this.pos.from : this.pos.to,\n
+          node = pos.node, offset = pos.offset;\n
+      // Reset the cursor if the current line is no longer in the DOM tree.\n
+      if (node && !node.parentNode) {\n
+        node = null; offset = 0;\n
+      }\n
+      function savePosAndFail() {\n
+        var pos = {node: node, offset: offset};\n
+        self.pos = {from: pos, to: pos};\n
+        self.atOccurrence = false;\n
+        return false;\n
+      }\n
+\n
+      while (true) {\n
+        if (this.pos = this.matches(reverse, node, offset)) {\n
+          this.atOccurrence = true;\n
+          return true;\n
+        }\n
+\n
+        if (reverse) {\n
+          if (!node) return savePosAndFail();\n
+          node = this.history.nodeBefore(node);\n
+          offset = this.history.textAfter(node).length;\n
+        }\n
+        else {\n
+          var next = this.history.nodeAfter(node);\n
+          if (!next) {\n
+            offset = this.history.textAfter(node).length;\n
+            return savePosAndFail();\n
+          }\n
+          node = next;\n
+          offset = 0;\n
+        }        \n
+      }\n
+    },\n
+\n
+    select: function() {\n
+      if (this.atOccurrence) {\n
+        select.setCursorPos(this.editor.container, this.pos.from, this.pos.to);\n
+        select.scrollToCursor(this.editor.container);\n
+      }\n
+    },\n
+\n
+    replace: function(string) {\n
+      if (this.atOccurrence) {\n
+        var end = this.editor.replaceRange(this.pos.from, this.pos.to, string);\n
+        this.pos.to = end;\n
+        this.atOccurrence = false;\n
+      }\n
+    },\n
+\n
+    position: function() {\n
+      if (this.atOccurrence)\n
+        return {line: this.pos.from.node, character: this.pos.from.offset};\n
+    }\n
+  };\n
+\n
+  // The Editor object is the main inside-the-iframe interface.\n
+  function Editor(options) {\n
+    this.options = options;\n
+    window.indentUnit = options.indentUnit;\n
+    this.parent = parent;\n
+    var container = this.container = document.body;\n
+    this.history = new UndoHistory(container, options.undoDepth, options.undoDelay, this);\n
+    var self = this;\n
+\n
+    if (!Editor.Parser)\n
+      throw "No parser loaded.";\n
+    if (options.parserConfig && Editor.Parser.configure)\n
+      Editor.Parser.configure(options.parserConfig);\n
+\n
+    if (!options.readOnly)\n
+      select.setCursorPos(container, {node: null, offset: 0});\n
+\n
+    this.dirty = [];\n
+    this.importCode(options.content || "");\n
+    this.history.onChange = options.onChange;\n
+\n
+    if (!options.readOnly) {\n
+      if (options.continuousScanning !== false) {\n
+        this.scanner = this.documentScanner(options.passTime);\n
+        this.delayScanning();\n
+      }\n
+\n
+      function setEditable() {\n
+        // Use contentEditable instead of designMode on IE, since designMode frames\n
+        // can not run any scripts. It would be nice if we could use contentEditable\n
+        // everywhere, but it is significantly flakier than designMode on every\n
+        // single non-IE browser.\n
+        if (document.body.contentEditable != undefined && internetExplorer)\n
+          document.body.contentEditable = "true";\n
+        else\n
+          document.designMode = "on";\n
+\n
+        // Work around issue where you have to click on the actual\n
+        // body of the document to focus it in IE, making focusing\n
+        // hard when the document is small.\n
+        if (internetExplorer && options.height != "dynamic")\n
+          document.body.style.minHeight = (frameElement.clientHeight - 2 * document.body.offsetTop - 5) + "px";\n
+\n
+        document.documentElement.style.borderWidth = "0";\n
+        if (!options.textWrapping)\n
+          container.style.whiteSpace = "nowrap";\n
+      }\n
+\n
+      // If setting the frame editable fails, try again when the user\n
+      // focus it (happens when the frame is not visible on\n
+      // initialisation, in Firefox).\n
+      try {\n
+        setEditable();\n
+      }\n
+      catch(e) {\n
+        var focusEvent = addEventHandler(document, "focus", function() {\n
+          focusEvent();\n
+          setEditable();\n
+        }, true);\n
+      }\n
+\n
+      addEventHandler(document, "keydown", method(this, "keyDown"));\n
+      addEventHandler(document, "keypress", method(this, "keyPress"));\n
+      addEventHandler(document, "keyup", method(this, "keyUp"));\n
+\n
+      function cursorActivity() {self.cursorActivity(false);}\n
+      addEventHandler(document.body, "mouseup", cursorActivity);\n
+      addEventHandler(document.body, "cut", cursorActivity);\n
+\n
+      // workaround for a gecko bug [?] where going forward and then\n
+      // back again breaks designmode (no more cursor)\n
+      if (gecko)\n
+        addEventHandler(window, "pagehide", function(){self.unloaded = true;});\n
+\n
+      addEventHandler(document.body, "paste", function(event) {\n
+        cursorActivity();\n
+        var text = null;\n
+        try {\n
+          var clipboardData = event.clipboardData || window.clipboardData;\n
+          if (clipboardData) text = clipboardData.getData(\'Text\');\n
+        }\n
+        catch(e) {}\n
+        if (text !== null) {\n
+          event.stop();\n
+          self.replaceSelection(text);\n
+          select.scrollToCursor(self.container);\n
+        }\n
+      });\n
+\n
+      if (this.options.autoMatchParens)\n
+        addEventHandler(document.body, "click", method(this, "scheduleParenHighlight"));\n
+    }\n
+    else if (!options.textWrapping) {\n
+      container.style.whiteSpace = "nowrap";\n
+    }\n
+  }\n
+\n
+  function isSafeKey(code) {\n
+    return (code >= 16 && code <= 18) || // shift, control, alt\n
+           (code >= 33 && code <= 40); // arrows, home, end\n
+  }\n
+\n
+  Editor.prototype = {\n
+    // Import a piece of code into the editor.\n
+    importCode: function(code) {\n
+      this.history.push(null, null, asEditorLines(code));\n
+      this.history.reset();\n
+    },\n
+\n
+    // Extract the code from the editor.\n
+    getCode: function() {\n
+      if (!this.container.firstChild)\n
+        return "";\n
+\n
+      var accum = [];\n
+      select.markSelection();\n
+      forEach(traverseDOM(this.container.firstChild), method(accum, "push"));\n
+      webkitLastLineHack(this.container);\n
+      select.selectMarked();\n
+      // On webkit, don\'t count last (empty) line if the webkitLastLineHack BR is present\n
+      if (webkit && this.container.lastChild.hackBR)\n
+        accum.pop();\n
+      return cleanText(accum.join(""));\n
+    },\n
+\n
+    checkLine: function(node) {\n
+      if (node === false || !(node == null || node.parentNode == this.container))\n
+        throw parent.CodeMirror.InvalidLineHandle;\n
+    },\n
+\n
+    cursorPosition: function(start) {\n
+      if (start == null) start = true;\n
+      var pos = select.cursorPos(this.container, start);\n
+      if (pos) return {line: pos.node, character: pos.offset};\n
+      else return {line: null, character: 0};\n
+    },\n
+\n
+    firstLine: function() {\n
+      return null;\n
+    },\n
+\n
+    lastLine: function() {\n
+      if (this.container.lastChild) return startOfLine(this.container.lastChild);\n
+      else return null;\n
+    },\n
+\n
+    nextLine: function(line) {\n
+      this.checkLine(line);\n
+      var end = endOfLine(line, this.container);\n
+      return end || false;\n
+    },\n
+\n
+    prevLine: function(line) {\n
+      this.checkLine(line);\n
+      if (line == null) return false;\n
+      return startOfLine(line.previousSibling);\n
+    },\n
+\n
+    visibleLineCount: function() {\n
+      var line = this.container.firstChild;\n
+      while (line && isBR(line)) line = line.nextSibling; // BR heights are unreliable\n
+      if (!line) return false;\n
+      var innerHeight = (window.innerHeight\n
+                         || document.documentElement.clientHeight\n
+                         || document.body.clientHeight);\n
+      return Math.floor(innerHeight / line.offsetHeight);\n
+    },\n
+\n
+    selectLines: function(startLine, startOffset, endLine, endOffset) {\n
+      this.checkLine(startLine);\n
+      var start = {node: startLine, offset: startOffset}, end = null;\n
+      if (endOffset !== undefined) {\n
+        this.checkLine(endLine);\n
+        end = {node: endLine, offset: endOffset};\n
+      }\n
+      select.setCursorPos(this.container, start, end);\n
+      select.scrollToCursor(this.container);\n
+    },\n
+\n
+    lineContent: function(line) {\n
+      var accum = [];\n
+      for (line = line ? line.nextSibling : this.container.firstChild;\n
+           line && !isBR(line); line = line.nextSibling)\n
+        accum.push(nodeText(line));\n
+      return cleanText(accum.join(""));\n
+    },\n
+\n
+    setLineContent: function(line, content) {\n
+      this.history.commit();\n
+      this.replaceRange({node: line, offset: 0},\n
+                        {node: line, offset: this.history.textAfter(line).length},\n
+                        content);\n
+      this.addDirtyNode(line);\n
+      this.scheduleHighlight();\n
+    },\n
+\n
+    removeLine: function(line) {\n
+      var node = line ? line.nextSibling : this.container.firstChild;\n
+      while (node) {\n
+        var next = node.nextSibling;\n
+        removeElement(node);\n
+        if (isBR(node)) break;\n
+        node = next;\n
+      }\n
+      this.addDirtyNode(line);\n
+      this.scheduleHighlight();\n
+    },\n
+\n
+    insertIntoLine: function(line, position, content) {\n
+      var before = null;\n
+      if (position == "end") {\n
+        before = endOfLine(line, this.container);\n
+      }\n
+      else {\n
+        for (var cur = line ? line.nextSibling : this.container.firstChild; cur; cur = cur.nextSibling) {\n
+          if (position == 0) {\n
+            before = cur;\n
+            break;\n
+          }\n
+          var text = nodeText(cur);\n
+          if (text.length > position) {\n
+            before = cur.nextSibling;\n
+            content = text.slice(0, position) + content + text.slice(position);\n
+            removeElement(cur);\n
+            break;\n
+          }\n
+          position -= text.length;\n
+        }\n
+      }\n
+\n
+      var lines = asEditorLines(content);\n
+      for (var i = 0; i < lines.length; i++) {\n
+        if (i > 0) this.container.insertBefore(document.createElement("BR"), before);\n
+        this.container.insertBefore(makePartSpan(lines[i]), before);\n
+      }\n
+      this.addDirtyNode(line);\n
+      this.scheduleHighlight();\n
+    },\n
+\n
+    // Retrieve the selected text.\n
+    selectedText: function() {\n
+      var h = this.history;\n
+      h.commit();\n
+\n
+      var start = select.cursorPos(this.container, true),\n
+          end = select.cursorPos(this.container, false);\n
+      if (!start || !end) return "";\n
+\n
+      if (start.node == end.node)\n
+        return h.textAfter(start.node).slice(start.offset, end.offset);\n
+\n
+      var text = [h.textAfter(start.node).slice(start.offset)];\n
+      for (var pos = h.nodeAfter(start.node); pos != end.node; pos = h.nodeAfter(pos))\n
+        text.push(h.textAfter(pos));\n
+      text.push(h.textAfter(end.node).slice(0, end.offset));\n
+      return cleanText(text.join("\\n"));\n
+    },\n
+\n
+    // Replace the selection with another piece of text.\n
+    replaceSelection: function(text) {\n
+      this.history.commit();\n
+\n
+      var start = select.cursorPos(this.container, true),\n
+          end = select.cursorPos(this.container, false);\n
+      if (!start || !end) return;\n
+\n
+      end = this.replaceRange(start, end, text);\n
+      select.setCursorPos(this.container, end);\n
+      webkitLastLineHack(this.container);\n
+    },\n
+\n
+    cursorCoords: function(start) {\n
+      var sel = select.cursorPos(this.container, start);\n
+      if (!sel) return null;\n
+      var off = sel.offset, node = sel.node, self = this;\n
+      function measureFromNode(node, xOffset) {\n
+        var y = -(document.body.scrollTop || document.documentElement.scrollTop || 0),\n
+            x = -(document.body.scrollLeft || document.documentElement.scrollLeft || 0) + xOffset;\n
+        forEach([node, window.frameElement], function(n) {\n
+          while (n) {x += n.offsetLeft; y += n.offsetTop;n = n.offsetParent;}\n
+        });\n
+        return {x: x, y: y, yBot: y + node.offsetHeight};\n
+      }\n
+      function withTempNode(text, f) {\n
+        var node = document.createElement("SPAN");\n
+        node.appendChild(document.createTextNode(text));\n
+        try {return f(node);}\n
+        finally {if (node.parentNode) node.parentNode.removeChild(node);}\n
+      }\n
+\n
+      while (off) {\n
+        node = node ? node.nextSibling : this.container.firstChild;\n
+        var txt = nodeText(node);\n
+        if (off < txt.length)\n
+          return withTempNode(txt.substr(0, off), function(tmp) {\n
+            tmp.style.position = "absolute"; tmp.style.visibility = "hidden";\n
+            tmp.className = node.className;\n
+            self.container.appendChild(tmp);\n
+            return measureFromNode(node, tmp.offsetWidth);\n
+          });\n
+        off -= txt.length;\n
+      }\n
+      if (node && isSpan(node))\n
+        return measureFromNode(node, node.offsetWidth);\n
+      else if (node && node.nextSibling && isSpan(node.nextSibling))\n
+        return measureFromNode(node.nextSibling, 0);\n
+      else\n
+        return withTempNode("\\u200b", function(tmp) {\n
+          if (node) node.parentNode.insertBefore(tmp, node.nextSibling);\n
+          else self.container.insertBefore(tmp, self.container.firstChild);\n
+          return measureFromNode(tmp, 0);\n
+        });\n
+    },\n
+\n
+    reroutePasteEvent: function() {\n
+      if (this.capturingPaste || window.opera) return;\n
+      this.capturingPaste = true;\n
+      var te = window.frameElement.CodeMirror.textareaHack;\n
+      parent.focus();\n
+      te.value = "";\n
+      te.focus();\n
+\n
+      var self = this;\n
+      this.parent.setTimeout(function() {\n
+        self.capturingPaste = false;\n
+        window.focus();\n
+        if (self.selectionSnapshot) // IE hack\n
+          window.select.setBookmark(self.container, self.selectionSnapshot);\n
+        var text = te.value;\n
+        if (text) {\n
+          self.replaceSelection(text);\n
+          select.scrollToCursor(self.container);\n
+        }\n
+      }, 10);\n
+    },\n
+\n
+    replaceRange: function(from, to, text) {\n
+      var lines = asEditorLines(text);\n
+      lines[0] = this.history.textAfter(from.node).slice(0, from.offset) + lines[0];\n
+      var lastLine = lines[lines.length - 1];\n
+      lines[lines.length - 1] = lastLine + this.history.textAfter(to.node).slice(to.offset);\n
+      var end = this.history.nodeAfter(to.node);\n
+      this.history.push(from.node, end, lines);\n
+      return {node: this.history.nodeBefore(end),\n
+              offset: lastLine.length};\n
+    },\n
+\n
+    getSearchCursor: function(string, fromCursor, caseFold) {\n
+      return new SearchCursor(this, string, fromCursor, caseFold);\n
+    },\n
+\n
+    // Re-indent the whole buffer\n
+    reindent: function() {\n
+      if (this.container.firstChild)\n
+        this.indentRegion(null, this.container.lastChild);\n
+    },\n
+\n
+    reindentSelection: function(direction) {\n
+      if (!select.somethingSelected()) {\n
+        this.indentAtCursor(direction);\n
+      }\n
+      else {\n
+        var start = select.selectionTopNode(this.container, true),\n
+            end = select.selectionTopNode(this.container, false);\n
+        if (start === false || end === false) return;\n
+        this.indentRegion(start, end, direction);\n
+      }\n
+    },\n
+\n
+    grabKeys: function(eventHandler, filter) {\n
+      this.frozen = eventHandler;\n
+      this.keyFilter = filter;\n
+    },\n
+    ungrabKeys: function() {\n
+      this.frozen = "leave";\n
+    },\n
+\n
+    setParser: function(name, parserConfig) {\n
+      Editor.Parser = window[name];\n
+      parserConfig = parserConfig || this.options.parserConfig;\n
+      if (parserConfig && Editor.Parser.configure)\n
+        Editor.Parser.configure(parserConfig);\n
+\n
+      if (this.container.firstChild) {\n
+        forEach(this.container.childNodes, function(n) {\n
+          if (n.nodeType != 3) n.dirty = true;\n
+        });\n
+        this.addDirtyNode(this.firstChild);\n
+        this.scheduleHighlight();\n
+      }\n
+    },\n
+\n
+    // Intercept enter and tab, and assign their new functions.\n
+    keyDown: function(event) {\n
+      if (this.frozen == "leave") {this.frozen = null; this.keyFilter = null;}\n
+      if (this.frozen && (!this.keyFilter || this.keyFilter(event.keyCode, event))) {\n
+        event.stop();\n
+        this.frozen(event);\n
+        return;\n
+      }\n
+\n
+      var code = event.keyCode;\n
+      // Don\'t scan when the user is typing.\n
+      this.delayScanning();\n
+      // Schedule a paren-highlight event, if configured.\n
+      if (this.options.autoMatchParens)\n
+        this.scheduleParenHighlight();\n
+\n
+      // The various checks for !altKey are there because AltGr sets both\n
+      // ctrlKey and altKey to true, and should not be recognised as\n
+      // Control.\n
+      if (code == 13) { // enter\n
+        if (event.ctrlKey && !event.altKey) {\n
+          this.reparseBuffer();\n
+        }\n
+        else {\n
+          select.insertNewlineAtCursor();\n
+          var mode = this.options.enterMode;\n
+          if (mode != "flat") this.indentAtCursor(mode == "keep" ? "keep" : undefined);\n
+          select.scrollToCursor(this.container);\n
+        }\n
+        event.stop();\n
+      }\n
+      else if (code == 9 && this.options.tabMode != "default" && !event.ctrlKey) { // tab\n
+        this.handleTab(!event.shiftKey);\n
+        event.stop();\n
+      }\n
+      else if (code == 32 && event.shiftKey && this.options.tabMode == "default") { // space\n
+        this.handleTab(true);\n
+        event.stop();\n
+      }\n
+      else if (code == 36 && !event.shiftKey && !event.ctrlKey) { // home\n
+        if (this.home()) event.stop();\n
+      }\n
+      else if (code == 35 && !event.shiftKey && !event.ctrlKey) { // end\n
+        if (this.end()) event.stop();\n
+      }\n
+      // Only in Firefox is the default behavior for PgUp/PgDn correct.\n
+      else if (code == 33 && !event.shiftKey && !event.ctrlKey && !gecko) { // PgUp\n
+        if (this.pageUp()) event.stop();\n
+      }\n
+      else if (code == 34 && !event.shiftKey && !event.ctrlKey && !gecko) {  // PgDn\n
+        if (this.pageDown()) event.stop();\n
+      }\n
+      else if ((code == 219 || code == 221) && event.ctrlKey && !event.altKey) { // [, ]\n
+        this.highlightParens(event.shiftKey, true);\n
+        event.stop();\n
+      }\n
+      else if (event.metaKey && !event.shiftKey && (code == 37 || code == 39)) { // Meta-left/right\n
+        var cursor = select.selectionTopNode(this.container);\n
+        if (cursor === false || !this.container.firstChild) return;\n
+\n
+        if (code == 37) select.focusAfterNode(startOfLine(cursor), this.container);\n
+        else {\n
+          var end = endOfLine(cursor, this.container);\n
+          select.focusAfterNode(end ? end.previousSibling : this.container.lastChild, this.container);\n
+        }\n
+        event.stop();\n
+      }\n
+      else if ((event.ctrlKey || event.metaKey) && !event.altKey) {\n
+        if ((event.shiftKey && code == 90) || code == 89) { // shift-Z, Y\n
+          select.scrollToNode(this.history.redo());\n
+          event.stop();\n
+        }\n
+        else if (code == 90 || (safari && code == 8)) { // Z, backspace\n
+          select.scrollToNode(this.history.undo());\n
+          event.stop();\n
+        }\n
+        else if (code == 83 && this.options.saveFunction) { // S\n
+          this.options.saveFunction();\n
+          event.stop();\n
+        }\n
+        else if (code == 86 && !mac) { // V\n
+          this.reroutePasteEvent();\n
+        }\n
+      }\n
+    },\n
+\n
+    // Check for characters that should re-indent the current line,\n
+    // and prevent Opera from handling enter and tab anyway.\n
+    keyPress: function(event) {\n
+      var electric = this.options.electricChars && Editor.Parser.electricChars, self = this;\n
+      // Hack for Opera, and Firefox on OS X, in which stopping a\n
+      // keydown event does not prevent the associated keypress event\n
+      // from happening, so we have to cancel enter and tab again\n
+      // here.\n
+      if ((this.frozen && (!this.keyFilter || this.keyFilter(event.keyCode || event.code, event))) ||\n
+          event.code == 13 || (event.code == 9 && this.options.tabMode != "default") ||\n
+          (event.code == 32 && event.shiftKey && this.options.tabMode == "default"))\n
+        event.stop();\n
+      else if (mac && (event.ctrlKey || event.metaKey) && event.character == "v") {\n
+        this.reroutePasteEvent();\n
+      }\n
+      else if (electric && electric.indexOf(event.character) != -1)\n
+        this.parent.setTimeout(function(){self.indentAtCursor(null);}, 0);\n
+      // Work around a bug where pressing backspace at the end of a\n
+      // line, or delete at the start, often causes the cursor to jump\n
+      // to the start of the line in Opera 10.60.\n
+      else if (brokenOpera) {\n
+        if (event.code == 8) { // backspace\n
+          var sel = select.selectionTopNode(this.container), self = this,\n
+              next = sel ? sel.nextSibling : this.container.firstChild;\n
+          if (sel !== false && next && isBR(next))\n
+            this.parent.setTimeout(function(){\n
+              if (select.selectionTopNode(self.container) == next)\n
+                select.focusAfterNode(next.previousSibling, self.container);\n
+            }, 20);\n
+        }\n
+        else if (event.code == 46) { // delete\n
+          var sel = select.selectionTopNode(this.container), self = this;\n
+          if (sel && isBR(sel)) {\n
+            this.parent.setTimeout(function(){\n
+              if (select.selectionTopNode(self.container) != sel)\n
+                select.focusAfterNode(sel, self.container);\n
+            }, 20);\n
+          }\n
+        }\n
+      }\n
+      // In 533.* WebKit versions, when the document is big, typing\n
+      // something at the end of a line causes the browser to do some\n
+      // kind of stupid heavy operation, creating delays of several\n
+      // seconds before the typed characters appear. This very crude\n
+      // hack inserts a temporary zero-width space after the cursor to\n
+      // make it not be at the end of the line.\n
+      else if (slowWebkit) {\n
+        var sel = select.selectionTopNode(this.container),\n
+            next = sel ? sel.nextSibling : this.container.firstChild;\n
+        // Doesn\'t work on empty lines, for some reason those always\n
+        // trigger the delay.\n
+        if (sel && next && isBR(next) && !isBR(sel)) {\n
+          var cheat = document.createTextNode("\\u200b");\n
+          this.container.insertBefore(cheat, next);\n
+          this.parent.setTimeout(function() {\n
+            if (cheat.nodeValue == "\\u200b") removeElement(cheat);\n
+            else cheat.nodeValue = cheat.nodeValue.replace("\\u200b", "");\n
+          }, 20);\n
+        }\n
+      }\n
+    },\n
+\n
+    // Mark the node at the cursor dirty when a non-safe key is\n
+    // released.\n
+    keyUp: function(event) {\n
+      this.cursorActivity(isSafeKey(event.keyCode));\n
+    },\n
+\n
+    // Indent the line following a given <br>, or null for the first\n
+    // line. If given a <br> element, this must have been highlighted\n
+    // so that it has an indentation method. Returns the whitespace\n
+    // element that has been modified or created (if any).\n
+    indentLineAfter: function(start, direction) {\n
+      function whiteSpaceAfter(node) {\n
+        var ws = node ? node.nextSibling : self.container.firstChild;\n
+        if (!ws || !hasClass(ws, "whitespace")) return null;\n
+        return ws;\n
+      }\n
+\n
+      // whiteSpace is the whitespace span at the start of the line,\n
+      // or null if there is no such node.\n
+      var self = this, whiteSpace = whiteSpaceAfter(start);\n
+      var newIndent = 0, curIndent = whiteSpace ? whiteSpace.currentText.length : 0;\n
+\n
+      if (direction == "keep") {\n
+        if (start) {\n
+          var prevWS = whiteSpaceAfter(startOfLine(start.previousSibling))\n
+          if (prevWS) newIndent = prevWS.currentText.length;\n
+        }\n
+      }\n
+      else {\n
+        // Sometimes the start of the line can influence the correct\n
+        // indentation, so we retrieve it.\n
+        var firstText = whiteSpace ? whiteSpace.nextSibling : (start ? start.nextSibling : this.container.firstChild);\n
+        var nextChars = (start && firstText && firstText.currentText) ? firstText.currentText : "";\n
+\n
+        // Ask the lexical context for the correct indentation, and\n
+        // compute how much this differs from the current indentation.\n
+        if (direction != null && this.options.tabMode == "shift")\n
+          newIndent = direction ? curIndent + indentUnit : Math.max(0, curIndent - indentUnit)\n
+        else if (start)\n
+          newIndent = start.indentation(nextChars, curIndent, direction);\n
+        else if (Editor.Parser.firstIndentation)\n
+          newIndent = Editor.Parser.firstIndentation(nextChars, curIndent, direction);\n
+      }\n
+      \n
+      var indentDiff = newIndent - curIndent;\n
+\n
+      // If there is too much, this is just a matter of shrinking a span.\n
+      if (indentDiff < 0) {\n
+        if (newIndent == 0) {\n
+          if (firstText) select.snapshotMove(whiteSpace.firstChild, firstText.firstChild || firstText, 0);\n
+          removeElement(whiteSpace);\n
+          whiteSpace = null;\n
+        }\n
+        else {\n
+          select.snapshotMove(whiteSpace.firstChild, whiteSpace.firstChild, indentDiff, true);\n
+          whiteSpace.currentText = makeWhiteSpace(newIndent);\n
+          whiteSpace.firstChild.nodeValue = whiteSpace.currentText;\n
+        }\n
+      }\n
+      // Not enough...\n
+      else if (indentDiff > 0) {\n
+        // If there is whitespace, we grow it.\n
+        if (whiteSpace) {\n
+          whiteSpace.currentText = makeWhiteSpace(newIndent);\n
+          whiteSpace.firstChild.nodeValue = whiteSpace.currentText;\n
+          select.snapshotMove(whiteSpace.firstChild, whiteSpace.firstChild, indentDiff, true);\n
+        }\n
+        // Otherwise, we have to add a new whitespace node.\n
+        else {\n
+          whiteSpace = makePartSpan(makeWhiteSpace(newIndent));\n
+          whiteSpace.className = "whitespace";\n
+          if (start) insertAfter(whiteSpace, start);\n
+          else this.container.insertBefore(whiteSpace, this.container.firstChild);\n
+          select.snapshotMove(firstText && (firstText.firstChild || firstText),\n
+                              whiteSpace.firstChild, newIndent, false, true);\n
+        }\n
+      }\n
+      // Make sure cursor ends up after the whitespace\n
+      else if (whiteSpace) {\n
+\tselect.snapshotMove(whiteSpace.firstChild, whiteSpace.firstChild, newIndent, false);\n
+      }\n
+      if (indentDiff != 0) this.addDirtyNode(start);\n
+    },\n
+\n
+    // Re-highlight the selected part of the document.\n
+    highlightAtCursor: function() {\n
+      var pos = select.selectionTopNode(this.container, true);\n
+      var to = select.selectionTopNode(this.container, false);\n
+      if (pos === false || to === false) return false;\n
+\n
+      select.markSelection();\n
+      if (this.highlight(pos, endOfLine(to, this.container), true, 20) === false)\n
+        return false;\n
+      select.selectMarked();\n
+      return true;\n
+    },\n
+\n
+    // When tab is pressed with text selected, the whole selection is\n
+    // re-indented, when nothing is selected, the line with the cursor\n
+    // is re-indented.\n
+    handleTab: function(direction) {\n
+      if (this.options.tabMode == "spaces")\n
+        select.insertTabAtCursor();\n
+      else\n
+        this.reindentSelection(direction);\n
+    },\n
+\n
+    // Custom home behaviour that doesn\'t land the cursor in front of\n
+    // leading whitespace unless pressed twice.\n
+    home: function() {\n
+      var cur = select.selectionTopNode(this.container, true), start = cur;\n
+      if (cur === false || !(!cur || cur.isPart || isBR(cur)) || !this.container.firstChild)\n
+        return false;\n
+\n
+      while (cur && !isBR(cur)) cur = cur.previousSibling;\n
+      var next = cur ? cur.nextSibling : this.container.firstChild;\n
+      if (next && next != start && next.isPart && hasClass(next, "whitespace"))\n
+        select.focusAfterNode(next, this.container);\n
+      else\n
+        select.focusAfterNode(cur, this.container);\n
+\n
+      select.scrollToCursor(this.container);\n
+      return true;\n
+    },\n
+\n
+    // Some browsers (Opera) don\'t manage to handle the end key\n
+    // properly in the face of vertical scrolling.\n
+    end: function() {\n
+      var cur = select.selectionTopNode(this.container, true);\n
+      if (cur === false) return false;\n
+      cur = endOfLine(cur, this.container);\n
+      if (!cur) return false;\n
+      select.focusAfterNode(cur.previousSibling, this.container);\n
+      select.scrollToCursor(this.container);\n
+      return true;\n
+    },\n
+\n
+    pageUp: function() {\n
+      var line = this.cursorPosition().line, scrollAmount = this.visibleLineCount();\n
+      if (line === false || scrollAmount === false) return false;\n
+      // Try to keep one line on the screen.\n
+      scrollAmount -= 2;\n
+      for (var i = 0; i < scrollAmount; i++) {\n
+        line = this.prevLine(line);\n
+        if (line === false) break;\n
+      }\n
+      if (i == 0) return false; // Already at first line\n
+      select.setCursorPos(this.container, {node: line, offset: 0});\n
+      select.scrollToCursor(this.container);\n
+      return true;\n
+    },\n
+\n
+    pageDown: function() {\n
+      var line = this.cursorPosition().line, scrollAmount = this.visibleLineCount();\n
+      if (line === false || scrollAmount === false) return false;\n
+      // Try to move to the last line of the current page.\n
+      scrollAmount -= 2;\n
+      for (var i = 0; i < scrollAmount; i++) {\n
+        var nextLine = this.nextLine(line);\n
+        if (nextLine === false) break;\n
+        line = nextLine;\n
+      }\n
+      if (i == 0) return false; // Already at last line\n
+      select.setCursorPos(this.container, {node: line, offset: 0});\n
+      select.scrollToCursor(this.container);\n
+      return true;\n
+    },\n
+\n
+    // Delay (or initiate) the next paren highlight event.\n
+    scheduleParenHighlight: function() {\n
+      if (this.parenEvent) this.parent.clearTimeout(this.parenEvent);\n
+      var self = this;\n
+      this.parenEvent = this.parent.setTimeout(function(){self.highlightParens();}, 300);\n
+    },\n
+\n
+    // Take the token before the cursor. If it contains a character in\n
+    // \'()[]{}\', search for the matching paren/brace/bracket, and\n
+    // highlight them in green for a moment, or red if no proper match\n
+    // was found.\n
+    highlightParens: function(jump, fromKey) {\n
+      var self = this;\n
+      // give the relevant nodes a colour.\n
+      function highlight(node, ok) {\n
+        if (!node) return;\n
+        if (self.options.markParen) {\n
+          self.options.markParen(node, ok);\n
+        }\n
+        else {\n
+          node.style.fontWeight = "bold";\n
+          node.style.color = ok ? "#8F8" : "#F88";\n
+        }\n
+      }\n
+      function unhighlight(node) {\n
+        if (!node) return;\n
+        if (self.options.unmarkParen) {\n
+          self.options.unmarkParen(node);\n
+        }\n
+        else {\n
+          node.style.fontWeight = "";\n
+          node.style.color = "";\n
+        }\n
+      }\n
+      if (!fromKey && self.highlighted) {\n
+        unhighlight(self.highlighted[0]);\n
+        unhighlight(self.highlighted[1]);\n
+      }\n
+\n
+      if (!window.parent || !window.select) return;\n
+      // Clear the event property.\n
+      if (this.parenEvent) this.parent.clearTimeout(this.parenEvent);\n
+      this.parenEvent = null;\n
+\n
+      // Extract a \'paren\' from a piece of text.\n
+      function paren(node) {\n
+        if (node.currentText) {\n
+          var match = node.currentText.match(/^[\\s\\u00a0]*([\\(\\)\\[\\]{}])[\\s\\u00a0]*$/);\n
+          return match && match[1];\n
+        }\n
+      }\n
+      // Determine the direction a paren is facing.\n
+      function forward(ch) {\n
+        return /[\\(\\[\\{]/.test(ch);\n
+      }\n
+\n
+      var ch, cursor = select.selectionTopNode(this.container, true);\n
+      if (!cursor || !this.highlightAtCursor()) return;\n
+      cursor = select.selectionTopNode(this.container, true);\n
+      if (!(cursor && ((ch = paren(cursor)) || (cursor = cursor.nextSibling) && (ch = paren(cursor)))))\n
+        return;\n
+      // We only look for tokens with the same className.\n
+      var className = cursor.className, dir = forward(ch), match = matching[ch];\n
+\n
+      // Since parts of the document might not have been properly\n
+      // highlighted, and it is hard to know in advance which part we\n
+      // have to scan, we just try, and when we find dirty nodes we\n
+      // abort, parse them, and re-try.\n
+      function tryFindMatch() {\n
+        var stack = [], ch, ok = true;\n
+        for (var runner = cursor; runner; runner = dir ? runner.nextSibling : runner.previousSibling) {\n
+          if (runner.className == className && isSpan(runner) && (ch = paren(runner))) {\n
+            if (forward(ch) == dir)\n
+              stack.push(ch);\n
+            else if (!stack.length)\n
+              ok = false;\n
+            else if (stack.pop() != matching[ch])\n
+              ok = false;\n
+            if (!stack.length) break;\n
+          }\n
+          else if (runner.dirty || !isSpan(runner) && !isBR(runner)) {\n
+            return {node: runner, status: "dirty"};\n
+          }\n
+        }\n
+        return {node: runner, status: runner && ok};\n
+      }\n
+\n
+      while (true) {\n
+        var found = tryFindMatch();\n
+        if (found.status == "dirty") {\n
+          this.highlight(found.node, endOfLine(found.node));\n
+          // Needed because in some corner cases a highlight does not\n
+          // reach a node.\n
+          found.node.dirty = false;\n
+          continue;\n
+        }\n
+        else {\n
+          highlight(cursor, found.status);\n
+          highlight(found.node, found.status);\n
+          if (fromKey)\n
+            self.parent.setTimeout(function() {unhighlight(cursor); unhighlight(found.node);}, 500);\n
+          else\n
+            self.highlighted = [cursor, found.node];\n
+          if (jump && found.node)\n
+            select.focusAfterNode(found.node.previousSibling, this.container);\n
+          break;\n
+        }\n
+      }\n
+    },\n
+\n
+    // Adjust the amount of whitespace at the start of the line that\n
+    // the cursor is on so that it is indented properly.\n
+    indentAtCursor: function(direction) {\n
+      if (!this.container.firstChild) return;\n
+      // The line has to have up-to-date lexical information, so we\n
+      // highlight it first.\n
+      if (!this.highlightAtCursor()) return;\n
+      var cursor = select.selectionTopNode(this.container, false);\n
+      // If we couldn\'t determine the place of the cursor,\n
+      // there\'s nothing to indent.\n
+      if (cursor === false)\n
+        return;\n
+      select.markSelection();\n
+      this.indentLineAfter(startOfLine(cursor), direction);\n
+      select.selectMarked();\n
+    },\n
+\n
+    // Indent all lines whose start falls inside of the current\n
+    // selection.\n
+    indentRegion: function(start, end, direction) {\n
+      var current = (start = startOfLine(start)), before = start && startOfLine(start.previousSibling);\n
+      if (!isBR(end)) end = endOfLine(end, this.container);\n
+      this.addDirtyNode(start);\n
+\n
+      do {\n
+        var next = endOfLine(current, this.container);\n
+        if (current) this.highlight(before, next, true);\n
+        this.indentLineAfter(current, direction);\n
+        before = current;\n
+        current = next;\n
+      } while (current != end);\n
+      select.setCursorPos(this.container, {node: start, offset: 0}, {node: end, offset: 0});\n
+    },\n
+\n
+    // Find the node that the cursor is in, mark it as dirty, and make\n
+    // sure a highlight pass is scheduled.\n
+    cursorActivity: function(safe) {\n
+      // pagehide event hack above\n
+      if (this.unloaded) {\n
+        window.document.designMode = "off";\n
+        window.document.designMode = "on";\n
+        this.unloaded = false;\n
+      }\n
+\n
+      if (internetExplorer) {\n
+        this.container.createTextRange().execCommand("unlink");\n
+        this.selectionSnapshot = select.getBookmark(this.container);\n
+      }\n
+\n
+      var activity = this.options.cursorActivity;\n
+      if (!safe || activity) {\n
+        var cursor = select.selectionTopNode(this.container, false);\n
+        if (cursor === false || !this.container.firstChild) return;\n
+        cursor = cursor || this.container.firstChild;\n
+        if (activity) activity(cursor);\n
+        if (!safe) {\n
+          this.scheduleHighlight();\n
+          this.addDirtyNode(cursor);\n
+        }\n
+      }\n
+    },\n
+\n
+    reparseBuffer: function() {\n
+      forEach(this.container.childNodes, function(node) {node.dirty = true;});\n
+      if (this.container.firstChild)\n
+        this.addDirtyNode(this.container.firstChild);\n
+    },\n
+\n
+    // Add a node to the set of dirty nodes, if it isn\'t already in\n
+    // there.\n
+    addDirtyNode: function(node) {\n
+      node = node || this.container.firstChild;\n
+      if (!node) return;\n
+\n
+      for (var i = 0; i < this.dirty.length; i++)\n
+        if (this.dirty[i] == node) return;\n
+\n
+      if (node.nodeType != 3)\n
+        node.dirty = true;\n
+      this.dirty.push(node);\n
+    },\n
+\n
+    allClean: function() {\n
+      return !this.dirty.length;\n
+    },\n
+\n
+    // Cause a highlight pass to happen in options.passDelay\n
+    // milliseconds. Clear the existing timeout, if one exists. This\n
+    // way, the passes do not happen while the user is typing, and\n
+    // should as unobtrusive as possible.\n
+    scheduleHighlight: function() {\n
+      // Timeouts are routed through the parent window, because on\n
+      // some browsers designMode windows do not fire timeouts.\n
+      var self = this;\n
+      this.parent.clearTimeout(this.highlightTimeout);\n
+      this.highlightTimeout = this.parent.setTimeout(function(){self.highlightDirty();}, this.options.passDelay);\n
+    },\n
+\n
+    // Fetch one dirty node, and remove it from the dirty set.\n
+    getDirtyNode: function() {\n
+      while (this.dirty.length > 0) {\n
+        var found = this.dirty.pop();\n
+        // IE8 sometimes throws an unexplainable \'invalid argument\'\n
+        // exception for found.parentNode\n
+        try {\n
+          // If the node has been coloured in the meantime, or is no\n
+          // longer in the document, it should not be returned.\n
+          while (found && found.parentNode != this.container)\n
+            found = found.parentNode;\n
+          if (found && (found.dirty || found.nodeType == 3))\n
+            return found;\n
+        } catch (e) {}\n
+      }\n
+      return null;\n
+    },\n
+\n
+    // Pick dirty nodes, and highlight them, until options.passTime\n
+    // milliseconds have gone by. The highlight method will continue\n
+    // to next lines as long as it finds dirty nodes. It returns\n
+    // information about the place where it stopped. If there are\n
+    // dirty nodes left after this function has spent all its lines,\n
+    // it shedules another highlight to finish the job.\n
+    highlightDirty: function(force) {\n
+      // Prevent FF from raising an error when it is firing timeouts\n
+      // on a page that\'s no longer loaded.\n
+      if (!window.parent || !window.select) return false;\n
+\n
+      if (!this.options.readOnly) select.markSelection();\n
+      var start, endTime = force ? null : time() + this.options.passTime;\n
+      while ((time() < endTime || force) && (start = this.getDirtyNode())) {\n
+        var result = this.highlight(start, endTime);\n
+        if (result && result.node && result.dirty)\n
+          this.addDirtyNode(result.node.nextSibling);\n
+      }\n
+      if (!this.options.readOnly) select.selectMarked();\n
+      if (start) this.scheduleHighlight();\n
+      return this.dirty.length == 0;\n
+    },\n
+\n
+    // Creates a function that, when called through a timeout, will\n
+    // continuously re-parse the document.\n
+    documentScanner: function(passTime) {\n
+      var self = this, pos = null;\n
+      return function() {\n
+        // FF timeout weirdness workaround.\n
+        if (!window.parent || !window.select) return;\n
+        // If the current node is no longer in the document... oh\n
+        // well, we start over.\n
+        if (pos && pos.parentNode != self.container)\n
+          pos = null;\n
+        select.markSelection();\n
+        var result = self.highlight(pos, time() + passTime, true);\n
+        select.selectMarked();\n
+        var newPos = result ? (result.node && result.node.nextSibling) : null;\n
+        pos = (pos == newPos) ? null : newPos;\n
+        self.delayScanning();\n
+      };\n
+    },\n
+\n
+    // Starts the continuous scanning process for this document after\n
+    // a given interval.\n
+    delayScanning: function() {\n
+      if (this.scanner) {\n
+        this.parent.clearTimeout(this.documentScan);\n
+        this.documentScan = this.parent.setTimeout(this.scanner, this.options.continuousScanning);\n
+      }\n
+    },\n
+\n
+    // The function that does the actual highlighting/colouring (with\n
+    // help from the parser and the DOM normalizer). Its interface is\n
+    // rather overcomplicated, because it is used in different\n
+    // situations: ensuring that a certain line is highlighted, or\n
+    // highlighting up to X milliseconds starting from a certain\n
+    // point. The \'from\' argument gives the node at which it should\n
+    // start. If this is null, it will start at the beginning of the\n
+    // document. When a timestamp is given with the \'target\' argument,\n
+    // it will stop highlighting at that time. If this argument holds\n
+    // a DOM node, it will highlight until it reaches that node. If at\n
+    // any time it comes across two \'clean\' lines (no dirty nodes), it\n
+    // will stop, except when \'cleanLines\' is true. maxBacktrack is\n
+    // the maximum number of lines to backtrack to find an existing\n
+    // parser instance. This is used to give up in situations where a\n
+    // highlight would take too long and freeze the browser interface.\n
+    highlight: function(from, target, cleanLines, maxBacktrack){\n
+      var container = this.container, self = this, active = this.options.activeTokens;\n
+      var endTime = (typeof target == "number" ? target : null);\n
+\n
+      if (!container.firstChild)\n
+        return false;\n
+      // Backtrack to the first node before from that has a partial\n
+      // parse stored.\n
+      while (from && (!from.parserFromHere || from.dirty)) {\n
+        if (maxBacktrack != null && isBR(from) && (--maxBacktrack) < 0)\n
+          return false;\n
+        from = from.previousSibling;\n
+      }\n
+      // If we are at the end of the document, do nothing.\n
+      if (from && !from.nextSibling)\n
+        return false;\n
+\n
+      // Check whether a part (<span> node) and the corresponding token\n
+      // match.\n
+      function correctPart(token, part){\n
+        return !part.reduced && part.currentText == token.value && part.className == token.style;\n
+      }\n
+      // Shorten the text associated with a part by chopping off\n
+      // characters from the front. Note that only the currentText\n
+      // property gets changed. For efficiency reasons, we leave the\n
+      // nodeValue alone -- we set the reduced flag to indicate that\n
+      // this part must be replaced.\n
+      function shortenPart(part, minus){\n
+        part.currentText = part.currentText.substring(minus);\n
+        part.reduced = true;\n
+      }\n
+      // Create a part corresponding to a given token.\n
+      function tokenPart(token){\n
+        var part = makePartSpan(token.value);     \n
+        part.className = token.style;\n
+        return part;\n
+      }\n
+\n
+      function maybeTouch(node) {\n
+        if (node) {\n
+          var old = node.oldNextSibling;\n
+          if (lineDirty || old === undefined || node.nextSibling != old)\n
+            self.history.touch(node);\n
+          node.oldNextSibling = node.nextSibling;\n
+        }\n
+        else {\n
+          var old = self.container.oldFirstChild;\n
+          if (lineDirty || old === undefined || self.container.firstChild != old)\n
+            self.history.touch(null);\n
+          self.container.oldFirstChild = self.container.firstChild;\n
+        }\n
+      }\n
+\n
+      // Get the token stream. If from is null, we start with a new\n
+      // parser from the start of the frame, otherwise a partial parse\n
+      // is resumed.\n
+      var traversal = traverseDOM(from ? from.nextSibling : container.firstChild),\n
+          stream = stringStream(traversal),\n
+          parsed = from ? from.parserFromHere(stream) : Editor.Parser.make(stream);\n
+\n
+      function surroundedByBRs(node) {\n
+        return (node.previousSibling == null || isBR(node.previousSibling)) &&\n
+               (node.nextSibling == null || isBR(node.nextSibling));\n
+      }\n
+\n
+      // parts is an interface to make it possible to \'delay\' fetching\n
+      // the next DOM node until we are completely done with the one\n
+      // before it. This is necessary because often the next node is\n
+      // not yet available when we want to proceed past the current\n
+      // one.\n
+      var parts = {\n
+        current: null,\n
+        // Fetch current node.\n
+        get: function(){\n
+          if (!this.current)\n
+            this.current = traversal.nodes.shift();\n
+          return this.current;\n
+        },\n
+        // Advance to the next part (do not fetch it yet).\n
+        next: function(){\n
+          this.current = null;\n
+        },\n
+        // Remove the current part from the DOM tree, and move to the\n
+        // next.\n
+        remove: function(){\n
+          container.removeChild(this.get());\n
+          this.current = null;\n
+        },\n
+        // Advance to the next part that is not empty, discarding empty\n
+        // parts.\n
+        getNonEmpty: function(){\n
+          var part = this.get();\n
+          // Allow empty nodes when they are alone on a line, needed\n
+          // for the FF cursor bug workaround (see select.js,\n
+          // insertNewlineAtCursor).\n
+          while (part && isSpan(part) && part.currentText == "") {\n
+            // Leave empty nodes that are alone on a line alone in\n
+            // Opera, since that browsers doesn\'t deal well with\n
+            // having 2 BRs in a row.\n
+            if (window.opera && surroundedByBRs(part)) {\n
+              this.next();\n
+              part = this.get();\n
+            }\n
+            else {\n
+              var old = part;\n
+              this.remove();\n
+              part = this.get();\n
+              // Adjust selection information, if any. See select.js for details.\n
+              select.snapshotMove(old.firstChild, part && (part.firstChild || part), 0);\n
+            }\n
+          }\n
+          \n
+          return part;\n
+        }\n
+      };\n
+\n
+      var lineDirty = false, prevLineDirty = true, lineNodes = 0;\n
+\n
+      // This forEach loops over the tokens from the parsed stream, and\n
+      // at the same time uses the parts object to proceed through the\n
+      // corresponding DOM nodes.\n
+      forEach(parsed, function(token){\n
+        var part = parts.getNonEmpty();\n
+\n
+        if (token.value == "\\n"){\n
+          // The idea of the two streams actually staying synchronized\n
+          // is such a long shot that we explicitly check.\n
+          if (!isBR(part))\n
+            throw "Parser out of sync. Expected BR.";\n
+\n
+          if (part.dirty || !part.indentation) lineDirty = true;\n
+          maybeTouch(from);\n
+          from = part;\n
+\n
+          // Every <br> gets a copy of the parser state and a lexical\n
+          // context assigned to it. The first is used to be able to\n
+          // later resume parsing from this point, the second is used\n
+          // for indentation.\n
+          part.parserFromHere = parsed.copy();\n
+          part.indentation = token.indentation;\n
+          part.dirty = false;\n
+\n
+          // If the target argument wasn\'t an integer, go at least\n
+          // until that node.\n
+          if (endTime == null && part == target) throw StopIteration;\n
+\n
+          // A clean line with more than one node means we are done.\n
+          // Throwing a StopIteration is the way to break out of a\n
+          // MochiKit forEach loop.\n
+          if ((endTime != null && time() >= endTime) || (!lineDirty && !prevLineDirty && lineNodes > 1 && !cleanLines))\n
+            throw StopIteration;\n
+          prevLineDirty = lineDirty; lineDirty = false; lineNodes = 0;\n
+          parts.next();\n
+        }\n
+        else {\n
+          if (!isSpan(part))\n
+            throw "Parser out of sync. Expected SPAN.";\n
+          if (part.dirty)\n
+            lineDirty = true;\n
+          lineNodes++;\n
+\n
+          // If the part matches the token, we can leave it alone.\n
+          if (correctPart(token, part)){\n
+            part.dirty = false;\n
+            parts.next();\n
+          }\n
+          // Otherwise, we have to fix it.\n
+          else {\n
+            lineDirty = true;\n
+            // Insert the correct part.\n
+            var newPart = tokenPart(token);\n
+            container.insertBefore(newPart, part);\n
+            if (active) active(newPart, token, self);\n
+            var tokensize = token.value.length;\n
+            var offset = 0;\n
+            // Eat up parts until the text for this token has been\n
+            // removed, adjusting the stored selection info (see\n
+            // select.js) in the process.\n
+            while (tokensize > 0) {\n
+              part = parts.get();\n
+              var partsize = part.currentText.length;\n
+              select.snapshotReplaceNode(part.firstChild, newPart.firstChild, tokensize, offset);\n
+              if (partsize > tokensize){\n
+                shortenPart(part, tokensize);\n
+                tokensize = 0;\n
+              }\n
+              else {\n
+                tokensize -= partsize;\n
+                offset += partsize;\n
+                parts.remove();\n
+              }\n
+            }\n
+          }\n
+        }\n
+      });\n
+      maybeTouch(from);\n
+      webkitLastLineHack(this.container);\n
+\n
+      // The function returns some status information that is used by\n
+      // hightlightDirty to determine whether and where it has to\n
+      // continue.\n
+      return {node: parts.getNonEmpty(),\n
+              dirty: lineDirty};\n
+    }\n
+  };\n
+\n
+  return Editor;\n
+})();\n
+\n
+addEventHandler(window, "load", function() {\n
+  var CodeMirror = window.frameElement.CodeMirror;\n
+  var e = CodeMirror.editor = new Editor(CodeMirror.options);\n
+  this.parent.setTimeout(method(CodeMirror, "init"), 0);\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>60366</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

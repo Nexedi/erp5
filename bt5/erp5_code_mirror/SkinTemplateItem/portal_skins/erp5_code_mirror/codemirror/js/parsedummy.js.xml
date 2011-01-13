@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts87948228.95</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>parsedummy.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>var DummyParser = Editor.Parser = (function() {\n
+  function tokenizeDummy(source) {\n
+    while (!source.endOfLine()) source.next();\n
+    return "text";\n
+  }\n
+  function parseDummy(source) {\n
+    function indentTo(n) {return function() {return n;}}\n
+    source = tokenizer(source, tokenizeDummy);\n
+    var space = 0;\n
+\n
+    var iter = {\n
+      next: function() {\n
+        var tok = source.next();\n
+        if (tok.type == "whitespace") {\n
+          if (tok.value == "\\n") tok.indentation = indentTo(space);\n
+          else space = tok.value.length;\n
+        }\n
+        return tok;\n
+      },\n
+      copy: function() {\n
+        var _space = space;\n
+        return function(_source) {\n
+          space = _space;\n
+          source = tokenizer(_source, tokenizeDummy);\n
+          return iter;\n
+        };\n
+      }\n
+    };\n
+    return iter;\n
+  }\n
+  return {make: parseDummy};\n
+})();\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>845</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

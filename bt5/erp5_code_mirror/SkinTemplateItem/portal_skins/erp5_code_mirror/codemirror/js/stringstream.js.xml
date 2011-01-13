@@ -1,0 +1,189 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts87948228.95</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>stringstream.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* String streams are the things fed to parsers (which can feed them\n
+ * to a tokenizer if they want). They provide peek and next methods\n
+ * for looking at the current character (next \'consumes\' this\n
+ * character, peek does not), and a get method for retrieving all the\n
+ * text that was consumed since the last time get was called.\n
+ *\n
+ * An easy mistake to make is to let a StopIteration exception finish\n
+ * the token stream while there are still characters pending in the\n
+ * string stream (hitting the end of the buffer while parsing a\n
+ * token). To make it easier to detect such errors, the stringstreams\n
+ * throw an exception when this happens.\n
+ */\n
+\n
+// Make a stringstream stream out of an iterator that returns strings.\n
+// This is applied to the result of traverseDOM (see codemirror.js),\n
+// and the resulting stream is fed to the parser.\n
+var stringStream = function(source){\n
+  // String that\'s currently being iterated over.\n
+  var current = "";\n
+  // Position in that string.\n
+  var pos = 0;\n
+  // Accumulator for strings that have been iterated over but not\n
+  // get()-ed yet.\n
+  var accum = "";\n
+  // Make sure there are more characters ready, or throw\n
+  // StopIteration.\n
+  function ensureChars() {\n
+    while (pos == current.length) {\n
+      accum += current;\n
+      current = ""; // In case source.next() throws\n
+      pos = 0;\n
+      try {current = source.next();}\n
+      catch (e) {\n
+        if (e != StopIteration) throw e;\n
+        else return false;\n
+      }\n
+    }\n
+    return true;\n
+  }\n
+\n
+  return {\n
+    // peek: -> character\n
+    // Return the next character in the stream.\n
+    peek: function() {\n
+      if (!ensureChars()) return null;\n
+      return current.charAt(pos);\n
+    },\n
+    // next: -> character\n
+    // Get the next character, throw StopIteration if at end, check\n
+    // for unused content.\n
+    next: function() {\n
+      if (!ensureChars()) {\n
+        if (accum.length > 0)\n
+          throw "End of stringstream reached without emptying buffer (\'" + accum + "\').";\n
+        else\n
+          throw StopIteration;\n
+      }\n
+      return current.charAt(pos++);\n
+    },\n
+    // get(): -> string\n
+    // Return the characters iterated over since the last call to\n
+    // .get().\n
+    get: function() {\n
+      var temp = accum;\n
+      accum = "";\n
+      if (pos > 0){\n
+        temp += current.slice(0, pos);\n
+        current = current.slice(pos);\n
+        pos = 0;\n
+      }\n
+      return temp;\n
+    },\n
+    // Push a string back into the stream.\n
+    push: function(str) {\n
+      current = current.slice(0, pos) + str + current.slice(pos);\n
+    },\n
+    lookAhead: function(str, consume, skipSpaces, caseInsensitive) {\n
+      function cased(str) {return caseInsensitive ? str.toLowerCase() : str;}\n
+      str = cased(str);\n
+      var found = false;\n
+\n
+      var _accum = accum, _pos = pos;\n
+      if (skipSpaces) this.nextWhileMatches(/[\\s\\u00a0]/);\n
+\n
+      while (true) {\n
+        var end = pos + str.length, left = current.length - pos;\n
+        if (end <= current.length) {\n
+          found = str == cased(current.slice(pos, end));\n
+          pos = end;\n
+          break;\n
+        }\n
+        else if (str.slice(0, left) == cased(current.slice(pos))) {\n
+          accum += current; current = "";\n
+          try {current = source.next();}\n
+          catch (e) {break;}\n
+          pos = 0;\n
+          str = str.slice(left);\n
+        }\n
+        else {\n
+          break;\n
+        }\n
+      }\n
+\n
+      if (!(found && consume)) {\n
+        current = accum.slice(_accum.length) + current;\n
+        pos = _pos;\n
+        accum = _accum;\n
+      }\n
+\n
+      return found;\n
+    },\n
+\n
+    // Utils built on top of the above\n
+    // more: -> boolean\n
+    // Produce true if the stream isn\'t empty.\n
+    more: function() {\n
+      return this.peek() !== null;\n
+    },\n
+    applies: function(test) {\n
+      var next = this.peek();\n
+      return (next !== null && test(next));\n
+    },\n
+    nextWhile: function(test) {\n
+      var next;\n
+      while ((next = this.peek()) !== null && test(next))\n
+        this.next();\n
+    },\n
+    matches: function(re) {\n
+      var next = this.peek();\n
+      return (next !== null && re.test(next));\n
+    },\n
+    nextWhileMatches: function(re) {\n
+      var next;\n
+      while ((next = this.peek()) !== null && re.test(next))\n
+        this.next();\n
+    },\n
+    equals: function(ch) {\n
+      return ch === this.peek();\n
+    },\n
+    endOfLine: function() {\n
+      var next = this.peek();\n
+      return next == null || next == "\\n";\n
+    }\n
+  };\n
+};\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4363</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

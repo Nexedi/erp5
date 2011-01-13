@@ -1,0 +1,272 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts87948228.94</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>parsesql.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+var SqlParser = Editor.Parser = (function() {\n
+\n
+  function wordRegexp(words) {\n
+    return new RegExp("^(?:" + words.join("|") + ")$", "i");\n
+  }\n
+\n
+  var functions = wordRegexp([\n
+    "abs", "acos", "adddate", "aes_encrypt", "aes_decrypt", "ascii",\n
+    "asin", "atan", "atan2", "avg", "benchmark", "bin", "bit_and",\n
+    "bit_count", "bit_length", "bit_or", "cast", "ceil", "ceiling",\n
+    "char_length", "character_length", "coalesce", "concat", "concat_ws",\n
+    "connection_id", "conv", "convert", "cos", "cot", "count", "curdate",\n
+    "current_date", "current_time", "current_timestamp", "current_user",\n
+    "curtime", "database", "date_add", "date_format", "date_sub",\n
+    "dayname", "dayofmonth", "dayofweek", "dayofyear", "decode", "degrees",\n
+    "des_encrypt", "des_decrypt", "elt", "encode", "encrypt", "exp",\n
+    "export_set", "extract", "field", "find_in_set", "floor", "format",\n
+    "found_rows", "from_days", "from_unixtime", "get_lock", "greatest",\n
+    "group_unique_users", "hex", "ifnull", "inet_aton", "inet_ntoa", "instr",\n
+    "interval", "is_free_lock", "isnull", "last_insert_id", "lcase", "least",\n
+    "left", "length", "ln", "load_file", "locate", "log", "log2", "log10",\n
+    "lower", "lpad", "ltrim", "make_set", "master_pos_wait", "max", "md5",\n
+    "mid", "min", "mod", "monthname", "now", "nullif", "oct", "octet_length",\n
+    "ord", "password", "period_add", "period_diff", "pi", "position",\n
+    "pow", "power", "quarter", "quote", "radians", "rand", "release_lock",\n
+    "repeat", "reverse", "right", "round", "rpad", "rtrim", "sec_to_time",\n
+    "session_user", "sha", "sha1", "sign", "sin", "soundex", "space", "sqrt",\n
+    "std", "stddev", "strcmp", "subdate", "substring", "substring_index",\n
+    "sum", "sysdate", "system_user", "tan", "time_format", "time_to_sec",\n
+    "to_days", "trim", "ucase", "unique_users", "unix_timestamp", "upper",\n
+    "user", "version", "week", "weekday", "yearweek"\n
+  ]);\n
+\n
+  var keywords = wordRegexp([\n
+    "alter", "grant", "revoke", "primary", "key", "table", "start", "top",\n
+    "transaction", "select", "update", "insert", "delete", "create", "describe",\n
+    "from", "into", "values", "where", "join", "inner", "left", "natural", "and",\n
+    "or", "in", "not", "xor", "like", "using", "on", "order", "group", "by",\n
+    "asc", "desc", "limit", "offset", "union", "all", "as", "distinct", "set",\n
+    "commit", "rollback", "replace", "view", "database", "separator", "if",\n
+    "exists", "null", "truncate", "status", "show", "lock", "unique", "having"\n
+  ]);\n
+\n
+  var types = wordRegexp([\n
+    "bigint", "binary", "bit", "blob", "bool", "char", "character", "date",\n
+    "datetime", "dec", "decimal", "double", "enum", "float", "float4", "float8",\n
+    "int", "int1", "int2", "int3", "int4", "int8", "integer", "long", "longblob",\n
+    "longtext", "mediumblob", "mediumint", "mediumtext", "middleint", "nchar",\n
+    "numeric", "real", "set", "smallint", "text", "time", "timestamp", "tinyblob",\n
+    "tinyint", "tinytext", "varbinary", "varchar", "year"\n
+  ]);\n
+\n
+  var operators = wordRegexp([\n
+    ":=", "<", "<=", "==", "<>", ">", ">=", "like", "rlike", "in", "xor", "between"\n
+  ]);\n
+\n
+  var operatorChars = /[*+\\-<>=&|:\\/]/;\n
+\n
+  var tokenizeSql = (function() {\n
+    function normal(source, setState) {\n
+      var ch = source.next();\n
+      if (ch == "@" || ch == "$") {\n
+        source.nextWhileMatches(/[\\w\\d]/);\n
+        return "sql-var";\n
+      }\n
+      else if (ch == "["){\n
+\t    setState(inAlias(ch))\n
+\t  \treturn null;\n
+      }\n
+      else if (ch == "\\"" || ch == "\'" || ch == "`") {\n
+        setState(inLiteral(ch));\n
+        return null;\n
+      }\n
+      else if (ch == "," || ch == ";") {\n
+        return "sql-separator"\n
+      }\n
+      else if (ch == \'-\') {\n
+        if (source.peek() == "-") {\n
+          while (!source.endOfLine()) source.next();\n
+          return "sql-comment";\n
+        }\n
+        else if (/\\d/.test(source.peek())) {\n
+          source.nextWhileMatches(/\\d/);\n
+          if (source.peek() == \'.\') {\n
+            source.next();\n
+            source.nextWhileMatches(/\\d/);\n
+          }\n
+          return "sql-number";\n
+        }\n
+        else\n
+          return "sql-operator";\n
+      }\n
+      else if (operatorChars.test(ch)) {\n
+        source.nextWhileMatches(operatorChars);\n
+        return "sql-operator";\n
+      }\n
+      else if (/\\d/.test(ch)) {\n
+        source.nextWhileMatches(/\\d/);\n
+        if (source.peek() == \'.\') {\n
+          source.next();\n
+          source.nextWhileMatches(/\\d/);\n
+        }\n
+        return "sql-number";\n
+      }\n
+      else if (/[()]/.test(ch)) {\n
+        return "sql-punctuation";\n
+      }\n
+      else {\n
+        source.nextWhileMatches(/[_\\w\\d]/);\n
+        var word = source.get(), type;\n
+        if (operators.test(word))\n
+          type = "sql-operator";\n
+        else if (keywords.test(word))\n
+          type = "sql-keyword";\n
+        else if (functions.test(word))\n
+          type = "sql-function";\n
+        else if (types.test(word))\n
+          type = "sql-type";\n
+        else\n
+          type = "sql-word";\n
+        return {style: type, content: word};\n
+      }\n
+    }\n
+\n
+    function inAlias(quote) {\n
+\t  return function(source, setState) {\n
+\t    while (!source.endOfLine()) {\n
+\t\t  var ch = source.next();\n
+\t\t  if (ch == \']\') {\n
+\t\t    setState(normal);\n
+\t\t    break;\n
+\t\t  }\n
+\t    }\n
+\t    return "sql-word";\n
+\t  }\n
+    }\n
+\n
+    function inLiteral(quote) {\n
+      return function(source, setState) {\n
+        var escaped = false;\n
+        while (!source.endOfLine()) {\n
+          var ch = source.next();\n
+          if (ch == quote && !escaped) {\n
+            setState(normal);\n
+            break;\n
+          }\n
+          escaped = !escaped && ch == "\\\\";\n
+        }\n
+        return quote == "`" ? "sql-word" : "sql-literal";\n
+      };\n
+    }\n
+\n
+    return function(source, startState) {\n
+      return tokenizer(source, startState || normal);\n
+    };\n
+  })();\n
+\n
+  function indentSql(context) {\n
+    return function(nextChars) {\n
+      var firstChar = nextChars && nextChars.charAt(0);\n
+      var closing = context && firstChar == context.type;\n
+      if (!context)\n
+        return 0;\n
+      else if (context.align)\n
+        return context.col - (closing ? context.width : 0);\n
+      else\n
+        return context.indent + (closing ? 0 : indentUnit);\n
+    }\n
+  }\n
+\n
+  function parseSql(source) {\n
+    var tokens = tokenizeSql(source);\n
+    var context = null, indent = 0, col = 0;\n
+    function pushContext(type, width, align) {\n
+      context = {prev: context, indent: indent, col: col, type: type, width: width, align: align};\n
+    }\n
+    function popContext() {\n
+      context = context.prev;\n
+    }\n
+\n
+    var iter = {\n
+      next: function() {\n
+        var token = tokens.next();\n
+        var type = token.style, content = token.content, width = token.value.length;\n
+\n
+        if (content == "\\n") {\n
+          token.indentation = indentSql(context);\n
+          indent = col = 0;\n
+          if (context && context.align == null) context.align = false;\n
+        }\n
+        else if (type == "whitespace" && col == 0) {\n
+          indent = width;\n
+        }\n
+        else if (!context && type != "sql-comment") {\n
+          pushContext(";", 0, false);\n
+        }\n
+\n
+        if (content != "\\n") col += width;\n
+\n
+        if (type == "sql-punctuation") {\n
+          if (content == "(")\n
+            pushContext(")", width);\n
+          else if (content == ")")\n
+            popContext();\n
+        }\n
+        else if (type == "sql-separator" && content == ";" && context && !context.prev) {\n
+          popContext();\n
+        }\n
+\n
+        return token;\n
+      },\n
+\n
+      copy: function() {\n
+        var _context = context, _indent = indent, _col = col, _tokenState = tokens.state;\n
+        return function(source) {\n
+          tokens = tokenizeSql(source, _tokenState);\n
+          context = _context;\n
+          indent = _indent;\n
+          col = _col;\n
+          return iter;\n
+        };\n
+      }\n
+    };\n
+    return iter;\n
+  }\n
+\n
+  return {make: parseSql, electricChars: ")"};\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>7816</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

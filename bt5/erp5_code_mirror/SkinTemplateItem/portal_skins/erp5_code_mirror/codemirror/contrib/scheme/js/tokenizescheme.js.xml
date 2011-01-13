@@ -1,0 +1,305 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts87948228.94</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>tokenizescheme.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Tokenizer for Scheme code */\n
+\n
+\n
+\n
+\n
+/**\n
+  TODO: follow the definitions in:\n
+\n
+      http://docs.racket-lang.org/reference/reader.html\n
+\n
+  to the letter; at the moment, we\'ve just done something quick-and-dirty.\n
+\n
+*/\n
+\n
+\n
+var tokenizeScheme = (function() {\n
+    var isWhiteSpace = function(ch) {\n
+\t// The messy regexp is because IE\'s regexp matcher is of the\n
+\t// opinion that non-breaking spaces are no whitespace.\n
+\treturn ch != "\\n" && /^[\\s\\u00a0]*$/.test(ch);\n
+    };\n
+\n
+\n
+    // scanUntilUnescaped: string-stream char -> boolean\n
+    // Advances the stream until the given character (not preceded by a\n
+    // backslash) is encountered.\n
+    // Returns true if we hit end of line without closing.\n
+    // Returns false otherwise.\n
+    var scanUntilUnescaped = function(source, end) {\n
+\tvar escaped = false;\n
+\twhile (true) {\n
+\t    if (source.endOfLine()) {\n
+\t\treturn true;\n
+\t    }\n
+\t    var next = source.next();\n
+\t    if (next == end && !escaped)\n
+\t\treturn false;\n
+\t    escaped = !escaped && next == "\\\\";\n
+\t}\n
+\treturn false;\n
+    }\n
+    \n
+\n
+    // Advance the stream until endline.\n
+    var scanUntilEndline = function(source, end) {\n
+\twhile (!source.endOfLine()) {\n
+\t    source.next();\n
+\t}\n
+    }\n
+\n
+    \n
+    // Some helper regexps\n
+    var isHexDigit = /[0-9A-Fa-f]/;\n
+    \n
+\n
+    var whitespaceChar = new RegExp("[\\\\s\\\\u00a0]");\n
+    \n
+    var isDelimiterChar = \n
+\tnew RegExp("[\\\\s\\\\\\(\\\\\\)\\\\\\[\\\\\\]\\\\\\{\\\\\\}\\\\\\"\\\\\\,\\\\\\\'\\\\\\`\\\\\\;]");\n
+\n
+    var isNotDelimiterChar = \n
+\tnew RegExp("[^\\\\s\\\\\\(\\\\\\)\\\\\\[\\\\\\]\\\\\\{\\\\\\}\\\\\\"\\\\\\,\\\\\\\'\\\\\\`\\\\\\;]");\n
+\n
+\n
+    var numberHeader = ("(?:(?:\\\\d+\\\\/\\\\d+)|"+\n
+\t\t\t(  "(?:(?:\\\\d+\\\\.\\\\d+|\\\\d+\\\\.|\\\\.\\\\d+)(?:[eE][+\\\\-]?\\\\d+)?)|")+\n
+\t\t\t(  "(?:\\\\d+(?:[eE][+\\\\-]?\\\\d+)?))"));\n
+    var numberPatterns = [\n
+\t// complex numbers\n
+\tnew RegExp("^((?:(?:\\\\#[ei])?[+\\\\-]?" + numberHeader +")?"\n
+\t\t   + "(?:[+\\\\-]" + numberHeader + ")i$)"),\n
+\t    /^((?:\\#[ei])?[+-]inf.0)$/,\n
+\t    /^((?:\\#[ei])?[+-]nan.0)$/,\n
+\tnew RegExp("^((?:\\\\#[ei])?[+\\\\-]?" + numberHeader + "$)"),\n
+\tnew RegExp("^0[xX][0-9A-Fa-f]+$")];\n
+   \n
+\n
+    // looksLikeNumber: string -> boolean\n
+    // Returns true if string s looks like a number.\n
+    var looksLikeNumber = function(s) {\n
+\tfor (var i = 0; i < numberPatterns.length; i++) {\n
+\t    if (numberPatterns[i].test(s)) {\n
+\t\treturn true;\n
+\t    }\n
+\t}\n
+\treturn false;\n
+    };\n
+\n
+\n
+\n
+    var UNCLOSED_STRING = function(source, setState) {\n
+\tvar readNewline = function() {\n
+\t    var content = source.get();\n
+\t    return { type:\'whitespace\', style:\'whitespace\', content: content };\n
+\t};\n
+\n
+\tvar ch = source.peek();\n
+\tif (ch === \'\\n\') {\n
+\t    source.next();\n
+\t    return readNewline();\n
+\t} else {\n
+\t    var isUnclosedString = scanUntilUnescaped(source, \'"\');\n
+\t    if (isUnclosedString) {\n
+\t\tsetState(UNCLOSED_STRING);\n
+\t    } else {\n
+\t\tsetState(START);\n
+\t    }\n
+\t    var content = source.get();\n
+\t    return {type: "string", style: "scheme-string", content: content,\n
+\t\t    isUnclosed: isUnclosedString};\n
+\t}\n
+    };\n
+\n
+\n
+\n
+    var START = function(source, setState) {\n
+\tvar readHexNumber = function(){\n
+\t    source.next(); // skip the \'x\'\n
+\t    source.nextWhileMatches(isHexDigit);\n
+\t    return {type: "number", style: "scheme-number"};\n
+\t};\n
+\n
+\n
+\tvar readNumber = function() {\n
+\t    scanSimpleNumber();\n
+\t    if (source.equals("-") || source.equals("+")) {\n
+\t\tsource.next();\n
+\t    }\n
+\t    scanSimpleNumber();\n
+\t    if (source.equals("i")) {\n
+\t\tsource.next();\n
+\t    }\n
+\t    return {type: "number", style: "scheme-number"};\n
+\t};\n
+\n
+\n
+\t// Read a word, look it up in keywords. If not found, it is a\n
+\t// variable, otherwise it is a keyword of the type found.\n
+\tvar readWordOrNumber = function() {\n
+\t    source.nextWhileMatches(isNotDelimiterChar);\n
+\t    var word = source.get();\n
+\t    if (looksLikeNumber(word)) {\n
+\t\treturn {type: "number", style: "scheme-number", content: word};\n
+\t    } else {\n
+\t\treturn {type: "variable", style: "scheme-symbol", content: word};\n
+\t    }\n
+\t};\n
+\n
+\n
+\tvar readString = function(quote) {\n
+\t    var isUnclosedString = scanUntilUnescaped(source, quote);\n
+\t    if (isUnclosedString) {\n
+\t\tsetState(UNCLOSED_STRING);\n
+\t    }\n
+\t    var word = source.get();\n
+\t    return {type: "string", style: "scheme-string", content: word,\n
+\t\t    isUnclosed: isUnclosedString};\n
+\t};\n
+\n
+\n
+\tvar readPound = function() {\n
+\t    var text;\n
+\t    // FIXME: handle special things here\n
+\t    if (source.equals(";")) {\n
+\t\tsource.next();\n
+\t\ttext = source.get();\n
+\t\treturn {type: text, \n
+\t\t\tstyle:"scheme-symbol",\n
+\t\t\tcontent: text};\n
+\t    } else {\n
+\t\ttext = source.get();\n
+\n
+\t\treturn {type : "symbol",\n
+\t\t\tstyle: "scheme-symbol",\n
+\t\t\tcontent: text};\n
+\t    }\n
+\n
+\t};\n
+\t\n
+\tvar readLineComment = function() {\n
+\t    scanUntilEndline(source);\n
+\t    var text = source.get();\n
+\t    return { type: "comment", style: "scheme-comment", content: text};\t\n
+\t};\n
+\n
+\n
+\tvar readWhitespace = function() {\n
+\t    source.nextWhile(isWhiteSpace);\n
+\t    var content = source.get();\n
+\t    return { type: \'whitespace\', style:\'whitespace\', content: content };\n
+\t};\n
+\n
+\tvar readNewline = function() {\n
+\t    var content = source.get();\n
+\t    return { type:\'whitespace\', style:\'whitespace\', content: content };\n
+\t};\n
+\n
+\n
+\t// Fetch the next token. Dispatches on first character in the\n
+\t// stream, or first two characters when the first is a slash.\n
+\tvar ch = source.next();\n
+\tif (ch === \'\\n\') {\n
+\t    return readNewline();\n
+\t} else if (whitespaceChar.test(ch)) {\n
+\t    return readWhitespace();\n
+\t} else if (ch === "#") {\n
+\t    return readPound();\n
+\t} else if (ch ===\';\') {\n
+\t    return readLineComment();\n
+\t} else if (ch === "\\"") {\n
+\t    return readString(ch);\n
+\t} else if (isDelimiterChar.test(ch)) {\n
+\t    return {type: ch, style: "scheme-punctuation"};\n
+\t} else {\n
+\t    return readWordOrNumber();\n
+\t}\n
+    }\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+    var makeTokenizer = function(source, state) {\n
+\t// Newlines are always a separate token.\n
+\n
+\tvar tokenizer = {\n
+\t    state: state,\n
+\n
+\t    take: function(type) {\n
+ \t\tif (typeof(type) == "string")\n
+ \t\t    type = {style: type, type: type};\n
+\n
+ \t\ttype.content = (type.content || "") + source.get();\n
+\t\ttype.value = type.content;\n
+\t\treturn type;\n
+\t    },\n
+\n
+\t    next: function () {\n
+\t\tif (!source.more()) throw StopIteration;\n
+\n
+\t\tvar type;\n
+\t\twhile (!type) {\n
+\t\t    type = tokenizer.state(source, function(s) {\n
+\t\t\ttokenizer.state = s;\n
+\t\t    });\n
+\t\t}\n
+\t\tvar result = this.take(type);\n
+\t\treturn result;\t\t    \n
+\t    }\n
+\t};\n
+\treturn tokenizer;\n
+    };\n
+\n
+\n
+    // The external interface to the tokenizer.\n
+    return function(source, startState) {\n
+\treturn makeTokenizer(source, startState || START);\n
+    };\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6295</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

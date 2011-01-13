@@ -1,0 +1,184 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts87948228.94</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>docs.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>body {\n
+  font-family: Droid Sans, Arial, sans-serif;\n
+  line-height: 1.5;\n
+  max-width: 64.3em;\n
+  margin: 3em auto;\n
+  padding: 0 1em;\n
+}\n
+\n
+h1 {\n
+  letter-spacing: -3px;\n
+  font-size: 3.23em;\n
+  font-weight: bold;\n
+  margin: 0;\n
+}\n
+\n
+h2 {\n
+  font-size: 1.23em;\n
+  font-weight: bold;\n
+  margin: .5em 0;\n
+  letter-spacing: -1px;\n
+}\n
+\n
+h3 {\n
+  font-size: 1em;\n
+  font-weight: bold;\n
+  margin: .4em 0;\n
+}\n
+\n
+pre {\n
+  font-family: Droid Sans Mono, Courier New, monospaced;\n
+  background-color: #eee;\n
+  -moz-border-radius: 6px;\n
+  -webkit-border-radius: 6px;\n
+  border-radius: 6px;\n
+  padding: 1em;\n
+}\n
+\n
+pre.code {\n
+  margin: 0 1em;\n
+}\n
+\n
+.grey {\n
+  font-size: 2em;\n
+  padding: .5em 1em;\n
+  line-height: 1.2em;\n
+  margin-top: .5em;\n
+}\n
+\n
+a:link, a:visited, .quasilink {\n
+  color: #df0019;\n
+  cursor: pointer;\n
+  text-decoration: none;\n
+}\n
+\n
+a:hover {\n
+  color: #800004;\n
+}\n
+\n
+ul {\n
+  margin: 0;\n
+  padding-left: 1.2em;\n
+}\n
+\n
+a.download {\n
+  color: white;\n
+  background-color: #df0019;\n
+  width: 100%;\n
+  display: block;\n
+  text-align: center;\n
+  font-size: 1.23em;\n
+  font-weight: bold;\n
+  text-decoration: none;\n
+  -moz-border-radius: 6px;\n
+  -webkit-border-radius: 6px;\n
+  border-radius: 6px;\n
+  padding: .5em 0;\n
+  margin-bottom: 1em;\n
+}\n
+\n
+a.download:hover {\n
+  background-color: #bb0010;\n
+}\n
+\n
+.rel {\n
+  margin-bottom: 0;\n
+}\n
+\n
+.rel-note {\n
+  color: #777;\n
+  font-size: .9em;\n
+  margin-top: .1em;\n
+}\n
+\n
+.logo-braces {\n
+  color: #df0019;\n
+  position: relative;\n
+  top: -4px;\n
+}\n
+\n
+.blk {\n
+  float: left;\n
+}\n
+\n
+.left {\n
+  width: 37em;\n
+  padding-right: 6.53em;\n
+  padding-bottom: 1em;\n
+}\n
+\n
+.left1 {\n
+  width: 15.24em;\n
+  padding-right: 6.45em;\n
+}\n
+\n
+.left2 {\n
+  width: 15.24em;\n
+}\n
+\n
+.right {\n
+  width: 20.68em;\n
+}\n
+\n
+.leftbig {\n
+  width: 42.44em;\n
+  padding-right: 6.53em;\n
+}\n
+\n
+.rightsmall {\n
+  width: 15.24em;\n
+}\n
+\n
+.clear:after {\n
+  visibility: hidden;\n
+  display: block;\n
+  font-size: 0;\n
+  content: " ";\n
+  clear: both;\n
+  height: 0;\n
+}\n
+.clear { display: inline-block; }\n
+/* start commented backslash hack \\*/\n
+* html .clear { height: 1%; }\n
+.clear { display: block; }\n
+/* close commented backslash hack */\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1974</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

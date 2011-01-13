@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts87948228.93</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>pythoncolors.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>html {\n
+  cursor: text;\n
+}\n
+\n
+.editbox {\n
+  padding: .4em;\n
+  margin: 0;\n
+  font-family: monospace;\n
+  font-size: 10pt;\n
+  line-height: 1.1em;\n
+  color: black;\n
+}\n
+\n
+pre.code, .editbox {\n
+  color: #666666;\n
+}\n
+\n
+.editbox p {\n
+  margin: 0;\n
+}\n
+\n
+span.py-delimiter, span.py-special {\n
+  color: #666666;\n
+}\n
+\n
+span.py-operator {\n
+  color: #666666;\n
+}\n
+\n
+span.py-error {\n
+  background-color: #660000;\n
+  color: #FFFFFF;\n
+}\n
+\n
+span.py-keyword {\n
+  color: #770088;\n
+  font-weight: bold;\n
+}\n
+\n
+span.py-literal {\n
+  color: #228811;\n
+}\n
+\n
+span.py-identifier, span.py-func  {\n
+  color: black;\n
+}\n
+\n
+span.py-type, span.py-decorator {\n
+  color: #0000FF;\n
+}\n
+\n
+span.py-comment {\n
+  color: #AA7700;\n
+}\n
+\n
+span.py-string, span.py-bytes, span.py-raw, span.py-unicode {\n
+  color: #AA2222;\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>718</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

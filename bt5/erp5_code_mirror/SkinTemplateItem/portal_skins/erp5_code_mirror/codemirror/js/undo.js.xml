@@ -1,0 +1,454 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts87948228.96</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>undo.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Storage and control for undo information within a CodeMirror\n
+ * editor. \'Why on earth is such a complicated mess required for\n
+ * that?\', I hear you ask. The goal, in implementing this, was to make\n
+ * the complexity of storing and reverting undo information depend\n
+ * only on the size of the edited or restored content, not on the size\n
+ * of the whole document. This makes it necessary to use a kind of\n
+ * \'diff\' system, which, when applied to a DOM tree, causes some\n
+ * complexity and hackery.\n
+ *\n
+ * In short, the editor \'touches\' BR elements as it parses them, and\n
+ * the UndoHistory stores these. When nothing is touched in commitDelay\n
+ * milliseconds, the changes are committed: It goes over all touched\n
+ * nodes, throws out the ones that did not change since last commit or\n
+ * are no longer in the document, and assembles the rest into zero or\n
+ * more \'chains\' -- arrays of adjacent lines. Links back to these\n
+ * chains are added to the BR nodes, while the chain that previously\n
+ * spanned these nodes is added to the undo history. Undoing a change\n
+ * means taking such a chain off the undo history, restoring its\n
+ * content (text is saved per line) and linking it back into the\n
+ * document.\n
+ */\n
+\n
+// A history object needs to know about the DOM container holding the\n
+// document, the maximum amount of undo levels it should store, the\n
+// delay (of no input) after which it commits a set of changes, and,\n
+// unfortunately, the \'parent\' window -- a window that is not in\n
+// designMode, and on which setTimeout works in every browser.\n
+function UndoHistory(container, maxDepth, commitDelay, editor) {\n
+  this.container = container;\n
+  this.maxDepth = maxDepth; this.commitDelay = commitDelay;\n
+  this.editor = editor; this.parent = editor.parent;\n
+  // This line object represents the initial, empty editor.\n
+  var initial = {text: "", from: null, to: null};\n
+  // As the borders between lines are represented by BR elements, the\n
+  // start of the first line and the end of the last one are\n
+  // represented by null. Since you can not store any properties\n
+  // (links to line objects) in null, these properties are used in\n
+  // those cases.\n
+  this.first = initial; this.last = initial;\n
+  // Similarly, a \'historyTouched\' property is added to the BR in\n
+  // front of lines that have already been touched, and \'firstTouched\'\n
+  // is used for the first line.\n
+  this.firstTouched = false;\n
+  // History is the set of committed changes, touched is the set of\n
+  // nodes touched since the last commit.\n
+  this.history = []; this.redoHistory = []; this.touched = [];\n
+}\n
+\n
+UndoHistory.prototype = {\n
+  // Schedule a commit (if no other touches come in for commitDelay\n
+  // milliseconds).\n
+  scheduleCommit: function() {\n
+    var self = this;\n
+    this.parent.clearTimeout(this.commitTimeout);\n
+    this.commitTimeout = this.parent.setTimeout(function(){self.tryCommit();}, this.commitDelay);\n
+  },\n
+\n
+  // Mark a node as touched. Null is a valid argument.\n
+  touch: function(node) {\n
+    this.setTouched(node);\n
+    this.scheduleCommit();\n
+  },\n
+\n
+  // Undo the last change.\n
+  undo: function() {\n
+    // Make sure pending changes have been committed.\n
+    this.commit();\n
+\n
+    if (this.history.length) {\n
+      // Take the top diff from the history, apply it, and store its\n
+      // shadow in the redo history.\n
+      var item = this.history.pop();\n
+      this.redoHistory.push(this.updateTo(item, "applyChain"));\n
+      this.notifyEnvironment();\n
+      return this.chainNode(item);\n
+    }\n
+  },\n
+\n
+  // Redo the last undone change.\n
+  redo: function() {\n
+    this.commit();\n
+    if (this.redoHistory.length) {\n
+      // The inverse of undo, basically.\n
+      var item = this.redoHistory.pop();\n
+      this.addUndoLevel(this.updateTo(item, "applyChain"));\n
+      this.notifyEnvironment();\n
+      return this.chainNode(item);\n
+    }\n
+  },\n
+\n
+  clear: function() {\n
+    this.history = [];\n
+    this.redoHistory = [];\n
+  },\n
+\n
+  // Ask for the size of the un/redo histories.\n
+  historySize: function() {\n
+    return {undo: this.history.length, redo: this.redoHistory.length};\n
+  },\n
+\n
+  // Push a changeset into the document.\n
+  push: function(from, to, lines) {\n
+    var chain = [];\n
+    for (var i = 0; i < lines.length; i++) {\n
+      var end = (i == lines.length - 1) ? to : this.container.ownerDocument.createElement("BR");\n
+      chain.push({from: from, to: end, text: cleanText(lines[i])});\n
+      from = end;\n
+    }\n
+    this.pushChains([chain], from == null && to == null);\n
+    this.notifyEnvironment();\n
+  },\n
+\n
+  pushChains: function(chains, doNotHighlight) {\n
+    this.commit(doNotHighlight);\n
+    this.addUndoLevel(this.updateTo(chains, "applyChain"));\n
+    this.redoHistory = [];\n
+  },\n
+\n
+  // Retrieve a DOM node from a chain (for scrolling to it after undo/redo).\n
+  chainNode: function(chains) {\n
+    for (var i = 0; i < chains.length; i++) {\n
+      var start = chains[i][0], node = start && (start.from || start.to);\n
+      if (node) return node;\n
+    }\n
+  },\n
+\n
+  // Clear the undo history, make the current document the start\n
+  // position.\n
+  reset: function() {\n
+    this.history = []; this.redoHistory = [];\n
+  },\n
+\n
+  textAfter: function(br) {\n
+    return this.after(br).text;\n
+  },\n
+\n
+  nodeAfter: function(br) {\n
+    return this.after(br).to;\n
+  },\n
+\n
+  nodeBefore: function(br) {\n
+    return this.before(br).from;\n
+  },\n
+\n
+  // Commit unless there are pending dirty nodes.\n
+  tryCommit: function() {\n
+    if (!window.parent || !window.UndoHistory) return; // Stop when frame has been unloaded\n
+    if (this.editor.highlightDirty()) this.commit(true);\n
+    else this.scheduleCommit();\n
+  },\n
+\n
+  // Check whether the touched nodes hold any changes, if so, commit\n
+  // them.\n
+  commit: function(doNotHighlight) {\n
+    this.parent.clearTimeout(this.commitTimeout);\n
+    // Make sure there are no pending dirty nodes.\n
+    if (!doNotHighlight) this.editor.highlightDirty(true);\n
+    // Build set of chains.\n
+    var chains = this.touchedChains(), self = this;\n
+\n
+    if (chains.length) {\n
+      this.addUndoLevel(this.updateTo(chains, "linkChain"));\n
+      this.redoHistory = [];\n
+      this.notifyEnvironment();\n
+    }\n
+  },\n
+\n
+  // [ end of public interface ]\n
+\n
+  // Update the document with a given set of chains, return its\n
+  // shadow. updateFunc should be "applyChain" or "linkChain". In the\n
+  // second case, the chains are taken to correspond the the current\n
+  // document, and only the state of the line data is updated. In the\n
+  // first case, the content of the chains is also pushed iinto the\n
+  // document.\n
+  updateTo: function(chains, updateFunc) {\n
+    var shadows = [], dirty = [];\n
+    for (var i = 0; i < chains.length; i++) {\n
+      shadows.push(this.shadowChain(chains[i]));\n
+      dirty.push(this[updateFunc](chains[i]));\n
+    }\n
+    if (updateFunc == "applyChain")\n
+      this.notifyDirty(dirty);\n
+    return shadows;\n
+  },\n
+\n
+  // Notify the editor that some nodes have changed.\n
+  notifyDirty: function(nodes) {\n
+    forEach(nodes, method(this.editor, "addDirtyNode"))\n
+    this.editor.scheduleHighlight();\n
+  },\n
+\n
+  notifyEnvironment: function() {\n
+    if (this.onChange) this.onChange();\n
+    // Used by the line-wrapping line-numbering code.\n
+    if (window.frameElement && window.frameElement.CodeMirror.updateNumbers)\n
+      window.frameElement.CodeMirror.updateNumbers();\n
+  },\n
+\n
+  // Link a chain into the DOM nodes (or the first/last links for null\n
+  // nodes).\n
+  linkChain: function(chain) {\n
+    for (var i = 0; i < chain.length; i++) {\n
+      var line = chain[i];\n
+      if (line.from) line.from.historyAfter = line;\n
+      else this.first = line;\n
+      if (line.to) line.to.historyBefore = line;\n
+      else this.last = line;\n
+    }\n
+  },\n
+\n
+  // Get the line object after/before a given node.\n
+  after: function(node) {\n
+    return node ? node.historyAfter : this.first;\n
+  },\n
+  before: function(node) {\n
+    return node ? node.historyBefore : this.last;\n
+  },\n
+\n
+  // Mark a node as touched if it has not already been marked.\n
+  setTouched: function(node) {\n
+    if (node) {\n
+      if (!node.historyTouched) {\n
+        this.touched.push(node);\n
+        node.historyTouched = true;\n
+      }\n
+    }\n
+    else {\n
+      this.firstTouched = true;\n
+    }\n
+  },\n
+\n
+  // Store a new set of undo info, throw away info if there is more of\n
+  // it than allowed.\n
+  addUndoLevel: function(diffs) {\n
+    this.history.push(diffs);\n
+    if (this.history.length > this.maxDepth)\n
+      this.history.shift();\n
+  },\n
+\n
+  // Build chains from a set of touched nodes.\n
+  touchedChains: function() {\n
+    var self = this;\n
+\n
+    // The temp system is a crummy hack to speed up determining\n
+    // whether a (currently touched) node has a line object associated\n
+    // with it. nullTemp is used to store the object for the first\n
+    // line, other nodes get it stored in their historyTemp property.\n
+    var nullTemp = null;\n
+    function temp(node) {return node ? node.historyTemp : nullTemp;}\n
+    function setTemp(node, line) {\n
+      if (node) node.historyTemp = line;\n
+      else nullTemp = line;\n
+    }\n
+\n
+    function buildLine(node) {\n
+      var text = [];\n
+      for (var cur = node ? node.nextSibling : self.container.firstChild;\n
+           cur && !isBR(cur); cur = cur.nextSibling)\n
+        if (cur.currentText) text.push(cur.currentText);\n
+      return {from: node, to: cur, text: cleanText(text.join(""))};\n
+    }\n
+\n
+    // Filter out unchanged lines and nodes that are no longer in the\n
+    // document. Build up line objects for remaining nodes.\n
+    var lines = [];\n
+    if (self.firstTouched) self.touched.push(null);\n
+    forEach(self.touched, function(node) {\n
+      if (node && node.parentNode != self.container) return;\n
+\n
+      if (node) node.historyTouched = false;\n
+      else self.firstTouched = false;\n
+\n
+      var line = buildLine(node), shadow = self.after(node);\n
+      if (!shadow || shadow.text != line.text || shadow.to != line.to) {\n
+        lines.push(line);\n
+        setTemp(node, line);\n
+      }\n
+    });\n
+\n
+    // Get the BR element after/before the given node.\n
+    function nextBR(node, dir) {\n
+      var link = dir + "Sibling", search = node[link];\n
+      while (search && !isBR(search))\n
+        search = search[link];\n
+      return search;\n
+    }\n
+\n
+    // Assemble line objects into chains by scanning the DOM tree\n
+    // around them.\n
+    var chains = []; self.touched = [];\n
+    forEach(lines, function(line) {\n
+      // Note that this makes the loop skip line objects that have\n
+      // been pulled into chains by lines before them.\n
+      if (!temp(line.from)) return;\n
+\n
+      var chain = [], curNode = line.from, safe = true;\n
+      // Put any line objects (referred to by temp info) before this\n
+      // one on the front of the array.\n
+      while (true) {\n
+        var curLine = temp(curNode);\n
+        if (!curLine) {\n
+          if (safe) break;\n
+          else curLine = buildLine(curNode);\n
+        }\n
+        chain.unshift(curLine);\n
+        setTemp(curNode, null);\n
+        if (!curNode) break;\n
+        safe = self.after(curNode);\n
+        curNode = nextBR(curNode, "previous");\n
+      }\n
+      curNode = line.to; safe = self.before(line.from);\n
+      // Add lines after this one at end of array.\n
+      while (true) {\n
+        if (!curNode) break;\n
+        var curLine = temp(curNode);\n
+        if (!curLine) {\n
+          if (safe) break;\n
+          else curLine = buildLine(curNode);\n
+        }\n
+        chain.push(curLine);\n
+        setTemp(curNode, null);\n
+        safe = self.before(curNode);\n
+        curNode = nextBR(curNode, "next");\n
+      }\n
+      chains.push(chain);\n
+    });\n
+\n
+    return chains;\n
+  },\n
+\n
+  // Find the \'shadow\' of a given chain by following the links in the\n
+  // DOM nodes at its start and end.\n
+  shadowChain: function(chain) {\n
+    var shadows = [], next = this.after(chain[0].from), end = chain[chain.length - 1].to;\n
+    while (true) {\n
+      shadows.push(next);\n
+      var nextNode = next.to;\n
+      if (!nextNode || nextNode == end)\n
+        break;\n
+      else\n
+        next = nextNode.historyAfter || this.before(end);\n
+      // (The this.before(end) is a hack -- FF sometimes removes\n
+      // properties from BR nodes, in which case the best we can hope\n
+      // for is to not break.)\n
+    }\n
+    return shadows;\n
+  },\n
+\n
+  // Update the DOM tree to contain the lines specified in a given\n
+  // chain, link this chain into the DOM nodes.\n
+  applyChain: function(chain) {\n
+    // Some attempt is made to prevent the cursor from jumping\n
+    // randomly when an undo or redo happens. It still behaves a bit\n
+    // strange sometimes.\n
+    var cursor = select.cursorPos(this.container, false), self = this;\n
+\n
+    // Remove all nodes in the DOM tree between from and to (null for\n
+    // start/end of container).\n
+    function removeRange(from, to) {\n
+      var pos = from ? from.nextSibling : self.container.firstChild;\n
+      while (pos != to) {\n
+        var temp = pos.nextSibling;\n
+        removeElement(pos);\n
+        pos = temp;\n
+      }\n
+    }\n
+\n
+    var start = chain[0].from, end = chain[chain.length - 1].to;\n
+    // Clear the space where this change has to be made.\n
+    removeRange(start, end);\n
+\n
+    // Insert the content specified by the chain into the DOM tree.\n
+    for (var i = 0; i < chain.length; i++) {\n
+      var line = chain[i];\n
+      // The start and end of the space are already correct, but BR\n
+      // tags inside it have to be put back.\n
+      if (i > 0)\n
+        self.container.insertBefore(line.from, end);\n
+\n
+      // Add the text.\n
+      var node = makePartSpan(fixSpaces(line.text));\n
+      self.container.insertBefore(node, end);\n
+      // See if the cursor was on this line. Put it back, adjusting\n
+      // for changed line length, if it was.\n
+      if (cursor && cursor.node == line.from) {\n
+        var cursordiff = 0;\n
+        var prev = this.after(line.from);\n
+        if (prev && i == chain.length - 1) {\n
+          // Only adjust if the cursor is after the unchanged part of\n
+          // the line.\n
+          for (var match = 0; match < cursor.offset &&\n
+               line.text.charAt(match) == prev.text.charAt(match); match++){}\n
+          if (cursor.offset > match)\n
+            cursordiff = line.text.length - prev.text.length;\n
+        }\n
+        select.setCursorPos(this.container, {node: line.from, offset: Math.max(0, cursor.offset + cursordiff)});\n
+      }\n
+      // Cursor was in removed line, this is last new line.\n
+      else if (cursor && (i == chain.length - 1) && cursor.node && cursor.node.parentNode != this.container) {\n
+        select.setCursorPos(this.container, {node: line.from, offset: line.text.length});\n
+      }\n
+    }\n
+\n
+    // Anchor the chain in the DOM tree.\n
+    this.linkChain(chain);\n
+    return start;\n
+  }\n
+};\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>14379</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

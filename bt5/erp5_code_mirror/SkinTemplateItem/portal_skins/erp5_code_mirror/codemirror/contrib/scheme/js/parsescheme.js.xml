@@ -1,0 +1,472 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts87948228.93</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>parsescheme.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+var SchemeParser = Editor.Parser = (function() {\n
+\n
+\n
+    // isLparen: char -> boolean\n
+    var isLparen = function(ch) {\n
+\treturn ch === \'(\' || ch === \'[\' || ch === \'{\';\n
+    };\n
+\n
+    // isRparen: char -> boolean\n
+    var isRparen = function(ch) {\n
+\treturn ch === \')\' || ch === \']\' || ch === \'}\';\n
+    };\n
+\n
+    // isMatchingParens: char char -> boolean\n
+    var isMatchingParens = function(lparen, rparen) {\n
+\treturn ((lparen === \'(\' && rparen === \')\') ||\n
+\t\t(lparen === \'[\' && rparen === \']\') ||\n
+\t\t(lparen === \'{\' && rparen === \'}\'));\n
+    };\n
+\n
+\n
+    // Compute the indentation context enclosing the end of the token\n
+    // sequence tokens.\n
+    // The context is the token sequence of the enclosing s-expression,\n
+    // augmented with column information.\n
+    var getIndentationContext = function(tokenStack) {\n
+\tvar EMPTY_CONTEXT = [];\n
+\n
+\tvar pendingParens = [], i = 0, j, line, column, context;\n
+\tvar tokens = [];\n
+\n
+\t// Scan for the start of the indentation context, accumulating tokens.\n
+\twhile (! isEmptyPair(tokenStack)) {\n
+\t    i++;\n
+\t    tokens.push(pairFirst(tokenStack));\n
+\t    if (isLparen(pairFirst(tokenStack).type)) {\n
+\t\tif (pendingParens.length === 0) {\n
+\t\t    break;\n
+\t\t} else {\n
+\t\t    if (isMatchingParens(pairFirst(tokenStack).value,\n
+\t\t\t\t\t pendingParens[pendingParens.length - 1])) {\n
+\t\t\tpendingParens.pop();\n
+\t\t    } else {\n
+\t\t\t// Error condition: we see mismatching parens,\n
+\t\t\t// so we exit with no known indentation context.\n
+\t\t\treturn EMPTY_CONTEXT;\n
+\t\t    }\n
+\t\t}\n
+\t    } else if (isRparen(pairFirst(tokenStack).type))  {\n
+\t\tpendingParens.push(pairFirst(tokenStack).type);\n
+\t    }\n
+\t    tokenStack = pairRest(tokenStack);\n
+\t}\n
+\n
+\t// If we scanned backward too far, we couldn\'t find a context.  Just\n
+\t// return the empty context.\n
+\tif (isEmptyPair(tokenStack)) { \n
+\t    return EMPTY_CONTEXT; \n
+\t}\n
+\n
+\t// Position tokenStack to the next token beyond.\n
+\ttokenStack = pairRest(tokenStack);\n
+\n
+\t// We now scan backwards to closest newline to figure out the column\n
+\t// number:\n
+\twhile (! isEmptyPair(tokenStack)) {\n
+\t    if(pairFirst(tokenStack).type === \'whitespace\' && \n
+\t       pairFirst(tokenStack).value === \'\\n\') {\n
+\t\tbreak;\n
+\t    }\n
+\t    tokens.push(pairFirst(tokenStack));\n
+\t    tokenStack = pairRest(tokenStack);\n
+\t}\n
+\n
+\tline = 0;\n
+\tcolumn = 0;\n
+\tcontext = [];\n
+\t// Start generating the context, walking forward.\n
+\tfor (j = tokens.length-1; j >= 0; j--) {\n
+\t    if (j < i) {\n
+\t\tcontext.push({ type: tokens[j].type,\n
+\t\t\t       value: tokens[j].value,\n
+\t\t\t       line: line,\n
+\t\t\t       column: column });\n
+\t    }\n
+\n
+\t    if (tokens[j].type === \'whitespace\' && \n
+\t\ttokens[j].value === \'\\n\') {\n
+\t\tcolumn = 0;\n
+\t\tline++;\n
+\t    } else {\n
+\t\tcolumn += tokens[j].value.length;\n
+\t    }\n
+\t}\n
+\treturn context;\n
+\n
+\n
+    };\n
+\n
+\n
+\n
+\n
+\n
+    // calculateIndentationFromContext: indentation-context number -> number\n
+    var calculateIndentationFromContext = function(context, currentIndentation) {\n
+\tif (context.length === 0) {\n
+\t    return 0;\n
+\t}\n
+ \tif (isBeginLikeContext(context)) {\n
+\t    return beginLikeIndentation(context);\n
+ \t}\n
+\tif (isDefineLikeContext(context)) {\n
+\t    return defineLikeIndentation(context);\n
+\t}\n
+  \tif (isLambdaLikeContext(context)) {\n
+\t    return lambdaLikeIndentation(context);\n
+  \t}\n
+\treturn beginLikeIndentation(context, 0);\n
+    };\n
+\n
+\n
+\n
+    // findContextElement: indentation-context number -> index or -1\n
+    var findContextElement = function(context, index) {\n
+\tvar depth = 0;\n
+\tfor(var i = 0; i < context.length; i++) {\n
+\t    if (context[i].type !== \'whitespace\' && depth === 1) {\n
+\t\tif (index === 0)\n
+\t\t    return i;\n
+\t\telse\n
+\t\t    index--;\n
+\t    }\n
+\n
+\t    if (isLparen(context[i].type)) {\n
+\t\tdepth++;\n
+\t    }\n
+\t    if (isRparen(context[i].type)) {\n
+\t\tdepth = Math.max(depth - 1, 0);\n
+\t    }\n
+\t}\n
+\treturn -1;\n
+    };\n
+\n
+    // contextElement: context -> (arrayof index)\n
+    var contextElements = function(context) {\n
+\tvar i = 0, index, results = [];\n
+\t\n
+\twhile ((index = findContextElement(context, i++)) != -1) {\n
+\t    results.push(index);\n
+\t}\n
+\treturn results;\n
+    };\n
+\n
+\n
+\n
+    //////////////////////////////////////////////////////////////////////\n
+\n
+    var BEGIN_LIKE_KEYWORDS = ["case-lambda", \n
+\t\t\t       "compound-unit",\n
+\t\t\t       "compound-unit/sig",\n
+\t\t\t       "cond",\n
+\t\t\t       "delay",\n
+\t\t\t       "inherit",\n
+\t\t\t       "match-lambda",\n
+\t\t\t       "match-lambda*",\n
+\t\t\t       "override",\n
+\t\t\t       "private",\n
+\t\t\t       "public",\n
+\t\t\t       "sequence",\n
+\t\t\t       "unit"];\n
+\n
+    var isBeginLikeContext = function(context) {\n
+\tvar j = findContextElement(context, 0);\n
+\tif (j === -1) { return false; }\n
+\treturn (/^begin/.test(context[j].value) ||\n
+\t\tisMember(context[j].value, BEGIN_LIKE_KEYWORDS));\n
+    };\n
+\n
+\n
+    // Begin: if there\'s no elements within the begin context,\n
+    // the indentation is that of the begin keyword\'s column + offset.\n
+    // Otherwise, find the leading element on the last line.\n
+    // Also used for default indentation.\n
+    var beginLikeIndentation = function(context, offset) {\n
+\tif (typeof(offset) === \'undefined\') { offset = 1; }\n
+\n
+\tvar indices = contextElements(context), j;\n
+\tif (indices.length === 0) {\n
+\t    return context[0].column + 1;\n
+\t} else if (indices.length === 1) {\n
+\t    // if we only see the begin keyword, indentation is based\n
+\t    // off the keyword.\n
+\t    return context[indices[0]].column + offset;\n
+\t} else {\n
+\t    // Otherwise, we scan for the contextElement of the last line\n
+\t    for (j = indices.length -1; j > 1; j--) {\n
+\t\tif (context[indices[j]].line !==\n
+\t\t    context[indices[j-1]].line) {\n
+\t\t    return context[indices[j]].column;\n
+\t\t}\n
+\t    }\n
+\t    return context[indices[j]].column;\n
+\t}\n
+    };\n
+\n
+\n
+\n
+    //////////////////////////////////////////////////////////////////////\n
+\n
+\n
+    var DEFINE_LIKE_KEYWORDS = ["local"];\n
+\n
+    var isDefineLikeContext = function(context) {\n
+\tvar j = findContextElement(context, 0);\n
+\tif (j === -1) { return false; }\n
+\treturn (/^def/.test(context[j].value) ||\n
+\t\tisMember(context[j].value, DEFINE_LIKE_KEYWORDS));\n
+    };\n
+\n
+\n
+    var defineLikeIndentation = function(context) {\n
+\tvar i = findContextElement(context, 0);\n
+\tif (i === -1) { return 0; }\n
+\treturn context[i].column +1; \n
+    };\n
+\n
+    //////////////////////////////////////////////////////////////////////\n
+\n
+    var LAMBDA_LIKE_KEYWORDS = ["cases",\n
+\t\t\t\t"instantiate",\n
+\t\t\t\t"super-instantiate",\n
+\t\t\t\t"syntax/loc",\n
+\t\t\t\t"quasisyntax/loc",\n
+\t\t\t\t"lambda",\n
+\t\t\t\t"let",\n
+\t\t\t\t"let*",\n
+\t\t\t\t"letrec",\n
+\t\t\t\t"recur",\n
+\t\t\t\t"lambda/kw",\n
+\t\t\t\t"letrec-values",\n
+\t\t\t\t"with-syntax",\n
+\t\t\t\t"with-continuation-mark",\n
+\t\t\t\t"module",\n
+\t\t\t\t"match",\n
+\t\t\t\t"match-let",\n
+\t\t\t\t"match-let*",\n
+\t\t\t\t"match-letrec",\n
+\t\t\t\t"let/cc",\n
+\t\t\t\t"let/ec",\n
+\t\t\t\t"letcc",\n
+\t\t\t\t"catch",\n
+\t\t\t\t"let-syntax",\n
+\t\t\t\t"letrec-syntax",\n
+\t\t\t\t"fluid-let-syntax",\n
+\t\t\t\t"letrec-syntaxes+values",\n
+\t\t\t\t"for",\n
+\t\t\t\t"for/list",\n
+\t\t\t\t"for/hash",\n
+\t\t\t\t"for/hasheq",\n
+\t\t\t\t"for/and",\n
+\t\t\t\t"for/or",\n
+\t\t\t\t"for/lists",\n
+\t\t\t\t"for/first",\n
+\t\t\t\t"for/last",\n
+\t\t\t\t"for/fold",\n
+\t\t\t\t"for*",\n
+\t\t\t\t"for*/list",\n
+\t\t\t\t"for*/hash",\n
+\t\t\t\t"for*/hasheq",\n
+\t\t\t\t"for*/and",\n
+\t\t\t\t"for*/or",\n
+\t\t\t\t"for*/lists",\n
+\t\t\t\t"for*/first",\n
+\t\t\t\t"for*/last",\n
+\t\t\t\t"for*/fold",\n
+\t\t\t\t"kernel-syntax-case",\n
+\t\t\t\t"syntax-case",\n
+\t\t\t\t"syntax-case*",\n
+\t\t\t\t"syntax-rules",\n
+\t\t\t\t"syntax-id-rules",\n
+\t\t\t\t"let-signature",\n
+\t\t\t\t"fluid-let",\n
+\t\t\t\t"let-struct",\n
+\t\t\t\t"let-macro",\n
+\t\t\t\t"let-values",\n
+\t\t\t\t"let*-values",\n
+\t\t\t\t"case",\n
+\t\t\t\t"when",\n
+\t\t\t\t"unless",\n
+\t\t\t\t"let-enumerate",\n
+\t\t\t\t"class",\n
+\t\t\t\t"class*",\n
+\t\t\t\t"class-asi",\n
+\t\t\t\t"class-asi*",\n
+\t\t\t\t"class*/names",\n
+\t\t\t\t"class100",\n
+\t\t\t\t"class100*",\n
+\t\t\t\t"class100-asi",\n
+\t\t\t\t"class100-asi*",\n
+\t\t\t\t"class100*/names",\n
+\t\t\t\t"rec",\n
+\t\t\t\t"make-object",\n
+\t\t\t\t"mixin",\n
+\t\t\t\t"define-some",\n
+\t\t\t\t"do",\n
+\t\t\t\t"opt-lambda",\n
+\t\t\t\t"send*",\n
+\t\t\t\t"with-method",\n
+\t\t\t\t"define-record",\n
+\t\t\t\t"catch",\n
+\t\t\t\t"shared",\n
+\t\t\t\t"unit/sig",\n
+\t\t\t\t"unit/lang",\n
+\t\t\t\t"with-handlers",\n
+\t\t\t\t"interface",\n
+\t\t\t\t"parameterize",\n
+\t\t\t\t"call-with-input-file",\n
+\t\t\t\t"call-with-input-file*",\n
+\t\t\t\t"with-input-from-file",\n
+\t\t\t\t"with-input-from-port",\n
+\t\t\t\t"call-with-output-file",\n
+\t\t\t\t"with-output-to-file",\n
+\t\t\t\t"with-output-to-port",\n
+\t\t\t\t"for-all"];\n
+\n
+\n
+    var isLambdaLikeContext = function(context) {\n
+\tvar j = findContextElement(context, 0);\n
+\tif (j === -1) { return false; }\n
+\treturn (isMember(context[j].value, LAMBDA_LIKE_KEYWORDS));\n
+    };\n
+\n
+\n
+    var lambdaLikeIndentation = function(context) {\n
+\tvar i = findContextElement(context, 0);\n
+\tif (i === -1) { return 0; }\n
+\tvar j = findContextElement(context, 1);\n
+\tif (j === -1) { \n
+\t    return context[i].column + 4; \n
+\t} else {\n
+\t    return context[i].column + 1;\n
+\t}\n
+    };\n
+\n
+\n
+\n
+\n
+    //////////////////////////////////////////////////////////////////////\n
+    // Helpers\n
+    var isMember = function(x, l) {\n
+\tfor (var i = 0; i < l.length; i++) {\n
+\t    if (x === l[i]) { return true; }\n
+\t}\n
+\treturn false;\n
+    };\n
+\n
+\n
+\n
+    //////////////////////////////////////////////////////////////////////\n
+\n
+    var pair = function(x, y) {\n
+\treturn [x,y];\n
+    };\n
+    var EMPTY_PAIR = [];\n
+    var pairFirst = function(p) { return p[0]; }\n
+    var pairRest = function(p) { return p[1]; }\n
+    var isEmptyPair = function(p) { return p === EMPTY_PAIR; }\n
+    var pairLength = function(p) {\n
+\tvar l = 0;\n
+\twhile (! isEmptyPair(p)) {\n
+\t    p = pairRest(p);\n
+\t}\n
+\treturn l;\n
+    };\n
+\n
+    //////////////////////////////////////////////////////////////////////\n
+\n
+\n
+\n
+\n
+    var indentTo = function(tokenStack) {\n
+\treturn function(tokenText, currentIndentation, direction) {\n
+\n
+\t    // If we\'re in the middle of an unclosed token,\n
+\t    // do not change indentation.\n
+\t    if ((! isEmptyPair(tokenStack)) &&\n
+\t\t(! isEmptyPair(pairRest(tokenStack))) &&\n
+\t\t(pairFirst(pairRest(tokenStack)).isUnclosed)) {\n
+\t\treturn currentIndentation;\n
+\t    }\n
+\n
+\t    var indentationContext = \n
+\t\tgetIndentationContext(tokenStack);\n
+\t    return calculateIndentationFromContext(indentationContext,\n
+\t\t\t\t\t\t   currentIndentation);\t\t\n
+\t};\n
+    };\n
+\n
+\n
+    var startParse = function(source) {\n
+\tsource = tokenizeScheme(source);\t\n
+\tvar tokenStack = EMPTY_PAIR;\n
+\tvar iter = {\n
+\t    next: function() {\n
+\t\tvar tok = source.next();\n
+\t\ttokenStack = pair(tok, tokenStack);\n
+\t\tif (tok.type === "whitespace") {\n
+\t\t    if (tok.value === "\\n") {\n
+\t\t\ttok.indentation = indentTo(tokenStack);\n
+\t\t    }\n
+\t\t}\n
+\t\treturn tok;\n
+\t    },\n
+\n
+\t    copy: function() {\n
+\t\tvar _tokenStack = tokenStack;\n
+\t\tvar _tokenState = source.state;\n
+\t\treturn function(_source) {\n
+\t\t    tokenStack = _tokenStack;\n
+\t\t    source = tokenizeScheme(_source, _tokenState);\n
+\t\t    return iter;\n
+\t\t};\n
+\t    }\n
+\t};\n
+\treturn iter;\n
+    };\n
+    return { make: startParse };\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>10188</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

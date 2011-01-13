@@ -1,0 +1,462 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts87948228.92</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>parsephp.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\n
+Copyright (c) 2008-2009 Yahoo! Inc. All rights reserved.\n
+The copyrights embodied in the content of this file are licensed by\n
+Yahoo! Inc. under the BSD (revised) open source license\n
+\n
+@author Dan Vlad Dascalescu <dandv@yahoo-inc.com>\n
+\n
+\n
+Parse function for PHP. Makes use of the tokenizer from tokenizephp.js.\n
+Based on parsejavascript.js by Marijn Haverbeke.\n
+\n
+\n
+Features:\n
+ + special "deprecated" style for PHP4 keywords like \'var\'\n
+ + support for PHP 5.3 keywords: \'namespace\', \'use\'\n
+ + 911 predefined constants, 1301 predefined functions, 105 predeclared classes\n
+   from a typical PHP installation in a LAMP environment\n
+ + new feature: syntax error flagging, thus enabling strict parsing of:\n
+   + function definitions with explicitly or implicitly typed arguments and default values\n
+   + modifiers (public, static etc.) applied to method and member definitions\n
+   + foreach(array_expression as $key [=> $value]) loops\n
+ + differentiation between single-quoted strings and double-quoted interpolating strings\n
+\n
+*/\n
+\n
+\n
+// add the Array.indexOf method for JS engines that don\'t support it (e.g. IE)\n
+// code from https://developer.mozilla.org/En/Core_JavaScript_1.5_Reference/Global_Objects/Array/IndexOf\n
+if (!Array.prototype.indexOf)\n
+{\n
+  Array.prototype.indexOf = function(elt /*, from*/)\n
+  {\n
+    var len = this.length;\n
+\n
+    var from = Number(arguments[1]) || 0;\n
+    from = (from < 0)\n
+         ? Math.ceil(from)\n
+         : Math.floor(from);\n
+    if (from < 0)\n
+      from += len;\n
+\n
+    for (; from < len; from++)\n
+    {\n
+      if (from in this &&\n
+          this[from] === elt)\n
+        return from;\n
+    }\n
+    return -1;\n
+  };\n
+}\n
+\n
+\n
+var PHPParser = Editor.Parser = (function() {\n
+  // Token types that can be considered to be atoms, part of operator expressions\n
+  var atomicTypes = {\n
+    "atom": true, "number": true, "variable": true, "string": true\n
+  };\n
+  // Constructor for the lexical context objects.\n
+  function PHPLexical(indented, column, type, align, prev, info) {\n
+    // indentation at start of this line\n
+    this.indented = indented;\n
+    // column at which this scope was opened\n
+    this.column = column;\n
+    // type of scope (\'stat\' (statement), \'form\' (special form), \'[\', \'{\', or \'(\')\n
+    this.type = type;\n
+    // \'[\', \'{\', or \'(\' blocks that have any text after their opening\n
+    // character are said to be \'aligned\' -- any lines below are\n
+    // indented all the way to the opening character.\n
+    if (align != null)\n
+      this.align = align;\n
+    // Parent scope, if any.\n
+    this.prev = prev;\n
+    this.info = info;\n
+  }\n
+\n
+  // PHP indentation rules\n
+  function indentPHP(lexical) {\n
+    return function(firstChars) {\n
+      var firstChar = firstChars && firstChars.charAt(0), type = lexical.type;\n
+      var closing = firstChar == type;\n
+      if (type == "form" && firstChar == "{")\n
+        return lexical.indented;\n
+      else if (type == "stat" || type == "form")\n
+        return lexical.indented + indentUnit;\n
+      else if (lexical.info == "switch" && !closing)\n
+        return lexical.indented + (/^(?:case|default)\\b/.test(firstChars) ? indentUnit : 2 * indentUnit);\n
+      else if (lexical.align)\n
+        return lexical.column - (closing ? 1 : 0);\n
+      else\n
+        return lexical.indented + (closing ? 0 : indentUnit);\n
+    };\n
+  }\n
+\n
+  // The parser-iterator-producing function itself.\n
+  function parsePHP(input, basecolumn) {\n
+    // Wrap the input in a token stream\n
+    var tokens = tokenizePHP(input);\n
+    // The parser state. cc is a stack of actions that have to be\n
+    // performed to finish the current statement. For example we might\n
+    // know that we still need to find a closing parenthesis and a\n
+    // semicolon. Actions at the end of the stack go first. It is\n
+    // initialized with an infinitely looping action that consumes\n
+    // whole statements.\n
+    var cc = [statements];\n
+    // The lexical scope, used mostly for indentation.\n
+    var lexical = new PHPLexical((basecolumn || 0) - indentUnit, 0, "block", false);\n
+    // Current column, and the indentation at the start of the current\n
+    // line. Used to create lexical scope objects.\n
+    var column = 0;\n
+    var indented = 0;\n
+    // Variables which are used by the mark, cont, and pass functions\n
+    // below to communicate with the driver loop in the \'next\' function.\n
+    var consume, marked;\n
+\n
+    // The iterator object.\n
+    var parser = {next: next, copy: copy};\n
+\n
+    // parsing is accomplished by calling next() repeatedly\n
+    function next(){\n
+      // Start by performing any \'lexical\' actions (adjusting the\n
+      // lexical variable), or the operations below will be working\n
+      // with the wrong lexical state.\n
+      while(cc[cc.length - 1].lex)\n
+        cc.pop()();\n
+\n
+      // Fetch the next token.\n
+      var token = tokens.next();\n
+\n
+      // Adjust column and indented.\n
+      if (token.type == "whitespace" && column == 0)\n
+        indented = token.value.length;\n
+      column += token.value.length;\n
+      if (token.content == "\\n"){\n
+        indented = column = 0;\n
+        // If the lexical scope\'s align property is still undefined at\n
+        // the end of the line, it is an un-aligned scope.\n
+        if (!("align" in lexical))\n
+          lexical.align = false;\n
+        // Newline tokens get an indentation function associated with\n
+        // them.\n
+        token.indentation = indentPHP(lexical);\n
+      }\n
+      // No more processing for meaningless tokens.\n
+      if (token.type == "whitespace" || token.type == "comment"\n
+        || token.type == "string_not_terminated" )\n
+        return token;\n
+      // When a meaningful token is found and the lexical scope\'s\n
+      // align is undefined, it is an aligned scope.\n
+      if (!("align" in lexical))\n
+        lexical.align = true;\n
+\n
+      // Execute actions until one \'consumes\' the token and we can\n
+      // return it. \'marked\' is used to change the style of the current token.\n
+      while(true) {\n
+        consume = marked = false;\n
+        // Take and execute the topmost action.\n
+        var action = cc.pop();\n
+        action(token);\n
+\n
+        if (consume){\n
+          if (marked)\n
+            token.style = marked;\n
+          // Here we differentiate between local and global variables.\n
+          return token;\n
+        }\n
+      }\n
+      return 1; // Firebug workaround for http://code.google.com/p/fbug/issues/detail?id=1239#c1\n
+    }\n
+\n
+    // This makes a copy of the parser state. It stores all the\n
+    // stateful variables in a closure, and returns a function that\n
+    // will restore them when called with a new input stream. Note\n
+    // that the cc array has to be copied, because it is contantly\n
+    // being modified. Lexical objects are not mutated, so they can\n
+    // be shared between runs of the parser.\n
+    function copy(){\n
+      var _lexical = lexical, _cc = cc.concat([]), _tokenState = tokens.state;\n
+\n
+      return function copyParser(input){\n
+        lexical = _lexical;\n
+        cc = _cc.concat([]); // copies the array\n
+        column = indented = 0;\n
+        tokens = tokenizePHP(input, _tokenState);\n
+        return parser;\n
+      };\n
+    }\n
+\n
+    // Helper function for pushing a number of actions onto the cc\n
+    // stack in reverse order.\n
+    function push(fs){\n
+      for (var i = fs.length - 1; i >= 0; i--)\n
+        cc.push(fs[i]);\n
+    }\n
+    // cont and pass are used by the action functions to add other\n
+    // actions to the stack. cont will cause the current token to be\n
+    // consumed, pass will leave it for the next action.\n
+    function cont(){\n
+      push(arguments);\n
+      consume = true;\n
+    }\n
+    function pass(){\n
+      push(arguments);\n
+      consume = false;\n
+    }\n
+    // Used to change the style of the current token.\n
+    function mark(style){\n
+      marked = style;\n
+    }\n
+    // Add a lyer of style to the current token, for example syntax-error\n
+    function mark_add(style){\n
+      marked = marked + \' \' + style;\n
+    }\n
+\n
+    // Push a new lexical context of the given type.\n
+    function pushlex(type, info) {\n
+      var result = function pushlexing() {\n
+        lexical = new PHPLexical(indented, column, type, null, lexical, info)\n
+      };\n
+      result.lex = true;\n
+      return result;\n
+    }\n
+    // Pop off the current lexical context.\n
+    function poplex(){\n
+      lexical = lexical.prev;\n
+    }\n
+    poplex.lex = true;\n
+    // The \'lex\' flag on these actions is used by the \'next\' function\n
+    // to know they can (and have to) be ran before moving on to the\n
+    // next token.\n
+\n
+    // Creates an action that discards tokens until it finds one of\n
+    // the given type. This will ignore (and recover from) syntax errors.\n
+    function expect(wanted){\n
+      return function expecting(token){\n
+        if (token.type == wanted) cont();  // consume the token\n
+        else {\n
+          cont(arguments.callee);  // continue expecting() - call itself\n
+        }\n
+      };\n
+    }\n
+\n
+    // Require a specific token type, or one of the tokens passed in the \'wanted\' array\n
+    // Used to detect blatant syntax errors. \'execute\' is used to pass extra code\n
+    // to be executed if the token is matched. For example, a \'(\' match could\n
+    // \'execute\' a cont( compasep(funcarg), require(")") )\n
+    function require(wanted, execute){\n
+      return function requiring(token){\n
+        var ok;\n
+        var type = token.type;\n
+        if (typeof(wanted) == "string")\n
+          ok = (type == wanted) -1;\n
+        else\n
+          ok = wanted.indexOf(type);\n
+        if (ok >= 0) {\n
+          if (execute && typeof(execute[ok]) == "function")\n
+            execute[ok](token);\n
+            cont();  // just consume the token\n
+        }\n
+        else {\n
+          if (!marked) mark(token.style);\n
+          mark_add("syntax-error");\n
+          cont(arguments.callee);\n
+        }\n
+      };\n
+    }\n
+\n
+    // Looks for a statement, and then calls itself.\n
+    function statements(token){\n
+      return pass(statement, statements);\n
+    }\n
+    // Dispatches various types of statements based on the type of the current token.\n
+    function statement(token){\n
+      var type = token.type;\n
+      if (type == "keyword a") cont(pushlex("form"), expression, altsyntax, statement, poplex);\n
+      else if (type == "keyword b") cont(pushlex("form"), statement, poplex);\n
+      else if (type == "{") cont(pushlex("}"), block, poplex);\n
+      else if (type == "function") funcdef();\n
+      // technically, "class implode {...}" is correct, but we\'ll flag that as an error because it overrides a predefined function\n
+      else if (type == "class") classdef();\n
+      else if (type == "foreach") cont(pushlex("form"), require("("), pushlex(")"), expression, require("as"), require("variable"), /* => $value */ expect(")"), altsyntax, poplex, statement, poplex);\n
+      else if (type == "for") cont(pushlex("form"), require("("), pushlex(")"), expression, require(";"), expression, require(";"), expression, require(")"), altsyntax, poplex, statement, poplex);\n
+      // public final function foo(), protected static $bar;\n
+      else if (type == "modifier") cont(require(["modifier", "variable", "function", "abstract"], [null, null, funcdef, absfun]));\n
+      else if (type == "abstract") abs();\n
+      else if (type == "switch") cont(pushlex("form"), require("("), expression, require(")"), pushlex("}", "switch"), require([":", "{"]), block, poplex, poplex);\n
+      else if (type == "case") cont(expression, require(":"));\n
+      else if (type == "default") cont(require(":"));\n
+      else if (type == "catch") cont(pushlex("form"), require("("), require("t_string"), require("variable"), require(")"), statement, poplex);\n
+      else if (type == "const") cont(require("t_string"));  // \'const static x=5\' is a syntax error\n
+      // technically, "namespace implode {...}" is correct, but we\'ll flag that as an error because it overrides a predefined function\n
+      else if (type == "namespace") cont(namespacedef, require(";"));\n
+      // $variables may be followed by operators, () for variable function calls, or [] subscripts\n
+      else pass(pushlex("stat"), expression, require(";"), poplex);\n
+    }\n
+    // Dispatch expression types.\n
+    function expression(token){\n
+      var type = token.type;\n
+      if (atomicTypes.hasOwnProperty(type)) cont(maybeoperator);\n
+      else if (type == "<<<") cont(require("string"), maybeoperator);  // heredoc/nowdoc\n
+      else if (type == "t_string") cont(maybe_double_colon, maybeoperator);\n
+      else if (type == "keyword c" || type == "operator") cont(expression);\n
+      // lambda\n
+      else if (type == "function") lambdadef();\n
+      // function call or parenthesized expression: $a = ($b + 1) * 2;\n
+      else if (type == "(") cont(pushlex(")"), commasep(expression), require(")"), poplex, maybeoperator);\n
+    }\n
+    // Called for places where operators, function calls, or subscripts are\n
+    // valid. Will skip on to the next action if none is found.\n
+    function maybeoperator(token){\n
+      var type = token.type;\n
+      if (type == "operator") {\n
+        if (token.content == "?") cont(expression, require(":"), expression);  // ternary operator\n
+        else cont(expression);\n
+      }\n
+      else if (type == "(") cont(pushlex(")"), expression, commasep(expression), require(")"), poplex, maybeoperator /* $varfunc() + 3 */);\n
+      else if (type == "[") cont(pushlex("]"), expression, require("]"), maybeoperator /* for multidimensional arrays, or $func[$i]() */, poplex);\n
+    }\n
+    // A regular use of the double colon to specify a class, as in self::func() or myclass::$var;\n
+    // Differs from `namespace` or `use` in that only one class can be the parent; chains (A::B::$var) are a syntax error.\n
+    function maybe_double_colon(token) {\n
+      if (token.type == "t_double_colon")\n
+        // A::$var, A::func(), A::const\n
+        cont(require(["t_string", "variable"]), maybeoperator);\n
+      else {\n
+        // a t_string wasn\'t followed by ::, such as in a function call: foo()\n
+        pass(expression)\n
+      }\n
+    }\n
+    // the declaration or definition of a function\n
+    function funcdef() {\n
+      cont(require("t_string"), require("("), pushlex(")"), commasep(funcarg), require(")"), poplex, block);\n
+    }\n
+    // the declaration or definition of a lambda\n
+    function lambdadef() {\n
+      cont(require("("), pushlex(")"), commasep(funcarg), require(")"), maybe_lambda_use, poplex, require("{"), pushlex("}"), block, poplex);\n
+    }\n
+    // optional lambda \'use\' statement\n
+    function maybe_lambda_use(token) {\n
+      if(token.type == "namespace") {\n
+        cont(require(\'(\'), commasep(funcarg), require(\')\'));\n
+      }\n
+      else {\n
+        pass(expression);\n
+      }\n
+    }\n
+    // the definition of a class\n
+    function classdef() {\n
+      cont(require("t_string"), expect("{"), pushlex("}"), block, poplex);\n
+    }\n
+    // either funcdef if the current token is "function", or the keyword "function" + funcdef\n
+    function absfun(token) {\n
+      if(token.type == "function") funcdef();\n
+      else cont(require(["function"], [funcdef]));\n
+    }\n
+    // the abstract class or function (with optional modifier)\n
+    function abs(token) {\n
+      cont(require(["modifier", "function", "class"], [absfun, funcdef, classdef]));\n
+    }\n
+    // Parses a comma-separated list of the things that are recognized\n
+    // by the \'what\' argument.\n
+    function commasep(what){\n
+      function proceed(token) {\n
+        if (token.type == ",") cont(what, proceed);\n
+      }\n
+      return function commaSeparated() {\n
+        pass(what, proceed);\n
+      };\n
+    }\n
+    // Look for statements until a closing brace is found.\n
+    function block(token) {\n
+      if (token.type == "}") cont();\n
+      else pass(statement, block);\n
+    }\n
+    function empty_parens_if_array(token) {\n
+      if(token.content == "array")\n
+        cont(require("("), require(")"));\n
+    }\n
+    function maybedefaultparameter(token){\n
+      if (token.content == "=") cont(require(["t_string", "string", "number", "atom"], [empty_parens_if_array, null, null]));\n
+    }\n
+    function var_or_reference(token) {\n
+      if(token.type == "variable") cont(maybedefaultparameter);\n
+      else if(token.content == "&") cont(require("variable"), maybedefaultparameter);\n
+    }\n
+    // support for default arguments: http://us.php.net/manual/en/functions.arguments.php#functions.arguments.default\n
+    function funcarg(token){\n
+      // function foo(myclass $obj) {...} or function foo(myclass &objref) {...}\n
+      if (token.type == "t_string") cont(var_or_reference);\n
+      // function foo($var) {...} or function foo(&$ref) {...}\n
+      else var_or_reference(token);\n
+    }\n
+\n
+    // A namespace definition or use\n
+    function maybe_double_colon_def(token) {\n
+      if (token.type == "t_double_colon")\n
+        cont(namespacedef);\n
+    }\n
+    function namespacedef(token) {\n
+      pass(require("t_string"), maybe_double_colon_def);\n
+    }\n
+    \n
+    function altsyntax(token){\n
+    \tif(token.content==\':\')\n
+    \t\tcont(altsyntaxBlock,poplex);\n
+    }\n
+    \n
+    function altsyntaxBlock(token){\n
+    \tif (token.type == "altsyntaxend") cont(require(\';\'));\n
+      else pass(statement, altsyntaxBlock);\n
+    }\n
+\n
+\n
+    return parser;\n
+  }\n
+\n
+  return {make: parsePHP, electricChars: "{}:"};\n
+\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>16866</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

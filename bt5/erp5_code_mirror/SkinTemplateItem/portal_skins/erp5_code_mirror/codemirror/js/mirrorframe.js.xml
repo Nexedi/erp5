@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts87948228.95</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>mirrorframe.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Demonstration of embedding CodeMirror in a bigger application. The\n
+ * interface defined here is a mess of prompts and confirms, and\n
+ * should probably not be used in a real project.\n
+ */\n
+\n
+function MirrorFrame(place, options) {\n
+  this.home = document.createElement("DIV");\n
+  if (place.appendChild)\n
+    place.appendChild(this.home);\n
+  else\n
+    place(this.home);\n
+\n
+  var self = this;\n
+  function makeButton(name, action) {\n
+    var button = document.createElement("INPUT");\n
+    button.type = "button";\n
+    button.value = name;\n
+    self.home.appendChild(button);\n
+    button.onclick = function(){self[action].call(self);};\n
+  }\n
+\n
+  makeButton("Search", "search");\n
+  makeButton("Replace", "replace");\n
+  makeButton("Current line", "line");\n
+  makeButton("Jump to line", "jump");\n
+  makeButton("Insert constructor", "macro");\n
+  makeButton("Indent all", "reindent");\n
+\n
+  this.mirror = new CodeMirror(this.home, options);\n
+}\n
+\n
+MirrorFrame.prototype = {\n
+  search: function() {\n
+    var text = prompt("Enter search term:", "");\n
+    if (!text) return;\n
+\n
+    var first = true;\n
+    do {\n
+      var cursor = this.mirror.getSearchCursor(text, first);\n
+      first = false;\n
+      while (cursor.findNext()) {\n
+        cursor.select();\n
+        if (!confirm("Search again?"))\n
+          return;\n
+      }\n
+    } while (confirm("End of document reached. Start over?"));\n
+  },\n
+\n
+  replace: function() {\n
+    // This is a replace-all, but it is possible to implement a\n
+    // prompting replace.\n
+    var from = prompt("Enter search string:", ""), to;\n
+    if (from) to = prompt("What should it be replaced with?", "");\n
+    if (to == null) return;\n
+\n
+    var cursor = this.mirror.getSearchCursor(from, false);\n
+    while (cursor.findNext())\n
+      cursor.replace(to);\n
+  },\n
+\n
+  jump: function() {\n
+    var line = prompt("Jump to line:", "");\n
+    if (line && !isNaN(Number(line)))\n
+      this.mirror.jumpToLine(Number(line));\n
+  },\n
+\n
+  line: function() {\n
+    alert("The cursor is currently at line " + this.mirror.currentLine());\n
+    this.mirror.focus();\n
+  },\n
+\n
+  macro: function() {\n
+    var name = prompt("Name your constructor:", "");\n
+    if (name)\n
+      this.mirror.replaceSelection("function " + name + "() {\\n  \\n}\\n\\n" + name + ".prototype = {\\n  \\n};\\n");\n
+  },\n
+\n
+  reindent: function() {\n
+    this.mirror.reindent();\n
+  }\n
+};\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2270</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
