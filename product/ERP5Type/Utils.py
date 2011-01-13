@@ -3187,7 +3187,6 @@ class ScalarMaxConflictResolver(persistent.Persistent):
 ###################
 #  URL Normaliser #
 ###################
-from Products.PythonScripts.standard import url_unquote
 try:
   import urlnorm
 except ImportError:
@@ -3259,11 +3258,6 @@ def urlnormNormaliseUrl(url, base_url=None):
   """
   try:
     url = urlnorm.norm(url)
-  except UnicodeDecodeError:
-    try:
-      url = urlnorm.norm(url_unquote(url).decode('latin1'))
-    except UnicodeDecodeError:
-      raise urlnorm.InvalidUrl
   except (AttributeError, urlnorm.InvalidUrl):
     # This url is not valid, a better Exception will
     # be raised
