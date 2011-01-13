@@ -596,7 +596,7 @@ class OOoTemplate(ZopePageTemplate):
       tmp_ooo.setBaseData(ooo)
       tmp_ooo.setBaseContentType(self.content_type)
 
-    if request is not None and not batch_mode:
+    if request is not None and not batch_mode and not source:
       return tmp_ooo.index_html(REQUEST=request,
                                 RESPONSE=request.RESPONSE,
                                 format=format)
