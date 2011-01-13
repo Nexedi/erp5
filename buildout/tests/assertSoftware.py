@@ -1770,6 +1770,22 @@ class AssertLibjpeg(AssertSoftwareMixin):
       ], [])
 
 class AssertLibpng(AssertSoftwareMixin):
+  def test_ld_libpng12(self):
+    self.assertLibraryList('parts/libpng12/lib/libpng12.so',[
+      'libc',
+      'libm',
+      'libz',
+      ], [
+      'zlib',
+      ])
+    self.assertLibraryList('parts/libpng12/lib/libpng.so',[
+      'libc',
+      'libm',
+      'libz',
+      ], [
+      'zlib',
+      ])
+
   def test_ld_libpng14(self):
     self.assertLibraryList('parts/libpng/lib/libpng14.so',[
       'libc',
@@ -1778,8 +1794,6 @@ class AssertLibpng(AssertSoftwareMixin):
       ], [
       'zlib',
       ])
-
-  def test_ld_libpng(self):
     self.assertLibraryList('parts/libpng/lib/libpng.so',[
       'libc',
       'libm',
