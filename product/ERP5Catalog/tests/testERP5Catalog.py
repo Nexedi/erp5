@@ -108,6 +108,12 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
   new_erp5_deferred_sql_connection = 'erp5_sql_deferred_connection2'
   new_catalog_id = 'erp5_mysql_innodb2'
 
+  __cleanups = ()
+
+  def _addCleanup(self, callable):
+    self.__cleanups += (callable,)
+    return callable
+
   def afterSetUp(self):
     uf = self.getPortal().acl_users
     uf._doAddUser(self.username, '', ['Manager'], [])
@@ -132,6 +138,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       self.portal.manage_delObjects([self.new_erp5_deferred_sql_connection])
     if self.new_catalog_id in self.portal.portal_catalog.objectIds():
       self.portal.portal_catalog.manage_delObjects([self.new_catalog_id])
+    for cleanup in self.__cleanups:
+      cleanup(self)
     transaction.commit()
     self.tic()
 
@@ -4438,6 +4446,56 @@ VALUES
     organisation_list = [x.getObject() for x in 
                          module.searchFolder(**search_kw)]
     self.assertEquals(organisation_list, [org1, org2, org3, org4])
+
+  def test_BackwardCompatibilityWithOldMethods(self, quiet=quiet, 
+                                               run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Dealing with RelatedKey methods missing the proper separator'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+
+    module = self.getOrganisationModule()
+    org_a = self._makeOrganisation(title='abc',default_address_city='abc')
+    org_a.setReference(org_a.getId())
+    org_a.immediateReindexObject()
+
+    # make a query to fetch the address of the organisation above by
+    # querying, among other things, the grand_parent
+    query = dict(grand_parent_portal_type="Organisation Module",
+                 parent_reference=org_a.getReference())
+    catalog = self.getCatalogTool()
+    # check the query works normally
+    self.assertEqual([x.getObject() for x in catalog.searchResults(**query)],
+                     [org_a.default_address])
+
+    # even if we do a left_join
+    query_lj = query.copy()
+    query_lj.update(left_join_list=('grand_parent_portal_type',))
+    self.assertEqual([x.getObject() for x in catalog.searchResults(**query_lj)],
+                     [org_a.default_address])
+    
+    # now turn the z_related_grand_parent into an old-style method, without
+    # RELATED_QUERY_SEPARATOR
+    method = catalog.getSQLCatalog().z_related_grand_parent
+    old_src = method.src
+
+    @self._addCleanup
+    def cleanGrandParentMethod(self):
+      method.manage_edit(method.title, method.connection_id,
+                         method.arguments_src, old_src)
+
+    src = old_src.replace('<dtml-var RELATED_QUERY_SEPARATOR>', ' AND ')
+    method.manage_edit(method.title, method.connection_id, method.arguments_src,
+                       src)
+
+    # check that it still works
+    self.assertEqual([x.getObject() for x in catalog.searchResults(**query)],
+                     [org_a.default_address])
+
+    # now try to do a left-join on grand_parent_portal_type which
+    # shouldn't work
+    self.assertRaises(RuntimeError, lambda: catalog.searchResults(**query_lj))
 
 def test_suite():
   suite = unittest.TestSuite()
