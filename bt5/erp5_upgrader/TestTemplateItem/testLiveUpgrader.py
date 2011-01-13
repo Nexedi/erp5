@@ -125,6 +125,10 @@ class TestLiveUpgrader(ERP5TypeLiveTestCase):
     self.assertTrue(signature['alarm_dict']["bt5_upgrader"])
     self.assertTrue(signature['alarm_dict']["finalize_upgrader"])
 
+    # By default there is nothing to fix on skin Selection.
+    # (rafael) Is it really necessary?
+    self.assertFalse(self.portal.ERP5Site_setupUpgraderSkinSelection())
+
   def testUpgradeObjectWorkflowState(self):
     """
       Create a test to ERP5Site_upgradeObjectList which aims to update
