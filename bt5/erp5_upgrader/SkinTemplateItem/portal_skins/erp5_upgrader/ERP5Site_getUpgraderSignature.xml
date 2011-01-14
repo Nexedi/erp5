@@ -290,7 +290,7 @@ INTEGRITY_VERIFICATION_SCRIPT_ID_LIST = (\'ERP5Site_verifyUpgradeIntegrity\',\n
 # be consider as After methods.\n
   \n
 FINALIZE_ALARM_SCRIPT = ( \'ERP5Site_upgradeGlobalPropertyList\',\n
-                          \'ERP5Site_upgradeValidationStateList\',\n
+                          \'ERP5Site_upgradeObjectList\',\n
                           \'ERP5Site_upgradeWorkflowChain\',\n
                           \'ERP5Site_upgradePortalTypePropertySheet\',\n
                           \'ERP5Site_upgradeSecurity\',\n
@@ -363,6 +363,8 @@ signature_dict = {\n
  , \'object_action_dict\': OBJECT_ACTION_DICT\n
    # Provides a list of script ids that will be run after the upgrade to check the Instance Integrity\n
  , \'integrity_verification_script_id_list\': INTEGRITY_VERIFICATION_SCRIPT_ID_LIST\n
+   # Provides a list of script ids that will be run during finalization step\n
+ , \'finalize_upgrade_script_list\': FINALIZE_ALARM_SCRIPT\n
    # Provides a dict with expected catalog filter expressions\n
  , \'catalog_filter_dict\': CATALOG_FILTER_DICT\n
    # Provides a list of portal types to had rules updated.\n
