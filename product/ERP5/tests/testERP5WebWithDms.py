@@ -75,6 +75,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     Return the list of required business templates.
     """
     return ('erp5_base',
+            'erp5_jquery',    
             'erp5_web',
             'erp5_ingestion',
             'erp5_ingestion_mysql_innodb_catalog',
