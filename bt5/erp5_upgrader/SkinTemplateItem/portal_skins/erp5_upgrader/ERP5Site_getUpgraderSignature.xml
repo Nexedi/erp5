@@ -156,7 +156,6 @@ REQUIRED_BT5_ID_LIST = ()\n
 # After the bt5 be updated, update catalog will be trigger.\n
 UPDATE_CATALOG_BT5_ID_LIST = ()\n
 \n
-\n
 # Call some scripts inside same transaction before or after BT update\n
 BEFORE_TRIGGERED_BT5_SCRIPT_ID_DICT = {}\n
 AFTER_TRIGGERED_BT5_SCRIPT_ID_DICT = {\'erp5_mysql_innodb_catalog\': (\'ERP5Site_updateSitePropertyForTestOnly\',)}\n
@@ -164,8 +163,7 @@ AFTER_TRIGGERED_BT5_SCRIPT_ID_DICT = {\'erp5_mysql_innodb_catalog\': (\'ERP5Site
 # A list bt5 which require reinstallation\n
 #   ie. the upgrader will call reinstall\n
 #   on each of them and revert all local changes.\n
-REINSTALABLE_BT5_ID_LIST = (\'erp5_odt_style\',\n
-)\n
+REINSTALABLE_BT5_ID_LIST = ()\n
 \n
 # A snapshot of workflow chains which are known to be valid\n
 #   this snapshot will be generated automatically from release\n
@@ -286,6 +284,21 @@ INTEGRITY_VERIFICATION_SCRIPT_ID_LIST = (\'ERP5Site_verifyUpgradeIntegrity\',\n
                                          \'ERP5Site_verifyMemcachedIntegrity\',\n
                                          \'ERP5Site_verifySQLCatalogFilterIntegrity\',\n
                                          \'ERP5Site_verifyActivityIntegrity\')\n
+\n
+#\n
+# List of Scripts to be sense and run after business template be upgraded. This can\n
+# be consider as After methods.\n
+  \n
+FINALIZE_ALARM_SCRIPT = ( \'ERP5Site_upgradeGlobalPropertyList\',\n
+                          \'ERP5Site_upgradeValidationStateList\',\n
+                          \'ERP5Site_upgradeWorkflowChain\',\n
+                          \'ERP5Site_upgradePortalTypePropertySheet\',\n
+                          \'ERP5Site_upgradeSecurity\',\n
+                          \'ERP5Site_upgradeObjectClass\',\n
+                          \'ERP5Site_upgradeSQLCatalogFilter\',\n
+                          \'ERP5Site_upgradeAlarmToolConfiguration\',\n
+                         #\'ERP5Site_upgradeMySQLCharset\',\n
+                        )\n
 \n
 # \n
 # Define the property and value ({\'property\' : \'value\', ...} to be set or created \n

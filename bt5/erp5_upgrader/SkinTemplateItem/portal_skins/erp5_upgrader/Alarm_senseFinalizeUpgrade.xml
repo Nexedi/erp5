@@ -63,41 +63,10 @@ alarm_dict = context.ERP5Site_getUpgraderSignature("alarm_dict")\n
 if not alarm_dict.get(context.getId(), True):\n
   return False\n
 \n
-# Verify if is required upgrade Global Site Properties. \n
-if len(context.ERP5Site_upgradeGlobalPropertyList()) > 0:\n
-  return True\n
-\n
-if len(context.ERP5Site_upgradeValidationStateList()) > 0: \n
-  return True\n
-\n
-if len(context.ERP5Site_upgradeWorkflowChain()) > 0:\n
-  return True\n
-\n
-if len(context.ERP5Site_upgradeData()) > 0: \n
-  return True\n
-\n
-if len(context.ERP5Site_upgradePortalTypePropertySheet()) > 0: \n
-  return True\n
-\n
-if len(context.ERP5Site_upgradeSecurity()) > 0: \n
-  return True\n
-\n
-if len(context.ERP5Site_upgradeObjectClass()) > 0: \n
-  return True\n
-\n
-if len(context.ERP5Site_upgradeSQLCatalogFilter()) > 0: \n
-  return True\n
-\n
-if len(context.ERP5Site_upgradeSQLCatalog()) > 0: \n
-  return True\n
-\n
-if len(context.ERP5Site_upgradeAlarmToolConfiguration()) > 0:\n
-  return True\n
-\n
-# (rafael) Maybe this is dangerous, enable it when this\n
-# is appropriated tested.\n
-#if len(context.ERP5Site_upgradeMySQLCharset()) > 0: \n
-#  return True\n
+finalize_upgrade_script_list = context.ERP5Site_getUpgraderSignature(\'finalize_upgrade_script_list\')\n
+for script_id in finalize_upgrade_script_list:\n
+  if len(getattr(context, script_id)()) > O:\n
+    return True\n
 \n
 return False\n
 
@@ -105,69 +74,12 @@ return False\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>kw</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>alarm_dict</string>
-                            <string>True</string>
-                            <string>False</string>
-                            <string>len</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Alarm_senseFinalizeUpgrade</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>
