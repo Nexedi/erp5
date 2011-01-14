@@ -453,7 +453,8 @@ $().ready(function(){\n
    $("div.listbox-tree, div.gadget-action div.front_pad").css("width", "79%");\n
    $("td.listbox-table-domain-tree-cell a").css("padding-right", "25px");\n
    $("div.header-right").css("width", "52.3%");\n
- }\n
+ };\n
+ $("a.tree-open").parent().parent().css("background-color", "#BBCCFF");\n
  return false;\n
 });
 

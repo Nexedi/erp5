@@ -145,7 +145,7 @@ div.gadget-column div.file-selection div.file-quick-browser,\n
 }\n
 \n
 div.quick-search-item, td.listbox-table-domain-tree-cell a {\n
-  padding-left: 20px;\n
+  padding-left: 15px;\n
   font-size: 13px;\n
   line-height: 19px;\n
   cursor: pointer;\n
@@ -832,10 +832,6 @@ td.listbox-table-domain-tree-cell a {\n
   padding-bottom: 3px;\n
   padding-right: 69px;\n
   padding-top: 3px;\n
-}\n
-\n
-a.tree-open {\n
-  background-color: #BBCCFF;\n
 }\n
 \n
 a.domain_selected {\n
