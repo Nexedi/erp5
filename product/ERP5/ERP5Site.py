@@ -1403,11 +1403,12 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     
     We consider that a Site is migrated if its Types Tool is migrated
     (it will always be migrated last)"""
-    # XXX do we want to call this automatically? Where? (note that it's likely
-    # to fail as portal types are usually not perfectly configured, and it
-    # requires user action to fix issues)
-    if self.portal_types.__class__.__module__ == 'erp5.portal_type':
-      # nothing to do
+    types_tool = getattr(self, 'portal_types', None)
+    if types_tool is None:
+      # empty site
+      return
+    if types_tool.__class__.__module__ == 'erp5.portal_type':
+      # nothing to do, already migrated
       return
 
     # note that the site itself is not migrated (ERP5Site is not a portal type)
