@@ -79,12 +79,19 @@
               <none/>
             </value>
         </item>
+        <item>
+            <key> <string>type_class</string> </key>
+            <value> <string>ComputerPartition</string> </value>
+        </item>
       </dictionary>
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
+      <tuple>
+        <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
+        <tuple/>
+      </tuple>
     </pickle>
     <pickle>
       <dictionary>
@@ -101,7 +108,10 @@
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
+      <tuple>
+        <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
+        <tuple/>
+      </tuple>
     </pickle>
     <pickle>
       <dictionary>
