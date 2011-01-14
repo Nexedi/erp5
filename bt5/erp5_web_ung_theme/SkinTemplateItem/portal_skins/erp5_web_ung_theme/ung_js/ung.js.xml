@@ -39,13 +39,6 @@ function getWebEditorName(){\n
   return currentUrlSplitted[currentUrlSplitted.length-1];\n
 }\n
 \n
-function createBlankSpace(amount){\n
-  blankSpaceStr = "";\n
-  for (var n=1; n < amount; n++)\n
-    blankSpaceStr += "&nbsp;";\n
-  return blankSpaceStr;     \n
-}\n
-\n
 function getUrlParameterList(){\n
   var argumentList = {};\n
   resultList = window.location.href.split("?")[1].split("&");\n
@@ -156,12 +149,6 @@ $().ready(function(){\n
   });\n
   if ($("div.gadget-column").length == 1) {\n
    $("a.domain_selected").text($("a.tree-open").text());\n
-   $("a.tree-open, a.tree-closed").each(function(){\n
-     if ($(this).text() == "Starred" || $(this).text() == "Hidden")\n
-       $(this).html($(this).text() + createBlankSpace(11));\n
-     if ($(this).text() == "Trash")\n
-       $(this).html($(this).text() + createBlankSpace(13));\n
-   })\n
    var listboxTreeHeight = $("div.listbox-tree").css("height").replace("px", "");\n
    var domainTreeHeight = $("div.listbox-domain-tree-container").css("height").replace("px", "");\n
    if (parseInt(listboxTreeHeight) > parseInt(domainTreeHeight)){\n

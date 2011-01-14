@@ -154,7 +154,7 @@ div.quick-search-item, td.listbox-table-domain-tree-cell a {\n
 }\n
 \n
 div.quick-search-item:hover,\n
- td.listbox-table-domain-tree-cell a:hover {\n
+ table.listbox-table-domain-tree tbody tr:hover {\n
   background-color: #DAE6F6;\n
 }\n
 \n
@@ -826,12 +826,6 @@ div.listbox-tree-mode-selection {\n
 \n
 table.listbox-table-domain-tree {\n
   width: 100%;\n
-}\n
-\n
-td.listbox-table-domain-tree-cell a {\n
-  padding-bottom: 3px;\n
-  padding-right: 69px;\n
-  padding-top: 3px;\n
 }\n
 \n
 a.domain_selected {\n
