@@ -56,7 +56,7 @@
 """\n
 from Products.ERP5Type.Log import log\n
 portal_templates = context.portal_templates\n
-validation_dict = context.ERP5Site_getUpgraderSignature(\'validation_dict\')\n
+validation_dict = context.ERP5Site_getUpgraderSignature(\'object_action_dict\')\n
 param_not_provided = "PARAM_NOT_PROVIDED"\n
 \n
 # get list of title of bt5 that are installed.\n
@@ -84,7 +84,7 @@ for definition in upgradable_list:\n
   if obj is not None:\n
     method = getattr(obj, method_id, None)\n
     if method is not None and method() == expected_state:\n
-      sub_message_list.append("Upgrade is required for Validation Workflow List (%s object is in %s state, action %s.)" %\n
+      sub_message_list.append("Upgrade is required for Object List (%s object is in %s state, action %s.)" %\n
                 (path, expected_state, action))\n
       if int(upgrade) == 1:\n
         action_method = getattr(obj, action , None)\n
@@ -93,8 +93,8 @@ for definition in upgradable_list:\n
             action_method()\n
           else:\n
             action_method(*param_list)\n
-          sub_message_list.append("updated")\n
-    message_list.append(\' \'.join(sub_message_list))\n
+          sub_message_list.append("[UPDATED]")\n
+      message_list.append(\' \'.join(sub_message_list))\n
     \n
 return message_list\n
 </string> </value>
