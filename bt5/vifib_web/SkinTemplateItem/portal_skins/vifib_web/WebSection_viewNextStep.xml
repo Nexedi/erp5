@@ -61,7 +61,7 @@ else:\n
   desired_index = current_web_section.getIntIndex() + 1\n
 \n
 \n
-for section in main_section.contentValues(check_permission="View"):\n
+for section in main_section.contentValues(checked_permission="View"):\n
   if section.getIntIndex() == desired_index :\n
     next_web_section = section\n
     break\n
