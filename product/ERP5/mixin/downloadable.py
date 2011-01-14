@@ -102,7 +102,7 @@ class DownloadableMixin:
       RESPONSE.setHeader('Content-Type', mime)
     if output_format not in (VALID_TEXT_FORMAT_LIST + VALID_IMAGE_FORMAT_LIST):
       # need to return it as attachment
-      filename = self.getStandardFileName(format=format)
+      filename = self.getStandardFilename(format=format)
       RESPONSE.setHeader('Content-Disposition',
                          'attachment; filename="%s"' % filename)
       RESPONSE.setHeader('Accept-Ranges', 'bytes')
