@@ -114,10 +114,9 @@ table {\n
 a:link, \n
 a:active, \n
 a:visited { \n
-  color: #9d968d; \n
-  font-weight:bold; \n
+  color: #000; \n
+  font-weight:normal; \n
   text-decoration: none;\n
-\n
 }\n
 \n
 a:hover { \n
@@ -1528,7 +1527,7 @@ div#wrapper_headline span.header_title {\n
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
-            <value> <string>utf-8</string> </value>
+            <value> <string>iso-8859-15</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
