@@ -114,7 +114,7 @@
       <br/>\n
       <br/>\n
       <button type="button"\n
-              onclick="MochiKit.Visual.toggle(\'add_new_tab_dialog\');"\n
+              onclick="$(\'#add_new_tab_dialog\').toggle();"\n
               i18n:translate="" \n
               i18n:domain="ui">Cancel</button>\n
       <button type="button"\n
@@ -140,7 +140,7 @@
       <button type="button"\n
               i18n:translate="" \n
               i18n:domain="ui"\n
-              onclick="MochiKit.Visual.toggle(\'rename_tab_dialog\');">Cancel</button>\n
+              onclick="$(\'#rename_tab_dialog\').toggle();">Cancel</button>\n
       <button type="button"\n
               i18n:translate="" \n
               i18n:domain="ui"\n
