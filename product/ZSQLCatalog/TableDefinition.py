@@ -190,3 +190,13 @@ class LeftJoin(InnerJoin):
   """Definition of a left-join as a FROM expression"""
   
   JOIN_TYPE = "LEFT JOIN"
+
+  def _extendJoinConditionQueryList(self, query_list):
+    """ The condition from a left-join cannot be meaningfully
+    extracted to be used in an implicit Inner Join, as is done when a
+    query contains a related key that is not formatted to separate the
+    join conditions for each related table."""
+    raise RuntimeError("Attempted to collapse table definition for implicit "
+                       "inner join, but this table definition contains a Left "
+                       "Join: %r" % self)
+
