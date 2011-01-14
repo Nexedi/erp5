@@ -442,11 +442,6 @@ div.bottom_actions button {\n
   display:none;\n
 }\n
 \n
-div.jSheetControls#jSheetControls_0 {\n
-  margin-top: 5px;\n
-}\n
-\n
-\n
 div.toolbar button, div.gadget-action input#upload {\n
   color: #333333;\n
   border: 1px solid #BBBBBB;\n

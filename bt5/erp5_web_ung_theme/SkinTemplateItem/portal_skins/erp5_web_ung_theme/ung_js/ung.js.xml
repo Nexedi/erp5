@@ -148,7 +148,7 @@ $().ready(function(){\n
      }\n
   });\n
   if ($("div.gadget-column").length == 1) {\n
-   $("a.domain_selected").text($("a.tree-open").text());\n
+   $("a.domain_selected").text($("a.tree-open:last").text());\n
    var listboxTreeHeight = $("div.listbox-tree").css("height").replace("px", "");\n
    var domainTreeHeight = $("div.listbox-domain-tree-container").css("height").replace("px", "");\n
    if (parseInt(listboxTreeHeight) > parseInt(domainTreeHeight)){\n
@@ -180,15 +180,16 @@ $().ready(function(){\n
  }\n
  else {\n
   $("div.action_menu ul li a").click(function(event){\n
-   event.preventDefault();\n
-   herfList = this.getAttribute("href").split("?");\n
-   action_name = herfList[herfList.length-1].split("=")[1];\n
-   $.ajax({url: "Base_changeWorkflowState", \n
+    event.preventDefault();\n
+    herfList = this.getAttribute("href").split("?");\n
+    action_name = herfList[herfList.length-1].split("=")[1];\n
+    $.ajax({\n
+           url: "Base_changeWorkflowState", \n
            data: "action_name=" + action_name,\n
            success: function(){\n
              window.location.reload();\n
-          },\n
-   });\n
+           },\n
+         });\n
   });\n
   if ($("a[name=\'document_state\']").text() == "Draft") {\n
     $("div.action_menu li ul").append("<li><a id=\'share_document\' href=\'#\'>" + \n
