@@ -3883,7 +3883,11 @@ class Base( CopyContainer,
       self._p_changed = True
       # this might look useless, but it is necessary to explicitely record
       # the change in the parent container, because the class has changed
-      setattr(self.getParentValue(), self.getId(), self)
+      try:
+        parent = self.getParentValue()
+      except AttributeError:
+        return
+      setattr(parent, self.getId(), self)
 
   security.declareProtected(Permissions.DeletePortalContent,
                             'migratePortalType')
