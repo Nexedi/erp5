@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts91031161.43</string> </value>
+            <value> <string>ts94991442.7</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -20,75 +20,65 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>application/x-javascript</string> </value>
+            <value> <string>application/javascript</string> </value>
         </item>
         <item>
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-// Browser gadget toggle section\n
+/*\n
+Copyright (c) 2011-2012 Nexedi SARL and Contributors. All Rights Reserved.\n
+\n
+This program is Free Software; you can redistribute it and/or\n
+modify it under the terms of the GNU General Public License\n
+as published by the Free Software Foundation; either version 2\n
+of the License, or (at your option) any later version.\n
+\n
+This program is distributed in the hope that it will be useful,\n
+but WITHOUT ANY WARRANTY; without even the implied warranty of\n
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n
+GNU General Public License for more details.\n
+\n
+You should have received a copy of the GNU General Public License\n
+along with this program; if not, write to the Free Software\n
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
+*/\n
+\n
 function toggleSection(section_id, image_id){\n
-  section_obj = MochiKit.DOM.getElement(section_id);\n
-  image_obj = MochiKit.DOM.getElement(image_id);\n
-  if(section_obj.style.display==\'none\'){\n
-    section_obj.style.display=\'block\';\n
-    image_obj.src=\'images/tree_open.png\';}\n
+  /* Browser gadget toggle section */\n
+  section_obj = $("#" + section_id);\n
+  image_obj = $("#" + image_id);\n
+  if(section_obj.is(":hidden")){\n
+    section_obj.show();\n
+    image_obj.attr("src", "images/tree_open.png");}\n
   else{\n
-    section_obj.style.display=\'none\';\n
-    image_obj.src=\'images/tree_closed.png\';}\n
+    section_obj.hide();\n
+    image_obj.attr("src", "images/tree_closed.png");}\n
   } \n
 \n
-// Pop up window for KM\n
-function delayedDocumentDetailsPopupWindowLoad(dom_element, url){\n
-  dom_id = dom_element.id;\n
-  if (dom_element.style.display==\'block\'){\n
-    d = MochiKit.Async.doSimpleXMLHttpRequest(url);\n
-    d.addCallback(handleServerSuccess);\n
-   }};\n
-\n
-function handleServerSuccess(res){\n
-  dom_element.innerHTML = res.responseText;};\n
-\n
-function toggleDocumentDetailsPopupWindow(dom_id, show, url){\n
-  dom_element = getElement(dom_id);\n
-  remote_url = url;\n
-  if (show==true){\n
-    dom_element.style.display=\'block\';\n
-    setTimeout(\'delayedDocumentDetailsPopupWindowLoad(dom_element, remote_url);\', 500)\n
-    }\n
-  else{\n
-    dom_element.style.display=\'none\';\n
-    }\n
-}\n
-\n
-// Toggle any element\n
-function toggleElement(tag_name, class_name){\n
-  dom_element = MochiKit.DOM.getFirstElementByTagAndClassName(tag_name, class_name);\n
-  MochiKit.Visual.toggle(dom_element);\n
-}\n
-\n
 function toggleHiddenFormatDialogSelection(){\n
-  toggleElement(\'div\', \'download-document-format-list-menu-hidden\');\n
-  MochiKit.DOM.removeElement(MochiKit.DOM.getFirstElementByTagAndClassName(\'li\', \'toggle-hidden-format-dialog-selection-link\'));\n
+  /* Expand more download formats widget */\n
+  $("div.download-document-format-list-menu-hidden").toggle();\n
+  $("li.toggle-hidden-format-dialog-selection-link").remove();\n
 }\n
-\n
-// MochiKit.DOM.addLoadEvent(setScreenClass);\n
-// connect(window, "onresize", setScreenClass);\n
-\n
-// function setScreenClass(){\n
-//   var fmt = document.documentElement.clientWidth;\n
-//   var cls = (fmt<=800)?\'screen_small\':(fmt>800)?\'screen_wide\':\'screen_small\';\n
-//   document.body.className=cls;\n
-// };\n
 \n
 function requestPasswordReset(script_name){\n
-  MochiKit.DOM.getElement(\'reference\').value = MochiKit.DOM.getElement(\'__ac_name\').value;\n
-  /* reset __ac_name & __ac_password in case they have been filled by browser */\n
-  MochiKit.DOM.getElement(\'__ac_name\').value = "";\n
-  MochiKit.DOM.getElement(\'__ac_password\').value = "";\n
-  /* Submit request password */\n
-  submitAction(MochiKit.DOM.getElement(\'main_form\'), script_name);  \n
+  $("#reference").attr("value", $("#__ac_name").val()) \n
+  // reset __ac_name & __ac_password in case they have been filled by browser\n
+  $("#__ac_name").attr("value", "");\n
+  $("#__ac_password").attr("value", "");\n
+  // Submit request password\n
+  main_form = $("#main_form");\n
+  main_form.attr("action", script_name);\n
+  main_form.submit();\n
 };\n
+\n
+function showPopik(dom_id, what, delay){\n
+  /* Show details pop up in search mode */\n
+  var obj = $("#" + dom_id);\n
+  if(what==true){obj.show();}\n
+  else{obj.hide();}\n
+}\n
 
 
 ]]></string> </value>
@@ -99,7 +89,7 @@ function requestPasswordReset(script_name){\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>2235</int> </value>
+            <value> <int>1883</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
