@@ -28,6 +28,7 @@
 #
 ##############################################################################
 from Products.ERP5Type.Utils import initializeProduct, updateGlobals
+from AccessControl.Permissions import manage_users as ManageUsers
 import sys
 import Permissions
 this_module = sys.modules[ __name__ ]
@@ -38,6 +39,9 @@ content_classes = ()
 content_constructors = ()
 from Tool import SlapTool
 portal_tools = ( SlapTool.SlapTool, )
+from Products.PluggableAuthService.PluggableAuthService import registerMultiPlugin
+
+import VifibMachineAuthenticationPlugin
 
 def initialize(context):
   import Document
@@ -45,3 +49,15 @@ def initialize(context):
     document_classes=document_classes, object_classes=object_classes,
     portal_tools=portal_tools, content_constructors=content_constructors,
     content_classes=content_classes)
+
+  context.registerClass( VifibMachineAuthenticationPlugin.VifibMachineAuthenticationPlugin
+                         , permission=ManageUsers
+                         , constructors=(
+                            VifibMachineAuthenticationPlugin.manage_addVifibMachineAuthenticationPluginForm,
+                            VifibMachineAuthenticationPlugin.addVifibMachineAuthenticationPlugin, )
+                         , visibility=None
+                         , icon='www/portal.gif'
+                         )
+
+
+registerMultiPlugin(VifibMachineAuthenticationPlugin.VifibMachineAuthenticationPlugin.meta_type)
