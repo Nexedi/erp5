@@ -4347,15 +4347,7 @@ VALUES
     result = connector.manage_test('select 1 as foo;')
     self.assertEquals(1, result[0].foo)
 
-  def test_SelectDictWithDynamicRelatedKey(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Select Dict With Dynamic Related Key'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
-
-    # Create some group categories
-    portal = self.getPortal()
+  def _createSomeGroupCategories(self):
     portal_category = self.getCategoryTool()
     group_category = portal_category.group
     group_data_map = dict(nexedi=('Nexedi', 'Nexedi Group'),
@@ -4368,8 +4360,18 @@ VALUES
         group = group_category.newContent(id=group_id)
       group.edit(title=title, description=description)
 
-    # Create some orgs associated with varying association with those groups
-    module = portal.getDefaultModule('Organisation')
+  def test_SelectDictWithDynamicRelatedKey(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Select Dict With Dynamic Related Key'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+
+    self._createSomeGroupCategories()
+
+    # Create some orgs associated with varying association with the
+    # groups created above.
+    module = self.portal.getDefaultModule('Organisation')
     # org1 has no groups
     org1 = module.newContent(portal_type='Organisation', title='org1')
     # org2 has group nexedi
@@ -4501,6 +4503,19 @@ VALUES
     # now try to do a left-join on grand_parent_portal_type which
     # shouldn't work
     self.assertRaises(RuntimeError, lambda: catalog.searchResults(**query_lj))
+
+    # Neither should it work if a left-join is attempted in a column
+    # that has proper related-key rendering, but is present in the
+    # same query as a column that hasn't, as the whole query is
+    # converted into implicit inner joins.
+    self.tic()
+    query_lj.update(left_join_list=('strict_group_title',),
+                    select_dict=('strict_group_title',))
+    self.assertRaises(RuntimeError, lambda: catalog.searchResults(**query_lj))
+    # though it should work on queries that don't use the broken related-key
+    del query_lj['grand_parent_portal_type']
+    self.assertEqual([x.getObject() for x in catalog.searchResults(**query_lj)],
+                     [org_a.default_address])
 
 def test_suite():
   suite = unittest.TestSuite()
