@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts50863427.77</string> </value>
+            <value> <string>ts94991458.99</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -24,30 +24,46 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string>function initialize_toolbar(){\n
-  // for each menues\n
-  var menus = getElementsByTagAndClassName(\'li\', \'toolboxSection\');\n
-  forEach(menus, function (menu) {\n
-     var menu_title = getFirstElementByTagAndClassName(\'h3\', \'menu_title\', menu);\n
-     var item = getFirstElementByTagAndClassName(\'div\', \'menu\', menu);\n
-     connect(menu_title, \'onclick\', function (){display_menu(item)});\n
-  });\n
-}\n
+            <value> <string>/*\n
+Copyright (c) 2011-2012 Nexedi SARL and Contributors. All Rights Reserved.\n
+\n
+This program is Free Software; you can redistribute it and/or\n
+modify it under the terms of the GNU General Public License\n
+as published by the Free Software Foundation; either version 2\n
+of the License, or (at your option) any later version.\n
+\n
+This program is distributed in the hope that it will be useful,\n
+but WITHOUT ANY WARRANTY; without even the implied warranty of\n
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n
+GNU General Public License for more details.\n
+\n
+You should have received a copy of the GNU General Public License\n
+along with this program; if not, write to the Free Software\n
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
+*/\n
+\n
+\n
+function initialize_toolbar(){\n
+  /* initialize all toolbar menues */\n
+  $("li.toolboxSection").each(\n
+    function (index, menu){\n
+      menu = $(this);\n
+      var menu_title = menu.children("h3.menu_title").first();\n
+      var item = menu.children("div.menu").first();\n
+      menu_title.bind("click", function (){display_menu(item)} );\n
+  })}\n
 \n
 function display_menu(clicked_item){\n
-  toggle(clicked_item, \'appear\', {duration:0});\n
-  // for each menues\n
-  var menus = getElementsByTagAndClassName(\'li\', \'toolboxSection\');\n
-  forEach(menus, function (menu) {\n
-     var item = getFirstElementByTagAndClassName(\'div\', \'menu\', menu);\n
-     if (item != clicked_item) {\n
-       //item.style.display = \'none\';\n
-       fade(item, {duration:0});\n
-     }\n
-  });\n
-}\n
+  /* when called funtion will display current menu and hide rest */\n
+  clicked_item.toggle();\n
+  $("li.toolboxSection").each(\n
+    function (index, menu){\n
+      menu = $(this);\n
+      var item = menu.children("div.menu").first();\n
+      if (item.parent().attr("id") != clicked_item.parent().attr("id")) {item.hide();}\n
+  })};\n
 \n
-initialize_toolbar();\n
+$(document).ready(initialize_toolbar);\n
 </string> </value>
         </item>
         <item>
@@ -56,7 +72,7 @@ initialize_toolbar();\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>809</int> </value>
+            <value> <int>1497</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

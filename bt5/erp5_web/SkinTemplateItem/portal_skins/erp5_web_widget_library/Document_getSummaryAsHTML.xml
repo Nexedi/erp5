@@ -49,7 +49,7 @@
               dom_id python: (\'%s-%s\' %(box_relative_url, here.getRelativeUrl())).replace(\'/\',\'_\')">\n
   <div class="document-gadget-quick-preview">\n
   <div class="teaser"\n
-       tal:attributes="onclick string:toggle(\'${dom_id}\');">\n
+       tal:attributes="onclick string:$(\'#${dom_id}\').toggle();">\n
     <img alt="Icon" class="icon"\n
          tal:attributes="src icon" />\n
 \n
@@ -82,8 +82,7 @@
   </div>\n
   </div>\n
   \n
-</tal:block>\n
-
+</tal:block>
 
 ]]></unicode> </value>
         </item>
@@ -101,7 +100,7 @@
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
-            <value> <string>utf-8</string> </value>
+            <value> <string>iso-8859-15</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
