@@ -4458,7 +4458,12 @@ VALUES
     module = self.getOrganisationModule()
     org_a = self._makeOrganisation(title='abc',default_address_city='abc')
     org_a.setReference(org_a.getId())
-    org_a.immediateReindexObject()
+    # sometimes the module itself is not indexed yet...
+    module.reindexObject()
+
+    # Flush message queue
+    transaction.commit()
+    self.tic()
 
     # make a query to fetch the address of the organisation above by
     # querying, among other things, the grand_parent
