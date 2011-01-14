@@ -2,111 +2,20 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Domain Generator" module="erp5.portal_type"/>
+      <global name="Domain" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_local_properties</string> </key>
+            <key> <string>_identity_criterion</string> </key>
             <value>
-              <tuple>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>int_index</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>criterion_property_list</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>lines</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>multimembership_criterion_base_category_list</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>lines</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>string_index</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>test_method_id</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>test_tales_expression</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>membership_criterion_base_category_list</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>lines</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>membership_criterion_category_list</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>lines</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>membership_criterion_document_list</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>lines</string> </value>
-                  </item>
-                </dictionary>
-              </tuple>
+              <dictionary/>
             </value>
         </item>
         <item>
-            <key> <string>criterion_property_list</string> </key>
+            <key> <string>_range_criterion</string> </key>
             <value>
-              <tuple/>
+              <dictionary/>
             </value>
         </item>
         <item>
@@ -115,47 +24,29 @@
         </item>
         <item>
             <key> <string>int_index</string> </key>
-            <value> <string></string> </value>
+            <value> <int>7</int> </value>
         </item>
         <item>
-            <key> <string>membership_criterion_base_category_list</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>membership_criterion_category_list</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>membership_criterion_document_list</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>multimembership_criterion_base_category_list</string> </key>
+            <key> <string>membership_criterion_category</string> </key>
             <value>
               <tuple/>
             </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Domain Generator</string> </value>
+            <value> <string>Domain</string> </value>
         </item>
         <item>
             <key> <string>string_index</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>test_method_id</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>test_tales_expression</string> </key>
-            <value> <string>python: True</string> </value>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
