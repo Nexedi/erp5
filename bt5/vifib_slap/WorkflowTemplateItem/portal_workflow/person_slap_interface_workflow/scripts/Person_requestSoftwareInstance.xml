@@ -1,0 +1,239 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+person = state_change[\'object\']\n
+portal = person.getPortalObject()\n
+# Get required arguments\n
+kwargs = state_change.kwargs\n
+software_release_url_string = state_change.kwargs[\'software_release\']\n
+requested_partition_reference = kwargs["partition_reference"]\n
+# software_type = kwargs["software_type"]\n
+software_type = "RootInstance"\n
+instance_xml = kwargs["instance_xml"]\n
+\n
+sale_order_portal_type = "Sale Order"\n
+sale_order_line_portal_type = "Sale Order Line"\n
+software_instance_portal_type = "Software Instance"\n
+hosting_subscription_portal_type = "Hosting Subscription"\n
+\n
+# XXX Hardcoded values\n
+seller = portal.restrictedTraverse("organisation_module/vifib_internet")\n
+currency = portal.restrictedTraverse("currency_module/EUR")\n
+\n
+tag = "%s_%s_%s_inProgress" % (person.getUid(), software_type, \n
+                               requested_partition_reference)\n
+\n
+# Check if it already exists\n
+request_software_instance = portal.portal_catalog.getResultValue(\n
+  portal_type=software_instance_portal_type,\n
+  title=software_type,\n
+  reference=requested_partition_reference,\n
+)\n
+if (request_software_instance is None):\n
+  if (portal.portal_activities.countMessageWithTag(tag) > 0):\n
+    # The software instance is already under creation but can not be fetched from catalog\n
+    # As it is not possible to fetch informations, it is better to raise an error\n
+    raise NotImplementedError(tag)\n
+  else:\n
+\n
+    setup_service_relative_url = portal.portal_preferences.getPreferredInstanceSetupResource()\n
+\n
+    software_instance = portal.getDefaultModule(portal_type=software_instance_portal_type).newContent(\n
+            portal_type=software_instance_portal_type,\n
+            reference=software_type,\n
+            title=requested_partition_reference,\n
+            text_content=instance_xml,\n
+            activate_kw={\'tag\': tag},\n
+    )\n
+\n
+    subscription = portal.getDefaultModule(portal_type=hosting_subscription_portal_type).newContent(\n
+      portal_type=hosting_subscription_portal_type,\n
+      title=requested_partition_reference,\n
+      activate_kw={\'tag\': tag},\n
+    )\n
+\n
+    software_release_document = context.portal_catalog.getResultValue(\n
+      portal_type=\'Software Release\',\n
+      url_string=software_release_url_string)\n
+\n
+    sale_order = portal.getDefaultModule(portal_type=sale_order_portal_type).newContent(\n
+      portal_type=sale_order_portal_type,\n
+      destination_value=person,\n
+      destination_section_value=person,\n
+      destination_decision_value=person,\n
+      start_date=DateTime(),\n
+      received_date=DateTime(),\n
+      # XXX Hardcoded values\n
+      source_value=seller,\n
+      source_section_value=seller,\n
+      price_currency_value=currency,\n
+      activate_kw={\'tag\': tag},\n
+    )\n
+    sale_order_line = sale_order.newContent(\n
+      portal_type=sale_order_line_portal_type,\n
+      resource=setup_service_relative_url,\n
+      quantity=1,\n
+      aggregate_value_list=[software_instance, subscription, software_release_document],\n
+      activate_kw={\'tag\': tag},\n
+    )\n
+    portal.portal_workflow.doActionFor(sale_order, "order_action")\n
+\n
+    # Find Computer partition\n
+    # XXX Link subscript to open order\n
+else:\n
+  # Update existing software instance\n
+  request_software_instance.edit(\n
+    text_content=instance_xml,\n
+    activate_kw={\'tag\': tag},\n
+  )\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>state_change</string>
+                            <string>_getitem_</string>
+                            <string>person</string>
+                            <string>_getattr_</string>
+                            <string>portal</string>
+                            <string>kwargs</string>
+                            <string>software_release_url_string</string>
+                            <string>requested_partition_reference</string>
+                            <string>software_type</string>
+                            <string>instance_xml</string>
+                            <string>sale_order_portal_type</string>
+                            <string>sale_order_line_portal_type</string>
+                            <string>software_instance_portal_type</string>
+                            <string>hosting_subscription_portal_type</string>
+                            <string>seller</string>
+                            <string>currency</string>
+                            <string>tag</string>
+                            <string>request_software_instance</string>
+                            <string>None</string>
+                            <string>NotImplementedError</string>
+                            <string>setup_service_relative_url</string>
+                            <string>software_instance</string>
+                            <string>subscription</string>
+                            <string>context</string>
+                            <string>software_release_document</string>
+                            <string>DateTime</string>
+                            <string>sale_order</string>
+                            <string>sale_order_line</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Person_requestSoftwareInstance</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
