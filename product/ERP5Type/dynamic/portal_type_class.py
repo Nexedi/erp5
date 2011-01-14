@@ -373,7 +373,7 @@ def initializeDynamicModules():
   erp5.temp_portal_type = registerDynamicModule('erp5.temp_portal_type',
                                                 loadTempPortalTypeClass)
 
-last_sync = 0
+last_sync = -1
 def synchronizeDynamicModules(context, force=False):
   """
   Allow resetting all classes to ghost state, most likely done after
