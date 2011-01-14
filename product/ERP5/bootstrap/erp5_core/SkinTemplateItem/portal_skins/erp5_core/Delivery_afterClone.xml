@@ -58,7 +58,7 @@ context.setSolver(None)\n
 # Initialize Causality Workflow\n
 if hasattr(context, \'startBuilding\'):\n
   context.startBuilding()\n
-  context.calculateCausalityState()\n
+  context.updateCausalityState()\n
 </string> </value>
         </item>
         <item>
