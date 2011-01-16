@@ -327,8 +327,8 @@ div.header-right {\n
 }\n
 \n
 div.main-left, div.main-right, div.main {\n
-  margin-top: -1em;\n
-  height:45em;\n
+  height: 45em;\n
+  margin-top: -0.6em;\n
 }\n
 \n
 div.main {\n
@@ -415,7 +415,6 @@ div.listbox-body div.main-right tbody {\n
 }\n
 \n
 div.header-left {\n
-  height:80%;\n
   margin-left:1px;\n
   margin-top:-4px;\n
 }\n
@@ -733,8 +732,8 @@ div.listbox-navigation {\n
 }\n
 \n
 div.listbox-navigation input {\n
-  height:14px;\n
-  width:20px;\n
+  height: 18px;\n
+  width: 20px;\n
 }\n
 \n
 div.listbox-header-box {\n
@@ -982,6 +981,17 @@ table#navigation_table div#add_new_gadget_link {\n
 \n
 div.front_pad div#page_wrapper {\n
   margin: -0.5em 0 0 !important;\n
+}\n
+\n
+#add-gadgets{\n
+ font-size: 11px;\n
+}\n
+\n
+form#ung_preference,\n
+ form#system_preference,\n
+ form#erp5_preference {\n
+  margin:0px;\n
+  padding: 0px;\n
 }
 
 ]]></string> </value>

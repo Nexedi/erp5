@@ -105,6 +105,7 @@ function changeCheckBoxValue(value){\n
 }\n
 \n
 $().ready(function(){\n
+  $("p.clear").remove();\n
   if ($("div.gadget-column").length == 0 && window.location.href.split("?").length > 1) {\n
     parameterList = getUrlParameterList();\n
     if (parameterList.hasOwnProperty("upload_document") == true){\n

@@ -40,8 +40,11 @@
 <body>\n
   <tal:block metal:define-macro="master">\n
      <tal:block tal:define="website here/getWebSiteValue;\n
-                            portal_path python:website.absolute_url();\n
+                            portal_path python: website.absolute_url();\n
                             dummy python: request.set(\'editable_mode\', 0);\n
+                            layout_form_id here/getApplicableLayout | nothing;\n
+                            ignore_layout request/ignore_layout | nothing;\n
+                            global layout_form python:(not layout_form_id or ignore_layout) or getattr(here, layout_form_id, None);\n
                             has_no_layout python: layout_form is None;\n
                             has_editor python: here.absolute_url() != portal_path;\n
                             aggregate python: has_no_layout or layout_form.Form_getGroupList(\n
@@ -50,7 +53,6 @@
                             navigation_area python:aggregate.get(\'navigation\', []);\n
                             header_area python:aggregate.get(\'header\', []);\n
                             main_area python:aggregate.get(\'main\', []);\n
-                            has_no_layout python: layout_form is None;\n
                             global css_list_template css_list_template | python: [];\n
                             global css_list_ung_template python:css_list_template + [\n
                                   \'ung_theme.css\',\n
