@@ -205,7 +205,7 @@ class TestWebCrawler(ERP5TypeTestCase):
           Funny link</a></p>
       <p><a href="http://www.example.com/section">Internal link</a></p>
       <p><a href="section2">Relative Internal link</a></p>
-      <p><a href="http://www.example.com/?title=%E9+crit">With Encoding issue
+      <p><a href="http://www.example.com/?title=%E9crit">With Encoding issue
       This link will be discarded</a></p>
       <img src="my_image_link"/>
       <script src="should_not_be_followed.js"/>
@@ -217,7 +217,8 @@ class TestWebCrawler(ERP5TypeTestCase):
     self.assertEquals(web_page.getContentNormalisedURLList(),
                     ["http://www.example.com/I%20don't%20care%20I%20put%20what/%20I%20want/",
                      'http://www.example.com/section',
-                     'http://www.example.com/section2',])
+                     'http://www.example.com/section2',
+                     'http://www.example.com/?title=\xc3\xa9crit',])
     # relative links without base tag
     text_content = """<html>
     <head>
