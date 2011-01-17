@@ -83,11 +83,13 @@
   <div class="file-selection">\n
    <div class="file-quick-search"></div>\n
   </div>\n
-  <div class="gadget-container">\n
-    <a href="#" id="add_gadget">Add Gadget</a>\n
-    <div class="gadget-listbox" id="gadget-listbox" title="Add Gadget">\n
-      <table id="gadget-table"></table>\n
-    </div>\n
+  <div class="gadget-listbox" id="gadget-listbox" title="Add Gadget">\n
+    <table id="gadget-table"></table>\n
+  </div>\n
+  <div class="front_pad">\n
+    <div tal:content="structure python: here.ERP5Site_viewHomeAreaRenderer(mode=\'web_front\', default_pad_group=\'\')"\n
+             class="draggable_wrapper"/>\n
+  </div>\n
 </div>
 
 ]]></unicode> </value>
