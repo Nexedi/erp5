@@ -59,14 +59,10 @@ for sale_order_line in portal.portal_catalog(\n
       ):\n
   sale_order = sale_order_line.getParentValue()\n
   if sale_order.getSimulationState() == \'ordered\':\n
-    # Hardcoded values used for demo purpose.\n
-    # This has to be replaced by clean Trade Condition\n
-    sale_order.edit(\n
-      source_section=\'organisation_module/vifib_internet\',\n
-      source=\'organisation_module/vifib_internet\')\n
     try:\n
       sale_order.confirm()\n
     except ValueError:\n
+      # It was not possible to find free Computer Partition\n
       continue\n
 </string> </value>
         </item>
