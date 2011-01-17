@@ -7,13 +7,21 @@
 
 <form action="manage_editCertificateAuthorityTool" method="POST">
 
-<table tal:define="certificate_authority_path request/certificate_authority_path|context/certificate_authority_path|string:;">
+<table
+ tal:define="certificate_authority_path request/certificate_authority_path|context/certificate_authority_path|string:; openssl_binary request/openssl_binary|context/openssl_binary|string:;">
 
 <tr>
-   <td>Path to configured Certificate Authority</td>
+   <td>Absolute path to configured Certificate Authority</td>
    <td>
      <input type="text" name="certificate_authority_path" value=""
             tal:attributes="value certificate_authority_path;" />
+   </td>
+</tr>
+<tr>
+   <td>Absolute path to OpenSSL binary</td>
+   <td>
+     <input type="text" name="openssl_binary" value=""
+            tal:attributes="value openssl_binary;" />
    </td>
 </tr>
 <tr>

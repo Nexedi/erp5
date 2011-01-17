@@ -63,6 +63,7 @@ class CertificateAuthorityTool(BaseTool):
   allowed_types = ()
 
   certificate_authority_path = ''
+  openssl_binary = ''
   
   manage_options = (({'label': 'Edit',
                       'action': 'manage_editCertificateAuthorityToolForm',},
@@ -72,7 +73,12 @@ class CertificateAuthorityTool(BaseTool):
   _properties = (({'id':'certificate_authority_path',
                    'type':'string',
                    'mode':'w',
-                   'label':'Path to certificate authority'
+                   'label':'Absolute path to certificate authority'
+                   },
+                   {'id':'openssl_binary',
+                   'type':'string',
+                   'mode':'w',
+                   'label':'Absolute path to OpenSSL binary'
                    },
                   )
                  )
@@ -99,19 +105,21 @@ class CertificateAuthorityTool(BaseTool):
     if not os.path.isdir(self.certificate_authority_path):
       raise CertificateAuthorityDamaged('Path to Certificate Authority %r is '
         'wrong' % self.certificate_authority_path)
+    if not self.openssl_binary:
+      raise CertificateAuthorityDamaged('OpenSSL binary path is not '
+        'configured' % self.certificate_authority_path)
+    if not os.path.isfile(self.openssl_binary):
+       raise CertificateAuthorityDamaged('OpenSSL binary %r does not exists' %
+        self.openssl_binary)
     self.serial = os.path.join(self.certificate_authority_path, 'serial')
     self.crl = os.path.join(self.certificate_authority_path, 'crlnumber')
     self.index = os.path.join(self.certificate_authority_path, 'index.txt')
-    self.openssl = os.path.join(self.certificate_authority_path, 'openssl')
     self.openssl_config = os.path.join(self.certificate_authority_path,
       'openssl.cnf')
     self.lock = os.path.join(self.certificate_authority_path, 'lock')
     for f in [self.serial, self.crl, self.index]:
       if not os.path.isfile(f):
         raise CertificateAuthorityDamaged('File %r does not exists.' % f)
-    if not os.path.isfile(self.openssl):
-      raise CertificateAuthorityDamaged('Openssl wrapper %r does not exists' %
-        self.openssl)
 
   security.declarePrivate('manage_afterAdd')
   def manage_afterAdd(self, item, container) :
@@ -137,15 +145,19 @@ class CertificateAuthorityTool(BaseTool):
       __name__='manage_editCertificateAuthorityToolForm')
 
   security.declareProtected(Permissions.ManageProperties, 'manage_editCertificateAuthorityTool')
-  def manage_editCertificateAuthorityTool(self, certificate_authority_path, RESPONSE=None):
+  def manage_editCertificateAuthorityTool(self, certificate_authority_path, openssl_binary, RESPONSE=None):
     """Edit the object"""
     error_message = ''
 
-    #Save certificate_authority_path
     if certificate_authority_path == '' or certificate_authority_path is None:
-      error_message += 'Invalid path '
+      error_message += 'Invalid Certificate Authority'
     else:
       self.certificate_authority_path = certificate_authority_path
+
+    if openssl_binary == '' or openssl_binary is None:
+      error_message += 'Invalid OpenSSL binary'
+    else:
+      self.openssl_binary = openssl_binary
 
     #Redirect
     if RESPONSE is not None:
@@ -171,7 +183,7 @@ class CertificateAuthorityTool(BaseTool):
       csr = os.path.join(self.certificate_authority_path, new_id + '.csr')
       cert = os.path.join(self.certificate_authority_path, 'certs', new_id + '.crt')
       try:
-        keygen = subprocess.Popen([self.openssl, 'req', '-nodes', '-config',
+        keygen = subprocess.Popen([self.openssl_binary, 'req', '-nodes', '-config',
           self.openssl_config, '-new', '-keyout', key, '-out', csr, '-days',
           '3650'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
           stdin=subprocess.PIPE)
@@ -180,7 +192,7 @@ class CertificateAuthorityTool(BaseTool):
           LOG('CertificateAuthorityTool', ERROR, 'Issue during key generation, result was:%r' % result)
           keygen.kill()
           raise CertificateGenerationError
-        keysign = subprocess.Popen([self.openssl, 'ca', '-batch', '-config',
+        keysign = subprocess.Popen([self.openssl_binary, 'ca', '-batch', '-config',
           self.openssl_config, '-out', cert, '-infiles', csr], stdout=subprocess.PIPE,
           stderr=subprocess.STDOUT)
         result = keysign.communicate()[0]
@@ -217,7 +229,7 @@ class CertificateAuthorityTool(BaseTool):
       if not os.path.exists(cert):
         raise ValueError('Certificate with serial %r does not exists' % serial)
       try:
-        crl_update = subprocess.Popen([self.openssl, 'ca', '-config',
+        crl_update = subprocess.Popen([self.openssl_binary, 'ca', '-config',
           self.openssl_config, '-revoke', cert], stdout=subprocess.PIPE,
           stderr=subprocess.STDOUT)
         result = crl_update.communicate()[0]
@@ -225,7 +237,7 @@ class CertificateAuthorityTool(BaseTool):
           LOG('CertificateAuthorityTool', ERROR, 'Issue during CRL update, result was:%r' % result)
           crl_update.kill()
           raise CertificateGenerationError
-        crl_gen = subprocess.Popen([self.openssl, 'ca', '-config',
+        crl_gen = subprocess.Popen([self.openssl_binary, 'ca', '-config',
           self.openssl_config, '-gencrl', '-out', crl], stdout=subprocess.PIPE,
           stderr=subprocess.STDOUT)
         result = crl_gen.communicate()[0]
