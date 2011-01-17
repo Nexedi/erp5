@@ -177,7 +177,7 @@ class CertificateAuthorityTool(BaseTool):
     self._checkCertificateAuthority()
     self._lockCertificateAuthority()
     try:
-      new_id = open(self.serial, 'r').read().strip()
+      new_id = open(self.serial, 'r').read().strip().lower()
       cn = base64.encodestring(str(new_id) + ':')
       key = os.path.join(self.certificate_authority_path, 'private', new_id+'.key')
       csr = os.path.join(self.certificate_authority_path, new_id + '.csr')
@@ -223,7 +223,7 @@ class CertificateAuthorityTool(BaseTool):
     self._checkCertificateAuthority()
     self._lockCertificateAuthority()
     try:
-      new_id = open(self.crl, 'r').read().strip()
+      new_id = open(self.crl, 'r').read().strip().lower()
       crl = os.path.join(self.certificate_authority_path, 'crl', new_id + '.crl')
       cert = os.path.join(self.certificate_authority_path, 'certs', serial + '.crt')
       if not os.path.exists(cert):
