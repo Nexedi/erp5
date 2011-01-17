@@ -227,4 +227,6 @@ class PortalTypeMetaClass(GhostBaseMetaClass):
       ERP5Base.aq_method_lock.release()
 
 def generateLazyPortalTypeClass(portal_type_name):
-  return PortalTypeMetaClass(portal_type_name, (InitGhostBase,), {})
+  return PortalTypeMetaClass(portal_type_name,
+                             (InitGhostBase,),
+                             dict(portal_type=portal_type_name))
