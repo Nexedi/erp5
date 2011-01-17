@@ -69,8 +69,6 @@ if custom_trade_condition is None:\n
                                                                          validation_state="validated")\n
   if len(trade_condition_list):\n
     custom_trade_condition = trade_condition_list[0].getObject()\n
-else:\n
-  log(repr(custom_trade_condition.getRelativeUrl()))\n
 \n
 if custom_trade_condition is None:\n
   # nothing found then create a new custom trade condition\n
@@ -84,32 +82,6 @@ else:\n
   log(repr(custom_trade_condition.getRelativeUrl()))\n
 \n
 order.setSpecialiseValue(custom_trade_condition, portal_type="Sale Trade Condition")\n
-log(repr(custom_trade_condition.getRelativeUrl()))\n
-log(repr(order.getSpecialise()))\n
-\n
-### STEP 2: does this order have a client-specific Open Order\n
-open_order_list = portal.open_sale_order_module.searchFolder(destination_section_uid=order.getDestinationSectionUid(),\n
-                                                             simulation_state="started")\n
-if not len(open_order_list):\n
-  # Maybe the Open Order has not been indexed yet. Fortunately we have a workflow on Person for that. We check its state,\n
-  # and if Person is in a open_order_created state, we fetch its linked Open Order. Else, we create the Open Order and change this state.\n
-  person = order.getDestinationSectionValue()\n
-  person_slap_interface_state = person.getSlapState()\n
-  if person_slap_interface_state in \'open_order_created\':\n
-    open_order_url = context.portal_workflow.getInfoFor(ob=person, name=\'open_order_url\', wf_id=\'person_slap_interface_workflow\')\n
-    open_order = portal.restrictedTraverse(open_order_url)\n
-  else:\n
-    open_order = portal.open_sale_order_module.newContent(\n
-          destination_section_uid=order.getDestinationSectionUid(),\n
-          destination_decision_uid=order.getDestinationDecisionUid(),\n
-          title="ViFiB Open Order")\n
-    person.createOpenOrder(open_order_url=open_order.getRelativeUrl())\n
-    open_order.order()\n
-    open_order.start()\n
-else:\n
-  open_order = open_order_list[0]\n
-\n
-return open_order\n
 </string> </value>
         </item>
         <item>
@@ -160,12 +132,6 @@ return open_order\n
                             <string>trade_condition_list</string>
                             <string>len</string>
                             <string>repr</string>
-                            <string>open_order_list</string>
-                            <string>person</string>
-                            <string>person_slap_interface_state</string>
-                            <string>context</string>
-                            <string>open_order_url</string>
-                            <string>open_order</string>
                           </tuple>
                         </value>
                     </item>
