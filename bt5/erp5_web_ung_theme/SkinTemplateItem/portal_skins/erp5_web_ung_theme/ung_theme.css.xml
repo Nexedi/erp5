@@ -923,7 +923,6 @@ table#gadget-table {\n
 div.gadget-action div.front_pad {\n
   font-size: 10px;\n
 }\n
-\n
 h3.handle {\n
   color: #222222 !important;\n
   background: white !important;\n
@@ -946,7 +945,7 @@ div#page_wrapper div.minimize_wrapper div.edit-form fieldset.left,\n
 }\n
 \n
 div.edit-form button {\n
-  margin-top: -1.5em !important;\n
+  margin-top: -0.3em !important;\n
 }\n
 \n
 div.edit-form {\n
@@ -992,6 +991,19 @@ form#ung_preference,\n
  form#erp5_preference {\n
   margin:0px;\n
   padding: 0px;\n
+}\n
+\n
+div.edit-form {\n
+  background-color: #FFF !important;\n
+  border: 0 none !important;\n
+}\n
+\n
+table.gadget tbody tr:first-child {\n
+  display: none !important;\n
+}\n
+\n
+div.edit-form {\n
+  height: 176px !important;\n
 }
 
 ]]></string> </value>
