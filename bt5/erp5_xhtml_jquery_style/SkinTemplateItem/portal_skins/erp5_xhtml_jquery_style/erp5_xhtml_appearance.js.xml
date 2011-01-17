@@ -50,7 +50,7 @@ var fixLeftRightHeightAndFocusOnLoad = function () {\n
   fixLeftRightHeightAndFocus(1);\n
 };\n
 \n
-addLoadEvent(fixLeftRightHeightAndFocusOnLoad);\n
+$(document).ready(fixLeftRightHeightAndFocusOnLoad);\n
 </string> </value>
         </item>
         <item>

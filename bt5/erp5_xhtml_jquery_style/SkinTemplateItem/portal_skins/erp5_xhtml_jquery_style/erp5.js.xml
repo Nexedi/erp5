@@ -341,9 +341,7 @@ var rewriteIndentedSelect = function() {\n
   }\n
 }\n
 \n
- var fixLeftRightHeightAndFocusOnLoad = function () {\n
-  fixLeftRightHeightAndFocus(1);\n
-};\n
+\n
 \n
 if (navigator.userAgent.toLowerCase().indexOf(\'firefox\') != -1)\n
   $(document).ready(rewriteIndentedSelect);\n
@@ -351,7 +349,7 @@ if (navigator.userAgent.toLowerCase().indexOf(\'firefox\') != -1)\n
 $(document).ready(resizeIFrameOnLoad);\n
 $(document).ready(addOnChangeEventHandler);\n
 $(document).ready(indexAllCheckBoxesAtBTInstallationOnLoad);\n
-$(document).ready(fixLeftRightHeightAndFocusOnLoad);
+
 
 ]]></string> </value>
         </item>
