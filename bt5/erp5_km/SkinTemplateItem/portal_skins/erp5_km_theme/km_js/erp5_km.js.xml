@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts94991442.7</string> </value>
+            <value> <string>ts95279629.97</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -79,6 +79,9 @@ function showPopik(dom_id, what, delay){\n
   if(what==true){obj.show();}\n
   else{obj.hide();}\n
 }\n
+\n
+\n
+\n
 
 
 ]]></string> </value>
@@ -89,7 +92,7 @@ function showPopik(dom_id, what, delay){\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1883</int> </value>
+            <value> <int>1886</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
