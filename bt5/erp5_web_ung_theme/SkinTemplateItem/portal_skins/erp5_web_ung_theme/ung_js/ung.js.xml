@@ -354,7 +354,8 @@ $().ready(function(){\n
         $("input#language.language").attr("value", getObjectPropertyValue("getLanguage"));\n
         $("input#sort_index.sort_index").attr("value", getObjectPropertyValue("getIntIndex"));\n
         var subjectList = jQuery.parseJSON(getObjectPropertyValue(\'getSubjectList\').replace(/\'/g,\'"\'));\n
-        $("textarea#keyword_list").attr("value", subjectList.join("\\n"));\n
+        if (subjectList != null)\n
+          $("textarea#keyword_list").attr("value", subjectList.join("\\n"));\n
         $("#edit_document").dialog("open");     \n
     });\n
  $("a#help").click(function(event){\n

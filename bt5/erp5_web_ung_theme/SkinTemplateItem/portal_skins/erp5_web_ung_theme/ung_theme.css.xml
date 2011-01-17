@@ -654,8 +654,9 @@ div#edit_document {\n
 }\n
 \n
 div#edit_document fieldset input {\n
-  margin-top:15px;\n
+  margin-top:6px;\n
   font-size:13px;\n
+  width: 95%;\n
 }\n
 \n
 div.ui-dialog {\n
