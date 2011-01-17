@@ -631,10 +631,6 @@ div#wrapper_header div.field a[name="document_title"] {\n
   text-decoration:none;\n
 }\n
 \n
-div#edit_document fieldset input {\n
-  width: 100%;\n
-}\n
-\n
 div#edit_document fieldset label {\n
   font-size: 12px;\n
 }\n
@@ -644,7 +640,6 @@ div.ui-dialog-titlebar {\n
 }\n
 \n
 div#edit_document fieldset {\n
-  background:none no-repeat scroll 0 0 #FFFFFF;\n
   border:0 none;\n
   height:72px;\n
   margin-left:-1em;\n
@@ -659,7 +654,6 @@ div#edit_document {\n
 }\n
 \n
 div#edit_document fieldset input {\n
-  width: 95%;\n
   margin-top:15px;\n
   font-size:13px;\n
 }\n
@@ -1004,6 +998,14 @@ table.gadget tbody tr:first-child {\n
 \n
 div.edit-form {\n
   height: 176px !important;\n
+}\n
+\n
+div#edit_document.ui-dialog-content {\n
+  background-color: #FFFFFF;\n
+}\n
+\n
+.ui-widget textarea {\n
+  font-size: 13px !important;\n
 }
 
 ]]></string> </value>

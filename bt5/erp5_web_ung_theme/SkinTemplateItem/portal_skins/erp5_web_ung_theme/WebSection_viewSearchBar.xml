@@ -71,8 +71,11 @@
      <input type="text" class="version" id="version" name="version" value=""><br>\n
      <label for="language">Language:</label>\n
      <input type="text" class="language" id="language" name="language" value=""><br>\n
-     <label for="language">Sort Index:</label>\n
+     <label for="sort_index">Sort Index:</label>\n
      <input type="text" class="sort_index" id="sort_index" name="sort_index" value=""><br>\n
+     <label for="keyword_list">Keywords:</label>\n
+     <textarea id="keyword_list" rows="2" cols="20" value="">\n
+     </textarea> \n
     </div>\n
     <p class="more_properties" id="more_properties">Edit More Properties</p>\n
     <p class="hide_properties" id="hide_properties">Hide Properties</p>\n

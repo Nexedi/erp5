@@ -217,7 +217,7 @@ $().ready(function(){\n
  };\n
  $("#edit_document").dialog({\n
     autoOpen: false,\n
-    height: 146,\n
+    height: 131,\n
     width: 389,\n
     modal: true,\n
     buttons: {\n
@@ -228,6 +228,7 @@ $().ready(function(){\n
          var new_language = $("input#language.language").attr("value");\n
          var new_version = $("input#version.version").attr("value");\n
          var new_int_index = $("input#sort_index.sort_index").attr("value");\n
+         var new_subject_list = $("textarea#keyword_list").attr("value").replace(/\\n+/g, ",");\n
          $("a[name=\'document_title\']").html(new_title);\n
          setObjectPropertyValue("setTitle", new_title, "value");\n
          setObjectPropertyValue("setReference", new_reference, "value");\n
@@ -235,6 +236,7 @@ $().ready(function(){\n
          setObjectPropertyValue("setLanguage", new_language, "language");\n
          setObjectPropertyValue("setVersion", new_version, "value");\n
          setObjectPropertyValue("setIntIndex", new_int_index, "value");\n
+         setObjectPropertyValue("WebPage_setSubjectList", new_subject_list, "value");   \n
          $("#edit_document").dialog("close");\n
          $("button.save").click();\n
        },\n
@@ -310,10 +312,10 @@ $().ready(function(){\n
     .click(function(){\n
       $("div#more_property").show();\n
       $("p#hide_properties").show();\n
-      $("div#edit_document fieldset").animate({"height": "151px"}, "slow");\n
+      $("div#edit_document fieldset").animate({"height": "214px"}, "slow");\n
       $("div.ui-dialog").animate({"top": "50px"}, "slow")\n
-                        .animate({"height": "228px"}, "slow");\n
-      $("div#edit_document").animate({"height": "157px"}, "slow");\n
+                        .animate({"height": "274px"}, "slow");\n
+      $("div#edit_document").animate({"height": "205px"}, "slow");\n
       $("div#edit_document fieldset input").css("margin", "0")\n
                                            .css("width", "60%");\n
       $("div#edit_document fieldset label").css("float", "left")\n
@@ -351,6 +353,8 @@ $().ready(function(){\n
         $("input#version.version").attr("value", getObjectPropertyValue("getVersion"));\n
         $("input#language.language").attr("value", getObjectPropertyValue("getLanguage"));\n
         $("input#sort_index.sort_index").attr("value", getObjectPropertyValue("getIntIndex"));\n
+        var subjectList = jQuery.parseJSON(getObjectPropertyValue(\'getSubjectList\').replace(/\'/g,\'"\'));\n
+        $("textarea#keyword_list").attr("value", subjectList.join("\\n"));\n
         $("#edit_document").dialog("open");     \n
     });\n
  $("a#help").click(function(event){\n
