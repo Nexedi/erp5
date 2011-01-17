@@ -61,7 +61,7 @@ except ImportError:
 
 from zLOG import LOG, INFO
 import xml_marshaller
-
+from Products.Vifib.Conduit import VifibConduit
 class SoftwareInstanceNotReady(Exception):
   pass
 
@@ -256,7 +256,20 @@ class SlapTool(BaseTool):
     computer_document = self._getComputerDocument(computer_id)
     # easy way to start to store usage messages sent by client in related Web
     # Page text_content...
-    self._reportComputerUsage(computer_document, use_string)
+    
+    #self._reportComputerUsage(computer_document, use_string)
+    #LOG("check-1", 0, "%s" % use_string)
+    unmarshalled_usage = xml_marshaller.xml_marshaller.loads(use_string)
+    #res = unmarshalled_usage.computer_partition_usage_list
+    
+    #LOG("check-2", 0, "%s" % res[0].usage)
+    vifib_conduit_instance = VifibConduit.VifibConduit()
+    sub_object = vifib_conduit_instance.addNode(object=self, 
+                xml=unmarshalled_usage.computer_partition_usage_list[0].usage)
+    
+    #sub_object = vifib_conduit_instance.addNode(object=self, xml=res[0].usage)
+    #self._reportComputerUsage(computer_document, use_string)
+
     return 'Content properly posted.'
 
   security.declareProtected(Permissions.AccessContentsInformation, 'loadComputerConfigurationFromXML')
