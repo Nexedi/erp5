@@ -65,12 +65,6 @@ line_list.extend([x.getObject() for x in context.portal_catalog(\n
   resource_relative_url=context.portal_preferences.getPreferredInstanceSetupResource(),\n
   default_aggregate_uid=subscription_item.getUid())])\n
 \n
-# context.log("Couscous: %s" % line_list)\n
-# context.log("Couscous: %s" % context.portal_catalog(src__=1,\n
-#   portal_type="Sale Order Line",\n
-#   resource_relative_url=context.portal_preferences.getPreferredInstanceSetupResource(),\n
-#   default_aggregate_uid=subscription_item.getUid()))\n
-\n
 for delivery_line in line_list:\n
   software_instance = delivery_line.getAggregateValue(portal_type=\'Software Instance\')\n
   if software_instance is not None:\n
@@ -120,8 +114,7 @@ for delivery_line in line_list:\n
                             <string>context</string>
                             <string>subscription_item</string>
                             <string>line_list</string>
-                            <string>append</string>
-                            <string>$append0</string>
+                            <string>$list0</string>
                             <string>_getiter_</string>
                             <string>x</string>
                             <string>delivery_line</string>
