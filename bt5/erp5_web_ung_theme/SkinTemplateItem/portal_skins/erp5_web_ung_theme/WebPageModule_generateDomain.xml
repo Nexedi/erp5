@@ -56,6 +56,8 @@
   This script generates a sections list to filter the document on UNG Docs.\n
 """\n
 \n
+from Products.ERP5Type.Cache import CachingMethod\n
+\n
 def getAvailableSubjectList(subject_list=()):\n
   """\n
     Returns the list of available subjects for all documents\n
@@ -101,9 +103,13 @@ domain_list = []\n
 if depth > 1:\n
   return domain_list\n
 \n
-validation_state_list = [\'draft\', \'published\', \'shared\']\n
+getAvailableSubjectListCached = CachingMethod(getAvailableSubjectList, \n
+                                              id=\'%s_%s\' % (script.id, \'subject_list_cached\'),\n
+                                              cache_factory=\'erp5_ui_short\')\n
 \n
-for subject in getAvailableSubjectList():\n
+subject_list = getAvailableSubjectListCached()\n
+\n
+for subject in subject_list:\n
   appendTempDomain("subject_" + subject,\n
                    subject.capitalize(),\n
                    dict(subject=subject),\n
