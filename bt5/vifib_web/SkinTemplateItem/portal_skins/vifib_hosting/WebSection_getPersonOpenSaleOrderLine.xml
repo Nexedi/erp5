@@ -53,13 +53,17 @@
             <value> <string>portal = context.getPortalObject()\n
 person_uid = portal.ERP5Site_getPropertyFromAuthenticatedMemberPersonValue(\'uid\')\n
 \n
-default_open_order = portal.portal_catalog.getResultValue(portal_type="Open Sale Order",\n
-                     default_destination_section_uid=person_uid)\n
+open_order_uid_list = [x.uid for x in portal.portal_catalog(\n
+                                 portal_type="Open Sale Order",\n
+                                 simulation_state="started",\n
+                                 default_destination_section_uid=person_uid)\n
+]\n
 \n
-if not default_open_order:\n
-  return []\n
-\n
-return default_open_order.contentValues(**kw)\n
+return portal.portal_catalog(\n
+  portal_type="Open Sale Order Line",\n
+  parent_uid=open_order_uid_list,\n
+  **kw\n
+)\n
 </string> </value>
         </item>
         <item>
@@ -101,7 +105,10 @@ return default_open_order.contentValues(**kw)\n
                             <string>context</string>
                             <string>portal</string>
                             <string>person_uid</string>
-                            <string>default_open_order</string>
+                            <string>$list0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
+                            <string>open_order_uid_list</string>
                             <string>_apply_</string>
                           </tuple>
                         </value>

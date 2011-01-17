@@ -51,27 +51,18 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""Get the release of the selected product"""\n
-portal = context.getPortalObject()\n
-prefered_resource = portal.portal_preferences.getPreferredInstanceSetupResource()\n
-service = portal.restrictedTraverse(prefered_resource)\n
-\n
-shopping_cart_items = context.SaleOrder_getShoppingCartItemList()\n
+session = context.WebSection_getVifibSession()\n
+uid = session.get(\'instance_software_product_uid\', None)\n
 \n
 # assert there is only one item\n
-if len(shopping_cart_items) != 1:\n
-  raise NotImplementedError, "There should be only one shopping card item"\n
-\n
-order_line = shopping_cart_items[0]\n
-software_product = order_line.getAggregateValue(portal_type="Software Product")\n
-\n
-if software_product is None:\n
-  raise NotImplementedError, "There should one selected software product"\n
-\n
-return context.portal_catalog(\n
-  portal_type="Software Release",\n
-  default_aggregate_uid=software_product.getUid(),\n
-  validation_state=["shared", "shared_alive", "released", "released_alive", "published", "published_alive"]\n
-  )\n
+if uid is None:\n
+  raise AttributeError, "There should be only one selected software product"\n
+else:\n
+  return context.portal_catalog(\n
+    portal_type="Software Release",\n
+    default_aggregate_uid=uid,\n
+    validation_state=["shared", "shared_alive", "released", "released_alive", "published", "published_alive"]\n
+    )\n
 </string> </value>
         </item>
         <item>
@@ -82,7 +73,7 @@ return context.portal_catalog(\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>dialog_id=None, uids=[], quantity = 1, reset_shopping_cart=True, **kw</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -102,29 +93,19 @@ return context.portal_catalog(\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>dialog_id</string>
-                            <string>uids</string>
-                            <string>quantity</string>
-                            <string>reset_shopping_cart</string>
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>portal</string>
-                            <string>prefered_resource</string>
-                            <string>service</string>
-                            <string>shopping_cart_items</string>
-                            <string>len</string>
-                            <string>NotImplementedError</string>
-                            <string>_getitem_</string>
-                            <string>order_line</string>
-                            <string>software_product</string>
+                            <string>session</string>
                             <string>None</string>
+                            <string>uid</string>
+                            <string>AttributeError</string>
                           </tuple>
                         </value>
                     </item>
@@ -136,12 +117,7 @@ return context.portal_catalog(\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <none/>
-                <list/>
-                <int>1</int>
-                <int>1</int>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>

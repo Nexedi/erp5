@@ -35,7 +35,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>SaleOrder_setCustomerInformation</string> </value>
+            <value> <string>WebSection_setCustomerInformation</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>

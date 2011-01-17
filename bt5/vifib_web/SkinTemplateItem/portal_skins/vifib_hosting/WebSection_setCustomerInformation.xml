@@ -50,21 +50,42 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Update customer informations"""\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""Update customer informations"""\n
+portal = context.getPortalObject()\n
 \n
-context.SaleOrder_getShoppingCartCustomer().edit(\n
-              last_name=last_name,\n
-              first_name=first_name,\n
-              career_subordination_title=career_subordination_title,\n
-              default_email_text=default_email_text,\n
-              default_telephone_text=default_telephone_text,\n
-              default_address_street_address=default_address_street_address,\n
-              default_address_zip_code=default_address_zip_code,\n
-              default_address_city=default_address_city,\n
-              )\n
+person = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
+person.edit(\n
+  last_name=last_name,\n
+  first_name=first_name,\n
+  career_subordination_title=career_subordination_title,\n
+  default_email_text=default_email_text,\n
+  default_telephone_text=default_telephone_text,\n
+  default_address_street_address=default_address_street_address,\n
+  default_address_zip_code=default_address_zip_code,\n
+  default_address_city=default_address_city,\n
+  )\n
 \n
-context.WebSection_viewNextStep()\n
-</string> </value>
+# return context.WebSection_viewNextStep()\n
+session = context.WebSection_getVifibSession()\n
+instance_software_release_uid = session[\'instance_software_release_uid\']\n
+software_release = portal.portal_catalog.getResultValue(uid=instance_software_release_uid)\n
+\n
+person.requestSoftwareInstance(\n
+  software_release=software_release.getUrlString(),\n
+  partition_reference=software_release.getTitle(),\n
+  instance_xml="""<?xml version="1.0" encoding="utf-8"?>\n
+<instance>\n
+</instance>\n
+""",\n
+)\n
+\n
+message = context.Base_translateString("Your instance is under creation. Thank you for using ViFiB!")\n
+return context.getWebSiteValue().Base_redirect(keep_items={\'portal_status_message\': message})\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -111,6 +132,13 @@ context.WebSection_viewNextStep()\n
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal</string>
+                            <string>person</string>
+                            <string>session</string>
+                            <string>_getitem_</string>
+                            <string>instance_software_release_uid</string>
+                            <string>software_release</string>
+                            <string>message</string>
                           </tuple>
                         </value>
                     </item>
@@ -127,7 +155,7 @@ context.WebSection_viewNextStep()\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleOrder_setCustomerInformation</string> </value>
+            <value> <string>WebSection_setCustomerInformation</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -10,9 +10,9 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>default</string>
                 <string>required</string>
                 <string>title</string>
-                <string>default</string>
               </list>
             </value>
         </item>
@@ -69,7 +69,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>required</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -79,6 +87,10 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
                 <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>your_integer_field</string> </value>
@@ -113,7 +125,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: context.SaleOrder_getShoppingCartCustomer().getDefaultAddressZipCode()</string> </value>
+            <value> <string>python: context.ERP5Site_getAuthenticatedMemberPersonValue().getDefaultAddressZipCode()</string> </value>
         </item>
       </dictionary>
     </pickle>

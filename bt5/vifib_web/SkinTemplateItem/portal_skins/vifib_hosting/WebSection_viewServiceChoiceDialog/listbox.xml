@@ -12,10 +12,8 @@
               <list>
                 <string>columns</string>
                 <string>css_class</string>
-                <string>default_display_style</string>
                 <string>default_params</string>
                 <string>list_method</string>
-                <string>page_navigation_template</string>
                 <string>search</string>
                 <string>selection_name</string>
                 <string>title</string>
@@ -89,7 +87,7 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>getSummaryAsHTML</string>
+                          <string>getDefaultImageAbsoluteUrl</string>
                           <string></string>
                         </tuple>
                       </list>
@@ -98,10 +96,6 @@
                 <item>
                     <key> <string>css_class</string> </key>
                     <value> <string>nolabel</string> </value>
-                </item>
-                <item>
-                    <key> <string>default_display_style</string> </key>
-                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>default_params</string> </key>
@@ -133,10 +127,6 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>page_navigation_template</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>search</string> </key>
                     <value> <int>0</int> </value>
                 </item>
@@ -161,7 +151,7 @@
                           <string></string>
                         </tuple>
                         <tuple>
-                          <string>getSummaryAsHTML</string>
+                          <string>getDefaultImageAbsoluteUrl</string>
                           <string></string>
                         </tuple>
                       </list>

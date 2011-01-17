@@ -50,7 +50,25 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return len(context.searchFolder(portal_type="Computer Partition",slap_state="busy"))\n
+            <value> <string>""" \n
+  Add resource to current (or to be created shopping cart). \n
+"""\n
+from DateTime import DateTime\n
+from random import choice\n
+import string\n
+\n
+request = context.REQUEST\n
+expire_timeout_days = 90\n
+session_id = request.get(\'vifib_session_id\', None)\n
+portal_sessions = context.portal_sessions\n
+\n
+if session_id is None:\n
+  ## first call so generate session_id and send back via cookie\n
+  now = DateTime()\n
+  session_id = \'\'.join([choice(string.letters) for i in range(20)])\n
+  request.RESPONSE.setCookie(\'vifib_session_id\', session_id, expires=(now +expire_timeout_days).fCommon(), path=\'/\')\n
+\n
+return portal_sessions[session_id]\n
 </string> </value>
         </item>
         <item>
@@ -87,9 +105,23 @@
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>len</string>
+                            <string>DateTime</string>
+                            <string>random</string>
+                            <string>choice</string>
+                            <string>string</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>request</string>
+                            <string>expire_timeout_days</string>
+                            <string>None</string>
+                            <string>session_id</string>
+                            <string>portal_sessions</string>
+                            <string>now</string>
+                            <string>$list0</string>
+                            <string>_getiter_</string>
+                            <string>range</string>
+                            <string>i</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
@@ -106,7 +138,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Computer_getFreeComputerPartition</string> </value>
+            <value> <string>WebSection_getVifibSession</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
