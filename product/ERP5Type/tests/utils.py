@@ -244,8 +244,14 @@ def getMySQLArguments():
   host = ''
   db, user = connection_string.split(' ', 1)
 
+  sock = ''
   if ' ' in user: # look for user password
-    user, password = user.split()
+    sp = user.split()
+    if len(sp) == 2:
+      user, password = sp
+    elif len(sp) == 3:
+      user, password, sock = sp
+      sock = '--socket=%s' % sock
     password = '-p%s' % password
 
   if "@" in db: # look for hostname
@@ -256,7 +262,7 @@ def getMySQLArguments():
     else:
       host = '-h %s' % host
 
-  return '-u %s %s %s %s' % (user, password, host, db)
+  return '-u %s %s %s %s %s' % (user, password, host, db, sock)
 
 def getExtraSqlConnectionStringList():
   """Return list of extra available SQL connection string
