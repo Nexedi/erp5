@@ -1258,7 +1258,12 @@ def getExistingBaseCategoryList(portal, base_cat_list):
   cache = getReadOnlyTransactionCache()
   if cache is None:
     cache = getTransactionalVariable()
-  category_tool = portal.portal_categories
+  category_tool = getattr(portal, 'portal_categories', None)
+  if category_tool is None:
+    # most likely, accessor generation when bootstrapping a site
+    warnings.warn("Category Tool is missing. Accessors can not be generated.")
+    return ()
+
   new_base_cat_list = []
   for base_cat in base_cat_list:
     key = (base_cat,)
@@ -2872,7 +2877,12 @@ def createTranslationLanguageAccessors(property_holder, property,
   """
   accessor_dict_list = []
 
-  for language in portal.Localizer.get_languages():
+  localizer = getattr(portal, 'Localizer', None)
+  if localizer is None:
+    warnings.warn("Localizer is missing. Accessors can not be generated.")
+    return
+
+  for language in localizer.get_languages():
     language_key = language.replace('-', '_')
     composed_id = '%s_translated_%s' % (language_key, property['id'])
     capitalised_compose_id = UpperCase(composed_id)
