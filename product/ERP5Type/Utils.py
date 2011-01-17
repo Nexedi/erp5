@@ -1211,8 +1211,8 @@ def createExpressionContext(object, portal=None):
         folder = aq_parent(aq_inner(folder))
 
   if portal is not None:
-    pm = getToolByName(portal, 'portal_membership')
-    if pm.isAnonymousUser():
+    pm = getattr(portal, 'portal_membership', None)
+    if pm is None or pm.isAnonymousUser():
       member = None
     else:
       member = pm.getAuthenticatedMember()
