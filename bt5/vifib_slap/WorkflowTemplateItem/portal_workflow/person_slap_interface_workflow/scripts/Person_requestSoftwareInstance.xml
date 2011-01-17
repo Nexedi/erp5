@@ -129,6 +129,35 @@ if (request_software_instance is None):\n
     )\n
     portal.portal_workflow.doActionFor(sale_order, "order_action")\n
 \n
+    # Update Open Order\n
+    # does this order have a client-specific Open Order\n
+    open_order = portal.portal_catalog.getResultValue(\n
+      destination_section_uid=person.getUid(),\n
+      portal_type="Open Sale Order",\t \t \n
+      simulation_state="started")\n
+    if open_order is None:\n
+      person_slap_interface_state = person.getSlapState()\n
+      if person_slap_interface_state == \'open_order_created\':\n
+        open_order_url = context.portal_workflow.getInfoFor(\n
+          ob=person, name=\'open_order_url\', \n
+          wf_id=\'person_slap_interface_workflow\')\n
+        open_order = portal.restrictedTraverse(open_order_url)\n
+      else:\n
+        open_order = portal.open_sale_order_module.newContent(\n
+              destination_section_uid=person.getUid(),\n
+              destination_decision_uid=person.getUid(),\n
+              title="ViFiB Open Order")\n
+        person.createOpenOrder(open_order_url=open_order.getRelativeUrl())\n
+        open_order.order()\n
+        open_order.start()\n
+\n
+    open_order.newContent(\n
+      portal_type="Open Sale Order Line",\n
+      title=requested_partition_reference,\n
+      aggregate_value=subscription,\n
+      activate_kw={\'tag\': tag},\n
+    )\n
+\n
     # Find Computer partition\n
     # XXX Link subscript to open order\n
 else:\n
@@ -209,6 +238,9 @@ else:\n
                             <string>DateTime</string>
                             <string>sale_order</string>
                             <string>sale_order_line</string>
+                            <string>open_order</string>
+                            <string>person_slap_interface_state</string>
+                            <string>open_order_url</string>
                           </tuple>
                         </value>
                     </item>
