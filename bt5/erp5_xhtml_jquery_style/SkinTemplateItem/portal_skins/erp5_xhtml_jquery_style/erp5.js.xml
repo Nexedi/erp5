@@ -48,13 +48,11 @@ along with this program; if not, write to the Free Software\n
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 */\n
 \n
-//XXX: in erp5_xhtml_style\n
 function submitAction(form, act) {\n
   form.action = act;\n
   form.submit();\n
 }\n
 \n
-//XXX: in erp5_xhtml_style\n
 // This function will be called when the user click the save button. As \n
 // submitAction function may have changed the action before, it\'s better to\n
 // reset the form action to it\'s original behaviour. This is actually\n
@@ -63,7 +61,6 @@ function clickSaveButton(act) {\n
   changed = false;\n
   document.forms[0].action = act;\n
 }\n
-\n
 \n
 // The first input element with an "autofocus" class will get the focus,\n
 // else if no element have autofocus class, the first element which is not the\n
@@ -85,7 +82,6 @@ function autoFocus() {\n
     //}\n
   }\n
 }\n
-\n
 \n
 function buildTables(element_list, rowPredicate, columnPredicate,\n
                     tableClassName) {\n
@@ -180,7 +176,7 @@ function submitFormOnEnter(event, form, method_name, clear_changed_flag, element
   }\n
   if(event.keyCode == 13){\n
     if (form == \'main_form\') {\n
-      form = getElement(form); // backward compatibility\n
+      form = $("#"+form); // backward compatibility\n
     }\n
     form.action = method_name;\n
     if (clear_changed_flag==true) {\n
@@ -188,9 +184,11 @@ function submitFormOnEnter(event, form, method_name, clear_changed_flag, element
     }\n
     if(element!=null){\n
       // disable other form elements having same name attribute\n
-      forEach(getElementsByTagAndClassName(element.tagName), function (input){\n
-        if((input.name == element.name) && (input!=element)){input.disabled = true;}\n
-      });\n
+      $(element.tagName).each(\n
+        function (index){\n
+          input = $(this);\n
+          if((input.attr("name") == element.name) && (input!=element)){input.attr("disabled",true);}\n
+        });\n
      }\n
     form.submit();\n
   }\n
@@ -226,7 +224,6 @@ var indexAllCheckBoxesAtBTInstallationOnLoad = function() {\n
     //var inputs = window.getElementsByTagAndClassName("input", "shift_check_support");\n
     //for(i=0;i<=inputs.length-1;i++) {inputs[i].id = "checkbox" + i; }\n
 }\n
-\n
 \n
 var resizeIFrameOnLoad = function() {\n
   /* Resize all frames in document in order to remove sliders  */\n
@@ -341,15 +338,11 @@ var rewriteIndentedSelect = function() {\n
   }\n
 }\n
 \n
-\n
-\n
 if (navigator.userAgent.toLowerCase().indexOf(\'firefox\') != -1)\n
   $(document).ready(rewriteIndentedSelect);\n
-\n
 $(document).ready(resizeIFrameOnLoad);\n
 $(document).ready(addOnChangeEventHandler);\n
-$(document).ready(indexAllCheckBoxesAtBTInstallationOnLoad);\n
-
+$(document).ready(indexAllCheckBoxesAtBTInstallationOnLoad);
 
 ]]></string> </value>
         </item>
