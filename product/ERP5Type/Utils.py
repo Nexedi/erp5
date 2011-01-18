@@ -1051,6 +1051,39 @@ def initializeLocalInteractorRegistry():
 # Product initialization
 #####################################################
 
+def registerDocumentClass(module_name, class_name):
+  """
+  register a class in document_class_registry without overwriting
+  existing records
+  """
+  old_value = document_class_registry.get(class_name)
+  new_value = "%s.%s" % (module_name, class_name)
+
+  if old_value is not None:
+    old_was_erp5 = old_value.startswith('Products.ERP5')
+    new_is_erp5 = module_name.startswith('Products.ERP5')
+
+    conflict = True
+    if not old_was_erp5:
+      if new_is_erp5:
+        # overwrite the non-erp5 class with the erp5 class
+        # likely to happen with e.g. CMF Category Tool and ERP5 Category Tool
+        LOG('Utils', INFO, 'Replacing non-ERP5 class %s by ERP5 class %s' %
+              (old_value, new_value))
+        conflict = False
+    elif not new_is_erp5:
+      # argh, trying to overwrite an existing erp5 class.
+      LOG('Utils', INFO,
+          'Ignoring replacement of ERP5 class %s by non-ERP5 class %s' %
+            (old_value, new_value))
+      return
+
+    if conflict:
+      raise TypeError("Class %s and %s from different products have the "
+                      "same name" % (old_value, new_value))
+
+  document_class_registry[class_name] = new_value
+
 def initializeProduct( context,
                        this_module,
                        global_hook,
@@ -1070,8 +1103,7 @@ def initializeProduct( context,
   # other products were all already registered in updateGlobals()
   # because getModuleIdList works fine for Document/ and Core/
   for klass in content_classes:
-    n = klass.__name__
-    document_class_registry[n] = "%s.%s" % (klass.__module__, n)
+    registerDocumentClass(klass.__module__, klass.__name__)
 
   mixin_module = getattr(this_module, 'mixin', None)
   if mixin_module is not None:
@@ -1115,8 +1147,7 @@ def initializeProduct( context,
   tools = portal_tools
   if len(tools) > 0:
     for tool in tools:
-      n = tool.__name__
-      document_class_registry[n] = "%s.%s" % (tool.__module__, n)
+      registerDocumentClass(tool.__module__, tool.__name__)
     try:
       utils.ToolInit('%s Tool' % product_name,
                       tools=tools,
