@@ -1102,6 +1102,15 @@ def initializeProduct( context,
   except:
     LOG("ERP5Type", BLATHER, "No help directory for %s" % product_name)
 
+  # create dynamic modules if they dont exist, this only ever happens
+  # once.
+  try:
+    import erp5.portal_type
+  except ImportError:
+    from dynamic.portal_type_class import initializeDynamicModules
+    initializeDynamicModules()
+    import erp5.portal_type
+
   # Tools initialization
   tools = portal_tools
   if len(tools) > 0:
