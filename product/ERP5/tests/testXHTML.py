@@ -333,17 +333,15 @@ class TestXHTML(ERP5TypeTestCase):
     """Make sure that preference view is not duplicated."""
     preference_view_id_dict = {}
     def addPreferenceView(folder_id, view_id):
-      if not view_id in preference_view_id_dict:
-        preference_view_id_dict[view_id] = []
-      preference_view_id_dict[view_id].append('%s.%s' % (folder_id, view_id))
+      preference_view_id_dict.setdefault(view_id, []).append('%s.%s' % (folder_id, view_id))
     error_list = []
-    for object_ in self.portal.portal_skins.objectValues():
-      if object_.isPrincipiaFolderish:
+    for skin_folder in self.portal.portal_skins.objectValues():
+      if skin_folder.isPrincipiaFolderish:
         for id_ in object_.objectIds():
           if id_.startswith('Preference_view'):
-            addPreferenceView(object_.id, id_)
+            addPreferenceView(skin_folder.id, id_)
     for view_id, location_list in preference_view_id_dict.items():
-      if len(location_list)>1:
+      if len(location_list) > 1:
         error_list.extend(location_list)
     self.assertEqual(error_list, [])
 
