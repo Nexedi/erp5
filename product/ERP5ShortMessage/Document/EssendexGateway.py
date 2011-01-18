@@ -101,11 +101,21 @@ class EssendexGateway(XMLObject):
       return phone
 
     security.declareProtected(Permissions.ManagePortal, 'send')
-    def send(self, text,recipient,sender=None, message_type="text",test=False,**kw):
+    def send(self, text,recipient,sender=None, sender_title=None, 
+              message_type="text",test=False,**kw):
       """Send a message.
-         Return message id (or list if multiple recipient)
+         Parameters:
+         text -- message
+         recipient -- phone url of destination_reference. Could be a list
+         sender -- phone url of source
+         sender_title -- Use it as source if the gateway has title mode enable
+         message_type -- Only 'text' is available today     
+         test -- Force the test mode
+         
          Kw Parameters:
          validity_period -- Validity Period of SMS (default,0)
+         
+         Return message id (or list if multiple recipient)
          """
 
       if message_type not in self.getAllowedMessageType():
@@ -128,13 +138,19 @@ class EssendexGateway(XMLObject):
                 'ValidityPeriod': validity_period,
                 'PlainText': 1,
                 }
+                
+       
       
-      if sender:
+      if sender_title and self.isTitleMode():
+        params['Originator'] = sender_title
+      elif sender:
         params['Originator'] = self._transformPhoneUrlToGatewayNumber(sender)
-      else:
+      elif self.getDefaultSender():
         params['Originator'] = self.getDefaultSender()
+        
       if test or self.isSimulationMode():
         params['Test'] = 1
+        LOG("EssendexGateway", INFO, params)
       
       params = urllib.urlencode(params)
       page = urllib.urlopen(base_url, params)
@@ -246,9 +262,8 @@ class EssendexGateway(XMLObject):
         return "+%s(%s)-%s" % (number[0:2],0,number[2:])
         
 
-      #Create the new sms in activities
-      module = self.getDefaultModule("Short Message")
-      module.activate(activity='SQLQueue').SMSTool_pushNewSMS(
+      #Create the new sms in activities      
+      self.activate(activity='SQLQueue').SMSTool_pushNewSMS(
                               message_id=xml['MessageId'],
                               sender=parsePhoneNumber(xml['From']),
                               recipient=parsePhoneNumber(xml['To']),
@@ -274,8 +289,7 @@ class EssendexGateway(XMLObject):
       #Convert date to DateTime      
       xml['OccurredAt'] = DateTime(xml['OccurredAt'][0:19])
       
-      module = self.getDefaultModule("Short Message")
-      module.activate(activity='SQLQueue').EventModule_setEventDelivery(
+      self.activate(activity='SQLQueue').SMSTool_setMessageDelivery(
                             portal_type="Short Message",
                             destination_reference=xml['MessageId'],
                             delivery_date=xml['OccurredAt'])
