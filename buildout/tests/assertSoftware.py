@@ -435,10 +435,10 @@ class AssertMariadb(AssertSoftwareMixin):
       'libpthread', 'librt', 'libstdc++', 'libz'], ['ncurses', 'zlib', 'readline'])
 
   def test_ld_libmysqlclient_r(self):
-    self.assertLibraryList('parts/mariadb/lib/mysql/libmysqlclient_r.so', ['libc', 'libdl', 'librt', 'libz', 'libcrypt', 'libm', 'libnsl', 'libpthread', 'libstdc++'], ['ncurses', 'zlib', 'readline'])
+    self.assertLibraryList('parts/mariadb/lib/mysql/libmysqlclient_r.so', ['libc', 'libdl', 'librt', 'libz', 'libcrypt', 'libm', 'libnsl', 'libpthread'], ['ncurses', 'zlib', 'readline'])
 
   def test_ld_libmysqlclient(self):
-    self.assertLibraryList('parts/mariadb/lib/mysql/libmysqlclient.so', ['libc', 'libdl', 'librt', 'libz', 'libcrypt', 'libm', 'libnsl', 'libpthread', 'libstdc++'], ['ncurses', 'readline', 'zlib'])
+    self.assertLibraryList('parts/mariadb/lib/mysql/libmysqlclient.so', ['libc', 'libdl', 'librt', 'libz', 'libcrypt', 'libm', 'libnsl', 'libpthread'], ['ncurses', 'readline', 'zlib'])
 
   def test_ld_mysql(self):
     self.assertLibraryList('parts/mariadb/bin/mysql', ['libc', 'libdl', 'librt', 'libz', 'libcrypt', 'libgcc_s', 'libm',
@@ -455,7 +455,7 @@ class AssertMariadb(AssertSoftwareMixin):
 
   def test_ld_mysqldump(self):
     self.assertLibraryList('parts/mariadb/bin/mysqldump', ['libc', 'libdl', 'librt', 'libz', 'libcrypt', 'libm', 'libmysqlclient',
-      'libnsl', 'libpthread', 'libstdc++'], ['ncurses', 'zlib', 'readline'],
+      'libnsl', 'libpthread'], ['ncurses', 'zlib', 'readline'],
                            [os.path.join(os.path.abspath(os.curdir),
       'parts', 'mariadb', 'lib', 'mysql')])
 
