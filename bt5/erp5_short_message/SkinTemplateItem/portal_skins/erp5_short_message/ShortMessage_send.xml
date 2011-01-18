@@ -50,23 +50,38 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""Search the event and set it delivered\n
-#XXX-Fx : See with JPS for a new event implementation\n
-#XXX-Fx : DestinationReference property must be replace by a category (multiple reference)\n
-#XXX-FX : Other possibility : use acknowledgment\n
+            <value> <string>"""\n
+  Send the current sms by using a SMS gateway.\n
+  Use default mobile phone of source and destination\n
 """\n
-event = context.portal_catalog.getResultValue(portal_type=portal_type, destination_reference="%"+destination_reference+"%")\n
-if event is not None:\n
-  #All sms must be delivered to set event as delivered\n
-  if event.getQuantity() > 1:\n
-    if event.isDelivered():\n
-      event.setStopDate(delivery_date)\n
-      event.deliver()\n
-
-
-]]></string> </value>
+\n
+#Get recipients\n
+if not to_url:\n
+  recipient_phone_list = [person.getDefaultMobileTelephoneValue() for person in context.getDestinationValueList()]\n
+  if None in recipient_phone_list:\n
+    raise ValueError, "All recipients should have a default mobile phone"\n
+\n
+  to_url = [phone.asURL() for phone in recipient_phone_list]\n
+  if None in to_url:\n
+    raise ValueError, "All recipients should have a valid default mobile phone number"\n
+\n
+#Get sender\n
+if not from_url:\n
+  if context.getSourceValue():\n
+    sender_phone = context.getSourceValue().getDefaultMobileTelephoneValue()\n
+    if not sender_phone:\n
+      raise ValueError, "The sender should have a default mobile phone"\n
+    #We use title of sender\n
+    from_title = sender_phone.getTitle()    \n
+    from_url = sender_phone.asURL()\n
+\n
+  \n
+\n
+if not body:\n
+  body = context.getTextContent()\n
+\n
+context.portal_sms.send(text=body, recipient=to_url, sender=from_url, sender_title=from_title,message_type="text", test=download, **kw)\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -76,7 +91,7 @@ if event is not None:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>delivery_date, portal_type, destination_reference</string> </value>
+            <value> <string>from_url=None, from_title=None, to_url=None, reply_url=None, subject=None,            body=None, attachment_format=None, attachment_list=None,download=False,**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -96,19 +111,34 @@ if event is not None:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>9</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>delivery_date</string>
-                            <string>portal_type</string>
-                            <string>destination_reference</string>
+                            <string>from_url</string>
+                            <string>from_title</string>
+                            <string>to_url</string>
+                            <string>reply_url</string>
+                            <string>subject</string>
+                            <string>body</string>
+                            <string>attachment_format</string>
+                            <string>attachment_list</string>
+                            <string>download</string>
+                            <string>kw</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>event</string>
+                            <string>person</string>
+                            <string>recipient_phone_list</string>
                             <string>None</string>
+                            <string>ValueError</string>
+                            <string>phone</string>
+                            <string>sender_phone</string>
+                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>
@@ -120,12 +150,22 @@ if event is not None:\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <int>0</int>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>EventModule_setEventDelivery</string> </value>
+            <value> <string>ShortMessage_send</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

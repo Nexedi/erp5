@@ -50,44 +50,27 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Create new SMS from a push of the sms gateway\n
-Parameter: \n
-message_id -- Reference of the message in gateway side (String)\n
-sender -- Phone number of the sender (String)\n
-recipient -- Phone number of the recipient (String)\n
-text_content -- the message (String)\n
-message_type -- Type of message (String)\n
-reception_date -- The date when the message was received (DateTime)"""\n
-#XXX-Should be replace by portal_contribution\n
-event = context.newContent(portal_type="Short Message",\n
-                   sender=sender,\n
-                   recipient=recipient,\n
-                   content_type=message_type,\n
-                   text_content=text_content,\n
-                   start_date=reception_date,\n
-    #XXX-Fx : See with JPS for a new event implementation\n
-    #XXX-Fx : DestinationReference property must be replace by a category\n
-                   destination_reference=message_id,\n
-                   )\n
+            <value> <string>"""Owner Proxy Role allows anonymous users to create events\n
+through web sites.\n
 \n
-#Mark the message as received\n
-event.receive()\n
+Reference will be probably generated with dedicated tool\n
+in near future\n
+"""\n
+portal = context.getPortalObject()\n
+type_definition = context.getTypeInfo()\n
 \n
-#Search sender and recipient\n
-def searchParentOfTelephoneNumber(phone_number):\n
-  getResultValue = context.portal_catalog.getResultValue\n
- \n
-  phone = getResultValue(url_string={\'query\':phone_number, \'key\':\'ExactMatch\'}, portal_type=\'Telephone\', parent_portal_type=\'Person\')\n
-  if phone is None:\n
-    phone = getResultValue(url_string={\'query\':phone_number, \'key\':\'ExactMatch\'}, portal_type=\'Telephone\', parent_portal_type=\'Organisation\')\n
-  if phone is not None:\n
-    return phone.getParentValue()\n
+short_portal_type = type_definition.getShortTitle()\n
+if not short_portal_type:\n
+  short_portal_type = \'\'.join(s for s in type_definition.getId() if s.isupper())\n
 \n
-  return None\n
+id_group = (\'reference\', short_portal_type)\n
+default = 1\n
+new_id = portal.portal_ids.generateNewId(id_group=id_group, default=default)\n
+reference = \'%s-%s\' % (short_portal_type, new_id)\n
 \n
-event.setSourceValue(searchParentOfTelephoneNumber(sender))\n
-event.setDestinationValue(searchParentOfTelephoneNumber(recipient))\n
-#context.log("new SMS added at %s" % event.getRelativeUrl())\n
+# Set preferred text format and reference\n
+context.edit(content_type=\'text/plain\',\n
+             reference=reference)\n
 </string> </value>
         </item>
         <item>
@@ -98,7 +81,15 @@ event.setDestinationValue(searchParentOfTelephoneNumber(recipient))\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>message_id, sender, recipient, text_content, message_type, reception_date</string> </value>
+            <value> <string>*args, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Owner</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -118,22 +109,24 @@ event.setDestinationValue(searchParentOfTelephoneNumber(recipient))\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>6</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>message_id</string>
-                            <string>sender</string>
-                            <string>recipient</string>
-                            <string>text_content</string>
-                            <string>message_type</string>
-                            <string>reception_date</string>
+                            <string>args</string>
+                            <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>event</string>
-                            <string>searchParentOfTelephoneNumber</string>
+                            <string>portal</string>
+                            <string>type_definition</string>
+                            <string>short_portal_type</string>
+                            <string>_getiter_</string>
+                            <string>id_group</string>
+                            <string>default</string>
+                            <string>new_id</string>
+                            <string>reference</string>
                           </tuple>
                         </value>
                     </item>
@@ -150,11 +143,7 @@ event.setDestinationValue(searchParentOfTelephoneNumber(recipient))\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>EventModule_pushNewSMS</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>XXX</string> </value>
+            <value> <string>ShortMessage_init</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
