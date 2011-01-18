@@ -75,12 +75,11 @@ if not from_url:\n
     from_title = sender_phone.getTitle()    \n
     from_url = sender_phone.asURL()\n
 \n
-  \n
-\n
 if not body:\n
   body = context.getTextContent()\n
 \n
-context.portal_sms.send(text=body, recipient=to_url, sender=from_url, sender_title=from_title,message_type="text", test=download, **kw)\n
+context.portal_sms.send(text=body,recipient=to_url,sender=from_url,sender_title=from_title,message_type="text", \n
+                        test=download, document_relative_url=context.getRelativeUrl(), **kw)\n
 </string> </value>
         </item>
         <item>
