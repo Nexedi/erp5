@@ -188,7 +188,9 @@ class PropertySheetTool(BaseTool):
     setDefaultClassProperties(property_holder)
 
     try:
-      setDefaultProperties(property_holder, portal=self.getPortalObject())
+      setDefaultProperties(property_holder,
+                           object=self,
+                           portal=self.getPortalObject())
     except:
       LOG("Tool.PropertySheetTool", ERROR,
           "Could not generate accessor holder class for %s (module=%s)" % \
@@ -269,9 +271,12 @@ class PropertySheetTool(BaseTool):
       property_holder._categories, \
       property_holder._constraints = definition_tuple
 
+    property_sheet_name = property_sheet.getId()
+    property_holder.__name__ = property_sheet_name
+
     return self._createCommonPropertySheetAccessorHolder(
       property_holder,
-      property_sheet.getId(),
+      property_sheet_name,
       'erp5.accessor_holder')
 
   security.declareProtected(Permissions.ManagePortal,
