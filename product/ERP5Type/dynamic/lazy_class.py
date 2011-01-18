@@ -50,8 +50,6 @@ class GhostBaseMetaClass(ExtensionClass):
       Because __bases__ is changed, the behavior of this object
       will change after the first call.
       """
-      if attr == 'meta_type':
-        return cls.meta_type
       # Class must be loaded if '__of__' is requested because otherwise,
       # next call to __getattribute__ would lose any acquisition wrapper.
       if attr in ('__class__',
@@ -156,7 +154,6 @@ class PortalTypeMetaClass(GhostBaseMetaClass):
         if attr not in ('__module__',
                         '__doc__',
                         '__isghost__',
-                        'meta_type',
                         'portal_type'):
           delattr(cls, attr)
       # generate a ghostbase that derives from all previous bases
@@ -232,5 +229,4 @@ class PortalTypeMetaClass(GhostBaseMetaClass):
 def generateLazyPortalTypeClass(portal_type_name):
   return PortalTypeMetaClass(portal_type_name,
                              (InitGhostBase,),
-                             dict(portal_type=portal_type_name,
-                                  meta_type='ERP5 %s' % portal_type_name))
+                             dict(portal_type=portal_type_name))
