@@ -171,25 +171,15 @@ function fixLeftRightHeightAndFocus(fix_height) {\n
 // if clear_changed_flag is set to true, changed will be set to false, so no\n
 // warning message about unsaved changes will be displayed\n
 function submitFormOnEnter(event, form, method_name, clear_changed_flag, element){\n
-  if (clear_changed_flag == null){\n
-    clear_changed_flag = false;\n
-  }\n
+  if (clear_changed_flag == null){ clear_changed_flag = false; }\n
   if(event.keyCode == 13){\n
-    if (form == \'main_form\') {\n
+    if (form == "main_form") {\n
       form = $("#"+form); // backward compatibility\n
     }\n
-    form.action = method_name;\n
+    form.attr("action", method_name);\n
     if (clear_changed_flag==true) {\n
       changed = false;\n
     }\n
-    if(element!=null){\n
-      // disable other form elements having same name attribute\n
-      $(element.tagName).each(\n
-        function (index){\n
-          input = $(this);\n
-          if((input.attr("name") == element.name) && (input!=element)){input.attr("disabled",true);}\n
-        });\n
-     }\n
     form.submit();\n
   }\n
 }\n
