@@ -36,7 +36,6 @@ from zLOG import LOG, INFO
 
 import os
 import subprocess
-import base64
 
 def popenCommunicate(command_list, input=None, **kwargs):
   kwargs.update(stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -185,14 +184,13 @@ class CertificateAuthorityTool(BaseTool):
     self._lockCertificateAuthority()
     try:
       new_id = open(self.serial, 'r').read().strip().lower()
-      cn = base64.encodestring(str(new_id) + ':')
       key = os.path.join(self.certificate_authority_path, 'private', new_id+'.key')
       csr = os.path.join(self.certificate_authority_path, new_id + '.csr')
       cert = os.path.join(self.certificate_authority_path, 'certs', new_id + '.crt')
       try:
         popenCommunicate([self.openssl_binary, 'req', '-nodes', '-config',
           self.openssl_config, '-new', '-keyout', key, '-out', csr, '-days',
-          '3650'], '%s\n' % cn, stdin=subprocess.PIPE)
+          '3650'], '%s\n' % new_id, stdin=subprocess.PIPE)
         popenCommunicate([self.openssl_binary, 'ca', '-batch', '-config',
           self.openssl_config, '-out', cert, '-infiles', csr])
         os.unlink(csr)
