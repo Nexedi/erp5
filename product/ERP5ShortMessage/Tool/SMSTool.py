@@ -50,18 +50,25 @@ class SMSTool(BaseTool):
   manage_overview = DTMLFile('explainSMSTool', _dtmldir )
      
   security.declareProtected(ManagePortal, 'send')
-  def send(self, text,recipient, sender=None, message_type="text",
-           test=False, gateway_reference='default', 
+  def send(self, text,recipient, sender=None, sender_title=None,
+           message_type="text", test=False, gateway_reference='default', 
            document_relative_url=None, activate_kw=None, **kw):        
     """
     document_relative_url (optional) : allows to send back result to a document
+    activate_kw (optional) : Call SMSTool_afterSend if founded in activity with
+                            message_id_list and document_relative_url
     """
               
     gateway = self.find(gateway_reference)
 
-    message_id_list =  gateway.send(text,recipient,
-                        sender=sender, message_type="text",
-                        test=False, **kw)
+    message_id_list =  gateway.send(text=text,
+                                    recipient=recipient,
+                                    sender=sender,
+                                    sender_title=sender_title,
+                                    message_type=message_type,
+                                    test=test, 
+                                    **kw)
+                        
     if getattr(self, 'SMSTool_afterSend'):
       # We need to use activities in order to avoid any conflict
       send_activate_kw = {'activity':'SQLQueue'}
