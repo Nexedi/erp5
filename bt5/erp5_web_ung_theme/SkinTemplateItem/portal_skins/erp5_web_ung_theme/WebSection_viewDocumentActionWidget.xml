@@ -36,9 +36,11 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<tal:block tal:define="actions  python:here.Base_filterDuplicateActions(here.portal_actions.listFilteredActionsFor(here.getObject()));\n
+<tal:block tal:define="actions  python:here.Base_filterDuplicateActions(here.portal_actions.listFilteredActionsFor(here));\n
                        dummy    python:request.set(\'actions\', actions);">\n
-       <a tal:content="python: \'Updated %s by\' % context.getModificationDate().toZone(\'UTC\').ISO()"/>\n
+       <a tal:condition="python: context.getModificationDate() is not None">\n
+         <a tal:content="python: \'Updated %s by\' % context.getModificationDate().toZone(\'UTC\').ISO()"/>\n
+       </a>\n
        <a tal:content="here/portal_membership/getAuthenticatedMember"/>\n
 \n
        <button onclick="javascript:clickSaveButton(\'Base_edit\')" \n
