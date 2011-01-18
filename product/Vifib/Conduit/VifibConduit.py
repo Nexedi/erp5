@@ -20,7 +20,7 @@ from lxml.etree import Element
 parser = etree.XMLParser(remove_blank_text=True)
 
 
-class VifibConduit():
+class VifibConduit:
   """This conduit is used to synchronize tiosafe packing list and erp5"""  
 
   def __init__(self):
