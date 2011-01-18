@@ -40,6 +40,7 @@ from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from Products.ERP5Type.Cache import transactional_cached
 from Products.ERP5Security.ERP5UserManager import SUPER_USER
 from ZODB.POSException import ConflictError
+from Products.PluggableAuthService.PluggableAuthService import DumbHTTPExtractor
 
 #Form for new plugin in ZMI
 manage_addVifibMachineAuthenticationPluginForm = PageTemplateFile(
@@ -93,16 +94,34 @@ class VifibMachineAuthenticationPlugin(BasePlugin):
   meta_type = "Vifib Machine Authentication Plugin"
   security = ClassSecurityInfo()
 
-  manage_options = (({'label': 'Edit',
-                      'action': 'manage_editVifibMAchineAuthenticationPluginForm',},
-                     )
-                    + BasePlugin.manage_options[:]
-                    )
-
   def __init__(self, id, title=None):
     #Register value
     self._setId(id)
     self.title = title
+
+  ####################################
+  #ILoginPasswordHostExtractionPlugin#
+  ####################################
+  security.declarePrivate('extractCredentials')
+  def extractCredentials(self, request):
+    """ Extract credentials from the request header. """
+    creds = {}
+    getHeader = getattr(request, 'getHeader', None)
+    if getHeader is None:
+      # use get_header instead for Zope-2.8
+      getHeader = request.get_header
+    user_id = getHeader('REMOTE_USER')
+    if user_id is not None:
+      creds['machine_login'] = user_id
+      creds['remote_host'] = request.get('REMOTE_HOST', '')
+      try:
+        creds['remote_address'] = request.getClientAddr()
+      except AttributeError:
+        creds['remote_address'] = request.get('REMOTE_ADDR', '')
+      return creds
+    else:
+      # fallback to default way
+      return DumbHTTPExtractor().extractCredentials(request)
 
   ################################
   #     IAuthenticationPlugin    #
@@ -110,7 +129,7 @@ class VifibMachineAuthenticationPlugin(BasePlugin):
   security.declarePrivate('authenticateCredentials')
   def authenticateCredentials(self, credentials):
     """Authentificate with credentials"""
-    login = credentials.get('login', None)
+    login = credentials.get('machine_login', None)
     # Forbidden the usage of the super user.
     if login == SUPER_USER:
       return None
@@ -149,5 +168,9 @@ class VifibMachineAuthenticationPlugin(BasePlugin):
 #List implementation of class
 classImplements(VifibMachineAuthenticationPlugin,
                 plugins.IAuthenticationPlugin)
+classImplements( VifibMachineAuthenticationPlugin,
+                plugins.ILoginPasswordHostExtractionPlugin
+               )
+
 
 InitializeClass(VifibMachineAuthenticationPlugin)
