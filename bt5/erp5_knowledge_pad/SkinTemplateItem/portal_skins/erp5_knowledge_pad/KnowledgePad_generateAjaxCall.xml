@@ -51,10 +51,11 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>if not ignore_security_check:\n
-  if context.portal_membership.isAnonymousUser():\n
-    # anonymous user is not allowed to use AJAX gadgets\n
-    return """alert("%s");""" %context.Base_translateString(\n
-                                "This function is available only for logged in users!")\n
+  pass\n
+  #if context.portal_membership.isAnonymousUser():\n
+  #  # anonymous user is not allowed to use AJAX gadgets\n
+  #  return """alert("%s");""" %context.Base_translateString(\n
+  #                              "This function is available only for logged in users!")\n
 \n
 # pass current_web_section (if available so we can send it to server in next\n
 # asynchronous request and server can set it in context.REQUEST\n
