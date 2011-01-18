@@ -284,7 +284,7 @@ class AssertSoftwareRunable(AssertSoftwareMixin):
     stdout, stderr = subprocess.Popen(["parts/w3m/bin/w3m", "-V"],
         stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
     self.assertEqual(stderr, '')
-    self.assertTrue(stdout.startswith('w3m version w3m/0.5.2'))
+    self.assertTrue(stdout.startswith('w3m version w3m/0.5.3'))
 
 class AssertMysql50Tritonn(AssertSoftwareMixin):
   def test_ld_mysqld(self):
