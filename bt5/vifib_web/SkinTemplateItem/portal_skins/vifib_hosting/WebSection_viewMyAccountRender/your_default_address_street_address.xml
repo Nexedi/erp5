@@ -13,6 +13,7 @@
                 <string>default</string>
                 <string>required</string>
                 <string>title</string>
+                <string>width</string>
               </list>
             </value>
         </item>
@@ -110,6 +111,10 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Address</string> </value>
+                </item>
+                <item>
+                    <key> <string>width</string> </key>
+                    <value> <int>30</int> </value>
                 </item>
               </dictionary>
             </value>

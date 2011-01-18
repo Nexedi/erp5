@@ -11,6 +11,7 @@
             <value>
               <list>
                 <string>css_class</string>
+                <string>editable</string>
                 <string>title</string>
               </list>
             </value>
@@ -75,6 +76,10 @@
                 <item>
                     <key> <string>css_class</string> </key>
                     <value> <string>inline</string> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>

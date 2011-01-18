@@ -103,20 +103,8 @@
                           <string>Image</string>
                         </tuple>
                         <tuple>
-                          <string>start_button</string>
-                          <string>Start</string>
-                        </tuple>
-                        <tuple>
-                          <string>stop_button</string>
-                          <string>Stop</string>
-                        </tuple>
-                        <tuple>
                           <string>status</string>
                           <string>Status</string>
-                        </tuple>
-                        <tuple>
-                          <string>destroy_button</string>
-                          <string>Destroy</string>
                         </tuple>
                       </list>
                     </value>
@@ -125,18 +113,6 @@
                     <key> <string>editable_columns</string> </key>
                     <value>
                       <list>
-                        <tuple>
-                          <string>start_button</string>
-                          <string>Start</string>
-                        </tuple>
-                        <tuple>
-                          <string>stop_button</string>
-                          <string>Stop</string>
-                        </tuple>
-                        <tuple>
-                          <string>destroy_button</string>
-                          <string>Destroy</string>
-                        </tuple>
                         <tuple>
                           <string>action_button</string>
                           <string>Action</string>
@@ -209,10 +185,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
+      <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
     <pickle>
       <dictionary>

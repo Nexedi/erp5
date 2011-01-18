@@ -59,9 +59,10 @@ body{ font-family:Arial,Helvetica,sans-serif;\n
       font-weight:bold}\n
 h1{color:#2e707c}\n
 h2{color:#3e95a5}\n
-input,textarea{font-size:18px;color:#8D8D8D}\n
+input{font-size:18px;color:#8D8D8D}\n
+textarea{color:#8D8D8D}\n
 input{height:26px;}\n
-textarea{height:77px;width:247px;}\n
+/* textarea{height:77px;width:247px;} */\n
 fieldset{border:none;}\n
 a img{border : 0 none;cursor : pointer;}\n
 \n
