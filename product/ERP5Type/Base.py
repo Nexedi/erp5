@@ -3887,7 +3887,9 @@ class Base( CopyContainer,
         parent = self.getParentValue()
       except AttributeError:
         return
-      setattr(parent, self.getId(), self)
+      id = self.getId()
+      parent._delObject(id)
+      parent._setOb(id, self)
 
   security.declareProtected(Permissions.DeletePortalContent,
                             'migratePortalType')
