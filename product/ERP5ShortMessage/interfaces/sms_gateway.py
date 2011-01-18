@@ -31,7 +31,8 @@ from zope.interface import Interface
 
 class ISmsGateway(Interface):
 
-    def send(self, text, recipient, sender=None, 
+    def send(self, text, recipient, 
+             sender=None, sender_title=None,
              message_type="text",test=False, **kw):
       """Send a message."""
       
