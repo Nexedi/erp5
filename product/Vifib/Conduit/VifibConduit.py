@@ -1,22 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from AccessControl import ClassSecurityInfo
-from AccessControl import Unauthorized
-from AccessControl.SecurityManagement import newSecurityManager
-from OFS.Traversable import NotFound
-from Products.DCWorkflow.DCWorkflow import ValidationFailed
-from Products.ERP5Security.ERP5UserManager import SUPER_USER
-from Products.ERP5Type.Globals import InitializeClass
-from Products.ERP5Type.Tool.BaseTool import BaseTool
-from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
-from slapos.slap.slap import Computer
-from slapos.slap.slap import ComputerPartition as SlapComputerPartition
-from slapos.slap.slap import SoftwareInstance
-from slapos.slap.slap import SoftwareRelease
-from zLOG import LOG, INFO
-import xml_marshaller
+#from zLOG import LOG, INFO
+#import xml_marshaller
 from lxml import etree
-from lxml.etree import Element
 parser = etree.XMLParser(remove_blank_text=True)
 
 
