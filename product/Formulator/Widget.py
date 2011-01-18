@@ -217,6 +217,8 @@ class Widget:
     if isinstance(value, str):
       #required by lxml
       value = value.decode('utf-8')
+    if value is None:
+      value = ''
     text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
     text_node.text = value
     text_node.attrib.update(attr_dict)
@@ -239,6 +241,8 @@ class Widget:
     if isinstance(value, str):
       #required by lxml
       value = value.decode('utf-8')
+    if value is None:
+      value = ''
     text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
     text_node.text = value
     text_node.attrib.update(attr_dict)
@@ -280,6 +284,8 @@ class Widget:
     if isinstance(value, str):
       #required by lxml
       value = value.decode('utf-8')
+    if value is None:
+      value = ''
     draw_frame_tag_name = '{%s}%s' % (DRAW_URI, 'frame')
     draw_frame_node = Element(draw_frame_tag_name, nsmap=NSMAP)
     draw_frame_attribute_list = attr_dict.get(draw_frame_tag_name)
