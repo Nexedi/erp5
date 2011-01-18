@@ -243,8 +243,11 @@ class TestXHTML(ERP5TypeTestCase):
     Usually we should not have duplicates except in some rare cases 
     described in SkinsTool_getDuplicateSelectionNameDict
     """
-    duplicating_selection_name_dict = self.portal.portal_skins.SkinsTool_getDuplicateSelectionNameDict()
-    self.assertEquals(duplicating_selection_name_dict, {})
+    portal_skins = self.portal.portal_skins
+    duplicating_selection_name_dict = portal_skins.SkinsTool_getDuplicateSelectionNameDict()
+    self.assertFalse(duplicating_selection_name_dict,
+                     "Repeated listbox selection names:\n" +
+                     portal_skins.SkinsTool_checkDuplicateSelectionName())
     
   def test_PythonScriptSyntax(self):
     """ 
