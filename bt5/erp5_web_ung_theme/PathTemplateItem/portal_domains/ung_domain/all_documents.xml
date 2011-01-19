@@ -26,6 +26,20 @@
                       </list>
                     </value>
                 </item>
+                <item>
+                    <key> <string>validation_state</string> </key>
+                    <value>
+                      <list>
+                        <string>draft</string>
+                        <string>published</string>
+                        <string>hidden</string>
+                        <string>released</string>
+                        <string>requested</string>
+                        <string>shared</string>
+                        <string>translated</string>
+                      </list>
+                    </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -52,6 +66,7 @@
             <value>
               <tuple>
                 <string>portal_type</string>
+                <string>validation_state</string>
               </tuple>
             </value>
         </item>
