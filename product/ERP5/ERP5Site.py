@@ -520,9 +520,12 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
         type_list.sort(key=lambda x:translate('ui', x))
       return tuple(type_list)
 
-    localizer_tool = getToolByName(self, 'Localizer')
-    language = localizer_tool.get_selected_language()
-    # language should be cached in Transaction Cache if performance issue
+    if enable_sort:
+      # language should be cached in Transaction Cache if performance issue
+      localizer_tool = getToolByName(self, 'Localizer')
+      language = localizer_tool.get_selected_language()
+    else:
+      localizer_tool = language = None
 
     getTypeList = CachingMethod(getTypeList,
                                 id=(('_getPortalGroupedTypeList', language), group,
