@@ -49,16 +49,18 @@
 \n
 $(document).ready(function(){\n
   $("button.save").click(function(event){\n
+    event.preventDefault();\n
     svg_canvas = window.frames["svgframe"].svgCanvas;\n
     $.ajax({\n
-      type: "POST",\n
-      url: "Base_setTextContentWrapper",\n
-      data: "text=" + svg_canvas.getSvgString(),\n
-   });\n
+       type: "POST",\n
+       url: "Base_setTextContentWrapper",\n
+       data: "text=" + svg_canvas.getSvgString(),\n
+    });\n
+    window.location.reload();\n
   });\n
   var text_content = $.ajax({\n
                              url: "getTextContent",\n
-                             async: false\n
+                             async: false,\n
                             }).responseText;\n
   $("iframe#svgframe").css("border", "0px");\n
 })</unicode> </value>
