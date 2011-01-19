@@ -51,6 +51,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>return context.getPortalObject().portal_catalog(\n
+  local_roles=["Assignee", "Owner"],\n
   **kw\n
   )\n
 </string> </value>
