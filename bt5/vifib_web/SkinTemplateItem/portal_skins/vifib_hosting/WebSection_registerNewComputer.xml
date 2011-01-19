@@ -53,16 +53,26 @@
             <value> <string>portal = context.getPortalObject()\n
 \n
 computer_portal_type = "Computer"\n
+\n
+certificate_dict = context.getPortalObject().portal_certificate_authority.getNewCertificate()\n
+\n
 module = portal.getDefaultModule(portal_type=computer_portal_type)\n
 computer = module.newContent(\n
   portal_type=computer_portal_type,\n
   title=title,\n
+  reference=certificate_dict["id"],\n
 )\n
 \n
 computer.requestComputerRegistration()\n
+computer = context.restrictedTraverse(computer.getRelativeUrl())\n
 \n
+context.REQUEST.set("computer_certificate", certificate_dict["certificate"])\n
+context.REQUEST.set("computer_key", certificate_dict["key"])\n
+context.REQUEST.set("computer_url", computer.absolute_url())\n
 message = "Registering Computer"\n
-return computer.Base_redirect(keep_items=dict(portal_status_message=message))\n
+context.REQUEST.set("portal_status_message", message)\n
+\n
+return computer.Computer_viewConnectionInformationAsWeb()\n
 </string> </value>
         </item>
         <item>
@@ -104,10 +114,11 @@ return computer.Base_redirect(keep_items=dict(portal_status_message=message))\n
                             <string>context</string>
                             <string>portal</string>
                             <string>computer_portal_type</string>
+                            <string>certificate_dict</string>
                             <string>module</string>
+                            <string>_getitem_</string>
                             <string>computer</string>
                             <string>message</string>
-                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
