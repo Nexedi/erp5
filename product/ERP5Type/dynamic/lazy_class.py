@@ -50,6 +50,13 @@ class GhostBaseMetaClass(ExtensionClass):
       Because __bases__ is changed, the behavior of this object
       will change after the first call.
       """
+      # very special case used to bootstrap an instance:
+      # calling _setObject() requires accessing the meta_type of the
+      # object we're setting, but when creating portal_types it's way
+      # too early to load erp5.portal_type.Types Tool
+      if attr == "meta_type" and self.__class__.__name__ == "Types Tool":
+          return "ERP5 Types Tool"
+
       # Class must be loaded if '__of__' is requested because otherwise,
       # next call to __getattribute__ would lose any acquisition wrapper.
       if attr in ('__class__',
