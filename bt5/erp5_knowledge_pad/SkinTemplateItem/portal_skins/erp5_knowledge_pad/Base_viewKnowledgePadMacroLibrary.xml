@@ -110,7 +110,7 @@
              value="" \n
              name="pad_title" \n
              id="new_pad_title"\n
-             tal:attributes="onkeypress string: return addPadOnServerOnEnter(event, \'ERP5Site_addNewKnowledgePad\', \'${mode}\', \'view\')"/>\n
+             tal:attributes="onkeypress string: return addPadOnServerOnEnter(event, \'${mode}\', \'view\')"/>\n
       <br/>\n
       <br/>\n
       <button type="button"\n
@@ -118,7 +118,7 @@
               i18n:translate="" \n
               i18n:domain="ui">Cancel</button>\n
       <button type="button"\n
-              tal:attributes="onclick string:addPadOnServer(\'ERP5Site_addNewKnowledgePad\', \'${mode}\', \'view\')" \n
+              tal:attributes="onclick string:addPadOnServer(\'${mode}\', \'view\')" \n
               i18n:translate="" \n
               i18n:domain="ui"\n
               id="add_new_tab_dialog_add_button">Add</button>\n
@@ -256,8 +256,7 @@
       </h2>\n
       <p i18n:translate="" i18n:domain="ui"> You\'ll be automatically redirected.</p>\n
       <script type="text/javascript"\n
-              tal:content="string: createDefaultPadOnServer(5000, \'ERP5Site_createDefaultKnowledgePadListForUser\',\n
-                                                            \'${default_pad_group}\', \'view\', \'${mode}\');"/>\n
+              tal:content="string: createDefaultPadOnServer(5000, \'${default_pad_group}\', \'view\', \'${mode}\');"/>\n
       </div>\n
   </div>\n
 </tal:block>\n

@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts95436971.49</string> </value>
+            <value> <string>ts95444322.67</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -39,8 +39,20 @@ var is_knowledge_template_used = 0;\n
 // dictionary of invisible gadgets\n
 var invisible_gadgets={};\n
 \n
+var create_default_knowledge_pad_script_id = "ERP5Site_createDefaultKnowledgePadListForUser";\n
+var check_for_activities_on_server_script_id = "ERP5Site_hasUserActivity";\n
+var knowledge_box_edit_script_id = "KnowledgeBox_baseEdit";\n
+var knowledge_pad_save_layout_script_id = "KnowledgePad_saveBoxColumnLayout";\n
+var knowledge_pad_delete_box_script_id = "KnowledgePad_deleteBox";\n
+var knowledge_box_toggle_script_id = "KnowledgeBox_toggleVisibility";\n
+var knowledge_pad_rename_script_id = "ERP5Site_renameKnowledgePad";\n
+var knowledge_pad_delete_script_id = "ERP5Site_deleteKnowledgePad";\n
+var add_new_knowledge_pad_script_id = "ERP5Site_addNewKnowledgePad";\n
+var knowledge_pad_as_json_script_id = "KnowledgePag_getPadAsJSON";\n
+var add_new_gadget_form_id = "Base_viewGadgetListDialog";\n
+\n
 function createCustomKnowledgePadOnServer(){\n
-  $.ajax({url:"ERP5Site_createDefaultKnowledgePadListForUser", \n
+  $.ajax({url:create_default_knowledge_pad_script_id, \n
           data:{mode: mode,\n
                 default_pad_group: default_pad_group},\n
           success:function(data){window.location=cancel_url + "/view?active_pad_url=" + data;}});\n
@@ -134,7 +146,7 @@ function checkForActivitiesOnServer(timeout, return_url, mode, default_pad_group
   /* check if activities are over and refresh current page */\n
   window.setInterval(\n
     function () {\n
-      $.ajax({url:"ERP5Site_hasUserActivity",\n
+      $.ajax({url:check_for_activities_on_server_script_id,\n
               data: {js_call: 1,\n
                      mode: mode,\n
                      default_pad_group: default_pad_group},\n
@@ -143,24 +155,10 @@ function checkForActivitiesOnServer(timeout, return_url, mode, default_pad_group
     timeout);\n
 };\n
 \n
-function stickPadOnWebSection(create_url,\n
-                              knowledge_pad_url,\n
-                              websection_url,\n
-                              cancel_url){\n
-  /* stick pad on Web Section and then check if \n
-     activities are over and refresh current page */\n
-  $.ajax({url: create_url,\n
-          data: {knowledge_pad_url: knowledge_pad_url,\n
-                 cancel_url: cancel_url},\n
-          success: function(data){window.location=cancel_url + "?active_pad_url=" + data;}\n
-          });\n
-}\n
-\n
-function createDefaultPadOnServer(timeout, create_url,\n
-                                  default_pad_group, return_url, mode){\n
+function createDefaultPadOnServer(timeout, default_pad_group, return_url, mode){\n
   /* create default tab on server and then check if \n
      activities are over and refresh current page */\n
-  $.ajax({url: create_url, \n
+  $.ajax({url: create_default_knowledge_pad_script_id, \n
           data: {default_pad_group: default_pad_group,\n
                  mode: mode},\n
           success: function(data){checkForActivitiesOnServer(timeout, return_url, mode, default_pad_group);}});\n
@@ -182,7 +180,7 @@ function submitSynchronousGadgetPreferenceForm(\n
   $("form").append(\'<input type="hidden" name="box_relative_url" value="\' +box_relative_url +  \'">\');\n
   $("form").append(\'<input type="hidden" name="form_fields_main_prefix" value="\' +form_fields_main_prefix +  \'">\');\n
   $("form").append(\'<input type="hidden" name="gadget_redirect_url" value="\' +redirect_url +  \'">\');\n
-  clickSaveButton("KnowledgeBox_baseEdit");    \n
+  clickSaveButton(knowledge_box_edit_script_id);    \n
 };\n
 \n
 function submitAsynchronousGadgetPreferenceForm(\n
@@ -227,7 +225,7 @@ function submitAsynchronousGadgetPreferenceForm(\n
        else{request_str+=name + \'=\' + value + \'&\';} });\n
     \n
   // save form preferences to remote server\n
-  $.ajax({url: "KnowledgeBox_baseEdit?" + request_str,\n
+  $.ajax({url: knowledge_box_edit_script_id + "?" + request_str,\n
           success: function (data){\n
                      updater(view_form_url, box_relative_url, visual_block_dom_id);\n
                      $("#" + form_dom_id).toggle();} });\n
@@ -255,7 +253,7 @@ function updateServerBoxColumnLayout(event, ui){\n
   // .. and send it to server only if it\'s different\n
   if (layout!=last_layout){\n
     last_layout = layout;\n
-    $.ajax({url: "KnowledgePad_saveBoxColumnLayout", \n
+    $.ajax({url: knowledge_pad_save_layout_script_id, \n
             data: {user_layout: layout}});}\n
 }\n
 \n
@@ -281,7 +279,7 @@ function loadPadFromServer(pad_relative_url, selected_pad_dom_id, mode){\n
   /* Load Pad from server */\n
   //  show some animation\n
   $("#loading-wrapper").first().show()\n
-  $.ajax({url: "KnowledgePag_getPadAsJSON", \n
+  $.ajax({url: knowledge_pad_as_json_script_id, \n
           data: {pad_relative_url: pad_relative_url,\n
                  mode: mode},\n
           dataType: "json",\n
@@ -325,22 +323,21 @@ function addNewPad(cancel_url, knowledge_pad_relative_url, mode){\n
     active_knowledge_pad_relative_url = knowledge_pad_relative_url;\n
   }\n
   // redirect to add gadget dialog\n
-  window.location="Base_viewGadgetListDialog?reset=1&cancel_url="+cancel_url+"&active_pad_relative_url="+active_knowledge_pad_relative_url+"&mode="+mode; \n
+  window.location=add_new_gadget_form_id + "?reset=1&cancel_url="+cancel_url+"&active_pad_relative_url="+active_knowledge_pad_relative_url+"&mode="+mode; \n
 }\n
 \n
-function addPadOnServerOnEnter(event, create_url, mode, cancel_url){\n
+function addPadOnServerOnEnter(event, mode, cancel_url){\n
   /* Catch and submit form when ENTER is pressed */\n
   if(event.keyCode == 13){\n
-    addPadOnServer(create_url, mode, cancel_url);\n
+    addPadOnServer(mode, cancel_url);\n
     return false;}\n
 }\n
 \n
-function addPadOnServer(create_url,\n
-                        mode,\n
+function addPadOnServer(mode,\n
                         cancel_url){\n
   /* add pad on server */\n
   pad_title_value = $("#new_pad_title").first().val();\n
-  window.location = create_url + "?redirect_url=" + cancel_url + "&mode=" + mode + "&pad_title=" + pad_title_value;\n
+  window.location = add_new_knowledge_pad_script_id + "?redirect_url=" + cancel_url + "&mode=" + mode + "&pad_title=" + pad_title_value;\n
 };\n
 \n
 function removeKnowledgePadFromServer(knowledge_pad_relative_url, mode){\n
@@ -351,7 +348,7 @@ function removeKnowledgePadFromServer(knowledge_pad_relative_url, mode){\n
     var user_choice = true;\n
     user_choice = confirm("Are you sure you want to remove this pad from your home?");\n
     if (user_choice==true){\n
-      location.href="ERP5Site_deleteKnowledgePad?knowledge_pad_relative_url=" + knowledge_pad_relative_url+"&mode="+mode;} }\n
+      location.href=knowledge_pad_delete_script_id + "?knowledge_pad_relative_url=" + knowledge_pad_relative_url+"&mode="+mode;} }\n
 }\n
 \n
 function renameKnowledgePadToServerOnEnter(event){\n
@@ -370,7 +367,7 @@ function renameKnowledgePadToServer(){\n
     input_element = $("#new_knowledge_pad_title")\n
     var knowledge_pad_title = input_element.val();\n
     title_element.html(knowledge_pad_title);\n
-    $.ajax({url: "ERP5Site_renameKnowledgePad", \n
+    $.ajax({url: knowledge_pad_rename_script_id, \n
             data: {knowledge_pad_relative_url: active_knowledge_pad_relative_url,\n
                    knowledge_pad_title: knowledge_pad_title}});                                           \n
   }\n
@@ -435,7 +432,7 @@ function initialize(){\n
             eval(js_code);\n
             // gadget is now visible, i.e. no need to query server just toggle locally dom\n
             delete invisible_gadgets[js_dom_id];}\n
-           $.ajax({url: "KnowledgeBox_toggleVisibility", \n
+           $.ajax({url: knowledge_box_toggle_script_id, \n
                    data: {box_relative_url: box_id}});\n
            }\n
         });}\n
@@ -453,7 +450,7 @@ function initialize(){\n
           if (user_choice==true){\n
             box_id = box.attr("id");\n
             box.toggle();\n
-            $.ajax({url: "KnowledgePad_deleteBox", \n
+            $.ajax({url: knowledge_pad_delete_box_script_id, \n
                     data: {box_relative_url: box_id}});}\n
         }});}\n
   }\n
@@ -484,7 +481,7 @@ $(document).ready(initialize);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>17712</int> </value>
+            <value> <int>17957</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
