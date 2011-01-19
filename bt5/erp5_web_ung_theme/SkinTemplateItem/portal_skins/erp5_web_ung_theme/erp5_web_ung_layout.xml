@@ -103,6 +103,7 @@
                     <value>
                       <list>
                         <string>navigation_box</string>
+                        <string>listbox_modification_date</string>
                       </list>
                     </value>
                 </item>

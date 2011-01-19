@@ -90,12 +90,7 @@
                 <item>
                     <key> <string>all_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>creation_date</string>
-                          <string>Creation</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -115,7 +110,7 @@
                           <string>Sharing</string>
                         </tuple>
                         <tuple>
-                          <string>Date</string>
+                          <string>modification_date</string>
                           <string>Date</string>
                         </tuple>
                       </list>
@@ -211,12 +206,7 @@
                 <item>
                     <key> <string>sort</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>Date</string>
-                          <string>Date</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -232,7 +222,7 @@
                           <string>Sharing</string>
                         </tuple>
                         <tuple>
-                          <string>Date</string>
+                          <string>modification_date</string>
                           <string>Date</string>
                         </tuple>
                       </list>
@@ -263,7 +253,7 @@
                           <string>WebSection_getDocumentUrl</string>
                         </tuple>
                         <tuple>
-                          <string>Date</string>
+                          <string>time</string>
                           <string>WebSection_getDocumentUrl</string>
                         </tuple>
                       </list>

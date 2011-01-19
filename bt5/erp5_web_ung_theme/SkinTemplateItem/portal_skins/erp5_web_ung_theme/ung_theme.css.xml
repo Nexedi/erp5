@@ -217,7 +217,6 @@ div.main-right div.main-status a {\n
 \n
 .listbox th {\n
   border-left: 1px solid #bbccff;\n
-  border-top: 1px solid #bbccff;\n
   border-right: 1px solid #bbccff;\n
 }\n
 \n
