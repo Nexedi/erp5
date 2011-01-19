@@ -673,6 +673,7 @@ span#ui-dialog-title-edit_document, \n
   margin-left:-8px;\n
   margin-top:-3px;\n
   font:bold 12pt Arial,Sans-serif;\n
+  color: #222222 !important;\n
 }\n
 \n
 div.ui-dialog-titlebar {\n
@@ -967,9 +968,10 @@ table#navigation_table td#tab-switcher-container,\n
   display: none !important;\n
 }\n
 \n
-table#navigation_table div#add_new_gadget_link {\n
+div#add_new_gadget_link {\n
   border-bottom: 0px;\n
   padding-top: 5px;\n
+  width: 50% !important;\n
 }\n
 \n
 div.front_pad div#page_wrapper {\n
@@ -1006,6 +1008,13 @@ div#edit_document.ui-dialog-content {\n
 \n
 .ui-widget textarea {\n
   font-size: 13px !important;\n
+}\n
+\n
+div#tabs, div#pad-navigation-wrapper div#tabs_switcher.tab {\n
+  display: none !important;\n
+}\n
+div#pad-navigation-wrapper {\n
+  border: 0px !important;\n
 }
 
 ]]></string> </value>
