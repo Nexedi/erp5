@@ -1635,8 +1635,7 @@ def setDefaultProperties(property_holder, object=None, portal=None):
       from Products.ERP5Type.ERP5Type import ERP5TypeInformation
       portal_type = object.portal_type
       for group in ERP5TypeInformation.defined_group_list:
-        value = portal_type in portal._getPortalGroupedTypeSet(group,
-                                                               enable_sort=False)
+        value = portal_type in portal._getPortalGroupedTypeSet(group)
         prop = {
            'id'          : group,
            'description' : "accessor to know the membership of portal group %s" \
