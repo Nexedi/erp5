@@ -337,7 +337,7 @@ class TestXHTML(ERP5TypeTestCase):
     error_list = []
     for skin_folder in self.portal.portal_skins.objectValues():
       if skin_folder.isPrincipiaFolderish:
-        for id_ in object_.objectIds():
+        for id_ in skin_folder.objectIds():
           if id_.startswith('Preference_view'):
             addPreferenceView(skin_folder.id, id_)
     for view_id, location_list in preference_view_id_dict.items():
