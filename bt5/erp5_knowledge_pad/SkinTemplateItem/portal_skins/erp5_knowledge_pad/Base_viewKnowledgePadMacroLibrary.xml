@@ -156,95 +156,78 @@
            tal:define="is_tabs_visible \n
                             python: int(here.REQUEST.get(\'is_tabs_visible\', 1));">\n
 \n
-   <table id="navigation_table">\n
-      <tr>\n
-        <td id="tab-switcher-container">\n
-          <div class="tab"\n
-              id="tabs_switcher"\n
-              tal:attributes="class python: test(is_tabs_visible,\n
-                                                 \'border_bottom1px\',\n
-                                                  \'border_bottom0px\');">\n
-            <span i18n:translate="" i18n:domain="ui" id="tab_switcher_hidden"\n
-                  tal:attributes="style python: test(is_tabs_visible, \'display:none\', None)">Show tabs</span>\n
-            <span i18n:translate="" i18n:domain="ui" id="tab_switcher_visible"\n
-                  tal:attributes="style python: test(is_tabs_visible, None, \'display:none\')">Hide tabs</span>\n
-          </div>\n
-        </td>\n
-        <td id="tab-list-container">\n
-          <div id="tabs"\n
-              tal:attributes="style python: \n
-                                    \'display: %s\' %test(is_tabs_visible, \'block\', \'none\')">\n
-              <ul>\n
-                <tal:block tal:repeat="knowledge_pad knowledge_pads">\n
+  <div class="tab"\n
+       id="tabs_switcher">\n
+     <span i18n:translate="" i18n:domain="ui" id="tab_switcher_hidden"\n
+           tal:attributes="style python: test(is_tabs_visible, \'display:none\', None)">Show tabs</span>\n
+     <span i18n:translate="" i18n:domain="ui" id="tab_switcher_visible"\n
+          tal:attributes="style python: test(is_tabs_visible, None, \'display:none\')">Hide tabs</span>\n
+  </div>\n
 \n
-                  <tal:block  \n
-                    tal:define="knowledge_pad_relative_url knowledge_pad/getRelativeUrl;\n
+  <div id="tabs"\n
+       tal:attributes="style python: \n
+                              \'display: %s\' %test(is_tabs_visible, \'block\', \'none\')">\n
+    <ul>\n
+      <tal:block tal:repeat="knowledge_pad knowledge_pads">\n
+\n
+        <tal:block  tal:define="knowledge_pad_relative_url knowledge_pad/getRelativeUrl;\n
                                 active_knowledge_pad_relative_url active_knowledge_pad/getRelativeUrl;\n
                                 is_active python: knowledge_pad_relative_url==active_knowledge_pad_relative_url;\n
                                 dom_id python: \'%s\' %knowledge_pad_relative_url.replace(\'/\', \'_\');\n
                                 pad_title_dom_id python: \'%s_title\' %dom_id;"> \n
 \n
-                    <li tal:attributes="id dom_id;\n
-                                        class python: test(is_active, \'tab tab_selected\', \'tab\')">\n
+          <li tal:attributes="id dom_id;\n
+                              class python: test(is_active, \'tab tab_selected\', \'tab\')">\n
 \n
-                    <!--                      \n
-                    <a tal:attributes="href string:\n
-                                           ERP5Site_toggleActiveKnowledgePad?knowledge_pad_url=${knowledge_pad_relative_url}&amp;mode=${mode}">\n
-                        <span tal:attributes="id pad_title_dom_id;"\n
-                              tal:content="knowledge_pad/getTitle"/>\n
-                      </a>-->\n
+            <!--                      \n
+            <a tal:attributes="href string:\n
+                                 ERP5Site_toggleActiveKnowledgePad?knowledge_pad_url=${knowledge_pad_relative_url}&amp;mode=${mode}">\n
+              <span tal:attributes="id pad_title_dom_id;"\n
+                    tal:content="knowledge_pad/getTitle"/>\n
+             </a>-->\n
 \n
-                      <span tal:attributes="id pad_title_dom_id;\n
-                                             onclick string:loadPadFromServer(\'${knowledge_pad_relative_url}\', \'${dom_id}\', \'${mode}\')" \n
-                             tal:content="knowledge_pad/getTitle"/>\n
+             <span tal:attributes="id pad_title_dom_id;\n
+                                   onclick string:loadPadFromServer(\'${knowledge_pad_relative_url}\', \'${dom_id}\', \'${mode}\')" \n
+                   tal:content="knowledge_pad/getTitle"/>\n
 \n
-                      <div class="pad-actions"\n
-                           tal:attributes="style python: test(is_active, \'display:block\', \'display:none\')">\n
-                        <span title="Settings"\n
-                              i18n:attributes="title"\n
-                              i18n:domain="ui"\n
-                              class="clickable_image rename_tab_dialog_image"\n
-                              tal:attributes="onclick string:showRenamePadPopup(\'${knowledge_pad_relative_url}\', \n
-                                                                                \'${pad_title_dom_id}\');"></span>\n
-                        <span title="Remove"\n
-                              i18n:attributes="title"\n
-                              i18n:domain="ui"\n
-                              class="clickable_image remove_tab_dialog_image"\n
-                              tal:attributes="onclick string: removeKnowledgePadFromServer(\n
-                                                                \'${knowledge_pad_relative_url}\', \'${mode}\')"/>\n
-                      </div>\n
+               <div class="pad-actions"\n
+                    tal:attributes="style python: test(is_active, \'display:block\', \'display:none\')">\n
+                 <span title="Settings"\n
+                       i18n:attributes="title"\n
+                       i18n:domain="ui"\n
+                       class="clickable_image rename_tab_dialog_image"\n
+                       tal:attributes="onclick string:showRenamePadPopup(\'${knowledge_pad_relative_url}\', \n
+                                                                         \'${pad_title_dom_id}\');"></span>\n
+                 <span title="Remove"\n
+                       i18n:attributes="title"\n
+                       i18n:domain="ui"\n
+                       class="clickable_image remove_tab_dialog_image"\n
+                       tal:attributes="onclick string: removeKnowledgePadFromServer(\n
+                                                         \'${knowledge_pad_relative_url}\', \'${mode}\')"/>\n
+               </div>\n
 \n
-                    </li>\n
+             </li>\n
 \n
-                  </tal:block>\n
-                </tal:block>\n
-                <li class="tab"\n
-                    tal:condition="not: isKnowledgePadTemplateUsed"\n
-                    onclick="showAddNewPadPopup();"\n
-                    i18n:translate="title" i18n:domain="ui"\n
-                    title="Add new tab"\n
-                    id="add_new_tab_dialog_link">Add tab</li>\n
-                <li class="tab"\n
+            </tal:block>\n
+          </tal:block>\n
+          <li class="tab"\n
+              tal:condition="not: isKnowledgePadTemplateUsed"\n
+              onclick="showAddNewPadPopup();"\n
+              i18n:translate="title" i18n:domain="ui"\n
+              title="Add new tab"\n
+              id="add_new_tab_dialog_link">Add tab</li>\n
+           <li class="tab"\n
                     tal:condition="python: isKnowledgePadTemplateUsed and isUserAllowedToCreateKnowledgePads"\n
                     onclick="showCreateDefaultKnowledgePadWarningMessage();"\n
                     i18n:translate="title" i18n:domain="ui"\n
                     title="Create your own tab"\n
                     id="create_own_pad_dialog_link"></li>\n
-              </ul>\n
-            </div>\n
-          </td>\n
-    \n
-          <td id="add-new-gadget-container">\n
-            <div id="add_new_gadget_link"\n
-                 tal:attributes="class python: test(is_tabs_visible,\n
-                                                    \'border_bottom1px\',\n
-                                                    \'border_bottom0px\');">\n
-              <span    metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/add_new_gadget"> Add Gadgets</span>\n
-            </div>\n
-          </td>\n
+       </ul>\n
+  </div>\n
 \n
-        </tr>\n
-      </table>\n
+  <div id="add_new_gadget_link">\n
+    <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/add_new_gadget"> Add Gadgets</span>\n
+  </div>\n
 \n
 </tal:block>\n
 \n

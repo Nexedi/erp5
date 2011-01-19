@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts94401374.54</string> </value>
+            <value> <string>ts95442223.79</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -165,29 +165,17 @@ div.edit-form {\n
 }\n
 \n
 /* Tabs for Knowledge Pads */ \n
-#navigation_table {\n
-  width: 100%;\n
-  border-collapse:collapse;\n
-  margin:0em;\n
-  border:medium none;\n
-}\n
-\n
-#navigation_table tr{\n
-  border:medium none;\n
-}\n
-\n
-#navigation_table td{\n
-  margin: 0em;\n
-  padding: 0em;\n
-  border:medium none;\n
+#pad-navigation-wrapper{\n
+  margin-top:10px;\n
+  border-bottom:1px solid #3D6474;\n
+  height:25px;\n
+  width:100%;\n
 }\n
 \n
 #tabs {\n
-  height: 25px;\n
-  border-bottom: 1px solid #3D6474;\n
   padding-left: 0em;\n
-  width: 100%;\n
   float: left;\n
+  width:78%;\n
 }\n
 \n
 #tabs ul {\n
@@ -273,20 +261,15 @@ div.toggable_dialog{\n
   border-style: none;\n
 }\n
 \n
-#tabs-switcher-container{\n
-  width: 17.5%;\n
-}\n
-\n
 #tabs_switcher{\n
   cursor: pointer; \n
   font-weight: bold;\n
   background: transparent;\n
   padding-top: 5px;\n
   border-style: none;\n
-  width: 100%;\n
-  border-bottom: 1px solid #3D6474;\n
-  height: 20px;\n
   margin: 0em;\n
+  width: 10%;\n
+  float:left\n
 }\n
 \n
 #add_new_gadget_link{\n
@@ -294,7 +277,8 @@ div.toggable_dialog{\n
   height: 20px;\n
   text-align:right; \n
   padding-top:5px;\n
-  border-bottom:1px solid #3D6474;\n
+  float:right;\n
+  width:12%;\n
 }\n
 \n
 /* Draggable Area */\n
@@ -316,15 +300,6 @@ div.box_inner_content {\n
 \n
 div.box_inner_content ol{\n
   margin-top: 0em;\n
-}\n
-\n
-/* this classes will switch one/off border below tabs selector*/\n
-div.border_bottom0px{\n
-  border-bottom: 1px solid #DAE6F6;\n
-}\n
-\n
-div.border_bottom1px{\n
-  border-bottom: 1px solid #3D6474;\n
 }\n
 \n
 /* seperate gadget tables from rest of ERP5*/\n
@@ -520,7 +495,7 @@ div.gadget-rss-reader .body {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8675</int> </value>
+            <value> <int>8226</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
