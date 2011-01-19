@@ -74,6 +74,14 @@ return context.ERP5Site_redirect(context.REQUEST.get("HTTP_REFERER"))\n
             <value> <string></string> </value>
         </item>
         <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>WebSection_deleteObjectList</string> </value>
         </item>
