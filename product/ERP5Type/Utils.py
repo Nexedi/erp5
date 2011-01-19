@@ -1546,12 +1546,15 @@ def setDefaultProperties(property_holder, object=None, portal=None):
         else:
           base_category_list.append(cat)
 
+      if portal is not None:
+        portal_categories = getattr(portal, 'portal_categories', None)
+      else:
+        portal_categories = None
       for cat in base_category_list:
         # Get read and write permission
-        if portal is not None:
-          cat_object = portal.portal_categories.get(cat, None)
-        else:
-          cat_object = None
+        cat_object = None
+        if portal_categories is not None:
+          cat_object = portal_categories.get(cat, None)
         if cat_object is not None:
           read_permission = Permissions.__dict__.get(
                                   cat_object.getReadPermission(),
