@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts94655271.85</string> </value>
+            <value> <string>ts95442606.13</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -212,7 +212,7 @@ div.border_bottom0px{\n
 /* front page gadget tabs switcher */\n
 #tabs {\n
   overflow: hidden;\n
-  width:99%;\n
+/*   width:99%; */\n
   border-bottom: none;\n
   height: 35px;\n
 }\n
@@ -281,22 +281,12 @@ a#tabs-hide:link, a#tabs-hide:active, a#tabs-hide:visited { padding: 0 10px 0 10
 }\n
 \n
 /* Gadget Navigation table */\n
-#navigation_table{\n
-  color:#9D968D;\n
-  font-weight:normal;\n
-}\n
-\n
-#navigation_table td {\n
-  background: url(km_img/tabsbg.png) repeat-x transparent;\n
-  background-position: 0 100%;\n
+#pad-navigation-wrapper{\n
+  background: url("km_img/tabsbg.png") repeat-x scroll center bottom transparent;\n
   font-size: 8pt;\n
-}\n
-\n
-table tr td, table tr.thead th {\n
-\n
-\tpadding:4px;\n
-\tvertical-align: top;\n
-\n
+  height:50px;\n
+  border-bottom: none;\n
+  color: #9D968D;\n
 }\n
 \n
 #tabs ul li{\n
@@ -385,9 +375,8 @@ table tr td, table tr.thead th {\n
   font-weight: normal;\n
 }\n
 \n
-#navigation_table a:hover, \n
-#navigation_table #tabs_switcher:hover,\n
-#navigation_table #tabs ul #add_new_tab_dialog_link:hover{color: #FFF; }\n
+#tabs_switcher:hover,\n
+#tabs ul #add_new_tab_dialog_link:hover{color: #FFF; }\n
 \n
 \n
 /* Gadget window buttons */\n
@@ -726,7 +715,7 @@ div.block fieldset.gadget-profile div.field{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>12387</int> </value>
+            <value> <int>12244</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
