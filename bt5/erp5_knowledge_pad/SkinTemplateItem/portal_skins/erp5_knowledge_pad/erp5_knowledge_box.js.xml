@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts94990647.19</string> </value>
+            <value> <string>ts95436971.49</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -398,21 +398,21 @@ function initialize(){\n
   }\n
 \n
   // enable show/hide tabs\n
-  tabs = $("#tabs");\n
-  tabs_switcher = $("#tabs_switcher");  \n
+  gadgets_tabs = $("#tabs");\n
+  gadgets_tabs_switcher = $("#tabs_switcher");  \n
   add_gadget = $("#add_new_gadget_link");\n
   \n
   function toggleTabNavigation(){\n
     /* Toggle tabs navigation */\n
     var is_tabs_visible=0;\n
-    if(tabs.css("display")!="block"){\n
+    if(gadgets_tabs.css("display")!="block"){\n
       is_tabs_visible=1;\n
       $("#tab_switcher_visible").show();\n
       $("#tab_switcher_hidden").hide();}\n
     else{\n
       $("#tab_switcher_visible").hide();\n
       $("#tab_switcher_hidden").show();}\n
-    tabs.toggle();\n
+    gadgets_tabs.toggle();\n
     createCookie("is_tabs_visible", is_tabs_visible, 365); }\n
  \n
   function bindGadgetHandlers(index, box){\n
@@ -459,7 +459,7 @@ function initialize(){\n
   }\n
   \n
   // tabs navigation\n
-  if(tabs_switcher){tabs_switcher.bind("click", toggleTabNavigation);}\n
+  if(gadgets_tabs_switcher){gadgets_tabs_switcher.bind("click", toggleTabNavigation);}\n
   \n
   // for each box (gadget) add respective event handlers\n
   gadget_list = $("div.block");\n
@@ -484,7 +484,7 @@ $(document).ready(initialize);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>17664</int> </value>
+            <value> <int>17712</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
