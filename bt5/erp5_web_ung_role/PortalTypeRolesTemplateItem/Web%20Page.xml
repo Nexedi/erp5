@@ -1,5 +1,5 @@
 <type_roles>
-  <role id='Assignor'>
+  <role id='Manager'>
    <property id='title'>UNG Share Document</property>
    <property id='base_category_script'>ERP5Type_getSecurityCategoryFromContent</property>
    <multi_property id='base_category'>follow_up</multi_property>
