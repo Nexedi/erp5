@@ -191,8 +191,9 @@ class CertificateAuthorityTool(BaseTool):
         popenCommunicate([self.openssl_binary, 'req', '-nodes', '-config',
           self.openssl_config, '-new', '-keyout', key, '-out', csr, '-days',
           '3650'], '%s\n' % new_id, stdin=subprocess.PIPE)
-        popenCommunicate([self.openssl_binary, 'ca', '-batch', '-config',
-          self.openssl_config, '-out', cert, '-infiles', csr])
+        popenCommunicate([self.openssl_binary, 'ca', '-days', '3650',
+          '-batch', '-config', self.openssl_config, '-out', cert, '-infiles',
+          csr])
         os.unlink(csr)
         return dict(
           key=open(key).read(),
