@@ -2876,22 +2876,21 @@ class TestPropertySheet:
       self.assertTrue(method())
 
     def test_type_provider(self):
-      from Products.ERP5Type.Tool.TypesTool import TypeProvider
-      class DummyTypeProvider(TypeProvider):
-        id = 'dummy_type_provider'
-       # portal_type = 'Dummy Type Provider'
-      
-      self.portal._setObject('dummy_type_provider', DummyTypeProvider())
+      self.portal.newContent(id='dummy_type_provider', portal_type="Types Tool")
+
       types_tool = self.portal.portal_types
       # register our dummy type provider
       types_tool.type_provider_list = types_tool.type_provider_list + (
                                             'dummy_type_provider',)
-      
+
       # types created in our type provider are available
       dummy_type = self.portal.dummy_type_provider.newContent(
               portal_type='Base Type',
               id='Dummy Type',
-              type_factory_method_id='addFolder', )
+              type_class='Folder', )
+
+      transaction.commit()
+      self.tic()
 
       # our type is available from types tool
       self.assertNotEquals(None, types_tool.getTypeInfo('Dummy Type'))
@@ -2904,9 +2903,12 @@ class TestPropertySheet:
       # we can create instances from our type provider
       container = self.portal.newContent(portal_type='Folder', id='test_folder')
       dummy_instance = container.newContent(portal_type='Dummy Type')
-      
+
       # and use generated accessors on them
       dummy_type.edit(type_property_sheet_list=('Reference', ))
+
+      transaction.commit()
+      self.tic()
 
       dummy_instance.setReference('test')
       self.assertEquals('test', dummy_instance.getReference())
