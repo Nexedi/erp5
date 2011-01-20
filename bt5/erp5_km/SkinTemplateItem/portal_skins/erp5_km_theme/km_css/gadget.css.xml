@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts95442606.13</string> </value>
+            <value> <string>ts95534465.43</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -54,13 +54,14 @@
 div.pad-actions{\n
    float:none;\n
 }\n
-.block {\n
+div.block {\n
   margin-top: 0.5em;\n
+   margin-bottom: 5px;\n
+\n
 }\n
 \n
 .block li {\n
   margin-left: 0.5em;\n
-  /*list-style-type:none;*/\n
 }\n
 \n
 .block h3 span.gadget_title{\n
@@ -154,7 +155,7 @@ h3.handle span.handle {\n
   cursor: default;\n
 }\n
 \n
-/* add space between fieldsets for gadgtes */\n
+/* add space between fieldsets for gadgets */\n
 div.block fieldset > div {\n
   margin-bottom: 0.3em;\n
 }\n
@@ -212,57 +213,40 @@ div.border_bottom0px{\n
 /* front page gadget tabs switcher */\n
 #tabs {\n
   overflow: hidden;\n
-/*   width:99%; */\n
   border-bottom: none;\n
   height: 35px;\n
 }\n
 \n
 #tabs ul {\n
-\n
-\tlist-style-type: none;\n
-\tmargin:0;\n
-\tpadding:10px 0 18px 0;\n
-\theight:22px;\n
-\tdisplay: block;\n
-\toverflow:hidden;\n
-\n
+  list-style-type: none;\n
+  padding:10px 0 18px 0;\n
+  height:22px;\n
+  display: block;\n
 }\n
 \n
 #tabs ul li {\n
-\n
-\tfloat:left;\n
-\toverflow: hidden;\n
-\tmargin: 0;\n
-\tpadding: 0 0 0 10px;\n
-\theight:22px;\n
-\twidth:auto;\n
-\tbackground: url(km_img/tabs.png) no-repeat transparent;\n
-\n
+  float:left;\n
+  padding: 0 0 0 10px;\n
+  height:22px;\n
+  background: url(km_img/tabs.png) no-repeat transparent;\n
 }\n
 \n
 #tabs ul li span {\n
-\n
-\tdisplay: block;\n
-\toverflow: hidden;\n
-\tmargin: 0;\n
-\twidth:auto;\n
-\theight:22px;\n
-\tline-height:24px;\n
-\tpadding-right:40px;\n
-\tpadding-top: 0em;\n
-\tposition: relative;\n
-\n
+  display: block;\n
+  margin: 0;\n
+  height:22px;\n
+  line-height:24px;\n
+  padding-right:40px;\n
+  padding-top: 0em;\n
 }\n
 \n
 #tabs ul li span a.icon {\n
-\n
-\tfloat:right;\n
-\twidth:10px;\n
-\theight:10px;\n
-\ttext-indent:-999999px;\n
-\tposition: absolute;\n
-\ttop:5px;\n
-\n
+  float:right;\n
+  width:10px;\n
+  height:10px;\n
+  text-indent:-999999px;\n
+  position: absolute;\n
+  top:5px;\n
 }\n
 \n
 \n
@@ -277,7 +261,7 @@ a#tabs-hide:link, a#tabs-hide:active, a#tabs-hide:visited { padding: 0 10px 0 10
   padding-top: 15px;\n
   height:35px;\n
   font-weight: normal;\n
-   border: none;\n
+  border: none;\n
 }\n
 \n
 /* Gadget Navigation table */\n
@@ -431,12 +415,9 @@ div.block-hover {\n
 \tborder:none;\n
 }\n
 \n
-/* eof gadgets */\n
 \n
 /* Gadget content */\n
-div.block {\n
-  margin-bottom: 5px;\n
-}\n
+\n
 \n
 /* Gadget edit form */\n
 div.edit-form {\n
@@ -715,7 +696,7 @@ div.block fieldset.gadget-profile div.field{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>12244</int> </value>
+            <value> <int>12056</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
