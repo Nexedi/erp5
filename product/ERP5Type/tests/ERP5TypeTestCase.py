@@ -274,10 +274,8 @@ def profile_if_environ(environment_var_name):
       # No profiling, return identity decorator
       return lambda self, method: method
 
-class ERP5TypeTestCase(ProcessingNodeTestCase, PortalTestCase):
-    """TestCase for ERP5 based tests.
-
-    This TestCase setups an ERP5Site and installs business templates.
+class ERP5TypeTestMixin(ProcessingNodeTestCase, PortalTestCase):
+    """Mixin class for ERP5 based tests.
     """
 
     def shortDescription(self):
@@ -286,10 +284,6 @@ class ERP5TypeTestCase(ProcessingNodeTestCase, PortalTestCase):
       if doc and doc.split("\n")[0].strip():
         description += ', ' + doc.split("\n")[0].strip()
       return description
-
-    def dummy_test(self):
-      ZopeTestCase._print('All tests are skipped when --save option is passed '
-                          'with --update_business_templates or without --load')
 
     def getRevision(self):
       erp5_path = os.path.join(instancehome, 'Products', 'ERP5')
@@ -303,68 +297,6 @@ class ERP5TypeTestCase(ProcessingNodeTestCase, PortalTestCase):
       """Returns the title of the test, for test reports.
       """
       return str(self.__class__)
-
-    def getPortalName(self):
-      """
-        Return the name of a portal for this test case.
-        This is necessary for each test case to use a different portal built by
-        different business templates.
-        The test runner can set `erp5_tests_portal_id` environment variable
-        to force a portal id.
-      """
-      forced_portal_id = os.environ.get('erp5_tests_portal_id')
-      if forced_portal_id:
-        return str(forced_portal_id)
-      m = md5.new()
-      m.update(repr(self.getBusinessTemplateList())+ self.getTitle())
-      uid = m.hexdigest()
-
-      return portal_name + '_' + uid
-
-    def getPortal(self):
-      """Returns the portal object, i.e. the "fixture root".
-
-      It also does some initialization, as if the portal was accessed for the
-      first time for the current request.
-      For performance reason, this should be used in only 3 places:
-      'setUpERP5Site', 'tic' and 'PortalTestCase._portal'
-      """
-      portal = self.app[self.getPortalName()]
-      # Make sure skins are correctly set-up (it's not implicitly set up
-      # by Acquisition on Zope 2.12 as it is on 2.8)
-      portal.setupCurrentSkin(portal.REQUEST)
-      self.REQUEST = portal.REQUEST
-      setSite(portal)
-      return portal
-
-    getPortalObject = getPortal
-
-    def _app(self):
-      '''Opens a ZODB connection and returns the app object.
-      
-      We override it to patch HTTP_ACCEPT_CHARSET into REQUEST to get the zpt
-      unicode conflict resolver to work properly'''
-      app = PortalTestCase._app(self)
-      app.REQUEST['HTTP_ACCEPT_CHARSET'] = 'utf-8'
-      return app
-
-    def enableLightInstall(self):
-      """
-      You can override this. Return if we should do a light install (1) or not (0)
-      """
-      return 1
-
-    def enableActivityTool(self):
-      """
-      You can override this. Return if we should create (1) or not (0) an activity tool
-      """
-      return 1
-
-    def enableHotReindexing(self):
-      """
-      You can override this. Return if we should create (1) or not (0) an activity tool
-      """
-      return 0
 
     def login(self, user_name='ERP5TypeTestCase', quiet=0):
       """
@@ -386,217 +318,10 @@ class ERP5TypeTestCase(ProcessingNodeTestCase, PortalTestCase):
       if not uf.getUser(user_name):
         uf._doAddUser(user_name, 'secret', ['Member'], [])
 
-    # class-defined decorators for profiling.
-    # Depending on the environment variable, they return
-    # the same method, or a profiling wrapped call
-    _decorate_setUp = profile_if_environ('PROFILE_SETUP')
-    _decorate_testRun = profile_if_environ('PROFILE_TESTS')
-    _decorate_tearDown = profile_if_environ('PROFILE_TEARDOWN')
-
-    def __call__(self, *args, **kw):
-      # Pulling down the profiling from ZopeTestCase.profiler to allow
-      # overriding run()
-      # This cannot be done at instanciation because we need to
-      # wrap the bottom-most methods, e.g.
-      # SecurityTestCase.tearDown instead of ERP5TestCase.tearDown
-
-      self.setUp = self._decorate_setUp(self.setUp)
-      self.tearDown = self._decorate_tearDown(self.tearDown)
-
-      test_name = self._testMethodName
-      test_method = getattr(self, test_name)
-      setattr(self, test_name, self._decorate_testRun(test_method))
-
-      self.run(*args, **kw)
-
-    @staticmethod
-    def _getBTPathAndIdList(template_list):
-      bootstrap_path = os.environ.get('erp5_tests_bootstrap_path') or \
-        ERP5Site.getBootstrapDirectory()
-      bt5_path = os.environ.get('erp5_tests_bt5_path')
-      if bt5_path:
-        bt5_path_list = bt5_path.split(',')
-      else:
-        bt5_path = os.path.join(instancehome, 'bt5')
-        bt5_path_list = bt5_path, os.path.join(bt5_path, '*')
-
-      def search(path, template):
-        urltype, url = urllib.splittype(path + '/' + template)
-        if urltype == 'http':
-          host, selector = urllib.splithost(url)
-          user_passwd, host = urllib.splituser(host)
-          host = urllib.unquote(host)
-          h = httplib.HTTP(host)
-          h.putrequest('HEAD', selector)
-          h.putheader('Host', host)
-          if user_passwd:
-            h.putheader('Authorization',
-                        'Basic %s' % base64.b64encode(user_passwd).strip())
-          h.endheaders()
-          errcode, errmsg, headers = h.getreply()
-          if errcode == 200:
-            return urltype + ':' + url
-        else:
-          path_list = glob(os.path.join(path, template))
-          if path_list:
-            return path_list[0]
-
-      not_found_list = []
-      new_template_list = []
-      for template in template_list:
-        id = template.split('/')[-1]
-        for path in bt5_path_list:
-          path = search(path, template) or search(path, template + '.bt5')
-          if path:
-            break
-        else:
-          path = os.path.join(bootstrap_path, template)
-          if not os.path.exists(path):
-            not_found_list.append(template)
-            continue
-        new_template_list.append((path, id))
-      if not_found_list:
-        raise RuntimeError("Following BT can't be found on your system : %s"
-                           % ', '.join(not_found_list))
-      return new_template_list
-
-    def manuallyInstallBusinessTemplate(self, *template_list):
-      new_template_list = self._getBTPathAndIdList(template_list)
-      light_install = self.enableLightInstall()
-      self._installBusinessTemplateList(new_template_list,
-                                        light_install=light_install)
-      self.tic()
-
-    def uninstallBusinessTemplate(self, *template_list):
-      template_list = set(template_list)
-      uninstalled_list = []
-      portal = self.portal
-      for bt in portal.portal_templates.getInstalledBusinessTemplateList():
-        bt_title = bt.getTitle()
-        if bt_title in template_list:
-          bt.uninstall(remove_translations=True)
-          uninstalled_list.append(bt_title)
-      if uninstalled_list:
-        getattr(portal, 'ERP5Site_updateTranslationTable', lambda: None)()
-      self.stepTic()
-      return uninstalled_list
-
-    def setUp(self):
-      '''Sets up the fixture. Do not override,
-         use the hooks instead.
-      '''
-      from Products.CMFActivity.ActivityRuntimeEnvironment import BaseMessage
-      # Activities in unit tests shall never fail.
-      # Let's be a litte tolerant for the moment.
-      BaseMessage.max_retry = property(lambda self:
-        self.activity_kw.get('max_retry', 1))
-
-      use_dummy_mail_host = os.environ.get('use_dummy_mail_host', 0)
-      template_list = self.getBusinessTemplateList()
-      erp5_catalog_storage = os.environ.get('erp5_catalog_storage',
-                                            'erp5_mysql_innodb_catalog')
-      update_business_templates = os.environ.get('update_business_templates') is not None
-      erp5_load_data_fs = int(os.environ.get('erp5_load_data_fs', 0))
-      if update_business_templates and erp5_load_data_fs:
-        update_only = os.environ.get('update_only', None)
-        template_list = (erp5_catalog_storage, 'erp5_core',
-                         'erp5_xhtml_style') + tuple(template_list)
-        # Update only specified business templates, regular expression
-        # can be used.
-        if update_only is not None:
-          update_only_list = update_only.split(',')
-          matching_template_list = []
-          # First parse the template list in order to keep same order
-          for business_template in template_list:
-            for expression in update_only_list:
-              if re.search(expression, business_template):
-                matching_template_list.append(business_template)
-          template_list = matching_template_list
-
-      # keep a mapping type info name -> property sheet list, to remove them in
-      # tear down.
-      self._added_property_sheets = {}
-      light_install = self.enableLightInstall()
-      create_activities = self.enableActivityTool()
-      hot_reindexing = self.enableHotReindexing()
-      self.setUpERP5Site(business_template_list=template_list,
-                         light_install=light_install,
-                         create_activities=create_activities,
-                         quiet=install_bt5_quiet,
-                         hot_reindexing=hot_reindexing,
-                         erp5_catalog_storage=erp5_catalog_storage, 
-                         use_dummy_mail_host=use_dummy_mail_host)
-      PortalTestCase.setUp(self)
-
-    def afterSetUp(self):
-      '''Called after setUp() has completed. This is
-         far and away the most useful hook.
-      '''
-      pass
-
-    def getBusinessTemplateList(self):
-      """
-        You must override this. Return the list of business templates.
-      """
-      return ()
-
-    def logMessage(self, message):
-      """
-        Shortcut function to log a message
-      """
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing ... ', DEBUG, message)
-
-    def _updateConnectionStrings(self):
-      """Update connection strings with values passed by the testRunner
-      """
-      # update connection strings
-      for connection_string_name, connection_string in\
-                                    _getConnectionStringDict().items():
-        connection_name = connection_string_name.replace('_string', '')
-        getattr(self.portal, connection_name).edit('', connection_string)
-
-    def _setUpDummyMailHost(self):
-      """Replace Original Mail Host by Dummy Mail Host.
-      """
-      if 'MailHost' in self.portal.objectIds():
-        self.portal.manage_delObjects(['MailHost'])
-        self.portal._setObject('MailHost', DummyMailHost('MailHost'))
-
-    def _updateConversionServerConfiguration(self):
-      """Update conversion server (Oood) at default site preferences.
-      """
-      conversion_dict = _getConversionServerDict()
-      preference = self.portal.portal_preferences[
-                        self.getDefaultSitePreferenceId()]
-      preference._setPreferredOoodocServerAddress(conversion_dict['hostname'])
-      preference._setPreferredOoodocServerPortNumber(conversion_dict['port'])
-
     def getDefaultSitePreferenceId(self):
       """Default id, usefull method to override
       """
       return "default_site_preference"
-
-    def _recreateCatalog(self, quiet=0):
-      """Clear activities and catalog and recatalog everything.
-      Test runner can set `erp5_tests_recreate_catalog` environnement variable,
-      in that case we have to clear catalog. """
-      if int(os.environ.get('erp5_tests_recreate_catalog', 0)):
-        try:
-          _start = time.time()
-          if not quiet:
-            ZopeTestCase._print('\nRecreating catalog ... ')
-          portal = self.getPortal()
-          portal.portal_activities.manageClearActivities()
-          portal.portal_catalog.manage_catalogClear()
-          transaction.commit()
-          portal.ERP5Site_reindexAll()
-          transaction.commit()
-          self.tic()
-          if not quiet:
-            ZopeTestCase._print('done (%.3fs)\n' % (time.time() - _start,))
-        finally:
-          os.environ['erp5_tests_recreate_catalog'] = '0'
 
     # Utility methods specific to ERP5Type
     def getTemplateTool(self):
@@ -786,6 +511,363 @@ class ERP5TypeTestCase(ProcessingNodeTestCase, PortalTestCase):
         self.assertEqual(workflow_error_message, error_message)
       self.assertEqual(method(), reference_workflow_state)
       return workflow_error_message
+
+    def stepPdb(self, sequence=None, sequence_list=None):
+      """Invoke debugger"""
+      try: # try ipython if available
+        import IPython
+        IPython.Shell.IPShell(argv=[])
+        tracer = IPython.Debugger.Tracer()
+      except ImportError:
+        from pdb import set_trace as tracer
+      tracer()
+
+    def stepTic(self, **kw):
+      """
+      The is used to simulate the zope_tic_loop script
+      Each time this method is called, it simulates a call to tic
+      which invoke activities in the Activity Tool
+      """
+      if kw.get('sequence', None) is None:
+        # in case of using not in sequence commit transaction
+        transaction.commit()
+      self.tic()
+
+    getPortalObject = getPortal
+
+    # class-defined decorators for profiling.
+    # Depending on the environment variable, they return
+    # the same method, or a profiling wrapped call
+    _decorate_setUp = profile_if_environ('PROFILE_SETUP')
+    _decorate_testRun = profile_if_environ('PROFILE_TESTS')
+    _decorate_tearDown = profile_if_environ('PROFILE_TEARDOWN')
+
+    def __call__(self, *args, **kw):
+      # Pulling down the profiling from ZopeTestCase.profiler to allow
+      # overriding run()
+      # This cannot be done at instanciation because we need to
+      # wrap the bottom-most methods, e.g.
+      # SecurityTestCase.tearDown instead of ERP5TestCase.tearDown
+
+      self.setUp = self._decorate_setUp(self.setUp)
+      self.tearDown = self._decorate_tearDown(self.tearDown)
+
+      test_name = self._testMethodName
+      test_method = getattr(self, test_name)
+      setattr(self, test_name, self._decorate_testRun(test_method))
+
+      self.run(*args, **kw)
+
+    def logMessage(self, message):
+      """
+        Shortcut function to log a message
+      """
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing ... ', DEBUG, message)
+
+    def publish(self, path, basic=None, env=None, extra=None,
+                request_method='GET', stdin=None, handle_errors=True):
+        '''Publishes the object at 'path' returning a response object.'''
+
+        from ZPublisher.Response import Response
+        from ZPublisher.Test import publish_module
+
+        from AccessControl.SecurityManagement import getSecurityManager
+        from AccessControl.SecurityManagement import setSecurityManager
+        
+        # Save current security manager
+        sm = getSecurityManager()
+
+        # Commit the sandbox for good measure
+        transaction.commit()
+
+        if env is None:
+            env = {}
+        if extra is None:
+            extra = {}
+
+        request = self.app.REQUEST
+
+        env['SERVER_NAME'] = request['SERVER_NAME']
+        env['SERVER_PORT'] = request['SERVER_PORT']
+        env['HTTP_ACCEPT_CHARSET'] = request['HTTP_ACCEPT_CHARSET']
+        env['REQUEST_METHOD'] = request_method
+
+        p = path.split('?')
+        if len(p) == 1:
+            env['PATH_INFO'] = p[0]
+        elif len(p) == 2:
+            [env['PATH_INFO'], env['QUERY_STRING']] = p
+        else:
+            raise TypeError, ''
+
+        if basic:
+            env['HTTP_AUTHORIZATION'] = "Basic %s" % base64.encodestring(basic).replace('\012', '')
+
+        if stdin is None:
+            stdin = StringIO()
+
+        outstream = StringIO()
+        response = Response(stdout=outstream, stderr=sys.stderr)
+
+        publish_module('Zope2',
+                       response=response,
+                       stdin=stdin,
+                       environ=env,
+                       extra=extra,
+                       debug=not handle_errors,
+                      )
+
+        # Restore security manager
+        setSecurityManager(sm)
+
+        return ResponseWrapper(response, outstream, path)
+class ERP5TypeTestCase(ERP5TypeTestMixin):
+    """TestCase for ERP5 based tests.
+
+    This TestCase setups an ERP5Site and installs business templates.
+    """
+
+    def dummy_test(self):
+      ZopeTestCase._print('All tests are skipped when --save option is passed '
+                          'with --update_business_templates or without --load')
+
+    def getPortalName(self):
+      """
+        Return the name of a portal for this test case.
+        This is necessary for each test case to use a different portal built by
+        different business templates.
+        The test runner can set `erp5_tests_portal_id` environment variable
+        to force a portal id.
+      """
+      forced_portal_id = os.environ.get('erp5_tests_portal_id')
+      if forced_portal_id:
+        return str(forced_portal_id)
+      m = md5.new()
+      m.update(repr(self.getBusinessTemplateList())+ self.getTitle())
+      uid = m.hexdigest()
+
+      return portal_name + '_' + uid
+
+    def getPortal(self):
+      """Returns the portal object, i.e. the "fixture root".
+
+      It also does some initialization, as if the portal was accessed for the
+      first time for the current request.
+      For performance reason, this should be used in only 3 places:
+      'setUpERP5Site', 'tic' and 'PortalTestCase._portal'
+      """
+      portal = self.app[self.getPortalName()]
+      # Make sure skins are correctly set-up (it's not implicitly set up
+      # by Acquisition on Zope 2.12 as it is on 2.8)
+      portal.setupCurrentSkin(portal.REQUEST)
+      self.REQUEST = portal.REQUEST
+      setSite(portal)
+      return portal
+
+    def _app(self):
+      '''Opens a ZODB connection and returns the app object.
+      
+      We override it to patch HTTP_ACCEPT_CHARSET into REQUEST to get the zpt
+      unicode conflict resolver to work properly'''
+      app = PortalTestCase._app(self)
+      app.REQUEST['HTTP_ACCEPT_CHARSET'] = 'utf-8'
+      return app
+
+    def enableLightInstall(self):
+      """
+      You can override this. Return if we should do a light install (1) or not (0)
+      """
+      return 1
+
+    def enableActivityTool(self):
+      """
+      You can override this. Return if we should create (1) or not (0) an activity tool
+      """
+      return 1
+
+    def enableHotReindexing(self):
+      """
+      You can override this. Return if we should create (1) or not (0) an activity tool
+      """
+      return 0
+
+    @staticmethod
+    def _getBTPathAndIdList(template_list):
+      bootstrap_path = os.environ.get('erp5_tests_bootstrap_path') or \
+        ERP5Site.getBootstrapDirectory()
+      bt5_path = os.environ.get('erp5_tests_bt5_path')
+      if bt5_path:
+        bt5_path_list = bt5_path.split(',')
+      else:
+        bt5_path = os.path.join(instancehome, 'bt5')
+        bt5_path_list = bt5_path, os.path.join(bt5_path, '*')
+
+      def search(path, template):
+        urltype, url = urllib.splittype(path + '/' + template)
+        if urltype == 'http':
+          host, selector = urllib.splithost(url)
+          user_passwd, host = urllib.splituser(host)
+          host = urllib.unquote(host)
+          h = httplib.HTTP(host)
+          h.putrequest('HEAD', selector)
+          h.putheader('Host', host)
+          if user_passwd:
+            h.putheader('Authorization',
+                        'Basic %s' % base64.b64encode(user_passwd).strip())
+          h.endheaders()
+          errcode, errmsg, headers = h.getreply()
+          if errcode == 200:
+            return urltype + ':' + url
+        else:
+          path_list = glob(os.path.join(path, template))
+          if path_list:
+            return path_list[0]
+
+      not_found_list = []
+      new_template_list = []
+      for template in template_list:
+        id = template.split('/')[-1]
+        for path in bt5_path_list:
+          path = search(path, template) or search(path, template + '.bt5')
+          if path:
+            break
+        else:
+          path = os.path.join(bootstrap_path, template)
+          if not os.path.exists(path):
+            not_found_list.append(template)
+            continue
+        new_template_list.append((path, id))
+      if not_found_list:
+        raise RuntimeError("Following BT can't be found on your system : %s"
+                           % ', '.join(not_found_list))
+      return new_template_list
+
+    def manuallyInstallBusinessTemplate(self, *template_list):
+      new_template_list = self._getBTPathAndIdList(template_list)
+      light_install = self.enableLightInstall()
+      self._installBusinessTemplateList(new_template_list,
+                                        light_install=light_install)
+      self.tic()
+
+    def uninstallBusinessTemplate(self, *template_list):
+      template_list = set(template_list)
+      uninstalled_list = []
+      portal = self.portal
+      for bt in portal.portal_templates.getInstalledBusinessTemplateList():
+        bt_title = bt.getTitle()
+        if bt_title in template_list:
+          bt.uninstall(remove_translations=True)
+          uninstalled_list.append(bt_title)
+      if uninstalled_list:
+        getattr(portal, 'ERP5Site_updateTranslationTable', lambda: None)()
+      self.stepTic()
+      return uninstalled_list
+
+    def setUp(self):
+      '''Sets up the fixture. Do not override,
+         use the hooks instead.
+      '''
+      from Products.CMFActivity.ActivityRuntimeEnvironment import BaseMessage
+      # Activities in unit tests shall never fail.
+      # Let's be a litte tolerant for the moment.
+      BaseMessage.max_retry = property(lambda self:
+        self.activity_kw.get('max_retry', 1))
+
+      use_dummy_mail_host = os.environ.get('use_dummy_mail_host', 0)
+      template_list = self.getBusinessTemplateList()
+      erp5_catalog_storage = os.environ.get('erp5_catalog_storage',
+                                            'erp5_mysql_innodb_catalog')
+      update_business_templates = os.environ.get('update_business_templates') is not None
+      erp5_load_data_fs = int(os.environ.get('erp5_load_data_fs', 0))
+      if update_business_templates and erp5_load_data_fs:
+        update_only = os.environ.get('update_only', None)
+        template_list = (erp5_catalog_storage, 'erp5_core',
+                         'erp5_xhtml_style') + tuple(template_list)
+        # Update only specified business templates, regular expression
+        # can be used.
+        if update_only is not None:
+          update_only_list = update_only.split(',')
+          matching_template_list = []
+          # First parse the template list in order to keep same order
+          for business_template in template_list:
+            for expression in update_only_list:
+              if re.search(expression, business_template):
+                matching_template_list.append(business_template)
+          template_list = matching_template_list
+
+      # keep a mapping type info name -> property sheet list, to remove them in
+      # tear down.
+      self._added_property_sheets = {}
+      light_install = self.enableLightInstall()
+      create_activities = self.enableActivityTool()
+      hot_reindexing = self.enableHotReindexing()
+      self.setUpERP5Site(business_template_list=template_list,
+                         light_install=light_install,
+                         create_activities=create_activities,
+                         quiet=install_bt5_quiet,
+                         hot_reindexing=hot_reindexing,
+                         erp5_catalog_storage=erp5_catalog_storage, 
+                         use_dummy_mail_host=use_dummy_mail_host)
+      PortalTestCase.setUp(self)
+
+    def afterSetUp(self):
+      '''Called after setUp() has completed. This is
+         far and away the most useful hook.
+      '''
+      pass
+
+    def getBusinessTemplateList(self):
+      """
+        You must override this. Return the list of business templates.
+      """
+      return ()
+
+    def _updateConnectionStrings(self):
+      """Update connection strings with values passed by the testRunner
+      """
+      # update connection strings
+      for connection_string_name, connection_string in\
+                                    _getConnectionStringDict().items():
+        connection_name = connection_string_name.replace('_string', '')
+        getattr(self.portal, connection_name).edit('', connection_string)
+
+    def _setUpDummyMailHost(self):
+      """Replace Original Mail Host by Dummy Mail Host.
+      """
+      if 'MailHost' in self.portal.objectIds():
+        self.portal.manage_delObjects(['MailHost'])
+        self.portal._setObject('MailHost', DummyMailHost('MailHost'))
+
+    def _updateConversionServerConfiguration(self):
+      """Update conversion server (Oood) at default site preferences.
+      """
+      conversion_dict = _getConversionServerDict()
+      preference = self.portal.portal_preferences[
+                        self.getDefaultSitePreferenceId()]
+      preference._setPreferredOoodocServerAddress(conversion_dict['hostname'])
+      preference._setPreferredOoodocServerPortNumber(conversion_dict['port'])
+
+    def _recreateCatalog(self, quiet=0):
+      """Clear activities and catalog and recatalog everything.
+      Test runner can set `erp5_tests_recreate_catalog` environnement variable,
+      in that case we have to clear catalog. """
+      if int(os.environ.get('erp5_tests_recreate_catalog', 0)):
+        try:
+          _start = time.time()
+          if not quiet:
+            ZopeTestCase._print('\nRecreating catalog ... ')
+          portal = self.getPortal()
+          portal.portal_activities.manageClearActivities()
+          portal.portal_catalog.manage_catalogClear()
+          transaction.commit()
+          portal.ERP5Site_reindexAll()
+          transaction.commit()
+          self.tic()
+          if not quiet:
+            ZopeTestCase._print('done (%.3fs)\n' % (time.time() - _start,))
+        finally:
+          os.environ['erp5_tests_recreate_catalog'] = '0'
 
     def _installBusinessTemplateList(self, business_template_list,
                                      light_install=True,
@@ -1003,27 +1085,6 @@ class ERP5TypeTestCase(ProcessingNodeTestCase, PortalTestCase):
               break
       PortalTestCase.tearDown(self)
 
-    def stepPdb(self, sequence=None, sequence_list=None):
-      """Invoke debugger"""
-      try: # try ipython if available
-        import IPython
-        IPython.Shell.IPShell(argv=[])
-        tracer = IPython.Debugger.Tracer()
-      except ImportError:
-        from pdb import set_trace as tracer
-      tracer()
-
-    def stepTic(self, **kw):
-      """
-      The is used to simulate the zope_tic_loop script
-      Each time this method is called, it simulates a call to tic
-      which invoke activities in the Activity Tool
-      """
-      if kw.get('sequence', None) is None:
-        # in case of using not in sequence commit transaction
-        transaction.commit()
-      self.tic()
-
     def importObjectFromFile(self, container, relative_path, **kw):
       """Import an object from a file located in $TESTFILEDIR/input/"""
       test_path = os.path.dirname(__file__)
@@ -1033,63 +1094,6 @@ class ERP5TypeTestCase(ProcessingNodeTestCase, PortalTestCase):
       obj.manage_afterClone(obj)
       return obj
 
-    def publish(self, path, basic=None, env=None, extra=None,
-                request_method='GET', stdin=None, handle_errors=True):
-        '''Publishes the object at 'path' returning a response object.'''
-
-        from ZPublisher.Response import Response
-        from ZPublisher.Test import publish_module
-
-        from AccessControl.SecurityManagement import getSecurityManager
-        from AccessControl.SecurityManagement import setSecurityManager
-        
-        # Save current security manager
-        sm = getSecurityManager()
-
-        # Commit the sandbox for good measure
-        transaction.commit()
-
-        if env is None:
-            env = {}
-        if extra is None:
-            extra = {}
-
-        request = self.app.REQUEST
-
-        env['SERVER_NAME'] = request['SERVER_NAME']
-        env['SERVER_PORT'] = request['SERVER_PORT']
-        env['HTTP_ACCEPT_CHARSET'] = request['HTTP_ACCEPT_CHARSET']
-        env['REQUEST_METHOD'] = request_method
-
-        p = path.split('?')
-        if len(p) == 1:
-            env['PATH_INFO'] = p[0]
-        elif len(p) == 2:
-            [env['PATH_INFO'], env['QUERY_STRING']] = p
-        else:
-            raise TypeError, ''
-
-        if basic:
-            env['HTTP_AUTHORIZATION'] = "Basic %s" % base64.encodestring(basic).replace('\012', '')
-
-        if stdin is None:
-            stdin = StringIO()
-
-        outstream = StringIO()
-        response = Response(stdout=outstream, stderr=sys.stderr)
-
-        publish_module('Zope2',
-                       response=response,
-                       stdin=stdin,
-                       environ=env,
-                       extra=extra,
-                       debug=not handle_errors,
-                      )
-
-        # Restore security manager
-        setSecurityManager(sm)
-
-        return ResponseWrapper(response, outstream, path)
 
 from Products.ERP5 import ERP5Site
 ERP5Site.getBootstrapBusinessTemplateUrl = lambda bt_title: \

@@ -35,6 +35,7 @@ from Testing.ZopeTestCase import PortalTestCase, user_name
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.tests.ProcessingNodeTestCase import ProcessingNodeTestCase
 from Products.ERP5Type.Globals import get_request
+from ERP5TypeTestCase import ERP5TypeTestCaseMixin
 import transaction
 
 from zLOG import LOG, DEBUG, INFO
@@ -58,7 +59,7 @@ from Products.ERP5Type.tests import ProcessingNodeTestCase as\
                                     ProcessingNodeTestCaseModule
 ProcessingNodeTestCaseModule.patchActivityTool = lambda: None
 
-class ERP5TypeLiveTestCase(ProcessingNodeTestCase, PortalTestCase):
+class ERP5TypeLiveTestCase(ERP5TypeTestMixin):
     """ERP5TypeLiveTestCase is the default class for *all* tests
     in ERP5. It is designed with the idea in mind that tests should
     be run through the web. Command line based tests may be helpful
@@ -72,18 +73,6 @@ class ERP5TypeLiveTestCase(ProcessingNodeTestCase, PortalTestCase):
     - An eplicit list of exceptions to live tests remains to be
       defined. 
     """
-
-    def shortDescription(self):
-      description = str(self)
-      doc = self._testMethodDoc
-      if doc and doc.split("\n")[0].strip():
-        description += ', ' + doc.split("\n")[0].strip()
-      return description
-
-    def getTitle(self):
-      """Returns the title of the test, for test reports.
-      """
-      return str(self.__class__)
 
     def getPortalName(self):
       """ Return the default ERP5 site id.
@@ -102,46 +91,17 @@ class ERP5TypeLiveTestCase(ProcessingNodeTestCase, PortalTestCase):
 
     getPortalObject = getPortal
 
-    def login(self, user_name='ERP5TypeTestCase', quiet=0):
-      """
-      Most of the time, we need to login before doing anything
-      """
-      PortalTestCase.login(self, user_name)
-
-    def logout(self):
-      PortalTestCase.logout(self)
-      # clean up certain cache related REQUEST keys that might be associated
-      # with the logged in user
-      for key in ('_ec_cache', '_oai_cache'):
-        pass
-        #self.REQUEST.other.pop(key, None) # XXX
+    #def logout(self):
+    #  PortalTestCase.logout(self)
+    #  # clean up certain cache related REQUEST keys that might be associated
+    #  # with the logged in user
+    #  for key in ('_ec_cache', '_oai_cache'):
+    #    pass
+    #    #self.REQUEST.other.pop(key, None) # XXX
 
     def _close(self):
       '''Closes the ZODB connection.'''
       transaction.abort()
-
-    # class-defined decorators for profiling.
-    # Depending on the environment variable, they return
-    # the same method, or a profiling wrapped call
-    _decorate_setUp = profile_if_environ('PROFILE_SETUP')
-    _decorate_testRun = profile_if_environ('PROFILE_TESTS')
-    _decorate_tearDown = profile_if_environ('PROFILE_TEARDOWN')
-
-    def __call__(self, *args, **kw):
-      # Pulling down the profiling from ZopeTestCase.profiler to allow
-      # overriding run()
-      # This cannot be done at instanciation because we need to
-      # wrap the bottom-most methods, e.g.
-      # SecurityTestCase.tearDown instead of ERP5TestCase.tearDown
-
-      self.setUp = self._decorate_setUp(self.setUp)
-      self.tearDown = self._decorate_tearDown(self.tearDown)
-
-      test_name = self._testMethodName
-      test_method = getattr(self, test_name)
-      setattr(self, test_name, self._decorate_testRun(test_method))
-
-      self.run(*args, **kw)
 
     def _setup(self):
         '''Configures the portal. Framework authors may
@@ -188,171 +148,6 @@ class ERP5TypeLiveTestCase(ProcessingNodeTestCase, PortalTestCase):
       '''
       pass
 
-    def logMessage(self, message):
-      """
-        Shortcut function to log a message
-      """
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing ... ', DEBUG, message)
-
-    # Utility methods specific to ERP5Type
-    def getTemplateTool(self):
-      return getToolByName(self.getPortal(), 'portal_templates', None)
-
-    def getPreferenceTool(self) :
-      return getToolByName(self.getPortal(), 'portal_preferences', None)
-
-    def getTrashTool(self):
-      return getToolByName(self.getPortal(), 'portal_trash', None)
-
-    def getPasswordTool(self):
-      return getToolByName(self.getPortal(), 'portal_password', None)
-
-    def getSkinsTool(self):
-      return getToolByName(self.getPortal(), 'portal_skins', None)
-
-    def getCategoryTool(self):
-      return getToolByName(self.getPortal(), 'portal_categories', None)
-
-    def getWorkflowTool(self):
-      return getToolByName(self.getPortal(), 'portal_workflow', None)
-
-    def getCatalogTool(self):
-      return getToolByName(self.getPortal(), 'portal_catalog', None)
-
-    def getTypesTool(self):
-      return getToolByName(self.getPortal(), 'portal_types', None)
-    getTypeTool = getTypesTool
-
-    def getRuleTool(self):
-      return getattr(self.getPortal(), 'portal_rules', None)
-
-    def getClassTool(self):
-      return getattr(self.getPortal(), 'portal_classes', None)
-
-    def getSimulationTool(self):
-      return getToolByName(self.getPortal(), 'portal_simulation', None)
-
-    def getSQLConnection(self):
-      return getToolByName(self.getPortal(), 'erp5_sql_connection', None)
-
-    def getPortalId(self):
-      return self.getPortal().getId()
-
-    def getDomainTool(self):
-      return getToolByName(self.getPortal(), 'portal_domains', None)
-
-    def getAlarmTool(self):
-      return getattr(self.getPortal(), 'portal_alarms', None)
-
-    def getActivityTool(self):
-      return getattr(self.getPortal(), 'portal_activities', None)
-
-    def getArchiveTool(self):
-      return getattr(self.getPortal(), 'portal_archives', None)
-
-    def getCacheTool(self):
-      return getattr(self.getPortal(), 'portal_caches', None)
-
-    def getOrganisationModule(self):
-      return getattr(self.getPortal(), 'organisation_module',
-          getattr(self.getPortal(), 'organisation', None))
-
-    def getPersonModule(self):
-      return getattr(self.getPortal(), 'person_module',
-          getattr(self.getPortal(), 'person', None))
-
-    def getCurrencyModule(self):
-      return getattr(self.getPortal(), 'currency_module',
-          getattr(self.getPortal(), 'currency', None))
-
-    def validateRules(self):
-      """
-      try to validate all rules in rule_tool.
-      """
-      rule_tool = self.getRuleTool()
-      for rule in rule_tool.contentValues(
-          portal_type=rule_tool.getPortalRuleTypeList()):
-        if rule.getValidationState() != 'validated':
-          rule.validate()
-
-    def createSimpleUser(self, title, reference, function):
-      """
-        Helper function to create a Simple ERP5 User.
-        User password is the reference.
-        
-        XXX-JPS do wa have a "delete" method etc.
-      """
-      user = self.createUser(reference, person_kw=dict(title=title))
-      assignment = self.createUserAssignement(user, assignment_kw=dict(function=function))
-      return user
-
-    def createUser(self, reference, password=None, person_kw=None):
-      """
-        Create an ERP5 User.
-        Default password is the reference.
-        person_kw is passed as additional arguments when creating the person
-      """
-      if password is None:
-        password = reference
-      if person_kw is None:
-        person_kw = dict()
-
-      person = self.portal.person_module.newContent(portal_type='Person',
-                                                    reference=reference,
-                                                    password=password,
-                                                    **person_kw)
-      return person
-
-    def createUserAssignment(self, user, assignment_kw):
-      """
-        Create an assignment to user.
-      """
-      assignment = user.newContent(portal_type='Assignment', **assignment_kw)
-      assignment.open()
-      return assignment
-
-    def createUserAssignement(self, user, assignment_kw):
-      # BBB
-      warn('createUserAssignement is deprecated;'
-           'Use createUserAssignment instead',
-           DeprecationWarning)
-      return self.createUserAssignment(user, assignment_kw)
-
-    def failIfDifferentSet(self, a, b, msg=""):
-      if not msg:
-        msg='%r != %r' % (a, b)
-      for i in a:
-        self.failUnless(i in b, msg)
-      for i in b:
-        self.failUnless(i in a, msg)
-      self.assertEquals(len(a), len(b), msg)
-    assertSameSet = failIfDifferentSet
-
-    def assertWorkflowTransitionFails(self, object, workflow_id, transition_id,
-        error_message=None, state_variable='simulation_state'):
-      """
-        Check that passing given transition from given workflow on given object
-        raises ValidationFailed.
-        Do sanity checks (workflow history length increased by one, simulation
-        state unchanged).
-        If error_message is provided, it is asserted to be equal to the last
-        workflow history error message.
-      """
-      workflow_tool = self.getWorkflowTool()
-      reference_history_length = len(workflow_tool.getInfoFor(ob=object, name='history', wf_id=workflow_id))
-      state_method = 'get' + convertToUpperCase(state_variable)
-      method = getattr(object, state_method, None)
-      reference_workflow_state = method()
-      self.assertRaises(ValidationFailed, workflow_tool.doActionFor, object, transition_id, wf_id=workflow_id)
-      workflow_history = workflow_tool.getInfoFor(ob=object, name='history', wf_id=workflow_id)
-      self.assertEqual(len(workflow_history), reference_history_length + 1)
-      workflow_error_message = str(workflow_history[-1]['error_message'])
-      if error_message is not None:
-        self.assertEqual(workflow_error_message, error_message)
-      self.assertEqual(method(), reference_workflow_state)
-      return workflow_error_message
-
     def tearDown(self):
       '''Tears down the fixture. Do not override,
          use the hooks instead.
@@ -364,85 +159,6 @@ class ERP5TypeLiveTestCase(ProcessingNodeTestCase, PortalTestCase):
       Clear "my activities"... how to do this ?
       """
       PortalTestCase.beforeClose(self)
-
-    def stepPdb(self, sequence=None, sequence_list=None):
-      """Invoke debugger"""
-      try: # try ipython if available
-        import IPython
-        IPython.Shell.IPShell(argv=[])
-        tracer = IPython.Debugger.Tracer()
-      except ImportError:
-        from pdb import set_trace as tracer
-      tracer()
-
-    def stepTic(self, **kw):
-      """
-      The is used to simulate the zope_tic_loop script
-      Each time this method is called, it simulates a call to tic
-      which invoke activities in the Activity Tool
-      """
-      if kw.get('sequence', None) is None:
-        # in case of using not in sequence commit transaction
-        transaction.commit()
-      self.tic()
-
-    def publish(self, path, basic=None, env=None, extra=None,
-                request_method='GET', stdin=None, handle_errors=True):
-        '''Publishes the object at 'path' returning a response object.'''
-
-        from ZPublisher.Response import Response
-        from ZPublisher.Test import publish_module
-
-        from AccessControl.SecurityManagement import getSecurityManager
-        from AccessControl.SecurityManagement import setSecurityManager
-        
-        # Save current security manager
-        sm = getSecurityManager()
-
-        # Commit the sandbox for good measure
-        transaction.commit()
-
-        if env is None:
-            env = {}
-        if extra is None:
-            extra = {}
-
-        request = self.app.REQUEST
-
-        env['SERVER_NAME'] = request['SERVER_NAME']
-        env['SERVER_PORT'] = request['SERVER_PORT']
-        env['HTTP_ACCEPT_CHARSET'] = request['HTTP_ACCEPT_CHARSET']
-        env['REQUEST_METHOD'] = request_method
-
-        p = path.split('?')
-        if len(p) == 1:
-            env['PATH_INFO'] = p[0]
-        elif len(p) == 2:
-            [env['PATH_INFO'], env['QUERY_STRING']] = p
-        else:
-            raise TypeError, ''
-
-        if basic:
-            env['HTTP_AUTHORIZATION'] = "Basic %s" % base64.encodestring(basic).replace('\012', '')
-
-        if stdin is None:
-            stdin = StringIO()
-
-        outstream = StringIO()
-        response = Response(stdout=outstream, stderr=sys.stderr)
-
-        publish_module('Zope2',
-                       response=response,
-                       stdin=stdin,
-                       environ=env,
-                       extra=extra,
-                       debug=not handle_errors,
-                      )
-
-        # Restore security manager
-        setSecurityManager(sm)
-
-        return ResponseWrapper(response, outstream, path)
 
 def runLiveTest(test_list, verbosity=1, stream=None, **kw):
   from Products.ERP5Type.tests.runUnitTest import DebugTestResult
