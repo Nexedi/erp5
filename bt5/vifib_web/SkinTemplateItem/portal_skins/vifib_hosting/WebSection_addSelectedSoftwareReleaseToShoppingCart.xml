@@ -58,7 +58,9 @@ if len(uids) != 1:\n
                         keep_items={\'portal_status_message\':context.Base_translateString("Please select one software release.")})\n
 else:\n
   session = context.WebSection_getVifibSession()\n
-  session[\'instance_software_release_uid\'] = uids[0]\n
+  params = portal.portal_selections.getSelectionParamsFor(\'vifib_session_id\')\n
+  params["instance_software_release_uid"] = uids[0]\n
+  portal.portal_selections.setSelectionParamsFor(\'vifib_session_id\', params)\n
 \n
 if kw.has_key(\'came_from\'):\n
   #we override the context to redirect the user to the next web section\n
@@ -110,6 +112,7 @@ context.WebSection_viewNextStep()\n
                             <string>portal</string>
                             <string>len</string>
                             <string>session</string>
+                            <string>params</string>
                             <string>_getitem_</string>
                             <string>_write_</string>
                           </tuple>

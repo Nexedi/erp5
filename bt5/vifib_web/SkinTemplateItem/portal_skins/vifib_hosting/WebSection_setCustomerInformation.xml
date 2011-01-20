@@ -69,7 +69,9 @@ person.edit(\n
 \n
 # return context.WebSection_viewNextStep()\n
 session = context.WebSection_getVifibSession()\n
-instance_software_release_uid = session[\'instance_software_release_uid\']\n
+params = portal.portal_selections.getSelectionParamsFor(\'vifib_session_id\')\n
+instance_software_release_uid = params[\'instance_software_release_uid\']\n
+\n
 software_release = portal.portal_catalog.getResultValue(uid=instance_software_release_uid)\n
 \n
 person.requestSoftwareInstance(\n
@@ -135,6 +137,7 @@ return context.getWebSiteValue().Base_redirect(keep_items={\'portal_status_messa
                             <string>portal</string>
                             <string>person</string>
                             <string>session</string>
+                            <string>params</string>
                             <string>_getitem_</string>
                             <string>instance_software_release_uid</string>
                             <string>software_release</string>
