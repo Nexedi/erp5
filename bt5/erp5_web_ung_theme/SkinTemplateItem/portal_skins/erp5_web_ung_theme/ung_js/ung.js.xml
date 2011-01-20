@@ -86,7 +86,7 @@ function checkConversion(){\n
        clearTimeout();\n
        setTimeout(updateWebPage(), 1000);\n
      }\n
-});\n
+  });\n
 }\n
 \n
 function setObjectPropertyValue(method_name, value, parameter){\n
@@ -137,121 +137,145 @@ $().ready(function(){\n
   }\n
   $("a[name=\'document_title\']").html(getObjectPropertyValue("getTitle"));\n
   $("input#upload").click(function(event){\n
-   event.preventDefault();\n
-   $("#upload_document").dialog("open");\n
+    event.preventDefault();\n
+    $("#upload_document").dialog("open");\n
   });\n
   $("tbody tr td.listbox-table-domain-tree-cell a").each(function(){\n
-     if ($(this).text().length == 16){\n
-       $(this).css("padding-right", "82px")\n
-     }\n
-     if ($(this).text().length > 16){\n
-       $(this).css("padding-right", "24px")\n
-     }\n
+    if ($(this).text().length == 16){\n
+      $(this).css("padding-right", "82px")\n
+    }\n
+    if ($(this).text().length > 16){\n
+      $(this).css("padding-right", "24px")\n
+    }\n
   });\n
   if ($("div.gadget-column").length == 1) {\n
-   $("a.domain_selected").text($("a.tree-open:last").text());\n
-   var listboxTreeHeight = $("div.listbox-tree").css("height").replace("px", "");\n
-   var domainTreeHeight = $("div.listbox-domain-tree-container").css("height").replace("px", "");\n
-   if (parseInt(listboxTreeHeight) > parseInt(domainTreeHeight)){\n
-     window.onload = function() {\n
-       $("div.listbox-tree").css("height", $("div.listbox-domain-tree-container").css("height"));\n
-     }\n
-   }\n
-   if (parseInt(domainTreeHeight) > 233) {\n
-     window.onload = function() {\n
-       $("div.listbox-tree").css("overflow-y", "scroll");\n
-     }\n
-   }\n
-   $("body").css("overflow", "hidden");\n
-   var navigation_html = $("div.listbox-footer div.listbox-page-navigation").html();\n
-   $("div.listbox-footer div.listbox-page-navigation").remove();\n
-   var navigation_div = "<div class=\'listbox-navigation\'>" + navigation_html + "</div>";\n
-   $("div.toolbar").append(navigation_div);\n
-   var listbox_tree_html = $("div.listbox-tree").html();\n
-   var listbox_tree_div = "<div class=\'listbox-tree\'>" + listbox_tree_html + "</div>";\n
-   $("div.listbox-tree").remove();\n
-   $("div.file-quick-search").append(listbox_tree_div);\n
-   var tr_length = $("div.main-right tbody tr").length;\n
-   if (tr_length < 16){\n
-     var height = tr_length * 1.5;\n
-     $("div.main-right tbody").css("height", height + "em");\n
-   }\n
-   if ($("div.listbox-navigation").text() == "null")\n
-     $("div.listbox-navigation").hide();\n
- }\n
- else {\n
-  $("div.action_menu ul li a").click(function(event){\n
-    event.preventDefault();\n
-    herfList = this.getAttribute("href").split("?");\n
-    action_name = herfList[herfList.length-1].split("=")[1];\n
-    $.ajax({\n
-           url: "Base_changeWorkflowState", \n
-           data: "action_name=" + action_name,\n
-           success: function(){\n
-             window.location.reload();\n
-           },\n
-         });\n
-  });\n
-  if ($("a[name=\'document_state\']").text() == "Draft") {\n
-    $("div.action_menu li ul").append("<li><a id=\'share_document\' href=\'#\'>" + \n
-                                      "<h6>Share this Document</h6></a></li>");\n
-    $("div.action_menu ul li a#share_document").click(function(event){\n
-      event.preventDefault();\n
-      $.ajax({\n
-              url: \'WebSection_shareDocument\',\n
-              async: false,\n
-             });\n
-      location.reload();\n
+    $("a.domain_selected").text($("a.tree-open:last").text());\n
+    var listboxTreeHeight = $("div.listbox-tree").css("height").replace("px", "");\n
+    var domainTreeHeight = $("div.listbox-domain-tree-container").css("height").replace("px", "");\n
+    if (parseInt(listboxTreeHeight) > parseInt(domainTreeHeight)){\n
+      window.onload = function() {\n
+        $("div.listbox-tree").css("height", $("div.listbox-domain-tree-container").css("height"));\n
+      }\n
+    }\n
+    if (parseInt(domainTreeHeight) > 233) {\n
+      window.onload = function() {\n
+        $("div.listbox-tree").css("overflow-y", "scroll");\n
+      }\n
+    }\n
+    $("body").css("overflow", "hidden");\n
+    var navigation_html = $("div.listbox-footer div.listbox-page-navigation").html();\n
+    $("div.listbox-footer div.listbox-page-navigation").remove();\n
+    var navigation_div = "<div class=\'listbox-navigation\'>" + navigation_html + "</div>";\n
+    $("div.toolbar").append(navigation_div);\n
+    var listbox_tree_html = $("div.listbox-tree").html();\n
+    var listbox_tree_div = "<div class=\'listbox-tree\'>" + listbox_tree_html + "</div>";\n
+    $("div.listbox-tree").remove();\n
+    $("div.file-quick-search").append(listbox_tree_div);\n
+    var tr_length = $("div.main-right tbody tr").length;\n
+    if (tr_length < 16){\n
+      var height = tr_length * 1.5;\n
+      $("div.main-right tbody").css("height", height + "em");\n
+    }\n
+    if ($("div.listbox-navigation").text() == "null")\n
+      $("div.listbox-navigation").hide();\n
+    $.getJSON("WebSection_getGadgetPathList", function(data){\n
+      gadgetList = jQuery(data);\n
+      gadgetList.each(function(){\n
+        $("div.gadget-listbox table#gadget-table")\n
+          .append($(\'<tr>\')\n
+              .append($(\'<td>\')\n
+                  .append($(\'<input>\')\n
+                      .attr(\'type\', \'checkbox\')\n
+                      .attr(\'id\', this.id)\n
+                  ) \n
+              )\n
+             .append($(\'<td>\')\n
+                 .append($(\'<a>\')\n
+                     .text(this.title)\n
+                 )\n
+             )\n
+             .append($(\'<td>\')\n
+                  .append($(\'<img>\')\n
+                      .attr(\'src\', this.image_url)\n
+                      .text(this.title)\n
+                  )\n
+             )\n
+          );\n
+        });\n
     });\n
+  }\n
+  else {\n
+    $("div.action_menu ul li a").click(function(event){\n
+      event.preventDefault();\n
+      herfList = this.getAttribute("href").split("?");\n
+      action_name = herfList[herfList.length-1].split("=")[1];\n
+      $.ajax({\n
+             url: "Base_changeWorkflowState", \n
+             data: "action_name=" + action_name,\n
+             success: function(){\n
+               window.location.reload();\n
+             },\n
+      });\n
+    });\n
+    if ($("a[name=\'document_state\']").text() == "Draft") {\n
+      $("div.action_menu li ul").append("<li><a id=\'share_document\' href=\'#\'>" + \n
+                                        "<h6>Share this Document</h6></a></li>");\n
+      $("div.action_menu ul li a#share_document").click(function(event){\n
+        event.preventDefault();\n
+        $.ajax({\n
+               url: \'WebSection_shareDocument\',\n
+               async: false,\n
+        });\n
+        location.reload();\n
+      });\n
+    };\n
+    $("div.action_menu li ul").css("height", $("div.action_menu li ul li").length * 25.3 + "px");\n
+    if ($("a[name=\'document_state\']").text() == "Shared"){\n
+      reference = $.ajax({\n
+                         url: \'getReference\',\n
+                         async: false,\n
+                  }).responseText;\n
+      keyUrl = location.href.split("web_page_module")[0] + "?key=" + reference;\n
+      $("div.header-right fieldset.widget a#sharing_url").text(keyUrl);\n
+    };\n
   };\n
-  $("div.action_menu li ul").css("height",\n
-                   $("div.action_menu li ul li").length * 25.3 + "px");\n
-  if ($("a[name=\'document_state\']").text() == "Shared"){\n
-    reference = $.ajax({\n
-                       url: \'getReference\',\n
-                       async: false,\n
-                      }).responseText;\n
-    keyUrl = location.href.split("web_page_module")[0] + "?key=" + reference;\n
-    $("div.header-right fieldset.widget a#sharing_url").text(keyUrl);\n
-  };\n
- };\n
- $("#edit_document").dialog({\n
+  $("#edit_document").dialog({\n
     autoOpen: false,\n
     height: 131,\n
     width: 389,\n
     modal: true,\n
     buttons: {\n
       "Save": function(){\n
-         var new_title = $("input#name.title").attr("value");\n
-         var new_reference = $("input#reference.reference").attr("value");\n
-         var new_short_title = $("input#short_title.short_title").attr("value");\n
-         var new_language = $("input#language.language").attr("value");\n
-         var new_version = $("input#version.version").attr("value");\n
-         var new_int_index = $("input#sort_index.sort_index").attr("value");\n
-         var new_subject_list = $("textarea#keyword_list").attr("value").replace(/\\n+/g, ",");\n
-         $("a[name=\'document_title\']").html(new_title);\n
-         setObjectPropertyValue("setTitle", new_title, "value");\n
-         setObjectPropertyValue("setReference", new_reference, "value");\n
-         setObjectPropertyValue("setShortTitle", new_short_title, "value");\n
-         setObjectPropertyValue("setLanguage", new_language, "language");\n
-         setObjectPropertyValue("setVersion", new_version, "value");\n
-         setObjectPropertyValue("setIntIndex", new_int_index, "value");\n
-         setObjectPropertyValue("WebPage_setSubjectList", new_subject_list, "value");   \n
-         $("#edit_document").dialog("close");\n
-         $("button.save").click();\n
-       },\n
-       Cancel: function() {\n
-         $(this).dialog("close");\n
-       },\n
+        var new_title = $("input#name.title").attr("value");\n
+        var new_reference = $("input#reference.reference").attr("value");\n
+        var new_short_title = $("input#short_title.short_title").attr("value");\n
+        var new_language = $("input#language.language").attr("value");\n
+        var new_version = $("input#version.version").attr("value");\n
+        var new_int_index = $("input#sort_index.sort_index").attr("value");\n
+        var new_subject_list = $("textarea#keyword_list").attr("value").replace(/\\n+/g, ",");\n
+        $("a[name=\'document_title\']").html(new_title);\n
+        setObjectPropertyValue("setTitle", new_title, "value");\n
+        setObjectPropertyValue("setReference", new_reference, "value");\n
+        setObjectPropertyValue("setShortTitle", new_short_title, "value");\n
+        setObjectPropertyValue("setLanguage", new_language, "language");\n
+        setObjectPropertyValue("setVersion", new_version, "value");\n
+        setObjectPropertyValue("setIntIndex", new_int_index, "value");\n
+        setObjectPropertyValue("WebPage_setSubjectList", new_subject_list, "value");   \n
+        $("#edit_document").dialog("close");\n
+        $("button.save").click();\n
+      },\n
+      Cancel: function() {\n
+        $(this).dialog("close");\n
+      },\n
     }\n
- });\n
- $("#upload_document").dialog({\n
+  });\n
+  $("#upload_document").dialog({\n
     autoOpen: false,\n
     height: 116,\n
     width: 346,\n
     modal: true,\n
- });\n
- $("div.gadget-listbox").dialog({\n
+  });\n
+  $("div.gadget-listbox").dialog({\n
     autoOpen: false,\n
     height: 416,\n
     width: 600,\n
@@ -260,55 +284,55 @@ $().ready(function(){\n
       "Add": function(){\n
          var gadgetId = null;\n
          $("table#gadget-table tbody tr td input").each(function(){\n
-             if (this.checked){\n
-                gadgetId = $(this).attr("id");\n
-                return false;\n
-             };\n
+           if (this.checked){\n
+             gadgetId = $(this).attr("id");\n
+             return false;\n
+           };\n
          });\n
          if (gadgetId == null){\n
            $(this).dialog("close");\n
          };\n
          var tabTitle = $("div#tabs ul li.tab_selected span").html();\n
          $.ajax({\n
-            url:"WebSection_addGadget",\n
-            data: "tab_title=" + tabTitle + "&gadget_id=" + gadgetId,\n
-            success: function(data) {\n
-              window.location.reload();\n
-            }\n
+           url:"WebSection_addGadget",\n
+           data: "tab_title=" + tabTitle + "&gadget_id=" + gadgetId,\n
+           success: function(data) {\n
+             window.location.reload();\n
+           }\n
          });\n
-       },\n
+      },\n
     }\n
- });\n
- $("div#preference_dialog").dialog({\n
+  });\n
+  $("div#preference_dialog").dialog({\n
     autoOpen: false,\n
     height: 487,\n
     width: 330,\n
     modal:true,\n
     buttons: {\n
       "Save": function(){\n
-         var erp5PreferenceArgument = $("form#erp5_preference").serialize();\n
-         $.ajax({\n
-                url: ungPreferencePath + "/Base_edit",\n
-                data: erp5PreferenceArgument + "&form_id=Preference_viewHtmlStyle",\n
-         });\n
-         var systemPreferenceArgument = $("form#system_preference").serialize();\n
-         $.ajax({\n
-                url: systemPreferencePath + "/Base_edit",\n
-                data: systemPreferenceArgument + "&form_id=SystemPreference_view",\n
-         });\n
-         var ungPreferenceArgument = $("form#ung_preference").serialize();\n
-         $.ajax({\n
-                url: ungPreferencePath + "/Base_edit",\n
-                data: ungPreferenceArgument + "&form_id=UNGPreference_view",\n
-         });\n
+        var erp5PreferenceArgument = $("form#erp5_preference").serialize();\n
+        $.ajax({\n
+          url: ungPreferencePath + "/Base_edit",\n
+          data: erp5PreferenceArgument + "&form_id=Preference_viewHtmlStyle",\n
+        });\n
+        var systemPreferenceArgument = $("form#system_preference").serialize();\n
+        $.ajax({\n
+          url: systemPreferencePath + "/Base_edit",\n
+          data: systemPreferenceArgument + "&form_id=SystemPreference_view",\n
+        });\n
+        var ungPreferenceArgument = $("form#ung_preference").serialize();\n
+        $.ajax({\n
+          url: ungPreferencePath + "/Base_edit",\n
+          data: ungPreferenceArgument + "&form_id=UNGPreference_view",\n
+        });\n
         location.reload();\n
-       },\n
-       Cancel: function() {\n
-         $(this).dialog("close");\n
-       },\n
+      },\n
+      Cancel: function() {\n
+        $(this).dialog("close");\n
+      },\n
     }\n
- });\n
- $("p#more_properties")\n
+  });\n
+  $("p#more_properties")\n
     .click(function(){\n
       $("div#more_property").show();\n
       $("p#hide_properties").show();\n
@@ -323,7 +347,7 @@ $().ready(function(){\n
       $("div#more_property input").css("width", "47%");\n
       $("p#more_properties").hide();\n
     });\n
- $("p#hide_properties")\n
+  $("p#hide_properties")\n
     .click(function(){\n
       $("div#more_property").hide();\n
       $("p#more_properties").show();\n
@@ -333,123 +357,98 @@ $().ready(function(){\n
       $("div#edit_document fieldset").animate({"height": "69px"}, "slow");\n
       $("div.ui-dialog").animate({"height": "148px"}, "slow");\n
       $("div#edit_document").animate({"height": "78px"}, "slow");\n
-    });\n
+  });\n
   $("a#settings")\n
     .click(function(event){\n
       event.preventDefault();\n
+      $.getJSON("Base_getPreferencePathList", function(data){\n
+        ungPreferencePath = data.preference;\n
+        systemPreferencePath = data.system_preference;\n
+        if ($("div#preference_dialog").html() == "") {\n
+          $.get(ungPreferencePath + \'/Preference_viewHtmlStyle?editable_mode:int=1\', function(data){\n
+            $("div#preference_dialog").append("<form id=\'erp5_preference\'>" + \n
+                                              "<fieldset class=\'center editable\'>" + \n
+                                              $(data).find(\'fieldset.center.editable\').html() +\n
+                                              "</fieldset></form>");\n
+          });\n
+          $.get(systemPreferencePath + \'/SystemPreference_view?editable_mode:int=1\', function(data){\n
+            $("div#preference_dialog").append("<form id=\'system_preference\'>" + \n
+                                              "<fieldset class=\'right editable\'>" + \n
+                                              $(data).find(\'fieldset.right.editable\').html() +\n
+                                              "</fieldset></form>");\n
+          });\n
+          $.get(ungPreferencePath + \'/UNGPreference_view?editable_mode:int=1\', function(data){  \n
+            $("div#preference_dialog").append("<form id=\'ung_preference\'>" + \n
+                                              "<fieldset class=\'center editable\'>" + \n
+                                              $(data).find(\'fieldset.center.editable\').html() +\n
+                                              "</fieldset></form>");\n
+          });\n
+        }\n
+      });\n
       $("div#preference_dialog").dialog("open");\n
     });\n
- $("button.ui-button, span.ui-icon").click(function(){$("p#hide_properties").click()});\n
- $("a[name=\'document_title\']")\n
+  $("button.ui-button, span.ui-icon").click(function(){$("p#hide_properties").click()});\n
+  $("a[name=\'document_title\']")\n
     .click(function(){\n
-        $("div#more_property").hide();\n
-        $("p#hide_properties").hide();\n
-        if ($("input#name.title").attr("value") != getObjectPropertyValue("getTitle")) {\n
-            $(this).html(getObjectPropertyValue("getTitle"));\n
-        }\n
-        $("input#name.title").attr("value", getObjectPropertyValue("getTitle"));\n
-        $("input#short_title.short_title").attr("value", getObjectPropertyValue("getShortTitle"));\n
-        $("input#reference.reference").attr("value", getObjectPropertyValue("getReference"));\n
-        $("input#version.version").attr("value", getObjectPropertyValue("getVersion"));\n
-        $("input#language.language").attr("value", getObjectPropertyValue("getLanguage"));\n
-        $("input#sort_index.sort_index").attr("value", getObjectPropertyValue("getIntIndex"));\n
-        var subjectList = jQuery.parseJSON(getObjectPropertyValue(\'getSubjectList\').replace(/\'/g,\'"\'));\n
-        if (subjectList != null)\n
-          $("textarea#keyword_list").attr("value", subjectList.join("\\n"));\n
-        $("#edit_document").dialog("open");     \n
+      $("div#more_property").hide();\n
+      $("p#hide_properties").hide();\n
+      if ($("input#name.title").attr("value") != getObjectPropertyValue("getTitle")) {\n
+        $(this).html(getObjectPropertyValue("getTitle"));\n
+      }\n
+      $("input#name.title").attr("value", getObjectPropertyValue("getTitle"));\n
+      $("input#short_title.short_title").attr("value", getObjectPropertyValue("getShortTitle"));\n
+      $("input#reference.reference").attr("value", getObjectPropertyValue("getReference"));\n
+      $("input#version.version").attr("value", getObjectPropertyValue("getVersion"));\n
+      $("input#language.language").attr("value", getObjectPropertyValue("getLanguage"));\n
+      $("input#sort_index.sort_index").attr("value", getObjectPropertyValue("getIntIndex"));\n
+      var subjectList = jQuery.parseJSON(getObjectPropertyValue(\'getSubjectList\').replace(/\'/g,\'"\'));\n
+      if (subjectList != null)\n
+        $("textarea#keyword_list").attr("value", subjectList.join("\\n"));\n
+      $("#edit_document").dialog("open");     \n
     });\n
- $("a#help").click(function(event){\n
-   event.preventDefault();\n
-   showNotImplementedMessage("a#right_message");\n
- });\n
- $("a.calendar, a.email").click(function(event){\n
-   event.preventDefault();\n
-   showNotImplementedMessage("a#left_message");\n
- });\n
- $("a#login").click(function(event){\n
-   event.preventDefault();\n
-   $("div.header-left div.field input, div.main-right, div.main-left").hide();\n
-   if ($("div#login_form").html() == null){\n
-     $.get("WebSection_loginDialog", function(data){\n
-       $("div.header-left fieldset.widget").append("<p>" + data + "</p>")\n
-     });\n
-   }\n
- });\n
- $("input.listbox-check-all").click(function(event){\n
-  event.preventDefault();\n
-  changeCheckBoxValue(true);\n
- });\n
- $("input.listbox-uncheck-all").click(function(event){\n
-  event.preventDefault();\n
-  changeCheckBoxValue(false);\n
- });\n
- $.getJSON("Base_getPreferencePathList", function(data){\n
-   ungPreferencePath = data.preference;\n
-   systemPreferencePath = data.system_preference;\n
-   if ($("div#preference_dialog").html() == "") {\n
-     $.get(ungPreferencePath + \'/Preference_viewHtmlStyle?editable_mode:int=1\', function(data){\n
-       $("div#preference_dialog").append("<form id=\'erp5_preference\'>" + \n
-                                         "<fieldset class=\'center editable\'>" + \n
-                                         $(data).find(\'fieldset.center.editable\').html() +\n
-                                         "</fieldset></form>");\n
-     });\n
-     $.get(systemPreferencePath + \'/SystemPreference_view?editable_mode:int=1\', function(data){\n
-       $("div#preference_dialog").append("<form id=\'system_preference\'>" + \n
-                                         "<fieldset class=\'right editable\'>" + \n
-                                         $(data).find(\'fieldset.right.editable\').html() +\n
-                                         "</fieldset></form>");\n
-     });\n
-     $.get(ungPreferencePath + \'/UNGPreference_view?editable_mode:int=1\', function(data){\n
-       $("div#preference_dialog").append("<form id=\'ung_preference\'>" + \n
-                                         "<fieldset class=\'center editable\'>" + \n
-                                         $(data).find(\'fieldset.center.editable\').html() +\n
-                                         "</fieldset></form>");\n
-     });\n
-  }\n
- });\n
- $.getJSON("WebSection_getGadgetPathList", function(data){\n
-   gadgetList = jQuery(data);\n
-   gadgetList.each(function(){\n
-     $("div.gadget-listbox table#gadget-table")\n
-       .append($(\'<tr>\')\n
-          .append($(\'<td>\')\n
-            .append($(\'<input>\')\n
-                .attr(\'type\', \'checkbox\')\n
-                .attr(\'id\', this.id)\n
-            )\n
-          )\n
-          .append($(\'<td>\')\n
-             .append($(\'<a>\')\n
-                .text(this.title)\n
-             )\n
-          )\n
-          .append($(\'<td>\')\n
-            .append($(\'<img>\')\n
-               .attr(\'src\', this.image_url)\n
-                .text(this.title)\n
-            )\n
-          )\n
-       );\n
-   });\n
- });\n
- $("span#knowledge_pad_module_8_titlean").text("1");\n
- if ($("#tab-list-container #tabs ul li").length > 2) {\n
-   $("li#add_new_tab_dialog_link.tab").hide()\n
- };\n
- $("div#add_new_gadget_link a#add-gadgets").removeAttr("onclick");\n
- $("div#add_new_gadget_link a#add-gadgets").click(function(event){\n
-   event.preventDefault();\n
-   $("div.gadget-listbox").dialog("open");\n
- });\n
- $("div#page_wrapper div#portal-column-1.portal-column, div#page_wrapper div#portal-column-2.portal-column").remove();\n
- var jScreen = jQuery(this);\n
- if (jScreen.width() < 1280){\n
-   $("div.listbox-tree, div.gadget-action div.front_pad").css("width", "79%");\n
-   $("td.listbox-table-domain-tree-cell a").css("padding-right", "25px");\n
-   $("div.header-right").css("width", "52.3%");\n
- };\n
- $("a.tree-open").parent().parent().css("background-color", "#BBCCFF");\n
- return false;\n
+  $("a#help").click(function(event){\n
+    event.preventDefault();\n
+    showNotImplementedMessage("a#right_message");\n
+  });\n
+  $("a.calendar, a.email").click(function(event){\n
+    event.preventDefault();\n
+    showNotImplementedMessage("a#left_message");\n
+  });\n
+  $("a#login").click(function(event){\n
+    event.preventDefault();\n
+    $("div.header-left div.field input, div.main-right, div.main-left").hide();\n
+    if ($("div#login_form").html() == null){\n
+      $.get("WebSection_loginDialog", function(data){\n
+        $("div.header-left fieldset.widget").append("<p>" + data + "</p>")\n
+      });\n
+    }\n
+  });\n
+  $("input.listbox-check-all").click(function(event){\n
+    event.preventDefault();\n
+    changeCheckBoxValue(true);\n
+  });\n
+  $("input.listbox-uncheck-all").click(function(event){\n
+    event.preventDefault();\n
+    changeCheckBoxValue(false);\n
+  });\n
+  $("span#knowledge_pad_module_8_titlean").text("1");\n
+  if ($("#tab-list-container #tabs ul li").length > 2) {\n
+    $("li#add_new_tab_dialog_link.tab").hide()\n
+  };\n
+  $("div#add_new_gadget_link a#add-gadgets").removeAttr("onclick");\n
+  $("div#add_new_gadget_link a#add-gadgets").click(function(event){\n
+    event.preventDefault();\n
+    $("div.gadget-listbox").dialog("open");\n
+  });\n
+  $("div#page_wrapper div#portal-column-1.portal-column, div#page_wrapper div#portal-column-2.portal-column").remove();\n
+  var jScreen = jQuery(this);\n
+  if (jScreen.width() < 1280){\n
+    $("div.listbox-tree, div.gadget-action div.front_pad").css("width", "79%");\n
+    $("td.listbox-table-domain-tree-cell a").css("padding-right", "25px");\n
+    $("div.header-right").css("width", "52.3%");\n
+  };\n
+  $("a.tree-open").parent().parent().css("background-color", "#BBCCFF");\n
+  return false;\n
 });
 
 ]]></string> </value>
