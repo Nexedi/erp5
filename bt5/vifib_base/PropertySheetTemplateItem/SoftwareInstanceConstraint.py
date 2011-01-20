@@ -33,12 +33,14 @@ class SoftwareInstanceConstraint:
       'description'   : 'Property text content must be defined',
       'type'          : 'PropertyExistence',
       'text_content'  : None,
+      "message_property_not_set" : 'XML must be set',
       "message_no_such_property" : 'XML must be set'
     },
     { 'id'            : 'property_existence',
-      'description'   : 'Property reference must be defined',
+      'description'   : 'Property source reference must be defined',
       'type'          : 'PropertyExistence',
-      'reference'     : None,
+      'source_reference'     : None,
+      "message_property_not_set" : 'Reference must be set',
       "message_no_such_property" : 'Reference must be set'
     },
     { 'id'            : 'text_content_validation',
