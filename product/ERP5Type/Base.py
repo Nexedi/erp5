@@ -719,7 +719,11 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, ptype, prop_holder,
           method_id_matcher = re.compile(imethod_id).match
 
           # queue transitions using regexps for later examination
-          interaction_queue.append((wf_id, tr_id, tdef, method_id_matcher))
+          interaction_queue.append((wf_id,
+                                    tr_id,
+                                    transition_id_set,
+                                    tdef.once_per_transaction,
+                                    method_id_matcher))
 
           # XXX - class stuff is missing here
           method_id_list = filter(method_id_matcher, all_method_id_list)
@@ -769,14 +773,14 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, ptype, prop_holder,
   # We need to run this part twice in order to handle interactions of interactions
   # ex. an interaction workflow creates a workflow method which matches
   # the regexp of another interaction workflow
-  for wf_id, tr_id, tdef, method_id_matcher in interaction_queue:
+  for wf_id, tr_id, transition_id_set, once, method_id_matcher in interaction_queue:
     for method_id in filter(method_id_matcher, added_method_set):
       # method must already exist and be a workflow method
       method = getattr(klass, method_id)
       transition_id = method.getTransitionId()
       if transition_id in transition_id_set:
         method.registerTransitionAlways(ptype, wf_id, transition_id)
-      if tdef.once_per_transaction:
+      if once:
         method.registerTransitionOncePerTransaction(ptype, wf_id, tr_id)
       else:
         method.registerTransitionAlways(ptype, wf_id, tr_id)
