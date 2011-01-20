@@ -63,7 +63,6 @@ from Products.ERP5Type.InitGenerator import getProductDocumentPathList
 
 from Products.ERP5Type.Base import _aq_reset
 from Products.ERP5Type.Base import newTempDocumentationHelper
-from Products.ERP5Type.tests.ERP5TypeLiveTestCase import runLiveTest
 
 from Products.ERP5Type import allowClassTool
 from DateTime import DateTime
@@ -1229,6 +1228,7 @@ def initialize( context ):
         instance_home = getConfiguration().instancehome
         global global_stream
         global_stream = StringIO()
+        from Products.ERP5Type.tests.ERP5TypeLiveTestCase import runLiveTest
         result = runLiveTest(test_list, run_only=run_only, debug=debug, path=path,
                            stream=global_stream, verbosity=verbosity)
         global_stream.seek(0)
