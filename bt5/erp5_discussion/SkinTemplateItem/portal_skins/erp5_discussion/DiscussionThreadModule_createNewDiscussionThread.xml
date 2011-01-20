@@ -111,6 +111,7 @@ New forum post has been created at this url:\n
 \n
 ${url}""" \n
   email_body = context.Base_translateString(email_template, mapping={\'url\':discussion_thread.absolute_url()})\n
+  email_list = filter(lambda x: x not in (None , \'\',) and \'@\' in x, email_list)\n
   for email_to in email_list:\n
     mail_headers = """\n
 To: %s\n
