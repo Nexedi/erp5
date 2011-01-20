@@ -35,6 +35,7 @@ from Products.ZSQLCatalog.interfaces.entire_query import IEntireQuery
 from zope.interface.verify import verifyClass
 from zope.interface import implements
 from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
+from Products.ZSQLCatalog.TableDefinition import LegacyTableDefinition
 
 def defaultDict(value):
   if value is None:
@@ -182,16 +183,27 @@ class EntireQuery(object):
       #   append(SQLExpression(self, where_expression=' AND '.join(
       #     where_pattern % (x, ) for x in join_table_list
       #   )))
-      self.from_expression = column_map.getTableDefinition()
+
+      # BBB self.from_expression forces use of implicit inner join
       table_alias_dict = column_map.getTableAliasDict()
-      assert ((self.from_expression is None) !=
-              (table_alias_dict is None)), ("Got both a from_expression "
-                                            "and a table_alias_dict")
+      if self.from_expression:
+        # XXX: perhaps move this code to ColumnMap?
+        legacy_from_expression = self.from_expression
+        from_expression = LegacyTableDefinition(legacy_from_expression,
+                                                table_alias_dict)
+        table_alias_dict = None
+      else:
+        from_expression = column_map.getTableDefinition()
+        assert ((from_expression is None) !=
+                (table_alias_dict is None)), ("Got both a from_expression "
+                                              "and a table_alias_dict")
       self.sql_expression_list = sql_expression_list
+      # TODO: wrap the table_alias_dict above into a TableDefinition as well,
+      # even without a legacy_table_definition.
     return SQLExpression(
       self,
       table_alias_dict=table_alias_dict,
-      from_expression=self.from_expression,
+      from_expression=from_expression,
       order_by_list=self.order_by_list,
       group_by_list=self.group_by_list,
       select_dict=self.final_select_dict,

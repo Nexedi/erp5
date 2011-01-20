@@ -403,12 +403,6 @@ class SQLExpression(object):
                                        "and a from_table_list")
     if from_expression is not None:
       from_expression = from_expression.render()
-    #   from_expression_dict = from_expression
-    #   from_expression = SQL_LIST_SEPARATOR.join(
-    #     from_expression_dict.get(table, '`%s` AS `%s`' % (table, alias))
-    #     for alias, table in table_alias_dict.iteritems())
-    # else:
-    #   from_expression = None
     return {
       'where_expression': self.getWhereExpression(),
       'order_by_expression': self.getOrderByExpression(),

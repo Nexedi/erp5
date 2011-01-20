@@ -30,6 +30,7 @@
 # * collapse of parentheses around chains of inner-joins
 # * indentation on rendering
 
+SQL_LIST_SEPARATOR = ', '
 SQL_SELECT_ALIAS_FORMAT = '%s AS `%s`'
 
 from Products.ZSQLCatalog.Query.SQLQuery import SQLQuery
@@ -200,3 +201,22 @@ class LeftJoin(InnerJoin):
                        "inner join, but this table definition contains a Left "
                        "Join: %r" % self)
 
+class LegacyTableDefinition(TableDefinition):
+  """Table Definition used when a from_expression is passed explicitly.
+  Mostly used for manual left-join definitions. Deprecated
+  """
+
+  def __init__(self, from_expression, table_alias_map):
+    self.from_expression = from_expression
+    self.table_alias_map = table_alias_map
+
+  def checkTableAliases(self, current_aliases=None):
+    pass
+
+  def render(self):
+    from_expression_dict = self.from_expression
+    table_alias_map = self.table_alias_map
+    from_expression = SQL_LIST_SEPARATOR.join(
+      from_expression_dict.get(table, '`%s` AS `%s`' % (table, alias))
+      for alias, table in table_alias_map.iteritems())
+    return from_expression

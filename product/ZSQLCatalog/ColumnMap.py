@@ -94,8 +94,10 @@ class ColumnMap(object):
     # Entries: column name
     self.column_ignore_set = set()
     self.join_table_set = set()
-    # BBB: Remove join_query_list and its uses when all RelatedKey methods have
-    # been converted to properly return each Join condition separately.
+    # BBB: Remove join_query_list and its uses when all RelatedKey
+    # methods have been converted to properly return each Join
+    # condition separately, and all uses of catalog's from_expression
+    # have been removed.
     self.join_query_list = []
     self.table_override_map = table_override_map or {}
     self.table_definition = PlaceHolderTableDefinition()
@@ -474,9 +476,21 @@ class ColumnMap(object):
   def getCatalogTableAlias(self, group=DEFAULT_GROUP_ID):
     return self.table_alias_dict[(group, self.catalog_table_name)]
 
+  def _isBackwardCompatibilityRequired(self):
+    return bool(
+      # If one or more RelatedKey methods weren't converted, we'll get
+      # queries for an implicit inner join, so we have to do all joins
+      # as implicit.
+      self.join_query_list
+      # for now, work in BW compat mode if a table_override
+      # is passed.  It only works for simple subselect
+      # definitions anyway, and it's being used primarily
+      # for writing left-joins manually.
+      or self.table_override_map)
+
   def getTableAliasDict(self):
-    if self.join_query_list:
-      # BBB: Using implicit joins
+    if self._isBackwardCompatibilityRequired():
+      # BBB: Using implicit joins or explicit from_expression
       return self.table_map.copy()
     else:
       return None
@@ -521,10 +535,9 @@ class ColumnMap(object):
     self.join_query_list.append(query)
 
   def iterJoinQueryList(self):
-    if self.join_query_list:
-      # BBB: one or more RelatedKey methods weren't converted, so we got
-      # queries for an implicit inner join. Return them, and all the other
-      # queries we were using in our table definition
+    if self._isBackwardCompatibilityRequired():
+      # Return all join queries for implicit join, and all the other
+      # queries we were using to build explicit joins, but won't be able to.
       return itertools.chain(self.join_query_list,
                              self.table_definition.getJoinConditionQueryList())
     return []
@@ -615,7 +628,7 @@ class ColumnMap(object):
   def getTableDefinition(self):
     if not self._setMinimalTableDefinition():
       raise RuntimeError("ColumnMap.build() must be called first!")
-    if self.join_query_list:
+    if self._isBackwardCompatibilityRequired():
       # BBB: One of the RelatedKeys registered an implicit join, do
       # not return a table definition, self.getTableAliasDict() should
       # be used instead
