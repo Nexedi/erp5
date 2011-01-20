@@ -91,7 +91,7 @@ if (request_software_instance is None):\n
 \n
     software_instance = portal.getDefaultModule(portal_type=software_instance_portal_type).newContent(\n
             portal_type=software_instance_portal_type,\n
-            reference=software_type,\n
+            source_reference=software_type,\n
             title=requested_partition_reference,\n
             text_content=instance_xml,\n
             activate_kw={\'tag\': tag},\n
