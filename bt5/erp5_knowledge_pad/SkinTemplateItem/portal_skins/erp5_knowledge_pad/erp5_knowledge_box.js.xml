@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts95444322.67</string> </value>
+            <value> <string>ts95535671.25</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -55,7 +55,8 @@ function createCustomKnowledgePadOnServer(){\n
   $.ajax({url:create_default_knowledge_pad_script_id, \n
           data:{mode: mode,\n
                 default_pad_group: default_pad_group},\n
-          success:function(data){window.location=cancel_url + "/view?active_pad_url=" + data;}});\n
+          dataType: "json",\n
+          success:function(data){window.location=cancel_url + "/view?active_pad_url=" + data.knowledge_pad_relative_url;}});\n
 }\n
 \n
 function showCreateDefaultKnowledgePadWarningMessage(){\n
@@ -150,7 +151,8 @@ function checkForActivitiesOnServer(timeout, return_url, mode, default_pad_group
               data: {js_call: 1,\n
                      mode: mode,\n
                      default_pad_group: default_pad_group},\n
-              success:  function (data){if(data=="False"){window.location=return_url;}}\n
+              dataType: "json",\n
+              success:  function (data){if(data.result=="False"){window.location=return_url;}}\n
               })},\n
     timeout);\n
 };\n
@@ -481,7 +483,7 @@ $(document).ready(initialize);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>17957</int> </value>
+            <value> <int>18051</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

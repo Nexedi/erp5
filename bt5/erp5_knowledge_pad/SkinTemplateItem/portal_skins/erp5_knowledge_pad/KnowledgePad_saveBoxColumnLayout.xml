@@ -80,7 +80,6 @@ if not context.portal_membership.isAnonymousUser():\n
   #  update only if necessary\n
   if getattr(knowledge_pad, \'user_layout\', None)!=new_user_layout:\n
     knowledge_pad.edit(user_layout=new_user_layout)\n
-return "OK"\n
 </string> </value>
         </item>
         <item>
