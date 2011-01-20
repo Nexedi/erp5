@@ -112,7 +112,7 @@
                         </tuple>
                         <tuple>
                           <string>validation_state</string>
-                          <string>validated</string>
+                          <string>published</string>
                         </tuple>
                       </list>
                     </value>
