@@ -41,90 +41,24 @@
             <value> <unicode encoding="cdata"><![CDATA[
 
 <tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'application/javascript;; charset=utf-8\')"/>\n
-var loading_deferred = undefined;\n
+/*\n
+Copyright (c) 20xx-2006 Nexedi SARL and Contributors. All Rights Reserved.\n
 \n
-function replaceContent(req) {\n
-  if (loading_deferred) {\n
-    loading_deferred.cancel();\n
-    loading_deferred = undefined;\n
-  }\n
-  //var container = $(\'container\');\n
-  var container = MochiKit.DOM.getElement("container");\n
-  container.innerHTML = req.responseText;\n
-  addOnClickEventsToTabs(req);\n
-}\n
+This program is Free Software; you can redistribute it and/or\n
+modify it under the terms of the GNU General Public License\n
+as published by the Free Software Foundation; either version 2\n
+of the License, or (at your option) any later version.\n
 \n
-function showServerSideError(req) {\n
-  if (loading_deferred) {\n
-    loading_deferred.cancel();\n
-    loading_deferred = undefined;\n
-  }\n
-  //var container = $(\'container\');\n
-  var container = MochiKit.DOM.getElement("container");\n
-  container.innerHTML = \'Server side error.\';\n
-  addOnClickEventsToTabs(req);\n
-}\n
+This program is distributed in the hope that it will be useful,\n
+but WITHOUT ANY WARRANTY; without even the implied warranty of\n
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n
+GNU General Public License for more details.\n
 \n
-function showLoadingMessage() {\n
-  //var container = $(\'container\');\n
-  var container = MochiKit.DOM.getElement("container");\n
-  container.innerHTML = \'<div><p style="text-align: left; vertical-align: middle; font-size: large;">Loading...</p></div>\';\n
-  loading_deferred = undefined;\n
-}\n
-\n
-function selectTab(e) {\n
-  //var tab_box = $(\'tab_box\');\n
-  //var item_list = tab_box.getElementsByTagName(\'li\');\n
-  var item_list = MochiKit.DOM.getElementsByTagAndClassName("li", null, "tab_box");\n
-  for (var i = 0; i < item_list.length; i++) {\n
-    var item = item_list[i];\n
-    //var node = item.getElementsByTagName(\'a\')[0];\n
-    var node = MochiKit.DOM.getFirstElementByTagAndClassName("a", null, item);\n
-    if (this == node) {\n
-      if (getNodeAttribute(item, \'class\') != \'selected\') {\n
-        MochiKit.DOM.setNodeAttribute(item, \'class\', \'selected\');\n
-      }\n
-      node.blur();\n
-    } else {\n
-      if (getNodeAttribute(item, \'class\') != \'non_selected\') {\n
-        MochiKit.DOM.setNodeAttribute(item, \'class\', \'non_selected\');\n
-      }\n
-    }\n
-    MochiKit.Signal.disconnectAll(node, \'onclick\');\n
-    MochiKit.Signal.connect(node, \'onclick\', function (e) { e.stop(); });\n
-  }\n
-\n
-  var mapping = {\n
-  <tal:block \n
-  tal:replace="structure python: \',\\n\'.join([\'%s: \\x22%s\\x22\' %(x[\'id\'], x[\'renderer\']) for x in context.ERP5Site_getTabList(add_all_tabs=1)])"></tal:block>\n
-  };\n
-\n
-  var url = mapping[this.parentNode.id];\n
-  var d = MochiKit.Async.doSimpleXMLHttpRequest(url);\n
-  d.addCallbacks(replaceContent, showServerSideError);\n
-  e.stop();\n
-\n
-  loading_deferred = MochiKit.Async.callLater(0.3, showLoadingMessage);\n
-\n
-  // Set a cookie.\n
-  document.cookie = \'erp5_site_selected_tab=\' + escape(this.parentNode.id);\n
-}\n
-\n
-function addOnClickEventsToTabs(e) {\n
-  //var tab_box = $(\'tab_box\');\n
-  //var item_list = tab_box.getElementsByTagName(\'li\');\n
-  var item_list = MochiKit.DOM.getElementsByTagAndClassName("li", null, "tab_box");\n
-  for (var i = 0; i < item_list.length; i++) {\n
-    //connect(item_list[i], \'onclick\', function(e){e.stop();})\n
-    //var node = item_list[i].getElementsByTagName(\'a\')[0];\n
-    var node = MochiKit.DOM.getFirstElementByTagAndClassName("a", null, item_list[i]);\n
-    MochiKit.Signal.disconnectAll(node, \'onclick\');\n
-    MochiKit.Signal.connect(node, \'onclick\', selectTab);\n
-  }\n
-  return true;\n
-}\n
-\n
-connect(window, \'onload\', addOnClickEventsToTabs);
+You should have received a copy of the GNU General Public License\n
+along with this program; if not, write to the Free Software\n
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
+*/\n
+// XXX: to be overriden in othe JavaScript based styles
 
 ]]></unicode> </value>
         </item>
@@ -142,7 +76,7 @@ connect(window, \'onload\', addOnClickEventsToTabs);
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
-            <value> <string>utf-8</string> </value>
+            <value> <string>iso-8859-15</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
