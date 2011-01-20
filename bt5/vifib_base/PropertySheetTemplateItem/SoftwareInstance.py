@@ -36,6 +36,14 @@ class SoftwareInstance:
           'description' : 'XML representing connection parameters',
           'type'        : 'text',
           'mode'        : 'w' },
+      {   'id'          : 'ssl_key',
+          'description' : 'Raw representation of related SSL key',
+          'type'        : 'text',
+          'mode'        : 'w' },
+      {   'id'          : 'ssl_certificate',
+          'description' : 'Raw representation of related SSL certificate',
+          'type'        : 'text',
+          'mode'        : 'w' },
   )
 
 
