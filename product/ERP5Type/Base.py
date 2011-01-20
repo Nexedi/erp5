@@ -671,13 +671,13 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, ptype, prop_holder,
     transition_id_set, trigger_dict = v
     for tr_id, tdef in trigger_dict.iteritems():
       method_id = convertToMixedCase(tr_id)
-      if getattr(klass, method_id, _MARKER) is _MARKER:
+      method = getattr(klass, method_id, _MARKER)
+      if method is _MARKER:
         prop_holder.security.declareProtected(Permissions.AccessContentsInformation,
                                               method_id)
         prop_holder.registerWorkflowMethod(method_id, wf_id, tr_id)
         continue
 
-      method = getattr(klass, method_id)
       # Wrap method
       if not callable(method):
         LOG('initializePortalTypeDynamicWorkflowMethods', 100,
@@ -725,7 +725,8 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, ptype, prop_holder,
           #     It's not consistent with regexp based filters.
           method_id_list = [imethod_id]
         for method_id in method_id_list:
-          if getattr(klass, method_id, _MARKER) is _MARKER:
+          method = getattr(klass, method_id, _MARKER)
+          if method is _MARKER:
             # set a default security, if this method is not already
             # protected.
             if method_id not in prop_holder.security.names:
@@ -735,7 +736,6 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, ptype, prop_holder,
                                                    tdef.once_per_transaction)
             continue
 
-          method = getattr(klass, method_id)
           # Wrap method
           if not callable(method):
             LOG('initializePortalTypeDynamicWorkflowMethods', 100,
