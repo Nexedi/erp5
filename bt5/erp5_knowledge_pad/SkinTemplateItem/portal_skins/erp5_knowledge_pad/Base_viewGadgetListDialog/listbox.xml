@@ -292,7 +292,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:[[\'gadget_type_uid\', context.getPortalObject().restrictedTraverse(\'portal_categories/gadget_type/%s\' %request.get(\'mode\', None) , None) is not None and context.getPortalObject().restrictedTraverse(\'portal_categories/gadget_type/%s\' %request.get(\'mode\',None), None).getUid() or \'\'],]</string> </value>
+            <value> <string>python:[[\'validation_state\', \'!=invisible\'], [\'gadget_type_uid\', context.getPortalObject().restrictedTraverse(\'portal_categories/gadget_type/%s\' %request.get(\'mode\', None) , None) is not None and context.getPortalObject().restrictedTraverse(\'portal_categories/gadget_type/%s\' %request.get(\'mode\',None), None).getUid() or \'\'],]</string> </value>
         </item>
       </dictionary>
     </pickle>
