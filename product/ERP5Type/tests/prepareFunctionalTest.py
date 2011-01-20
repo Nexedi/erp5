@@ -59,7 +59,7 @@ class TestZelenium(ERP5TypeTestCase):
         """
         return ('erp5_base', 'erp5_ui_test_core', 'erp5_ui_test', 'erp5_forge',
                 'erp5_dhtml_style', 'erp5_dhtml_ui_test',
-                'erp5_xhtml_jquery_style', 'erp5_jquery', 'erp5_jquery_ui',		
+                'erp5_xhtml_jquery_style', 'erp5_jquery', 'erp5_jquery_ui',
                 'erp5_knowledge_pad',
                 'erp5_trade', 'erp5_pdm', 'erp5_ooo_import',
                 'erp5_accounting', 'erp5_invoicing',
@@ -72,9 +72,9 @@ class TestZelenium(ERP5TypeTestCase):
                 'erp5_ingestion', 'erp5_ingestion_mysql_innodb_catalog',
                 'erp5_web', 'erp5_dms', 'erp5_dms_ui_test',
                 'erp5_knowledge_pad_ui_test',
-                'erp5_credential',		
+                'erp5_credential', 'erp5_discussion',
                 'erp5_km', 'erp5_km_ui_test',
-                'erp5_l10n_fr',		
+                'erp5_l10n_fr',
                 'erp5_crm', 'erp5_workflow', 'erp5_configurator',
                 'erp5_configurator_standard', 'erp5_configurator_standard_ui_test',
                 # erp5_web_ui_test must run at the last, because it logs out
