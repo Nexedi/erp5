@@ -764,7 +764,7 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, ptype, prop_holder,
   if not interaction_queue:
     return
 
-  new_method_set = set(prop_holder.getClassMethodItemList(klass))
+  new_method_set = set(prop_holder.getClassMethodIdList(klass))
   added_method_set = new_method_set.difference(class_method_list)
   # We need to run this part twice in order to handle interactions of interactions
   # ex. an interaction workflow creates a workflow method which matches
