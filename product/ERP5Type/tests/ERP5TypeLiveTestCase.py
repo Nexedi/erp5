@@ -105,10 +105,14 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
       transaction.abort()
 
     def _setup(self):
-        '''Configures the portal. Framework authors may
-           override.
+        '''Change some site properties in order to be ready for live test
         '''
-        pass # Do nothing in a live test
+        # Disabling portal_activities is required in order to avoid
+        # conflict with other threads doing tic in the same time
+        self.initial_transaction_hash = transaction.get().__hash__()
+        self.activity_tool_subscribed = self.getPortalObject()\
+                .portal_activities.isSubscribed()
+        self.portal.portal_activities.unsubscribe()
 
     def setUp(self):
         '''Sets up the fixture. Do not override,
@@ -137,8 +141,9 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
       pass
 
     def beforeSetUp(self):
-      '''Called after setUp() has completed. This is
-         far and away the most useful hook.
+      '''Called before the ZODB connection is opened,
+           at the start of setUp(). By default begins
+           a new transaction.
       '''
       pass
 
@@ -157,8 +162,12 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
 
     def beforeClose(self):
       """
-      Clear "my activities"... how to do this ?
+      put back site properties that were disabled for unit test
       """
+      if transaction.get().__hash__() != self.initial_transaction_hash:
+        if self.activity_tool_subscribed:
+          self.portal.portal_activities.subscribe()
+          transaction.commit()
       PortalTestCase.beforeClose(self)
 
 def runLiveTest(test_list, verbosity=1, stream=None, **kw):
