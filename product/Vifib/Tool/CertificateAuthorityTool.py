@@ -44,7 +44,7 @@ def popenCommunicate(command_list, input=None, **kwargs):
   if popen.returncode is None:
     popen.kill()
   if popen.returncode != 0:
-    raise ValueError('Issue during calling %r, result was: %r' % (command_list,
+    raise ValueError('Issue during calling %r, result was:\n%s' % (command_list,
       result))
   return result
 
@@ -178,8 +178,8 @@ class CertificateAuthorityTool(BaseTool):
                           )
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getNewCertificate')
-  def getNewCertificate(self):
-    """Returns dictionary {key, certificate, id} where id is certificate id to be used"""
+  def getNewCertificate(self, common_name):
+    """Returns certificate for passed common name, as dictionary of {key, certificate, serial, common_name}"""
     self._checkCertificateAuthority()
     self._lockCertificateAuthority()
     try:
@@ -190,7 +190,7 @@ class CertificateAuthorityTool(BaseTool):
       try:
         popenCommunicate([self.openssl_binary, 'req', '-nodes', '-config',
           self.openssl_config, '-new', '-keyout', key, '-out', csr, '-days',
-          '3650'], '%s\n' % new_id, stdin=subprocess.PIPE)
+          '3650'], '%s\n' % common_name, stdin=subprocess.PIPE)
         popenCommunicate([self.openssl_binary, 'ca', '-days', '3650',
           '-batch', '-config', self.openssl_config, '-out', cert, '-infiles',
           csr])
@@ -198,7 +198,8 @@ class CertificateAuthorityTool(BaseTool):
         return dict(
           key=open(key).read(),
           certificate=open(cert).read(),
-          id=new_id)
+          id=new_id,
+          common_name=common_name)
       except:
         try:
           for p in [key, csr, cert]:
