@@ -625,7 +625,7 @@ class ERP5TypeTestCaseMixin(object):
 
         return ResponseWrapper(response, outstream, path)
 
-class CommandLineTestCase(object):
+class ERP5TypeCommandLineTestCase(object):
 
     def dummy_test(self):
       ZopeTestCase._print('All tests are skipped when --save option is passed '
@@ -1100,7 +1100,7 @@ class ERP5TypeTestCase(ERP5TypeTestCaseMixin):
     """
 
     def __init__(self, *args, **kw):
-      type_test_case_klass = CommandLineTestCase
+      type_test_case_klass = ERP5TypeCommandLineTestCase
       from Products.ERP5Type.TransactionalVariable import \
             getTransactionalVariable
       unit_test_type = getTransactionalVariable().get('unit_test_type', None)
@@ -1117,7 +1117,7 @@ class ERP5TypeTestCase(ERP5TypeTestCaseMixin):
 
 from Products.ERP5 import ERP5Site
 ERP5Site.getBootstrapBusinessTemplateUrl = lambda bt_title: \
-  CommandLineTestCase._getBTPathAndIdList((bt_title,))[0][0]
+  ERP5TypeCommandLineTestCase._getBTPathAndIdList((bt_title,))[0][0]
 
 
 class ResponseWrapper:
