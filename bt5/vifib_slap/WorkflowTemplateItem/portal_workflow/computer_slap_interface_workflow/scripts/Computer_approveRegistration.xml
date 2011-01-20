@@ -53,21 +53,15 @@
             <value> <string>computer = state_change[\'object\']\n
 portal = computer.getPortalObject()\n
 \n
-# Access service\n
-service_module_id = portal.getDefaultModuleId(portal_type=\'Service\')\n
-service_module = portal.restrictedTraverse(service_module_id)\n
-service_value = service_module.restrictedTraverse(\'computer_registration\')\n
+internal_packing_list_url = context.portal_workflow.getInfoFor(\n
+  ob=computer, name=\'internal_packing_list_url\', \n
+  wf_id=\'computer_slap_interface_workflow\')\n
 \n
-internal_packing_list_line = portal.portal_catalog.getResultValue(\n
-  portal_type=\'Internal Packing List Line\',\n
-  simulation_state=\'stopped\',\n
-  resource_value=service_value,\n
-  aggregate_value=computer,\n
-)\n
-if (internal_packing_list_line is not None):\n
-  internal_packing_list = internal_packing_list_line.getParentValue()\n
-  portal.portal_workflow.doActionFor(internal_packing_list, \'deliver_action\')\n
-  portal.portal_workflow.doActionFor(computer, \'validate_action\')\n
+internal_packing_list = portal.restrictedTraverse(internal_packing_list_url)\n
+\n
+# portal.portal_workflow.doActionFor(internal_packing_list, \'deliver_action\')\n
+internal_packing_list.deliver()\n
+portal.portal_workflow.doActionFor(computer, \'validate_action\')\n
 </string> </value>
         </item>
         <item>
@@ -115,11 +109,8 @@ if (internal_packing_list_line is not None):\n
                             <string>computer</string>
                             <string>_getattr_</string>
                             <string>portal</string>
-                            <string>service_module_id</string>
-                            <string>service_module</string>
-                            <string>service_value</string>
-                            <string>internal_packing_list_line</string>
-                            <string>None</string>
+                            <string>context</string>
+                            <string>internal_packing_list_url</string>
                             <string>internal_packing_list</string>
                           </tuple>
                         </value>

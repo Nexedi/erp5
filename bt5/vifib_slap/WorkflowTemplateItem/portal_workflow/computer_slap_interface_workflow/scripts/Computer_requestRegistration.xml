@@ -53,11 +53,11 @@
             <value> <string>computer = state_change[\'object\']\n
 portal = computer.getPortalObject()\n
 \n
-reference = computer.getReference("")\n
-if not reference:\n
-  computer.edit(reference=portal.portal_ids.generateNewId(\n
-    id_group=\'slap_computer_reference\',\n
-    id_generator=\'mysql_non_continuous_increasing\'))\n
+# reference = computer.getReference("")\n
+# if not reference:\n
+#   computer.edit(reference=portal.portal_ids.generateNewId(\n
+#     id_group=\'slap_computer_reference\',\n
+#     id_generator=\'mysql_non_continuous_increasing\'))\n
 \n
 # Access internal packing list module\n
 internal_packing_list_id = portal.getDefaultModuleId(portal_type=\'Internal Packing List\')\n
@@ -92,6 +92,8 @@ internal_packing_list_line = internal_packing_list.newContent(\n
 # Deliver IPL\n
 internal_packing_list.portal_workflow.doActionFor(internal_packing_list, \'confirm_action\')\n
 internal_packing_list.portal_workflow.doActionFor(internal_packing_list, \'stop_action\')\n
+\n
+computer.createComputerRegistration(internal_packing_list_url=internal_packing_list.getRelativeUrl())\n
 </string> </value>
         </item>
         <item>
@@ -139,7 +141,6 @@ internal_packing_list.portal_workflow.doActionFor(internal_packing_list, \'stop_
                             <string>computer</string>
                             <string>_getattr_</string>
                             <string>portal</string>
-                            <string>reference</string>
                             <string>internal_packing_list_id</string>
                             <string>internal_packing_list_module</string>
                             <string>internal_packing_list</string>
