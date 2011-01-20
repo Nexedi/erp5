@@ -623,9 +623,14 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, ptype, prop_holder,
   # is looked up with _aq_dynamic, thus causes infinite recursions.
 
   portal_workflow = aq_inner(getToolByName(portal, 'portal_workflow'))
+
+  dc_workflow_dict = dict()
+  interaction_workflow_dict = dict()
+
   for wf in portal_workflow.getWorkflowsFor(self):
-    if wf.__class__.__name__ in ('DCWorkflowDefinition', ):
-      wf_id = wf.id
+    wf_id = wf.id
+    wf_type = wf.__class__.__name__
+    if wf_type == "DCWorkflowDefinition":
       # Create state var accessor
       # and generate methods that support the translation of workflow states
       state_var = wf.variables.getStateVar()
@@ -643,95 +648,109 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, ptype, prop_holder,
           prop_holder.security.declareProtected(
                                  Permissions.AccessContentsInformation,
                                  method_id )
-  for wf in portal_workflow.getWorkflowsFor(self):
-    wf_id = wf.id
-    if wf.__class__.__name__ in ('DCWorkflowDefinition', ):
-      interaction_id_list = wf.transitions.objectIds()
-      for tr_id in interaction_id_list:
-        tdef = wf.transitions.get(tr_id, None)
-        if tdef.trigger_type == TRIGGER_WORKFLOW_METHOD:
-          method_id = convertToMixedCase(tr_id)
-          if getattr(klass, method_id, _MARKER) is not _MARKER:
-            method = getattr(klass, method_id)
-            # Wrap method
-            if callable(method):
-              if not isinstance(method, WorkflowMethod):
-                method = WorkflowMethod(method)
-                setattr(klass, method_id, method)
-              else:
-                # We must be sure that we
-                # are going to register class defined
-                # workflow methods to the appropriate transition
-                transition_id = method.getTransitionId()
-                if transition_id in interaction_id_list:
-                  method.registerTransitionAlways(ptype, wf_id, transition_id)
-              method.registerTransitionAlways(ptype, wf_id, tr_id)
-            else:
-              LOG('initializePortalTypeDynamicWorkflowMethods', 100,
-                  'WARNING! Can not initialize %s on %s' % \
-                    (method_id, str(klass)))
-          else:
-            prop_holder.security.declareProtected(Permissions.AccessContentsInformation,
-                                                  method_id)
-            prop_holder.registerWorkflowMethod(method_id, wf_id, tr_id)
+
+      storage = dc_workflow_dict
+      transitions = wf.transitions
+    elif wf_type == "InteractionWorkflowDefinition":
+      storage = interaction_workflow_dict
+      transitions = wf.interactions
+    else:
+      continue
+
+    # extract Trigger transitions from workflow definitions for later
+    transition_id_set = set(transitions.objectIds())
+    trigger_dict = dict()
+    for tr_id in transition_id_set:
+      tdef = transitions.get(tr_id, None)
+      if tdef.trigger_type == TRIGGER_WORKFLOW_METHOD:
+        trigger_dict[tr_id] = tdef
+
+    storage[wf_id] = (transition_id_set, trigger_dict)
+
+  for wf_id, v in dc_workflow_dict.iteritems():
+    transition_id_set, trigger_dict = v
+    for tr_id, tdef in trigger_dict.iteritems():
+      method_id = convertToMixedCase(tr_id)
+      if getattr(klass, method_id, _MARKER) is _MARKER:
+        prop_holder.security.declareProtected(Permissions.AccessContentsInformation,
+                                              method_id)
+        prop_holder.registerWorkflowMethod(method_id, wf_id, tr_id)
+        continue
+
+      method = getattr(klass, method_id)
+      # Wrap method
+      if not callable(method):
+        LOG('initializePortalTypeDynamicWorkflowMethods', 100,
+            'WARNING! Can not initialize %s on %s' % \
+              (method_id, str(klass)))
+        continue
+
+      if not isinstance(method, WorkflowMethod):
+        method = WorkflowMethod(method)
+        setattr(klass, method_id, method)
+      else:
+        # We must be sure that we
+        # are going to register class defined
+        # workflow methods to the appropriate transition
+        transition_id = method.getTransitionId()
+        if transition_id in transition_id_set:
+          method.registerTransitionAlways(ptype, wf_id, transition_id)
+      method.registerTransitionAlways(ptype, wf_id, tr_id)
+
   # XXX This part is (more or less...) a copy and paste
   # We need to run this part twice in order to handle interactions of interactions
   # ex. an interaction workflow creates a workflow method which matches
   # the regexp of another interaction workflow
-  for wf in portal_workflow.getWorkflowsFor(self) * 2: # This is really necesary
-    wf_id = wf.id
-    if wf.__class__.__name__ in ('InteractionWorkflowDefinition', ):
-      interaction_id_list = wf.interactions.objectIds()
-      for tr_id in interaction_id_list:
-        tdef = wf.interactions.get(tr_id, None)
-        if tdef.trigger_type == TRIGGER_WORKFLOW_METHOD:
-          # XXX Prefiltering per portal type would be more efficient
-          for imethod_id in tdef.method_id:
-            if wildcard_interaction_method_id_match(imethod_id):
-              # Interactions workflows can use regexp based wildcard methods
-              method_id_matcher = re.compile(imethod_id) # XXX What happens if exception ?
-              method_id_list = prop_holder.getAccessorMethodIdList() + \
-                               prop_holder.getWorkflowMethodIdList() + \
-                               prop_holder.getClassMethodIdList(klass)
-                # XXX - class stuff is missing here
-              method_id_list = filter(method_id_matcher.match, method_id_list)
-            else:
-              # Single method
-              # XXX What if the method does not exist ?
-              #     It's not consistent with regexp based filters.
-              method_id_list = [imethod_id]
-            for method_id in method_id_list:
-              if getattr(klass, method_id, _MARKER) is not _MARKER:
-                method = getattr(klass, method_id)
-                # Wrap method
-                if callable(method):
-                  if not isinstance(method, WorkflowMethod):
-                    method = WorkflowMethod(method)
-                    setattr(klass, method_id, method)
-                  else:
-                    # We must be sure that we
-                    # are going to register class defined
-                    # workflow methods to the appropriate transition
-                    transition_id = method.getTransitionId()
-                    if transition_id in interaction_id_list:
-                      method.registerTransitionAlways(ptype, wf_id, transition_id)
-                  if tdef.once_per_transaction:
-                    method.registerTransitionOncePerTransaction(ptype, wf_id, tr_id)
-                  else:
-                    method.registerTransitionAlways(ptype, wf_id, tr_id)
-                else:
-                  LOG('initializePortalTypeDynamicWorkflowMethods', 100,
-                      'WARNING! Can not initialize %s on %s' % \
-                        (method_id, str(klass)))
-              else:
-                # set a default security, if this method is not already
-                # protected.
-                if method_id not in prop_holder.security.names:
-                  prop_holder.security.declareProtected(
-                      Permissions.AccessContentsInformation, method_id)
-                prop_holder.registerWorkflowMethod(method_id, wf_id, tr_id,
-                                                       tdef.once_per_transaction)
+  for wf_id in interaction_workflow_dict.keys()*2:
+    transition_id_set, trigger_dict = interaction_workflow_dict[wf_id]
+    for tr_id, tdef in trigger_dict.iteritems():
+      # XXX Prefiltering per portal type would be more efficient
+      for imethod_id in tdef.method_id:
+        if wildcard_interaction_method_id_match(imethod_id):
+          # Interactions workflows can use regexp based wildcard methods
+          method_id_matcher = re.compile(imethod_id) # XXX What happens if exception ?
+          method_id_list = prop_holder.getAccessorMethodIdList() + \
+                           prop_holder.getWorkflowMethodIdList() + \
+                           prop_holder.getClassMethodIdList(klass)
+            # XXX - class stuff is missing here
+          method_id_list = filter(method_id_matcher.match, method_id_list)
+        else:
+          # Single method
+          # XXX What if the method does not exist ?
+          #     It's not consistent with regexp based filters.
+          method_id_list = [imethod_id]
+        for method_id in method_id_list:
+          if getattr(klass, method_id, _MARKER) is _MARKER:
+            # set a default security, if this method is not already
+            # protected.
+            if method_id not in prop_holder.security.names:
+              prop_holder.security.declareProtected(
+                  Permissions.AccessContentsInformation, method_id)
+            prop_holder.registerWorkflowMethod(method_id, wf_id, tr_id,
+                                                   tdef.once_per_transaction)
+            continue
 
+          method = getattr(klass, method_id)
+          # Wrap method
+          if not callable(method):
+            LOG('initializePortalTypeDynamicWorkflowMethods', 100,
+                'WARNING! Can not initialize %s on %s' % \
+                  (method_id, str(klass)))
+            continue
+          if not isinstance(method, WorkflowMethod):
+            method = WorkflowMethod(method)
+            setattr(klass, method_id, method)
+          else:
+            # We must be sure that we
+            # are going to register class defined
+            # workflow methods to the appropriate transition
+            transition_id = method.getTransitionId()
+            if transition_id in transition_id_set:
+              method.registerTransitionAlways(ptype, wf_id, transition_id)
+          if tdef.once_per_transaction:
+            method.registerTransitionOncePerTransaction(ptype, wf_id, tr_id)
+          else:
+            method.registerTransitionAlways(ptype, wf_id, tr_id)
 
 class Base( CopyContainer,
             PortalContent,
