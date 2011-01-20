@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts72889188.39</string> </value>
+            <value> <string>ts95524491.35</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -24,27 +24,25 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string>function deleteDiscussionPost(id){\n
+            <value> <string encoding="cdata"><![CDATA[
+
+function deleteDiscussionPost(id){\n
   /* this will add respective input box for delete post id (so multiple delete buttons can \n
      safely coexist in one HTML page with one HTML form */\n
-  appendChildNodes(document.forms[0], \n
-                   INPUT({\'value\':id, \n
-                          \'name\': \'delete_discussion_post_id\', \n
-                          \'type\':\'hidden\'}));\n
-  clickSaveButton(\'DiscussionThread_deleteDiscussionPost\');\n
+  $("form").append(\'<input type="hidden" name="discussion_post_uid" value="\' +id +  \'">\');\n
+  clickSaveButton("DiscussionThread_deleteDiscussionPost");\n
 }\n
 \n
 function redirectCreateCitedNewDiscussionPost(id){\n
   /* this will add respective input box for reply post id (so multiple reply buttons can \n
      safely coexist in one HTML page with one HTML form */\n
-  appendChildNodes(document.forms[0], \n
-                   INPUT({\'value\':id, \n
-                          \'name\': \'discussion_post_uid\', \n
-                          \'type\':\'hidden\'}));\n
-  clickSaveButton(\'DiscussionThread_redirectCreateNewDiscussionPost\');\n
+  $("form").append(\'<input type="hidden" name="discussion_post_uid" value="\' +id +  \'">\');\n
+  clickSaveButton("DiscussionThread_redirectCreateNewDiscussionPost");\n
 }\n
 \n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
@@ -52,7 +50,7 @@ function redirectCreateCitedNewDiscussionPost(id){\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>893</int> </value>
+            <value> <int>705</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
