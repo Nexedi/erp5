@@ -106,7 +106,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_predecessor_reference_list</string>
+                        <string>my_predecessor_source_reference_list</string>
                       </list>
                     </value>
                 </item>
