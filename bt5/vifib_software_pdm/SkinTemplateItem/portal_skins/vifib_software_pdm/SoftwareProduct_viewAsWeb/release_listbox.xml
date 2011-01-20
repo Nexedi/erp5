@@ -13,7 +13,6 @@
                 <string>columns</string>
                 <string>css_class</string>
                 <string>list_method</string>
-                <string>portal_types</string>
                 <string>selection_name</string>
                 <string>title</string>
                 <string>url_columns</string>
@@ -79,10 +78,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>portal_types</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>selection_name</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -135,17 +130,6 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>portal_types</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>Software Release</string>
-                          <string>Software Release</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>selection_name</string> </key>
                     <value> <string>vifib_software_product_release_selection</string> </value>
                 </item>
@@ -182,7 +166,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>Base_getRelatedObjectList</string> </value>
+            <value> <string>SoftwareProduct_viewSharedSoftwareReleaseList</string> </value>
         </item>
       </dictionary>
     </pickle>

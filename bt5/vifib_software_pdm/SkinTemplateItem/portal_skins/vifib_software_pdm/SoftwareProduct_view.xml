@@ -102,6 +102,7 @@
                         <string>my_follow_up_title_list</string>
                         <string>my_content_type</string>
                         <string>my_product_line</string>
+                        <string>my_default_image_file</string>
                       </list>
                     </value>
                 </item>
