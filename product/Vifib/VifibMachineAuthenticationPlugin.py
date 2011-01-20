@@ -26,11 +26,13 @@
 #
 ##############################################################################
 
-from zLOG import LOG, PROBLEM
+from zLOG import LOG, PROBLEM, WARNING
 from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 import sys
 
+from AccessControl.SecurityManagement import newSecurityManager,\
+    getSecurityManager, setSecurityManager
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PluggableAuthService.PluggableAuthService import \
     _SWALLOWABLE_PLUGIN_EXCEPTIONS
@@ -41,6 +43,10 @@ from Products.ERP5Type.Cache import transactional_cached
 from Products.ERP5Security.ERP5UserManager import SUPER_USER
 from ZODB.POSException import ConflictError
 from Products.PluggableAuthService.PluggableAuthService import DumbHTTPExtractor
+from Products.ERP5Security.ERP5GroupManager import ConsistencyError, NO_CACHE_MODE
+from Products.ERP5Type.ERP5Type \
+  import ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT
+from Products.ERP5Type.Cache import CachingMethod
 
 #Form for new plugin in ZMI
 manage_addVifibMachineAuthenticationPluginForm = PageTemplateFile(
@@ -166,11 +172,135 @@ class VifibMachineAuthenticationPlugin(BasePlugin):
       # the _SWALLOWABLE_PLUGIN_EXCEPTIONS list.
       raise _SWALLOWABLE_PLUGIN_EXCEPTIONS[0]
 
+  #################################
+  #   IGroupsPlugin               #
+  #################################
+  # This is patched version of
+  #   Products.ERP5Security.ERP5GroupManager.ERP5GroupManager.getGroupsForPrincipal
+  # which allows to treat Computer and Software Instance as loggable user
+  loggable_portal_type_list = ['Computer', 'Person', 'Software Instance']
+  def getGroupsForPrincipal(self, principal, request=None):
+    """ See IGroupsPlugin.
+    """
+    # If this is the super user, skip the check.
+    if principal.getId() == SUPER_USER:
+      return ()
+
+    def _getGroupsForPrincipal(user_name, path):
+      security_category_dict = {} # key is the base_category_list,
+                                  # value is the list of fetched categories
+      security_group_list = []
+      security_definition_list = ()
+
+      # because we aren't logged in, we have to create our own
+      # SecurityManager to be able to access the Catalog
+      sm = getSecurityManager()
+      if sm.getUser().getId() != SUPER_USER:
+        newSecurityManager(self, self.getUser(SUPER_USER))
+      try:
+        # To get the complete list of groups, we try to call the
+        # ERP5Type_getSecurityCategoryMapping which should return a list
+        # of lists of two elements (script, base_category_list) like :
+        # (
+        #   ('script_1', ['base_category_1', 'base_category_2', ...]),
+        #   ('script_2', ['base_category_1', 'base_category_3', ...])
+        # )
+        #
+        # else, if the script does not exist, falls back to a list containng
+        # only one list :
+        # (('ERP5Type_getSecurityCategoryFromAssignment',
+        #   self.getPortalAssignmentBaseCategoryList() ),)
+
+        mapping_method = getattr(self,
+            'ERP5Type_getSecurityCategoryMapping', None)
+        if mapping_method is None:
+          security_definition_list = ((
+              'ERP5Type_getSecurityCategoryFromAssignment',
+              self.getPortalAssignmentBaseCategoryList()
+          ),)
+        else:
+          security_definition_list = mapping_method()
+
+        # get the loggable document from its reference - no security check needed
+        catalog_result = self.portal_catalog.unrestrictedSearchResults(
+            portal_type=self.loggable_portal_type_list,
+            reference=user_name)
+        if len(catalog_result) != 1: # we won't proceed with groups
+          if len(catalog_result) > 1: # configuration is screwed
+            raise ConsistencyError, 'There is more than one of %s whose \
+                login is %s : %s' % (','.join(self.loggable_portal_type_list),
+                user_name,
+                repr([r.getObject() for r in catalog_result]))
+          else:
+            return ()
+        loggable_object = catalog_result[0].getObject()
+
+        # Fetch category values from defined scripts
+        for (method_name, base_category_list) in security_definition_list:
+          base_category_list = tuple(base_category_list)
+          method = getattr(self, method_name)
+          security_category_list = security_category_dict.setdefault(
+                                            base_category_list, [])
+          try:
+            # The called script may want to distinguish if it is called
+            # from here or from _updateLocalRolesOnSecurityGroups.
+            # Currently, passing portal_type='' (instead of 'Person')
+            # is the only way to make the difference.
+            security_category_list.extend(
+              method(base_category_list, user_name, loggable_object, '')
+            )
+          except ConflictError:
+            raise
+          except:
+            LOG('ERP5GroupManager', WARNING,
+                'could not get security categories from %s' % (method_name,),
+                error = sys.exc_info())
+
+        # Get group names from category values
+        # XXX try ERP5Type_asSecurityGroupIdList first for compatibility
+        generator_name = 'ERP5Type_asSecurityGroupIdList'
+        group_id_list_generator = getattr(self, generator_name, None)
+        if group_id_list_generator is None:
+          generator_name = ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT
+          group_id_list_generator = getattr(self, generator_name)
+        for base_category_list, category_value_list in \
+            security_category_dict.iteritems():
+          for category_dict in category_value_list:
+            try:
+              group_id_list = group_id_list_generator(
+                                        category_order=base_category_list,
+                                        **category_dict)
+              if isinstance(group_id_list, str):
+                group_id_list = [group_id_list]
+              security_group_list.extend(group_id_list)
+            except ConflictError:
+              raise
+            except:
+              LOG('ERP5GroupManager', WARNING,
+                  'could not get security groups from %s' %
+                  generator_name,
+                  error = sys.exc_info())
+      finally:
+        setSecurityManager(sm)
+      return tuple(security_group_list)
+
+    if not NO_CACHE_MODE:
+      _getGroupsForPrincipal = CachingMethod(_getGroupsForPrincipal,
+                                             id='ERP5GroupManager_getGroupsForPrincipal',
+                                             cache_factory='erp5_content_short')
+
+    return _getGroupsForPrincipal(
+                user_name=principal.getId(),
+                path=self.getPhysicalPath())
+
 #List implementation of class
 classImplements(VifibMachineAuthenticationPlugin,
                 plugins.IAuthenticationPlugin)
 classImplements( VifibMachineAuthenticationPlugin,
                 plugins.ILoginPasswordHostExtractionPlugin
+               )
+classImplements( VifibMachineAuthenticationPlugin,
+               plugins.IGroupsPlugin
                )
 
 
