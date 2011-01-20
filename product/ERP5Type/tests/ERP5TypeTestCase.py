@@ -274,7 +274,7 @@ def profile_if_environ(environment_var_name):
       # No profiling, return identity decorator
       return lambda self, method: method
 
-class ERP5TypeTestMixin(ProcessingNodeTestCase, PortalTestCase):
+class ERP5TypeTestCaseMixin(object):
     """Mixin class for ERP5 based tests.
     """
 
@@ -308,8 +308,9 @@ class ERP5TypeTestMixin(ProcessingNodeTestCase, PortalTestCase):
       PortalTestCase.logout(self)
       # clean up certain cache related REQUEST keys that might be associated
       # with the logged in user
-      for key in ('_ec_cache', '_oai_cache'):
-        self.REQUEST.other.pop(key, None)
+      if getattr(self, 'REQUEST', None) is not None:
+        for key in ('_ec_cache', '_oai_cache'):
+          self.REQUEST.other.pop(key, None)
 
     def _setupUser(self):
       '''Creates the default user.'''
@@ -533,7 +534,8 @@ class ERP5TypeTestMixin(ProcessingNodeTestCase, PortalTestCase):
         transaction.commit()
       self.tic()
 
-    getPortalObject = getPortal
+    def getPortalObject(self):
+      return self.getPortal()
 
     # class-defined decorators for profiling.
     # Depending on the environment variable, they return
@@ -622,11 +624,8 @@ class ERP5TypeTestMixin(ProcessingNodeTestCase, PortalTestCase):
         setSecurityManager(sm)
 
         return ResponseWrapper(response, outstream, path)
-class ERP5TypeTestCase(ERP5TypeTestMixin):
-    """TestCase for ERP5 based tests.
 
-    This TestCase setups an ERP5Site and installs business templates.
-    """
+class CommandLineTestCase(object):
 
     def dummy_test(self):
       ZopeTestCase._print('All tests are skipped when --save option is passed '
@@ -1094,10 +1093,31 @@ class ERP5TypeTestCase(ERP5TypeTestMixin):
       obj.manage_afterClone(obj)
       return obj
 
+class ERP5TypeTestCase(ERP5TypeTestCaseMixin):
+    """TestCase for ERP5 based tests.
+
+    This TestCase setups an ERP5Site and installs business templates.
+    """
+
+    def __init__(self, *args, **kw):
+      type_test_case_klass = CommandLineTestCase
+      from Products.ERP5Type.TransactionalVariable import \
+            getTransactionalVariable
+      unit_test_type = getTransactionalVariable().get('unit_test_type', None)
+      if unit_test_type == 'live_test':
+        from Products.ERP5Type.tests.ERP5TypeLiveTestCase import \
+                ERP5TypeLiveTestCase
+        type_test_case_klass = ERP5TypeLiveTestCase
+      klass = self.__class__
+      class TempTestCase(klass, type_test_case_klass,
+              ProcessingNodeTestCase, PortalTestCase):
+        pass
+      self.__class__ = TempTestCase
+      return PortalTestCase.__init__(self, *args, **kw)
 
 from Products.ERP5 import ERP5Site
 ERP5Site.getBootstrapBusinessTemplateUrl = lambda bt_title: \
-  ERP5TypeTestCase._getBTPathAndIdList((bt_title,))[0][0]
+  CommandLineTestCase._getBTPathAndIdList((bt_title,))[0][0]
 
 
 class ResponseWrapper:

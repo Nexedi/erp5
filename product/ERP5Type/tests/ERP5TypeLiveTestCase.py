@@ -36,6 +36,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.tests.ProcessingNodeTestCase import ProcessingNodeTestCase
 from Products.ERP5Type.Globals import get_request
 from ERP5TypeTestCase import ERP5TypeTestCaseMixin
+from glob import glob
 import transaction
 
 from zLOG import LOG, DEBUG, INFO
@@ -59,7 +60,7 @@ from Products.ERP5Type.tests import ProcessingNodeTestCase as\
                                     ProcessingNodeTestCaseModule
 ProcessingNodeTestCaseModule.patchActivityTool = lambda: None
 
-class ERP5TypeLiveTestCase(ERP5TypeTestMixin):
+class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
     """ERP5TypeLiveTestCase is the default class for *all* tests
     in ERP5. It is designed with the idea in mind that tests should
     be run through the web. Command line based tests may be helpful
@@ -171,12 +172,20 @@ def runLiveTest(test_list, verbosity=1, stream=None, **kw):
   path = kw.get('path', None)
   if path is not None and path not in sys.path:
     sys.path.append(path)
+  product_test_list = []
+  import Products
+  for product_path in Products.__path__:
+    product_test_list.extend(glob(os.path.join(product_path, '*', 'tests')))
+
+  sys.path.extend(product_test_list)
   # Reload the test class before runing tests
   for test_name in test_list:
     (test_file, test_path_name, test_description) = imp.find_module(test_name)
     imp.load_module(test_name, test_file, test_path_name, test_description)
 
   TestRunner = backportUnittest.TextTestRunner
+  from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+  getTransactionalVariable()['unit_test_type'] = 'live_test'
   if kw.get('debug', False):
     class DebugTextTestRunner(TestRunner):
       def _makeResult(self):
