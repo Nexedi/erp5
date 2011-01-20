@@ -53,6 +53,12 @@
             <value> <string>""" \n
   Add resource to current (or to be created shopping cart). \n
 """\n
+selection = context.getPortalObject().portal_selections.getSelectionFor(\'vifib_session_id\')\n
+if selection is None:\n
+  context.getPortalObject().portal_selections.setSelectionParamsFor(\'vifib_session_id\', {})\n
+  selection = context.getPortalObject().portal_selections.getSelectionFor(\'vifib_session_id\')\n
+return selection\n
+\n
 from DateTime import DateTime\n
 from random import choice\n
 import string\n
@@ -63,6 +69,7 @@ session_id = request.get(\'vifib_session_id\', None)\n
 portal_sessions = context.portal_sessions\n
 \n
 if session_id is None:\n
+  raise NotImplementedError, "no session..."\n
   ## first call so generate session_id and send back via cookie\n
   now = DateTime()\n
   session_id = \'\'.join([choice(string.letters) for i in range(20)])\n
@@ -105,17 +112,19 @@ return portal_sessions[session_id]\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>selection</string>
+                            <string>None</string>
                             <string>DateTime</string>
                             <string>random</string>
                             <string>choice</string>
                             <string>string</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
                             <string>request</string>
                             <string>expire_timeout_days</string>
-                            <string>None</string>
                             <string>session_id</string>
                             <string>portal_sessions</string>
+                            <string>NotImplementedError</string>
                             <string>now</string>
                             <string>$list0</string>
                             <string>_getiter_</string>

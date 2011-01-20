@@ -51,8 +51,10 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""Get the release of the selected product"""\n
+portal = context.getPortalObject()\n
 session = context.WebSection_getVifibSession()\n
-uid = session.get(\'instance_software_product_uid\', None)\n
+params = portal.portal_selections.getSelectionParamsFor(\'vifib_session_id\')\n
+uid = params[\'instance_software_product_uid\']\n
 \n
 # assert there is only one item\n
 if uid is None:\n
@@ -102,9 +104,12 @@ else:\n
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal</string>
                             <string>session</string>
-                            <string>None</string>
+                            <string>params</string>
+                            <string>_getitem_</string>
                             <string>uid</string>
+                            <string>None</string>
                             <string>AttributeError</string>
                           </tuple>
                         </value>
