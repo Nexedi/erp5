@@ -56,6 +56,7 @@ class TestERP5Discussion(ERP5TypeTestCase):
             'erp5_dms',
             'erp5_knowledge_pad',
             'erp5_rss_style',
+            'erp5_jquery',
             'erp5_discussion', )
 
   def login(self):
