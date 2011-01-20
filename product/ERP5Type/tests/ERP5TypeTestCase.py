@@ -278,6 +278,10 @@ class ERP5TypeTestCaseMixin(object):
     """Mixin class for ERP5 based tests.
     """
 
+    def dummy_test(self):
+      ZopeTestCase._print('All tests are skipped when --save option is passed '
+                          'with --update_business_templates or without --load')
+
     def shortDescription(self):
       description = str(self)
       doc = self._testMethodDoc
@@ -626,10 +630,6 @@ class ERP5TypeTestCaseMixin(object):
         return ResponseWrapper(response, outstream, path)
 
 class ERP5TypeCommandLineTestCase(object):
-
-    def dummy_test(self):
-      ZopeTestCase._print('All tests are skipped when --save option is passed '
-                          'with --update_business_templates or without --load')
 
     def getPortalName(self):
       """
