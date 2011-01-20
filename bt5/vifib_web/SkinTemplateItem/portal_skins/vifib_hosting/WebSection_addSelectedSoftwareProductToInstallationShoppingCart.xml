@@ -52,36 +52,13 @@
             <key> <string>_body</string> </key>
             <value> <string>"""Add selected product to the cart and continue"""\n
 portal = context.getPortalObject()\n
-prefered_resource = portal.portal_preferences.getPreferredInstanceSetupResource()\n
-service = portal.restrictedTraverse(prefered_resource)\n
 \n
-##Get item list\n
-item_list = []\n
-if uids:\n
-  item_list = [item.getObject() for item in portal.portal_catalog(uid=uids, portal_type="Software Product")]\n
-\n
-if len(item_list) != 1:\n
+if len(uids) != 1:\n
   return context.Base_redirect(dialog_id,\n
                         keep_items={\'portal_status_message\':context.Base_translateString("Please select one service.")})\n
-\n
-\n
-shopping_cart = context.SaleOrder_getShoppingCart()\n
-shopping_cart_items = context.SaleOrder_getShoppingCartItemList()\n
-\n
-item = item_list[0]\n
-\n
-if len(shopping_cart_items) != 1:\n
-  raise NotImplementedError, "There should be only one shopping card item."\n
-\n
-product_url = item.getRelativeUrl()\n
-\n
-order_line = shopping_cart_items[0]\n
-order_line.edit(\n
-  aggregate_list=order_line.getAggregateList() + [product_url],\n
-)\n
-\n
-##Set connected member as shopping cart customer\n
-context.SaleOrder_setShoppingCartCustomer()\n
+else:\n
+  session = context.WebSection_getVifibSession()\n
+  session[\'instance_software_product_uid\'] = uids[0]\n
 \n
 if kw.has_key(\'came_from\'):\n
   #we override the context to redirect the user to the next web section\n
@@ -131,19 +108,10 @@ context.WebSection_viewNextStep()\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
-                            <string>prefered_resource</string>
-                            <string>service</string>
-                            <string>item_list</string>
-                            <string>$list0</string>
-                            <string>_getiter_</string>
-                            <string>item</string>
                             <string>len</string>
-                            <string>shopping_cart</string>
-                            <string>shopping_cart_items</string>
+                            <string>session</string>
                             <string>_getitem_</string>
-                            <string>NotImplementedError</string>
-                            <string>product_url</string>
-                            <string>order_line</string>
+                            <string>_write_</string>
                           </tuple>
                         </value>
                     </item>

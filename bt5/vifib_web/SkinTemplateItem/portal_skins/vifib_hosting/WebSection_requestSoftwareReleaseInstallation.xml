@@ -59,21 +59,8 @@ service = portal.restrictedTraverse(prefered_resource)\n
 if context.getPortalType() != "Computer":\n
   raise NotImplementedError, "Should be called on a Computer"\n
 \n
-##Reset the cart and get new shopping cart\n
-if reset_shopping_cart:\n
-  context.SaleOrder_getShoppingCart(action=\'reset\')\n
-\n
-shopping_cart = context.SaleOrder_getShoppingCart()\n
-\n
-## new Resource so add it to shopping cart\n
-order_line = shopping_cart.newContent(portal_type=\'Sale Order Line\',\n
-                                      quantity=1,\n
-                                      resource=prefered_resource,\n
-                                      price=50,\n
-                                      aggregate_list=[context.getRelativeUrl()])\n
-    \n
-##Set connected member as shopping cart customer\n
-context.SaleOrder_setShoppingCartCustomer()\n
+session = context.WebSection_getVifibSession()\n
+session[\'computer_uid\'] = context.getUid()\n
 \n
 web_section = context.getWebSectionValue()\n
 return web_section.Base_redirect(\'install-a-software\', keep_items={\'editable_mode\': 0})\n
@@ -124,8 +111,8 @@ return web_section.Base_redirect(\'install-a-software\', keep_items={\'editable_
                             <string>prefered_resource</string>
                             <string>service</string>
                             <string>NotImplementedError</string>
-                            <string>shopping_cart</string>
-                            <string>order_line</string>
+                            <string>session</string>
+                            <string>_write_</string>
                             <string>web_section</string>
                           </tuple>
                         </value>
