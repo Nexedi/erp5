@@ -700,25 +700,29 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, ptype, prop_holder,
   if not interaction_workflow_dict:
     return
 
+  class_method_list = prop_holder.getClassMethodIdList(klass)
   # only compute once this (somehow) costly list
   all_method_id_list = prop_holder.getAccessorMethodIdList() + \
                        prop_holder.getWorkflowMethodIdList() + \
-                       prop_holder.getClassMethodIdList(klass)
+                       class_method_list
 
+  interaction_queue = []
   # XXX This part is (more or less...) a copy and paste
-  # We need to run this part twice in order to handle interactions of interactions
-  # ex. an interaction workflow creates a workflow method which matches
-  # the regexp of another interaction workflow
-  for wf_id in interaction_workflow_dict.keys()*2:
-    transition_id_set, trigger_dict = interaction_workflow_dict[wf_id]
+  for wf_id, v in interaction_workflow_dict.iteritems():
+    transition_id_set, trigger_dict = v
     for tr_id, tdef in trigger_dict.iteritems():
       # XXX Prefiltering per portal type would be more efficient
       for imethod_id in tdef.method_id:
         if wildcard_interaction_method_id_match(imethod_id):
           # Interactions workflows can use regexp based wildcard methods
-          method_id_matcher = re.compile(imethod_id) # XXX What happens if exception ?
+          # XXX What happens if exception ?
+          method_id_matcher = re.compile(imethod_id).match
+
+          # queue transitions using regexps for later examination
+          interaction_queue.append((wf_id, tr_id, tdef, method_id_matcher))
+
           # XXX - class stuff is missing here
-          method_id_list = filter(method_id_matcher.match, all_method_id_list)
+          method_id_list = filter(method_id_matcher, all_method_id_list)
         else:
           # Single method
           # XXX What if the method does not exist ?
@@ -733,7 +737,7 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, ptype, prop_holder,
               prop_holder.security.declareProtected(
                   Permissions.AccessContentsInformation, method_id)
             prop_holder.registerWorkflowMethod(method_id, wf_id, tr_id,
-                                                   tdef.once_per_transaction)
+                                               tdef.once_per_transaction)
             continue
 
           # Wrap method
@@ -756,6 +760,26 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, ptype, prop_holder,
             method.registerTransitionOncePerTransaction(ptype, wf_id, tr_id)
           else:
             method.registerTransitionAlways(ptype, wf_id, tr_id)
+
+  if not interaction_queue:
+    return
+
+  new_method_set = set(prop_holder.getClassMethodItemList(klass))
+  added_method_set = new_method_set.difference(class_method_list)
+  # We need to run this part twice in order to handle interactions of interactions
+  # ex. an interaction workflow creates a workflow method which matches
+  # the regexp of another interaction workflow
+  for wf_id, tr_id, tdef, method_id_matcher in interaction_queue:
+    for method_id in filter(method_id_matcher, added_method_set):
+      # method must already exist and be a workflow method
+      method = getattr(klass, method_id)
+      transition_id = method.getTransitionId()
+      if transition_id in transition_id_set:
+        method.registerTransitionAlways(ptype, wf_id, transition_id)
+      if tdef.once_per_transaction:
+        method.registerTransitionOncePerTransaction(ptype, wf_id, tr_id)
+      else:
+        method.registerTransitionAlways(ptype, wf_id, tr_id)
 
 class Base( CopyContainer,
             PortalContent,
