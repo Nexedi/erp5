@@ -35,7 +35,7 @@ from Testing.ZopeTestCase import PortalTestCase, user_name
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.tests.ProcessingNodeTestCase import ProcessingNodeTestCase
 from Products.ERP5Type.Globals import get_request
-from ERP5TypeTestCase import ERP5TypeTestCaseMixin
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCaseMixin
 from glob import glob
 import transaction
 
