@@ -54,16 +54,23 @@
 \n
 computer_portal_type = "Computer"\n
 \n
-certificate_dict = context.getPortalObject().portal_certificate_authority.getNewCertificate()\n
+reference = "COMP-%s" % portal.portal_ids.generateNewId(\n
+    id_group=\'slap_computer_reference\',\n
+    id_generator=\'uid\')\n
+\n
+certificate_dict = context.getPortalObject().portal_certificate_authority.getNewCertificate(reference)\n
 \n
 module = portal.getDefaultModule(portal_type=computer_portal_type)\n
 computer = module.newContent(\n
   portal_type=computer_portal_type,\n
   title=title,\n
-  reference=certificate_dict["id"],\n
+  reference=reference,\n
+  destination_reference=certificate_dict["id"],\n
 )\n
 \n
 computer.requestComputerRegistration()\n
+computer.approveComputerRegistration()\n
+\n
 computer = context.restrictedTraverse(computer.getRelativeUrl())\n
 \n
 context.REQUEST.set("computer_certificate", certificate_dict["certificate"])\n
@@ -114,6 +121,7 @@ return computer.Computer_viewConnectionInformationAsWeb()\n
                             <string>context</string>
                             <string>portal</string>
                             <string>computer_portal_type</string>
+                            <string>reference</string>
                             <string>certificate_dict</string>
                             <string>module</string>
                             <string>_getitem_</string>
