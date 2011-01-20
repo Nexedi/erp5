@@ -697,6 +697,13 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, ptype, prop_holder,
           method.registerTransitionAlways(ptype, wf_id, transition_id)
       method.registerTransitionAlways(ptype, wf_id, tr_id)
 
+  if interaction_workflow_dict:
+    # only compute once this (somehow) costly list
+    all_method_id_list = prop_holder.getAccessorMethodIdList() + \
+                         prop_holder.getWorkflowMethodIdList() + \
+                         prop_holder.getClassMethodIdList(klass)
+  else:
+    all_method_id_list = []
   # XXX This part is (more or less...) a copy and paste
   # We need to run this part twice in order to handle interactions of interactions
   # ex. an interaction workflow creates a workflow method which matches
@@ -709,11 +716,8 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, ptype, prop_holder,
         if wildcard_interaction_method_id_match(imethod_id):
           # Interactions workflows can use regexp based wildcard methods
           method_id_matcher = re.compile(imethod_id) # XXX What happens if exception ?
-          method_id_list = prop_holder.getAccessorMethodIdList() + \
-                           prop_holder.getWorkflowMethodIdList() + \
-                           prop_holder.getClassMethodIdList(klass)
             # XXX - class stuff is missing here
-          method_id_list = filter(method_id_matcher.match, method_id_list)
+          method_id_list = filter(method_id_matcher.match, all_method_id_list)
         else:
           # Single method
           # XXX What if the method does not exist ?
