@@ -67,6 +67,7 @@ def getUserByLogin(portal, login):
   result = portal.portal_catalog.unrestrictedSearchResults(
       select_expression='reference',
       portal_type=["Computer", "Software Instance"],
+      validation_state="validated",
       reference=dict(query=login, key='ExactMatch'))
   # XXX: Here, we filter catalog result list ALTHOUGH we did pass
   # parameters to unrestrictedSearchResults to restrict result set.
