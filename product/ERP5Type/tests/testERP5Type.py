@@ -62,7 +62,7 @@ class PropertySheetTestCase(ERP5TypeTestCase):
   """
   def setUp(self):
     """Set up the fixture. """
-    ERP5TypeTestCase.setUp(self)
+    super(PropertySheetTestCase,self).setUp()
     installRealClassTool(self.getPortal())
 
   def tearDown(self):
@@ -82,7 +82,7 @@ class PropertySheetTestCase(ERP5TypeTestCase):
       ti._setTypePropertySheetList(list(property_sheet_set))
     transaction.commit()
     ttool.resetDynamicDocuments()
-    ERP5TypeTestCase.tearDown(self)
+    super(PropertySheetTestCase, self).tearDown()
     
   def _addProperty(self, portal_type_name, property_definition_code):
     """quickly add a property to a type information."""

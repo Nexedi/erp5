@@ -72,9 +72,6 @@ class TestDeferredConnection(ERP5TypeTestCase):
   def getTitle(self):
     return "Deferred Connection"
 
-  def setUp(self):
-    ERP5TypeTestCase.setUp(self)
-
   def afterSetUp(self):
     self.login()
 

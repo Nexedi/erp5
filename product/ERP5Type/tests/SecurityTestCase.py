@@ -115,7 +115,7 @@ class SecurityTestCase(ERP5TypeTestCase):
   """
   def _setup(self):
     """set up and login as default user"""
-    ERP5TypeTestCase._setup(self)
+    super(SecurityTestCase, self)._setup()
     self.login()
     self.portal = self.getPortal()
     self.workflow_tool = self.portal.portal_workflow
@@ -125,7 +125,7 @@ class SecurityTestCase(ERP5TypeTestCase):
     """
     transaction.abort()
     self.portal.portal_caches.clearAllCache()
-    ERP5TypeTestCase.tearDown(self)
+    super(SecurityTestCase, self).tearDown()
 
   def _loginAsUser(self, username):
     """Login as a given username. The user must exist.

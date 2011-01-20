@@ -97,7 +97,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
 
   def publish(self, *args, **kw):
     kw['handle_errors'] = not debug
-    return ERP5TypeTestCase.publish(self, *args, **kw)
+    return super(TestOOoStyle, self).publish(*args, **kw)
 
   def _validate(self, odf_file_data):
     error_list = self.validator.validate(odf_file_data)

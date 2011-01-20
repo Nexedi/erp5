@@ -725,7 +725,7 @@ return True
     self.assertTrue(len(large_image) > len(small_image))
 
   def _test_document_publication_workflow(self, portal_type, transition):
-    ERP5TypeTestCase.login(self)
+    super(TestERP5WebWithDms, self).login()
     document = self.portal.web_page_module.newContent(portal_type=portal_type)
     self.portal.portal_workflow.doActionFor(document, transition)
 

@@ -81,7 +81,7 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
                              self.portal_activities_backup)
       get_transaction().commit()
       del self.portal_activities_backup
-    return ERP5TypeTestCase.beforeTearDown(self)
+    return super(TestXMLMatrix, self).beforeTearDown()
 
 
   def test_01_RenameCellRange(self):

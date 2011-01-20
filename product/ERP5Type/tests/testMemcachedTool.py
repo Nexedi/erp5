@@ -53,7 +53,7 @@ class TestMemcachedTool(ERP5TypeTestCase):
     return "MemcachedTool"
 
   def setUp(self):
-    ERP5TypeTestCase.setUp(self)
+    super(TestMemcachedTool, self).setUp()
     installRealMemcachedTool(self.getPortal())
     memcached_tool = self.getPortal().portal_memcached
     #create Memcache Plugin

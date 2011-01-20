@@ -389,7 +389,7 @@ class TestTranslation(ERP5TypeTestCase):
     self.portal.ERP5Site_updateTranslationTable()
 
   def afterSetUp(self):
-    ERP5TypeTestCase.afterSetUp(self)
+    super(TestTranslation, self).afterSetUp()
     self._setUpTranslations()
 
     # replace Localizer.utils.lang_negotiator in MessageCatalog to return
@@ -429,7 +429,7 @@ class TestTranslation(ERP5TypeTestCase):
     self.portal.manage_delObjects(['myzpt'])
 
     self.stepTic()
-    ERP5TypeTestCase.beforeTearDown(self)
+    super(TestTranslation, self).beforeTearDown()
 
   def test_Localizer_translation(self):
     # basically, test afterSetUp worked...

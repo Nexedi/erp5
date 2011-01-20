@@ -1079,7 +1079,7 @@ class TestDocument(TestDocumentMixin):
     self.stepTic()
 
     # login as another user
-    ERP5TypeTestCase.login(self, 'user1')
+    super(TestDocument, self).login('user1')
     document_4 = portal.document_module.newContent(
                    portal_type = 'Presentation',
                    description = 'owner different user contributing document',
@@ -1160,7 +1160,7 @@ class TestDocument(TestDocumentMixin):
     self.assertSameSet([], getAdvancedSearchStringResultList(**kw))
   
     # only my docs
-    ERP5TypeTestCase.login(self, 'user1')
+    super(TestDocument, self).login('user1')
     kw = {'searchabletext_any': 'owner'}
     # should return all documents matching a word no matter if we're owner or not
     self.assertSameSet([web_page_1, document_4], getAdvancedSearchStringResultList(**kw))
@@ -1471,7 +1471,7 @@ class TestDocument(TestDocumentMixin):
     self.stepTic()
 
     # login as first one
-    ERP5TypeTestCase.login(self, 'contributor1')
+    super(TestDocument, self).login('contributor1')
     doc = document_module.newContent(portal_type='File', 
                                      title='Test1')
     self.stepTic()
@@ -1480,7 +1480,7 @@ class TestDocument(TestDocumentMixin):
                        doc.getContributorValueList())
 
     # login as second one
-    ERP5TypeTestCase.login(self, 'contributor2')
+    super(TestDocument, self).login('contributor2')
     doc.edit(title='Test2')
     self.stepTic()
     self.login()
@@ -2396,7 +2396,7 @@ class TestDocumentWithSecurity(TestDocumentMixin):
     those properties are taken into account when the user
     views an image
     """
-    ERP5TypeTestCase.login(self, 'yusei')
+    super(TestDocument, self).login('yusei')
     preference_tool = self.portal.portal_preferences
     #get the thumbnail sizes defined by default on default site preference
     default_thumbnail_image_height = \
