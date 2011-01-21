@@ -39,8 +39,7 @@
 <script src="erp5_discussion.js" type="text/javascript"></script>\n
 <link href="erp5_discussion.css" rel="stylesheet" type="text/css">\n
 \n
-<tal:block \n
-     tal:define="discussion_post_object here/getObject;\n
+<tal:block tal:define="discussion_post_object here/getObject;\n
                  author_dict discussion_post_object/DiscussionPost_getAuthorDict;\n
                  author_url author_dict/author_url;\n
                  author_signature author_dict/author_signature;\n
@@ -49,7 +48,7 @@
                  discussion_post_uid discussion_post_object/getUid;\n
                  discussion_post_title discussion_post_object/getTitle;\n
                  discussion_post_url discussion_post_object/getAbsoluteUrl;\n
-                 discussion_post_creation_date discussion_post_object/getCreationDate;\n
+                 discussion_post_creation_date python: here.Base_FormatDate(discussion_post_object.getCreationDate());\n
                  discussion_post_validation_state_title discussion_post_object/getTranslatedValidationStateTitle;\n
                  discussion_post_stripped_html discussion_post_object/asStrippedHTML;\n
                  isUserAllowedToPost python: discussion_post_object.getParentValue().DiscussionThread_isUserAllowedToPost()">\n
@@ -59,15 +58,15 @@
     <a class="discussion-post-title"\n
        tal:attributes="href string:${discussion_post_url}/view;\n
                        name discussion_post_uid"\n
-       tal:content="discussion_post_title"/>\n
+       tal:content="discussion_post_title"></a>\n
 \n
     <div class="discussion-post-creator">\n
         by \n
         <a class="discussion-post-creator-title-link"\n
            tal:attributes="href author_url"\n
-           tal:content="author_title"/> \n
+           tal:content="author_title"></a> \n
         on \n
-        <tal:block tal:replace="discussion_post_creation_date"/>\n
+        <tal:block tal:replace="discussion_post_creation_date" />\n
      </div>\n
 \n
   </div>\n
@@ -76,18 +75,17 @@
   <div class="discussion-post-body-container">\n
 \n
     <div class="discussion-post-body"\n
-         tal:content="structure discussion_post_stripped_html"/>\n
+         tal:content="structure discussion_post_stripped_html"></div>\n
 \n
   </div>\n
 \n
   <!-- Signature -->\n
   <div tal:condition="python: author_signature is not None"\n
-         class="discussion-post-author-signature-container" \n
-         tal:content="author_signature"/>\n
+       class="discussion-post-author-signature-container"\n
+       tal:content="author_signature"></div>\n
 \n
-  <button tal:condition="isUserAllowedToPost" \n
-          type="submit" \n
-          title="Reply" \n
+  <button tal:condition="isUserAllowedToPost" type="submit"\n
+          title="Reply"\n
           name="DiscussionThread_redirectCreateNewDiscussionPost:method"\n
           tal:attributes="onClick python: \'redirectCreateCitedNewDiscussionPost(\\\'%s\\\')\' %discussion_post_id"\n
           class="discussion-post-action-button">Reply</button>\n
@@ -97,12 +95,16 @@
 ]]></unicode> </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>DiscussionPost_getSummaryAsHTML</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
-            <value> <string>utf-8</string> </value>
+            <value> <string>iso-8859-15</string> </value>
         </item>
       </dictionary>
     </pickle>
