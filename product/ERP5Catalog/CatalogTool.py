@@ -70,7 +70,7 @@ class IndexableObjectWrapper(object):
         return getattr(self.__ob, name)
 
     # We need to update the uid during the cataloging process
-    uid = property(lambda self: self.__ob.uid,
+    uid = property(lambda self: self.__ob.getUid(),
                    lambda self, value: setattr(self.__ob, 'uid', value))
 
     def _getSecurityParameterList(self):
