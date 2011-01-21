@@ -97,6 +97,7 @@ if (request_software_instance is None):\n
       source_reference=requested_partition_reference,\n
       text_content=instance_xml,\n
       activate_kw={\'tag\': tag},\n
+      **portal.Base_getNewSoftwareInstanceCoordinate()\n
     )\n
     sale_packing_list_line = context.SoftwareInstance_getInstanceSetupPackingListLine(state_change)\n
     hosting_subscription_uid = sale_packing_list_line.getAggregateValue(portal_type=\'Hosting Subscription\').getUid()\n
@@ -193,6 +194,7 @@ software_instance.edit(\n
                             <string>request_software_instance</string>
                             <string>NotImplementedError</string>
                             <string>module</string>
+                            <string>_apply_</string>
                             <string>context</string>
                             <string>sale_packing_list_line</string>
                             <string>hosting_subscription_uid</string>
