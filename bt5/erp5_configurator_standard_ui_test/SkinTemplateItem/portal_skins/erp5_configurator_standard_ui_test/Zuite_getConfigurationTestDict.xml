@@ -84,8 +84,8 @@ configuration_dict = {\n
 # XXX FIXME The follow configuration are not related to configuration itself\n
 # but related to system or inicial setup. Split this script later in order\n
 # To have a clean definition of what is the User Configuration Values only.\n
-        "functional_test_username" : "zope", \n
-        "functional_test_password" : "zope",\n
+        "functional_test_username" : "ERP5TypeTestCase", \n
+        "functional_test_password" : "",\n
 \n
         "business_configuration_id": "STANDARD_CONFIGURATOR_TEST",\n
         \'bt_repository_list\':[\'http://www.erp5.org/dists/snapshot/bt5/\'],\n
