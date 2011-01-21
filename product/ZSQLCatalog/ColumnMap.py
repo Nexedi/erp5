@@ -60,7 +60,8 @@ class ColumnMap(object):
   def __init__(self,
                catalog_table_name=None,
                table_override_map=None,
-               left_join_list=None):
+               left_join_list=None,
+               implicit_join=False):
     self.catalog_table_name = catalog_table_name
     # Key: group
     # Value: set of column names
@@ -104,6 +105,10 @@ class ColumnMap(object):
     # We need to keep track of the original definition to do inner joins on it
     self._inner_table_definition = self.table_definition
     self.left_join_list = left_join_list
+    self.implicit_join = implicit_join
+    assert not (self.implicit_join and self.left_join_list), (
+      "Cannot do left_joins while forcing implicit join"
+    )
 
   @profiler_decorator
   def registerColumn(self, raw_column, group=DEFAULT_GROUP_ID, simple_query=None):
@@ -478,15 +483,19 @@ class ColumnMap(object):
 
   def _isBackwardCompatibilityRequired(self):
     return bool(
+      # if they explicitly ask for implicit
+      self.implicit_join or
+      # if they don't pass a catalog alias, we cannot do explicit joins
+      not self._setMinimalTableDefinition() or
       # If one or more RelatedKey methods weren't converted, we'll get
       # queries for an implicit inner join, so we have to do all joins
       # as implicit.
-      self.join_query_list
+      self.join_query_list or
       # for now, work in BW compat mode if a table_override
       # is passed.  It only works for simple subselect
       # definitions anyway, and it's being used primarily
       # for writing left-joins manually.
-      or self.table_override_map)
+      self.table_override_map)
 
   def getTableAliasDict(self):
     if self._isBackwardCompatibilityRequired():
@@ -620,19 +629,21 @@ class ColumnMap(object):
       try:
         catalog_table_alias = self.getCatalogTableAlias()
       except KeyError:
+        LOG('ColumnMap', WARNING,
+            '_setMinimalTableDefinition called but the main catalog has not '
+            'yet received an alias!')
         return False
       inner_def.replace(self.makeTableAliasDefinition(self.catalog_table_name,
                                                       catalog_table_alias))
     return True
 
   def getTableDefinition(self):
-    if not self._setMinimalTableDefinition():
-      raise RuntimeError("ColumnMap.build() must be called first!")
     if self._isBackwardCompatibilityRequired():
       # BBB: One of the RelatedKeys registered an implicit join, do
       # not return a table definition, self.getTableAliasDict() should
       # be used instead
       return None
+    self.table_definition.checkTableAliases()
     return self.table_definition
 
   def addRelatedKeyJoin(self, column, right_side, condition):

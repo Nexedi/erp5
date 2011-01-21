@@ -181,8 +181,6 @@ class SQLExpression(object):
             sql_expression.query,
             ', '.join('%r (%r)' % (x, x.query) for x in self.sql_expression_list))
         raise ValueError, message
-    if result is not None:
-      result.checkTableAliases()
     return result
 
   @profiler_decorator

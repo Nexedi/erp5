@@ -78,6 +78,14 @@ class TableDefinition(object):
   def _extendJoinConditionQueryList(self, query_list):
     raise NotImplementedError('should be implemented by subclasses')
 
+  def getSuperSet(self, other):
+    """Checks if this TableDefinition is a subset of the other table
+    definition or vice-versa.
+
+    Returns whichever is the superset of the other or None
+    """
+    raise NotImplementedError('should be implemented by subclasses')
+
 class PlaceHolderTableDefinition(TableDefinition):
   """Table Definition that simply holds an inner table definition and
   delegates to it the rendering.
@@ -105,8 +113,14 @@ class PlaceHolderTableDefinition(TableDefinition):
     return self.table_definition.render()
 
   def _extendJoinConditionQueryList(self, query_list):
+    # XXX _extendJoinConditionQueryList
+    #assert self.table_definition is not None, "table definition wasn't set"
+    if self.table_definition is not None:
+      return self.table_definition._extendJoinConditionQueryList(query_list)
+
+  def getSuperSet(self, other):
     assert self.table_definition is not None, "table definition wasn't set"
-    return self.table_definition._extendJoinConditionQueryList(query_list)
+    return self.table_definition.getSuperSet(other)
 
 class TableAlias(TableDefinition):
   """Definition of a table alias as a FROM expression"""
@@ -139,6 +153,22 @@ class TableAlias(TableDefinition):
   def _extendJoinConditionQueryList(self, query_list):
     pass
 
+  def __eq__(self, other):
+    return (isinstance(other, TableAlias) and
+            self.table == other.table and 
+            self.alias == other.alias)
+
+  def getSuperSet(self, other):
+    """A TableAlias is a subset of another table Alias if either:
+     - the other is an equivalent TableAlias
+     - the other is an InnerJoin where the left-side is an equivalent TableAlias
+    """
+    if isinstance(other, TableAlias) and self == other:
+      # we're just like the other guy, we could return self or other
+      return self
+    # delegate the rest of the job to InnerJoin
+    return other.getSuperSet(self)
+
 JOIN_FORMAT = """
   (
     %(left)s 
@@ -149,17 +179,18 @@ JOIN_FORMAT = """
   )
 """.strip()
 
-class InnerJoin(TableDefinition):
-  """Definition of an inner-join as a FROM expression"""
+class Join(TableDefinition):
 
-  JOIN_TYPE = "INNER JOIN"
+  JOIN_TYPE = None
 
   def __init__(self, left_tabledef, right_tabledef, condition):
+    assert self.JOIN_TYPE, ('Join must be subclassed and self.JOIN_TYPE '
+                            'must be defined.')
     assert isinstance(left_tabledef, (TableDefinition, None.__class__))
     assert isinstance(right_tabledef, (TableDefinition, None.__class__))
     self.left_tabledef = left_tabledef
     self.right_tabledef = right_tabledef
-    # perhaps expect condition to be a SQLExpression?
+    # perhaps assert condition is an SQLExpression?
     self.condition = condition
 
   def render(self):
@@ -187,6 +218,37 @@ class InnerJoin(TableDefinition):
     self.right_tabledef._extendJoinConditionQueryList(query_list)
     query_list.append(SQLQuery(self.condition))
 
+  def getSuperSet(self, other):
+    return None
+
+class InnerJoin(Join):
+  """Definition of an inner-join as a FROM expression"""
+
+  JOIN_TYPE = "INNER JOIN"
+
+  def getSuperSet(self, other):
+    """This InnerJoin is a superset of another TableDefinition if either:
+
+     - other is a TableAlias (or None) equal to our
+       left_side. I.e. "other" is at the end of it's inner-join chain.
+
+     - other is an InnerJoin, and it's left-side is equal to our left-side (both TableAliases or None), and it's righ
+    """
+    if self.left_tabledef == other:
+      # other and left-side are both None or TableAliases
+      return self
+    if (isinstance(other, InnerJoin) and
+        self.left_tabledef == other.left_tabledef):
+      # our left-sides match. If one of our right sides is a superset of the
+      # other, then one of is is the superset
+      sub_superset = self.right_tabledef.getSuperSet(other.right_tabledef)
+      if sub_superset is self.right_tabledef:
+        return self
+      elif sub_superset is other.right_tabledef:
+        return other
+      return None
+    return None
+
 class LeftJoin(InnerJoin):
   """Definition of a left-join as a FROM expression"""
   
@@ -209,9 +271,6 @@ class LegacyTableDefinition(TableDefinition):
   def __init__(self, from_expression, table_alias_map):
     self.from_expression = from_expression
     self.table_alias_map = table_alias_map
-
-  def checkTableAliases(self, current_aliases=None):
-    pass
 
   def render(self):
     from_expression_dict = self.from_expression

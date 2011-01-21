@@ -64,7 +64,8 @@ class EntireQuery(object):
                catalog_table_name=None,
                extra_column_list=(),
                from_expression=None,
-               order_by_override_list=None):
+               order_by_override_list=None,
+               implicit_join=False):
     self.query = query
     self.order_by_list = list(order_by_list)
     self.order_by_override_set = frozenset(order_by_override_list)
@@ -75,6 +76,7 @@ class EntireQuery(object):
     self.catalog_table_name = catalog_table_name
     self.extra_column_list = list(extra_column_list)
     self.from_expression = from_expression
+    self.implicit_join = implicit_join
 
   def asSearchTextExpression(self, sql_catalog):
     return self.query.asSearchTextExpression(sql_catalog)
@@ -89,6 +91,7 @@ class EntireQuery(object):
       column_map = ColumnMap(catalog_table_name=self.catalog_table_name,
                              table_override_map=self.from_expression,
                              left_join_list=self.left_join_list,
+                             implicit_join=self.implicit_join,
                             )
       self.column_map = column_map
       for extra_column in self.extra_column_list:
