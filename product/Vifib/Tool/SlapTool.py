@@ -30,10 +30,8 @@
 
 from AccessControl import ClassSecurityInfo
 from AccessControl import Unauthorized
-from AccessControl.SecurityManagement import newSecurityManager
 from OFS.Traversable import NotFound
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
-from Products.ERP5Security.ERP5UserManager import SUPER_USER
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
