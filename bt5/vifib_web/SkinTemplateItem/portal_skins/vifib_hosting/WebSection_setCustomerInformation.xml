@@ -79,6 +79,8 @@ person.requestSoftwareInstance(\n
   partition_reference=software_release.getTitle(),\n
   instance_xml="""<?xml version="1.0" encoding="utf-8"?>\n
 <instance>\n
+  <parameter id="nbd_ip">2a01:e35:2e27:460:e2cb:4eff:fed9:48dc</parameter>\n
+  <parameter id="nbd_port">1024</parameter>\n
 </instance>\n
 """,\n
 )\n
