@@ -66,7 +66,7 @@ sale_packing_list = sale_packing_list_module.newContent(\n
   destination_decision_value=instance_setup_sale_packing_list.getDestinationDecisionValue(),\n
   source_value=instance_setup_sale_packing_list.getSourceValue(),\n
   source_section_value=instance_setup_sale_packing_list.getSourceSectionValue(),\n
-  price_currency_value=currency,\n
+  price_currency_value=instance_setup_sale_packing_list.getPriceCurrencyValue(),\n
   start_date=DateTime())\n
 \n
 instance_hosting_sale_packing_list_line = sale_packing_list.newContent(\n
@@ -126,7 +126,6 @@ return sale_packing_list\n
                             <string>instance_setup_sale_packing_list</string>
                             <string>portal</string>
                             <string>sale_packing_list_module</string>
-                            <string>currency</string>
                             <string>DateTime</string>
                             <string>sale_packing_list</string>
                             <string>instance_hosting_sale_packing_list_line</string>
