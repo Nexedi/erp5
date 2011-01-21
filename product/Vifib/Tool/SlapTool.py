@@ -151,6 +151,7 @@ class SlapTool(BaseTool):
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getComputerPartitionCertificate')
   def getComputerPartitionCertificate(self, computer_id, computer_partition_id):
+    """Method to fetch certificate"""
     self.REQUEST.response.setHeader('Content-Type', 'text/xml')
     software_instance = self._getSoftwareInstanceForComputerPartition(
       computer_id, computer_partition_id)
