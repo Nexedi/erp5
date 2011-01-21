@@ -99,6 +99,7 @@ if (request_software_instance is None):\n
       activate_kw={\'tag\': tag},\n
       **portal.Base_getNewSoftwareInstanceCoordinate()\n
     )\n
+    request_software_instance.validate()\n
     sale_packing_list_line = context.SoftwareInstance_getInstanceSetupPackingListLine(state_change)\n
     hosting_subscription_uid = sale_packing_list_line.getAggregateValue(portal_type=\'Hosting Subscription\').getUid()\n
     request_software_instance.requestComputerPartition(\n
