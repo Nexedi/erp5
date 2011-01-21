@@ -66,7 +66,8 @@ order_line_list =  context.portal_catalog( \n
 # XXX order line has to display (as order is under approval)\n
 \n
 result = [x.getAggregateValue(portal_type="Software Instance") for x in line_list]\n
-result.extend([x.getObject() for x in order_line_list])\n
+result.extend([x.getAggregateValue(portal_type="Software Instance") for x in order_line_list])\n
+# result.extend([x.getObject() for x in order_line_list])\n
 return result\n
 </string> </value>
         </item>
@@ -110,8 +111,7 @@ return result\n
                             <string>subscription_item</string>
                             <string>line_list</string>
                             <string>order_line_list</string>
-                            <string>append</string>
-                            <string>$append0</string>
+                            <string>$list0</string>
                             <string>_getiter_</string>
                             <string>x</string>
                             <string>result</string>
