@@ -36,62 +36,43 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<tal:block  \n
-  tal:define="mode python: options.get(\'mode\', request.get(\'gadget_mode\', \'erp5_front\'));\n
-              default_pad_group python: options.get(\'default_pad_group\', request.get(\'gadget_default_pad_group\', \'\'));\n
-              kw python: dict(mode=mode, default_pad_group=default_pad_group);\n
-              knowledge_pads python:  here.ERP5Site_getKnowledgePadListForUser(**kw);\n
-              struct python: here.ERP5Site_getActiveKnowledgePadForUser(knowledge_pads, **kw);\n
-              global active_knowledge_pad python: struct[0];\n
-              knowledge_pads python: struct[1];\n
-              columns python: options.get(\'columns\', 3);\n
-              hasUserActivity python:  here.ERP5Site_hasUserActivity(active_knowledge_pad, **kw);\n
-              isAnon python: here.portal_membership.isAnonymousUser();\n
-              createDefaultPadForUser  python: len(knowledge_pads)==0 and not hasUserActivity;\n
-              waitForActivitiesOnServer python: active_knowledge_pad is None and hasUserActivity;\n
-              isUserAllowedToCreateKnowledgePads context/Base_isUserAllowedToUseKnowledgePad;\n
-              isKnowledgePadTemplateUsed python: request.get(\'is_knowledge_pad_template_used\', 0);\n
-              isAnonymousKnowledgePadUsed python: request.get(\'use_anonymous_knowledge_pad\', False);\n
-              cancel_url here/absolute_url;">\n
+<span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/global_definitions"/>\n
 \n
-  <div id="gadget_area_wrapper">\n
+<div id="gadget_area_wrapper">\n
 \n
-    <tal:block tal:condition="python: not createDefaultPadForUser and \n
-                                      not waitForActivitiesOnServer and\n
-                                      active_knowledge_pad is not None">\n
+  <tal:block tal:condition="python: not createDefaultPadForUser and \n
+                                    not waitForActivitiesOnServer and\n
+                                    active_knowledge_pad is not None">\n
 \n
-      <tal:block tal:condition="not: isAnon"> \n
-        <div id="pad-navigation-wrapper">\n
-          <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/navigation"/>\n
-        </div>\n
-        <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/loading_message"/>\n
-        <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/knowledge_pad_security_check"/> \n
-        <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/disable_server_integration"/>\n
-      </tal:block>\n
+    <tal:block tal:condition="not: isAnon"> \n
+      <div id="pad-navigation-wrapper">\n
+        <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/navigation"/>\n
+      </div>\n
+      <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/loading_message"/>\n
+      <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/knowledge_pad_security_check"/> \n
+      <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/disable_server_integration"/>\n
+    </tal:block>\n
 \n
-      <!-- Render active Knowledge pad -->\n
-      <div id="pad-body-wrapper"\n
-           tal:condition="active_knowledge_pad">\n
-        <tal:block tal:replace="structure python: active_knowledge_pad.KnowledgePad_viewDashboardWidget(\n
+    <!-- Render active Knowledge pad -->\n
+    <div id="pad-body-wrapper"\n
+         tal:condition="active_knowledge_pad">\n
+    <tal:block tal:replace="structure python: active_knowledge_pad.KnowledgePad_viewDashboardWidget(\n
                                                                        columns=columns,\n
                                                                        real_context=here,\n
                                                                        cancel_url=cancel_url)"/>\n
-      </div>\n
-      <!-- Hidden dialogs -->\n
-      <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/hidden_dialogs"/>\n
+    </div>\n
+    <!-- Hidden dialogs -->\n
+    <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/hidden_dialogs"/>\n
       \n
-    </tal:block>\n
+  </tal:block>\n
      \n
-    <!-- Show message that default pad is being prepared. -->\n
-    <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/create_default_pad_started"/>\n
+  <!-- Show message that default pad is being prepared. -->\n
+  <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/create_default_pad_started"/>\n
 \n
-    <!-- Create (asynch) default pad. -->\n
-    <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/create_default_pad"/>\n
+  <!-- Create (asynch) default pad. -->\n
+  <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/create_default_pad"/>\n
 \n
-  </div>\n
-  \n
-</tal:block>\n
-
+</div>
 
 ]]></unicode> </value>
         </item>
@@ -109,7 +90,7 @@
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
-            <value> <string>utf-8</string> </value>
+            <value> <string>iso-8859-15</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
