@@ -519,28 +519,20 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>waitForCondition</td>\n
-  <td>selenium.isTextPresent("Configuration is over. Enjoy your new ERP5 system!")</td>\n
-  <td>1000000</td> <!-- set timeout reasonably as it takes time to finish installation-->\n
+  <td>setTimeout</td>\n
+  <td>1200000</td>\n
+  <td></td>\n
 </tr>\n
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities">\n
+Wait for activities</span>\n
 <tr>\n
-  <td>verifyTextPresent</td>\n
-  <td>Please click link below.</td>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/Zuite_assertEndConfiguration</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyTextPresent</td>\n
-  <td>You will be redirected to a form in which you can login using</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>verifyTextPresent</td>\n
-  <td>one of yours newly created ERP5 user accounts.</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>verifyTextPresent</td>\n
-  <td>Start using your new ERP5 system</td>\n
+  <td>True</td>\n
   <td></td>\n
 </tr>\n
 \n
