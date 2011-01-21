@@ -56,14 +56,23 @@ instance_setup_sale_packing_list_line = \\\n
                   state_change, \n
                   service_relative_url=software_instance.portal_preferences.\\\n
                           getPreferredInstanceSetupResource())\n
+instance_setup_sale_packing_list = instance_setup_sale_packing_list_line.getParentValue()\n
 portal = context.getPortalObject()\n
 sale_packing_list_module = portal.getDefaultModule(portal_type=\'Sale Packing List\')\n
-sale_packing_list = sale_packing_list_module.newContent(portal_type=\'Sale Packing List\', \n
-                                                        start_date=DateTime())\n
+sale_packing_list = sale_packing_list_module.newContent(\n
+  portal_type=\'Sale Packing List\',\n
+  destination_value=instance_setup_sale_packing_list.getDestinationValue(),\n
+  destination_section_value=instance_setup_sale_packing_list.getDestinationSectionValue(),\n
+  destination_decision_value=instance_setup_sale_packing_list.getDestinationDecisionValue(),\n
+  source_value=instance_setup_sale_packing_list.getSourceValue(),\n
+  source_section_value=instance_setup_sale_packing_list.getSourceSectionValue(),\n
+  price_currency_value=currency,\n
+  start_date=DateTime())\n
 \n
 instance_hosting_sale_packing_list_line = sale_packing_list.newContent(\n
   portal_type=\'Sale Packing List Line\',\n
   resource=service_relative_url,\n
+  quantity=instance_setup_sale_packing_list_line.getQuantity(),\n
   aggregate_value_list=[\n
     software_instance,\n
     instance_setup_sale_packing_list_line.getAggregateValue(portal_type=\'Software Release\'),\n
@@ -114,8 +123,10 @@ return sale_packing_list\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>instance_setup_sale_packing_list_line</string>
+                            <string>instance_setup_sale_packing_list</string>
                             <string>portal</string>
                             <string>sale_packing_list_module</string>
+                            <string>currency</string>
                             <string>DateTime</string>
                             <string>sale_packing_list</string>
                             <string>instance_hosting_sale_packing_list_line</string>
