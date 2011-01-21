@@ -88,7 +88,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
 
   def afterSetUp(self):
     """Prepare the test."""
-    TestTradeModelLineMixin.afterSetUp(self)
+    super(TestPayrollMixin, self).afterSetUp()
     self.createCategories()
     self.fixed_quantity = self.setBaseAmountQuantityMethod('fixed_quantity',
                                                            "return lambda *args, **kw: 1")
@@ -133,7 +133,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
 
   @reindex
   def beforeTearDown(self):
-    TestTradeModelLineMixin.beforeTearDown(self)
+    super(TestPayrollMixin, self).beforeTearDown()
     transaction.abort()
     for module in (
       self.portal.organisation_module,
