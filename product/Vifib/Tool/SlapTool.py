@@ -262,7 +262,7 @@ class SlapTool(BaseTool):
   security.declareProtected(Permissions.AccessContentsInformation, 'useComputer')
   def useComputer(self, computer_id, use_string):
     """Entry point to reporting usage of a computer."""
-    computer_document = self._getComputerDocument(computer_id)
+    #computer_document = self._getComputerDocument(computer_id)
     # easy way to start to store usage messages sent by client in related Web
     # Page text_content...
     
@@ -273,7 +273,8 @@ class SlapTool(BaseTool):
     
     #LOG("check-2", 0, "%s" % res[0].usage)
     vifib_conduit_instance = VifibConduit.VifibConduit()
-    sub_object = vifib_conduit_instance.addNode(object=self, 
+    #sub_object = vifib_conduit_instance.addNode(object=self, 
+    vifib_conduit_instance.addNode(object=self, 
                 xml=unmarshalled_usage.computer_partition_usage_list[0].usage)
     
     #sub_object = vifib_conduit_instance.addNode(object=self, xml=res[0].usage)
