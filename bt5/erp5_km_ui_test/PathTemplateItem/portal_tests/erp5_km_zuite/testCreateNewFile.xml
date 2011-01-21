@@ -54,6 +54,11 @@
 <tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/createKMWebSite" />\n
 \n
 <tr>\n
+  <td>setTimeout</td>\n
+  <td>60000</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
   <td>openAndWait</td>\n
   <td>${base_url}/web_site_module/km_test_web_site</td>\n
   <td></td>\n
@@ -176,6 +181,11 @@
 <tr>\n
   <td>verifyTextPresent</td>\n
   <td>tiolive-ERP5.DMS.TioLive</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>setTimeout</td>\n
+  <td>30000</td>\n
   <td></td>\n
 </tr>\n
 \n
