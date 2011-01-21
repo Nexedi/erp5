@@ -562,11 +562,12 @@ class TestBPMDummyDeliveryMovementMixin(TestBPMMixin):
     return delivery.newContent(portal_type='Dummy Movement', **kw)
 
   def getBusinessTemplateList(self):
-    return TestBPMMixin.getBusinessTemplateList(self) \
+    return super(TestBPMDummyDeliveryMovementMixin, self)\
+        .getBusinessTemplateList() \
         + ('erp5_dummy_movement', )
 
   def afterSetUp(self):
-    TestBPMMixin.afterSetUp(self)
+    super(TestBPMDummyDeliveryMovementMixin, self).afterSetUp()
     if not hasattr(self.portal, 'testing_folder'):
       self.portal.newContent(portal_type='Folder',
                             id='testing_folder')
@@ -574,7 +575,7 @@ class TestBPMDummyDeliveryMovementMixin(TestBPMMixin):
     self.stepTic()
 
   def beforeTearDown(self):
-    TestBPMMixin.beforeTearDown(self)
+    super(TestBPMDummyDeliveryMovementMixin, self).beforeTearDown()
     self.portal.deleteContent(id='testing_folder')
     self.stepTic()
 

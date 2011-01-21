@@ -92,11 +92,11 @@ class TestTradeModelLineMixin(TestBPMMixin, UserDict):
 
   def afterSetUp(self):
     UserDict.__init__(self)
-    return TestBPMMixin.afterSetUp(self)
+    return super(TestTradeModelLineMixin, self).afterSetUp()
 
   def beforeTearDown(self):
     UserDict.clear(self)
-    return TestBPMMixin.beforeTearDown(self)
+    return super(TestTradeModelLineMixin, self).beforeTearDown()
 
   def clone(self, document):
     parent = document.getParentValue()
