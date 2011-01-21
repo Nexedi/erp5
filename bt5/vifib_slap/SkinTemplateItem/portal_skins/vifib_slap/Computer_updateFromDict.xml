@@ -66,6 +66,7 @@ for send_partition in computer_dict[\'partition_list\']:\n
   partition = existing_partition_dict.get(send_partition[\'reference\'], None)\n
   if partition is None:\n
     partition = context.newContent(portal_type=\'Computer Partition\')\n
+    partition.validate()\n
     partition.markFree()\n
   partition.edit(reference=send_partition[\'reference\'])\n
   network_interface = send_partition[\'tap\'][\'name\']\n
