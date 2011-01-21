@@ -565,6 +565,9 @@ class SimulationTool(BaseTool):
         new_kw.pop('ignore_group_by', None)
         new_kw.pop('movement_list_mode', None)
 
+        # block use of explicit join
+        new_kw['implicit_join'] = True
+
         sql_kw.update(ctool.buildSQLQuery(**new_kw))
         return sql_kw
 
@@ -801,7 +804,8 @@ class SimulationTool(BaseTool):
         where_expression = self.getPortalObject().portal_categories\
           .buildSQLSelector(
             category_list = variation_category,
-            query_table = 'predicate_category')
+            query_table = 'predicate_category',
+            implicit_join=True)
         if where_expression != '':
           add_kw['where_expression'] = where_expression
           add_kw['predicate_category.uid'] = '!=NULL'
@@ -1306,6 +1310,7 @@ class SimulationTool(BaseTool):
                 'range': column_value_dict.get('date', {}).get('range', [])
               },
               'query_table': None,
+              'implicit_join': True,
             })
             if date_query_result['where_expression'] not in ('',None):
               where_expression = date_query_result['where_expression']
@@ -1392,8 +1397,8 @@ class SimulationTool(BaseTool):
               assert len(equal_date_query_list) == \
                      len(greater_than_date_query_list)
               assert len(equal_date_query_list) > 0
-              equal_date_query = buildSQLQuery(query=ComplexQuery(operator='OR', *equal_date_query_list), query_table=None)['where_expression']
-              greater_than_date_query = buildSQLQuery(query=ComplexQuery(operator='OR', *greater_than_date_query_list), query_table=None)['where_expression']
+              equal_date_query = buildSQLQuery(query=ComplexQuery(operator='OR', *equal_date_query_list), query_table=None, implicit_join=True)['where_expression']
+              greater_than_date_query = buildSQLQuery(query=ComplexQuery(operator='OR', *greater_than_date_query_list), query_table=None, implicit_join=True)['where_expression']
               inventory_stock_sql_kw = \
                 self._generateSQLKeywordDictFromKeywordDict(
                   table=EQUAL_DATE_TABLE_ID, sql_kw=sql_kw, new_kw=new_kw)
