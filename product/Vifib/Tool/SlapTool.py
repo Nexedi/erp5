@@ -151,6 +151,17 @@ class SlapTool(BaseTool):
           self._convertToSlapPartition(slave_partition_document, computer_id))
     return xml_marshaller.xml_marshaller.dumps(slap_computer)
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getComputerPartitionCertificate')
+  def getComputerPartitionCertificate(self, computer_id, computer_partition_id):
+    self.REQUEST.response.setHeader('Content-Type', 'text/xml')
+    software_instance = self._getSoftwareInstanceForComputerPartition(
+      computer_id, computer_partition_id)
+    certificate_dict = dict(
+      key=software_instance.getSslKey(),
+      certificate=software_instance.getSslCertificate()
+    )
+    return xml_marshaller.xml_marshaller.dumps(certificate_dict)
+    
   ####################################################
   # Public POST methods
   ####################################################
