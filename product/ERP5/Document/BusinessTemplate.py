@@ -1560,7 +1560,7 @@ class SkinTemplateItem(ObjectTemplateItem):
     force = kw.get('force')
     p = context.getPortalObject()
     skin_tool = p.portal_skins
-    for relative_url in self._archive.keys():
+    for relative_url in self._objects.keys():
       folder = p.unrestrictedTraverse(relative_url)
       for obj in folder.objectValues(spec=('Z SQL Method',)):
         fixZSQLMethod(p, obj)
