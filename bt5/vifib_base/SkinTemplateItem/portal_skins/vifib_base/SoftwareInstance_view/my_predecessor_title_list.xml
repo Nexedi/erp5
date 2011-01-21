@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_predecessor_source_reference_list</string> </value>
+            <value> <string>my_predecessor_title_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -405,7 +405,7 @@
                 </item>
                 <item>
                     <key> <string>catalog_index</string> </key>
-                    <value> <string>source_reference</string> </value>
+                    <value> <string>title</string> </value>
                 </item>
                 <item>
                     <key> <string>columns</string> </key>

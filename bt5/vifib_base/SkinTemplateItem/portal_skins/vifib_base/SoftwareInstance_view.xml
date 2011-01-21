@@ -83,6 +83,8 @@
                       <list>
                         <string>my_text_content</string>
                         <string>my_connection_xml</string>
+                        <string>my_ssl_key</string>
+                        <string>my_ssl_certificate</string>
                         <string>my_description</string>
                       </list>
                     </value>
@@ -99,6 +101,8 @@
                       <list>
                         <string>my_title</string>
                         <string>my_reference</string>
+                        <string>my_destination_reference</string>
+                        <string>my_source_reference</string>
                       </list>
                     </value>
                 </item>
@@ -106,7 +110,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_predecessor_source_reference_list</string>
+                        <string>my_predecessor_title_list</string>
                       </list>
                     </value>
                 </item>
