@@ -1789,7 +1789,6 @@ class TestSolvingPackingList(TestPackingListMixin, ERP5TypeTestCase):
     transaction.commit()
     self.tic()
     super(TestSolvingPackingList, self).beforeTearDown()
-    beforeTearDown(self)
 
   @UnrestrictedMethod
   def _setUpTargetSolver(self, solver_id, solver_class, tested_property_list):
