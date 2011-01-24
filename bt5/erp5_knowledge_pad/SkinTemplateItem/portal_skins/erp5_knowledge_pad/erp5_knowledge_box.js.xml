@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts95535671.25</string> </value>
+            <value> <string>ts95875565.52</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -404,14 +404,14 @@ function initialize(){\n
   function toggleTabNavigation(){\n
     /* Toggle tabs navigation */\n
     var is_tabs_visible=0;\n
-    if(gadgets_tabs.css("display")!="block"){\n
+    if($("#tabs").css("display")!="block"){\n
       is_tabs_visible=1;\n
       $("#tab_switcher_visible").show();\n
       $("#tab_switcher_hidden").hide();}\n
     else{\n
       $("#tab_switcher_visible").hide();\n
       $("#tab_switcher_hidden").show();}\n
-    gadgets_tabs.toggle();\n
+    $("#tabs").toggle();\n
     createCookie("is_tabs_visible", is_tabs_visible, 365); }\n
  \n
   function bindGadgetHandlers(index, box){\n
@@ -458,7 +458,9 @@ function initialize(){\n
   }\n
   \n
   // tabs navigation\n
-  if(gadgets_tabs_switcher){gadgets_tabs_switcher.bind("click", toggleTabNavigation);}\n
+  if(gadgets_tabs_switcher){\n
+    gadgets_tabs_switcher.unbind("click");\n
+    gadgets_tabs_switcher.bind("click", toggleTabNavigation);}\n
   \n
   // for each box (gadget) add respective event handlers\n
   gadget_list = $("div.block");\n
@@ -483,7 +485,7 @@ $(document).ready(initialize);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>18051</int> </value>
+            <value> <int>18095</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
