@@ -274,7 +274,7 @@ def profile_if_environ(environment_var_name):
       # No profiling, return identity decorator
       return lambda self, method: method
 
-class ERP5TypeTestCaseMixin(object):
+class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
     """Mixin class for ERP5 based tests.
     """
 
@@ -629,7 +629,7 @@ class ERP5TypeTestCaseMixin(object):
 
         return ResponseWrapper(response, outstream, path)
 
-class ERP5TypeCommandLineTestCase(object):
+class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
 
     def getPortalName(self):
       """
@@ -1093,27 +1093,11 @@ class ERP5TypeCommandLineTestCase(object):
       obj.manage_afterClone(obj)
       return obj
 
-class ERP5TypeTestCase(ERP5TypeTestCaseMixin):
+class ERP5TypeTestCase(ERP5TypeCommandLineTestCase):
     """TestCase for ERP5 based tests.
 
     This TestCase setups an ERP5Site and installs business templates.
     """
-
-    def __init__(self, *args, **kw):
-      type_test_case_klass = ERP5TypeCommandLineTestCase
-      from Products.ERP5Type.TransactionalVariable import \
-            getTransactionalVariable
-      unit_test_type = getTransactionalVariable().get('unit_test_type', None)
-      if unit_test_type == 'live_test':
-        from Products.ERP5Type.tests.ERP5TypeLiveTestCase import \
-                ERP5TypeLiveTestCase
-        type_test_case_klass = ERP5TypeLiveTestCase
-      klass = self.__class__
-      class TempTestCase(klass, type_test_case_klass,
-              ProcessingNodeTestCase, PortalTestCase):
-        pass
-      self.__class__ = TempTestCase
-      return PortalTestCase.__init__(self, *args, **kw)
 
 from Products.ERP5 import ERP5Site
 ERP5Site.getBootstrapBusinessTemplateUrl = lambda bt_title: \

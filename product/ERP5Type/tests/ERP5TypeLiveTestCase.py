@@ -35,7 +35,8 @@ from Testing.ZopeTestCase import PortalTestCase, user_name
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.tests.ProcessingNodeTestCase import ProcessingNodeTestCase
 from Products.ERP5Type.Globals import get_request
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCaseMixin
+from Products.ERP5Type.tests.ERP5TypeTestCase import \
+  ERP5TypeTestCaseMixin, ERP5TypeTestCase
 from glob import glob
 import transaction
 
@@ -193,8 +194,8 @@ def runLiveTest(test_list, verbosity=1, stream=None, **kw):
     imp.load_module(test_name, test_file, test_path_name, test_description)
 
   TestRunner = backportUnittest.TextTestRunner
-  from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-  getTransactionalVariable()['unit_test_type'] = 'live_test'
+  if ERP5TypeLiveTestCase not in ERP5TypeTestCase.__bases__:
+    ERP5TypeTestCase.__bases__ = ERP5TypeLiveTestCase,
   if kw.get('debug', False):
     class DebugTextTestRunner(TestRunner):
       def _makeResult(self):
