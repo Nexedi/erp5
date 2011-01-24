@@ -301,7 +301,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.WebSection_viewKnowledgePadColumn(default_pad_group=\'default_content_pad\', pad_column=0, create_default_pad=True, make_security_check=True, use_anonymous_knowledge_pad=context.getLayoutProperty(\'layout_force_anonymous_gadget\',False))</string> </value>
+            <value> <string>python: here.WebSection_viewKnowledgePadColumn(default_pad_group=\'default_content_pad\', mode=\'web_section\', pad_column=0, create_default_pad=True, make_security_check=True, use_anonymous_knowledge_pad=context.getLayoutProperty(\'layout_force_anonymous_gadget\',False))</string> </value>
         </item>
       </dictionary>
     </pickle>
