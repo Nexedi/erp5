@@ -2396,7 +2396,7 @@ class TestDocumentWithSecurity(TestDocumentMixin):
     those properties are taken into account when the user
     views an image
     """
-    super(TestDocument, self).login('yusei')
+    super(TestDocumentWithSecurity, self).login('yusei')
     preference_tool = self.portal.portal_preferences
     #get the thumbnail sizes defined by default on default site preference
     default_thumbnail_image_height = \
