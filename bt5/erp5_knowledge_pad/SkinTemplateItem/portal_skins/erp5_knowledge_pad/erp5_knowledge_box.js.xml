@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts95875565.52</string> </value>
+            <value> <string>ts95876458.14</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -423,6 +423,7 @@ function initialize(){\n
     var minimize = box.find("a.block-minimize").first(); \n
     var minimize_wrapper = box.find("div.minimize_wrapper").first(); \n
     if(minimize){\n
+      minimize.unbind("click");\n
       minimize.bind("click", function (){\n
         if (is_knowledge_template_used){showCreateDefaultKnowledgePadWarningMessage();}\n
         else{\n
@@ -440,11 +441,13 @@ function initialize(){\n
         });}\n
 \n
     if(edit){\n
+      edit.unbind("click");\n
       edit.bind("click", function (){\n
         if (is_knowledge_template_used){showCreateDefaultKnowledgePadWarningMessage();}\n
         else{edit_form.toggle()}});}\n
         \n
     if(remove){\n
+      remove.unbind("click");\n
       remove.bind("click", function (){\n
         if (is_knowledge_template_used){showCreateDefaultKnowledgePadWarningMessage();}\n
         else{\n
@@ -485,7 +488,7 @@ $(document).ready(initialize);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>18095</int> </value>
+            <value> <int>18185</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
