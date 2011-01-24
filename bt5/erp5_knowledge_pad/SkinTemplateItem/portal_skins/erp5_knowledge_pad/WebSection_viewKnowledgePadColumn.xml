@@ -36,35 +36,13 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
+<span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/global_definitions"/>\n
+\n
 <tal:block \n
-  tal:define="mode python: options.get(\'mode\', \'web_section\');\n
-              default_pad_group python: options.get(\'default_pad_group\', None);\n
-              kw python: dict(mode=mode, default_pad_group=default_pad_group);\n
-              isAnonymousKnowledgePadUsed python: options.get(\'use_anonymous_knowledge_pad\', False);\n
-              pad_column python: options.get(\'pad_column\', 0);\n
-              create_default_pad python: options.get(\'create_default_pad\', False);\n
-              make_security_check python: options.get(\'make_security_check\', False);\n
-              dummy python: request.set(\'is_anonymous_knowledge_pad_used\', isAnonymousKnowledgePadUsed);\n
-              knowledge_pads python:  here.ERP5Site_getKnowledgePadListForUser(**kw);\n
-              struct python: here.ERP5Site_getActiveKnowledgePadForUser(knowledge_pads, **kw);\n
-              active_knowledge_pad python: struct[0];\n
-              knowledge_pads python: struct[1];\n
-              hasUserActivity python:  here.ERP5Site_hasUserActivity(active_knowledge_pad, **kw);\n
-              isAnon python: context.portal_membership.isAnonymousUser();\n
-              createDefaultPadForUser python: len(knowledge_pads)==0 and\n
-                                              not hasUserActivity and create_default_pad;\n
-              waitForActivitiesOnServer python: active_knowledge_pad is None and\n
-                                                hasUserActivity;\n
+  tal:define="current_web_section python: context.REQUEST.get(\'current_web_section\', here);\n
               current_web_section python:\n
-                  context.REQUEST.get(\'current_web_section\', here);\n
-              current_web_section python:\n
-                  test(current_web_section.getPortalType()==\'Web Site\',\n
-                                               here, current_web_section);\n
+                  test(current_web_section.getPortalType()==\'Web Site\', here, current_web_section);\n
               current_web_section_url python: current_web_section.absolute_url();\n
-              isUserAllowedToCreateKnowledgePads\n
-                  context/Base_isUserAllowedToUseKnowledgePad;\n
-              isKnowledgePadTemplateUsed python:\n
-                  request.get(\'is_knowledge_pad_template_used\', 0);\n
               cancel_url string:${current_web_section_url}/view">\n
 \n
     <tal:block tal:condition="python: not createDefaultPadForUser and \n
