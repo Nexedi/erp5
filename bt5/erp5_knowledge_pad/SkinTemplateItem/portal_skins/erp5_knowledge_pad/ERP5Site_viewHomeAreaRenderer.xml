@@ -56,7 +56,7 @@
     <!-- Render active Knowledge pad -->\n
     <div id="pad-body-wrapper"\n
          tal:condition="active_knowledge_pad">\n
-    <tal:block tal:replace="structure python: active_knowledge_pad.KnowledgePad_viewDashboardWidget(\n
+      <tal:block tal:replace="structure python: active_knowledge_pad.KnowledgePad_viewDashboardWidget(\n
                                                                        columns=columns,\n
                                                                        real_context=here,\n
                                                                        cancel_url=cancel_url)"/>\n
