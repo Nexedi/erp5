@@ -51,11 +51,12 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string># revoke certificate\n
+software_instance = state_change[\'object\']\n
 context.getPortalObject().portal_certificate_authority\\\n
-  .revokeCertificate(context.getDestinationReference())\n
+  .revokeCertificate(software_instance.getDestinationReference())\n
 \n
 # remove certificate from SI\n
-context.edit(\n
+software_instance.edit(\n
   ssl_key=None,\n
   ssl_certificate=None,\n
 )\n
@@ -110,6 +111,8 @@ if packing_list.getPortalObject().portal_workflow.isTransitionPossible(packing_l
                         <value>
                           <tuple>
                             <string>state_change</string>
+                            <string>_getitem_</string>
+                            <string>software_instance</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>None</string>
