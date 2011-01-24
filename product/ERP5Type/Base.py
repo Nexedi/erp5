@@ -497,7 +497,8 @@ class PropertyHolder:
     """
     Return the list of class method IDs
     """
-    return [x[0] for x in self.getClassMethodItemList()]
+    return [x[0] for x in self.getClassMethodItemList(klass,
+      inherited=inherited, local=local)]
 
   def getClassPropertyItemList(self, klass, inherited=1, local=1):
     """
@@ -510,7 +511,8 @@ class PropertyHolder:
     """
     Return the list of class method IDs
     """
-    return [x[0] for x in self.getClassPropertyItemList()]
+    return [x[0] for x in self.getClassPropertyItemList(klass,
+      inherited=inherited, local=local)]
 
 def getClassPropertyList(klass):
   ps_list = getattr(klass, 'property_sheets', ())
