@@ -1561,16 +1561,15 @@ class SkinTemplateItem(ObjectTemplateItem):
     p = context.getPortalObject()
     skin_tool = p.portal_skins
     for relative_url in self._objects.keys():
-      folder = p.unrestrictedTraverse(relative_url)
-      for obj in folder.objectValues(spec=('Z SQL Method',)):
-        fixZSQLMethod(p, obj)
-
       # Do not register skin which were explicitely ask not to be installed
       if context.getTemplateFormatVersion() == 1:
         if update_dict.has_key(relative_url) or force:
           if not force:
             if update_dict[relative_url] == 'nothing':
               continue
+      folder = p.unrestrictedTraverse(relative_url)
+      for obj in folder.objectValues(spec=('Z SQL Method',)):
+        fixZSQLMethod(p, obj)
       if folder.aq_parent.meta_type == 'CMF Skins Tool':
         registerSkinFolder(skin_tool, folder)
 
