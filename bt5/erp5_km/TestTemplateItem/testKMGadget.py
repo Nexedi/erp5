@@ -120,16 +120,14 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
     self.getPortal().portal_skins.changeSkin(skin_name)
     request.set('portal_skin', skin_name)
 
-  def test_01ProperPoolInitialization(self, quiet=quiet, run=run_all_test):
+  def test_01ProperPoolInitialization(self):
     """ Check that it's properly initialized """
-    if not run: return
     portal = self.getPortal()
     self.assertNotEqual(None, 
                         getattr(portal, 'portal_gadgets', None))
  
-  def test_02(self, quiet=quiet, run=run_all_test):
+  def test_02(self):
     """ Check Gadgets """
-    if not run: return
     portal = self.getPortal()
     knowledge_pad_module = getattr(portal, 'knowledge_pad_module')
     # remove created by login method pads
@@ -214,42 +212,31 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
                         mode='web_section',
                         default_pad_group = pad_group)
     self.stepTic()
-    websection_pads = websection.ERP5Site_getKnowledgePadListForUser(
-                        mode='web_section',
-                        default_pad_group = pad_group)
+    #websection_pads = websection.ERP5Site_getKnowledgePadListForUser(
+                        #mode='web_section',
+                        #default_pad_group = pad_group)
     base_websection_pad, websection_pads = \
-             websection.ERP5Site_getActiveKnowledgePadForUser(websection_pads,
-                                                             default_pad_group = pad_group)
+             websection.ERP5Site_getActiveKnowledgePadForUser(default_pad_group = pad_group)
    
     # Check stick
     websection.WebSection_stickKnowledgePad(
                     base_websection_pad.getRelativeUrl(), '')
     self.stepTic()
-    websection_pads = websection.ERP5Site_getKnowledgePadListForUser(
-                        mode='web_section',
-                        default_pad_group = pad_group)
     current_websection_pad, websection_pads = \
-             websection.ERP5Site_getActiveKnowledgePadForUser(websection_pads,
-                                                              mode='web_section',      
+             websection.ERP5Site_getActiveKnowledgePadForUser(mode='web_section',      
                                                               default_pad_group = pad_group )
     self.assertNotEqual(base_websection_pad.getObject(),
                         current_websection_pad.getObject())
     
     # check unstick
     websection.WebSection_unStickKnowledgePad(current_websection_pad.getRelativeUrl(), '')
-    
-    websection_pads = websection.ERP5Site_getKnowledgePadListForUser(
-                        mode='web_section',
-                        default_pad_group = pad_group)
     current_websection_pad, websection_pads = \
-             websection.ERP5Site_getActiveKnowledgePadForUser(websection_pads,
-                                                             default_pad_group = pad_group)
+             websection.ERP5Site_getActiveKnowledgePadForUser(default_pad_group = pad_group)
     self.assertEqual(base_websection_pad.getObject(),
                      current_websection_pad.getObject())
 
-  def test_03DefaultKnowledgePadFromPreference(self, quiet=quiet, run=run_all_test):
+  def test_03DefaultKnowledgePadFromPreference(self):
     """ Check Gadgets """
-    if not run: return
     portal = self.getPortal()
     website = self.website
     websection = self.websection
@@ -419,9 +406,8 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
     self.assertEqual("visible",  
                      websection_content_knowledge_pad.objectValues()[0].getValidationState()) 
 
-  def test_04WebFrontGadgets(self, quiet=quiet, run=run_all_test):
+  def test_04WebFrontGadgets(self):
     """ Check different Web / KM Gadgets """
-    if not run: return
     portal = self.getPortal()
     request = self.app.REQUEST
 
@@ -448,9 +434,8 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
     for gadget in web_front_gadgets:
       self.failUnless(gadget.getTitle() in response.getBody())
 
-  def test_05MyTaskGadget(self, quiet=quiet, run=run_all_test):
+  def test_05MyTaskGadget(self):
     """ Check My Task Gadgets """
-    if not run: return    
     portal = self.getPortal()
     km_my_tasks_gadget = portal.portal_gadgets.km_my_tasks
     
@@ -488,9 +473,8 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
       self.failUnless(project.getTitle() in response.getBody())
       self.failUnless(visit.getTitle() in response.getBody())
 
-  def test_06MyDocumentsGadget(self, quiet=quiet, run=run_all_test):
+  def test_06MyDocumentsGadget(self):
     """ Check My Document Gadgets """
-    if not run: return 
     portal = self.getPortal()
     km_my_documents_gadget = portal.portal_gadgets.km_my_documents
     
@@ -532,9 +516,8 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
       self.failUnless(web_page.getTitle() in response.getBody())
       self.failUnless(presentation.getTitle() in response.getBody())
     
-  def test_07MyContactsGadget(self, quiet=quiet, run=run_all_test):
+  def test_07MyContactsGadget(self):
     """ Check My Contacts Gadgets """
-    if not run: return 
     portal = self.getPortal()
     km_my_contacts_gadget = portal.portal_gadgets.km_my_contacts
     
@@ -569,9 +552,8 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
                          , self.auth)]:
       self.failUnless(person.getTitle() in response.getBody())
     
-  def test_08WebSectionGadget(self, quiet=quiet, run=run_all_test):
+  def test_08WebSectionGadget(self):
     """ Check Web Section Gadgets """
-    if not run: return 
     portal = self.getPortal()
     km_subsection_gadget = portal.portal_gadgets.km_subsection
     km_latest_documents_gadget = portal.portal_gadgets.km_latest_documents
@@ -591,9 +573,8 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
     for gadget in web_section_gadgets:
       self.failUnless(gadget.getTitle() in response.getBody())     
 
-  def test_10LatestContentGadget(self, quiet=quiet, run=run_all_test):
+  def test_10LatestContentGadget(self):
     """ Check Latest Content Gadgets """
-    if not run: return 
     portal = self.getPortal()
     request = self.app.REQUEST
     km_latest_documents_gadget = portal.portal_gadgets.km_latest_documents
@@ -639,9 +620,8 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
                       km_latest_documents_gadget_box_url)
                     , self.auth).getBody())
 
-  def test_11AssignedMembersGadget(self, quiet=quiet, run=run_all_test):
+  def test_11AssignedMembersGadget(self):
     """ Check Assigned Members Gadgets """
-    if not run: return 
     portal = self.getPortal()
     request = self.app.REQUEST
     km_assigned_member_gadget = portal.portal_gadgets.km_assigned_member
@@ -690,9 +670,8 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
               km_assigned_member_gadget_box_url)
             , self.auth).getBody())
     
-  def test_11WebSectionContentGadget(self, quiet=quiet, run=run_all_test):
+  def test_11WebSectionContentGadget(self):
     """ Check  Web Section Content Gadgets """
-    if not run: return     
     portal = self.getPortal()
     request = self.app.REQUEST
 
@@ -707,11 +686,9 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
 
     for gadget in web_section_content_gadgets:
       self.failUnless(gadget.getTitle() in response.getBody())
-    return
     
-  def test_12RelationGadget(self, quiet=quiet, run=run_all_test):
+  def test_12RelationGadget(self):
     """ Check  Relation Gadgets """
-    if not run: return     
     portal = self.getPortal()
     request = self.app.REQUEST
     km_document_relations_gadget = portal.portal_gadgets.km_document_relations
@@ -763,12 +740,11 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
     self.failUnless(predecessor_doc.getTitle() in relation_form_renderer())
     self.failUnless(successor_doc.getTitle() in relation_form_renderer())
 
-  def test_15GadgetServerSideFailure(self, quiet=quiet, run=run_all_test):
+  def test_15GadgetServerSideFailure(self):
     """ 
       Check that if gadget uses a non existent view / edit form
       nothing is raised but a message is shown to user.
     """
-    if not run: return
     portal = self.getPortal()
     request = self.app.REQUEST
     portal_gadgets = portal.portal_gadgets
@@ -803,11 +779,10 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
     response = self.publish(url, self.auth)
     self.failUnless('Server side error' not in response.getBody())
 
-  def test_16WebSiteBrowserGadget(self, quiet=quiet, run=run_all_test):
+  def test_16WebSiteBrowserGadget(self):
     """ 
       Check Web Site Browser Gadget.
      """
-    if not run: return 
     portal = self.getPortal()
     web_site_browser_gadget = portal.portal_gadgets.web_site_browser
 
@@ -841,9 +816,8 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
     self.failUnless(subsection.getTitle() in 
                     self.publish(url, self.auth).getBody())
 
-  def test_17AddGadgets(self, quiet=quiet, run=run_all_test):
+  def test_17AddGadgets(self):
     """ Check Latest Content Gadgets """
-
     portal = self.getPortal()
     portal_selections = portal.portal_selections
     km_my_documents_gadget = portal.portal_gadgets.km_my_documents
@@ -870,7 +844,6 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
     # in listbox selection as well
     self.assertSameSet([km_my_documents_gadget, km_my_contacts_gadget],
                         [x.getSpecialiseValue() for x in self.web_front_knowledge_pad.objectValues()])
-    
     
 def test_suite():
   suite = unittest.TestSuite()
