@@ -50,7 +50,18 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>packing_list_line = context.SoftwareInstance_getInstanceDestroyPackingListLine(state_change)\n
+            <value> <string># revoke certificate\n
+context.getPortalObject().portal_certificate_authority\\\n
+  .revokeCertificate(context.getDestinationReference())\n
+\n
+# remove certificate from SI\n
+context.edit(\n
+  ssl_key=None,\n
+  ssl_certificate=None,\n
+)\n
+\n
+# deliver proper packing list\n
+packing_list_line = context.SoftwareInstance_getInstanceDestroyPackingListLine(state_change)\n
 packing_list = packing_list_line.getParentValue()\n
 if packing_list.getPortalObject().portal_workflow.isTransitionPossible(packing_list, \'start\'):\n
   packing_list.start()\n
@@ -101,6 +112,7 @@ if packing_list.getPortalObject().portal_workflow.isTransitionPossible(packing_l
                             <string>state_change</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>None</string>
                             <string>packing_list_line</string>
                             <string>packing_list</string>
                           </tuple>
