@@ -48,8 +48,7 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
   manager_password = ''
   
   def getBusinessTemplateList(self):
-    return (
-            'erp5_base',
+    return ('erp5_base',
             'erp5_knowledge_pad',
             'erp5_web',
             'erp5_ingestion',
@@ -212,9 +211,6 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
                         mode='web_section',
                         default_pad_group = pad_group)
     self.stepTic()
-    #websection_pads = websection.ERP5Site_getKnowledgePadListForUser(
-                        #mode='web_section',
-                        #default_pad_group = pad_group)
     base_websection_pad, websection_pads = \
              websection.ERP5Site_getActiveKnowledgePadForUser(default_pad_group = pad_group)
    
@@ -428,7 +424,6 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
       self.web_front_knowledge_pad.KnowledgePad_addBoxList(**{'uids':[gadget.getUid()]})
     self.stepTic()
     
-    #self.changeSkin('KM')
     # check that gadgets are added to web front page view
     response = self.publish(url, self.auth)
     for gadget in web_front_gadgets:
@@ -566,10 +561,11 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
     for gadget in web_section_gadgets:
       self.web_section_knowledge_pad.KnowledgePad_addBoxList(**{'uids':[gadget.getUid()]})
     self.stepTic()
-
+    
     # check that gadgets are added to web section page view
-    self.changeSkin('KM')
-    response = self.publish('%s/WebSection_viewKnowledgePadColumn' %self.web_section_url, self.auth)
+    response = self.publish('%s/WebSection_viewKnowledgePadColumn?active_pad_url=%s' \
+                               %(self.web_section_url, self.web_section_knowledge_pad.getRelativeUrl()), self.auth)
+   
     for gadget in web_section_gadgets:
       self.failUnless(gadget.getTitle() in response.getBody())     
 
@@ -682,7 +678,8 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
     self.stepTic()
 
     # check that gadgets are added to web section page view
-    response = self.publish('%s/WebSection_viewKnowledgePadColumn' %self.web_page_url, self.auth)
+    response = self.publish('%s/WebSection_viewKnowledgePadColumn?active_pad_url=%s' \
+                               %(self.web_page_url,self.web_section_content_knowledge_pad.getRelativeUrl()), self.auth)
 
     for gadget in web_section_content_gadgets:
       self.failUnless(gadget.getTitle() in response.getBody())
