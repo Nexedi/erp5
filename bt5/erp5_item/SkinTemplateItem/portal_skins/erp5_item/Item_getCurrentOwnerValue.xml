@@ -59,7 +59,7 @@ if last_affectation_list and last_affectation_list[0].section_uid:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>at_date=None</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
