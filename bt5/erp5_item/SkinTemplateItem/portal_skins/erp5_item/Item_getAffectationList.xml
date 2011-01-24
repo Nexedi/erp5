@@ -67,7 +67,7 @@ affectation_list = portal.portal_simulation.getCurrentTrackingList(**sql_kw)\n
 \n
 if not affectation_list:\n
   if default_at_date:\n
-    del kw[\'at_date\']\n
+    del sql_kw[\'at_date\']\n
   affectation_list = portal.portal_simulation.getFutureTrackingList(**sql_kw)\n
 \n
 return affectation_list\n
