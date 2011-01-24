@@ -464,9 +464,7 @@ class PropertyHolder:
     """
     Return the list of workflow method IDs
     """
-    return [x[0] for x in self._getItemList() if isinstance(x[1], WorkflowMethod)
-        or (isinstance(x[1], types.TupleType)
-            and x[1] is WORKFLOW_METHOD_MARKER)]
+    return [x[0] for x in self.getWorkflowMethodItemList()]
 
   def _getClassDict(self, klass, inherited=1, local=1):
     """
@@ -499,8 +497,7 @@ class PropertyHolder:
     """
     Return the list of class method IDs
     """
-    return [x[0] for x in self._getClassItemList(klass, inherited=inherited,
-      local=local) if callable(x[1]) and not isinstance(x[1], Method)]
+    return [x[0] for x in self.getClassMethodItemList()]
 
   def getClassPropertyItemList(self, klass, inherited=1, local=1):
     """
@@ -513,8 +510,7 @@ class PropertyHolder:
     """
     Return the list of class method IDs
     """
-    return [x[0] for x in self._getClassItemList(klass, inherited=inherited,
-      local=local) if not callable(x[1])]
+    return [x[0] for x in self.getClassPropertyItemList()]
 
 def getClassPropertyList(klass):
   ps_list = getattr(klass, 'property_sheets', ())
