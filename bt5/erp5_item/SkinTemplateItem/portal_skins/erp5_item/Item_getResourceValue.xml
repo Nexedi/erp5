@@ -64,7 +64,7 @@ return None\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>at_date=None, **kw</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
