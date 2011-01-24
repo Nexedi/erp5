@@ -41,8 +41,7 @@
     tal:define="global mode python: options.get(\'mode\', request.get(\'gadget_mode\', \'erp5_front\'));\n
                 global default_pad_group python: options.get(\'default_pad_group\', request.get(\'gadget_default_pad_group\', \'\'));\n
                 kw python: dict(mode=mode, default_pad_group=default_pad_group);\n
-                knowledge_pads python:  here.ERP5Site_getKnowledgePadListForUser(**kw);\n
-                struct python: here.ERP5Site_getActiveKnowledgePadForUser(knowledge_pads, **kw);\n
+                struct python: here.ERP5Site_getActiveKnowledgePadForUser(**kw);\n
                 global active_knowledge_pad python: struct[0];\n
                 global knowledge_pads python: struct[1];\n
                 global columns python: options.get(\'columns\', 3);\n

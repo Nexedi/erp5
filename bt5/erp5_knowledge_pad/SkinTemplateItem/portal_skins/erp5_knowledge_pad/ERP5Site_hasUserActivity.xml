@@ -55,11 +55,9 @@ portal = context.getPortalObject()\n
 \n
 if active_knowledge_pad is None and js_call:\n
   # only for asynchronous checks\n
-  kw = dict(mode=mode, \n
-            default_pad_group=default_pad_group)\n
-  knowledge_pads = context.ERP5Site_getKnowledgePadListForUser(**kw)\n
   active_knowledge_pad, knowledge_pads = context.ERP5Site_getActiveKnowledgePadForUser(\n
-                                                   knowledge_pads, **kw)\n
+                                                   mode=mode, \n
+                                                   default_pad_group=default_pad_group)\n
 \n
 if active_knowledge_pad is None:\n
   # no pad but it may be reindexed in an activity now, check by tag\n

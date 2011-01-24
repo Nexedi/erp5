@@ -56,6 +56,8 @@ MARKER = (\'\', None,)\n
 visible_state_list = [\'visible\', \'public\']\n
 isAnon = context.portal_membership.isAnonymousUser()\n
 \n
+knowledge_pads = context.ERP5Site_getKnowledgePadListForUser(mode=mode,\n
+                                                             default_pad_group=default_pad_group)\n
 if isAnon and len(knowledge_pads)>=1:\n
   # for anonymous we return the first one found \n
   return knowledge_pads[0], knowledge_pads\n
@@ -108,7 +110,7 @@ return None, knowledge_pads\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>knowledge_pads = [], mode = None, default_pad_group=None</string> </value>
+            <value> <string>mode = None, default_pad_group=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
