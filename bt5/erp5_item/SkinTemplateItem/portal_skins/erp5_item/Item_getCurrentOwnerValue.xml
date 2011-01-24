@@ -50,15 +50,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from DateTime import DateTime\n
-portal = context.getPortalObject()\n
-\n
-last_affectation_list = portal.portal_simulation.getCurrentTrackingList(\n
-                             item=context.getRelativeUrl(), at_date=at_date)\n
-\n
-if not last_affectation_list:\n
-  last_affectation_list = portal.portal_simulation.getFutureTrackingList(\n
-                             item=context.getRelativeUrl(), at_date=at_date)\n
+            <value> <string>portal = context.getPortalObject()\n
+last_affectation_list = context.Item_getAffectationList(**kw)\n
 \n
 if last_affectation_list and last_affectation_list[0].section_uid:\n
   return portal.portal_catalog.getObject(last_affectation_list[0].section_uid)\n

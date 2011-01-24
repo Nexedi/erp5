@@ -50,25 +50,36 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>last_affectation_list = context.Item_getAffectationList(**kw)\n
-if len(last_affectation_list):\n
-  last_affectation = last_affectation_list[0]\n
-  if last_affectation.delivery_uid is not None:\n
-    movement = portal.portal_catalog.getObject(last_affectation.delivery_uid)\n
-    variation_list = [x[0] for x in movement.getVariationCategoryItemList()]\n
-    variation = \',\'.join(variation_list)\n
-    return variation\n
+            <value> <string>"""Helper script used by many scripts Item_get*(Value|Title) used for UI\n
+It helps to improve consistency between all those scripts\n
+"""\n
+portal = context.getPortalObject()\n
 \n
-return []\n
+default_at_date = False\n
+if at_date is None:\n
+  default_at_date = True\n
+  at_date = DateTime()\n
+\n
+sql_kw = {\'item\': context.getRelativeUrl(),\n
+          \'at_date\': at_date}\n
+\n
+affectation_list = portal.portal_simulation.getCurrentTrackingList(**sql_kw)\n
+\n
+if not affectation_list:\n
+  if default_at_date:\n
+    del kw[\'at_date\']\n
+  affectation_list = portal.portal_simulation.getFutureTrackingList(**sql_kw)\n
+\n
+return affectation_list\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>at_date=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Item_getVariationCategoryTitleList</string> </value>
+            <value> <string>Item_getAffectationList</string> </value>
         </item>
       </dictionary>
     </pickle>

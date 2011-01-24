@@ -50,29 +50,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from DateTime import DateTime\n
-portal = context.getPortalObject()\n
+            <value> <string>portal = context.getPortalObject()\n
+last_affectation_list = context.Item_getAffectationList(**kw)\n
 \n
-default_at_date = False\n
-if at_date is None:\n
-  default_at_date = True\n
-  at_date = DateTime()\n
-\n
-kw[\'at_date\'] = at_date\n
-kw[\'item\'] = context.getRelativeUrl()\n
-\n
-last_affectation_list = portal.portal_simulation.getCurrentTrackingList(**kw)\n
-\n
-if kw.get(\'src__\',0):\n
-  return last_affectation_list\n
-\n
-if not last_affectation_list:\n
-  # Falback in Future inventory\n
-  if default_at_date:\n
-    del kw[\'at_date\']\n
-  last_affectation_list = portal.portal_simulation.getFutureTrackingList(**kw)\n
-\n
-if len(last_affectation_list):\n
+if last_affectation_list:\n
   last_affectation = last_affectation_list[0]\n
   if last_affectation.resource_uid is not None:\n
     resource_value = portal.portal_catalog.getObject(last_affectation.resource_uid)\n
