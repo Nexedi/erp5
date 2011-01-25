@@ -27,24 +27,23 @@
             <value> <string encoding="cdata"><![CDATA[
 
 $(document).ready(function() {     \n
-  var view="day";          \n
-  var DATA_FEED_URL = "Base_getEventList";\n
+  var DATA_FEED_URL = "Base_getEventListSerialized";\n
   var op = {\n
-    view: view,\n
-    theme:3,\n
+    view: "day",\n
     showday: new Date(),\n
     EditCmdhandler:Edit,\n
     DeleteCmdhandler:Delete,\n
+    weekstartday: 0,\n
     ViewCmdhandler:View,    \n
     onWeekOrMonthToDay:wtd,\n
     onBeforeRequestData: cal_beforerequest,\n
     onAfterRequestData: cal_afterrequest,\n
     onRequestDataError: cal_onerror, \n
     autoload:true,\n
-    url: DATA_FEED_URL + "?method=list",  \n
-    quickAddUrl: DATA_FEED_URL + "?method=add", \n
-    quickUpdateUrl: DATA_FEED_URL + "?method=update",\n
-    quickDeleteUrl: DATA_FEED_URL + "?method=remove"        \n
+    url: DATA_FEED_URL + "?request_type=list",  \n
+    quickAddUrl: DATA_FEED_URL + "?request_type=add", \n
+    quickUpdateUrl: DATA_FEED_URL + "?request_type=update",\n
+    quickDeleteUrl: DATA_FEED_URL + "?requet_type=remove"        \n
   };\n
   var $dv = $("#calhead");\n
   var _MH = document.documentElement.clientHeight;\n

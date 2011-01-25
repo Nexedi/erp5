@@ -84,6 +84,7 @@
                     <value>
                       <list>
                         <string>calendar_box</string>
+                        <string>date_selector_box</string>
                       </list>
                     </value>
                 </item>

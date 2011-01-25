@@ -112,12 +112,6 @@
         <div id="sfnextbtn" title="Next" class="fbutton">\n
           <span class="fnext"></span>\n
         </div>\n
-        <div class="fshowdatep fbutton">\n
-          <div>\n
-            <input type="hidden" name="txtshow" id="hdtxtshow" />\n
-            <span id="txtdatetimeshow">Loading</span>\n
-          </div>\n
-        </div>\n
         <div class="clear"></div>\n
         </div>\n
       </div>\n

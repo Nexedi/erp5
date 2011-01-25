@@ -30,13 +30,15 @@
             <key> <string>raw</string> </key>
             <value> <string>div.main-right {\n
   border-left: 0px !important;\n
-  width: 87% !important;\n
+  width: 85.6% !important;\n
 }\n
+\n
 div.main-left {\n
   width: 13.3% !important;\n
   margin-top: -3.7px !important;\n
   background-color: #FFFFFF !important;\n
 }\n
+\n
 div.main-right fieldset.widget {\n
   margin-left: 0px;\n
 }\n
@@ -60,6 +62,7 @@ div.cHead div.ptogtitle {\n
   right: 20px !important;\n
   top: 58px !important;\n
 }\n
+\n
 a#BBIT_DP_CONTAINER {\n
   left: 0px !important;\n
    \n
