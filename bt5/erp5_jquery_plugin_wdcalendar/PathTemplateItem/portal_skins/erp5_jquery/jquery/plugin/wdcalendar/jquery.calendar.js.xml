@@ -1,0 +1,2887 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts95872747.81</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>jquery.calendar.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>131759</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>jquery.calendar.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Pdata" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\r\n
+  * @description {Class} wdCalendar\r\n
+  * This is the main class of wdCalendar.\r\n
+  */\r\n
+; (function($) {\r\n
+    var __WDAY = new Array(i18n.xgcalendar.dateformat.sun, i18n.xgcalendar.dateformat.mon, i18n.xgcalendar.dateformat.tue, i18n.xgcalendar.dateformat.wed, i18n.xgcalendar.dateformat.thu, i18n.xgcalendar.dateformat.fri, i18n.xgcalendar.dateformat.sat);\r\n
+    var __MonthName = new Array(i18n.xgcalendar.dateformat.jan, i18n.xgcalendar.dateformat.feb, i18n.xgcalendar.dateformat.mar, i18n.xgcalendar.dateformat.apr, i18n.xgcalendar.dateformat.may, i18n.xgcalendar.dateformat.jun, i18n.xgcalendar.dateformat.jul, i18n.xgcalendar.dateformat.aug, i18n.xgcalendar.dateformat.sep, i18n.xgcalendar.dateformat.oct, i18n.xgcalendar.dateformat.nov, i18n.xgcalendar.dateformat.dec);\r\n
+    if (!Clone || typeof (Clone) != "function") {\r\n
+        var Clone = function(obj) {\r\n
+            var objClone = new Object();\r\n
+            if (obj.constructor == Object) {\r\n
+                objClone = new obj.constructor();\r\n
+            } else {\r\n
+                objClone = new obj.constructor(obj.valueOf());\r\n
+            }\r\n
+            for (var key in obj) {\r\n
+                if (objClone[key] != obj[key]) {\r\n
+                    if (typeof (obj[key]) == \'object\') {\r\n
+                        objClone[key] = Clone(obj[key]);\r\n
+                    } else {\r\n
+                        objClone[key] = obj[key];\r\n
+                    }\r\n
+                }\r\n
+            }\r\n
+            objClone.toString = obj.toString;\r\n
+            objClone.valueOf = obj.valueOf;\r\n
+            return objClone;\r\n
+        }\r\n
+    }\r\n
+    if (!dateFormat || typeof (dateFormat) != "function") {\r\n
+        var dateFormat = function(format) {\r\n
+            var o = {\r\n
+                "M+": this.getMonth() + 1,\r\n
+                "d+": this.getDate(),\r\n
+                "h+": this.getHours(),\r\n
+                "H+": this.getHours(),\r\n
+                "m+": this.getMinutes(),\r\n
+                "s+": this.getSeconds(),\r\n
+                "q+": Math.floor((this.getMonth() + 3) / 3),\r\n
+                "w": "0123456".indexOf(this.getDay()),\r\n
+                "W": __WDAY[this.getDay()],\r\n
+                "L": __MonthName[this.getMonth()] //non-standard\r\n
+            };\r\n
+            if (/(y+)/.test(format)) {\r\n
+                format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));\r\n
+            }\r\n
+            for (var k in o) {\r\n
+                if (new RegExp("(" + k + ")").test(format))\r\n
+                    format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));\r\n
+            }\r\n
+            return format;\r\n
+        };\r\n
+    }\r\n
+    if (!DateAdd || typeof (DateDiff) != "function") {\r\n
+        var DateAdd = function(interval, number, idate) {\r\n
+            number = parseInt(number);\r\n
+            var date;\r\n
+            if (typeof (idate) == "string") {\r\n
+                date = idate.split(/\\D/);\r\n
+                eval("var date = new Date(" + date.join(",") + ")");\r\n
+            }\r\n
+\r\n
+            if (typeof (idate) == "object") {\r\n
+                date = new Date(idate.toString());\r\n
+            }\r\n
+            switch (interval) {\r\n
+                case "y": date.setFullYear(date.getFullYear() + number); break;\r\n
+                case "m": date.setMonth(date.getMonth() + number); break;\r\n
+                case "d": date.setDate(date.getDate() + number); break;\r\n
+                case "w": date.setDate(date.getDate() + 7 * number); break;\r\n
+                case "h": date.setHours(date.getHours() + number); break;\r\n
+                case "n": date.setMinutes(date.getMinutes() + number); break;\r\n
+                case "s": date.setSeconds(date.getSeconds() + number); break;\r\n
+                case "l": date.setMilliseconds(date.getMilliseconds() + number); break;\r\n
+            }\r\n
+            return date;\r\n
+        }\r\n
+    }\r\n
+    if (!DateDiff || typeof (DateDiff) != "function") {\r\n
+        var DateDiff = function(interval, d1, d2) {\r\n
+            switch (interval) {\r\n
+                case "d": //date\r\n
+                case "w":\r\n
+                    d1 = new Date(d1.getFullYear(), d1.getMonth(), d1.getDate());\r\n
+                    d2 = new Date(d2.getFullYear(), d2.getMonth(), d2.getDate());\r\n
+                    break;  //w\r\n
+                case "h":\r\n
+                    d1 = new Date(d1.getFullYear(), d1.getMonth(), d1.getDate(), d1.getHours());\r\n
+                    d2 = new Date(d2.getFullYear(), d2.getMonth(), d2.getDate(), d2.getHours());\r\n
+                    break; //h\r\n
+                case "n":\r\n
+                    d1 = new Date(d1.getFullYear(), d1.getMonth(), d1.getDate(), d1.getHours(), d1.getMinutes());\r\n
+                    d2 = new Date(d2.getFullYear(), d2.getMonth(), d2.getDate(), d2.getHours(), d2.getMinutes());\r\n
+                    break;\r\n
+                case "s":\r\n
+                    d1 = new Date(d1.getFullYear(), d1.getMonth(), d1.getDate(), d1.getHours(), d1.getMinutes(), d1.getSeconds());\r\n
+                    d2 = new Date(d2.getFullYear(), d2.getMonth(), d2.getDate(), d2.getHours(), d2.getMinutes(), d2.getSeconds());\r\n
+                    break;\r\n
+            }\r\n
+            var t1 = d1.getTime(), t2 = d2.getTime();\r\n
+            var diff = NaN;\r\n
+            switch (interval) {\r\n
+                case "y": diff = d2.getFullYear() - d1.getFullYear(); break; //y\r\n
+                case "m": diff = (d2.getFullYear() - d1.getFullYear()) * 12 + d2.getMonth() - d1.getMonth(); break;    //m\r\n
+                case "d": diff = Math.floor(t2 / 86400000) - Math.floor(t1 / 86400000); break;\r\n
+                case "w": diff = Math.floor((t2 + 345600000) / (604800000)) - Math.floor((t1 + 345600000) / (604800000)); break; //w\r\n
+                case "h": diff = Math.floor(t2 / 3600000) - Math.floor(t1 / 3600000); break; //h\r\n
+                case "n": diff = Math.floor(t2 / 60000) - Math.floor(t1 / 60000); break; //\r\n
+                case "s": diff = Math.floor(t2 / 1000) - Math.floor(t1 / 1000); break; //s\r\n
+                case "l": diff = t2 - t1; break;\r\n
+            }\r\n
+            return diff;\r\n
+\r\n
+        }\r\n
+    }\r\n
+    if ($.fn.noSelect == undefined) {\r\n
+        $.fn.noSelect = function(p) { //no select plugin by me :-)\r\n
+            if (p == null)\r\n
+                prevent = true;\r\n
+            else\r\n
+                prevent = p;\r\n
+            if (prevent) {\r\n
+                return this.each(function() {\r\n
+                    if ($.browser.msie || $.browser.safari) $(this).bind(\'selectstart\', function() { return false; });\r\n
+                    else if ($.browser.mozilla) {\r\n
+                        $(this).css(\'MozUserSelect\', \'none\');\r\n
+                        $(\'body\').trigger(\'focus\');\r\n
+                    }\r\n
+                    else if ($.browser.opera) $(this).bind(\'mousedown\', function() { return false; });\r\n
+                    else $(this).attr(\'unselectable\', \'on\');\r\n
+                });\r\n
+\r\n
+            } else {\r\n
+                return this.each(function() {\r\n
+                    if ($.browser.msie || $.browser.safari) $(this).unbind(\'selectstart\');\r\n
+                    else if ($.browser.mozilla) $(this).css(\'MozUserSelect\', \'inherit\');\r\n
+                    else if ($.browser.opera) $(this).unbind(\'mousedown\');\r\n
+                    else $(this).removeAttr(\'unselectable\', \'on\');\r\n
+                });\r\n
+\r\n
+            }\r\n
+        }; //end noSelect\r\n
+    }\r\n
+    $.fn.bcalendar = function(option) {\r\n
+        var def = {\r\n
+            /**\r\n
+             * @description {Config} view  \r\n
+             * {String} Three calendar view provided, \'day\',\'week\',\'month\'. \'week\' by default.\r\n
+             */\r\n
+            view: "week", \r\n
+            /**\r\n
+             * @description {Config} weekstartday  \r\n
+             * {Number} First day of week 0 for Sun, 1 for Mon, 2 for Tue.\r\n
+             */\r\n
+            weekstartday: 1,  //start from Monday by default\r\n
+            theme: 0, //theme no\r\n
+            /**\r\n
+             * @description {Config} height  \r\n
+             * {Number} Calendar height, false for page height by default.\r\n
+             */\r\n
+            height: false, \r\n
+            /**\r\n
+             * @description {Config} url  \r\n
+             * {String} Url to request calendar data.\r\n
+             */\r\n
+            url: "", \r\n
+            /**\r\n
+             * @description {Config} eventItems  \r\n
+             * {Array} event items for initialization.\r\n
+             */   \r\n
+            eventItems: [], \r\n
+            method: "POST", \r\n
+            /**\r\n
+             * @description {Config} showday  \r\n
+             * {Date} Current date. today by default.\r\n
+             */\r\n
+            showday: new Date(), \r\n
+            /**\r\n
+\t \t         * @description {Event} onBeforeRequestData:function(stage)\r\n
+\t \t         * Fired before any ajax request is sent.\r\n
+\t \t         * @param {Number} stage. 1 for retrieving events, 2 - adding event, 3 - removiing event, 4 - update event.\r\n
+\t           */\r\n
+            onBeforeRequestData: false, \r\n
+            /**\r\n
+\t \t         * @description {Event} onAfterRequestData:function(stage)\r\n
+\t \t         * Fired before any ajax request is finished.\r\n
+\t \t         * @param {Number} stage. 1 for retrieving events, 2 - adding event, 3 - removiing event, 4 - update event.\r\n
+\t           */\r\n
+            onAfterRequestData: false, \r\n
+            /**\r\n
+\t \t         * @description {Event} onAfterRequestData:function(stage)\r\n
+\t \t         * Fired when some errors occur while any ajax request is finished.\r\n
+\t \t         * @param {Number} stage. 1 for retrieving events, 2 - adding event, 3 - removiing event, 4 - update event.\r\n
+\t           */\r\n
+            onRequestDataError: false,              \r\n
+            \r\n
+            onWeekOrMonthToDay: false, \r\n
+            /**\r\n
+\t \t         * @description {Event} quickAddHandler:function(calendar, param )\r\n
+\t \t         * Fired when user quick adds an item. If this function is set, ajax request to quickAddUrl will abort. \r\n
+\t \t         * @param {Object} calendar Calendar object.\r\n
+\t \t         * @param {Array} param Format [{name:"name1", value:"value1"}, ...]\r\n
+\t \t         * \t \t         \r\n
+\t           */\r\n
+            quickAddHandler: false, \r\n
+            /**\r\n
+             * @description {Config} quickAddUrl  \r\n
+             * {String} Url for quick adding. \r\n
+             */\r\n
+            quickAddUrl: "", \r\n
+            /**\r\n
+             * @description {Config} quickUpdateUrl  \r\n
+             * {String} Url for time span update.\r\n
+             */\r\n
+            quickUpdateUrl: "", \r\n
+            /**\r\n
+             * @description {Config} quickDeleteUrl  \r\n
+             * {String} Url for removing an event.\r\n
+             */\r\n
+            quickDeleteUrl: "", \r\n
+            /**\r\n
+             * @description {Config} autoload  \r\n
+             * {Boolean} If event items is empty, and this param is set to true. \r\n
+             * Event will be retrieved by ajax call right after calendar is initialized.\r\n
+             */  \r\n
+            autoload: false,\r\n
+            /**\r\n
+             * @description {Config} readonly  \r\n
+             * {Boolean} Indicate calendar is readonly or editable \r\n
+             */\r\n
+            readonly: false, \r\n
+            /**\r\n
+             * @description {Config} extParam  \r\n
+             * {Array} Extra params submitted to server. \r\n
+             * Sample - [{name:"param1", value:"value1"}, {name:"param2", value:"value2"}]\r\n
+             */\r\n
+            extParam: [], \r\n
+            /**\r\n
+             * @description {Config} enableDrag  \r\n
+             * {Boolean} Whether end user can drag event item by mouse. \r\n
+             */\r\n
+            enableDrag: true, \r\n
+            loadDateR: [] \r\n
+        };\r\n
+        var eventDiv = $("#gridEvent");\r\n
+        if (eventDiv.length == 0) {\r\n
+            eventDiv = $("<div id=\'gridEvent\' style=\'display:none;\'></div>").appendTo(document.body);\r\n
+        }\r\n
+        var gridcontainer = $(this);\r\n
+        option = $.extend(def, option);\r\n
+        //no quickUpdateUrl, dragging disabled.\r\n
+        if (option.quickUpdateUrl == null || option.quickUpdateUrl == "") {\r\n
+            option.enableDrag = false;\r\n
+        }\r\n
+        //template for month and date\r\n
+        var __SCOLLEVENTTEMP = "<DIV style=\\"WIDTH:${width};top:${top};left:${left};\\" title=\\"${title}\\" class=\\"chip chip${i} ${drag}\\"><div class=\\"dhdV\\" style=\\"display:none\\">${data}</div><DIV style=\\"BORDER-BOTTOM-COLOR:${bdcolor}\\" class=ct>&nbsp;</DIV><DL style=\\"BORDER-BOTTOM-COLOR:${bdcolor}; BACKGROUND-COLOR:${bgcolor1}; BORDER-TOP-COLOR: ${bdcolor}; HEIGHT: ${height}px; BORDER-RIGHT-COLOR:${bdcolor}; BORDER-LEFT-COLOR:${bdcolor}\\"><DT style=\\"BACKGROUND-COLOR:${bgcolor2}\\">${starttime} - ${endtime} ${icon}</DT><DD><SPAN>${content}</SPAN></DD><DIV class=\'resizer\' style=\'display:${redisplay}\'><DIV class=rszr_icon>&nbsp;</DIV></DIV></DL><DIV style=\\"BORDER-BOTTOM-COLOR:${bdcolor}; BACKGROUND-COLOR:${bgcolor1}; BORDER-TOP-COLOR: ${bdcolor}; BORDER-RIGHT-COLOR: ${bdcolor}; BORDER-LEFT-COLOR:${bdcolor}\\" class=cb1>&nbsp;</DIV><DIV style=\\"BORDER-BOTTOM-COLOR:${bdcolor}; BORDER-TOP-COLOR:${bdcolor}; BORDER-RIGHT-COLOR:${bdcolor}; BORDER-LEFT-COLOR:${bdcolor}\\" class=cb2>&nbsp;</DIV></DIV>";\r\n
+        var __ALLDAYEVENTTEMP = \'<div class="rb-o ${eclass}" id="${id}" title="${title}" style="color:${color};"><div class="dhdV" style="display:none">${data}</div><div class="${extendClass} rb-m" style="background-color:${color}">${extendHTML}<div class="rb-i">${content}</div></div></div>\';\r\n
+        var __MonthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];\r\n
+        var __LASSOTEMP = "<div class=\'drag-lasso\' style=\'left:${left}px;top:${top}px;width:${width}px;height:${height}px;\'>&nbsp;</div>";\r\n
+        //for dragging var\r\n
+        var _dragdata;\r\n
+        var _dragevent;\r\n
+\r\n
+        //clear DOM\r\n
+        clearcontainer();\r\n
+\r\n
+        //no height specified in options, we get page height.\r\n
+        if (!option.height) {\r\n
+            option.height = document.documentElement.clientHeight;\r\n
+        }\r\n
+        //\r\n
+        gridcontainer.css("overflow-y", "visible").height(option.height - 8);\r\n
+\r\n
+        //populate events data for first display.\r\n
+        if (option.url && option.autoload) {\r\n
+            populate(); \r\n
+        }\r\n
+        else {\r\n
+            //contruct HTML          \r\n
+            render();\r\n
+            //get date range\r\n
+            var d = getRdate();\r\n
+            pushER(d.start, d.end);\r\n
+        }\r\n
+\r\n
+        //clear DOM\r\n
+        function clearcontainer() {\r\n
+            gridcontainer.empty();\r\n
+        }\r\n
+        //get range\r\n
+        function getRdate() {\r\n
+            return { start: option.vstart, end: option.vend };\r\n
+        }\r\n
+        //add date range to cache.\r\n
+        function pushER(start, end) {\r\n
+            var ll = option.loadDateR.length;\r\n
+            if (!end) {\r\n
+                end = start;\r\n
+            }\r\n
+            if (ll == 0) {\r\n
+                option.loadDateR.push({ startdate: start, enddate: end });\r\n
+            }\r\n
+            else {\r\n
+                for (var i = 0; i < ll; i++) {\r\n
+                    var dr = option.loadDateR[i];\r\n
+                    var diff = DateDiff("d", start, dr.startdate);\r\n
+                    if (diff == 0 || diff == 1) {\r\n
+                        if (dr.enddate < end) {\r\n
+                            dr.enddate = end;\r\n
+                        }\r\n
+                        break;\r\n
+                    }\r\n
+                    else if (diff > 1) {\r\n
+                        var d2 = DateDiff("d", end, dr.startdate);\r\n
+                        if (d2 > 1) {\r\n
+                            option.loadDateR.splice(0, 0, { startdate: start, enddate: end });\r\n
+                        }\r\n
+                        else {\r\n
+                            dr.startdate = start;\r\n
+                            if (dr.enddate < end) {\r\n
+                                dr.enddate = end;\r\n
+                            }\r\n
+                        }\r\n
+                        break;\r\n
+                    }\r\n
+                    else {\r\n
+                        var d3 = DateDiff("d", end, dr.startdate);\r\n
+\r\n
+                        if (dr.enddate < end) {\r\n
+                            if (d3 < 1) {\r\n
+                                dr.enddate = end;\r\n
+                                break;\r\n
+                            }\r\n
+                            else {\r\n
+                                if (i == ll - 1) {\r\n
+                                    option.loadDateR.push({ startdate: start, enddate: end });\r\n
+                                }\r\n
+                            }\r\n
+                        }\r\n
+                    }\r\n
+                }\r\n
+                //end for\r\n
+                //clear\r\n
+                ll = option.loadDateR.length;\r\n
+                if (ll > 1) {\r\n
+                    for (var i = 0; i < ll - 1; ) {\r\n
+                        var d1 = option.loadDateR[i];\r\n
+                        var d2 = option.loadDateR[i + 1];\r\n
+\r\n
+                        var diff1 = DateDiff("d", d2.startdate, d1.enddate);\r\n
+                        if (diff1 <= 1) {\r\n
+                            d1.startdate = d2.startdate > d1.startdate ? d1.startdate : d2.startdate;\r\n
+                            d1.enddate = d2.enddate > d1.enddate ? d2.enddate : d1.enddate;\r\n
+                            option.loadDateR.splice(i + 1, 1);\r\n
+                            ll--;\r\n
+                            continue;\r\n
+                        }\r\n
+                        i++;\r\n
+                    }\r\n
+                }\r\n
+            }\r\n
+        }\r\n
+        //contruct DOM \r\n
+        function render() {\r\n
+            //params needed\r\n
+            //viewType, showday, events, config\t\t\t\r\n
+            var showday = new Date(option.showday.getFullYear(), option.showday.getMonth(), option.showday.getDate());\r\n
+            var events = option.eventItems;\r\n
+            var config = { view: option.view, weekstartday: option.weekstartday, theme: option.theme };\r\n
+            if (option.view == "day" || option.view == "week") {\r\n
+                var $dvtec = $("#dvtec");\r\n
+                if ($dvtec.length > 0) {\r\n
+                    option.scoll = $dvtec.attr("scrollTop"); //get scroll bar position\r\n
+                }\r\n
+            }\r\n
+            switch (option.view) {\r\n
+                case "day":\r\n
+                    BuildDaysAndWeekView(showday, 1, events, config);\r\n
+                    break;\r\n
+                case "week":\r\n
+                    BuildDaysAndWeekView(showday, 7, events, config);\r\n
+                    break;\r\n
+                case "month":\r\n
+                    BuildMonthView(showday, events, config);\r\n
+                    break;\r\n
+                default:\r\n
+                    alert(i18n.xgcalendar.no_implement);\r\n
+                    break;\r\n
+            }\r\n
+            initevents(option.view); \r\n
+            ResizeView();\r\n
+        }\r\n
+\r\n
+        //build day view\r\n
+        function BuildDaysAndWeekView(startday, l, events, config) {\r\n
+            var days = [];\r\n
+            if (l == 1) {\r\n
+                var show = dateFormat.call(startday, i18n.xgcalendar.dateformat.Md);\r\n
+                days.push({ display: show, date: startday, day: startday.getDate(), year: startday.getFullYear(), month: startday.getMonth() + 1 });\r\n
+                option.datestrshow = CalDateShow(days[0].date);\r\n
+                option.vstart = days[0].date;\r\n
+                option.vend = days[0].date;\r\n
+            }\r\n
+            else {\r\n
+                var w = 0;\r\n
+                if (l == 7) {\r\n
+                    w = config.weekstartday - startday.getDay();\r\n
+                    if (w > 0) w = w - 7;\r\n
+                }\r\n
+                var ndate;\r\n
+                for (var i = w, j = 0; j < l; i = i + 1, j++) {\r\n
+                    ndate = DateAdd("d", i, startday);\r\n
+                    var show = dateFormat.call(ndate, i18n.xgcalendar.dateformat.Md);\r\n
+                    days.push({ display: show, date: ndate, day: ndate.getDate(), year: ndate.getFullYear(), month: ndate.getMonth() + 1 });\r\n
+                }\r\n
+                option.vstart = days[0].date;\r\n
+                option.vend = days[l - 1].date;\r\n
+                option.datestrshow = CalDateShow(days[0].date, days[l - 1].date);\r\n
+            }\r\n
+\r\n
+            var allDayEvents = [];\r\n
+            var scollDayEvents = [];\r\n
+            //get number of all-day events, including more-than-one-day events.\r\n
+            var dM = PropareEvents(days, events, allDayEvents, scollDayEvents);\r\n
+\r\n
+            var html = [];\r\n
+            html.push("<div id=\\"dvwkcontaienr\\" class=\\"wktopcontainer\\">");\r\n
+            html.push("<table class=\\"wk-top\\" border=\\"0\\" cellpadding=\\"0\\" cellspacing=\\"0\\">");\r\n
+            BuildWT(html, days, allDayEvents, dM);\r\n
+            html.push("</table>");\r\n
+            html.push("</div>");\r\n
+\r\n
+            //onclick=\\"javascript:FunProxy(\'rowhandler\',event,this);\\"\r\n
+            html.push("<div id=\\"dvtec\\"  class=\\"scolltimeevent\\"><table style=\\"table-layout: fixed;", jQuery.browser.msie ? "" : "width:100%", "\\" cellspacing=\\"0\\" cellpadding=\\"0\\"><tbody><tr><td>");\r\n
+            html.push("<table style=\\"height: 1008px\\" id=\\"tgTable\\" class=\\"tg-timedevents\\" cellspacing=\\"0\\" cellpadding=\\"0\\"><tbody>");\r\n
+            BuildDayScollEventContainer(html, days, scollDayEvents);\r\n
+            html.push("</tbody></table></td></tr></tbody></table></div>");\r\n
+            gridcontainer.html(html.join(""));\r\n
+            html = null;\r\n
+            //TODO event handlers\r\n
+            //$("#weekViewAllDaywk").click(RowHandler);\r\n
+        }\r\n
+        //build month view\r\n
+        function BuildMonthView(showday, events, config) {\r\n
+            var cc = "<div id=\'cal-month-cc\' class=\'cc\'><div id=\'cal-month-cc-header\'><div class=\'cc-close\' id=\'cal-month-closebtn\'></div><div id=\'cal-month-cc-title\' class=\'cc-title\'></div></div><div id=\'cal-month-cc-body\' class=\'cc-body\'><div id=\'cal-month-cc-content\' class=\'st-contents\'><table class=\'st-grid\' cellSpacing=\'0\' cellPadding=\'0\'><tbody></tbody></table></div></div></div>";\r\n
+            var html = [];\r\n
+            html.push(cc);\r\n
+            //build header\r\n
+            html.push("<div id=\\"mvcontainer\\" class=\\"mv-container\\">");\r\n
+            html.push("<table id=\\"mvweek\\" class=\\"mv-daynames-table\\" cellSpacing=\\"0\\" cellPadding=\\"0\\"><tbody><tr>");\r\n
+            for (var i = config.weekstartday, j = 0; j < 7; i++, j++) {\r\n
+                if (i > 6) i = 0;\r\n
+                var p = { dayname: __WDAY[i] };\r\n
+                html.push("<th class=\\"mv-dayname\\" title=\\"", __WDAY[i], "\\">", __WDAY[i], "");\r\n
+            }\r\n
+            html.push("</tr></tbody></table>");\r\n
+            html.push("</div>");\r\n
+            var bH = GetMonthViewBodyHeight() - GetMonthViewHeaderHeight();\r\n
+\r\n
+            html.push("<div id=\\"mvEventContainer\\" class=\\"mv-event-container\\" style=\\"height:", bH, "px;", "\\">");\r\n
+            BuilderMonthBody(html, showday, config.weekstartday, events, bH);\r\n
+            html.push("</div>");\r\n
+            gridcontainer.html(html.join(""));\r\n
+            html = null;\r\n
+            $("#cal-month-closebtn").click(closeCc);\r\n
+        }\r\n
+        function closeCc() {\r\n
+            $("#cal-month-cc").css("visibility", "hidden");\r\n
+        }\r\n
+        \r\n
+        //all-day event, including more-than-one-day events \r\n
+        function PropareEvents(dayarrs, events, aDE, sDE) {\r\n
+            var l = dayarrs.length;\r\n
+            var el = events.length;\r\n
+            var fE = [];\r\n
+            var deB = aDE;\r\n
+            var deA = sDE;\r\n
+            for (var j = 0; j < el; j++) {\r\n
+                var sD = events[j][2];\r\n
+                var eD = events[j][3];\r\n
+                var s = {};\r\n
+                s.event = events[j];\r\n
+                s.day = sD.getDate();\r\n
+                s.year = sD.getFullYear();\r\n
+                s.month = sD.getMonth() + 1;\r\n
+                s.allday = events[j][4] == 1;\r\n
+                s.crossday = events[j][5] == 1;\r\n
+                s.reevent = events[j][6] == 1; //Recurring event\r\n
+                s.daystr = [s.year, s.month, s.day].join("/");\r\n
+                s.st = {};\r\n
+                s.st.hour = sD.getHours();\r\n
+                s.st.minute = sD.getMinutes();\r\n
+                s.st.p = s.st.hour * 60 + s.st.minute; // start time\r\n
+                s.et = {};\r\n
+                s.et.hour = eD.getHours();\r\n
+                s.et.minute = eD.getMinutes();\r\n
+                s.et.p = s.et.hour * 60 + s.et.minute; // end time\r\n
+                fE.push(s);\r\n
+            }\r\n
+            var dMax = 0;\r\n
+            for (var i = 0; i < l; i++) {\r\n
+                var da = dayarrs[i];\r\n
+                deA[i] = []; deB[i] = [];\r\n
+                da.daystr = da.year + "/" + da.month + "/" + da.day;\r\n
+                for (var j = 0; j < fE.length; j++) {\r\n
+                    if (!fE[j].crossday && !fE[j].allday) {\r\n
+                        if (da.daystr == fE[j].daystr)\r\n
+                            deA[i].push(fE[j]);\r\n
+                    }\r\n
+                    else {\r\n
+                        if (da.daystr == fE[j].daystr) {\r\n
+                            deB[i].push(fE[j]);\r\n
+                            dMax++;\r\n
+                        }\r\n
+                        else {\r\n
+                            if (i == 0 && da.date >= fE[j].event[2] && da.date <= fE[j].event[3])//first more-than-one-day event\r\n
+                            {\r\n
+                                deB[i].push(fE[j]);\r\n
+                                dMax++;\r\n
+                            }\r\n
+                        }\r\n
+                    }\r\n
+                }\r\n
+            }\r\n
+            var lrdate = dayarrs[l - 1].date;\r\n
+            for (var i = 0; i < l; i++) { //to deal with more-than-one-day event\r\n
+                var de = deB[i];\r\n
+                if (de.length > 0) { //           \r\n
+                    for (var j = 0; j < de.length; j++) {\r\n
+                        var end = DateDiff("d", lrdate, de[j].event[3]) > 0 ? lrdate : de[j].event[3];\r\n
+                        de[j].colSpan = DateDiff("d", dayarrs[i].date, end) + 1\r\n
+                    }\r\n
+                }\r\n
+                de = null;\r\n
+            }\r\n
+            //for all-day events\r\n
+            for (var i = 0; i < l; i++) {\r\n
+                var de = deA[i];\r\n
+                if (de.length > 0) { \r\n
+                    var x = []; \r\n
+                    var y = []; \r\n
+                    var D = [];\r\n
+                    var dl = de.length;\r\n
+                    var Ia;\r\n
+                    for (var j = 0; j < dl; ++j) {\r\n
+                        var ge = de[j];\r\n
+                        for (var La = ge.st.p, Ia = 0; y[Ia] > La; ) Ia++;\r\n
+                        ge.PO = Ia; ge.ne = []; //PO is how many events before this one\r\n
+                        y[Ia] = ge.et.p || 1440;\r\n
+                        x[Ia] = ge;\r\n
+                        if (!D[Ia]) {\r\n
+                            D[Ia] = [];\r\n
+                        }\r\n
+                        D[Ia].push(ge);\r\n
+                        if (Ia != 0) {\r\n
+                            ge.pe = [x[Ia - 1]]; //previous event\r\n
+                            x[Ia - 1].ne.push(ge); //next event\r\n
+                        }\r\n
+                        for (Ia = Ia + 1; y[Ia] <= La; ) Ia++;\r\n
+                        if (x[Ia]) {\r\n
+                            var k = x[Ia];\r\n
+                            ge.ne.push(k);\r\n
+                            k.pe.push(ge);\r\n
+                        }\r\n
+                        ge.width = 1 / (ge.PO + 1);\r\n
+                        ge.left = 1 - ge.width;\r\n
+                    }\r\n
+                    var k = Array.prototype.concat.apply([], D);\r\n
+                    x = y = D = null;\r\n
+                    var t = k.length;\r\n
+                    for (var y = t; y--; ) {\r\n
+                        var H = 1;\r\n
+                        var La = 0;\r\n
+                        var x = k[y];\r\n
+                        for (var D = x.ne.length; D--; ) {\r\n
+                            var Ia = x.ne[D];\r\n
+                            La = Math.max(La, Ia.VL);\r\n
+                            H = Math.min(H, Ia.left)\r\n
+                        }\r\n
+                        x.VL = La + 1;\r\n
+                        x.width = H / (x.PO + 1);\r\n
+                        x.left = H - x.width;\r\n
+                    }\r\n
+                    for (var y = 0; y < t; y++) {\r\n
+                        var x = k[y];\r\n
+                        x.left = 0;\r\n
+                        if (x.pe) for (var D = x.pe.length; D--; ) {\r\n
+                            var H = x.pe[D];\r\n
+                            x.left = Math.max(x.left, H.left + H.width);\r\n
+                        }\r\n
+                        var p = (1 - x.left) / x.VL;\r\n
+                        x.width = Math.max(x.width, p);\r\n
+                        x.aQ = Math.min(1 - x.left, x.width + 0.7 * p); //width offset\r\n
+                    }\r\n
+                    de = null;\r\n
+                    deA[i] = k;\r\n
+                }\r\n
+            }\r\n
+            return dMax;\r\n
+        }\r\n
+\r\n
+        function BuildWT(ht, dayarrs, events, dMax) {\r\n
+            //1:\r\n
+            ht.push("<tr>", "<th width=\\"60\\" rowspan=\\"3\\">&nbsp;</th>");\r\n
+            for (var i = 0; i < dayarrs.length; i++) {\r\n
+                var ev, title, cl;\r\n
+                if (dayarrs.length == 1) {\r\n
+                    ev = "";\r\n
+                    title = "";\r\n
+                    cl = "";\r\n
+                }\r\n
+                else {\r\n
+                    ev = ""; // "onclick=\\"javascript:FunProxy(\'week2day\',event,this);\\"";\r\n
+                    title = i18n.xgcalendar.to_date_view;\r\n
+                    cl = "wk-daylink";\r\n
+                }\r\n
+                ht.push("<th abbr=\'", dateFormat.call(dayarrs[i].date, i18n.xgcalendar.dateformat.fulldayvalue), "\' class=\'gcweekname\' scope=\\"col\\"><div title=\'", title, "\' ", ev, " class=\'wk-dayname\'><span class=\'", cl, "\'>", dayarrs[i].display, "</span></div></th>");\r\n
+\r\n
+            }\r\n
+            ht.push("<th width=\\"16\\" rowspan=\\"3\\">&nbsp;</th>");\r\n
+            ht.push("</tr>"); //end tr1;\r\n
+            //2:          \r\n
+            ht.push("<tr>");\r\n
+            ht.push("<td class=\\"wk-allday\\"");\r\n
+\r\n
+            if (dayarrs.length > 1) {\r\n
+                ht.push(" colSpan=\'", dayarrs.length, "\'");\r\n
+            }\r\n
+            //onclick=\\"javascript:FunProxy(\'rowhandler\',event,this);\\"\r\n
+            ht.push("><div id=\\"weekViewAllDaywk\\" ><table class=\\"st-grid\\" cellpadding=\\"0\\" cellspacing=\\"0\\"><tbody>");\r\n
+\r\n
+            if (dMax == 0) {\r\n
+                ht.push("<tr>");\r\n
+                for (var i = 0; i < dayarrs.length; i++) {\r\n
+                    ht.push("<td class=\\"st-c st-s\\"", " ch=\'qkadd\' abbr=\'", dateFormat.call(dayarrs[i].date, "yyyy-M-d"), "\' axis=\'00:00\'>&nbsp;</td>");\r\n
+                }\r\n
+                ht.push("</tr>");\r\n
+            }\r\n
+            else {\r\n
+                var l = events.length;\r\n
+                var el = 0;\r\n
+                var x = [];\r\n
+                for (var j = 0; j < l; j++) {\r\n
+                    x.push(0);\r\n
+                }\r\n
+                //var c = tc();\r\n
+                for (var j = 0; el < dMax; j++) {\r\n
+                    ht.push("<tr>");\r\n
+                    for (var h = 0; h < l; ) {\r\n
+                        var e = events[h][x[h]];\r\n
+                        ht.push("<td class=\'st-c");\r\n
+                        if (e) { //if exists\r\n
+                            x[h] = x[h] + 1;\r\n
+                            ht.push("\'");\r\n
+                            var t = BuildMonthDayEvent(e, dayarrs[h].date, l - h);\r\n
+                            if (e.colSpan > 1) {\r\n
+                                ht.push(" colSpan=\'", e.colSpan, "\'");\r\n
+                                h += e.colSpan;\r\n
+                            }\r\n
+                            else {\r\n
+                                h++;\r\n
+                            }\r\n
+                            ht.push(" ch=\'show\'>", t);\r\n
+                            t = null;\r\n
+                            el++;\r\n
+                        }\r\n
+                        else {\r\n
+                            ht.push(" st-s\' ch=\'qkadd\' abbr=\'", dateFormat.call(dayarrs[h].date, i18n.xgcalendar.dateformat.fulldayvalue), "\' axis=\'00:00\'>&nbsp;");\r\n
+                            h++;\r\n
+                        }\r\n
+                        ht.push("</td>");\r\n
+                    }\r\n
+                    ht.push("</tr>");\r\n
+                }\r\n
+                ht.push("<tr>");\r\n
+                for (var h = 0; h < l; h++) {\r\n
+                    ht.push("<td class=\'st-c st-s\' ch=\'qkadd\' abbr=\'", dateFormat.call(dayarrs[h].date, i18n.xgcalendar.dateformat.fulldayvalue), "\' axis=\'00:00\'>&nbsp;</td>");\r\n
+                }\r\n
+                ht.push("</tr>");\r\n
+            }\r\n
+            ht.push("</tbody></table></div></td></tr>"); // stgrid end //wvAd end //td2 end //tr2 end\r\n
+            //3:\r\n
+            ht.push("<tr>");\r\n
+\r\n
+            ht.push("<td style=\\"height: 5px;\\"");\r\n
+            if (dayarrs.length > 1) {\r\n
+                ht.push(" colSpan=\'", dayarrs.length, "\'");\r\n
+            }\r\n
+            ht.push("></td>");\r\n
+            ht.push("</tr>");\r\n
+        }\r\n
+\r\n
+        function BuildDayScollEventContainer(ht, dayarrs, events) {\r\n
+            //1:\r\n
+            ht.push("<tr>");\r\n
+            ht.push("<td style=\'width:60px;\'></td>");\r\n
+            ht.push("<td");\r\n
+            if (dayarrs.length > 1) {\r\n
+                ht.push(" colSpan=\'", dayarrs.length, "\'");\r\n
+            }\r\n
+            ht.push("><div id=\\"tgspanningwrapper\\" class=\\"tg-spanningwrapper\\"><div style=\\"font-size: 20px\\" class=\\"tg-hourmarkers\\">");\r\n
+            for (var i = 0; i < 24; i++) {\r\n
+                ht.push("<div class=\\"tg-dualmarker\\"></div>");\r\n
+            }\r\n
+            ht.push("</div></div></td></tr>");\r\n
+\r\n
+            //2:\r\n
+            ht.push("<tr>");\r\n
+            ht.push("<td style=\\"width: 60px\\" class=\\"tg-times\\">");\r\n
+\r\n
+            //get current time \r\n
+            var now = new Date(); var h = now.getHours(); var m = now.getMinutes();\r\n
+            var mHg = gP(h, m) - 4; //make middle alignment vertically\r\n
+            ht.push("<div id=\\"tgnowptr\\" class=\\"tg-nowptr\\" style=\\"left:0px;top:", mHg, "px\\"></div>");\r\n
+            var tmt = "";\r\n
+            for (var i = 0; i < 24; i++) {\r\n
+                tmt = fomartTimeShow(i);\r\n
+                ht.push("<div style=\\"height: 41px\\" class=\\"tg-time\\">", tmt, "</div>");\r\n
+            }\r\n
+            ht.push("</td>");\r\n
+\r\n
+            var l = dayarrs.length;\r\n
+            for (var i = 0; i < l; i++) {\r\n
+                ht.push("<td class=\\"tg-col\\" ch=\'qkadd\' abbr=\'", dateFormat.call(dayarrs[i].date, i18n.xgcalendar.dateformat.fulldayvalue), "\'>");\r\n
+                var istoday = dateFormat.call(dayarrs[i].date, "yyyyMMdd") == dateFormat.call(new Date(), "yyyyMMdd");\r\n
+                // Today\r\n
+                if (istoday) {\r\n
+                    ht.push("<div style=\\"margin-bottom: -1008px; height:1008px\\" class=\\"tg-today\\">&nbsp;</div>");\r\n
+                }\r\n
+                //var eventC = $(eventWrap);\r\n
+                //onclick=\\"javascript:FunProxy(\'rowhandler\',event,this);\\"\r\n
+                ht.push("<div  style=\\"margin-bottom: -1008px; height: 1008px\\" id=\'tgCol", i, "\' class=\\"tg-col-eventwrapper\\">");\r\n
+                BuildEvents(ht, events[i], dayarrs[i]);\r\n
+                ht.push("</div>");\r\n
+\r\n
+                ht.push("<div class=\\"tg-col-overlaywrapper\\" id=\'tgOver", i, "\'>");\r\n
+                if (istoday) {\r\n
+                    var mhh = mHg + 4;\r\n
+                    ht.push("<div id=\\"tgnowmarker\\" class=\\"tg-hourmarker tg-nowmarker\\" style=\\"left:0px;top:", mhh, "px\\"></div>");\r\n
+                }\r\n
+                ht.push("</div>");\r\n
+                ht.push("</td>");\r\n
+            }\r\n
+            ht.push("</tr>");\r\n
+        }\r\n
+        //show events to calendar\r\n
+        function BuildEvents(hv, events, sday) {\r\n
+            for (var i = 0; i < events.length; i++) {\r\n
+                var c;\r\n
+                if (events[i].event[7] && events[i].event[7] >= 0) {\r\n
+                    c = tc(events[i].event[7]); //theme\r\n
+                }\r\n
+                else {\r\n
+                    c = tc(); //default theme\r\n
+                }\r\n
+                var tt = BuildDayEvent(c, events[i], i);\r\n
+                hv.push(tt);\r\n
+            }\r\n
+        }\r\n
+        function getTitle(event) {\t\t\t\r\n
+            var timeshow, locationshow, attendsshow, eventshow;\r\n
+            var showtime = event[4] != 1;\r\n
+            eventshow = event[1];\r\n
+            var startformat = getymformat(event[2], null, showtime, true);\r\n
+            var endformat = getymformat(event[3], event[2], showtime, true);\r\n
+            timeshow = dateFormat.call(event[2], startformat) + " - " + dateFormat.call(event[3], endformat);\r\n
+            locationshow = (event[9] != undefined && event[9] != "") ? event[9] : i18n.xgcalendar.i_undefined;\r\n
+            attendsshow = (event[10] != undefined && event[10] != "") ? event[10] : "";\r\n
+            var ret = [];\r\n
+            if (event[4] == 1) {\r\n
+                ret.push("[" + i18n.xgcalendar.allday_event + "]",$.browser.mozilla?"":"\\r\\n" );\r\n
+            }\r\n
+            else {\r\n
+                if (event[5] == 1) {\r\n
+                    ret.push("[" + i18n.xgcalendar.repeat_event + "]",$.browser.mozilla?"":"\\r\\n");\r\n
+                }\r\n
+            }\r\n
+            ret.push(i18n.xgcalendar.time + ":", timeshow, $.browser.mozilla?"":"\\r\\n", i18n.xgcalendar.event + ":", eventshow,$.browser.mozilla?"":"\\r\\n", i18n.xgcalendar.location + ":", locationshow);\r\n
+            if (attendsshow != "") {\r\n
+                ret.push($.browser.mozilla?"":"\\r\\n", i18n.xgcalendar.participant + ":", attendsshow);\r\n
+            }\r\n
+            return ret.join("");\r\n
+        }\r\n
+        function BuildDayEvent(theme, e, index) {\r\n
+            var p = { bdcolor: theme[0], bgcolor2: theme[0], bgcolor1: theme[2], width: "70%", icon: "", title: "", data: "" };\r\n
+            p.starttime = pZero(e.st.hour) + ":" + pZero(e.st.minute);\r\n
+            p.endtime = pZero(e.et.hour) + ":" + pZero(e.et.minute);\r\n
+            p.content = e.event[1];\r\n
+            p.title = getTitle(e.event);\r\n
+            p.data = e.event.join("$");\r\n
+            var icons = [];\r\n
+            icons.push("<I class=\\"cic cic-tmr\\">&nbsp;</I>");\r\n
+            if (e.reevent) {\r\n
+                icons.push("<I class=\\"cic cic-spcl\\">&nbsp;</I>");\r\n
+            }\r\n
+            p.icon = icons.join("");\r\n
+            var sP = gP(e.st.hour, e.st.minute);\r\n
+            var eP = gP(e.et.hour, e.et.minute);\r\n
+            p.top = sP + "px";\r\n
+            p.left = (e.left * 100) + "%";\r\n
+            p.width = (e.aQ * 100) + "%";\r\n
+            p.height = (eP - sP - 4);\r\n
+            p.i = index;\r\n
+            if (option.enableDrag && e.event[8] == 1) {\r\n
+                p.drag = "drag";\r\n
+                p.redisplay = "block";\r\n
+            }\r\n
+            else {\r\n
+                p.drag = "";\r\n
+                p.redisplay = "none";\r\n
+            }\r\n
+            var newtemp = Tp(__SCOLLEVENTTEMP, p);\r\n
+            p = null;\r\n
+            return newtemp;\r\n
+        }\r\n
+\r\n
+        //get body height in month view\r\n
+        function GetMonthViewBodyHeight() {\r\n
+            return option.height;\r\n
+        }\r\n
+        function GetMonthViewHeaderHeight() {\r\n
+            return 21;\r\n
+        }\r\n
+        function BuilderMonthBody(htb, showday, startday, events, bodyHeight) {\r\n
+\r\n
+            var firstdate = new Date(showday.getFullYear(), showday.getMonth(), 1);\r\n
+            var diffday = startday - firstdate.getDay();\r\n
+            var showmonth = showday.getMonth();\r\n
+            if (diffday > 0) {\r\n
+                diffday -= 7;\r\n
+            }\r\n
+            var startdate = DateAdd("d", diffday, firstdate);\r\n
+            var enddate = DateAdd("d", 34, startdate);\r\n
+            var rc = 5;\r\n
+\r\n
+            if (enddate.getFullYear() == showday.getFullYear() && enddate.getMonth() == showday.getMonth() && enddate.getDate() < __MonthDays[showmonth]) {\r\n
+                enddate = DateAdd("d", 7, enddate);\r\n
+                rc = 6;\r\n
+            }\r\n
+            option.vstart = startdate;\r\n
+            option.vend = enddate;\r\n
+            option.datestrshow = CalDateShow(startdate, enddate);\r\n
+            bodyHeight = bodyHeight - 18 * rc;\r\n
+            var rowheight = bodyHeight / rc;\r\n
+            var roweventcount = parseInt(rowheight / 21);\r\n
+            if (rowheight % 21 > 15) {\r\n
+                roweventcount++;\r\n
+            }\r\n
+            var p = 100 / rc;\r\n
+            var formatevents = [];\r\n
+            var hastdata = formartEventsInHashtable(events, startday, 7, startdate, enddate);\r\n
+            var B = [];\r\n
+            var C = [];\r\n
+            for (var j = 0; j < rc; j++) {\r\n
+                var k = 0;\r\n
+                formatevents[j] = b = [];\r\n
+                for (var i = 0; i < 7; i++) {\r\n
+                    var newkeyDate = DateAdd("d", j * 7 + i, startdate);\r\n
+                    C[j * 7 + i] = newkeyDate;\r\n
+                    var newkey = dateFormat.call(newkeyDate, i18n.xgcalendar.dateformat.fulldaykey);\r\n
+                    b[i] = hastdata[newkey];\r\n
+                    if (b[i] && b[i].length > 0) {\r\n
+                        k += b[i].length;\r\n
+                    }\r\n
+                }\r\n
+                B[j] = k;\r\n
+            }\r\n
+            //var c = tc();\r\n
+            eventDiv.data("mvdata", formatevents);\r\n
+            for (var j = 0; j < rc; j++) {\r\n
+                //onclick=\\"javascript:FunProxy(\'rowhandler\',event,this);\\"\r\n
+                htb.push("<div id=\'mvrow_", j, "\' style=\\"HEIGHT:", p, "%; TOP:", p * j, "%\\"  class=\\"month-row\\">");\r\n
+                htb.push("<table class=\\"st-bg-table\\" cellSpacing=\\"0\\" cellPadding=\\"0\\"><tbody><tr>");\r\n
+                var dMax = B[j];\r\n
+\r\n
+                for (var i = 0; i < 7; i++) {\r\n
+                    var day = C[j * 7 + i];\r\n
+                    htb.push("<td abbr=\'", dateFormat.call(day, i18n.xgcalendar.dateformat.fulldayvalue), "\' ch=\'qkadd\' axis=\'00:00\' title=\'\'");\r\n
+\r\n
+                    if (dateFormat.call(day, "yyyyMMdd") == dateFormat.call(new Date(), "yyyyMMdd")) {\r\n
+                        htb.push(" class=\\"st-bg st-bg-today\\">");\r\n
+                    }\r\n
+                    else {\r\n
+                        htb.push(" class=\\"st-bg\\">");\r\n
+                    }\r\n
+                    htb.push("&nbsp;</td>");\r\n
+                }\r\n
+                //bgtable\r\n
+                htb.push("</tr></tbody></table>");\r\n
+\r\n
+                //stgrid\r\n
+                htb.push("<table class=\\"st-grid\\" cellpadding=\\"0\\" cellspacing=\\"0\\"><tbody>");\r\n
+\r\n
+                //title tr\r\n
+                htb.push("<tr>");\r\n
+                var titletemp = "<td class=\\"st-dtitle${titleClass}\\" ch=\'qkadd\' abbr=\'${abbr}\' axis=\'00:00\' title=\\"${title}\\"><span class=\'monthdayshow\'>${dayshow}</span></a></td>";\r\n
+\r\n
+                for (var i = 0; i < 7; i++) {\r\n
+                    var o = { titleClass: "", dayshow: "" };\r\n
+                    var day = C[j * 7 + i];\r\n
+                    if (dateFormat.call(day, "yyyyMMdd") == dateFormat.call(new Date(), "yyyyMMdd")) {\r\n
+                        o.titleClass = " st-dtitle-today";\r\n
+                    }\r\n
+                    if (day.getMonth() != showmonth) {\r\n
+                        o.titleClass = " st-dtitle-nonmonth";\r\n
+                    }\r\n
+                    o.title = dateFormat.call(day, i18n.xgcalendar.dateformat.fulldayshow);\r\n
+                    if (day.getDate() == 1) {\r\n
+                        if (day.getMonth == 0) {\r\n
+                            o.dayshow = dateFormat.call(day, i18n.xgcalendar.dateformat.fulldayshow);\r\n
+                        }\r\n
+                        else {\r\n
+                            o.dayshow = dateFormat.call(day, i18n.xgcalendar.dateformat.Md3);\r\n
+                        }\r\n
+                    }\r\n
+                    else {\r\n
+                        o.dayshow = day.getDate();\r\n
+                    }\r\n
+                    o.abbr = dateFormat.call(day, i18n.xgcalendar.dateformat.fulldayvalue);\r\n
+                    htb.push(Tp(titletemp, o));\r\n
+                }\r\n
+                htb.push("</tr>");\r\n
+                var sfirstday = C[j * 7];\r\n
+                BuildMonthRow(htb, formatevents[j], dMax, roweventcount, sfirstday);\r\n
+                //htb=htb.concat(rowHtml); rowHtml = null;  \r\n
+\r\n
+                htb.push("</tbody></table>");\r\n
+                //month-row\r\n
+                htb.push("</div>");\r\n
+            }\r\n
+\r\n
+            formatevents = B = C = hastdata = null;\r\n
+            //return htb;\r\n
+        }\r\n
+        \r\n
+        //formate datetime \r\n
+        function formartEventsInHashtable(events, startday, daylength, rbdate, redate) {\r\n
+            var hast = new Object();\r\n
+            var l = events.length;\r\n
+            for (var i = 0; i < l; i++) {\r\n
+                var sD = events[i][2];\r\n
+                var eD = events[i][3];\r\n
+                var diff = DateDiff("d", sD, eD);\r\n
+                var s = {};\r\n
+                s.event = events[i];\r\n
+                s.day = sD.getDate();\r\n
+                s.year = sD.getFullYear();\r\n
+                s.month = sD.getMonth() + 1;\r\n
+                s.allday = events[i][4] == 1;\r\n
+                s.crossday = events[i][5] == 1;\r\n
+                s.reevent = events[i][6] == 1; //Recurring event\r\n
+                s.daystr = s.year + "/" + s.month + "/" + s.day;\r\n
+                s.st = {};\r\n
+                s.st.hour = sD.getHours();\r\n
+                s.st.minute = sD.getMinutes();\r\n
+                s.st.p = s.st.hour * 60 + s.st.minute; // start time position\r\n
+                s.et = {};\r\n
+                s.et.hour = eD.getHours();\r\n
+                s.et.minute = eD.getMinutes();\r\n
+                s.et.p = s.et.hour * 60 + s.et.minute; // end time postition\r\n
+\r\n
+                if (diff > 0) {\r\n
+                    if (sD < rbdate) { //start date out of range\r\n
+                        sD = rbdate;\r\n
+                    }\r\n
+                    if (eD > redate) { //end date out of range\r\n
+                        eD = redate;\r\n
+                    }\r\n
+                    var f = startday - sD.getDay();\r\n
+                    if (f > 0) { f -= daylength; }\r\n
+                    var sdtemp = DateAdd("d", f, sD);\r\n
+                    for (; sdtemp <= eD; sD = sdtemp = DateAdd("d", daylength, sdtemp)) {\r\n
+                        var d = Clone(s);\r\n
+                        var key = dateFormat.call(sD, i18n.xgcalendar.dateformat.fulldaykey);\r\n
+                        var x = DateDiff("d", sdtemp, eD);\r\n
+                        if (hast[key] == null) {\r\n
+                            hast[key] = [];\r\n
+                        }\r\n
+                        d.colSpan = (x >= daylength) ? daylength - DateDiff("d", sdtemp, sD) : DateDiff("d", sD, eD) + 1;\r\n
+                        hast[key].push(d);\r\n
+                        d = null;\r\n
+                    }\r\n
+                }\r\n
+                else {\r\n
+                    var key = dateFormat.call(events[i][2], i18n.xgcalendar.dateformat.fulldaykey);\r\n
+                    if (hast[key] == null) {\r\n
+                        hast[key] = [];\r\n
+                    }\r\n
+                    s.colSpan = 1;\r\n
+                    hast[key].push(s);\r\n
+                }\r\n
+                s = null;\r\n
+            }\r\n
+            return hast;\r\n
+        }\r\n
+        function BuildMonthRow(htr, events, dMax, sc, day) {\r\n
+            var x = []; \r\n
+            var y = []; \r\n
+            var z = []; \r\n
+            var cday = [];  \r\n
+            var l = events.length;\r\n
+            var el = 0;\r\n
+            //var c = tc();\r\n
+            for (var j = 0; j < l; j++) {\r\n
+                x.push(0);\r\n
+                y.push(0);\r\n
+                z.push(0);\r\n
+                cday.push(DateAdd("d", j, day));\r\n
+            }\r\n
+            for (var j = 0; j < l; j++) {\r\n
+                var ec = events[j] ? events[j].length : 0;\r\n
+                y[j] += ec;\r\n
+                for (var k = 0; k < ec; k++) {\r\n
+                    var e = events[j][k];\r\n
+                    if (e && e.colSpan > 1) {\r\n
+                        for (var m = 1; m < e.colSpan; m++) {\r\n
+                            y[j + m]++;\r\n
+                        }\r\n
+                    }\r\n
+                }\r\n
+            }\r\n
+            //var htr=[];\r\n
+            var tdtemp = "<td class=\'${cssclass}\' axis=\'${axis}\' ch=\'${ch}\' abbr=\'${abbr}\' title=\'${title}\' ${otherAttr}>${html}</td>";\r\n
+            for (var j = 0; j < sc && el < dMax; j++) {\r\n
+                htr.push("<tr>");\r\n
+                //var gridtr = $(__TRTEMP);\r\n
+                for (var h = 0; h < l; ) {\r\n
+                    var e = events[h] ? events[h][x[h]] : undefined;\r\n
+                    var tempdata = { "class": "", axis: "", ch: "", title: "", abbr: "", html: "", otherAttr: "", click: "javascript:void(0);" };\r\n
+                    var tempCss = ["st-c"];\r\n
+\r\n
+                    if (e) { \r\n
+                        x[h] = x[h] + 1;\r\n
+                        //last event of the day\r\n
+                        var bs = false;\r\n
+                        if (z[h] + 1 == y[h] && e.colSpan == 1) {\r\n
+                            bs = true;\r\n
+                        }\r\n
+                        if (!bs && j == (sc - 1) && z[h] < y[h]) {\r\n
+                            el++;\r\n
+                            $.extend(tempdata, { "axis": h, ch: "more", "abbr": dateFormat.call(cday[h], i18n.xgcalendar.dateformat.fulldayvalue), html: i18n.xgcalendar.others + (y[h] - z[h]) + i18n.xgcalendar.item, click: "javascript:alert(\'more event\');" });\r\n
+                            tempCss.push("st-more st-moreul");\r\n
+                            h++;\r\n
+                        }\r\n
+                        else {\r\n
+                            tempdata.html = BuildMonthDayEvent(e, cday[h], l - h);\r\n
+                            tempdata.ch = "show";\r\n
+                            if (e.colSpan > 1) {\r\n
+                                tempdata.otherAttr = " colSpan=\'" + e.colSpan + "\'";\r\n
+                                for (var m = 0; m < e.colSpan; m++) {\r\n
+                                    z[h + m] = z[h + m] + 1;\r\n
+                                }\r\n
+                                h += e.colSpan;\r\n
+\r\n
+                            }\r\n
+                            else {\r\n
+                                z[h] = z[h] + 1;\r\n
+                                h++;\r\n
+                            }\r\n
+                            el++;\r\n
+                        }\r\n
+                    }\r\n
+                    else {\r\n
+                        if (j == (sc - 1) && z[h] < y[h] && y[h] > 0) {\r\n
+                            $.extend(tempdata, { "axis": h, ch: "more", "abbr": dateFormat.call(cday[h], i18n.xgcalendar.dateformat.fulldayvalue), html: i18n.xgcalendar.others + (y[h] - z[h]) + i18n.xgcalendar.item, click: "javascript:alert(\'more event\');" });\r\n
+                            tempCss.push("st-more st-moreul");\r\n
+                            h++;\r\n
+                        }\r\n
+                        else {\r\n
+                            $.extend(tempdata, { html: "&nbsp;", ch: "qkadd", "axis": "00:00", "abbr": dateFormat.call(cday[h], i18n.xgcalendar.dateformat.fulldayvalue), title: "" });\r\n
+                            tempCss.push("st-s");\r\n
+                            h++;\r\n
+                        }\r\n
+                    }\r\n
+                    tempdata.cssclass = tempCss.join(" ");\r\n
+                    tempCss = null;\r\n
+                    htr.push(Tp(tdtemp, tempdata));\r\n
+                    tempdata = null;\r\n
+                }\r\n
+                htr.push("</tr>");\r\n
+            }\r\n
+            x = y = z = cday = null;\r\n
+            //return htr;\r\n
+        }\r\n
+        function BuildMonthDayEvent(e, cday, length) {\r\n
+            var theme;\r\n
+            if (e.event[7] && e.event[7] >= 0) {\r\n
+                theme = tc(e.event[7]);\r\n
+            }\r\n
+            else {\r\n
+                theme = tc();\r\n
+            }\r\n
+            var p = { color: theme[2], title: "", extendClass: "", extendHTML: "", data: "" };\r\n
+\r\n
+            p.title = getTitle(e.event);\r\n
+            p.id = "bbit_cal_event_" + e.event[0];\r\n
+            if (option.enableDrag && e.event[8] == 1) {\r\n
+                p.eclass = "drag";\r\n
+            }\r\n
+            else {\r\n
+                p.eclass = "cal_" + e.event[0];\r\n
+            }\r\n
+            p.data = e.event.join("$");\r\n
+            var sp = "<span style=\\"cursor: pointer\\">${content}</span>";\r\n
+            var i = "<I class=\\"cic cic-tmr\\">&nbsp;</I>";\r\n
+            var i2 = "<I class=\\"cic cic-rcr\\">&nbsp;</I>";\r\n
+            var ml = "<div class=\\"st-ad-ml\\"></div>";\r\n
+            var mr = "<div class=\\"st-ad-mr\\"></div>";\r\n
+            var arrm = [];\r\n
+            var sf = e.event[2] < cday;\r\n
+            var ef = DateDiff("d", cday, e.event[3]) >= length;  //e.event[3] >= DateAdd("d", 1, cday);\r\n
+            if (sf || ef) {\r\n
+                if (sf) {\r\n
+                    arrm.push(ml);\r\n
+                    p.extendClass = "st-ad-mpad ";\r\n
+                }\r\n
+                if (ef)\r\n
+                { arrm.push(mr); }\r\n
+                p.extendHTML = arrm.join("");\r\n
+\r\n
+            }\r\n
+            var cen;\r\n
+            if (!e.allday && !sf) {\r\n
+                cen = pZero(e.st.hour) + ":" + pZero(e.st.minute) + " " + e.event[1];\r\n
+            }\r\n
+            else {\r\n
+                cen = e.event[1];\r\n
+            }\r\n
+            var content = [];\r\n
+            content.push(Tp(sp, { content: cen }));\r\n
+            content.push(i);\r\n
+            if (e.reevent)\r\n
+            { content.push(i2); }\r\n
+            p.content = content.join("");\r\n
+            return Tp(__ALLDAYEVENTTEMP, p);\r\n
+        }\r\n
+        //to populate the data \r\n
+        function populate() {\r\n
+            if (option.isloading) {\r\n
+                return true;\r\n
+            }\r\n
+            if (option.url && option.url != "") {\r\n
+                option.isloading = true;\r\n
+                //clearcontainer();\r\n
+                if (option.onBeforeRequestData && $.isFunction(option.onBeforeRequestData)) {\r\n
+                    option.onBeforeRequestData(1);\r\n
+                }\r\n
+                var zone = new Date().getTimezoneOffset() / 60 * -1;\r\n
+                var param = [\r\n
+                { name: "showdate", value: dateFormat.call(option.showday, i18n.xgcalendar.dateformat.fulldayvalue) },\r\n
+                { name: "viewtype", value: option.view },\r\n
+\t\t\t\t { name: "timezone", value: zone }\r\n
+                ];\r\n
+                if (option.extParam) {\r\n
+                    for (var pi = 0; pi < option.extParam.length; pi++) {\r\n
+                        param[param.length] = option.extParam[pi];\r\n
+                    }\r\n
+                }\r\n
+\t\t\t\t\r\n
+                $.ajax({\r\n
+                    type: option.method, //\r\n
+                    url: option.url,\r\n
+                    data: param,\t\t\t\t   \r\n
+\t\t\t        //dataType: "text",  // fixed jquery 1.4 not support Ms Date Json Format /Date(@Tickets)/\r\n
+                    dataType: "json",\r\n
+                    dataFilter: function(data, type) { \r\n
+                        //return data.replace(/"\\\\\\/(Date\\([0-9-]+\\))\\\\\\/"/gi, "new $1");\r\n
+                        \r\n
+                        return data;\r\n
+                      },\r\n
+                    success: function(data) {//function(datastr) {\t\t\t\t\t\t\t\t\t\r\n
+\t\t\t\t\t\t//datastr =datastr.replace(/"\\\\\\/(Date\\([0-9-]+\\))\\\\\\/"/gi, \'new $1\');\t\t\t\t\t\t\r\n
+                        //var data = (new Function("return " + datastr))();\r\n
+                        if (data != null && data.error != null) {\r\n
+                            if (option.onRequestDataError) {\r\n
+                                option.onRequestDataError(1, data);\r\n
+                            }\r\n
+                        }\r\n
+                        else {\r\n
+                            data["start"] = parseDate(data["start"]);\r\n
+                            data["end"] = parseDate(data["end"]);\r\n
+                            $.each(data.events, function(index, value) { \r\n
+                                value[2] = parseDate(value[2]);\r\n
+                                value[3] = parseDate(value[3]); \r\n
+                            });\r\n
+                            responseData(data, data.start, data.end);\r\n
+                            pushER(data.start, data.end);\r\n
+                        }\r\n
+                        if (option.onAfterRequestData && $.isFunction(option.onAfterRequestData)) {\r\n
+                            option.onAfterRequestData(1);\r\n
+                        }\r\n
+                        option.isloading = false;\r\n
+                    },\r\n
+                    error: function(data) {\t\r\n
+\t\t\t\t\t\ttry {\t\t\t\t\t\t\t\r\n
+                            if (option.onRequestDataError) {\r\n
+                                option.onRequestDataError(1, data);\r\n
+                            } else {\r\n
+                                alert(i18n.xgcalendar.get_data_exception);\r\n
+                            }\r\n
+                            if (option.onAfterRequestData && $.isFunction(option.onAfterRequestData)) {\r\n
+                                option.onAfterRequestData(1);\r\n
+                            }\r\n
+                            option.isloading = false;\r\n
+                        } catch (e) { }\r\n
+                    }\r\n
+                });\r\n
+            }\r\n
+            else {\r\n
+                alert("url" + i18n.xgcalendar.i_undefined);\r\n
+            }\r\n
+        }\r\n
+        function responseData(data, start, end) {\r\n
+            var events;\r\n
+            if (data.issort == false) {\r\n
+                if (data.events && data.events.length > 0) {\r\n
+                    events = data.sort(function(l, r) { return l[2] > r[2] ? -1 : 1; });\r\n
+                }\r\n
+                else {\r\n
+                    events = [];\r\n
+                }\r\n
+            }\r\n
+            else {\r\n
+                events = data.events;\r\n
+            }\r\n
+            ConcatEvents(events, start, end);\r\n
+            render();\r\n
+\r\n
+        }\r\n
+        function clearrepeat(events, start, end) {\r\n
+            var jl = events.length;\r\n
+            if (jl > 0) {\r\n
+                var es = events[0][2];\r\n
+                var el = events[jl - 1][2];\r\n
+                for (var i = 0, l = option.eventItems.length; i < l; i++) {\r\n
+\r\n
+                    if (option.eventItems[i][2] > el || jl == 0) {\r\n
+                        break;\r\n
+                    }\r\n
+                    if (option.eventItems[i][2] >= es) {\r\n
+                        for (var j = 0; j < jl; j++) {\r\n
+                            if (option.eventItems[i][0] == events[j][0] && option.eventItems[i][2] < start) {\r\n
+                                events.splice(j, 1); //for duplicated event\r\n
+                                jl--;\r\n
+                                break;\r\n
+                            }\r\n
+                        }\r\n
+                    }\r\n
+                }\r\n
+            }\r\n
+        }\r\n
+        function ConcatEvents(events, start, end) {\r\n
+            if (!events) {\r\n
+                events = [];\r\n
+            }\r\n
+            if (events) {\r\n
+                if (option.eventItems.length == 0) {\r\n
+                    option.eventItems = events;\r\n
+                }\r\n
+                else {\r\n
+                    //remove duplicated one\r\n
+                    clearrepeat(events, start, end);\r\n
+                    var l = events.length;\r\n
+                    var sl = option.eventItems.length;\r\n
+                    var sI = -1;\r\n
+                    var eI = sl;\r\n
+                    var s = start;\r\n
+                    var e = end;\r\n
+                    if (option.eventItems[0][2] > e)\r\n
+                    {\r\n
+                        option.eventItems = events.concat(option.eventItems);\r\n
+                        return;\r\n
+                    }\r\n
+                    if (option.eventItems[sl - 1][2] < s) \r\n
+                    {\r\n
+                        option.eventItems = option.eventItems.concat(events);\r\n
+                        return;\r\n
+                    }\r\n
+                    for (var i = 0; i < sl; i++) {\r\n
+                        if (option.eventItems[i][2] >= s && sI < 0) {\r\n
+                            sI = i;\r\n
+                            continue;\r\n
+                        }\r\n
+                        if (option.eventItems[i][2] > e) {\r\n
+                            eI = i;\r\n
+                            break;\r\n
+                        }\r\n
+                    }\r\n
+\r\n
+                    var e1 = sI <= 0 ? [] : option.eventItems.slice(0, sI);\r\n
+                    var e2 = eI == sl ? [] : option.eventItems.slice(eI);\r\n
+                    option.eventItems = [].concat(e1, events, e2);\r\n
+                    events = e1 = e2 = null;\r\n
+                }\r\n
+            }\r\n
+        }\r\n
+        //utils goes here\r\n
+        function weekormonthtoday(e) {\r\n
+            var th = $(this);\r\n
+            var daystr = th.attr("abbr");\r\n
+            option.showday = strtodate(daystr + " 00:00");\r\n
+            option.view = "day";\r\n
+            render();\r\n
+            if (option.onweekormonthtoday) {\r\n
+                option.onweekormonthtoday(option);\r\n
+            }\r\n
+            return false;\r\n
+        }\r\n
+        function parseDate(str){\r\n
+            return new Date(Date.parse(str));\r\n
+        }\r\n
+        function gP(h, m) {\r\n
+            return h * 42 + parseInt(m / 60 * 42);\r\n
+        }\r\n
+        function gW(ts1, ts2) {\r\n
+            var t1 = ts1 / 42;\r\n
+            var t2 = parseInt(t1);\r\n
+            var t3 = t1 - t2 >= 0.5 ? 30 : 0;\r\n
+            var t4 = ts2 / 42;\r\n
+            var t5 = parseInt(t4);\r\n
+            var t6 = t4 - t5 >= 0.5 ? 30 : 0;\r\n
+            return { sh: t2, sm: t3, eh: t5, em: t6, h: ts2 - ts1 };\r\n
+        }\r\n
+        function gH(y1, y2, pt) {\r\n
+            var sy1 = Math.min(y1, y2);\r\n
+            var sy2 = Math.max(y1, y2);\r\n
+            var t1 = (sy1 - pt) / 42;\r\n
+            var t2 = parseInt(t1);\r\n
+            var t3 = t1 - t2 >= 0.5 ? 30 : 0;\r\n
+            var t4 = (sy2 - pt) / 42;\r\n
+            var t5 = parseInt(t4);\r\n
+            var t6 = t4 - t5 >= 0.5 ? 30 : 0;\r\n
+            return { sh: t2, sm: t3, eh: t5, em: t6, h: sy2 - sy1 };\r\n
+        }\r\n
+        function pZero(n) {\r\n
+            return n < 10 ? "0" + n : "" + n;\r\n
+        }\r\n
+        //to get color list array\r\n
+        function tc(d) {\r\n
+            function zc(c, i) {\r\n
+                var d = "666666888888aaaaaabbbbbbdddddda32929cc3333d96666e69999f0c2c2b1365fdd4477e67399eea2bbf5c7d67a367a994499b373b3cca2cce1c7e15229a36633cc8c66d9b399e6d1c2f029527a336699668cb399b3ccc2d1e12952a33366cc668cd999b3e6c2d1f01b887a22aa9959bfb391d5ccbde6e128754e32926265ad8999c9b1c2dfd00d78131096184cb05288cb8cb8e0ba52880066aa008cbf40b3d580d1e6b388880eaaaa11bfbf4dd5d588e6e6b8ab8b00d6ae00e0c240ebd780f3e7b3be6d00ee8800f2a640f7c480fadcb3b1440edd5511e6804deeaa88f5ccb8865a5aa87070be9494d4b8b8e5d4d47057708c6d8ca992a9c6b6c6ddd3dd4e5d6c6274878997a5b1bac3d0d6db5a69867083a894a2beb8c1d4d4dae54a716c5c8d8785aaa5aec6c3cedddb6e6e41898951a7a77dc4c4a8dcdccb8d6f47b08b59c4a883d8c5ace7dcce";\r\n
+                return "#" + d.substring(c * 30 + i * 6, c * 30 + (i + 1) * 6);\r\n
+            }\r\n
+            var c = d != null && d != undefined ? d : option.theme;\r\n
+            return [zc(c, 0), zc(c, 1), zc(c, 2), zc(c, 3)];\r\n
+        }\r\n
+        function Tp(temp, dataarry) {\r\n
+            return temp.replace(/\\$\\{([\\w]+)\\}/g, function(s1, s2) { var s = dataarry[s2]; if (typeof (s) != "undefined") { return s; } else { return s1; } });\r\n
+        }\r\n
+        function Ta(temp, dataarry) {\r\n
+            return temp.replace(/\\{([\\d])\\}/g, function(s1, s2) { var s = dataarry[s2]; if (typeof (s) != "undefined") { return encodeURIComponent(s); } else { return ""; } });\r\n
+        }\r\n
+        function fomartTimeShow(h) {\r\n
+            return h < 10 ? "0" + h + ":00" : h + ":00";\r\n
+        }\r\n
+        function getymformat(date, comparedate, isshowtime, isshowweek, showcompare) {\r\n
+            var showyear = isshowtime != undefined ? (date.getFullYear() != new Date().getFullYear()) : true;\r\n
+            var showmonth = true;\r\n
+            var showday = true;\r\n
+            var showtime = isshowtime || false;\r\n
+            var showweek = isshowweek || false;\r\n
+            if (comparedate) {\r\n
+                showyear = comparedate.getFullYear() != date.getFullYear();\r\n
+                //showmonth = comparedate.getFullYear() != date.getFullYear() || date.getMonth() != comparedate.getMonth();\r\n
+                if (comparedate.getFullYear() == date.getFullYear() &&\r\n
+\t\t\t\t\tdate.getMonth() == comparedate.getMonth() &&\r\n
+\t\t\t\t\tdate.getDate() == comparedate.getDate()\r\n
+\t\t\t\t\t) {\r\n
+                    showyear = showmonth = showday = showweek = false;\r\n
+                }\r\n
+            }\r\n
+\r\n
+            var a = [];\r\n
+            if (showyear) {\r\n
+                a.push(i18n.xgcalendar.dateformat.fulldayshow)\r\n
+            } else if (showmonth) {\r\n
+                a.push(i18n.xgcalendar.dateformat.Md3)\r\n
+            } else if (showday) {\r\n
+                a.push(i18n.xgcalendar.dateformat.day);\r\n
+            }\r\n
+            a.push(showweek ? " (W)" : "", showtime ? " HH:mm" : "");\r\n
+            return a.join("");\r\n
+        }\r\n
+        function CalDateShow(startday, endday, isshowtime, isshowweek) {\r\n
+            if (!endday) {\r\n
+                return dateFormat.call(startday, getymformat(startday,null,isshowtime));\r\n
+            } else {\r\n
+                var strstart= dateFormat.call(startday, getymformat(startday, null, isshowtime, isshowweek));\r\n
+\t\t\t\tvar strend=dateFormat.call(endday, getymformat(endday, startday, isshowtime, isshowweek));\r\n
+\t\t\t\tvar join = (strend!=""? " - ":"");\r\n
+\t\t\t\treturn [strstart,strend].join(join);\r\n
+            }\r\n
+        }\r\n
+\r\n
+        function dochange() {\r\n
+            var d = getRdate();\r\n
+            var loaded = checkInEr(d.start, d.end);\r\n
+            if (!loaded) {\r\n
+                populate();\r\n
+            }\r\n
+        }\r\n
+\r\n
+        function checkInEr(start, end) {\r\n
+            var ll = option.loadDateR.length;\r\n
+            if (ll == 0) {\r\n
+                return false;\r\n
+            }\r\n
+            var r = false;\r\n
+            var r2 = false;\r\n
+            for (var i = 0; i < ll; i++) {\r\n
+                r = false, r2 = false;\r\n
+                var dr = option.loadDateR[i];\r\n
+                if (start >= dr.startdate && start <= dr.enddate) {\r\n
+                    r = true;\r\n
+                }\r\n
+                if (dateFormat.call(start, "yyyyMMdd") == dateFormat.call(dr.startdate, "yyyyMMdd") || dateFormat.call(start, "yyyyMMdd") == dateFormat.call(dr.enddate, "yyyyMMdd")) {\r\n
+                    r = true;\r\n
+                }\r\n
+                if (!end)\r\n
+                { r2 = true; }\r\n
+                else {\r\n
+                    if (end >= dr.startdate && end <= dr.enddate) {\r\n
+                        r2 = true;\r\n
+                    }\r\n
+                    if (dateFormat.call(end, "yyyyMMdd") == dateFormat.call(dr.startdate, "yyyyMMdd") || dateFormat.call(end, "yyyyMMdd") == dateFormat.call(dr.enddate, "yyyyMMdd")) {\r\n
+                        r2 = true;\r\n
+                    }\r\n
+                }\r\n
+                if (r && r2) {\r\n
+                    break;\r\n
+                }\r\n
+            }\r\n
+            r
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>next</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="Pdata" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+eturn r && r2;\r\n
+        }\r\n
+\r\n
+        function buildtempdayevent(sh, sm, eh, em, h, title, w, resize, thindex) {\r\n
+            var theme = thindex != undefined && thindex >= 0 ? tc(thindex) : tc();\r\n
+            var newtemp = Tp(__SCOLLEVENTTEMP, {\r\n
+                bdcolor: theme[0],\r\n
+                bgcolor2: theme[0],\r\n
+                bgcolor1: theme[2],\r\n
+                data: "",\r\n
+                starttime: [pZero(sh), pZero(sm)].join(":"),\r\n
+                endtime: [pZero(eh), pZero(em)].join(":"),\r\n
+                content: title ? title : i18n.xgcalendar.new_event,\r\n
+                title: title ? title : i18n.xgcalendar.new_event,\r\n
+                icon: "<I class=\\"cic cic-tmr\\">&nbsp;</I>",\r\n
+                top: "0px",\r\n
+                left: "",\r\n
+                width: w ? w : "100%",\r\n
+                height: h - 4,\r\n
+                i: "-1",\r\n
+                drag: "drag-chip",\r\n
+                redisplay: resize ? "block" : "none"\r\n
+            });\r\n
+            return newtemp;\r\n
+        }\r\n
+\r\n
+        function getdata(chip) {\r\n
+            var hddata = chip.find("div.dhdV");\r\n
+            if (hddata.length == 1) {\r\n
+                var str = hddata.text();\r\n
+                return parseED(str.split("$"));\r\n
+            }\r\n
+            return null;\r\n
+        }\r\n
+        function parseED(data) {\r\n
+            if (data.length > 6) {\r\n
+                var e = [];\r\n
+                e.push(data[0], data[1], new Date(data[2]), new Date(data[3]), parseInt(data[4]), parseInt(data[5]), parseInt(data[6]), data[7] != undefined ? parseInt(data[7]) : -1, data[8] != undefined ? parseInt(data[8]) : 0, data[9], data[10]);\r\n
+                return e;\r\n
+            }\r\n
+            return null;\r\n
+\r\n
+        }\r\n
+        function quickd(type) {\r\n
+            $("#bbit-cs-buddle").css("visibility", "hidden");\r\n
+            var calid = $("#bbit-cs-id").val();\r\n
+            var param = [{ "name": "calendarId", value: calid },\r\n
+                        { "name": "type", value: type}];\r\n
+            var de = rebyKey(calid, true);\r\n
+            option.onBeforeRequestData && option.onBeforeRequestData(3);\r\n
+            $.post(option.quickDeleteUrl, param, function(data) {\r\n
+                if (data) {\r\n
+                    if (data.IsSuccess) {\r\n
+                        de = null;\r\n
+                        option.onAfterRequestData && option.onAfterRequestData(3);\r\n
+                    }\r\n
+                    else {\r\n
+                        option.onRequestDataError && option.onRequestDataError(3, data);\r\n
+                        Ind(de);\r\n
+                        render();\r\n
+                        option.onAfterRequestData && option.onAfterRequestData(3);\r\n
+                    }\r\n
+                }\r\n
+            }, "json");\r\n
+            render();\r\n
+        }\r\n
+        function getbuddlepos(x, y) {\r\n
+            var tleft = x - 110; \r\n
+            var ttop = y - 217; \r\n
+            var maxLeft = document.documentElement.clientWidth;\r\n
+            var maxTop = document.documentElement.clientHeight;\r\n
+            var ishide = false;\r\n
+            if (tleft <= 0 || ttop <= 0 || tleft + 400 > maxLeft) {\r\n
+                tleft = x - 200 <= 0 ? 10 : x - 200;\r\n
+                ttop = y - 159 <= 0 ? 10 : y - 159;\r\n
+                if (tleft + 400 >= maxLeft) {\r\n
+                    tleft = maxLeft - 410;\r\n
+                }\r\n
+                if (ttop + 164 >= maxTop) {\r\n
+                    ttop = maxTop - 165;\r\n
+                }\r\n
+                ishide = true;\r\n
+            }\r\n
+            return { left: tleft, top: ttop, hide: ishide };\r\n
+        }\r\n
+        function dayshow(e, data) {\r\n
+            if (data == undefined) {\r\n
+                data = getdata($(this));\r\n
+            }\r\n
+            if (data != null) {\r\n
+                if (option.quickDeleteUrl != "" && data[8] == 1 && option.readonly != true) {\r\n
+                    var csbuddle = \'<div id="bbit-cs-buddle" style="z-index: 180; width: 400px;visibility:hidden;" class="bubble"><table class="bubble-table" cellSpacing="0" cellPadding="0"><tbody><tr><td class="bubble-cell-side"><div id="tl1" class="bubble-corner"><div class="bubble-sprite bubble-tl"></div></div><td class="bubble-cell-main"><div class="bubble-top"></div><td class="bubble-cell-side"><div id="tr1" class="bubble-corner"><div class="bubble-sprite bubble-tr"></div></div>  <tr><td class="bubble-mid" colSpan="3"><div style="overflow: hidden" id="bubbleContent1"><div><div></div><div class="cb-root"><table class="cb-table" cellSpacing="0" cellPadding="0"><tbody><tr><td class="cb-value"><div class="textbox-fill-wrapper"><div class="textbox-fill-mid"><div id="bbit-cs-what" title="\'\r\n
+                    \t+ i18n.xgcalendar.click_to_detail + \'" class="textbox-fill-div lk" style="cursor:pointer;"></div></div></div></td></tr><tr><td class=cb-value><div id="bbit-cs-buddle-timeshow"></div></td></tr></tbody></table><div class="bbit-cs-split"><input id="bbit-cs-id" type="hidden" value=""/>[ <span id="bbit-cs-delete" class="lk">\'\r\n
+                    \t+ i18n.xgcalendar.i_delete + \'</span> ]&nbsp; <SPAN id="bbit-cs-editLink" class="lk">\'\r\n
+                    \t+ i18n.xgcalendar.update_detail + \' <StrONG>&gt;&gt;</StrONG></SPAN></div></div></div></div><tr><td><div id="bl1" class="bubble-corner"><div class="bubble-sprite bubble-bl"></div></div><td><div class="bubble-bottom"></div><td><div id="br1" class="bubble-corner"><div class="bubble-sprite bubble-br"></div></div></tr></tbody></table><div id="bubbleClose2" class="bubble-closebutton"></div><div id="prong1" class="prong"><div class=bubble-sprite></div></div></div>\';\r\n
+                    var bud = $("#bbit-cs-buddle");\r\n
+                    if (bud.length == 0) {\r\n
+                        bud = $(csbuddle).appendTo(document.body);\r\n
+                        var calbutton = $("#bbit-cs-delete");\r\n
+                        var lbtn = $("#bbit-cs-editLink");\r\n
+                        var closebtn = $("#bubbleClose2").click(function() {\r\n
+                            $("#bbit-cs-buddle").css("visibility", "hidden");\r\n
+                        });\r\n
+                        calbutton.click(function() {\r\n
+                            var data = $("#bbit-cs-buddle").data("cdata");\r\n
+                            if (option.DeleteCmdhandler && $.isFunction(option.DeleteCmdhandler)) {\r\n
+                                option.DeleteCmdhandler.call(this, data, quickd);\r\n
+                            }\r\n
+                            else {\r\n
+                                if (confirm(i18n.xgcalendar.confirm_delete_event + "?")) {\r\n
+                                    var s = 0; //0 single event , 1 for Recurring event\r\n
+                                    if (data[6] == 1) {\r\n
+                                        if (confirm(i18n.xgcalendar.confrim_delete_event_or_all)) {\r\n
+                                            s = 0;\r\n
+                                        }\r\n
+                                        else {\r\n
+                                            s = 1;\r\n
+                                        }\r\n
+                                    }\r\n
+                                    else {\r\n
+                                        s = 0;\r\n
+                                    }\r\n
+                                    quickd(s);\r\n
+                                }\r\n
+                            }\r\n
+                        });\r\n
+                        $("#bbit-cs-what").click(function(e) {\r\n
+                            if (!option.ViewCmdhandler) {\r\n
+                                alert("ViewCmdhandler" + i18n.xgcalendar.i_undefined);\r\n
+                            }\r\n
+                            else {\r\n
+                                if (option.ViewCmdhandler && $.isFunction(option.ViewCmdhandler)) {\r\n
+                                    option.ViewCmdhandler.call(this, $("#bbit-cs-buddle").data("cdata"));\r\n
+                                }\r\n
+                            }\r\n
+                            $("#bbit-cs-buddle").css("visibility", "hidden");\r\n
+                            return false;\r\n
+                        });\r\n
+                        lbtn.click(function(e) {\r\n
+                            if (!option.EditCmdhandler) {\r\n
+                                alert("EditCmdhandler" + i18n.xgcalendar.i_undefined);\r\n
+                            }\r\n
+                            else {\r\n
+                                if (option.EditCmdhandler && $.isFunction(option.EditCmdhandler)) {\r\n
+                                    option.EditCmdhandler.call(this, $("#bbit-cs-buddle").data("cdata"));\r\n
+                                }\r\n
+                            }\r\n
+                            $("#bbit-cs-buddle").css("visibility", "hidden");\r\n
+                            return false;\r\n
+                        });\r\n
+                        bud.click(function() { return false });\r\n
+                    }\r\n
+                    var pos = getbuddlepos(e.pageX, e.pageY);\r\n
+                    if (pos.hide) {\r\n
+                        $("#prong1").hide()\r\n
+                    }\r\n
+                    else {\r\n
+                        $("#prong1").show()\r\n
+                    }\r\n
+                    var ss = [];\r\n
+                    var iscos = DateDiff("d", data[2], data[3]) != 0;\r\n
+                    ss.push(dateFormat.call(data[2], i18n.xgcalendar.dateformat.Md3), " (", __WDAY[data[2].getDay()], ")");\r\n
+                    if (data[4] != 1) {\r\n
+                        ss.push(",", dateFormat.call(data[2], "HH:mm"));\r\n
+                    }\r\n
+\r\n
+                    if (iscos) {\r\n
+                        ss.push(" - ", dateFormat.call(data[3], i18n.xgcalendar.dateformat.Md3), " (", __WDAY[data[3].getDay()], ")");\r\n
+                        if (data[4] != 1) {\r\n
+                            ss.push(",", dateFormat.call(data[3], "HH:mm"));\r\n
+                        }\r\n
+                    }\r\n
+                    var ts = $("#bbit-cs-buddle-timeshow").html(ss.join(""));\r\n
+                    $("#bbit-cs-what").html(data[1]);\r\n
+                    $("#bbit-cs-id").val(data[0]);\r\n
+                    bud.data("cdata", data);\r\n
+                    bud.css({ "visibility": "visible", left: pos.left, top: pos.top });\r\n
+\r\n
+                    $(document).one("click", function() {\r\n
+                        $("#bbit-cs-buddle").css("visibility", "hidden");\r\n
+                    });\r\n
+                }\r\n
+                else {\r\n
+                    if (!option.ViewCmdhandler) {\r\n
+                        alert("ViewCmdhandler" + i18n.xgcalendar.i_undefined);\r\n
+                    }\r\n
+                    else {\r\n
+                        if (option.ViewCmdhandler && $.isFunction(option.ViewCmdhandler)) {\r\n
+                            option.ViewCmdhandler.call(this, data);\r\n
+                        }\r\n
+                    }\r\n
+                }\r\n
+            }\r\n
+            else {\r\n
+                alert(i18n.xgcalendar.data_format_error);\r\n
+            }\r\n
+            return false;\r\n
+        }\r\n
+\r\n
+        function moreshow(mv) {\r\n
+            var me = $(this);\r\n
+            var divIndex = mv.id.split(\'_\')[1];\r\n
+            var pdiv = $(mv);\r\n
+            var offsetMe = me.position();\r\n
+            var offsetP = pdiv.position();\r\n
+            var width = (me.width() + 2) * 1.5;\r\n
+            var top = offsetP.top + 15;\r\n
+            var left = offsetMe.left;\r\n
+\r\n
+            var daystr = this.abbr;\r\n
+            var arrdays = daystr.split(\'/\');\r\n
+            var day = new Date(arrdays[0], parseInt(arrdays[1] - 1), arrdays[2]);\r\n
+            var cc = $("#cal-month-cc");\r\n
+            var ccontent = $("#cal-month-cc-content table tbody");\r\n
+            var ctitle = $("#cal-month-cc-title");\r\n
+            ctitle.html(dateFormat.call(day, i18n.xgcalendar.dateformat.Md3) + " " + __WDAY[day.getDay()]);\r\n
+            ccontent.empty();\r\n
+            //var c = tc()[2];\r\n
+            var edata = $("#gridEvent").data("mvdata");\r\n
+            var events = edata[divIndex];\r\n
+            var index = parseInt(this.axis);\r\n
+            var htm = [];\r\n
+            for (var i = 0; i <= index; i++) {\r\n
+                var ec = events[i] ? events[i].length : 0;\r\n
+                for (var j = 0; j < ec; j++) {\r\n
+                    var e = events[i][j];\r\n
+                    if (e) {\r\n
+                        if ((e.colSpan + i - 1) >= index) {\r\n
+                            htm.push("<tr><td class=\'st-c\'>");\r\n
+                            htm.push(BuildMonthDayEvent(e, day, 1));\r\n
+                            htm.push("</td></tr>");\r\n
+                        }\r\n
+                    }\r\n
+                }\r\n
+            }\r\n
+            ccontent.html(htm.join(""));\r\n
+            //click\r\n
+            ccontent.find("div.rb-o").each(function(i) {\r\n
+                $(this).click(dayshow);\r\n
+            });\r\n
+\r\n
+            edata = events = null;\r\n
+            var height = cc.height();\r\n
+            var maxleft = document.documentElement.clientWidth;\r\n
+            var maxtop = document.documentElement.clientHeight;\r\n
+            if (left + width >= maxleft) {\r\n
+                left = offsetMe.left - (me.width() + 2) * 0.5;\r\n
+            }\r\n
+            if (top + height >= maxtop) {\r\n
+                top = maxtop - height - 2;\r\n
+            }\r\n
+            var newOff = { left: left, top: top, "z-index": 180, width: width, "visibility": "visible" };\r\n
+            cc.css(newOff);\r\n
+            $(document).one("click", closeCc);\r\n
+            return false;\r\n
+        }\r\n
+        function dayupdate(data, start, end) {\r\n
+            if (option.quickUpdateUrl != "" && data[8] == 1 && option.readonly != true) {\r\n
+                if (option.isloading) {\r\n
+                    return false;\r\n
+                }\r\n
+                option.isloading = true;\r\n
+                var id = data[0];\r\n
+                var os = data[2];\r\n
+                var od = data[3];\r\n
+                var zone = new Date().getTimezoneOffset() / 60 * -1;\r\n
+                var param = [{ "name": "calendarId", value: id },\r\n
+\t\t\t\t\t\t\t{ "name": "CalendarStartTime", value: dateFormat.call(start, i18n.xgcalendar.dateformat.fulldayvalue + " HH:mm") },\r\n
+\t\t\t\t\t\t\t{ "name": "CalendarEndTime", value: dateFormat.call(end, i18n.xgcalendar.dateformat.fulldayvalue + " HH:mm") },\r\n
+\t\t\t\t\t\t\t{ "name": "timezone", value: zone }\r\n
+\t\t\t\t\t\t   ];\r\n
+                var d;\r\n
+                if (option.quickUpdateHandler && $.isFunction(option.quickUpdateHandler)) {\r\n
+                    option.quickUpdateHandler.call(this, param);\r\n
+                }\r\n
+                else {\r\n
+                    option.onBeforeRequestData && option.onBeforeRequestData(4);\r\n
+                    $.post(option.quickUpdateUrl, param, function(data) {\r\n
+                        if (data) {\r\n
+                            if (data.IsSuccess == true) {\r\n
+                                option.isloading = false;\r\n
+                                option.onAfterRequestData && option.onAfterRequestData(4);\r\n
+                            }\r\n
+                            else {\r\n
+                                option.onRequestDataError && option.onRequestDataError(4, data);\r\n
+                                option.isloading = false;\t\t\t\t\t\t\t\t\t\r\n
+                                d = rebyKey(id, true);\r\n
+                                d[2] = os;\r\n
+                                d[3] = od;\r\n
+                                Ind(d);\r\n
+                                render();\r\n
+                                d = null;\r\n
+                                option.onAfterRequestData && option.onAfterRequestData(4);\r\n
+                            }\r\n
+                        }\r\n
+                    }, "json");\t\t\t\t\t\r\n
+                    d = rebyKey(id, true);\r\n
+                    if (d) {\r\n
+                        d[2] = start;\r\n
+                        d[3] = end;\r\n
+                    }\r\n
+                    Ind(d);\r\n
+                    render();\r\n
+                }\r\n
+            }\r\n
+        }\r\n
+        function quickadd(start, end, isallday, pos) {\r\n
+            if ((!option.quickAddHandler && option.quickAddUrl == "") || option.readonly) {\r\n
+                return;\r\n
+            }\r\n
+            var buddle = $("#bbit-cal-buddle");\r\n
+            if (buddle.length == 0) {\r\n
+                var temparr = [];\r\n
+                temparr.push(\'<div id="bbit-cal-buddle" style="z-index: 180; width: 400px;visibility:hidden;" class="bubble">\');\r\n
+                temparr.push(\'<table class="bubble-table" cellSpacing="0" cellPadding="0"><tbody><tr><td class="bubble-cell-side"><div id="tl1" class="bubble-corner"><div class="bubble-sprite bubble-tl"></div></div>\');\r\n
+                temparr.push(\'<td class="bubble-cell-main"><div class="bubble-top"></div><td class="bubble-cell-side"><div id="tr1" class="bubble-corner"><div class="bubble-sprite bubble-tr"></div></div>  <tr><td class="bubble-mid" colSpan="3"><div style="overflow: hidden" id="bubbleContent1"><div><div></div><div class="cb-root">\');\r\n
+                temparr.push(\'<table class="cb-table" cellSpacing="0" cellPadding="0"><tbody><tr><th class="cb-key">\');\r\n
+                temparr.push(i18n.xgcalendar.time, \':</th><td class=cb-value><div id="bbit-cal-buddle-timeshow"></div></td></tr><tr><th class="cb-key">\');\r\n
+                temparr.push(i18n.xgcalendar.content, \':</th><td class="cb-value"><div class="textbox-fill-wrapper"><div class="textbox-fill-mid"><input id="bbit-cal-what" class="textbox-fill-input"/></div></div><div class="cb-example">\');\r\n
+                temparr.push(i18n.xgcalendar.example, \'</div></td></tr></tbody></table><input id="bbit-cal-start" type="hidden"/><input id="bbit-cal-end" type="hidden"/><input id="bbit-cal-allday" type="hidden"/><input id="bbit-cal-quickAddBTN" value="\');\r\n
+                temparr.push(i18n.xgcalendar.create_event, \'" type="button"/>&nbsp; <SPAN id="bbit-cal-editLink" class="lk">\');\r\n
+                temparr.push(i18n.xgcalendar.update_detail, \' <StrONG>&gt;&gt;</StrONG></SPAN></div></div></div><tr><td><div id="bl1" class="bubble-corner"><div class="bubble-sprite bubble-bl"></div></div><td><div class="bubble-bottom"></div><td><div id="br1" class="bubble-corner"><div class="bubble-sprite bubble-br"></div></div></tr></tbody></table><div id="bubbleClose1" class="bubble-closebutton"></div><div id="prong2" class="prong"><div class=bubble-sprite></div></div></div>\');\r\n
+                var tempquickAddHanler = temparr.join("");\r\n
+                temparr = null;\r\n
+                $(document.body).append(tempquickAddHanler);\r\n
+                buddle = $("#bbit-cal-buddle");\r\n
+                var calbutton = $("#bbit-cal-quickAddBTN");\r\n
+                var lbtn = $("#bbit-cal-editLink");\r\n
+                var closebtn = $("#bubbleClose1").click(function() {\r\n
+                    $("#bbit-cal-buddle").css("visibility", "hidden");\r\n
+                    realsedragevent();\r\n
+                });\r\n
+                calbutton.click(function(e) {\r\n
+                    if (option.isloading) {\r\n
+                        return false;\r\n
+                    }\r\n
+                    option.isloading = true;\r\n
+                    var what = $("#bbit-cal-what").val();\r\n
+                    var datestart = $("#bbit-cal-start").val();\r\n
+                    var dateend = $("#bbit-cal-end").val();\r\n
+                    var allday = $("#bbit-cal-allday").val();\r\n
+                    var f = /^[^\\$\\<\\>]+$/.test(what);\r\n
+                    if (!f) {\r\n
+                        alert(i18n.xgcalendar.invalid_title);\r\n
+                        $("#bbit-cal-what").focus();\r\n
+                        option.isloading = false;\r\n
+                        return false;\r\n
+                    }\r\n
+                    var zone = new Date().getTimezoneOffset() / 60 * -1;\r\n
+                    var param = [{ "name": "CalendarTitle", value: what },\r\n
+\t\t\t\t\t\t{ "name": "CalendarStartTime", value: datestart },\r\n
+\t\t\t\t\t\t{ "name": "CalendarEndTime", value: dateend },\r\n
+\t\t\t\t\t\t{ "name": "IsAllDayEvent", value: allday },\r\n
+\t\t\t\t\t\t{ "name": "timezone", value: zone}];\r\n
+\r\n
+                    if (option.extParam) {\r\n
+                        for (var pi = 0; pi < option.extParam.length; pi++) {\r\n
+                            param[param.length] = option.extParam[pi];\r\n
+                        }\r\n
+                    }\r\n
+\r\n
+                    if (option.quickAddHandler && $.isFunction(option.quickAddHandler)) {\r\n
+                        option.quickAddHandler.call(this, param);\r\n
+                        $("#bbit-cal-buddle").css("visibility", "hidden");\r\n
+                        realsedragevent();\r\n
+                    }\r\n
+                    else {\r\n
+                        $("#bbit-cal-buddle").css("visibility", "hidden");\r\n
+                        var newdata = [];\r\n
+                        var tId = -1;\r\n
+                        option.onBeforeRequestData && option.onBeforeRequestData(2);\r\n
+                        $.post(option.quickAddUrl, param, function(data) {\r\n
+                            if (data) {\r\n
+                                if (data.IsSuccess == true) {\r\n
+                                    option.isloading = false;\r\n
+                                    option.eventItems[tId][0] = data.Data;\r\n
+                                    option.eventItems[tId][8] = 1;\r\n
+                                    render();\r\n
+                                    option.onAfterRequestData && option.onAfterRequestData(2);\r\n
+                                }\r\n
+                                else {\r\n
+                                    option.onRequestDataError && option.onRequestDataError(2, data);\r\n
+                                    option.isloading = false;\r\n
+                                    option.onAfterRequestData && option.onAfterRequestData(2);\r\n
+                                }\r\n
+\r\n
+                            }\r\n
+\r\n
+                        }, "json");\r\n
+\r\n
+                        newdata.push(-1, what);\r\n
+                        var sd = strtodate(datestart);\r\n
+                        var ed = strtodate(dateend);\r\n
+                        var diff = DateDiff("d", sd, ed);\r\n
+                        newdata.push(sd, ed, allday == "1" ? 1 : 0, diff > 0 ? 1 : 0, 0);\r\n
+                        newdata.push(-1, 0, "", ""); \r\n
+                        tId = Ind(newdata);\r\n
+                        realsedragevent();\r\n
+                        render();\r\n
+                    }\r\n
+                });\r\n
+                lbtn.click(function(e) {\r\n
+                    if (!option.EditCmdhandler) {\r\n
+                        alert("EditCmdhandler" + i18n.xgcalendar.i_undefined);\r\n
+                    }\r\n
+                    else {\r\n
+                        if (option.EditCmdhandler && $.isFunction(option.EditCmdhandler)) {\r\n
+                            option.EditCmdhandler.call(this, [\'0\', $("#bbit-cal-what").val(), $("#bbit-cal-start").val(), $("#bbit-cal-end").val(), $("#bbit-cal-allday").val()]);\r\n
+                        }\r\n
+                        $("#bbit-cal-buddle").css("visibility", "hidden");\r\n
+                        realsedragevent();\r\n
+                    }\r\n
+                    return false;\r\n
+                });\r\n
+                buddle.mousedown(function(e) { return false });\r\n
+            }\r\n
+\t\t\t\r\n
+            var dateshow = CalDateShow(start, end, !isallday, true);\t\t\t\r\n
+            var off = getbuddlepos(pos.left, pos.top);\r\n
+            if (off.hide) {\r\n
+                $("#prong2").hide()\r\n
+            }\r\n
+            else {\r\n
+                $("#prong2").show()\r\n
+            }\r\n
+            $("#bbit-cal-buddle-timeshow").html(dateshow);\r\n
+            var calwhat = $("#bbit-cal-what").val("");\r\n
+            $("#bbit-cal-allday").val(isallday ? "1" : "0");\r\n
+            $("#bbit-cal-start").val(dateFormat.call(start, i18n.xgcalendar.dateformat.fulldayvalue + " HH:mm"));\r\n
+            $("#bbit-cal-end").val(dateFormat.call(end, i18n.xgcalendar.dateformat.fulldayvalue + " HH:mm"));\r\n
+            buddle.css({ "visibility": "visible", left: off.left, top: off.top });\t\t\t\r\n
+\t\t\tcalwhat.blur().focus(); //add 2010-01-26 blur() fixed chrome \r\n
+            $(document).one("mousedown", function() {\r\n
+                $("#bbit-cal-buddle").css("visibility", "hidden");\r\n
+                realsedragevent();\r\n
+            });\r\n
+            return false;\r\n
+        }\r\n
+        //format datestring to Date Type\r\n
+        function strtodate(str) {\r\n
+\r\n
+            var arr = str.split(" ");\r\n
+            var arr2 = arr[0].split(i18n.xgcalendar.dateformat.separator);\r\n
+            var arr3 = arr[1].split(":");\r\n
+\r\n
+            var y = arr2[i18n.xgcalendar.dateformat.year_index];\r\n
+            var m = arr2[i18n.xgcalendar.dateformat.month_index].indexOf("0") == 0 ? arr2[i18n.xgcalendar.dateformat.month_index].substr(1, 1) : arr2[i18n.xgcalendar.dateformat.month_index];\r\n
+            var d = arr2[i18n.xgcalendar.dateformat.day_index].indexOf("0") == 0 ? arr2[i18n.xgcalendar.dateformat.day_index].substr(1, 1) : arr2[i18n.xgcalendar.dateformat.day_index];\r\n
+            var h = arr3[0].indexOf("0") == 0 ? arr3[0].substr(1, 1) : arr3[0];\r\n
+            var n = arr3[1].indexOf("0") == 0 ? arr3[1].substr(1, 1) : arr3[1];\r\n
+            return new Date(y, parseInt(m) - 1, d, h, n);\r\n
+        }\r\n
+\r\n
+        function rebyKey(key, remove) {\r\n
+            if (option.eventItems && option.eventItems.length > 0) {\r\n
+                var sl = option.eventItems.length;\r\n
+                var i = -1;\r\n
+                for (var j = 0; j < sl; j++) {\r\n
+                    if (option.eventItems[j][0] == key) {\r\n
+                        i = j;\r\n
+                        break;\r\n
+                    }\r\n
+                }\r\n
+                if (i >= 0) {\r\n
+                    var t = option.eventItems[i];\r\n
+                    if (remove) {\r\n
+                        option.eventItems.splice(i, 1);\r\n
+                    }\r\n
+                    return t;\r\n
+                }\r\n
+            }\r\n
+            return null;\r\n
+        }\r\n
+        function Ind(event, i) {\r\n
+            var d = 0;\r\n
+            if (!i) {\r\n
+                if (option.eventItems && option.eventItems.length > 0) {\r\n
+                    var sl = option.eventItems.length;\r\n
+                    var s = event[2];\r\n
+                    var d1 = s.getTime() - option.eventItems[0][2].getTime();\r\n
+                    var d2 = option.eventItems[sl - 1][2].getTime() - s.getTime();\r\n
+                    var diff = d1 - d2;\r\n
+                    if (d1 < 0 || diff < 0) {\r\n
+                        for (var j = 0; j < sl; j++) {\r\n
+                            if (option.eventItems[j][2] >= s) {\r\n
+                                i = j;\r\n
+                                break;\r\n
+                            }\r\n
+                        }\r\n
+                    }\r\n
+                    else if (d2 < 0) {\r\n
+                        i = sl;\r\n
+                    }\r\n
+                    else {\r\n
+                        for (var j = sl - 1; j >= 0; j--) {\r\n
+                            if (option.eventItems[j][2] < s) {\r\n
+                                i = j + 1;\r\n
+                                break;\r\n
+                            }\r\n
+                        }\r\n
+                    }\r\n
+                }\r\n
+                else {\r\n
+                    i = 0;\r\n
+                }\r\n
+            }\r\n
+            else {\r\n
+                d = 1;\r\n
+            }\r\n
+            if (option.eventItems && option.eventItems.length > 0) {\r\n
+                if (i == option.eventItems.length) {\r\n
+                    option.eventItems.push(event);\r\n
+                }\r\n
+                else { option.eventItems.splice(i, d, event); }\r\n
+            }\r\n
+            else {\r\n
+                option.eventItems = [event];\r\n
+            }\r\n
+            return i;\r\n
+        }\r\n
+        \r\n
+        \r\n
+        function ResizeView() {\r\n
+            var _MH = document.documentElement.clientHeight;\r\n
+            var _viewType = option.view;\r\n
+            if (_viewType == "day" || _viewType == "week") {\r\n
+                var $dvwkcontaienr = $("#dvwkcontaienr");\r\n
+                var $dvtec = $("#dvtec");\r\n
+                if ($dvwkcontaienr.length == 0 || $dvtec.length == 0) {\r\n
+                    alert(i18n.xgcalendar.view_no_ready); return;\r\n
+                }\r\n
+                var dvwkH = $dvwkcontaienr.height() + 2;\r\n
+                var calH = option.height - 8 - dvwkH;\r\n
+                $dvtec.height(calH);\r\n
+                if (typeof (option.scoll) == "undefined") {\r\n
+                    var currentday = new Date();\r\n
+                    var h = currentday.getHours();\r\n
+                    var m = currentday.getMinutes();\r\n
+                    var th = gP(h, m);\r\n
+                    var ch = $dvtec.attr("clientHeight");\r\n
+                    var sh = th - 0.5 * ch;\r\n
+                    var ph = $dvtec.attr("scrollHeight");\r\n
+                    if (sh < 0) sh = 0;\r\n
+                    if (sh > ph - ch) sh = ph - ch - 10 * (23 - h);\r\n
+                    $dvtec.attr("scrollTop", sh);\r\n
+                }\r\n
+                else {\r\n
+                    $dvtec.attr("scrollTop", option.scoll);\r\n
+                }\r\n
+            }\r\n
+            else if (_viewType == "month") {\r\n
+                //Resize GridContainer\r\n
+            }\r\n
+        }\r\n
+        function returnfalse() {\r\n
+            return false;\r\n
+        }\r\n
+        function initevents(viewtype) {\r\n
+            if (viewtype == "week" || viewtype == "day") {\r\n
+                $("div.chip", gridcontainer).each(function(i) {\r\n
+                    var chip = $(this);\r\n
+                    chip.click(dayshow);\r\n
+                    if (chip.hasClass("drag")) {\r\n
+                        chip.mousedown(function(e) { dragStart.call(this, "dw3", e); return false; });\r\n
+                        //resize                      \r\n
+                        chip.find("div.resizer").mousedown(function(e) {\r\n
+                            dragStart.call($(this).parent().parent(), "dw4", e); return false;\r\n
+                        });\r\n
+                    }\r\n
+                    else {\r\n
+                        chip.mousedown(returnfalse)\r\n
+                    }\r\n
+                });\r\n
+                $("div.rb-o", gridcontainer).each(function(i) {\r\n
+                    var chip = $(this);\r\n
+                    chip.click(dayshow);\r\n
+                    if (chip.hasClass("drag") && viewtype == "week") {\r\n
+                        //drag;\r\n
+                        chip.mousedown(function(e) { dragStart.call(this, "dw5", e); return false; });\r\n
+                    }\r\n
+                    else {\r\n
+                        chip.mousedown(returnfalse)\r\n
+                    }\r\n
+                });\r\n
+                if (option.readonly == false) {\r\n
+                    $("td.tg-col", gridcontainer).each(function(i) {\r\n
+                        $(this).mousedown(function(e) { dragStart.call(this, "dw1", e); return false; });\r\n
+                    });\r\n
+                    $("#weekViewAllDaywk").mousedown(function(e) { dragStart.call(this, "dw2", e); return false; });\r\n
+                }\r\n
+\r\n
+                if (viewtype == "week") {\r\n
+                    $("#dvwkcontaienr th.gcweekname").each(function(i) {\r\n
+                        $(this).click(weekormonthtoday);\r\n
+                    });\r\n
+                }\r\n
+\r\n
+\r\n
+            }\r\n
+            else if (viewtype = "month") {\r\n
+                $("div.rb-o", gridcontainer).each(function(i) {\r\n
+                    var chip = $(this);\r\n
+                    chip.click(dayshow);\r\n
+                    if (chip.hasClass("drag")) {\r\n
+                        //drag;\r\n
+                        chip.mousedown(function(e) { dragStart.call(this, "m2", e); return false; });\r\n
+                    }\r\n
+                    else {\r\n
+                        chip.mousedown(returnfalse)\r\n
+                    }\r\n
+                });\r\n
+                $("td.st-more", gridcontainer).each(function(i) {\r\n
+\r\n
+                    $(this).click(function(e) {\r\n
+                        moreshow.call(this, $(this).parent().parent().parent().parent()[0]); return false;\r\n
+                    }).mousedown(function() { return false; });\r\n
+                });\r\n
+                if (option.readonly == false) {\r\n
+                    $("#mvEventContainer").mousedown(function(e) { dragStart.call(this, "m1", e); return false; });\r\n
+                }\r\n
+            }\r\n
+\r\n
+        }\r\n
+        function realsedragevent() {\r\n
+            if (_dragevent) {\r\n
+                _dragevent();\r\n
+                _dragevent = null;\r\n
+            }\r\n
+        }\r\n
+        function dragStart(type, e) {\r\n
+            var obj = $(this);\r\n
+            var source = e.srcElement || e.target;\r\n
+            realsedragevent();\r\n
+            switch (type) {\r\n
+                case "dw1": \r\n
+                    _dragdata = { type: 1, target: obj, sx: e.pageX, sy: e.pageY };\r\n
+                    break;\r\n
+                case "dw2": \r\n
+                    var w = obj.width();\r\n
+                    var h = obj.height();\r\n
+                    var offset = obj.offset();\r\n
+                    var left = offset.left;\r\n
+                    var top = offset.top;\r\n
+                    var l = option.view == "day" ? 1 : 7;\r\n
+                    var py = w % l;\r\n
+                    var pw = parseInt(w / l);\r\n
+                    if (py > l / 2 + 1) {\r\n
+                        pw++;\r\n
+                    }\r\n
+                    var xa = [];\r\n
+                    var ya = [];\r\n
+                    for (var i = 0; i < l; i++) {\r\n
+                        xa.push({ s: i * pw + left, e: (i + 1) * pw + left });\r\n
+                    }\r\n
+                    ya.push({ s: top, e: top + h });\r\n
+                    _dragdata = { type: 2, target: obj, sx: e.pageX, sy: e.pageY, pw: pw, xa: xa, ya: ya, h: h };\r\n
+                    w = left = l = py = pw = xa = null;\r\n
+                    break;\r\n
+                case "dw3": \r\n
+                    var evid = obj.parent().attr("id").replace("tgCol", "");\r\n
+                    var p = obj.parent();\r\n
+                    var pos = p.offset();\r\n
+                    var w = p.width() + 10;\r\n
+                    var h = obj.height();\r\n
+                    var data = getdata(obj);\r\n
+                    _dragdata = { type: 4, target: obj, sx: e.pageX, sy: e.pageY,\r\n
+                        pXMin: pos.left, pXMax: pos.left + w, pw: w, h: h,\r\n
+                        cdi: parseInt(evid), fdi: parseInt(evid), data: data\r\n
+                    };\r\n
+                    break;\r\n
+                case "dw4": //resize;\r\n
+                    var h = obj.height();\r\n
+                    var data = getdata(obj);\r\n
+                    _dragdata = { type: 5, target: obj, sx: e.pageX, sy: e.pageY, h: h, data: data };\r\n
+                    break;\r\n
+                case "dw5":\r\n
+                    var con = $("#weekViewAllDaywk");\r\n
+                    var w = con.width();\r\n
+                    var h = con.height();\r\n
+                    var offset = con.offset();\r\n
+                    var moffset = obj.offset();\r\n
+                    var left = offset.left;\r\n
+                    var top = offset.top;\r\n
+                    var l = 7;\r\n
+                    var py = w % l;\r\n
+                    var pw = parseInt(w / l);\r\n
+                    if (py > l / 2 + 1) {\r\n
+                        pw++;\r\n
+                    }\r\n
+                    var xa = [];\r\n
+                    var ya = [];\r\n
+                    var di = 0;\r\n
+                    for (var i = 0; i < l; i++) {\r\n
+                        xa.push({ s: i * pw + left, e: (i + 1) * pw + left });\r\n
+                        if (moffset.left >= xa[i].s && moffset.left < xa[i].e) {\r\n
+                            di = i;\r\n
+                        }\r\n
+                    }\r\n
+                    var fdi = { x: di, y: 0, di: di };\r\n
+                    ya.push({ s: top, e: top + h });\r\n
+                    var data = getdata(obj);\r\n
+                    var dp = DateDiff("d", data[2], data[3]) + 1;\r\n
+                    _dragdata = { type: 6, target: obj, sx: e.pageX, sy: e.pageY, data: data, xa: xa, ya: ya, fdi: fdi, h: h, dp: dp, pw: pw };\r\n
+                    break;\r\n
+                case "m1": \r\n
+                    var w = obj.width();\r\n
+                    var offset = obj.offset();\r\n
+                    var left = offset.left;\r\n
+                    var top = offset.top;\r\n
+                    var l = 7;\r\n
+                    var yl = obj.children().length;\r\n
+                    var py = w % l;\r\n
+                    var pw = parseInt(w / l);\r\n
+                    if (py > l / 2 + 1) {\r\n
+                        pw++;\r\n
+                    }\r\n
+                    var h = $("#mvrow_0").height();\r\n
+                    var xa = [];\r\n
+                    var ya = [];\r\n
+                    for (var i = 0; i < l; i++) {\r\n
+                        xa.push({ s: i * pw + left, e: (i + 1) * pw + left });\r\n
+                    }\r\n
+                    var xa = [];\r\n
+                    var ya = [];\r\n
+                    for (var i = 0; i < l; i++) {\r\n
+                        xa.push({ s: i * pw + left, e: (i + 1) * pw + left });\r\n
+                    }\r\n
+                    for (var i = 0; i < yl; i++) {\r\n
+                        ya.push({ s: i * h + top, e: (i + 1) * h + top });\r\n
+                    }\r\n
+                    _dragdata = { type: 3, target: obj, sx: e.pageX, sy: e.pageY, pw: pw, xa: xa, ya: ya, h: h };\r\n
+                    break;\r\n
+                case "m2": \r\n
+                    var row0 = $("#mvrow_0");\r\n
+                    var row1 = $("#mvrow_1");\r\n
+                    var w = row0.width();\r\n
+                    var offset = row0.offset();\r\n
+                    var diffset = row1.offset();\r\n
+                    var moffset = obj.offset();\r\n
+                    var h = diffset.top - offset.top;\r\n
+                    var left = offset.left;\r\n
+                    var top = offset.top;\r\n
+                    var l = 7;\r\n
+                    var yl = row0.parent().children().length;\r\n
+                    var py = w % l;\r\n
+                    var pw = parseInt(w / l);\r\n
+                    if (py > l / 2 + 1) {\r\n
+                        pw++;\r\n
+                    }\r\n
+                    var xa = [];\r\n
+                    var ya = [];\r\n
+                    var xi = 0;\r\n
+                    var yi = 0;\r\n
+                    for (var i = 0; i < l; i++) {\r\n
+                        xa.push({ s: i * pw + left, e: (i + 1) * pw + left });\r\n
+                        if (moffset.left >= xa[i].s && moffset.left < xa[i].e) {\r\n
+                            xi = i;\r\n
+                        }\r\n
+                    }\r\n
+                    for (var i = 0; i < yl; i++) {\r\n
+                        ya.push({ s: i * h + top, e: (i + 1) * h + top });\r\n
+                        if (moffset.top >= ya[i].s && moffset.top < ya[i].e) {\r\n
+                            yi = i;\r\n
+                        }\r\n
+                    }\r\n
+                    var fdi = { x: xi, y: yi, di: yi * 7 + xi };\r\n
+                    var data = getdata(obj);\r\n
+                    var dp = DateDiff("d", data[2], data[3]) + 1;\r\n
+                    _dragdata = { type: 7, target: obj, sx: e.pageX, sy: e.pageY, data: data, xa: xa, ya: ya, fdi: fdi, h: h, dp: dp, pw: pw };\r\n
+                    break;\r\n
+            }\r\n
+            $(\'body\').noSelect();\r\n
+        }\r\n
+        function dragMove(e) {\r\n
+            if (_dragdata) {\r\n
+                if (e.pageX < 0 || e.pageY < 0\r\n
+\t\t\t\t\t|| e.pageX > document.documentElement.clientWidth\r\n
+\t\t\t\t\t|| e.pageY >= document.documentElement.clientHeight) {\r\n
+                    dragEnd(e);\r\n
+                    return false;\r\n
+                }\r\n
+                var d = _dragdata;\r\n
+                switch (d.type) {\r\n
+                    case 1:\r\n
+                        var sy = d.sy;\r\n
+                        var y = e.pageY;\r\n
+                        var diffy = y - sy;\r\n
+                        if (diffy > 11 || diffy < -11 || d.cpwrap) {\r\n
+                            if (diffy == 0) { diffy = 21; }\r\n
+                            var dy = diffy % 21;\r\n
+                            if (dy != 0) {\r\n
+                                diffy = dy > 0 ? diffy + 21 - dy : diffy - 21 - dy;\r\n
+                                y = d.sy + diffy;\r\n
+                                if (diffy < 0) {\r\n
+                                    sy = sy + 21;\r\n
+                                }\r\n
+                            }\r\n
+                            if (!d.tp) {\r\n
+                                d.tp = $(d.target).offset().top;\r\n
+                            }\r\n
+                            var gh = gH(sy, y, d.tp);\r\n
+                            var ny = gP(gh.sh, gh.sm);\r\n
+                            var tempdata;\r\n
+                            if (!d.cpwrap) {\r\n
+                                tempdata = buildtempdayevent(gh.sh, gh.sm, gh.eh, gh.em, gh.h);\r\n
+                                var cpwrap = $("<div class=\'ca-evpi drag-chip-wrapper\' style=\'top:" + ny + "px\'/>").html(tempdata);\r\n
+                                $(d.target).find("div.tg-col-overlaywrapper").append(cpwrap);\r\n
+                                d.cpwrap = cpwrap;\r\n
+                            }\r\n
+                            else {\r\n
+                                if (d.cgh.sh != gh.sh || d.cgh.eh != gh.eh || d.cgh.sm != gh.sm || d.cgh.em != gh.em) {\r\n
+                                    tempdata = buildtempdayevent(gh.sh, gh.sm, gh.eh, gh.em, gh.h);\r\n
+                                    d.cpwrap.css("top", ny + "px").html(tempdata);\r\n
+                                }\r\n
+                            }\r\n
+                            d.cgh = gh;\r\n
+                        }\r\n
+                        break;\r\n
+                    case 2:\r\n
+                        var sx = d.sx;\r\n
+                        var x = e.pageX;\r\n
+                        var diffx = x - sx;\r\n
+                        if (diffx > 5 || diffx < -5 || d.lasso) {\r\n
+                            if (!d.lasso) {\r\n
+                                d.lasso = $("<div style=\'z-index: 10; display: block\' class=\'drag-lasso-container\'/>");\r\n
+                                $(document.body).append(d.lasso);\r\n
+                            }\r\n
+                            if (!d.sdi) {\r\n
+                                d.sdi = getdi(d.xa, d.ya, sx, d.sy);\r\n
+                            }\r\n
+                            var ndi = getdi(d.xa, d.ya, x, e.pageY);\r\n
+                            if (!d.fdi || d.fdi.di != ndi.di) {\r\n
+                                addlasso(d.lasso, d.sdi, ndi, d.xa, d.ya, d.h);\r\n
+                            }\r\n
+                            d.fdi = ndi;\r\n
+                        }\r\n
+                        break;\r\n
+                    case 3:\r\n
+                        var sx = d.sx;\r\n
+                        var x = e.pageX;\r\n
+                        var sy = d.sy;\r\n
+                        var y = e.pageY;\r\n
+                        var diffx = x - sx;\r\n
+                        var diffy = y - sy;\r\n
+                        if (diffx > 5 || diffx < -5 || diffy < -5 || diffy > 5 || d.lasso) {\r\n
+                            if (!d.lasso) {\r\n
+                                d.lasso = $("<div style=\'z-index: 10; display: block\' class=\'drag-lasso-container\'/>");\r\n
+                                $(document.body).append(d.lasso);\r\n
+                            }\r\n
+                            if (!d.sdi) {\r\n
+                                d.sdi = getdi(d.xa, d.ya, sx, sy);\r\n
+                            }\r\n
+                            var ndi = getdi(d.xa, d.ya, x, y);\r\n
+                            if (!d.fdi || d.fdi.di != ndi.di) {\r\n
+                                addlasso(d.lasso, d.sdi, ndi, d.xa, d.ya, d.h);\r\n
+                            }\r\n
+                            d.fdi = ndi;\r\n
+                        }\r\n
+                        break;\r\n
+                    case 4:\r\n
+                        var data = d.data;\r\n
+                        if (data != null && data[8] == 1) {\r\n
+                            var sx = d.sx;\r\n
+                            var x = e.pageX;\r\n
+                            var sy = d.sy;\r\n
+                            var y = e.pageY;\r\n
+                            var diffx = x - sx;\r\n
+                            var diffy = y - sy;\r\n
+                            if (diffx > 5 || diffx < -5 || diffy > 5 || diffy < -5 || d.cpwrap) {\r\n
+                                var gh, ny, tempdata;\r\n
+                                if (!d.cpwrap) {\r\n
+                                    gh = { sh: data[2].getHours(),\r\n
+                                        sm: data[2].getMinutes(),\r\n
+                                        eh: data[3].getHours(),\r\n
+                                        em: data[3].getMinutes(),\r\n
+                                        h: d.h\r\n
+                                    };\r\n
+                                    d.target.hide();\r\n
+                                    ny = gP(gh.sh, gh.sm);\r\n
+                                    d.top = ny;\r\n
+                                    tempdata = buildtempdayevent(gh.sh, gh.sm, gh.eh, gh.em, gh.h, data[1], false, false, data[7]);\r\n
+                                    var cpwrap = $("<div class=\'ca-evpi drag-chip-wrapper\' style=\'top:" + ny + "px\'/>").html(tempdata);\r\n
+                                    var evid = d.target.parent().attr("id").replace("tgCol", "#tgOver");\r\n
+                                    $(evid).append(cpwrap);\r\n
+                                    d.cpwrap = cpwrap;\r\n
+                                    d.ny = ny;\r\n
+                                }\r\n
+                                else {\r\n
+                                    var pd = 0;\r\n
+                                    if (x < d.pXMin) {\r\n
+                                        pd = -1;\r\n
+                                    }\r\n
+                                    else if (x > d.pXMax) {\r\n
+                                        pd = 1;\r\n
+                                    }\r\n
+                                    if (pd != 0) {\r\n
+\r\n
+                                        d.cdi = d.cdi + pd;\r\n
+                                        var ov = $("#tgOver" + d.cdi);\r\n
+                                        if (ov.length == 1) {\r\n
+                                            d.pXMin = d.pXMin + d.pw * pd;\r\n
+                                            d.pXMax = d.pXMax + d.pw * pd;\r\n
+                                            ov.append(d.cpwrap);\r\n
+                                        }\r\n
+                                        else {\r\n
+                                            d.cdi = d.cdi - pd;\r\n
+                                        }\r\n
+                                    }\r\n
+                                    ny = d.top + diffy;\r\n
+                                    var pny = ny % 21;\r\n
+                                    if (pny != 0) {\r\n
+                                        ny = ny - pny;\r\n
+                                    }\r\n
+                                    if (d.ny != ny) {\r\n
+                                        //log.info("ny=" + ny);\r\n
+                                        gh = gW(ny, ny + d.h);\r\n
+                                        //log.info("sh=" + gh.sh + ",sm=" + gh.sm);\r\n
+                                        tempdata = buildtempdayevent(gh.sh, gh.sm, gh.eh, gh.em, gh.h, data[1], false, false, data[7]);\r\n
+                                        d.cpwrap.css("top", ny + "px").html(tempdata);\r\n
+                                    }\r\n
+                                    d.ny = ny;\r\n
+                                }\r\n
+                            }\r\n
+                        }\r\n
+\r\n
+                        break;\r\n
+                    case 5:\r\n
+                        var data = d.data;\r\n
+                        if (data != null && data[8] == 1) {\r\n
+                            var sy = d.sy;\r\n
+                            var y = e.pageY;\r\n
+                            var diffy = y - sy;\r\n
+                            if (diffy != 0 || d.cpwrap) {\r\n
+                                var gh, ny, tempdata;\r\n
+                                if (!d.cpwrap) {\r\n
+                                    gh = { sh: data[2].getHours(),\r\n
+                                        sm: data[2].getMinutes(),\r\n
+                                        eh: data[3].getHours(),\r\n
+                                        em: data[3].getMinutes(),\r\n
+                                        h: d.h\r\n
+                                    };\r\n
+                                    d.target.hide();\r\n
+                                    ny = gP(gh.sh, gh.sm);\r\n
+                                    d.top = ny;\r\n
+                                    tempdata = buildtempdayevent(gh.sh, gh.sm, gh.eh, gh.em, gh.h, data[1], "100%", true, data[7]);\r\n
+                                    var cpwrap = $("<div class=\'ca-evpi drag-chip-wrapper\' style=\'top:" + ny + "px\'/>").html(tempdata);\r\n
+                                    var evid = d.target.parent().attr("id").replace("tgCol", "#tgOver");\r\n
+                                    $(evid).append(cpwrap);\r\n
+                                    d.cpwrap = cpwrap;\r\n
+                                }\r\n
+                                else {\r\n
+                                    nh = d.h + diffy;\r\n
+                                    var pnh = nh % 21;\r\n
+                                    nh = pnh > 1 ? nh - pnh + 21 : nh - pnh;\r\n
+                                    if (d.nh != nh) {\r\n
+                                        var sp = gP(data[2].getHours(), data[2].getMinutes());\r\n
+                                        var ep = sp + nh;\r\n
+                                        gh = gW(d.top, d.top + nh);\r\n
+                                        tempdata = buildtempdayevent(gh.sh, gh.sm, gh.eh, gh.em, gh.h, data[1], "100%", true, data[7]);\r\n
+                                        d.cpwrap.html(tempdata);\r\n
+                                    }\r\n
+                                    d.nh = nh;\r\n
+                                }\r\n
+                            }\r\n
+                        }\r\n
+                        break;\r\n
+                    case 6:\r\n
+                        var sx = d.sx;\r\n
+                        var x = e.pageX;\r\n
+                        var y = e.pageY;\r\n
+                        var diffx = x - sx;\r\n
+                        if (diffx > 5 || diffx < -5 || d.lasso) {\r\n
+                            if (!d.lasso) {\r\n
+                                var w1 = d.dp > 1 ? (d.pw - 4) * 1.5 : (d.pw - 4);\r\n
+                                var cp = d.target.clone();\r\n
+                                if (d.dp > 1) {\r\n
+                                    cp.find("div.rb-i>span").prepend("(" + d.dp + " " + i18n.xgcalendar.day_plural + ")&nbsp;");\r\n
+                                }\r\n
+                                var cpwrap = $("<div class=\'drag-event st-contents\' style=\'width:" + w1 + "px\'/>").append(cp).appendTo(document.body);\r\n
+                                d.cpwrap = cpwrap;\r\n
+                                d.lasso = $("<div style=\'z-index: 10; display: block\' class=\'drag-lasso-container\'/>");\r\n
+                                $(document.body).append(d.lasso);\r\n
+                                cp = cpwrap = null;\r\n
+                            }\r\n
+                            fixcppostion(d.cpwrap, e, d.xa, d.ya);\r\n
+                            var ndi = getdi(d.xa, d.ya, x, e.pageY);\r\n
+                            if (!d.cdi || d.cdi.di != ndi.di) {\r\n
+                                addlasso(d.lasso, ndi, { x: ndi.x, y: ndi.y, di: ndi.di + d.dp - 1 }, d.xa, d.ya, d.h);\r\n
+                            }\r\n
+                            d.cdi = ndi;\r\n
+                        }\r\n
+                        break;\r\n
+                    case 7:\r\n
+                        var sx = d.sx;\r\n
+                        var sy = d.sy;\r\n
+                        var x = e.pageX;\r\n
+                        var y = e.pageY;\r\n
+                        var diffx = x - sx;\r\n
+                        var diffy = y - sy;\r\n
+                        if (diffx > 5 || diffx < -5 || diffy > 5 || diffy < -5 || d.lasso) {\r\n
+                            if (!d.lasso) {\r\n
+                                var w1 = d.dp > 1 ? (d.pw - 4) * 1.5 : (d.pw - 4);\r\n
+                                var cp = d.target.clone();\r\n
+                                if (d.dp > 1) {\r\n
+                                    cp.find("div.rb-i>span").prepend("(" + d.dp + " " + i18n.xgcalendar.day_plural + ")&nbsp;");\r\n
+                                }\r\n
+                                var cpwrap = $("<div class=\'drag-event st-contents\' style=\'width:" + w1 + "px\'/>").append(cp).appendTo(document.body);\r\n
+                                d.cpwrap = cpwrap;\r\n
+                                d.lasso = $("<div style=\'z-index: 10; display: block\' class=\'drag-lasso-container\'/>");\r\n
+                                $(document.body).append(d.lasso);\r\n
+                                cp = cpwrap = null;\r\n
+                            }\r\n
+                            fixcppostion(d.cpwrap, e, d.xa, d.ya);\r\n
+                            var ndi = getdi(d.xa, d.ya, x, e.pageY);\r\n
+                            if (!d.cdi || d.cdi.di != ndi.di) {\r\n
+                                addlasso(d.lasso, ndi, { x: ndi.x, y: ndi.y, di: ndi.di + d.dp - 1 }, d.xa, d.ya, d.h);\r\n
+                            }\r\n
+                            d.cdi = ndi;\r\n
+                        }\r\n
+                        break;\r\n
+                }\r\n
+            }\r\n
+            return false;\r\n
+        }\r\n
+        function dragEnd(e) {\r\n
+            if (_dragdata) {\r\n
+                var d = _dragdata;\r\n
+                switch (d.type) {\r\n
+                    case 1: //day view\r\n
+                        var wrapid = new Date().getTime();\r\n
+                        tp = d.target.offset().top;\r\n
+                        if (!d.cpwrap) {\r\n
+                            var gh = gH(d.sy, d.sy + 42, tp);\r\n
+                            var ny = gP(gh.sh, gh.sm);\r\n
+                            var tempdata = buildtempdayevent(gh.sh, gh.sm, gh.eh, gh.em, gh.h);\r\n
+                            d.cpwrap = $("<div class=\'ca-evpi drag-chip-wrapper\' style=\'top:" + ny + "px\'/>").html(tempdata);\r\n
+                            $(d.target).find("div.tg-col-overlaywrapper").append(d.cpwrap);\r\n
+                            d.cgh = gh;\r\n
+                        }\r\n
+                        var pos = d.cpwrap.offset();\r\n
+                        pos.left = pos.left + 30;\r\n
+                        d.cpwrap.attr("id", wrapid);\r\n
+                        var start = strtodate(d.target.attr("abbr") + " " + d.cgh.sh + ":" + d.cgh.sm);\r\n
+                        var end = strtodate(d.target.attr("abbr") + " " + d.cgh.eh + ":" + d.cgh.em);\r\n
+                        _dragevent = function() { $("#" + wrapid).remove(); $("#bbit-cal-buddle").css("visibility", "hidden"); };\r\n
+                        quickadd(start, end, false, pos);\r\n
+                        break;\r\n
+                    case 2: //week view\r\n
+                    case 3: //month view\t\t\t\t\t\r\n
+                        var source = e.srcElement || e.target;                       \r\n
+                        var lassoid = new Date().getTime();\r\n
+                        if (!d.lasso) {\r\n
+\t\t\t\t\t\t\t if ($(source).hasClass("monthdayshow"))\r\n
+\t\t\t\t\t\t\t{\r\n
+\t\t\t\t\t\t\t\tweekormonthtoday.call($(source).parent()[0],e);\r\n
+\t\t\t\t\t\t\t\tbreak;\r\n
+\t\t\t\t\t\t\t}\r\n
+                            d.fdi = d.sdi = getdi(d.xa, d.ya, d.sx, d.sy);\r\n
+                            d.lasso = $("<div style=\'z-index: 10; display: block\' class=\'drag-lasso-container\'/>");\r\n
+                            $(document.body).append(d.lasso);\r\n
+                            addlasso(d.lasso, d.sdi, d.fdi, d.xa, d.ya, d.h);\r\n
+                        }\r\n
+                        d.lasso.attr("id", lassoid);\r\n
+                        var si = Math.min(d.fdi.di, d.sdi.di);\r\n
+                        var ei = Math.max(d.fdi.di, d.sdi.di);\r\n
+                        var firstday = option.vstart;\r\n
+                        var start = DateAdd("d", si, firstday);\r\n
+                        var end = DateAdd("d", ei, firstday);\r\n
+                        _dragevent = function() { $("#" + lassoid).remove(); };\r\n
+                        quickadd(start, end, true, { left: e.pageX, top: e.pageY });\r\n
+                        break;\r\n
+                    case 4: // event moving\r\n
+                        if (d.cpwrap) {\r\n
+                            var start = DateAdd("d", d.cdi, option.vstart);\r\n
+                            var end = DateAdd("d", d.cdi, option.vstart);\r\n
+                            var gh = gW(d.ny, d.ny + d.h);\r\n
+                            start.setHours(gh.sh, gh.sm);\r\n
+                            end.setHours(gh.eh, gh.em);\r\n
+                            if (start.getTime() == d.data[2].getTime() && end.getTime() == d.data[3].getTime()) {\r\n
+                                d.cpwrap.remove();\r\n
+                                d.target.show();\r\n
+                            }\r\n
+                            else {\r\n
+                                dayupdate(d.data, start, end);\r\n
+                            }\r\n
+                        }\r\n
+                        break;\r\n
+                    case 5: //Resize\r\n
+                        if (d.cpwrap) {\r\n
+                            var start = new Date(d.data[2].toString());\r\n
+                            var end = new Date(d.data[3].toString());\r\n
+                            var gh = gW(d.top, d.top + nh);\r\n
+                            start.setHours(gh.sh, gh.sm);\r\n
+                            end.setHours(gh.eh, gh.em);\r\n
+\r\n
+                            if (start.getTime() == d.data[2].getTime() && end.getTime() == d.data[3].getTime()) {\r\n
+                                d.cpwrap.remove();\r\n
+                                d.target.show();\r\n
+                            }\r\n
+                            else {\r\n
+                                dayupdate(d.data, start, end);\r\n
+                            }\r\n
+                        }\r\n
+                        break;\r\n
+                    case 6:\r\n
+                    case 7:\r\n
+                        if (d.lasso) {\r\n
+                            d.cpwrap.remove();\r\n
+                            d.lasso.remove();\r\n
+                            var start = new Date(d.data[2].toString());\r\n
+                            var end = new Date(d.data[3].toString());\r\n
+                            var currrentdate = DateAdd("d", d.cdi.di, option.vstart);\r\n
+                            var diff = DateDiff("d", start, currrentdate);\r\n
+                            start = DateAdd("d", diff, start);\r\n
+                            end = DateAdd("d", diff, end);\r\n
+                            if (start.getTime() != d.data[2].getTime() || end.getTime() != d.data[3].getTime()) {\r\n
+                                dayupdate(d.data, start, end);\r\n
+                            }\r\n
+                        }\r\n
+                        break;\r\n
+                }\r\n
+                d = _dragdata = null;\r\n
+                $(\'body\').noSelect(false);\r\n
+                return false;\r\n
+            }\r\n
+        }\r\n
+        function getdi(xa, ya, x, y) {\r\n
+            var ty = 0;\r\n
+            var tx = 0;\r\n
+            var lx = 0;\r\n
+            var ly = 0;\r\n
+            if (xa && xa.length != 0) {\r\n
+                lx = xa.length;\r\n
+                if (x >= xa[lx - 1].e) {\r\n
+                    tx = lx - 1;\r\n
+                }\r\n
+                else {\r\n
+                    for (var i = 0; i < lx; i++) {\r\n
+                        if (x > xa[i].s && x <= xa[i].e) {\r\n
+                            tx = i;\r\n
+                            break;\r\n
+                        }\r\n
+                    }\r\n
+                }\r\n
+            }\r\n
+            if (ya && ya.length != 0) {\r\n
+                ly = ya.length;\r\n
+                if (y >= ya[ly - 1].e) {\r\n
+                    ty = ly - 1;\r\n
+                }\r\n
+                else {\r\n
+                    for (var j = 0; j < ly; j++) {\r\n
+                        if (y > ya[j].s && y <= ya[j].e) {\r\n
+                            ty = j;\r\n
+                            break;\r\n
+                        }\r\n
+                    }\r\n
+                }\r\n
+            }\r\n
+            return { x: tx, y: ty, di: ty * lx + tx };\r\n
+        }\r\n
+        function addlasso(lasso, sdi, edi, xa, ya, height) {\r\n
+            var diff = sdi.di > edi.di ? sdi.di - edi.di : edi.di - sdi.di;\r\n
+            diff++;\r\n
+            var sp = sdi.di > edi.di ? edi : sdi;\r\n
+            var ep = sdi.di > edi.di ? sdi : edi;\r\n
+            var l = xa.length > 0 ? xa.length : 1;\r\n
+            var h = ya.length > 0 ? ya.length : 1;\r\n
+            var play = [];\r\n
+            var width = xa[0].e - xa[0].s; \r\n
+            var i = sp.x;\r\n
+            var j = sp.y;\r\n
+            var max = Math.min(document.documentElement.clientWidth, xa[l - 1].e) - 2;\r\n
+\r\n
+            while (j < h && diff > 0) {\r\n
+                var left = xa[i].s;\r\n
+                var d = i + diff > l ? l - i : diff;\r\n
+                var wid = width * d;\r\n
+                while (left + wid >= max) {\r\n
+                    wid--;\r\n
+                }\r\n
+                play.push(Tp(__LASSOTEMP, { left: left, top: ya[j].s, height: height, width: wid }));\r\n
+                i = 0;\r\n
+                diff = diff - d;\r\n
+                j++;\r\n
+            }\r\n
+            lasso.html(play.join(""));\r\n
+        }\r\n
+        function fixcppostion(cpwrap, e, xa, ya) {\r\n
+            var x = e.pageX - 6;\r\n
+            var y = e.pageY - 4;\r\n
+            var w = cpwrap.width();\r\n
+            var h = 21;\r\n
+            var lmin = xa[0].s + 6;\r\n
+            var tmin = ya[0].s + 4;\r\n
+            var lmax = xa[xa.length - 1].e - w - 2;\r\n
+            var tmax = ya[ya.length - 1].e - h - 2;\r\n
+            if (x > lmax) {\r\n
+                x = lmax;\r\n
+            }\r\n
+            if (x <= lmin) {\r\n
+                x = lmin + 1;\r\n
+            }\r\n
+            if (y <= tmin) {\r\n
+                y = tmin + 1;\r\n
+            }\r\n
+            if (y > tmax) {\r\n
+                y = tmax;\r\n
+            }\r\n
+            cpwrap.css({ left: x, top: y });\r\n
+        }\r\n
+        $(document)\r\n
+\t\t.mousemove(dragMove)\r\n
+\t\t.mouseup(dragEnd);\r\n
+        //.mouseout(dragEnd);\r\n
+\r\n
+        var c = {\r\n
+            sv: function(view) { //switch view                \r\n
+                if (view == option.view) {\r\n
+                    return;\r\n
+                }\r\n
+                clearcontainer();\r\n
+                option.view = view;\r\n
+                render();\r\n
+                dochange();\r\n
+            },\r\n
+            rf: function() {\r\n
+                populate();\r\n
+            },\r\n
+            gt: function(d) {\r\n
+                if (!d) {\r\n
+                    d = new Date();\r\n
+                }\r\n
+                option.showday = d;\r\n
+                render();\r\n
+                dochange();\r\n
+            },\r\n
+\r\n
+            pv: function() {\r\n
+                switch (option.view) {\r\n
+                    case "day":\r\n
+                        option.showday = DateAdd("d", -1, option.showday);\r\n
+                        break;\r\n
+                    case "week":\r\n
+                        option.showday = DateAdd("w", -1, option.showday);\r\n
+                        break;\r\n
+                    case "month":\r\n
+                        option.showday = DateAdd("m", -1, option.showday);\r\n
+                        break;\r\n
+                }\r\n
+                render();\r\n
+                dochange();\r\n
+            },\r\n
+            nt: function() {\t\t\t\t\r\n
+                switch (option.view) {\r\n
+                    case "day":\r\n
+                        option.showday = DateAdd("d", 1, option.showday);\r\n
+                        break;\r\n
+                    case "week":\r\n
+                        option.showday = DateAdd("w", 1, option.showday);\r\n
+                        break;\r\n
+                    case "month":\r\n
+\t\t\t\t\t\tvar od = option.showday.getDate();\r\n
+\t\t\t\t\t\toption.showday = DateAdd("m", 1, option.showday);\r\n
+\t\t\t\t\t\tvar nd = option.showday.getDate();\r\n
+\t\t\t\t\t\tif(od !=nd) //we go to the next month\r\n
+\t\t\t\t\t\t{\r\n
+\t\t\t\t\t\t\toption.showday= DateAdd("d", 0-nd, option.showday); //last day of last month\r\n
+\t\t\t\t\t\t}\r\n
+                        break;\r\n
+                }\r\n
+                render();\r\n
+                dochange();\r\n
+            },\r\n
+            go: function() {\r\n
+                return option;\r\n
+            },\r\n
+            so: function(p) {\r\n
+                option = $.extend(option, p);\r\n
+            }\r\n
+        };\r\n
+        this[0].bcal = c;\r\n
+        return this;\r\n
+    };\r\n
+    \r\n
+    /**\r\n
+     * @description {Method} swtichView To switch to another view.\r\n
+     * @param {String} view View name, one of \'day\', \'week\', \'month\'. \r\n
+     */\r\n
+    $.fn.swtichView = function(view) {\r\n
+        return this.each(function() {\r\n
+            if (this.bcal) {\r\n
+                this.bcal.sv(view);\r\n
+            }\r\n
+        })\r\n
+    };\r\n
+    \r\n
+    /**\r\n
+     * @description {Method} reload To reload event of current time range.\r\n
+     */\r\n
+    $.fn.reload = function() {\r\n
+        return this.each(function() {\r\n
+            if (this.bcal) {\r\n
+                this.bcal.rf();\r\n
+            }\r\n
+        })\r\n
+    };\r\n
+    \r\n
+    /**\r\n
+     * @description {Method} gotoDate To go to a range containing date.\r\n
+     * If view is week, it will go to a week containing date. \r\n
+     * If view is month, it will got to a month containing date.          \r\n
+     * @param {Date} date. Date to go. \r\n
+     */\r\n
+    $.fn.gotoDate = function(d) {\r\n
+        return this.each(function() {\r\n
+            if (this.bcal) {\r\n
+                this.bcal.gt(d);\r\n
+            }\r\n
+        })\r\n
+    };\r\n
+    \r\n
+    /**\r\n
+     * @description {Method} previousRange To go to previous date range.\r\n
+     * If view is week, it will go to previous week. \r\n
+     * If view is month, it will got to previous month.          \r\n
+     */\r\n
+    $.fn.previousRange = function() {\r\n
+        return this.each(function() {\r\n
+            if (this.bcal) {\r\n
+                this.bcal.pv();\r\n
+            }\r\n
+        })\r\n
+    };\r\n
+    \r\n
+    /**\r\n
+     * @description {Method} nextRange To go to next date range.\r\n
+     * If view is week, it will go to next week. \r\n
+     * If view is month, it will got to next month. \r\n
+     */\r\n
+    $.fn.nextRange = function() {\r\n
+        return this.each(function() {\r\n
+            if (this.bcal) {\r\n
+                this.bcal.nt();\r\n
+            }\r\n
+        })\r\n
+    };\r\n
+    \r\n
+    \r\n
+    $.fn.BcalGetOp = function() {\r\n
+        if (this[0].bcal) {\r\n
+            return this[0].bcal.go();\r\n
+        }\r\n
+        return null;\r\n
+    };\r\n
+    \r\n
+    \r\n
+    $.fn.BcalSetOp = function(p) {\r\n
+        if (this[0].bcal) {\r\n
+            return this[0].bcal.so(p);\r\n
+        }\r\n
+    };\r\n
+    \r\n
+})(jQuery);
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>next</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

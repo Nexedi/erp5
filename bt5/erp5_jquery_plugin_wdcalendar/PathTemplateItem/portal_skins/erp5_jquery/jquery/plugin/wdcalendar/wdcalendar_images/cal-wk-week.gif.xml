@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Image" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts95899443.42</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>cal-wk-week.gif</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/gif</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">R0lGODlhEAAQAOYAAAAAAP///32j9Iin6TNkxzpy3zNjwzdpzzps0D903z9v0UV54ERz00t+4Ep3
+1VKC4lB811qI41eB2WGN5F2H22WM3mmS5WuS4Hij9nCX5nmh9XKX4nec6IOr+Xic5H2g6H6g5oKk
+6YOk6Ieo6ouq6svc/93o/tzn/eDq/uLr/nGe8n+n84iv+d7p/uHr/nWOuXWXyzVJY5exy6i5yyAl
+IFpbWv+ZIf/Vo752Jf/Mk//Qmv/Qm//Uo//YrP/Zrf/ctf/dtv/hv//lyHV1df///wAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5
+BAEAAEQALAAAAAAQABAAAAeXgEQ0goSDhoQ1QwGKjIuOjSQDIiAeGxcVFBIQDgwKCAckKS4oLSYn
+LB0rKwIaGCoEJCQjIR8cGRYTEQ8NCwkFBjIBATDCxMPFwjHBx8zGxDPKMi821NXVODAwysI2AUJB
+QD43Ozk4AdDL3d8/PTw65efR0zj09fXZ283IwyXo+87F+inLRrCgQWUxEipcyJCIw4cQIxIJBAA7</string> </value>
+        </item>
+        <item>
+            <key> <string>height</string> </key>
+            <value> <int>16</int> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>570</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>cal-wk-week.gif</string> </value>
+        </item>
+        <item>
+            <key> <string>width</string> </key>
+            <value> <int>16</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

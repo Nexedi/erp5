@@ -1,0 +1,639 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts95900054.21</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>main.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+html\n
+{\n
+    margin:0px;\n
+    padding:0px;\n
+    height: 100%;\n
+    width:100%;\n
+ }\n
+\n
+.toolBotton\n
+{ \n
+    border: none;\n
+  border-bottom:#99bbe8 1px solid;\n
+  background: #ccc url(jquery/plugin/wdcalendar/wdcalendar_images/tbg.gif) repeat-x 50% top;\n
+  overflow: hidden; \n
+  position: relative;\n
+  height: 25px;\n
+  padding:0;\n
+  margin:0;\n
+}\n
+.toolBotton a\n
+{\n
+    display:block;\n
+    width:auto;\n
+    cursor:pointer;\n
+}\n
+.toolBotton a span\n
+{\n
+    float: left;\n
+    display:block;\n
+    width:auto;\n
+    cursor:pointer;\n
+}\n
+\n
+body\n
+{\n
+  margin: 0;\n
+  background-color: #E8F1F8;\n
+  font-size: 12px;\n
+  font-family: "Lucida Grande","Lucida Sans Unicode",Arial,Verdana,sans-serif;\n
+  padding: 0;\n
+  height: 100%;\n
+  width:100%;\n
+}\n
+\n
+div, span, td\n
+{\n
+  font-family: "Lucida Grande","Lucida Sans Unicode",Arial,Verdana,sans-serif;\n
+}\n
+a:link, a:visited\n
+{\n
+  text-decoration: none;\n
+  color: #333;\n
+}\n
+input\n
+{\n
+  border: solid 1px #3C7FB1;  \n
+}\n
+\n
+select\n
+{\n
+  border: #3C7FB1 1px solid;\n
+}\n
+input[type=\'text\']\n
+{\n
+  border: solid 1px #3C7FB1;  \n
+  height:18px;\n
+}\n
+input[type=\'checkbox\']\n
+{\n
+  border: none;\n
+}\n
+input[type=\'radio\']\n
+{\n
+  border: none;\n
+}\n
+textarea\n
+{\n
+    border: solid 1px #3C7FB1;  \n
+    overflow:auto;\n
+}\n
+.ellipsis\n
+{\n
+  white-space: nowrap;\n
+  text-overflow: ellipsis; /* for internet explorer */\n
+  overflow: hidden;\n
+  display: block;\n
+}\n
+html > body .ellipsis\n
+{\n
+  clear: both;\n
+}\n
+.bbit-main\n
+{  \n
+    position:absolute;\n
+    left:0;\n
+    top:0;\n
+    width:100%;\n
+    height:100%;\n
+    z-index:0;    \n
+    background-color:#E8F1F8;  \n
+}\n
+a.linkdelete span\n
+{\n
+    text-decoration:underline;\n
+    color: #000000;\n
+    padding-left:18px;\n
+    background: url(./jquery/plugin/wdcalendar/wdcalendar_images/delete.png) no-repeat left 6px;\n
+    padding-top:5px;\n
+}\n
+a.imgbtn\n
+{\n
+  color: #000000;\n
+}\n
+a.imgbtn span\n
+{\n
+  padding: 4px 4px 3px 21px;\n
+  cursor: point;\n
+}\n
+\n
+a.imgbtn:hover span\n
+{\n
+  border: #466094 1px solid;\n
+  padding: 3px 3px 2px 20px;\n
+  cursor: point;\n
+  background-color: #EDF1D5;\n
+}\n
+a.imgbtn span.Save\n
+{\n
+  background: url(./jquery/plugin/wdcalendar/wdcalendar_images/Item.Save.gif) no-repeat 3px 4px;\n
+}\n
+a.imgbtn span.Close\n
+{\n
+  background: url(./jquery/plugin/wdcalendar/wdcalendar_images/Btn.Close.gif) no-repeat 3px 4px;\n
+}\n
+a.imgbtn span.Delete\n
+{\n
+  background: url(./jquery/plugin/wdcalendar/wdcalendar_images/delete.png) no-repeat 3px 4px;\n
+}\n
+\n
+span.addcal\n
+{\n
+    padding-left:20px;\n
+  background: url(./jquery/plugin/wdcalendar/wdcalendar_images/date_add.png)  no-repeat 1px 50%;\n
+}\n
+span.showdayview\n
+{\n
+    padding-left:20px;\n
+  background: url(./jquery/plugin/wdcalendar/wdcalendar_images/cal-day.gif)  no-repeat 1px 50%;\n
+}\n
+span.showweekview\n
+{\n
+    padding-left:20px;\n
+  background: url(./jquery/plugin/wdcalendar/wdcalendar_images/cal-week.gif)  no-repeat 1px 50%;\n
+}\n
+span.showwkweekview\n
+{\n
+    padding-left:20px;\n
+  background: url(./jquery/plugin/wdcalendar/wdcalendar_images/cal-wk-week.gif)  no-repeat 1px 50%;\n
+}\n
+span.chinese\n
+{\n
+    padding-left:20px;\n
+  background: url(./jquery/plugin/wdcalendar/wdcalendar_images/cn.gif)  no-repeat 1px 50%;\n
+}\n
+span.english\n
+{\n
+    padding-left:20px;\n
+  background: url(./jquery/plugin/wdcalendar/wdcalendar_images/us.gif)  no-repeat 1px 50%;\n
+}\n
+span.english_au\n
+{\n
+    padding-left:20px;\n
+  background: url(./jquery/plugin/wdcalendar/wdcalendar_images/au.gif)  no-repeat 1px 50%;\n
+}\n
+span.showmonthview\n
+{\n
+    padding-left:20px;\n
+  background: url(./jquery/plugin/wdcalendar/wdcalendar_images/cal-month.gif)  no-repeat 1px 50%;\n
+}\n
+span.showtoday\n
+{\n
+     padding-left:20px;\n
+  background: url(./jquery/plugin/wdcalendar/wdcalendar_images/date.png)  no-repeat 1px 50%;\n
+}\n
+\n
+span.fprev\n
+{\n
+    width:18px;\n
+    background:url("./jquery/plugin/wdcalendar/wdcalendar_images/resultset_previous.png") no-repeat 1px bottom;\n
+}\n
+span.fnext\n
+{\n
+    width:18px;\n
+    background:url("./jquery/plugin/wdcalendar/wdcalendar_images/resultset_next.png") no-repeat 1px bottom;\n
+}\n
+span.showdayflash\n
+{\n
+    padding-left:20px;\n
+    background:url("./jquery/plugin/wdcalendar/wdcalendar_images/date_reflash.png") no-repeat 1px 50%;\n
+}\n
+.size1\n
+{\n
+    width:50px;    \n
+} \n
+.size2\n
+{\n
+    width:100px;    \n
+} \n
+.size3\n
+{\n
+    width:160px;    \n
+} \n
+.size4\n
+{\n
+    width:200px;    \n
+} \n
+.size5\n
+{\n
+    width:260px;    \n
+} \n
+.size6\n
+{\n
+    width:300px;    \n
+} \n
+.size7\n
+{\n
+    width:360px;    \n
+} \n
+\n
+\n
+.X\n
+{\n
+    float:right;\n
+    padding-right:3px;\n
+    color:#555;\n
+    cursor:pointer;\n
+    height:16px;    \n
+}\n
+.nodisplay\n
+{\n
+    display:none;        \n
+}\n
+/* JQuery Validation */\n
+label.error\n
+{\n
+    padding: 2px 0 2px 20px;           \n
+    display: block;   \n
+    background: url(jquery/plugin/wdcalendar/wdcalendar_images/exclamation.png) no-repeat 2px center;\n
+}\n
+input.error,select.error,textarea.error,  input.cusErrorPanel,cusErrorPanel.cusErrorPanel,textarea.cusErrorPanel\n
+{\n
+    border:solid 1px red;    \n
+}\n
+label.checked\n
+{\n
+    float:none;\n
+     position:relative;\n
+    padding: 0px 0 0px 18px;\n
+    background: url(jquery/plugin/wdcalendar/wdcalendar_images/accept.png) no-repeat 2px center;\n
+}\n
+div.error\n
+{\n
+  \n
+}\n
+\n
+div.cusErrorPanel\n
+{\n
+    z-index: auto;         \n
+    position:absolute;\n
+    width: 276px;\n
+    height: 35px;\n
+    overflow: hidden;\n
+    text-indent: 5px;\n
+    line-height: 40px;\n
+    font-size: 12px;\n
+    font-family: Arial;\n
+    background: url(jquery/plugin/wdcalendar/wdcalendar_images/tooltop.gif) no-repeat left top;\n
+    opacity:0.9;\n
+    filter: alpha(opacity=90);\n
+}\n
+.infocontainer\n
+{\n
+    margin:2px;\n
+ padding:4px;\n
+ border:1px solid #999;    \n
+ background:#fff;\n
+}\n
+.fform\n
+{\n
+   margin:0px;\n
+}\n
+.fform label\n
+{\n
+    display:block;\n
+    margin-top:2px;\n
+    padding:2px;\n
+    vertical-align:top;\n
+}\n
+.fform label.checkp\n
+{\n
+       display:inline;\n
+}\n
+.fform label span\n
+{\n
+    font-weight:bold;\n
+     display:block;\n
+}\n
+input.noborder\n
+{\n
+ border:none;    \n
+}\n
+\n
+\n
+.doing\n
+{\n
+    color: red;\n
+    vertical-align: middle;\n
+    display: none;\n
+    position: absolute;\n
+    left: 20%;\n
+    top: 20%;\n
+    border: solid 1px #555;\n
+    background-color: #FFFF00;\n
+    padding: 5px;\n
+}\n
+div.clear\n
+{\n
+    clear:both;\n
+}\n
+\n
+\n
+\n
+div.cHead\n
+{\n
+    background: url(jquery/plugin/wdcalendar/wdcalendar_images/headbg.gif) repeat-x top;\n
+    border: 1px solid #99bbe8;\n
+    border-top: 0px;\n
+    font-weight: bold;\n
+    display: block;\n
+    overflow: hidden;\n
+    white-space: nowrap;\n
+    position: relative;\n
+}\n
+\n
+ div.cHead div\n
+{\n
+    padding:4px;\n
+    white-space: nowrap;\n
+}\n
+ div.cHead div.ftitle\n
+{\n
+    background:url("jquery/plugin/wdcalendar/wdcalendar_images/grid.png") no-repeat left ;\n
+    color:#15428b;\n
+    margin-left:10px;\n
+    padding-left:20px;\n
+}\n
+ div.cHead div.ptogtitle\n
+{\n
+    position: absolute;\n
+    top: 3px;\n
+    right: 15px;\n
+    height: 18px;\n
+    padding: 1px 2px 1px 2px;\n
+    font-weight: normal;\n
+}\n
+ div.cHead div.loadicon\n
+{\n
+     background:#c44;    \n
+     color:#fff;  \n
+     \n
+}\n
+ div.cHead div.loaderror\n
+{\n
+   padding: 1px 4px 1px 4px;\n
+   background:#fad163; \n
+}\n
+\n
+div.cHead div.ptogtitle input\n
+{\n
+    height:16px;   \n
+    border:solid 1px #ccc;\n
+    background-color:#fff;\n
+    padding-left:4px;\n
+}\n
+\n
+div.ctoolbar\n
+{\n
+    BORDER-RIGHT: #99bbe8 1px solid;  \n
+    BORDER-TOP: #99bbe8 0px solid;  \n
+    BACKGROUND: #ccc url(jquery/plugin/wdcalendar/wdcalendar_images/tbg.gif)  repeat-x 50% top;  \n
+    OVERFLOW: hidden; \n
+    BORDER-LEFT: #99bbe8 1px solid;\n
+    BORDER-BOTTOM: #99bbe8 1px solid; \n
+    POSITION: relative;\n
+    HEIGHT: 25px\n
+}\n
+div.ctoolbar div.fbutton \n
+{ \n
+    PADDING-RIGHT: 1px;\n
+    DISPLAY: block; \n
+    PADDING-LEFT: 1px;  \n
+    FLOAT: left;  \n
+    PADDING-BOTTOM: 1px;  \n
+    CURSOR: pointer;  \n
+    PADDING-TOP: 1px; \n
+    HEIGHT: 22px;\n
+    margin-left:1px;\n
+\n
+}\n
+\n
+div.ctoolbar div.fbutton  div\n
+{\n
+    float: left;\n
+    padding: 2px 3px;\n
+} \n
+div.ctoolbar div.fbutton span\n
+{\n
+    float: left;\n
+    display: block;   \n
+    height:18px;\n
+}\n
+\n
+div.ctoolbar div.fbutton.fcurrent\n
+{\n
+    border: #555 1px solid;\n
+    padding: 0;\n
+    cursor: pointer;\n
+    background-color: #EDF1D5;\n
+}\n
+\n
+div.ctoolbar div.fbutton.fcurrent div\n
+{\n
+    padding: 1px 2px;\n
+    border-left: 1px solid #fff;\n
+    border-top: 1px solid #fff;\n
+    border-right: 1px solid #eee;\n
+    border-bottom: 1px solid #eee;\n
+}\n
+  \n
+div.ctoolbar div.fbutton:hover, .div.ctoolbar div.fbutton.fbOver\n
+{\n
+    border: #466094 1px solid;\n
+    padding: 0;\n
+    cursor: pointer;\n
+    background-color: #EDF1D5;\n
+}\n
+\n
+div.ctoolbar div.fbutton:hover div, .div.ctoolbar div.fbutton.fbOver div\n
+{\n
+    padding: 1px 2px;\n
+    border-left: 1px solid #fff;\n
+    border-top: 1px solid #fff;\n
+    border-right: 1px solid #eee;\n
+    border-bottom: 1px solid #eee;\n
+}   \n
+\n
+div.ctoolbar div.btnseparator\n
+{\n
+    float: left;\n
+    height: 18px;\n
+    border-left: 1px solid #ccc;\n
+    border-right: 1px solid #fff;\n
+    margin: 1px;\n
+   \n
+}\n
+\n
+div.ctoolbar div.fshowdatep\n
+{\n
+    PADDING-RIGHT: 1px;\n
+    DISPLAY: block; \n
+    PADDING-LEFT: 1px;  \n
+    FLOAT: left;  \n
+    PADDING-BOTTOM: 1px;  \n
+    CURSOR:default; \n
+    PADDING-TOP: 1px; \n
+    HEIGHT: 22px;   \n
+}\n
+div.ctoolbar div.fshowdatep  div\n
+{\n
+    float: left;\n
+    padding: 2px 3px;\n
+} \n
+\n
+div.ctoolbar div.fshowdatep span\n
+{\n
+    float: left;\n
+    display: block;   \n
+} \n
+div.cbody div.ctablehead\n
+{  \n
+    border-right: #ccc 1px solid;\n
+    border-top: #fff 1px solid;\n
+    background: #e3f7ff url(\'jquery/plugin/wdcalendar/wdcalendar_images/gridth.gif\') repeat-x left bottom;\n
+    overflow: hidden;\n
+    border-left: #ccc 1px solid;\n
+    border-bottom: #9c9c9c 0px solid;\n
+    position: relative ;\n
+    height:25px;\n
+}\n
+div.cbody div.ctablehead th div,div.cbody div.ctablebody td div\n
+{\n
+    padding: 4px;\n
+    border-left:none;   \n
+    overflow:hidden;     \n
+} \n
+div.cbody div.ctablehead  th /* common cell properties*/\n
+{\n
+    text-align: left; \n
+    border-right:solid 1px #ddd;  \n
+    border-left:solid 1px #fff;\n
+    overflow: hidden;\n
+    vertical-align: top !important;\n
+    font-weight: normal;\n
+    cursor: default;\n
+    white-space: nowrap;\n
+}\n
+div.cbody div.ctablehead div.ctableheadp\n
+{\n
+    float:left;\n
+}\n
+div.cbody div.ctablehead th div\n
+{\n
+    height:17px;   \n
+    \n
+ }  \n
+ \n
+ div.cbody div.ctablebody \n
+ {\n
+     BORDER-RIGHT: #ccc 1px solid;  \n
+     BORDER-TOP: #ccc 0px solid;  \n
+     BACKGROUND: #dfe8f6; \n
+     OVERFLOW: auto;  \n
+     BORDER-LEFT: #ccc 1px solid; \n
+     BORDER-BOTTOM: #ccc 1px solid; \n
+     POSITION: relative\n
+ }\n
+ \n
+ div.cbody div.ctablebody td  /* common cell properties*/\n
+{\n
+    text-align: left; \n
+    border-left:solid 1px #fff;\n
+    border-top: none;\n
+    border-bottom: 1px dotted #ddd;\n
+    border-right:solid 1px #ddd;\n
+    overflow: hidden;\n
+    vertical-align: top !important;\n
+    white-space: nowrap; \n
+    background-color:#fff;\n
+    cursor:default;\n
+}\n
+ div.cbody div.ctablebody tr.erow td\n
+{\n
+    background: #F5FFEF;        \n
+}\n
+ div.cbody div.ctablebody tr:hover td, \n
+ div.cbody div.ctablebody tr.trOver td\n
+{\n
+    background: #FFFFBB;\n
+    border-left: 1px solid #eef8ff;\n
+    border-bottom: 1px dotted #a8d8eb;\n
+}\n
+\n
+\n
+ div.cbody div.ctablebody td div\n
+{\n
+    border-top: 0px solid #fff;\n
+    padding-bottom: 2px;\n
+}\n
+ \n
+\n
+\n
+div.ViewgBlock\n
+{\n
+    background: #E3E3E3 url(\'jquery/plugin/wdcalendar/wdcalendar_images/load-bg.png\');        \n
+}\n
+div.ViewgBlock>div.loading\n
+{\n
+    width: 100%;\n
+    height: 100%;\n
+    display: block;\n
+    opacity:0.5;\n
+    filter: alpha(opacity=50);\n
+    background:#f4f4f4 url(\'jquery/plugin/wdcalendar/wdcalendar_images/indicator_web20_working.gif\') no-repeat center center;  \n
+}\n
+\n
+.transparent\n
+{\n
+  filter:alpha(opacity=0);\n
+  -moz-opacity:0;\n
+  opacity:0;\n
+  background-color:#000;\n
+}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>11106</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>main.css</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

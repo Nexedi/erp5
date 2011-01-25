@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Image" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts95901720.43</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>hd-sprite.gif</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/gif</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">R0lGODlhAwB7AIcAABEpVxEqWBIqWRIrWhMsWxMsXBQtXRQuXhUuXxUvYBYwYRYxYhcxYxcyZBgz
+ZRgzZhk0Zxk1aBo1aRo2aho3axs3bBs4bRw5bhw5bx06cB07cR47ch48cx89dB8+dSA+diA/dyFA
+eCFAeSJBeiJCeyNCfCNDfUp0vP3//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAMAACgALAAAAAADAHsA
+AAj/ACtUQHFCoAkTFUqUqECCRIURIyqIEFEhRIgKIEBU+PChggcPFTp0qMCBQ4UNGypo0FAhQ4YK
+GDBUuHChggULAgVSoFBhwoQKEiRUiBChAgQIFR48qODAQYUGDSowYFBhwYIKChRUSJCgAgIEFQ4c
+qGDAQIUCBSoQIFBhwIAKAgRUCBCgAgAAA3NWKHgw4cKGDyNOrHgx48aOH0OOLHky5cqWL2POrHlT
+786eP4MOLXo06dKmT6NOrXo169auX8OOLXs27dq2b+POrXs354nbB00oLNGQBMQRE0VYDJERBMcP
+Hz2I7FCSA8oNKzW4zBATA80LN3Hq3OlzQlAJRCMcKIWg9EFTB1AbTGVgdUFWBVwTfEUg9kBZA2gL
+rCXgdkBcAXQFcBcAAQEAOw==</string> </value>
+        </item>
+        <item>
+            <key> <string>height</string> </key>
+            <value> <int>123</int> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1099</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>hd-sprite.gif</string> </value>
+        </item>
+        <item>
+            <key> <string>width</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
