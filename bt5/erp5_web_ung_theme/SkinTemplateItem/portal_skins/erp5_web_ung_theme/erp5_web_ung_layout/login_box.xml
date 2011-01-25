@@ -271,7 +271,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>user_navigation_box</string> </value>
+                    <value> <string>user_login_box</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -299,7 +299,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/WebSection_viewUserNavigationWidget</string> </value>
+            <value> <string>here/WebSection_viewUserLoginWidget</string> </value>
         </item>
       </dictionary>
     </pickle>

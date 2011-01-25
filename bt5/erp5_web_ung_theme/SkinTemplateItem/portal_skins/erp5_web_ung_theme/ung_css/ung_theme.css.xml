@@ -1014,8 +1014,13 @@ div#edit_document.ui-dialog-content {\n
 div#tabs, div#pad-navigation-wrapper div#tabs_switcher.tab {\n
   display: none !important;\n
 }\n
+\n
 div#pad-navigation-wrapper {\n
   border: 0px !important;\n
+}\n
+\n
+img[alt="calendar_logo_box"]{\n
+  margin-top: 10px;\n
 }
 
 ]]></string> </value>

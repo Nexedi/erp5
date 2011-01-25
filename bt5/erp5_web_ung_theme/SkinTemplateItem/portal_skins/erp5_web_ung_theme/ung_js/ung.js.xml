@@ -410,7 +410,7 @@ $().ready(function(){\n
     event.preventDefault();\n
     showNotImplementedMessage("a#right_message");\n
   });\n
-  $("a.calendar, a.email").click(function(event){\n
+  $("a.email").click(function(event){\n
     event.preventDefault();\n
     showNotImplementedMessage("a#left_message");\n
   });\n

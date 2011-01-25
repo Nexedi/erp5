@@ -1,3 +1,12 @@
+2011-01-25 gabriel
+* Add Web Section to UNG Calendar and added new form and css file for this section.
+
+2011-01-19 gabriel
+* Release 0.2 (r42537)
+
+2010-01-17 gabriel
+* Add CachingMethod to extract all subjects from all objects in Web Page Module
+
 2010-01-17 gabriel
 * Add CachingMethod to extract all subjects from all objects in Web Page Module
 

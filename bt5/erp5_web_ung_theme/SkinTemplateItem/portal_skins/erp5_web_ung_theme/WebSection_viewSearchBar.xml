@@ -36,9 +36,9 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<tal:block tal:define="website here/getWebSiteValue;\n
+<tal:block tal:define="websection here/getWebSectionValue;\n
                        enctype string:multipart/form-data;\n
-                       portal_path python:website.absolute_url();\n
+                       portal_path python:websection.absolute_url();\n
                        has_editor python: here.absolute_url() != portal_path;">\n
 <a class="ung_docs" tal:attributes="href python: portal_path + \'/unfoldDomain?domain_url=ung_domain/all_documents&\' + \n
                                                                \'form_id=erp5_web_ung_layout&\' + \n

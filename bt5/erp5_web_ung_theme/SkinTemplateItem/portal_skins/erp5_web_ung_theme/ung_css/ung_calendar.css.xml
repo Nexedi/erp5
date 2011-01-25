@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLDocument" module="OFS.DTMLDocument"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ung_calendar.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>div.main-right {\n
+  border-left: 0px !important;\n
+  width: 87% !important;\n
+}\n
+div.main-left {\n
+  width: 13.3% !important;\n
+  margin-top: -3.7px !important;\n
+  background-color: #FFFFFF !important;\n
+}\n
+div.main-right fieldset.widget {\n
+  margin-left: 0px;\n
+}\n
+\n
+div.cHead {\n
+  border-left: 0px !important;\n
+  border-right: 0px !important;\n
+}\n
+\n
+div.ctoolbar {\n
+  background: #BBCCFF !important;\n
+}\n
+\n
+div.btnseparator {\n
+  display:none;\n
+}\n
+\n
+div.cHead div.ptogtitle {\n
+  padding: 2px;\n
+  position: fixed !important;\n
+  right: 20px !important;\n
+  top: 58px !important;\n
+}\n
+a#BBIT_DP_CONTAINER {\n
+  left: 0px !important;\n
+   \n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

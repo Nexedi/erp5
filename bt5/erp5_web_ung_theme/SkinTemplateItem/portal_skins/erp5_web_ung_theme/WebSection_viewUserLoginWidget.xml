@@ -36,12 +36,20 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<tal:block tal:define="portal_path python: here.getWebSiteValue().absolute_url();">\n
- <a class="email" tal:attributes="href string:${portal_path}/email">Email</a>\n
- <a class="documents" tal:attributes="href string:${portal_path}">Documents</a>\n
- <a class="calendar" tal:attributes="href string:${portal_path}/calendar">Calendar</a>\n
-</tal:block>\n
-<a id="left_message">Not Implemented yet</a>
+<tal:block tal:define="website here/getWebSiteValue;\n
+                       enctype string:multipart/form-data;\n
+                       portal_path python:website.absolute_url();">\n
+ <a id="right_message">Not Implemented yet</a>\n
+ <div id="preference_dialog" title="UNG Preferences"></div> \n
+ <tal:block tal:condition="here/portal_membership/isAnonymousUser">\n
+   <a id="login" tal:attributes="href string: #">Sign in</a>\n
+  </tal:block>\n
+ <tal:block tal:condition="python:not here.portal_membership.isAnonymousUser()">\n
+   <a tal:content="here/portal_membership/getAuthenticatedMember"/>\n
+ </tal:block>\n
+ | <a id="settings" href="#">Settings</a> | <a id="help" href="#">Help</a> |\n
+ <a tal:attributes="href string:${portal_path}/WebSite_logout">Sign out</a>\n
+</tal:block>
 
 ]]></unicode> </value>
         </item>
@@ -55,7 +63,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSection_viewUserNavigationWidget</string> </value>
+            <value> <string>WebSection_viewUserLoginWidget</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>

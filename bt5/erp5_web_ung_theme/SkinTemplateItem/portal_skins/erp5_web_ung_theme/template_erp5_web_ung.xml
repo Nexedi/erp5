@@ -39,8 +39,8 @@
 <html>\n
 <body>\n
   <tal:block metal:define-macro="master">\n
-     <tal:block tal:define="website here/getWebSiteValue;\n
-                            portal_path python: website.absolute_url();\n
+     <tal:block tal:define="websection here/getWebSectionValue;\n
+                            portal_path python: websection.absolute_url();\n
                             dummy python: request.set(\'editable_mode\', 0);\n
                             layout_form_id here/getApplicableLayout | nothing;\n
                             ignore_layout request/ignore_layout | nothing;\n
@@ -55,7 +55,7 @@
                             main_area python:aggregate.get(\'main\', []);\n
                             global css_list_template css_list_template | python: [];\n
                             global css_list_ung_template python:css_list_template + [\n
-                                  \'ung_theme.css\',\n
+                                  \'ung_css/ung_theme.css\',\n
                                   \'jquery/ui/css/erp5-theme/jquery-ui.css\'];\n
                             global js_list js_list | python:[];\n
                             global css_list css_list | python:[];\n

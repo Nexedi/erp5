@@ -34,16 +34,7 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<tal:block tal:define="portal_path python: here.getWebSiteValue().absolute_url();">\n
- <a class="email" tal:attributes="href string:${portal_path}/email">Email</a>\n
- <a class="documents" tal:attributes="href string:${portal_path}">Documents</a>\n
- <a class="calendar" tal:attributes="href string:${portal_path}/calendar">Calendar</a>\n
-</tal:block>\n
-<a id="left_message">Not Implemented yet</a>
-
-]]></unicode> </value>
+            <value> <unicode>Blank Page</unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -55,7 +46,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSection_viewUserNavigationWidget</string> </value>
+            <value> <string>WebSection_newEvent</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
