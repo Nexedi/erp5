@@ -123,7 +123,8 @@ a:hover { \n
   color: #000; \n
 }\n
 \n
-.transition_message{\n
+.transition_message, \n
+.information_area {\n
   background-color:#FF654A;\n
   font-weight:bold;\n
   margin-left:10px;\n
@@ -234,12 +235,12 @@ div#wrapper_headline div.header_title {\n
   float:left;\n
 }\n
 \n
-.content .error .input {\n
-  border:2px solid #FF4400;\n
+.content .error input,  \n
+.content .error textarea {\n
+  border:1px solid #FF4400;\n
 }\n
 \n
-.content .field .error {\n
-  background-color:inherit;\n
+.content .field .error, .content .error label {\n
   color:#FF4400;\n
 }\n
 \n
