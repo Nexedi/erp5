@@ -1312,7 +1312,8 @@ def fortify():
   CacheEntry__init__ = CacheEntry.__init__
   def __init__(self, value, *args, **kw):
     # this will raise TypeError if you try to cache a persistent object
-    dumps(value)
+    if value is not None:
+      dumps(value)
     CacheEntry__init__(self, value, *args, **kw)
   CacheEntry.__init__ = __init__
   # randomize priorities of activities in a deterministic way
