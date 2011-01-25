@@ -40,213 +40,23 @@
 <html xmlns="http://www.w3.org/1999/xhtml">\n
 <head id="Head1">\n
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">\n
-    <link href="portal_skins/erp5_jquery/jquery/plugin/wdcalendar/dailog.css" rel="stylesheet" type="text/css" />\n
-    <link href="portal_skins/erp5_jquery/jquery/plugin/wdcalendar/calendar.css" rel="stylesheet" type="text/css" /> \n
-    <link href="portal_skins/erp5_jquery/jquery/plugin/wdcalendar/dp.css" rel="stylesheet" type="text/css" />   \n
-    <link href="portal_skins/erp5_jquery/jquery/plugin/wdcalendar/alert.css" rel="stylesheet" type="text/css" /> \n
-    <link href="portal_skins/erp5_jquery/jquery/plugin/wdcalendar/main.css" rel="stylesheet" type="text/css" />    \n
-    <script src="portal_skins/erp5_jquery/jquery/plugin/wdcalendar/Common.js" type="text/javascript"></script>    \n
-    <script src="portal_skins/erp5_jquery/jquery/plugin/wdcalendar/datepicker_lang_US.js" type="text/javascript"></script>     \n
-    <script src="portal_skins/erp5_jquery/jquery/plugin/wdcalendar/jquery.datepicker.js" type="text/javascript"></script>\n
-\n
-    <script src="portal_skins/erp5_jquery/jquery/plugin/wdcalendar/jquery.alert.js" type="text/javascript"></script>    \n
-    <script src="portal_skins/erp5_jquery/jquery/plugin/wdcalendar/jquery.ifrmdailog.js" defer="defer" type="text/javascript"></script>\n
-    <script src="portal_skins/erp5_jquery/jquery/plugin/wdcalendar/wdCalendar_lang_US.js" type="text/javascript"></script>    \n
-    <script src="portal_skins/erp5_jquery/jquery/plugin/wdcalendar/jquery.calendar.js" type="text/javascript"></script>   \n
-    \n
-    <script type="text/javascript">\n
-        $(document).ready(function() {     \n
-           var view="day";          \n
-           \n
-            var DATA_FEED_URL = "Base_getEventList";\n
-            var op = {\n
-                view: view,\n
-                theme:3,\n
-                showday: new Date(),\n
-                EditCmdhandler:Edit,\n
-                DeleteCmdhandler:Delete,\n
-                ViewCmdhandler:View,    \n
-                onWeekOrMonthToDay:wtd,\n
-                onBeforeRequestData: cal_beforerequest,\n
-                onAfterRequestData: cal_afterrequest,\n
-                onRequestDataError: cal_onerror, \n
-                autoload:true,\n
-                url: DATA_FEED_URL + "?method=list",  \n
-                quickAddUrl: DATA_FEED_URL + "?method=add", \n
-                quickUpdateUrl: DATA_FEED_URL + "?method=update",\n
-                quickDeleteUrl: DATA_FEED_URL + "?method=remove"        \n
-            };\n
-            var $dv = $("#calhead");\n
-            var _MH = document.documentElement.clientHeight;\n
-            var dvH = $dv.height() + 2;\n
-            op.height = _MH - dvH;\n
-            op.eventItems =[];\n
-\n
-            var p = $("#gridcontainer").bcalendar(op).BcalGetOp();\n
-            if (p && p.datestrshow) {\n
-                $("#txtdatetimeshow").text(p.datestrshow);\n
-            }\n
-            $("#caltoolbar").noSelect();\n
-            \n
-            $("#hdtxtshow").datepicker({ picker: "#txtdatetimeshow", showtarget: $("#txtdatetimeshow"),\n
-            onReturn:function(r){                          \n
-                            var p = $("#gridcontainer").gotoDate(r).BcalGetOp();\n
-                            if (p && p.datestrshow) {\n
-                                $("#txtdatetimeshow").text(p.datestrshow);\n
-                            }\n
-                     } \n
-            });\n
-            function cal_beforerequest(type)\n
-            {\n
-                var t="Loading data...";\n
-                switch(type)\n
-                {\n
-                    case 1:\n
-                        t="Loading data...";\n
-                        break;\n
-                    case 2:                      \n
-                    case 3:  \n
-                    case 4:    \n
-                        t="The request is being processed ...";                                   \n
-                        break;\n
-                }\n
-                $("#errorpannel").hide();\n
-                $("#loadingpannel").html(t).show();    \n
-            }\n
-            function cal_afterrequest(type)\n
-            {\n
-                switch(type)\n
-                {\n
-                    case 1:\n
-                        $("#loadingpannel").hide();\n
-                        break;\n
-                    case 2:\n
-                    case 3:\n
-                    case 4:\n
-                        $("#loadingpannel").html("Success!");\n
-                        window.setTimeout(function(){ $("#loadingpannel").hide();},2000);\n
-                    break;\n
-                }              \n
-               \n
-            }\n
-            function cal_onerror(type,data)\n
-            {\n
-                $("#errorpannel").show();\n
-            }\n
-            function Edit(data)\n
-            {\n
-               var eurl="WebSection_newEvent?id={0}&start={2}&end={3}&isallday={4}&title={1}";   \n
-                if(data)\n
-                {\n
-                    var url = StrFormat(eurl,data);\n
-                    OpenModelWindow(url,{ width: 600, height: 400, caption:"Manage  The Calendar",onclose:function(){\n
-                       $("#gridcontainer").reload();\n
-                    }});\n
-                }\n
-            }    \n
-            function View(data)\n
-            {\n
-                var str = "";\n
-                $.each(data, function(i, item){\n
-                    str += "[" + i + "]: " + item + "\\n";\n
-                });\n
-                alert(str);               \n
-            }    \n
-            function Delete(data,callback)\n
-            {           \n
-                \n
-                $.alerts.okButton="Ok";  \n
-                $.alerts.cancelButton="Cancel";  \n
-                hiConfirm("Are You Sure to Delete this Event", \'Confirm\',function(r){ r && callback(0);});           \n
-            }\n
-            function wtd(p)\n
-            {\n
-               if (p && p.datestrshow) {\n
-                    $("#txtdatetimeshow").text(p.datestrshow);\n
-                }\n
-                $("#caltoolbar div.fcurrent").each(function() {\n
-                    $(this).removeClass("fcurrent");\n
-                })\n
-                $("#showdaybtn").addClass("fcurrent");\n
-            }\n
-            //to show day view\n
-            $("#showdaybtn").click(function(e) {\n
-                //document.location.href="#day";\n
-                $("#caltoolbar div.fcurrent").each(function() {\n
-                    $(this).removeClass("fcurrent");\n
-                })\n
-                $(this).addClass("fcurrent");\n
-                var p = $("#gridcontainer").swtichView("day").BcalGetOp();\n
-                if (p && p.datestrshow) {\n
-                    $("#txtdatetimeshow").text(p.datestrshow);\n
-                }\n
-            });\n
-            //to show week view\n
-            $("#showweekbtn").click(function(e) {\n
-                //document.location.href="#week";\n
-                $("#caltoolbar div.fcurrent").each(function() {\n
-                    $(this).removeClass("fcurrent");\n
-                })\n
-                $(this).addClass("fcurrent");\n
-                var p = $("#gridcontainer").swtichView("week").BcalGetOp();\n
-                if (p && p.datestrshow) {\n
-                    $("#txtdatetimeshow").text(p.datestrshow);\n
-                }\n
-\n
-            });\n
-            //to show month view\n
-            $("#showmonthbtn").click(function(e) {\n
-                //document.location.href="#month";\n
-                $("#caltoolbar div.fcurrent").each(function() {\n
-                    $(this).removeClass("fcurrent");\n
-                })\n
-                $(this).addClass("fcurrent");\n
-                var p = $("#gridcontainer").swtichView("month").BcalGetOp();\n
-                if (p && p.datestrshow) {\n
-                    $("#txtdatetimeshow").text(p.datestrshow);\n
-                }\n
-            });\n
-            \n
-            $("#showreflashbtn").click(function(e){\n
-                $("#gridcontainer").reload();\n
-            });\n
-            \n
-            //Add a new event\n
-            $("#faddbtn").click(function(e) {\n
-                var url ="WebSection_newEvent";\n
-                OpenModelWindow(url,{ width: 500, height: 400, caption: "Create New Event"});\n
-            });\n
-            //go to today\n
-            $("#showtodaybtn").click(function(e) {\n
-                var p = $("#gridcontainer").gotoDate().BcalGetOp();\n
-                if (p && p.datestrshow) {\n
-                    $("#txtdatetimeshow").text(p.datestrshow);\n
-                }\n
-\n
-\n
-            });\n
-            //previous date range\n
-            $("#sfprevbtn").click(function(e) {\n
-                var p = $("#gridcontainer").previousRange().BcalGetOp();\n
-                if (p && p.datestrshow) {\n
-                    $("#txtdatetimeshow").text(p.datestrshow);\n
-                }\n
-\n
-            });\n
-            //next date range\n
-            $("#sfnextbtn").click(function(e) {\n
-                var p = $("#gridcontainer").nextRange().BcalGetOp();\n
-                if (p && p.datestrshow) {\n
-                    $("#txtdatetimeshow").text(p.datestrshow);\n
-                }\n
-            });\n
-            \n
-        });\n
-    </script>    \n
+    <link href="portal_skins/erp5_jquery/jquery/plugin/wdcalendar/dailog.css" rel="stylesheet" type="text/css"/>\n
+    <link href="portal_skins/erp5_jquery/jquery/plugin/wdcalendar/calendar.css" rel="stylesheet" type="text/css"/>\n
+    <link href="portal_skins/erp5_jquery/jquery/plugin/wdcalendar/dp.css" rel="stylesheet" type="text/css"/>\n
+    <link href="portal_skins/erp5_jquery/jquery/plugin/wdcalendar/alert.css" rel="stylesheet" type="text/css"/>\n
+    <link href="portal_skins/erp5_jquery/jquery/plugin/wdcalendar/main.css" rel="stylesheet" type="text/css"/>\n
+    <link href="ung_css/ung_calendar.css" rel="stylesheet" type="text/css"/>\n
+    <script src="portal_skins/erp5_jquery/jquery/plugin/wdcalendar/Common.js" type="text/javascript"/>\n
+    <script src="portal_skins/erp5_jquery/jquery/plugin/wdcalendar/datepicker_lang_US.js" type="text/javascript"/>\n
+    <script src="portal_skins/erp5_jquery/jquery/plugin/wdcalendar/jquery.datepicker.js" type="text/javascript"/>\n
+    <script src="portal_skins/erp5_jquery/jquery/plugin/wdcalendar/jquery.alert.js" type="text/javascript"/>\n
+    <script src="portal_skins/erp5_jquery/jquery/plugin/wdcalendar/jquery.ifrmdailog.js" defer="defer" type="text/javascript"/>\n
+    <script src="portal_skins/erp5_jquery/jquery/plugin/wdcalendar/wdCalendar_lang_US.js" type="text/javascript"/>\n
+    <script src="portal_skins/erp5_jquery/jquery/plugin/wdcalendar/jquery.calendar.js" type="text/javascript"/>\n
+    <script src="ung_js/ung_calendar.js" type="text/javascript"/>\n
 </head>\n
 <body>\n
     <div>\n
-\n
       <div id="calhead" style="padding-left:1px;padding-right:1px;">          \n
             <div class="cHead">\n
               <div id="loadingpannel" class="ptogtitle loadicon" style="display: none;">Loading data...</div>\n

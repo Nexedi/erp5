@@ -1,0 +1,204 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ung_calendar.js</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+$(document).ready(function() {     \n
+  var view="day";          \n
+  var DATA_FEED_URL = "Base_getEventList";\n
+  var op = {\n
+    view: view,\n
+    theme:3,\n
+    showday: new Date(),\n
+    EditCmdhandler:Edit,\n
+    DeleteCmdhandler:Delete,\n
+    ViewCmdhandler:View,    \n
+    onWeekOrMonthToDay:wtd,\n
+    onBeforeRequestData: cal_beforerequest,\n
+    onAfterRequestData: cal_afterrequest,\n
+    onRequestDataError: cal_onerror, \n
+    autoload:true,\n
+    url: DATA_FEED_URL + "?method=list",  \n
+    quickAddUrl: DATA_FEED_URL + "?method=add", \n
+    quickUpdateUrl: DATA_FEED_URL + "?method=update",\n
+    quickDeleteUrl: DATA_FEED_URL + "?method=remove"        \n
+  };\n
+  var $dv = $("#calhead");\n
+  var _MH = document.documentElement.clientHeight;\n
+  var dvH = $dv.height() + 2;\n
+  op.height = _MH - dvH;\n
+  op.eventItems =[];\n
+  var p = $("#gridcontainer").bcalendar(op).BcalGetOp();\n
+  if (p && p.datestrshow) {\n
+    $("#txtdatetimeshow").text(p.datestrshow);\n
+  }\n
+  $("#caltoolbar").noSelect();\n
+  $("#hdtxtshow").datepicker({ picker: "#txtdatetimeshow", showtarget: $("#txtdatetimeshow"),\n
+    onReturn:function(r){                          \n
+      var p = $("#gridcontainer").gotoDate(r).BcalGetOp();\n
+      if (p && p.datestrshow) {\n
+        $("#txtdatetimeshow").text(p.datestrshow);\n
+      }\n
+    } \n
+  });\n
+  function cal_beforerequest(type){\n
+    var t = "Loading data...";\n
+    switch(type){\n
+      case 1:\n
+        t = "Loading data...";\n
+        break;\n
+      case 2:                      \n
+      case 3:  \n
+      case 4:    \n
+        t = "The request is being processed ...";                                   \n
+        break;\n
+    }\n
+    $("#errorpannel").hide();\n
+    $("#loadingpannel").html(t).show();    \n
+  }\n
+  function cal_afterrequest(type){\n
+    switch(type){\n
+      case 1:\n
+        $("#loadingpannel").hide();\n
+        break;\n
+      case 2:\n
+      case 3:\n
+      case 4:\n
+        $("#loadingpannel").html("Success!");\n
+        window.setTimeout(function(){ $("#loadingpannel").hide();},2000);\n
+        break;\n
+    }              \n
+  }\n
+  function cal_onerror(type,data){\n
+    $("#errorpannel").show();\n
+  }\n
+  function Edit(data){\n
+    var eurl="WebSection_newEvent?id={0}&start={2}&end={3}&isallday={4}&title={1}";   \n
+    if(data){\n
+      var url = StrFormat(eurl,data);\n
+      OpenModelWindow(url,{width: 600, height: 400, caption:"Manage The Event",onclose:function(){\n
+        $("#gridcontainer").reload();\n
+      }});\n
+    }\n
+  }    \n
+  function View(data){\n
+    var str = "";\n
+    $.each(data, function(i, item){\n
+      str += "[" + i + "]: " + item + "\\n";\n
+    });\n
+    alert(str);               \n
+  }    \n
+  function Delete(data, callback){\n
+    $.alerts.okButton="Ok";  \n
+    $.alerts.cancelButton="Cancel";  \n
+    hiConfirm("Are You Sure to Delete this Event", \'Confirm\', function(r){ r && callback(0);});           \n
+  }\n
+  function wtd(p){\n
+    if (p && p.datestrshow) {\n
+      $("#txtdatetimeshow").text(p.datestrshow);\n
+    }\n
+    $("#caltoolbar div.fcurrent").each(function() {\n
+      $(this).removeClass("fcurrent");\n
+    })\n
+    $("#showdaybtn").addClass("fcurrent");\n
+  }\n
+  //to show day view\n
+  $("#showdaybtn").click(function(e) {\n
+    //document.location.href="#day";\n
+    $("#caltoolbar div.fcurrent").each(function() {\n
+      $(this).removeClass("fcurrent");\n
+    })\n
+    $(this).addClass("fcurrent");\n
+    var p = $("#gridcontainer").swtichView("day").BcalGetOp();\n
+    if (p && p.datestrshow) {\n
+      $("#txtdatetimeshow").text(p.datestrshow);\n
+    }\n
+  });\n
+  //to show week view\n
+  $("#showweekbtn").click(function(e) {\n
+    //document.location.href="#week";\n
+    $("#caltoolbar div.fcurrent").each(function() {\n
+      $(this).removeClass("fcurrent");\n
+    })\n
+    $(this).addClass("fcurrent");\n
+    var p = $("#gridcontainer").swtichView("week").BcalGetOp();\n
+    if (p && p.datestrshow){\n
+      $("#txtdatetimeshow").text(p.datestrshow);\n
+    }\n
+  });\n
+  //to show month view\n
+  $("#showmonthbtn").click(function(e) {\n
+    //document.location.href="#month";\n
+    $("#caltoolbar div.fcurrent").each(function() {\n
+      $(this).removeClass("fcurrent");\n
+    })\n
+    $(this).addClass("fcurrent");\n
+    var p = $("#gridcontainer").swtichView("month").BcalGetOp();\n
+    if (p && p.datestrshow) {\n
+      $("#txtdatetimeshow").text(p.datestrshow);\n
+    }\n
+  });\n
+  $("#showreflashbtn").click(function(e){\n
+    $("#gridcontainer").reload();\n
+  });          \n
+  //Add a new event\n
+  $("#faddbtn").click(function(e) {\n
+    var url ="WebSection_newEvent";\n
+    OpenModelWindow(url,{ width: 500, height: 400, caption: "Create New Event"});\n
+  });\n
+  //go to today\n
+  $("#showtodaybtn").click(function(e) {\n
+    var p = $("#gridcontainer").gotoDate().BcalGetOp();\n
+    if (p && p.datestrshow) {\n
+      $("#txtdatetimeshow").text(p.datestrshow);\n
+    }\n
+  });\n
+  //previous date range\n
+  $("#sfprevbtn").click(function(e) {\n
+    var p = $("#gridcontainer").previousRange().BcalGetOp();\n
+    if (p && p.datestrshow) {\n
+      $("#txtdatetimeshow").text(p.datestrshow);\n
+    }\n
+  });\n
+  //next date range\n
+  $("#sfnextbtn").click(function(e) {\n
+    var p = $("#gridcontainer").nextRange().BcalGetOp();\n
+    if (p && p.datestrshow) {\n
+      $("#txtdatetimeshow").text(p.datestrshow);\n
+    }\n
+  });\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
