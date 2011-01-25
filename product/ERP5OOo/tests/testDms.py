@@ -846,7 +846,6 @@ class TestDocument(TestDocumentMixin):
                                          web_page.getReference(),
                                          web_page.getLanguage(),
                                          web_page.getVersion())))
-  @expectedFailure
   def test_10_SearchString(self):
     """
     Test search string search generation and parsing.
@@ -1016,7 +1015,7 @@ class TestDocument(TestDocumentMixin):
     # parse with multiple portal_type containing spaces in one portal_type
     search_string = 'erp5 AND (portal_type:Document OR portal_type:Presentation OR portal_type:"Web Page")'
     parsed_string = parse(search_string)
-    self.assertEquals(parsed_string['portal_type'], ['Document','Presentation','Web Page'])
+    self.assertEquals(parsed_string['portal_type'], ['Document','Presentation','"Web Page"'])
 
   @expectedFailure
   def test_11_Base_getAdvancedSearchResultList(self):
