@@ -361,10 +361,10 @@ $().ready(function(){\n
   $("a#settings")\n
     .click(function(event){\n
       event.preventDefault();\n
-      $.getJSON("Base_getPreferencePathList", function(data){\n
-        ungPreferencePath = data.preference;\n
-        systemPreferencePath = data.system_preference;\n
-        if ($("div#preference_dialog").html() == "") {\n
+      if ($("div#preference_dialog").html() == ""){\n
+        $.getJSON("Base_getPreferencePathList", function(data){\n
+          ungPreferencePath = data.preference;\n
+          systemPreferencePath = data.system_preference;\n
           $.get(ungPreferencePath + \'/Preference_viewHtmlStyle?editable_mode:int=1\', function(data){\n
             $("div#preference_dialog").append("<form id=\'erp5_preference\'>" + \n
                                               "<fieldset class=\'center editable\'>" + \n
@@ -383,8 +383,8 @@ $().ready(function(){\n
                                               $(data).find(\'fieldset.center.editable\').html() +\n
                                               "</fieldset></form>");\n
           });\n
-        }\n
-      });\n
+        });\n
+      }\n
       $("div#preference_dialog").dialog("open");\n
     });\n
   $("button.ui-button, span.ui-icon").click(function(){$("p#hide_properties").click()});\n
