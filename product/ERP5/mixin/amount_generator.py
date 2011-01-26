@@ -319,8 +319,11 @@ class AmountGeneratorMixin:
           amount = getRoundingProxy(amount, context=self)
         result.append(amount)
         # Contribute
-        quantity *= property_dict.get('price', 1) / \
-                    property_dict.get('efficiency', 1)
+        quantity *= property_dict.get('price', 1)
+        try:
+          quantity /= property_dict.get('efficiency', 1)
+        except ZeroDivisionError:
+          quantity *= float('inf')
         for base_contribution in property_dict['base_contribution_set']:
           base_amount.contribute(base_contribution, quantity)
 
