@@ -174,7 +174,7 @@ function submitFormOnEnter(event, form, method_name, clear_changed_flag, element
   if (clear_changed_flag == null){ clear_changed_flag = false; }\n
   if(event.keyCode == 13){\n
     if (form == "main_form") {\n
-      form = $("#"+form).get(); // backward compatibility\n
+      form = document.forms[form]; // backward compatibility\n
     }\n
     form.action = method_name;\n
     if (clear_changed_flag==true) {\n
