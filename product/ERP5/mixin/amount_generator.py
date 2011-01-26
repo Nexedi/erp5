@@ -288,10 +288,10 @@ class AmountGeneratorMixin:
         # (XXX is it OK ?) XXX-JPS Need careful review with taxes
         quantity = float(sum(map(base_amount.getGeneratedAmountQuantity,
                                  base_application_set)))
-        try:
-          quantity *= property_dict.pop('quantity', 1)
-        except TypeError: # None or ''
-          pass
+        for key in 'quantity', 'price', 'efficiency':
+          if property_dict.get(key, 0) in (None, ''):
+            del property_dict[key]
+        quantity *= property_dict.pop('quantity', 1)
         if not (quantity or generate_empty_amounts):
           continue
         # Backward compatibility
@@ -319,8 +319,8 @@ class AmountGeneratorMixin:
           amount = getRoundingProxy(amount, context=self)
         result.append(amount)
         # Contribute
-        quantity *= (property_dict.get('price') or 1) / \
-                    (property_dict.get('efficiency') or 1)
+        quantity *= property_dict.get('price', 1) / \
+                    property_dict.get('efficiency', 1)
         for base_contribution in property_dict['base_contribution_set']:
           base_amount.contribute(base_contribution, quantity)
 
