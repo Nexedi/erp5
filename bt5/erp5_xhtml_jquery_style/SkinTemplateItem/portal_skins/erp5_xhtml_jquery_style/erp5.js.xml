@@ -186,6 +186,9 @@ function submitFormOnEnter(event, form, method_name, clear_changed_flag, element
 \n
 var old_index=0;\n
 function shiftCheck(evt) {\n
+  /*Uncheck all checkboxes from last unchecked one in \n
+    business template Install / Update / Reinstall dialog.\n
+  */\n
   evt=(evt)?evt:event;\n
   var target=(evt.target)?evt.target:evt.srcElement;\n
   // remove "checkbox" part from ID\n
@@ -197,12 +200,10 @@ function shiftCheck(evt) {\n
     return false;\n
     }\n
   target.checked=1;\n
-    alert("dd1");\n
   var low=Math.min(target_index , old_index);\n
   var high=Math.max(target_index , old_index);\n
   for(var i=low;i<=high;i++) {\n
-    //document.getElementById("checkbox" + i ).checked = check_option;\n
-    $("#checkbox" + i).attr("checked", check_option);\n
+    $("#checkbox" + i).attr("checked", false);\n
    }\n
   return true;\n
   }\n
