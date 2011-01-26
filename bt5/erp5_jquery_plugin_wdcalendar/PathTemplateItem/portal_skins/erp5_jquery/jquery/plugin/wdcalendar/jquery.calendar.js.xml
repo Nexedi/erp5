@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts95872747.81</string> </value>
+            <value> <string>ts95964878.99</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -34,7 +34,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>131759</int> </value>
+            <value> <int>131761</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -1485,7 +1485,7 @@
                     break;\r\n
                 }\r\n
             }\r\n
-            r
+            ret
 
 ]]></string> </value>
         </item>
@@ -1508,7 +1508,7 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-eturn r && r2;\r\n
+urn r && r2;\r\n
         }\r\n
 \r\n
         function buildtempdayevent(sh, sm, eh, em, h, title, w, resize, thindex) {\r\n
@@ -2871,7 +2871,8 @@ eturn r && r2;\r\n
         }\r\n
     };\r\n
     \r\n
-})(jQuery);
+})(jQuery);\r\n
+
 
 ]]></string> </value>
         </item>

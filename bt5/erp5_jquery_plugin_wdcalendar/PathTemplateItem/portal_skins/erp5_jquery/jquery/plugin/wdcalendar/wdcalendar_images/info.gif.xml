@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Image" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts96051115.57</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>info.gif</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/gif</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">R0lGODlhIAAgAOYAADKouLHCxHG3wM7s71Wyvo7P26va5fH6+4W4v2awu7nj6USvvbTV2ZzU3oTN
+2Obv8erq6mS/zd/f3zexwHLF0U6os129y4jJ1NbW1s7FxWbC0LTf5qTX4YzW3pPQ2HrH1Euyvd/v
+8VK7yJC7wc/p7/D4+v///y2tvaTb4rvg6nPAzJLR3UO2xMfd4L3m66TM0szMzFizvsjHx5zJz3TG
+0+X19ziwwN7390i2xNTu8Ty2xff8/ajZ5G21vnrK1NHQ0Pf4+EmruLvg6+Dx9IK/yLzW2pPCycbl
+7GvBz026yG3Ez1C4x5ze3pTV3a3e5I7P1zGtvafc49bv9/f3/zqntUK1vb/IyXi3v2Szvb/j6nrB
+zFi4xE6uu////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5
+BAEHAF0ALAAAAAAgACAAAAf/gF2Cg4SFhoeIiYqLijs1ISQkOUMljIo1Rymam5pZOZaFB1kbpDwc
+p6cGmhtDoF01Bhs8DbS1thwbBgOWQ7hNK8DBK04NFw3ABgZHiwcNBgXQ0dA1JiYvWivQp5+JURwO
+4OHgG9UmQAkF4RxNB4gh2T7i4B8c5Q8J8g0biBwFH/8A/9FA4qRECCJKAn6AtsNQCXAUIkpEgsRB
+gwIqIiihIVGiAxKGBnxQQrFkhAbUqj0QEKGkyw8oDG1QEqGmzQhNPJCrVoSLhps1lRQwxMGC0aNH
+l0TYUa1FEKRIPxhqIKKq1as+yr1YcPWqEkNRlogdO5ZFvWpXWJAlS8OQAhxwt+PGtTGgWokKLOTK
+dWBoCIu/gAEvYWqiBZXAiJ0cioD474Ss1YwAaAy4xqENlKGcNZHghA3KbRFZaHwCRbkZOJQsWIBY
+SqIBOmLLtmHhQDkgDKjIjt1kEYrdsSeIaBLlyRYowEP7Bq5jwonnE5K7cpGEufXerl4VqG5dBw1u
+iSBIwIDhxw8YPyRYGdEjBggQBLAgCEAe/Q/yEiAQEk/ePAwYMsDQnwwBDhigefjpl92CDDbo4CGB
+AAA7</string> </value>
+        </item>
+        <item>
+            <key> <string>height</string> </key>
+            <value> <int>32</int> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>858</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>info.gif</string> </value>
+        </item>
+        <item>
+            <key> <string>width</string> </key>
+            <value> <int>32</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

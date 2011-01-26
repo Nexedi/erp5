@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts95872620.13</string> </value>
+            <value> <string>ts96051707.31</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -24,112 +24,153 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string>﻿#popup_container {\r\n
-\tfont-family: Arial, sans-serif;\r\n
-\tfont-size: 12px;\r\n
-\tmin-width: 300px; /* Dialog will be no smaller than this */\r\n
-\t_width:320px; \r\n
-\tmax-width: 600px; /* Dialog will wrap after this width */\r\n
-\tbackground: #fff;\r\n
-\tborder: solid 1px #777;\r\n
-\tcolor: #000;\r\n
-}\r\n
-\r\n
-\r\n
-/*corner style*/\r\n
-#ctl, #cbl, #ctr, #cbr { \r\n
-position:absolute; width:5px; height:5px;  \r\n
-overflow:hidden; font-style:normal; z-index:99999;\r\n
-background:#fff url(images/alert/corners.gif) no-repeat ;}\r\n
-#ctl {top:-1px; left:-1px;background-position:0 0;background-color:#dae7f6;}\r\n
-#ctr {top:-1px; right:-1px;background-position:-5px 0;background-color:#dae7f6;}\r\n
-#cbl {bottom:-1px; left:-1px;background-position:0 -5px;}\r\n
-#cbr {bottom:-1px; right:-1px;background-position:-5px -5px;}\r\n
-/*corner style over*/\r\n
-\r\n
-\r\n
-#popup_title {\r\n
-\tfont-size: 12px;\r\n
-\tfont-weight: bold;\r\n
-\ttext-align:left;\r\n
-\tline-height: 1.9em;\r\n
-\tcolor: #333;\r\n
-\tbackground:url(images/alert/title.gif) repeat-x 0px -2px;\r\n
-\tborder-bottom: solid 1px #777;\r\n
-\tcursor: default;\r\n
-\tpadding:0 0 0 8px;\r\n
-\tmargin: 0em;\r\n
-}\r\n
-#popup_close{\r\n
-position:absolute;\r\n
-right:7px;top:4px;\r\n
-width:15px;height:15px;\r\n
-background:url(images/alert/close.gif) no-repeat ;\r\n
-cursor:hand;\r\n
-cursor:pointer;}\r\n
-#popup_close:hover\r\n
-{\r\n
-    -moz-opacity:0.8;\r\n
-    opacity:0.8;\r\n
-    filter:alpha(opacity=80);\r\n
-}\r\n
-\r\n
-#popup_content {\r\n
-\tbackground: 16px 16px no-repeat;\r\n
-\tpadding: 12px;\r\n
-\tmargin: 0em;\r\n
-}\r\n
-\r\n
-#popup_container .alert {\r\n
-\tbackground-image: url(images/alert/info.gif);\r\n
-}\r\n
-\r\n
-#popup_container .confirm {\r\n
-\tbackground-image: url(images/alert/important.gif);\r\n
-}\r\n
-\r\n
-#popup_container .prompt {\r\n
-\tbackground-image: url(images/alert/help.gif);\r\n
-}\r\n
-\r\n
-#popup_message {\r\n
-\tpadding-left: 48px;\r\n
-}\r\n
-\r\n
-#popup_panel {\r\n
-\ttext-align: center;\r\n
-\tmargin: 1em 0em 0em 1em;\r\n
-}\r\n
-\r\n
-#popup_ok,#popup_cancel{\r\n
-width:55px;height:20px;\r\n
-text-align:center;\r\n
-border:none;\r\n
-background:url(images/alert/bot.gif) no-repeat ;\r\n
-font-size:12px;\r\n
-line-height:20px;\r\n
-padding:0; }\r\n
-\r\n
-#popup_prompt {\r\n
-\tmargin: .5em 0em;\r\n
-}\r\n
-\r\n
-#popup_content.openBox{padding:12px;background:none; }\r\n
-.openBox #popup_message{padding:0;overflow:auto;}\r\n
-\r\n
-#over_container{\r\n
-min-width: 300px; /* Dialog will be no smaller than this */\r\n
-background:#DDEDFB;\r\n
-border:1px solid #0099CC;\r\n
-color: #000;\r\n
-}\r\n
-#over_message{\r\n
-text-align:center; \r\n
-padding:5px 20px;}\r\n
-\r\n
-#over_container.over_3{\r\n
-background:#FFF2F2;\r\n
-border:1px solid #FF8080;}</string> </value>
+            <value> <string>#popup_container {\n
+  font-family: Arial, sans-serif;\n
+  font-size: 12px;\n
+  min-width: 300px; /* Dialog will be no smaller than this */\n
+  _width:320px; \n
+  max-width: 600px; /* Dialog will wrap after this width */\n
+  background: #fff;\n
+  border: solid 1px #777;\n
+  color: #000;\n
+}\n
+\n
+/*corner style*/\n
+#ctl, #cbl, #ctr, #cbr { \n
+  position:absolute;\n
+  width:5px;\n
+  height:5px;  \n
+  overflow:hidden;\n
+  font-style:normal;\n
+  z-index:99999;\n
+  background:#fff url(jquery/plugin/wdcalendar/wdcalendar_images/corners.gif) no-repeat;\n
+}\n
+\n
+#ctl {\n
+  top:-1px;\n
+  left:-1px;\n
+  background-position:0 0;\n
+  background-color:#dae7f6;\n
+}\n
+\n
+#ctr {\n
+  top: -1px;\n
+  right: -1px;\n
+  background-position: -5px 0;\n
+  background-color:#dae7f6;\n
+}\n
+\n
+#cbl {\n
+  bottom:-1px;\n
+  left:-1px;\n
+  background-position:0 -5px;\n
+}\n
+\n
+#cbr {\n
+  bottom:-1px;\n
+  right:-1px;\n
+  background-position:-5px -5px;\n
+}\n
+\n
+/*corner style over*/\n
+#popup_title {\n
+  font-size: 12px;\n
+  font-weight: bold;\n
+  text-align:left;\n
+  line-height: 1.9em;\n
+  color: #333;\n
+  background:url(jquery/plugin/wdcalendar/wdcalendar_images/title.gif) repeat-x 0px -2px;\n
+  border-bottom: solid 1px #777;\n
+  cursor: default;\n
+  padding:0 0 0 8px;\n
+  margin: 0em;\n
+}\n
+\n
+#popup_close{\n
+  position:absolute;\n
+  right:7px;\n
+  top:4px;\n
+  width:15px;\n
+  height:15px;\n
+  background:url(jquery/plugin/wdcalendar/wdcalendar_images/close.gif) no-repeat ;\n
+  cursor:hand;\n
+  cursor:pointer;\n
+}\n
+\n
+#popup_close:hover {\n
+  -moz-opacity:0.8;\n
+  opacity:0.8;\n
+  filter:alpha(opacity=80);\n
+}\n
+\n
+#popup_content {\n
+  background: 16px 16px no-repeat;\n
+  padding: 12px;\n
+  margin: 0em;\n
+}\n
+\n
+#popup_container .alert {\n
+  background-image: url(jquery/plugin/wdcalendar/wdcalendar_images/info.gif);\n
+}\n
+\n
+#popup_container .confirm {\n
+  background-image: url(jquery/plugin/wdcalendar/wdcalendar_images/important.gif);\n
+}\n
+\n
+#popup_container .prompt {\n
+  background-image: url(jquery/plugin/wdcalendar/wdcalendar_images/help.gif);\n
+}\n
+\n
+#popup_message {\n
+  padding-left: 48px;\n
+}\n
+\n
+#popup_panel {\n
+  text-align: center;\n
+  margin: 1em 0em 0em 1em;\n
+}\n
+\n
+#popup_ok, #popup_cancel {\n
+  width:55px;\n
+  height:20px;\n
+  text-align:center;\n
+  border:none;\n
+  background:url(jquery/plugin/wdcalendar/wdcalendar_images/bot.gif) no-repeat;\n
+  font-size:12px;\n
+  line-height:20px;\n
+  padding:0;\n
+}\n
+\n
+#popup_prompt {\n
+  margin: .5em 0em;\n
+}\n
+\n
+#popup_content.openBox {\n
+  padding:12px;\n
+  background:none;\n
+}\n
+\n
+.openBox #popup_message{\n
+  padding:0;\n
+  overflow:auto;\n
+}\n
+\n
+#over_container{\n
+  min-width: 300px; /* Dialog will be no smaller than this */\n
+  background:#DDEDFB;\n
+  border:1px solid #0099CC;\n
+  color: #000;\n
+}\n
+\n
+#over_message{\n
+  text-align:center; \n
+  padding:5px 20px;\n
+}\n
+\n
+#over_container.over_3{\n
+  background:#FFF2F2;\n
+  border:1px solid #FF8080;\n
+}</string> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
@@ -137,7 +178,7 @@ border:1px solid #FF8080;}</string> </value>
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>2387</int> </value>
+            <value> <int>2645</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

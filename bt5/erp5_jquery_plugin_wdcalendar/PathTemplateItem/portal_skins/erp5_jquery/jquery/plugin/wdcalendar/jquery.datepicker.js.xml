@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts95955498.82</string> </value>
+            <value> <string>ts95975364.59</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -511,7 +511,6 @@
         }\n
        \n
         return $(this).each(function() {\n
-\n
             var obj = $(this).addClass("bbit-dp-input");\n
             var picker = $(def.picker);\n
             def.showtarget == null && obj.after(picker);\n
@@ -571,8 +570,6 @@
                 $("#BBIT-DP-T").height(cp.height());\n
                 var t = def.showtarget || obj;\n
                 var pos = t.offset();\n
-\n
-\n
                 var height = t.outerHeight();\n
                 var newpos = { left: pos.left, top: pos.top + height };\n
                 var w = cp.width();\n
@@ -594,10 +591,6 @@
                 $("#BBIT-DP-MP").hide();\n
                 newpos.visibility = "visible";\n
                 cp.css(newpos);\n
-\n
-\n
-\n
-                //cp.show();\n
                 $(this).attr("isshow", "1");\n
 \n
                 $(document).one("click", function(e) {\n
@@ -620,7 +613,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>26462</int> </value>
+            <value> <int>26427</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
