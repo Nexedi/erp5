@@ -26,6 +26,69 @@
             <key> <string>raw</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+function callBeforeRequest(type){\n
+  var message = "Loading data...";\n
+  switch(type){\n
+    case 1:\n
+      message = "Loading data...";\n
+      break;\n
+    case 4:\n
+      message = "The request is being processed ...";\n
+      break;\n
+  }\n
+  $("#errorpannel").hide();\n
+  $("#loadingpannel").html(message).show();\n
+}\n
+\n
+function callAfterRequest(type){\n
+  switch(type){\n
+    case 1:\n
+      $("#loadingpannel").hide();\n
+      break;\n
+    case 4:\n
+      $("#loadingpannel").html("Success!");\n
+      window.setTimeout(function(){$("#loadingpannel").hide();},2000);\n
+      break;\n
+  }\n
+}\n
+\n
+function callOnError(type, data){\n
+  $("#errorpannel").show();\n
+}\n
+\n
+function Edit(data){\n
+  var editUrl="WebSection_newEvent?id={0}&start={2}&end={3}&isallday={4}&title={1}";\n
+  if(data){\n
+    var url = StrFormat(editUrl, data);\n
+    OpenModelWindow(url,{width: 600, height: 400, caption:"Manage The Event",onclose:function(){\n
+      $("#gridcontainer").reload();\n
+    }});\n
+  }\n
+}\n
+\n
+function View(data){\n
+  var str = "";\n
+  $.each(data, function(i, item){\n
+    str += "[" + i + "]: " + item + "\\n";\n
+  });\n
+  alert(str);\n
+}\n
+function Delete(data, callback){\n
+  $.alerts.okButton = "Ok";  \n
+  $.alerts.cancelButton = "Cancel";\n
+  hiConfirm("Are You Sure to Delete this Event", \'Confirm\', function(r){ r && callback(0);});\n
+}\n
+\n
+function wtd(p){\n
+  if (p && p.datestrshow) {\n
+    $("#txtdatetimeshow").text(p.datestrshow);\n
+  }\n
+  $("#caltoolbar div.fcurrent").each(function() {\n
+    $(this).removeClass("fcurrent");\n
+  })\n
+  $("#showdaybtn").addClass("fcurrent");\n
+}\n
+\n
 $(document).ready(function() {     \n
   var DATA_FEED_URL = "Base_getEventListSerialized";\n
   var op = {\n
@@ -34,16 +97,16 @@ $(document).ready(function() {     \n
     EditCmdhandler:Edit,\n
     DeleteCmdhandler:Delete,\n
     weekstartday: 0,\n
-    ViewCmdhandler:View,    \n
+    ViewCmdhandler:View,\n
     onWeekOrMonthToDay:wtd,\n
-    onBeforeRequestData: cal_beforerequest,\n
-    onAfterRequestData: cal_afterrequest,\n
-    onRequestDataError: cal_onerror, \n
+    onBeforeRequestData: callBeforeRequest,\n
+    onAfterRequestData: callAfterRequest,\n
+    onRequestDataError: callOnError,\n
     autoload:true,\n
-    url: DATA_FEED_URL + "?request_type=list",  \n
-    quickAddUrl: DATA_FEED_URL + "?request_type=add", \n
+    url: DATA_FEED_URL + "?request_type=list",\n
+    quickAddUrl: DATA_FEED_URL + "?request_type=add",\n
     quickUpdateUrl: DATA_FEED_URL + "?request_type=update",\n
-    quickDeleteUrl: DATA_FEED_URL + "?requet_type=remove"        \n
+    quickDeleteUrl: DATA_FEED_URL + "?requet_type=remove",\n
   };\n
   var $dv = $("#calhead");\n
   var _MH = document.documentElement.clientHeight;\n
@@ -63,67 +126,6 @@ $(document).ready(function() {     \n
       }\n
     } \n
   });\n
-  function cal_beforerequest(type){\n
-    var t = "Loading data...";\n
-    switch(type){\n
-      case 1:\n
-        t = "Loading data...";\n
-        break;\n
-      case 2:                      \n
-      case 3:  \n
-      case 4:    \n
-        t = "The request is being processed ...";                                   \n
-        break;\n
-    }\n
-    $("#errorpannel").hide();\n
-    $("#loadingpannel").html(t).show();    \n
-  }\n
-  function cal_afterrequest(type){\n
-    switch(type){\n
-      case 1:\n
-        $("#loadingpannel").hide();\n
-        break;\n
-      case 2:\n
-      case 3:\n
-      case 4:\n
-        $("#loadingpannel").html("Success!");\n
-        window.setTimeout(function(){ $("#loadingpannel").hide();},2000);\n
-        break;\n
-    }              \n
-  }\n
-  function cal_onerror(type,data){\n
-    $("#errorpannel").show();\n
-  }\n
-  function Edit(data){\n
-    var eurl="WebSection_newEvent?id={0}&start={2}&end={3}&isallday={4}&title={1}";   \n
-    if(data){\n
-      var url = StrFormat(eurl,data);\n
-      OpenModelWindow(url,{width: 600, height: 400, caption:"Manage The Event",onclose:function(){\n
-        $("#gridcontainer").reload();\n
-      }});\n
-    }\n
-  }    \n
-  function View(data){\n
-    var str = "";\n
-    $.each(data, function(i, item){\n
-      str += "[" + i + "]: " + item + "\\n";\n
-    });\n
-    alert(str);               \n
-  }    \n
-  function Delete(data, callback){\n
-    $.alerts.okButton="Ok";  \n
-    $.alerts.cancelButton="Cancel";  \n
-    hiConfirm("Are You Sure to Delete this Event", \'Confirm\', function(r){ r && callback(0);});           \n
-  }\n
-  function wtd(p){\n
-    if (p && p.datestrshow) {\n
-      $("#txtdatetimeshow").text(p.datestrshow);\n
-    }\n
-    $("#caltoolbar div.fcurrent").each(function() {\n
-      $(this).removeClass("fcurrent");\n
-    })\n
-    $("#showdaybtn").addClass("fcurrent");\n
-  }\n
   //to show day view\n
   $("#showdaybtn").click(function(e) {\n
     //document.location.href="#day";\n
