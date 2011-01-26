@@ -344,9 +344,6 @@ class AmountGeneratorMixin:
     Implementation of a generic transformation algorith which is
     applicable to payroll, tax generation and BOMs. Return the
     list of amounts with aggregation.
-
-    TODO:
-    - make working sample code
     """
     generated_amount_list = self.getGeneratedAmountList(
       amount_list=amount_list, rounding=rounding,
@@ -377,9 +374,3 @@ class AmountGeneratorMixin:
                   % (x.getResourceTitle(), x.getQuantity(), x.getPrice())
                   for x in result_list))
     return result_list
-
-    raise NotImplementedError
-    # Example of return code
-    result = self.getGeneratedAmountList(amount_list=amount_list,
-                                         rounding=rounding)
-    return SomeMovementGroup(result)
