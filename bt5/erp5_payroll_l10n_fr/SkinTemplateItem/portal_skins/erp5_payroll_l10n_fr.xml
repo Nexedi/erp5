@@ -17,7 +17,7 @@
                   </item>
                   <item>
                       <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
+                      <value> <string>float</string> </value>
                   </item>
                 </dictionary>
               </tuple>
