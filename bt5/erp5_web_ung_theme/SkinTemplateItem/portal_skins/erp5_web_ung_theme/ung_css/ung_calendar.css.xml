@@ -65,7 +65,9 @@ div.cHead div.ptogtitle {\n
 \n
 a#BBIT_DP_CONTAINER {\n
   left: 0px !important;\n
-   \n
+}\n
+input[type="text"] {\n
+  border: 0px;\n
 }</string> </value>
         </item>
         <item>

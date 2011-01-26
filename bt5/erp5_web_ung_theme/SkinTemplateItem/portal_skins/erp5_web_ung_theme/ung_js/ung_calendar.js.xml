@@ -7,6 +7,10 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
             <key> <string>__name__</string> </key>
             <value> <string>ung_calendar.js</string> </value>
         </item>
@@ -60,7 +64,7 @@ function Edit(data){\n
   var editUrl="WebSection_newEvent?id={0}&start={2}&end={3}&isallday={4}&title={1}";\n
   if(data){\n
     var url = StrFormat(editUrl, data);\n
-    OpenModelWindow(url,{width: 600, height: 400, caption:"Manage The Event",onclose:function(){\n
+    OpenModelWindow(url,{width: 400, height: 200, caption:"Manage The Event",onclose:function(){\n
       $("#gridcontainer").reload();\n
     }});\n
   }\n
@@ -74,8 +78,8 @@ function View(data){\n
   alert(str);\n
 }\n
 function Delete(data, callback){\n
-  $.alerts.okButton = "Ok";  \n
-  $.alerts.cancelButton = "Cancel";\n
+  //$.alerts.okButton = "Ok";  \n
+  //$.alerts.cancelButton = "Cancel";\n
   hiConfirm("Are You Sure to Delete this Event", \'Confirm\', function(r){ r && callback(0);});\n
 }\n
 \n
@@ -106,7 +110,7 @@ $(document).ready(function() {     \n
     url: DATA_FEED_URL + "?request_type=list",\n
     quickAddUrl: DATA_FEED_URL + "?request_type=add",\n
     quickUpdateUrl: DATA_FEED_URL + "?request_type=update",\n
-    quickDeleteUrl: DATA_FEED_URL + "?requet_type=remove",\n
+    quickDeleteUrl: DATA_FEED_URL + "?request_type=remove",\n
   };\n
   var $dv = $("#calhead");\n
   var _MH = document.documentElement.clientHeight;\n
@@ -166,30 +170,51 @@ $(document).ready(function() {     \n
     $("#gridcontainer").reload();\n
   });          \n
   //Add a new event\n
-  $("#faddbtn").click(function(e) {\n
+  $("#faddbtn").click(function() {\n
     var url ="WebSection_newEvent";\n
-    OpenModelWindow(url,{ width: 500, height: 400, caption: "Create New Event"});\n
+    $("div#new_event_dialog").load(url);\n
+    $("div#new_event_dialog").dialog("open");\n
   });\n
   //go to today\n
-  $("#showtodaybtn").click(function(e) {\n
+  $("#showtodaybtn").click(function() {\n
     var p = $("#gridcontainer").gotoDate().BcalGetOp();\n
     if (p && p.datestrshow) {\n
       $("#txtdatetimeshow").text(p.datestrshow);\n
     }\n
   });\n
   //previous date range\n
-  $("#sfprevbtn").click(function(e) {\n
+  $("#sfprevbtn").click(function() {\n
     var p = $("#gridcontainer").previousRange().BcalGetOp();\n
     if (p && p.datestrshow) {\n
       $("#txtdatetimeshow").text(p.datestrshow);\n
     }\n
   });\n
   //next date range\n
-  $("#sfnextbtn").click(function(e) {\n
+  $("#sfnextbtn").click(function() {\n
     var p = $("#gridcontainer").nextRange().BcalGetOp();\n
     if (p && p.datestrshow) {\n
       $("#txtdatetimeshow").text(p.datestrshow);\n
     }\n
+  });\n
+  $("div#new_event_dialog").dialog({\n
+    autoOpen: false,\n
+    height: 162,\n
+    width: 410,\n
+    modal: true,\n
+    buttons: {\n
+      "Create": function(){\n
+        $.post("EventModule_createNewEvent",\n
+          $("form#create_new_event").serialize(),\n
+          function(){\n
+            $("div#new_event_dialog").dialog("close");\n
+            $("div#showreflashbtn.fbutton").click();\n
+          }\n
+       );\n
+      }\n
+    },\n
+  });\n
+  $("span#bbit-cs-delete.lk").click(function(event){\n
+    event.preventDefault();\n
   });\n
 });
 

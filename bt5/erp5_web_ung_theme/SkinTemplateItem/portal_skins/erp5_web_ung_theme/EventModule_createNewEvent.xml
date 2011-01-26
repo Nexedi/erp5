@@ -50,41 +50,24 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Script to load all events and organize all data to be loaded on calendar.\n
-  XXX - Initial Script to serialize all events\n
-"""\n
-from Products.ERP5Type.JSONEncoder import encodeInJson as dumps\n
-import random\n
+            <value> <string>from DateTime import DateTime\n
 \n
-if request_type == "list":\n
-  event_list = context.getPortalObject().event_module.searchFolder()\n
-  now = DateTime()\n
-  event_dict = {}\n
-  event_dict["events"] = []\n
-  event_dict["issort"] = True\n
-  event_dict["start"] = (now-30).strftime("%m/%d/%Y %H:%M")\n
-  event_dict["end"] = (now+30).strftime("%m/%d/%Y %H:%M")\n
-  event_dict["error"] = None\n
-  for event in event_list:\n
-    start = event.getStartDate().strftime("%m/%d/%Y %H:%M")\n
-    end = event.getStartDate().strftime("%m/%d/%Y %H:%M")\n
-    event_dict["events"].append([random.randrange(10000, 99999),\n
-                                 event.getTitle(),\n
-                                 start,\n
-                                 end,\n
-                                 random.randrange(0,1),1,0,\n
-                                 random.randrange(-1,13),1,\'\',\'\',])\n
-  return dumps(event_dict)\n
+form = context.REQUEST.form\n
+portal_type = form.get("portal_type")\n
+event_title = form.get("title")\n
+start_date = DateTime("%(date_year)s/%(date_month)s/%(date_day)s %(date_hour)s:%(date_minute)s" % form)\n
+portal = context.getPortalObject()\n
+event = portal.event_module.newContent(portal_type=portal_type, title=event_title)\n
+event.setStartDate(start_date)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>request_type</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_getEventListSerialized</string> </value>
+            <value> <string>EventModule_createNewEvent</string> </value>
         </item>
       </dictionary>
     </pickle>
