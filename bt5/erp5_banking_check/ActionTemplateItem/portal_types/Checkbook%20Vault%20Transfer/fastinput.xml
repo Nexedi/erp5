@@ -10,17 +10,15 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>action</string> </key>
+            <key> <string>__ac_local_roles__</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <none/>
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
+            <key> <string>action</string> </key>
             <value>
-              <tuple>
-                <string>action_type/object_button</string>
-              </tuple>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -33,9 +31,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>icon</string> </key>
@@ -81,7 +77,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/CheckbookDelivery_fastInputForm?your_fast_input_type=checkbook_vault_transfer</string> </value>
+            <value> <string>string:${object_url}/CheckbookDelivery_initFastInputForm?your_fast_input_type=checkbook_vault_transfer</string> </value>
         </item>
       </dictionary>
     </pickle>
