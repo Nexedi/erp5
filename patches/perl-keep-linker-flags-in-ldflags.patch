@@ -1,0 +1,20 @@
+--- perl-5.12.3/Configure.orig	2011-01-09 21:20:52.000000000 +0100
++++ perl-5.12.3/Configure	2011-01-26 19:33:33.106561007 +0100
+@@ -8092,16 +8092,7 @@
+ 	case "$dflt" in
+ 	none) dflt='' ;;
+ 	esac
+-	for thisflag in $ldflags; do
+-		case "$thisflag" in
+-		-L*|-R*|-Wl,-R*)
+-			case " $dflt " in
+-			*" $thisflag "*) ;;
+-			*) dflt="$dflt $thisflag" ;;
+-			esac
+-			;;
+-		esac
+-	done
++	dflt="$dflt $ldflags"
+ 
+ 	case "$dflt" in
+ 	''|' ') dflt='none' ;;
