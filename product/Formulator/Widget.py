@@ -560,6 +560,17 @@ class CheckBoxWidget(Widget):
       return etree.tostring(text_node)
     return text_node
 
+  def render_odg_view(self, field, value, as_string, ooo_builder, REQUEST,
+                      render_prefix, attr_dict, local_name):
+    """Convert boolean value into integer (1/0) then into string.
+    """
+    if value is None:
+      value = False
+    value = str(int(value))
+    return Widget.render_odg_view(self, field, value, as_string, ooo_builder,
+                                  REQUEST, render_prefix, attr_dict,
+                                  local_name)
+
 CheckBoxWidgetInstance = CheckBoxWidget()
 
 class TextAreaWidget(Widget):
@@ -1744,6 +1755,17 @@ class IntegerWidget(TextWidget) :
     if as_string:
       return etree.tostring(text_node)
     return text_node
+
+  def render_odg_view(self, field, value, as_string, ooo_builder, REQUEST,
+                      render_prefix, attr_dict, local_name):
+    """convert interger into string then use TextWidget renderer
+    """
+    if isinstance(value, int):
+      # convert into string
+      value = str(value)
+    return TextWidget.render_odg_view(self, field, value, as_string,
+                                      ooo_builder, REQUEST, render_prefix, 
+                                      attr_dict, local_name)
 
 IntegerWidgetInstance = IntegerWidget()
 class FloatWidget(TextWidget):
