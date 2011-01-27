@@ -259,6 +259,16 @@ class TestIntegerField(ERP5TypeTestCase):
     self.assertEquals(node.get('{%s}value' % NSMAP['office']), str(value))
     self.assertEquals(node.text, str(value))
 
+  def test_render_odg_view(self):
+    self.field.values['default'] = 34
+    test_value = self.field.render_odg(as_string=False)\
+      .xpath('%s/text()' % ODG_XML_WRAPPING_XPATH, namespaces=NSMAP)[0]
+    self.assertEquals('34', test_value)
+    test_value = self.field.render_odg(value=0, as_string=False)\
+      .xpath('%s/text()' % ODG_XML_WRAPPING_XPATH, namespaces=NSMAP)[0]
+    self.assertEquals('0', test_value)
+
+
 class TestStringField(ERP5TypeTestCase):
   """Tests string field
   """
@@ -424,6 +434,19 @@ class TestCheckBoxField(ERP5TypeTestCase):
       self.assertEquals(node.get('{%s}boolean-value' % NSMAP['office']),
                         str(value).lower())
       self.assertEquals(node.text, str(value).upper())
+
+  def test_render_odg_view(self):
+    """Like integer field
+    return 1 or 0
+    """
+    self.field.values['default'] = 1
+    self.portal.REQUEST.set('editable_mode', 0)
+    test_value = self.field.render_odg(as_string=False)\
+      .xpath('%s/text()' % ODG_XML_WRAPPING_XPATH, namespaces=NSMAP)[0]
+    self.assertEquals('1', test_value)
+    test_value = self.field.render_odg(value=0, as_string=False)\
+      .xpath('%s/text()' % ODG_XML_WRAPPING_XPATH, namespaces=NSMAP)[0]
+    self.assertEquals('0', test_value)
 
 class TestListField(ERP5TypeTestCase):
   """Tests List field
