@@ -214,8 +214,18 @@ $(document).ready(function() {     \n
       }\n
     },\n
   });\n
-  $( "#datepicker" ).datepicker();\n
-\n
+  $( "#datepicker" ).datepicker({\n
+    onSelect: function(dateText, inst){\n
+      var dateList = dateText.split("/");\n
+      var month = dateList[0] - 1;\n
+      var day = dateList[1];\n
+      var year = dateList[2];\n
+      var p = $("#gridcontainer").gotoDate(new Date(year, month, day)).BcalGetOp();\n
+      if (p && p.datestrshow) {\n
+        $("#txtdatetimeshow").text(p.datestrshow);\n
+      }\n
+     }\n
+  });\n
 });
 
 ]]></string> </value>
