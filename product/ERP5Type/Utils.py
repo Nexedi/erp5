@@ -3311,13 +3311,11 @@ def urlnormNormaliseUrl(url, base_url=None):
   """The normalisation up is delegated to urlnorm library.
   """
   try:
-    url = urlnorm.norm(url)
-  except UnicodeDecodeError:
     try:
-      url = urlnorm.norm(url_unquote(url).decode('latin1'))
+      url = urlnorm.norm(url)
     except UnicodeDecodeError:
-      raise urlnorm.InvalidUrl
-  except (AttributeError, urlnorm.InvalidUrl):
+      url = urlnorm.norm(url_unquote(url).decode('latin1'))
+  except (AttributeError, UnicodeDecodeError, urlnorm.InvalidUrl):
     # This url is not valid, a better Exception will
     # be raised
     return
