@@ -94,7 +94,7 @@ class CategoryBudgetVariation(BudgetVariation):
       axis = 'default_strict_%s_uid' % base_category
       uid_based_axis = True
     elif axis in ('node', 'section', 'payment', 'function', 'project',
-                  'mirror_section', 'mirror_node' ):
+                  'mirror_section', 'mirror_node', 'funding' ):
       axis = '%s_uid' % axis
       uid_based_axis = True
 

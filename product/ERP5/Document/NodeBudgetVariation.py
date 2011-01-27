@@ -128,7 +128,7 @@ class NodeBudgetVariation(BudgetVariation):
     
     uid_based_axis = False
     if axis in ('node', 'section', 'payment', 'function', 'project',
-                'mirror_section', 'mirror_node' ):
+                'mirror_section', 'mirror_node', 'funding' ):
       axis = '%s_uid' % axis
       uid_based_axis = True
 
@@ -214,7 +214,7 @@ class NodeBudgetVariation(BudgetVariation):
 
     uid_based_axis = False
     if axis in ('node', 'section', 'payment', 'function', 'project',
-                'mirror_section', 'mirror_node' ):
+                'mirror_section', 'mirror_node', 'funding' ):
       axis = '%s_uid' % axis
       uid_based_axis = True
 
