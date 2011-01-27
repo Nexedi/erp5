@@ -158,7 +158,7 @@ class BudgetCell(Predicate, MetaNode, Movement):
         source_debit = float(source_debit)
       except TypeError:
         source_debit = 0.0
-      self.setQuantity(source_debit)
+      self.setQuantity(-source_debit)
 
     security.declareProtected( Permissions.ModifyPortalContent,
                                'setDestinationDebit', 'setDestinationCredit' )
