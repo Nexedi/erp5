@@ -1726,6 +1726,7 @@
                 }\n
                 option.isloading = true;\n
                 var id = data[0];\n
+                var title = data[1];\n
                 var os = data[2];\n
                 var od = data[3];\n
                 var zone = new Date().getTimezoneOffset() / 60 * -1;\n
@@ -1733,6 +1734,7 @@
               { "name": "CalendarStartTime", value: dateFormat.call(start, i18n.xgcalendar.dateformat.fulldayvalue + " HH:mm") },\n
               { "name": "CalendarEndTime", value: dateFormat.call(end, i18n.xgcalendar.dateformat.fulldayvalue + " HH:mm") },\n
               { "name": "timezone", value: zone },\n
+              { "name": "title", value: title },\n
                ];\n
                 var d;\n
                 if (option.quickUpdateHandler && $.isFunction(option.quickUpdateHandler)) {\n
