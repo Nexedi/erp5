@@ -1006,7 +1006,11 @@ class ListBoxRenderer:
     if search_columns:
       search_column_id_list = [c[0] for c in search_columns]
     else:
-      search_column_id_list = self.getCatalogTool().schema()
+      search_column_id_list = []
+      isValidColumn = self.getCatalogTool().getSQLCatalog().isValidColumn
+      for column_id, column_title in self.getAllColumnList():
+        if isValidColumn(column_id):
+          search_column_id_list.append(column_id)
     return set(search_column_id_list)
 
   getSearchColumnIdSet = lazyMethod(getSearchColumnIdSet)
