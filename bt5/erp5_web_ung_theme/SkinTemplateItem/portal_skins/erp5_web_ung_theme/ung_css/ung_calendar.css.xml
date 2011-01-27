@@ -80,7 +80,7 @@ div.main-left div#datepicker.hasDatepicker {\n
   width: 13.5em;\n
 }\n
 \n
-.ui-widget-content {\n
+div#datepicker .ui-widget-content {\n
   background: none !important;\n
   border: 0;\n
 }\n
@@ -120,6 +120,11 @@ div.main-left div#datepicker.hasDatepicker {\n
 \n
 .ui-datepicker td:hover {\n
   background: #DAE6F6 !important;\n
+}\n
+\n
+div#ui-datepicker-div.ui-datepicker {\n
+  background: none !important;\n
+  border: 0px;\n
 }</string> </value>
         </item>
         <item>
