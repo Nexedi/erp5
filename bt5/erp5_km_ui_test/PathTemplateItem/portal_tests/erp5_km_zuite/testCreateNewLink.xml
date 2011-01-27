@@ -64,7 +64,7 @@
 <tr>\n
   <td>type</td>\n
   <td>field_your_url</td>\n
-  <td>${base_url}/login_form</td>\n
+  <td>http://www.erp5.com/login_form</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -140,7 +140,7 @@
 <tr>\n
   <td>type</td>\n
   <td>field_your_url</td>\n
-  <td>${base_url}/nosuch_view</td>\n
+  <td>http://www.erp5.com/nosuch_view</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -157,8 +157,7 @@
 \n
 </tbody></table>\n
 </body>\n
-</html>\n
-
+</html>
 
 ]]></unicode> </value>
         </item>
