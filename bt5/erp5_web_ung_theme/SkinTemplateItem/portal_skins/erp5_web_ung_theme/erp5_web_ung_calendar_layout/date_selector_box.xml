@@ -219,12 +219,7 @@
                     <key> <string>default</string> </key>
                     <value> <string encoding="cdata"><![CDATA[
 
-<div class="fshowdatep fbutton">\n
-<div>\n
-<input type="hidden" name="txtshow" id="hdtxtshow" />\n
-<span id="txtdatetimeshow">Loading</span>\n
-</div>\n
-</div>
+<div id="datepicker"></div>
 
 ]]></string> </value>
                 </item>

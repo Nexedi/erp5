@@ -66,8 +66,60 @@ div.cHead div.ptogtitle {\n
 a#BBIT_DP_CONTAINER {\n
   left: 0px !important;\n
 }\n
+\n
 input[type="text"] {\n
   border: 0px;\n
+}\n
+\n
+div.main-left div#datepicker.hasDatepicker {\n
+  margin: -3px;\n
+}\n
+\n
+.ui-datepicker {\n
+  padding: 0;\n
+  width: 13.5em;\n
+}\n
+\n
+.ui-widget-content {\n
+  background: none !important;\n
+  border: 0;\n
+}\n
+\n
+.ui-datepicker th {\n
+  padding: 0px !important;\n
+  font-size: 12px;\n
+}\n
+\n
+.ui-datepicker .ui-datepicker-header {\n
+  padding: 0px !important;\n
+}\n
+\n
+.ui-datepicker table {\n
+  width: 101% !important;\n
+}\n
+\n
+.ui-datepicker .ui-datepicker-header {\n
+  width: 100% !imporant;\n
+}\n
+\n
+.ui-datepicker .ui-datepicker-prev,\n
+  .ui-datepicker .ui-datepicker-next {\n
+  top: 0px;\n
+}\n
+\n
+.ui-state-default, \n
+ .ui-widget-content .ui-state-default,\n
+ .ui-widget-header .ui-state-default {\n
+  background: none !important;\n
+  border: 1px solid #FFF !important;\n
+}\n
+\n
+.ui-widget-header {\n
+  border: 1px solid #DAE6F6 !important;\n
+}\n
+\n
+.ui-datepicker td:hover {\n
+  background: #DAE6F6 !important;\n
 }</string> </value>
         </item>
         <item>

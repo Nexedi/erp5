@@ -101,7 +101,6 @@ elif request_type == "remove":\n
   event = context.restrictedTraverse(catalog_object.getPath())\n
   portal.event_module.deleteContent(event.getId())\n
 elif request_type == "update":\n
-  context.log(form)\n
   title = form.get("title")\n
   if not title:\n
     return None\n

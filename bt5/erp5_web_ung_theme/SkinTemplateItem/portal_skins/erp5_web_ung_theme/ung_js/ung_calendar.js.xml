@@ -64,7 +64,7 @@ function Edit(data){\n
   var editUrl="WebSection_newEvent?id={0}&start={2}&end={3}&isallday={4}&title={1}";\n
   if(data){\n
     var url = StrFormat(editUrl, data);\n
-    OpenModelWindow(url,{width: 400, height: 200, caption:"Manage The Event",onclose:function(){\n
+    OpenModelWindow(url,{width: 400, height: 200, caption:"Manage The Event", onclose:function(){\n
       $("#gridcontainer").reload();\n
     }});\n
   }\n
@@ -96,7 +96,7 @@ function wtd(p){\n
 $(document).ready(function() {     \n
   var DATA_FEED_URL = "Base_updateCalendarEventList";\n
   var op = {\n
-    view: "day",\n
+    view: "week",\n
     showday: new Date(),\n
     EditCmdhandler:Edit,\n
     DeleteCmdhandler:Delete,\n
@@ -122,14 +122,15 @@ $(document).ready(function() {     \n
     $("#txtdatetimeshow").text(p.datestrshow);\n
   }\n
   $("#caltoolbar").noSelect();\n
-  $("#hdtxtshow").datepicker({ picker: "#txtdatetimeshow", showtarget: $("#txtdatetimeshow"),\n
-    onReturn:function(r){                          \n
+  /*$("#hdtxtshow").datepicker({picker:"#txtdatetimeshow", showtarget: $("#txtdatetimeshow"),\n
+    onReturn:function(r){\n
+      console.log(r);\n
       var p = $("#gridcontainer").gotoDate(r).BcalGetOp();\n
       if (p && p.datestrshow) {\n
         $("#txtdatetimeshow").text(p.datestrshow);\n
       }\n
     } \n
-  });\n
+  });*/\n
   //to show day view\n
   $("#showdaybtn").click(function(e) {\n
     //document.location.href="#day";\n
@@ -213,6 +214,8 @@ $(document).ready(function() {     \n
       }\n
     },\n
   });\n
+  $( "#datepicker" ).datepicker();\n
+\n
 });
 
 ]]></string> </value>
