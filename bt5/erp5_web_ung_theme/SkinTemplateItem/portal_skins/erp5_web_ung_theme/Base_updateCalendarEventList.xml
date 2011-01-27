@@ -55,10 +55,29 @@
   XXX - Initial Script to serialize all events\n
 """\n
 from Products.ERP5Type.JSONEncoder import encodeInJson as dumps\n
+from DateTime import DateTime\n
 import random\n
 \n
+def convertToERP5DateTime(date):\n
+  date, hour = date.split()\n
+  day, month, year = date.split("/")\n
+  return DateTime("%s/%s/%s %s" % (year, month, day, hour))\n
+\n
+portal = context.getPortalObject()\n
+form = context.REQUEST.form\n
+portal_type_list = ["Acknowledgement",\n
+                    "Fax Message",\n
+                    "Letter",\n
+                    "Mail Message",\n
+                    "Note",\n
+                    "Phone Call",\n
+                    "Short Message",\n
+                    "Site Message",\n
+                    "Visit",\n
+                    "Web Message"]\n
+\n
 if request_type == "list":\n
-  event_list = context.getPortalObject().event_module.searchFolder()\n
+  event_list = portal.event_module.searchFolder()\n
   now = DateTime()\n
   event_dict = {}\n
   event_dict["events"] = []\n
@@ -76,6 +95,29 @@ if request_type == "list":\n
                                  random.randrange(0,1),1,0,\n
                                  random.randrange(-1,13),1,\'\',\'\',])\n
   return dumps(event_dict)\n
+elif request_type == "remove":\n
+  title = form.get("title")\n
+  catalog_object = portal.portal_catalog.getResultValue(portal_type=portal_type_list, title=title)\n
+  event = context.restrictedTraverse(catalog_object.getPath())\n
+  portal.event_module.deleteContent(event.getId())\n
+elif request_type == "update":\n
+  context.log(form)\n
+  title = form.get("title")\n
+  if not title:\n
+    return None\n
+  end_date = convertToERP5DateTime(form.get("CalendarEndTime"))\n
+  start_date = convertToERP5DateTime(form.get("CalendarStartTime"))\n
+  catalog_object = portal.portal_catalog.getResultValue(portal_type=portal_type_list, title=title)\n
+  event = context.restrictedTraverse(catalog_object.getPath())\n
+  event.setStartDate(start_date)\n
+  event.setStopDate(end_date)\n
+elif request_type == "add":\n
+  end_date = convertToERP5DateTime(form.get("CalendarEndTime"))\n
+  start_date = convertToERP5DateTime(form.get("CalendarStartTime"))\n
+  event_title = form.get("CalendarTitle")\n
+  event = portal.event_module.newContent(portal_type="Web Message", title=event_title)\n
+  event.setStartDate(start_date)\n
+  event.setStopDate(end_date)\n
 </string> </value>
         </item>
         <item>
@@ -84,7 +126,7 @@ if request_type == "list":\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_getEventListSerialized</string> </value>
+            <value> <string>Base_updateCalendarEventList</string> </value>
         </item>
       </dictionary>
     </pickle>

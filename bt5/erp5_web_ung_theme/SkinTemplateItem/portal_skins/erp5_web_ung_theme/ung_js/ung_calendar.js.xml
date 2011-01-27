@@ -94,7 +94,7 @@ function wtd(p){\n
 }\n
 \n
 $(document).ready(function() {     \n
-  var DATA_FEED_URL = "Base_getEventListSerialized";\n
+  var DATA_FEED_URL = "Base_updateCalendarEventList";\n
   var op = {\n
     view: "day",\n
     showday: new Date(),\n
@@ -212,9 +212,6 @@ $(document).ready(function() {     \n
        );\n
       }\n
     },\n
-  });\n
-  $("span#bbit-cs-delete.lk").click(function(event){\n
-    event.preventDefault();\n
   });\n
 });
 
