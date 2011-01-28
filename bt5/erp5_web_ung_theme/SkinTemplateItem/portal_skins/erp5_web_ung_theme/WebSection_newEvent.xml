@@ -54,13 +54,21 @@
   <label>Title: </label>\n
   <input name="title" value="" type="text" size="30">\n
   <p>\n
-  <label>Date: </label>\n
-  <input class="date_field" name="date_year" value="2011" maxlength="4" type="text" size="4">/\n
-  <input class="date_field" name="date_month" value="" maxlength="2" type="text" size="2">/\n
-  <input class="date_field" name="date_day" value="" maxlength="2" type="text" size="2">\n
+  <label>Start Date: </label>\n
+  <input class="start_date_field" name="start_date_year" value="2011" maxlength="4" type="text" size="4">/\n
+  <input class="start_date_field" name="start_date_month" value="" maxlength="2" type="text" size="2">/\n
+  <input class="start_date_field" name="start_date_day" value="" maxlength="2" type="text" size="2">\n
   &nbsp;&nbsp;&nbsp;\n
-  <input class="date_field" name="date_hour" value="" maxlength="2" type="text" size="2">:\n
-  <input class="date_field" name="date_minute" value="" maxlength="2" type="text" size="2">\n
+  <input class="start_date_field" name="start_date_hour" value="" maxlength="2" type="text" size="2">:\n
+  <input class="start_date_field" name="start_date_minute" value="" maxlength="2" type="text" size="2">\n
+  <p>\n
+  <label>Stop Date: </label>\n
+  <input class="stop_date_field" name="stop_date_year" value="2011" maxlength="4" type="text" size="4">/\n
+  <input class="stop_date_field" name="stop_date_month" value="" maxlength="2" type="text" size="2">/\n
+  <input class="stop_date_field" name="stop_date_day" value="" maxlength="2" type="text" size="2">\n
+  &nbsp;&nbsp;&nbsp;\n
+  <input class="stop_date_field" name="stop_date_hour" value="" maxlength="2" type="text" size="2">:\n
+  <input class="stop_date_field" name="stop_date_minute" value="" maxlength="2" type="text" size="2">\n
 </form>
 
 ]]></unicode> </value>

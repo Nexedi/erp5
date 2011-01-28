@@ -164,7 +164,15 @@ $(document).ready(function() {     \n
   //Add a new event\n
   $("#faddbtn").click(function() {\n
     var url ="WebSection_newEvent";\n
-    $("div#new_event_dialog").load(url);\n
+    var date = new Date();\n
+    $("div#new_event_dialog").load(url, {}, function(){\n
+      $("input.start_date_field[name=\'start_date_month\'], input.stop_date_field[name=\'stop_date_month\']").attr("value", ""+date.getMonth()+1);\n
+      $("input.start_date_field[name=\'start_date_day\'], input.stop_date_field[name=\'stop_date_day\']").attr("value", date.getDate());\n
+      $("input.start_date_field[name=\'start_date_hour\'], input.stop_date_field[name=\'stop_date_hour\']").attr("value", date.getHours());\n
+      $("input.start_date_field[name=\'start_date_minute\'], input.stop_date_field[name=\'stop_date_minute\']").attr("value", date.getMinutes());\n
+    });\n
+    //$("input.start_date_field[name=\'start_date_month\'],\n
+    //      input.stop_date_field[name=\'stop_date_month\']").attr("value", ""+date.getMonth()+1);\n
     $("div#new_event_dialog").dialog("open");\n
   });\n
   //go to today\n
