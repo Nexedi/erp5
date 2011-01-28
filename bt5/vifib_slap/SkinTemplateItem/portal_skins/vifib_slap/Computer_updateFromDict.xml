@@ -70,14 +70,31 @@ for send_partition in computer_dict[\'partition_list\']:\n
     partition.markFree()\n
   partition.edit(reference=send_partition[\'reference\'])\n
   network_interface = send_partition[\'tap\'][\'name\']\n
-  # XXX: non optimal way to "update" partition interface, update = delete + insert\n
-  partition.deleteContent(list(partition.objectIds(portal_type=\'Internet Protocol Address\')))\n
-  for address in send_partition[\'address_list\']:\n
-    partition.newContent(portal_type=\'Internet Protocol Address\',\n
+  to_delete_ip_id_list = []\n
+  to_add_ip_dict_list = send_partition[\'address_list\'][:]\n
+  for address in partition.contentValues(portal_type=\'Internet Protocol Address\'):\n
+    current_dict = {\n
+      \'addr\': address.getIpAddress(),\n
+      \'netmask\': address.getNetmask()\n
+    }\n
+    if not current_dict in to_add_ip_dict_list:\n
+      to_delete_ip_id_list.append(address.getId())\n
+    else:\n
+      to_add_ip_dict_list.remove(current_dict)\n
+  \n
+  for address in to_add_ip_dict_list:\n
+    if to_delete_ip_id_list:\n
+      id = to_delete_ip_id_list.pop()\n
+      address_document = getattr(partition, id)\n
+    else:\n
+      address_document = partition.newContent(portal_type=\'Internet Protocol Address\')\n
+    address_document.edit(\n
       network_interface=network_interface,\n
       ip_address=address[\'addr\'],\n
       netmask=address[\'netmask\'],\n
-      )\n
+    )\n
+  if to_delete_ip_id_list:\n
+    partition.deleteContent(to_delete_ip_id_list)\n
 </string> </value>
         </item>
         <item>
@@ -133,8 +150,13 @@ for send_partition in computer_dict[\'partition_list\']:\n
                             <string>None</string>
                             <string>partition</string>
                             <string>network_interface</string>
-                            <string>list</string>
+                            <string>to_delete_ip_id_list</string>
+                            <string>to_add_ip_dict_list</string>
                             <string>address</string>
+                            <string>current_dict</string>
+                            <string>id</string>
+                            <string>getattr</string>
+                            <string>address_document</string>
                           </tuple>
                         </value>
                     </item>
