@@ -1,3 +1,6 @@
+2011-01-28 Ivan
+* Define Sphinx's full_text key implementation.
+
 2011-01-03 Kazuhiko
 * retrieve SearchableText from catalog, not calling SearchableText method.
 * Use InnoDB with non-deferred connection for full_text table, because we don't need fulltext search function of transactionless MyISAM engine.

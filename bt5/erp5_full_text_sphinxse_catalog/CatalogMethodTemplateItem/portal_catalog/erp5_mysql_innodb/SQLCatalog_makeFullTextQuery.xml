@@ -50,13 +50,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ZSQLCatalog.SQLCatalog import Query\n
+            <value> <string>"""\n
+  Sphinx full text searchable key implementation.\n
+"""\n
+from Products.ZSQLCatalog.SQLCatalog import Query\n
 \n
-# XXX Should we use system preference here?\n
-if \'sphinxse_index\' in container.getCatalogSearchTableIds():\n
-  query = Query(**{\'sphinxse_query\':value})\n
-else:\n
-  query = Query(**{\'full_text.SearchableText\':value})\n
+query = Query(**{\'sphinxse_query\': value})\n
 return query\n
 </string> </value>
         </item>
