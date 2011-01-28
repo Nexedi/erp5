@@ -67,17 +67,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
                     precondition='',
                     content_type='application/vnd.oasis.opendocument.graphics')
     erp5OOo = custom.manage_addProduct['ERP5OOo']
-    addOOoTemplate = erp5OOo.addOOoTemplate
-    if custom._getOb('Foo_viewAsOdg', None) is None:
-      addOOoTemplate(id='Foo_viewAsOdg', title='')
-    request = self.app.REQUEST
-    Foo_viewAsOdg = custom.Foo_viewAsOdg
-    Foo_viewAsOdg.doSettings(request, title='', xml_file_id='content.xml',
-                             ooo_stylesheet='Foo_getODGStyleSheet')
-    builder = OOoBuilder(foo_file)
-    content = builder.extract('content.xml')
-    Foo_viewAsOdg.pt_edit(content,
-        content_type='application/vnd.oasis.opendocument.graphics')
+
     if custom._getOb('Foo_viewAsODGPrintout', None) is None:
       erp5OOo.addFormPrintout(id='Foo_viewAsODGPrintout', title='',
                               form_name='Foo_view', template='Foo_getODGStyleSheet')
