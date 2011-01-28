@@ -220,8 +220,7 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
       tdef = self.interactions[t_id]
       assert tdef.trigger_type == TRIGGER_WORKFLOW_METHOD
       if (tdef.portal_type_filter is None or \
-          ob.getPortalType() in tdef.portal_type_filter) and \
-          self._checkTransitionGuard(tdef, ob, **kw):
+          ob.getPortalType() in tdef.portal_type_filter):
         filtered_transition_list.append(tdef.id)
         former_status = self._getStatusOf(ob)
         # Execute the "before" script.
