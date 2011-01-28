@@ -219,17 +219,15 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
     for t_id in transition_list:
       tdef = self.interactions[t_id]
       assert tdef.trigger_type == TRIGGER_WORKFLOW_METHOD
-      if (tdef.portal_type_filter is None or \
-          ob.getPortalType() in tdef.portal_type_filter):
-        filtered_transition_list.append(tdef.id)
-        former_status = self._getStatusOf(ob)
-        # Execute the "before" script.
-        for script_name in tdef.script_name:
-          script = self.scripts[script_name]
-          # Pass lots of info to the script in a single parameter.
-          sci = StateChangeInfo(
-              ob, self, former_status, tdef, None, None, kwargs=kw)
-          script(sci)  # May throw an exception
+      filtered_transition_list.append(tdef.id)
+      former_status = self._getStatusOf(ob)
+      # Execute the "before" script.
+      for script_name in tdef.script_name:
+        script = self.scripts[script_name]
+        # Pass lots of info to the script in a single parameter.
+        sci = StateChangeInfo(
+            ob, self, former_status, tdef, None, None, kwargs=kw)
+        script(sci)  # May throw an exception
 
     return filtered_transition_list
 
@@ -248,9 +246,6 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
     for t_id in transition_list:
       tdef = self.interactions[t_id]
       assert tdef.trigger_type == TRIGGER_WORKFLOW_METHOD
-      if (tdef.portal_type_filter is not None and \
-          ob.getPortalType() not in tdef.portal_type_filter):
-        continue
 
       # Initialize variables
       former_status = self._getStatusOf(ob)

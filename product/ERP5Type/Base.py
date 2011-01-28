@@ -709,7 +709,9 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, ptype, prop_holder,
   for wf_id, v in interaction_workflow_dict.iteritems():
     transition_id_set, trigger_dict = v
     for tr_id, tdef in trigger_dict.iteritems():
-      # XXX Prefiltering per portal type would be more efficient
+      if (tdef.portal_type_filter is not None and \
+          ptype not in tdef.portal_type_filter):
+        continue
       for imethod_id in tdef.method_id:
         if wildcard_interaction_method_id_match(imethod_id):
           # Interactions workflows can use regexp based wildcard methods
