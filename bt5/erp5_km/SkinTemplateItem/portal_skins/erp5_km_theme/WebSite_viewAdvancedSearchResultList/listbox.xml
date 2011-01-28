@@ -151,7 +151,7 @@
                 </item>
                 <item>
                     <key> <string>global_search_column</string> </key>
-                    <value> <string>SearchableText</string> </value>
+                    <value> <string>full_text</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
