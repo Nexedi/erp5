@@ -87,7 +87,7 @@ if request_type == "list":\n
   event_dict["error"] = None\n
   for event in event_list:\n
     start = event.getStartDate().strftime("%m/%d/%Y %H:%M")\n
-    end = event.getStartDate().strftime("%m/%d/%Y %H:%M")\n
+    end = event.getStopDate().strftime("%m/%d/%Y %H:%M")\n
     event_dict["events"].append([random.randrange(10000, 99999),\n
                                  event.getTitle(),\n
                                  start,\n
