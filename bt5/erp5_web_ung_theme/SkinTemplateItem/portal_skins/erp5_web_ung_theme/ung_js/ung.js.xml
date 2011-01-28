@@ -305,7 +305,7 @@ $().ready(function(){\n
   });\n
   $("div#preference_dialog").dialog({\n
     autoOpen: false,\n
-    height: 487,\n
+    height: 460,\n
     width: 330,\n
     modal:true,\n
     buttons: {\n

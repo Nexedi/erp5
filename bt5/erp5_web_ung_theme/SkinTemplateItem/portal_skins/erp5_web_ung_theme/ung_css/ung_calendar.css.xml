@@ -108,9 +108,9 @@ div#datepicker .ui-widget-content {\n
   top: 0px;\n
 }\n
 \n
-.ui-state-default, \n
- .ui-widget-content .ui-state-default,\n
- .ui-widget-header .ui-state-default {\n
+div.main-left .ui-state-default, \n
+ div.main-left .ui-widget-content .ui-state-default,\n
+ div.main-left .ui-widget-header .ui-state-default {\n
   background: none !important;\n
   border: 1px solid #FFF;\n
 }\n
