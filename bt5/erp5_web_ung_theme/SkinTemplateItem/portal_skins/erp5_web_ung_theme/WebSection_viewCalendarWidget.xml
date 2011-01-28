@@ -46,7 +46,6 @@
   <link href="portal_skins/erp5_jquery/jquery/plugin/wdcalendar/main.css" rel="stylesheet" type="text/css"/>\n
   <link href="ung_css/ung_calendar.css" rel="stylesheet" type="text/css"/>\n
   <script src="portal_skins/erp5_jquery/jquery/plugin/wdcalendar/Common.js" type="text/javascript"></script>\n
-  <script src="portal_skins/erp5_jquery/jquery/plugin/wdcalendar/datepicker_lang_US.js" type="text/javascript"></script>\n
   <script src="portal_skins/erp5_jquery/jquery/plugin/wdcalendar/jquery.alert.js" type="text/javascript"></script>\n
   <script src="portal_skins/erp5_jquery/jquery/plugin/wdcalendar/jquery.ifrmdailog.js" defer="defer" type="text/javascript"></script>\n
   <script src="portal_skins/erp5_jquery/jquery/plugin/wdcalendar/wdCalendar_lang_US.js" type="text/javascript"></script>\n

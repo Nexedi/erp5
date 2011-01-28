@@ -31,10 +31,15 @@
             <value> <string encoding="cdata"><![CDATA[
 
 function callBeforeRequest(type){\n
-  var message = "Loading data...";\n
   switch(type){\n
     case 1:\n
-      message = "Loading data...";\n
+      message = "Loading Events...";\n
+      break;\n
+    case 2:\n
+      message = "Adding Event...";\n
+      break;\n
+    case 3:\n
+      message = "Removing Event...";\n
       break;\n
     case 4:\n
       message = "The request is being processed ...";\n
@@ -46,12 +51,8 @@ function callBeforeRequest(type){\n
 \n
 function callAfterRequest(type){\n
   switch(type){\n
-    case 1:\n
+    default:\n
       $("#loadingpannel").hide();\n
-      break;\n
-    case 4:\n
-      $("#loadingpannel").html("Success!");\n
-      window.setTimeout(function(){$("#loadingpannel").hide();},2000);\n
       break;\n
   }\n
 }\n
