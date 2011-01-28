@@ -66,10 +66,10 @@ def isSource(accounting_transaction):\n
     source_section = accounting_transaction.getSourceSectionValue()\n
     if source_section is None:\n
       return False\n
-    group = source_section.getGroup(base=True) or \'\'\n
+    group = source_section.getGroup(base=True)\n
     if section_category_strict:\n
       return group == section_category\n
-    return group.startswith(section_category)\n
+    return (group or \'\').startswith(section_category)\n
   return accounting_transaction.AccountingTransaction_isSourceView()\n
 \n
 def isDestination(accounting_transaction):\n
@@ -77,10 +77,10 @@ def isDestination(accounting_transaction):\n
     destination_section = accounting_transaction.getDestinationSectionValue()\n
     if destination_section is None:\n
       return False\n
-    group = destination_section.getGroup(base=True) or \'\' \n
+    group = destination_section.getGroup(base=True)\n
     if section_category_strict:\n
       return group == section_category\n
-    return group.startswith(section_category)\n
+    return (group or \'\').startswith(section_category)\n
   return accounting_transaction.AccountingTransaction_isDestinationView()\n
 \n
 \n
@@ -194,6 +194,7 @@ for delivery in delivery_list:\n
         mirror_section_region_title=movement.getDestinationRegionTranslatedTitle(),\n
         function_title=getTitle(movement.getSourceFunctionValue()),\n
         project_title=getTitle(movement.getSourceProjectValue()),\n
+        funding_title=getTitle(movement.getSourceFundingValue()),\n
         product_line=movement.getProductLineTranslatedTitle(),\n
         date=movement.getStartDate(),\n
         debit_price=movement.getSourceInventoriatedTotalAssetDebit(),\n
@@ -238,6 +239,7 @@ for delivery in delivery_list:\n
         mirror_section_region_title=movement.getSourceRegionTranslatedTitle(),\n
         mirror_payment_title=getBankAccountTitle(movement.getSourcePaymentValue()),\n
         function_title=getTitle(movement.getDestinationFunctionValue()),\n
+        funding_title=getTitle(movement.getDestinationFundingValue()),\n
         project_title=getTitle(movement.getDestinationProjectValue()),\n
         product_line=movement.getProductLineTranslatedTitle(),\n
         date=movement.getStopDate(),\n

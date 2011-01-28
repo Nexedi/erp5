@@ -73,6 +73,7 @@ selection_columns = (\n
   (\'mirror_section_region_title\', \'Third Party Region\',),\n
   (\'function_title\',\n
       context.AccountingTransactionLine_getFunctionBaseCategoryTitle()),\n
+  (\'funding_title\', \'Funding\',),\n
   (\'project_title\', \'Project\',),\n
   (\'product_line\', \'Product Line\'),\n
   (\'string_index\', \'String Index\'),\n
