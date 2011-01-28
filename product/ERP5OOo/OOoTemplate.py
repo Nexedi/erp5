@@ -258,13 +258,19 @@ class OOoTemplate(ZopePageTemplate):
       file = builder.prepareContentXml(self.ooo_xml_file_id)
     return ZopePageTemplate.pt_upload(self, REQUEST, file)
 
-  security.declareProtected('Change Page Templates', 'pt_edit')
-  def pt_edit(self, text, content_type):
-    if content_type:
-      self.content_type = str(content_type)
-    if hasattr(text, 'read'):
-      text = text.read()
-    self.write(text)
+  if 'pt_edit' not in ZopePageTemplate.__dict__:
+    # Override it only for 2.8 !
+    # ZopePageTemplate v.2.8 inherate pt_edit from
+    # PageTemplate. If method is defined on ZopePageTemplate
+    # means we are under 2.12.
+    # Delete me when we drop support of 2.8
+    security.declareProtected('Change Page Templates', 'pt_edit')
+    def pt_edit(self, text, content_type):
+      if content_type:
+        self.content_type = str(content_type)
+      if hasattr(text, 'read'):
+        text = text.read()
+      self.write(text)
 
   security.declareProtected('Change Page Templates', 'doSettings')
   def doSettings(self, REQUEST, title, xml_file_id, ooo_stylesheet, script_name=None):
