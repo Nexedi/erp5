@@ -98,7 +98,7 @@ def getAccountItemList(section_category,\n
         account.getRelativeUrl(), ]\n
 \n
   return [(\'\', \'\')] + sorted(account_dict.values(),\n
-                key=lambda item: item[1])\n
+                key=lambda item: item[0])\n
 \n
 getAccountItemList = CachingMethod(getAccountItemList,\n
                                    id=script.getId(),\n
