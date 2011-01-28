@@ -174,19 +174,11 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
   security.declarePrivate('isWorkflowMethodSupported')
   def isWorkflowMethodSupported(self, ob, method_id):
     '''
-    Returns a true value if the given workflow is
-    automatic with the propper method_id
-
-    NOTE: this method is not used in ERP5 because
-    of transition_list approach
+    Returns a true value if the given workflow method
+    is supported in the current state.
     '''
     tdef = self.interactions.get(method_id, None)
-    if (tdef is not None and
-      tdef.trigger_type == TRIGGER_WORKFLOW_METHOD and
-      self._checkTransitionGuard(tdef, ob)):
-      return 1
-    return 0
-
+    return tdef is not None and self._checkTransitionGuard(tdef, ob)
 
   security.declarePrivate('wrapWorkflowMethod')
   def wrapWorkflowMethod(self, ob, method_id, func, args, kw):
