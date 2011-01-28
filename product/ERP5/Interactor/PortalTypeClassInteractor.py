@@ -28,31 +28,33 @@
 ##############################################################################
 
 from Products.ERP5Type.Interactor.Interactor import Interactor
-from Products.ERP5Type.Base import _aq_reset
 
-class AqDynamicInteractor(Interactor):
+class PortalTypeClassInteractor(Interactor):
   """
-    This interactor handles all the calls to _aq_dynamic
-    which must be trigerred whenever some parts of ERP5 
+    This interactor handles all the calls to resetDynamicDocuments
+    which must be trigered whenever some parts of ERP5 
     are modified and require to generate again accessors
     and dynamic properties.
   """
   def install(self):
     from Products.CMFCore.WorkflowTool import WorkflowTool
-    self.on(WorkflowTool.manage_changeWorkflows).doAfter(self.resetAqDynamic)
+    self.on(WorkflowTool.manage_changeWorkflows).doAfter(self.resetDynamic)
     from Products.DCWorkflow.Transitions import Transitions
-    self.on(Transitions.addTransition).doAfter(self.resetAqDynamic)
-    self.on(Transitions.deleteTransitions).doAfter(self.resetAqDynamic)    
+    self.on(Transitions.addTransition).doAfter(self.resetDynamic)
+    self.on(Transitions.deleteTransitions).doAfter(self.resetDynamic)
     from Products.DCWorkflow.Transitions import TransitionDefinition
-    self.on(TransitionDefinition.setProperties).doAfter(self.resetAqDynamic)
+    self.on(TransitionDefinition.setProperties).doAfter(self.resetDynamic)
     from Products.DCWorkflow.Variables import Variables
-    self.on(Variables.setStateVar).doAfter(self.resetAqDynamic)
+    self.on(Variables.setStateVar).doAfter(self.resetDynamic)
     from Products.Localizer.Localizer import Localizer
-    self.on(Localizer.add_language).doAfter(self.resetAqDynamic)
-    self.on(Localizer.del_language).doAfter(self.resetAqDynamic)
+    self.on(Localizer.add_language).doAfter(self.resetDynamic)
+    self.on(Localizer.del_language).doAfter(self.resetDynamic)
 
-  def resetAqDynamic(self, *args, **kw):
+  def resetDynamic(self, method_call_object, *args, **kw):
     """
-      Reset _aq_dynamic
+    Call resetDynamicDocuments
     """
-    _aq_reset()
+    portal = method_call_object.instance.getPortalObject()
+    types_tool = getattr(portal, 'portal_types', None)
+    if types_tool is not None:
+      types_tool.resetDynamicDocuments()

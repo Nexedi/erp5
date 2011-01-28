@@ -35,7 +35,6 @@ from Products.DCWorkflow.Expression import Expression
 from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD
 
 from Products.ERP5 import _dtmldir
-from Products.ERP5Type.Base import _aq_reset
 
 class InteractionDefinition (SimpleItem):
     meta_type = 'Workflow Interaction'
@@ -164,8 +163,8 @@ class InteractionDefinition (SimpleItem):
         self.actbox_name = str(actbox_name)
         self.actbox_url = str(actbox_url)
         self.actbox_category = str(actbox_category)
-        # reset _aq_dynamic method cache.
-        _aq_reset()
+        # reset cached methods
+        self.getPortalObject().portal_types.resetDynamicDocuments()
         if REQUEST is not None:
             return self.manage_properties(REQUEST, 'Properties changed.')
 
