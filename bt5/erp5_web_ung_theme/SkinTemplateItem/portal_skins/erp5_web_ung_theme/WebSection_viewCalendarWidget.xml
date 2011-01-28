@@ -123,7 +123,7 @@
         <div class="t2 chromeColor">&nbsp;</div>\n
         <div class="t1 chromeColor">&nbsp;</div>\n
       </div>\n
-      <div id="new_event_dialog" title="Create New Event"></div>\n
+      <div id="new_event_dialog"/>\n
   </div>\n
 </html>
 

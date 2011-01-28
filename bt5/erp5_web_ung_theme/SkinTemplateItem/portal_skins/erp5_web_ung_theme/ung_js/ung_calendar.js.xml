@@ -63,13 +63,26 @@ function callOnError(type, data){\n
 \n
 function Edit(data){\n
   var url ="WebSection_newEvent";\n
-  var editUrl="WebSection_newEvent?id={0}&start={2}&end={3}&isallday={4}&title={1}";\n
-  if(data){\n
-    var url = StrFormat(editUrl, data);\n
-    OpenModelWindow(url,{width: 400, height: 200, caption:"Manage The Event", onclose:function(){\n
-      $("#gridcontainer").reload();\n
-    }});\n
-  }\n
+  $("div#new_event_dialog").dialog({\n
+    title: "Update Event",\n
+    buttons: {},\n
+  });\n
+  $("div#new_event_dialog").load(url, {}, function(){\n
+    $("form#create_new_event select").val(data[10]);\n
+    $("input[name=\'title\']").attr("value", data[1]);\n
+    $("input.start_date_field[name=\'start_date_year\']").attr("value", data[2].getFullYear());\n
+    $("input.start_date_field[name=\'start_date_month\']").attr("value", ""+data[2].getMonth() + 1);\n
+    $("input.start_date_field[name=\'start_date_day\']").attr("value", data[2].getDate());\n
+    $("input.start_date_field[name=\'start_date_hour\']").attr("value", data[2].getHours());\n
+    $("input.start_date_field[name=\'start_date_minute\']").attr("value", data[2].getMinutes());\n
+\n
+    $("input.stop_date_field[name=\'stop_date_year\']").attr("value", data[3].getFullYear());\n
+    $("input.stop_date_field[name=\'stop_date_month\']").attr("value", ""+data[3].getMonth() + 1);\n
+    $("input.stop_date_field[name=\'stop_date_day\']").attr("value", data[3].getDate());\n
+    $("input.stop_date_field[name=\'stop_date_hour\']").attr("value", data[3].getHours());\n
+    $("input.stop_date_field[name=\'stop_date_minute\']").attr("value", data[3].getMinutes());\n
+  });\n
+  $("div#new_event_dialog").dialog(\'open\');\n
 }\n
 \n
 function View(data){\n
@@ -163,6 +176,19 @@ $(document).ready(function() {     \n
   });          \n
   //Add a new event\n
   $("#faddbtn").click(function() {\n
+    $("div#new_event_dialog").dialog({\n
+      title: "Create New Event",\n
+      buttons: {\n
+        "Create": function(){\n
+          $.post("EventModule_createNewEvent",\n
+            $("form#create_new_event").serialize(),\n
+            function(){\n
+              $("div#new_event_dialog").dialog("close");\n
+              $("div#showreflashbtn.fbutton").click();\n
+          });\n
+        }\n
+      },\n
+    });\n
     var url ="WebSection_newEvent";\n
     var date = new Date();\n
     $("div#new_event_dialog").load(url, {}, function(){\n
@@ -171,8 +197,6 @@ $(document).ready(function() {     \n
       $("input.start_date_field[name=\'start_date_hour\'], input.stop_date_field[name=\'stop_date_hour\']").attr("value", date.getHours());\n
       $("input.start_date_field[name=\'start_date_minute\'], input.stop_date_field[name=\'stop_date_minute\']").attr("value", date.getMinutes());\n
     });\n
-    //$("input.start_date_field[name=\'start_date_month\'],\n
-    //      input.stop_date_field[name=\'stop_date_month\']").attr("value", ""+date.getMonth()+1);\n
     $("div#new_event_dialog").dialog("open");\n
   });\n
   //go to today\n
@@ -201,17 +225,6 @@ $(document).ready(function() {     \n
     height: 192,\n
     width: 410,\n
     modal: true,\n
-    buttons: {\n
-      "Create": function(){\n
-        $.post("EventModule_createNewEvent",\n
-          $("form#create_new_event").serialize(),\n
-          function(){\n
-            $("div#new_event_dialog").dialog("close");\n
-            $("div#showreflashbtn.fbutton").click();\n
-          }\n
-       );\n
-      }\n
-    },\n
   });\n
   $( "#datepicker" ).datepicker({\n
     onSelect: function(dateText, inst){\n
