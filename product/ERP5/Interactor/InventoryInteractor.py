@@ -41,7 +41,7 @@ class InventoryInteractor(Interactor):
 
   def reindexInventory(self, method_call_object, *args, **kw):
     """
-      Reset _aq_dynamic
+      Reindex inventory
     """
     inventory = method_call_object.instance.getRootDeliveryValue()
     # No need to reindex recursively, so we call _reindexObject() not
