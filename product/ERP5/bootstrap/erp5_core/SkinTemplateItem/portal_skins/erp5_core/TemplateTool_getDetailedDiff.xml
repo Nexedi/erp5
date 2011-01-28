@@ -88,7 +88,7 @@ for diff_object in context.BusinessTemplate_getDiffObjectList():\n
   if link == 1: \n
     print \'</a>\'\n
   print \'</div>\'\n
-  if diff_object.object_state == "Modified":\n
+  if diff_object.object_state.startswith(\'Modified\'):\n
     request.set(\'bt1\', diff_object.bt1)\n
     request.set(\'bt2\', diff_object.bt2)\n
     request.set(\'object_id\', diff_object.object_id)\n

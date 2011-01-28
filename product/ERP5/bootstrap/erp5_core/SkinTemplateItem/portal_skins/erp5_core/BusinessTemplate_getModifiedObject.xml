@@ -99,12 +99,12 @@ for object_id in keys:\n
   line = newTempBase(context, \'tmp_install_%s\' %(str(i)))\n
   if object_state == \'New\':\n
     choice_item_list=[[install_title, \'install\']]\n
-  elif object_state == \'Modified\':\n
+  elif object_state.startswith(\'Modified\'):\n
     if object_class in no_backup_dict:\n
       choice_item_list=[[upgrade_title, \'install\']]\n
     else:\n
       choice_item_list=[[backup_title, \'backup\']]\n
-  elif object_state in (\'Removed\', \'Removed but used\'):\n
+  elif object_state.startswith(\'Removed\'):\n
     if object_class in no_backup_dict:\n
       choice_item_list=[[remove_title, \'remove\']]\n
     else:\n

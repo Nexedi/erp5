@@ -54,7 +54,7 @@
 
 from Products.PythonScripts.standard import html_quote\n
 \n
-if brain.object_state == \'Modified\':\n
+if brain.object_state.startswith(\'Modified\'):\n
   target_object = brain.getObject()\n
   parent_absolute_path = target_object.aq_parent.absolute_url()\n
   if hasattr(brain, \'bt1\'):\n

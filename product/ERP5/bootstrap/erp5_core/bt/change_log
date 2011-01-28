@@ -1,3 +1,7 @@
+2011-01-28 Kazuhiko
+* support 'Paths of objects whose workflow history should be kept' and 'Paths of objects that should be kept' in Business Template definition.
+* support more 'Removed but ...' and 'Modified but ...' cases in business template installation dialogue.
+
 2011-01-13 nicolas.dumazet
 * add portal types for Tools bundled in erp5_core: Notification Tool was missing
 

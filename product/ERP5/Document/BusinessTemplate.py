@@ -839,10 +839,16 @@ class ObjectTemplateItem(BaseTemplateItem):
         new_io.close()
         old_io.close()
         if new_obj_xml != old_obj_xml:
-          modified_object_list[path] = 'Modified', type_name
+          if context.isKeepObject(path):
+            modified_object_list[path] = 'Modified but should be kept', type_name
+          else:
+            modified_object_list[path] = 'Modified', type_name
       # get removed object
       for path in set(installed_item._objects) - set(self._objects):
-        modified_object_list[path] = 'Removed', type_name
+        if context.isKeepObject(path):
+          modified_object_list[path] = 'Removed but should be kept', type_name
+        else:
+          modified_object_list[path] = 'Removed', type_name
     return modified_object_list
 
   def _backupObject(self, action, trashbin, container_path, object_id, **kw):
@@ -966,6 +972,10 @@ class ObjectTemplateItem(BaseTemplateItem):
             action = update_dict[path]
             if action == 'nothing':
               continue
+          elif context.isKeepObject(path):
+            # do nothing if the object is specified in keep list in
+            # force mode.
+            continue
           # get subobjects in path
           path_list = path.split('/')
           container_path = path_list[:-1]
@@ -993,6 +1003,7 @@ class ObjectTemplateItem(BaseTemplateItem):
           saved_uid_dict = {}
           subobjects_dict = {}
           portal_type_dict = {}
+          workflow_history = None
           old_obj = container._getOb(object_id, None)
           object_existed = old_obj is not None
           if old_obj is not None:
@@ -1015,6 +1026,11 @@ class ObjectTemplateItem(BaseTemplateItem):
                 portal_type_dict[attr] = getattr(old_obj, attr, ())
               portal_type_dict['workflow_chain'] = \
                 getChainByType(context)[1].get('chain_' + object_id, '')
+            # try to keep workflow history for specified objects.
+            workflow_history = getattr(old_obj, 'workflow_history', None)
+            if workflow_history is not None \
+                   and context.isKeepWorkflowObject(path):
+                workflow_history = deepcopy(workflow_history)
             container.manage_delObjects([object_id])
 
           # install object
@@ -1093,6 +1109,9 @@ class ObjectTemplateItem(BaseTemplateItem):
                 # an object which cannot (e.g. External Method).
                 LOG('BusinessTemplate', WARNING,
                     'could not restore %r in %r' % (subobject_id, obj))
+          # copy workflow history if required
+          if workflow_history is not None:
+            setattr(obj, 'workflow_history', workflow_history)
           if obj.meta_type in ('Z SQL Method',):
             fixZSQLMethod(portal, obj)
           # portal transforms specific initialization
@@ -5043,6 +5062,30 @@ Business Template is a set of definitions, such as skins, portal types and categ
       ordered list
       """
       return self._getOrderedList('template_tool_id')
+
+    def isKeepObject(self, path):
+      """
+      Return True if path is included in keep object list.
+      """
+      keep_list = self.getTemplateKeepPathList()
+      for keep_path in keep_list:
+        if keep_path.endswith('**') and path.startswith(keep_path[:-2]):
+          return True
+        elif path == keep_path:
+          return True
+      return False
+
+    def isKeepWorkflowObject(self, path):
+      """
+      Return True if path is included in keep workflow object list.
+      """
+      keep_list = self.getTemplateKeepWorkflowPathList()
+      for keep_path in keep_list:
+        if keep_path.endswith('**') and path.startswith(keep_path[:-2]):
+          return True
+        elif path == keep_path:
+          return True
+      return False
 
     security.declareProtected(Permissions.ManagePortal, 'export')
     def export(self, path=None, local=0, **kw):
