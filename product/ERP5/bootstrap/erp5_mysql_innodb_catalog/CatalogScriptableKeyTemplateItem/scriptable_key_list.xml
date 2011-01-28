@@ -1,4 +1,5 @@
 <key_list>
  <key>advanced_search_text | SQLCatalog_makeQuickSearchQuery</key>
+ <key>full_text | SQLCatalog_makeFullTextQuery</key>
  <key>quick_search_text | SQLCatalog_makeQuickSearchQuery</key>
 </key_list>

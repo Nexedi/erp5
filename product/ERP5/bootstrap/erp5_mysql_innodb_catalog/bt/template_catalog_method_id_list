@@ -1,5 +1,6 @@
 erp5_mysql_innodb/SQLCatalog_catalogTransformation
 erp5_mysql_innodb/SQLCatalog_catalogTransformationList
+erp5_mysql_innodb/SQLCatalog_makeFullTextQuery
 erp5_mysql_innodb/SQLCatalog_makeQuickSearchQuery
 erp5_mysql_innodb/z0_drop_alarm
 erp5_mysql_innodb/z0_drop_catalog
