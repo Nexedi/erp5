@@ -1,2 +1,5 @@
+2011-01-28 Ivan
+* Define MySQL's full_text key implementation
+
 2011-01-03 Kazuhiko
 * split fulltext related part from erp5_mysql_innodb_catalog.
