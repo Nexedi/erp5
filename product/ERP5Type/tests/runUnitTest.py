@@ -585,7 +585,15 @@ def usage(stream, msg=None):
   program = os.path.basename(sys.argv[0])
   print >>stream, __doc__ % {"program": program}
 
-def main():
+def main(argument_list=None):
+  if argument_list is None:
+    argument_list = []
+  # as this method can be used as entry point extend real sys.argv with
+  # passed argument list
+  old_argv = sys.argv[:]
+  sys.argv = [old_argv[0]]
+  sys.argv.extend(argument_list)
+  sys.argv.extend(old_argv[1:])
   try:
     opts, args = getopt.getopt(sys.argv[1:],
         "hpvD", ["help", "verbose", "profile", "portal_id=", "data_fs_path=",
