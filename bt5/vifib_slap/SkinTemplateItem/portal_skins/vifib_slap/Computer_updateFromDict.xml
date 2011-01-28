@@ -50,29 +50,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># Getting existing partitions\n
-existing_partition_dict = {}\n
-for c in context.contentValues():\n
-  existing_partition_dict[c.getReference()] = c\n
-\n
-# update computer data\n
-context.edit(\n
-  default_network_address_ip_address = computer_dict[\'address\'],\n
-  default_network_address_netmask = computer_dict[\'netmask\'],\n
-  quantity = len(computer_dict[\'partition_list\']),\n
-)\n
-\n
-for send_partition in computer_dict[\'partition_list\']:\n
-  partition = existing_partition_dict.get(send_partition[\'reference\'], None)\n
-  if partition is None:\n
-    partition = context.newContent(portal_type=\'Computer Partition\')\n
-    partition.validate()\n
-    partition.markFree()\n
-  partition.edit(reference=send_partition[\'reference\'])\n
-  network_interface = send_partition[\'tap\'][\'name\']\n
+            <value> <string>def compareAndUpdateAddressList(document, address_list, additional_dict=None):\n
+  if additional_dict is None:\n
+    additional_dict = {}\n
   to_delete_ip_id_list = []\n
-  to_add_ip_dict_list = send_partition[\'address_list\'][:]\n
-  for address in partition.contentValues(portal_type=\'Internet Protocol Address\'):\n
+  to_add_ip_dict_list = address_list[:]\n
+  for address in document.contentValues(portal_type=\'Internet Protocol Address\'):\n
     current_dict = {\n
       \'addr\': address.getIpAddress(),\n
       \'netmask\': address.getNetmask()\n
@@ -87,14 +70,39 @@ for send_partition in computer_dict[\'partition_list\']:\n
       id = to_delete_ip_id_list.pop()\n
       address_document = getattr(partition, id)\n
     else:\n
-      address_document = partition.newContent(portal_type=\'Internet Protocol Address\')\n
+      kw = {\'portal_type\': \'Internet Protocol Address\'}\n
+      if len(document.objectIds(portal_type=\'Internet Protocol Address\')):\n
+        kw.update(id=\'default_network_address\')\n
+      address_document = document.newContent(**kw)\n
     address_document.edit(\n
-      network_interface=network_interface,\n
       ip_address=address[\'addr\'],\n
       netmask=address[\'netmask\'],\n
+      **additional_dict\n
     )\n
   if to_delete_ip_id_list:\n
-    partition.deleteContent(to_delete_ip_id_list)\n
+    document.deleteContent(to_delete_ip_id_list)\n
+\n
+\n
+# Getting existing partitions\n
+existing_partition_dict = {}\n
+for c in context.contentValues():\n
+  existing_partition_dict[c.getReference()] = c\n
+\n
+# update computer data\n
+context.edit(\n
+  quantity = len(computer_dict[\'partition_list\']),\n
+)\n
+\n
+compareAndUpdateAddressList(context, [{\'addr\': computer_dict[\'address\'], \'netmask\': computer_dict[\'netmask\']}])\n
+for send_partition in computer_dict[\'partition_list\']:\n
+  partition = existing_partition_dict.get(send_partition[\'reference\'], None)\n
+  if partition is None:\n
+    partition = context.newContent(portal_type=\'Computer Partition\')\n
+    partition.validate()\n
+    partition.markFree()\n
+  partition.edit(reference=send_partition[\'reference\'])\n
+  network_interface = send_partition[\'tap\'][\'name\']\n
+  compareAndUpdateAddressList(partition, send_partition[\'address_list\'], {\'network_interface\': network_interface})\n
 </string> </value>
         </item>
         <item>
@@ -138,25 +146,19 @@ for send_partition in computer_dict[\'partition_list\']:\n
                         <value>
                           <tuple>
                             <string>computer_dict</string>
+                            <string>None</string>
+                            <string>partition</string>
+                            <string>compareAndUpdateAddressList</string>
                             <string>existing_partition_dict</string>
                             <string>_getiter_</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>c</string>
                             <string>_write_</string>
-                            <string>_getitem_</string>
                             <string>len</string>
+                            <string>_getitem_</string>
                             <string>send_partition</string>
-                            <string>None</string>
-                            <string>partition</string>
                             <string>network_interface</string>
-                            <string>to_delete_ip_id_list</string>
-                            <string>to_add_ip_dict_list</string>
-                            <string>address</string>
-                            <string>current_dict</string>
-                            <string>id</string>
-                            <string>getattr</string>
-                            <string>address_document</string>
                           </tuple>
                         </value>
                     </item>
