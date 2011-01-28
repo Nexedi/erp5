@@ -99,7 +99,7 @@ if hide_analytic:\n
                                    \'payment_uid\',\n
                                    \'node_uid\' )\n
 else:\n
-  analytic_column_list = context.AccountModule_getAnalyticColumnList()\n
+  analytic_column_list = context.accounting_module.AccountModule_getAnalyticColumnList()\n
   selection_params[\'analytic_column_list\'] = analytic_column_list\n
 \n
 selection_columns = (\n
