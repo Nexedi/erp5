@@ -575,7 +575,7 @@ class OOoTemplate(ZopePageTemplate):
 
     extension = None
     mimetypes_registry = self.getPortalObject().mimetypes_registry
-    mimetype_object_list = mimetypes_registry.lookup(self.content_type)
+    mimetype_object_list = mimetypes_registry.lookup(ooo_builder.getMimeType())
     for mimetype_object in mimetype_object_list:
       if mimetype_object.extensions:
         extension = mimetype_object.extensions[0]
