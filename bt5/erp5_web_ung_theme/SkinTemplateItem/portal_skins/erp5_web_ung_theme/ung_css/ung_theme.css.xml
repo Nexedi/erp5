@@ -1021,6 +1021,10 @@ div#pad-navigation-wrapper {\n
 \n
 img[alt="calendar_logo_box"]{\n
   margin-top: 10px;\n
+}\n
+\n
+div#preference_dialog select{\n
+  border: 0px;\n
 }
 
 ]]></string> </value>

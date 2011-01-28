@@ -78,6 +78,7 @@ div.main-left div#datepicker.hasDatepicker {\n
 .ui-datepicker {\n
   padding: 0;\n
   width: 13.5em;\n
+  height: 12em;\n
 }\n
 \n
 div#datepicker .ui-widget-content {\n
@@ -87,7 +88,7 @@ div#datepicker .ui-widget-content {\n
 \n
 .ui-datepicker th {\n
   padding: 0px !important;\n
-  font-size: 12px;\n
+  font-size: 11px;\n
 }\n
 \n
 .ui-datepicker .ui-datepicker-header {\n
@@ -111,7 +112,7 @@ div#datepicker .ui-widget-content {\n
  .ui-widget-content .ui-state-default,\n
  .ui-widget-header .ui-state-default {\n
   background: none !important;\n
-  border: 1px solid #FFF !important;\n
+  border: 1px solid #FFF;\n
 }\n
 \n
 .ui-widget-header {\n
@@ -125,7 +126,16 @@ div#datepicker .ui-widget-content {\n
 div#ui-datepicker-div.ui-datepicker {\n
   background: none !important;\n
   border: 0px;\n
-}</string> </value>
+}\n
+\n
+.ui-state-default .ui-state-highlight .ui-state-active .ui-state-hover {\n
+  background: #DAE6F6 !important;\n
+}\n
+\n
+td.ui-datepicker-days-cell-over, td.ui-datepicker-week-end.ui-datepicker-current-day {\n
+    background: url("images/ui-bg_glass_75_dae6f6_1x400.png") repeat-x scroll 50% 50% #DAE6F6;\n
+}\n
+</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
