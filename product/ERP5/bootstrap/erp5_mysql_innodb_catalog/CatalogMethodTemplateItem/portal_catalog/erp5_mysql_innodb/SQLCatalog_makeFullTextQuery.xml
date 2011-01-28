@@ -51,16 +51,14 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  Generic full text searchable key which based on site configuration will use\n
-  available third party search engine (Sphinx) or fall back to default \n
-  MySQL full text search.\n
+  Default full text searchable key implementation.\n
 """\n
+from Products.ZSQLCatalog.SQLCatalog import ComplexQuery\n
 from Products.ZSQLCatalog.SQLCatalog import Query\n
 \n
-if context.SQLCatalog_isSphinxSearchAvailable():\n
-  query = Query(**{\'sphinxse_query\':value})\n
-else:\n
-  query = Query(**{\'full_text.SearchableText\':value})\n
+query = ComplexQuery(Query(title=value),\n
+                     Query(reference=value),\n
+                     operator="OR")\n
 return query\n
 </string> </value>
         </item>
