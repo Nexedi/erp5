@@ -257,61 +257,63 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
         for t_id in transition_list:
           tdef = self.interactions[t_id]
           assert tdef.trigger_type == TRIGGER_WORKFLOW_METHOD
-          if (tdef.portal_type_filter is None or \
-              ob.getPortalType() in tdef.portal_type_filter):
-            # Initialize variables
-            former_status = self._getStatusOf(ob)
-            econtext = None
-            sci = None
+          if (tdef.portal_type_filter is not None and \
+              ob.getPortalType() not in tdef.portal_type_filter):
+            continue
 
-            # Update variables.
-            tdef_exprs = tdef.var_exprs
-            if tdef_exprs is None: tdef_exprs = {}
-            status = {}
-            for id, vdef in self.variables.items():
-              if not vdef.for_status:
-                continue
-              expr = None
-              if tdef_exprs.has_key(id):
-                expr = tdef_exprs[id]
-              elif not vdef.update_always and former_status.has_key(id):
-                # Preserve former value
-                value = former_status[id]
+          # Initialize variables
+          former_status = self._getStatusOf(ob)
+          econtext = None
+          sci = None
+
+          # Update variables.
+          tdef_exprs = tdef.var_exprs
+          if tdef_exprs is None: tdef_exprs = {}
+          status = {}
+          for id, vdef in self.variables.items():
+            if not vdef.for_status:
+              continue
+            expr = None
+            if tdef_exprs.has_key(id):
+              expr = tdef_exprs[id]
+            elif not vdef.update_always and former_status.has_key(id):
+              # Preserve former value
+              value = former_status[id]
+            else:
+              if vdef.default_expr is not None:
+                expr = vdef.default_expr
               else:
-                if vdef.default_expr is not None:
-                  expr = vdef.default_expr
-                else:
-                  value = vdef.default_value
-              if expr is not None:
-                # Evaluate an expression.
-                if econtext is None:
-                  # Lazily create the expression context.
-                  if sci is None:
-                    sci = StateChangeInfo(
-                        ob, self, former_status, tdef,
-                        None, None, None)
-                  econtext = createExprContext(sci)
-                value = expr(econtext)
-              status[id] = value
+                value = vdef.default_value
+            if expr is not None:
+              # Evaluate an expression.
+              if econtext is None:
+                # Lazily create the expression context.
+                if sci is None:
+                  sci = StateChangeInfo(
+                      ob, self, former_status, tdef,
+                      None, None, None)
+                econtext = createExprContext(sci)
+              value = expr(econtext)
+            status[id] = value
 
-            sci = StateChangeInfo(
-                  ob, self, former_status, tdef, None, None, kwargs=kw)
-            # Execute the "after" script.
-            for script_name in tdef.after_script_name:
-              script = self.scripts[script_name]
-              # Pass lots of info to the script in a single parameter.
-              script(sci)  # May throw an exception
+          sci = StateChangeInfo(
+                ob, self, former_status, tdef, None, None, kwargs=kw)
+          # Execute the "after" script.
+          for script_name in tdef.after_script_name:
+            script = self.scripts[script_name]
+            # Pass lots of info to the script in a single parameter.
+            script(sci)  # May throw an exception
 
-            # Execute Before Commit
-            for script_name in tdef.before_commit_script_name:
-              transaction.get().addBeforeCommitHook(self._before_commit,
-                                                    (sci, script_name))
+          # Execute Before Commit
+          for script_name in tdef.before_commit_script_name:
+            transaction.get().addBeforeCommitHook(self._before_commit,
+                                                  (sci, script_name))
 
-            # Execute "activity" scripts
-            for script_name in tdef.activate_script_name:
-              self.activate(activity='SQLQueue')\
-                  .activeScript(script_name, ob.getRelativeUrl(),
-                                status, tdef.id)
+          # Execute "activity" scripts
+          for script_name in tdef.activate_script_name:
+            self.activate(activity='SQLQueue')\
+                .activeScript(script_name, ob.getRelativeUrl(),
+                              status, tdef.id)
 
     def _before_commit(self, sci, script_name):
       # check the object still exists before calling the script
