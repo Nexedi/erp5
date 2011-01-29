@@ -97,7 +97,7 @@ if request_type == "list":\n
                                  start,\n
                                  end,\n
                                  0, display_minimized, 0,\n
-                                 random.randrange(-1,13), 1, \'\', event.getPortalType()])\n
+                                 random.randrange(-1,13), 1, event.getId(), event.getPortalType()])\n
   return dumps(event_dict)\n
 \n
 elif request_type == "remove":\n
@@ -108,13 +108,16 @@ elif request_type == "remove":\n
   return dumps({"IsSuccess": True})\n
 \n
 elif request_type == "update":\n
+  event_id = form.get("event_id")\n
+  if not event_id:\n
+    return dumps({"IsSuccess": False})\n
   title = form.get("title")\n
-  if not title:\n
-    return None\n
   end_date = convertToERP5DateTime(form.get("CalendarEndTime"))\n
   start_date = convertToERP5DateTime(form.get("CalendarStartTime"))\n
-  catalog_object = portal.portal_catalog.getResultValue(portal_type=portal_type_list, title=title)\n
+  catalog_object = portal.portal_catalog.getResultValue(portal_type=portal_type_list, id=event_id)\n
   event = context.restrictedTraverse(catalog_object.getPath())\n
+  if title and event.getTitle() != title:\n
+    event.setTitle(title)\n
   event.setStartDate(start_date)\n
   event.setStopDate(end_date)\n
   return dumps({"IsSuccess": True})\n

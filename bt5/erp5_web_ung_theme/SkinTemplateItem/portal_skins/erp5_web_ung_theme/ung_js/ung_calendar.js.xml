@@ -65,9 +65,37 @@ function Edit(data){\n
   var url ="WebSection_newEvent";\n
   $("div#new_event_dialog").dialog({\n
     title: "Update Event",\n
-    buttons: {},\n
+    buttons: {\n
+      "Save": function(){\n
+         data = $("form#create_new_event").serializeArray();\n
+         var dataHash = {};\n
+         for (var i=0; i<data.length; i++)\n
+           dataHash[data[i].name] = data[i].value;\n
+         start_date = dataHash.start_date_day + "/" + \n
+                      dataHash.start_date_month + "/" + \n
+                      dataHash.start_date_year + " " + \n
+                      dataHash.start_date_hour + ":" + \n
+                      dataHash.start_date_minute;\n
+\n
+         stop_date = dataHash.stop_date_day + "/" + \n
+                     dataHash.stop_date_month + "/" + \n
+                     dataHash.stop_date_year + " " + \n
+                     dataHash.stop_date_hour + ":" + \n
+                     dataHash.stop_date_minute;\n
+\n
+         var paramList = [{name : \'CalendarEndTime\', \'value\': stop_date},\n
+                      {name : \'CalendarStartTime\', \'value\': start_date},\n
+                      {name : \'title\', \'value\': dataHash.title},\n
+                      {name : \'request_type\', \'value\': \'update\'},\n
+                      {name : \'event_id\', \'value\': $("input#event_id").attr("value")}]\n
+\n
+         $.post("Base_updateCalendarEventList", paramList);\n
+      },\n
+    },\n
   });\n
   $("div#new_event_dialog").load(url, {}, function(){\n
+    $("form#create_new_event").append("<input type=\'hidden\' id=\'event_id\'/>");\n
+    $("input#event_id").attr("value", data[9]);\n
     $("form#create_new_event select").val(data[10]);\n
     $("input[name=\'title\']").attr("value", data[1]);\n
     $("input.start_date_field[name=\'start_date_year\']").attr("value", data[2].getFullYear());\n
