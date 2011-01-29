@@ -89,7 +89,10 @@ function Edit(data){\n
                       {name : \'request_type\', \'value\': \'update\'},\n
                       {name : \'event_id\', \'value\': $("input#event_id").attr("value")}]\n
 \n
-         $.post("Base_updateCalendarEventList", paramList);\n
+         $.post("Base_updateCalendarEventList", paramList, function(){\n
+           $("div#new_event_dialog").dialog("close");\n
+           $("div#showreflashbtn.fbutton").click();\n
+         });\n
       },\n
     },\n
   });\n
