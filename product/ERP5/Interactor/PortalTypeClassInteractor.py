@@ -54,7 +54,10 @@ class PortalTypeClassInteractor(Interactor):
     """
     Call resetDynamicDocuments
     """
-    portal = method_call_object.instance.getPortalObject()
+    from Products.ERP5.ERP5Site import getSite
+    # method_call_object might be an unwrapped DCWorflowDefinition method,
+    # no even belonging to a container.
+    portal = getSite()
     types_tool = getattr(portal, 'portal_types', None)
     if types_tool is not None:
       types_tool.resetDynamicDocuments()
