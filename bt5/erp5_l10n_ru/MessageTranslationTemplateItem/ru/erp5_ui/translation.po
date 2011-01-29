@@ -1,0 +1,7660 @@
+msgid ""
+msgstr "Project-Id-Version: ERP5 Localized Interface\n"
+"POT-Creation-Date: 2011-01-29 17:01+CET\n"
+"PO-Revision-Date: 2011-01-29 17:01+CET\n"
+"Last-Translator:  <>\n"
+"Language-Team: ru <>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+
+msgid "${min_quantity} <= Quantity"
+msgstr "Количество >= ${min_quantity}"
+
+msgid "${min_quantity} <= Quantity < ${max_quantity}"
+msgstr "${min_quantity} <= Количество < ${max_quantity}"
+
+msgid "${number} record(s)"
+msgstr "${number} записей"
+
+msgid "${number} records"
+msgstr ""
+
+msgid "${page} of ${total_pages}"
+msgstr "${page} из ${total_pages}"
+
+msgid "${this_portal_type} related to ${that_portal_type} : ${that_title}."
+msgstr "${this_portal_type}, соответствующий(ая)  документу: ${that_portal_type} ${that_title}."
+
+msgid "&nbsp;"
+msgstr ""
+
+msgid "- ${number} item(s) selected"
+msgstr "- ${number} элементов выделено"
+
+msgid "- ${number} items selected"
+msgstr ""
+
+msgid "-- Select Classification --"
+msgstr ""
+
+msgid "-- Select Project --"
+msgstr ""
+
+msgid "1"
+msgstr ""
+
+msgid "12"
+msgstr ""
+
+msgid "2"
+msgstr ""
+
+msgid "3"
+msgstr ""
+
+msgid "4"
+msgstr ""
+
+msgid "5"
+msgstr ""
+
+msgid "A codification used to identify the category"
+msgstr ""
+
+msgid "A document can be associated to one or multiple entities in the function classification tree."
+msgstr "Документ может быть ассоциирован с одной или несколькими функциями."
+
+msgid "A document can be associated to one or multiple entities in the group classification tree."
+msgstr "Документ может быть ассоциирован с одной или несколькими группами."
+
+msgid "A document can be associated to one or multiple entities in the site  classification tree."
+msgstr "Документ может быть отнесен к одному или нескольким месторасположению."
+
+msgid "A example of decimal exponent. This value is used when rounds a number to a fixed exponent."
+msgstr ""
+
+msgid "A frozen movement cannot be modified by the simulation anylonger"
+msgstr ""
+
+msgid "A global discount ratio depending on the context, on the options or on the variations. All discount ratios may sum up to form a higher discount ratio."
+msgstr "Базовая скидка, выраженная в процентах. Конкретная скидка может зависить от контекста или вариаций. Скидки могут суммироваться. "
+
+msgid "A global surcharge ratio depending on the context, on the options or on the variations. All surcharge ratios may sum up to form a higher surcharge ratio."
+msgstr "Базовая надбавка, выраженная в процентах. Конкретная надбавка может зависить от контекста или вариаций. Надбавки могут суммироваться. "
+
+msgid "A list of ERP5Types for which we want to add the roles in the template"
+msgstr ""
+
+msgid "A list of Tool ids used by this template"
+msgstr ""
+
+msgid "A list of allowed content types for portal types"
+msgstr ""
+
+msgid "A list of base categories for portal types"
+msgstr ""
+
+msgid "A list of base categories which define possible discrete variations. Variation ranges are stored as category membership. (prev. variation_category_list)."
+msgstr "Список базовых категорий, которые определяют возможные вариации ресурса. Конкретные вариации являются членами этих базовой категорий (category membership). "
+
+msgid "A list of changes done on the document"
+msgstr ""
+
+msgid "A list of copyright holders"
+msgstr ""
+
+msgid "A list of hidden content types for portal types"
+msgstr ""
+
+msgid "A list of ids of actions used by this template"
+msgstr ""
+
+msgid "A list of ids of base categories used by this template"
+msgstr ""
+
+msgid "A list of ids of catalog DateTime keys used by this template"
+msgstr ""
+
+msgid "A list of ids of catalog full text keys used by this template"
+msgstr ""
+
+msgid "A list of ids of catalog keyword keys used by this template"
+msgstr ""
+
+msgid "A list of ids of catalog local role keys used by this template"
+msgstr ""
+
+msgid "A list of ids of catalog methods used by this template"
+msgstr ""
+
+msgid "A list of ids of catalog multivalue keys used by this template"
+msgstr ""
+
+msgid "A list of ids of catalog related keys used by this template"
+msgstr ""
+
+msgid "A list of ids of catalog request keys used by this template"
+msgstr ""
+
+msgid "A list of ids of catalog result keys used by this template"
+msgstr ""
+
+msgid "A list of ids of catalog result tables used by this template"
+msgstr ""
+
+msgid "A list of ids of catalog role keys used by this template"
+msgstr ""
+
+msgid "A list of ids of catalog scriptable keys used by this template"
+msgstr ""
+
+msgid "A list of ids of catalog topic keys used by this template"
+msgstr ""
+
+msgid "A list of ids of constraints used by this template"
+msgstr ""
+
+msgid "A list of ids of documents used by this template"
+msgstr ""
+
+msgid "A list of ids of extensions used by this template"
+msgstr ""
+
+msgid "A list of ids of modules used by this template"
+msgstr ""
+
+msgid "A list of ids of portal types used by this template"
+msgstr ""
+
+msgid "A list of ids of products used by this template"
+msgstr ""
+
+msgid "A list of ids of property sheets used by this template"
+msgstr ""
+
+msgid "A list of ids of roles used by this template"
+msgstr ""
+
+msgid "A list of ids of site properties used by this template"
+msgstr ""
+
+msgid "A list of ids of skins used by this template"
+msgstr ""
+
+msgid "A list of ids of tests used by this template"
+msgstr ""
+
+msgid "A list of ids of workflows used by this template"
+msgstr ""
+
+msgid "A list of local roles used by this template"
+msgstr ""
+
+msgid "A list of maintainers"
+msgstr ""
+
+msgid "A list of message translations used by this template"
+msgstr ""
+
+msgid "A list of object paths used by this template"
+msgstr ""
+
+msgid "A list of preferences used by this template"
+msgstr ""
+
+msgid "A list of property sheet for portal types"
+msgstr ""
+
+msgid "A list of quantity values which define acceptable ranges"
+msgstr "Перечень количеств ресурса, при достижении каждого из которых цена ресурса изменяется."
+
+msgid "A list of registered skin selections used by this template"
+msgstr ""
+
+msgid "A list of workflow chains of portal types used by this template"
+msgstr ""
+
+msgid "A non discountable per unit additional price which applies for example whenever certain options or variations are selected. Multiple additional prices related to different options sum up. The total of additional prices may not be discounted."
+msgstr ""
+
+msgid "A one line title which describes a product, an order, a supply, a trade condition. It may be used  in official documents."
+msgstr "Заголовок, который описывает ресурсы, заказ, поставку, прототип. "
+
+msgid "A per unit additional price that depends on a continuous property"
+msgstr ""
+
+msgid "A per unit additional price which applies for example whenever certain options or variations are selected. Multiple additional prices related to different options sum up."
+msgstr "Дополнительная цена, которая к примеру может быть применена для определенных вариаций. Несколько применимых дополнительных цен суммируются."
+
+msgid "A resource in ERP5 can be a product or a service. This term will be found in orders for instance, or accounting and inventories."
+msgstr ""
+
+msgid "A revision identifier"
+msgstr "Номер ревизии документа."
+
+msgid "A typical per unit height of the resource"
+msgstr "Стандартная высота для единицы данного ресурса."
+
+msgid "A typical per unit length of the resource"
+msgstr "Стандартная длина единицы данного ресурса."
+
+msgid "A typical per unit price"
+msgstr "Цена за единицу измерения."
+
+msgid "A typical per unit volume of the resource"
+msgstr "Стандартный объем единицы данного ресурса."
+
+msgid "A typical per unit weight of the resource"
+msgstr "Стандартный вес единицы данного ресурса."
+
+msgid "A typical per unit width of the resource"
+msgstr "Стандартная ширина для единицы данного ресурса."
+
+msgid "A typical price of a unit."
+msgstr ""
+
+msgid "A version identifier"
+msgstr ""
+
+msgid "Absolute Tolerance"
+msgstr ""
+
+msgid "Absolute Tolerance (max)"
+msgstr ""
+
+msgid "Absolute Tolerance (min)"
+msgstr ""
+
+msgid "Accept"
+msgstr "Принять"
+
+msgid "Accept Decision"
+msgstr "Применить Текущее Решение"
+
+msgid "Accept Offer"
+msgstr "Принять Предложение"
+
+msgid "Accept Solver"
+msgstr ""
+
+msgid "Accept decision"
+msgstr "Применить Текущее Решение"
+
+msgid "Account"
+msgstr "Номер Счета"
+
+msgid "Account Module"
+msgstr ""
+
+msgid "Account Name"
+msgstr "Название Счета"
+
+msgid "Account Number Method"
+msgstr ""
+
+msgid "Account Reference"
+msgstr ""
+
+msgid "Account Statement"
+msgstr "Выписка по Счету"
+
+msgid "Account Type"
+msgstr "Вид Счета"
+
+msgid "Account Workflow"
+msgstr "Workflow бухгалтерских Счетов"
+
+msgid "Account for Bank Line"
+msgstr "Банковский Счет (Касса)"
+
+msgid "Accounting"
+msgstr "Бухгалтерский Учет"
+
+msgid "Accounting Operation Date"
+msgstr "Дата Проводки"
+
+msgid "Accounting Period"
+msgstr "Бухгалтерский Период"
+
+msgid "Accounting Periods"
+msgstr "Бухгалтерские Периоды"
+
+msgid "Accounting Preference"
+msgstr "Бухгалтерские Настройки"
+
+msgid "Accounting Preferences"
+msgstr ""
+
+msgid "Accounting Rule Cell"
+msgstr ""
+
+msgid "Accounting Rule Cell Line"
+msgstr ""
+
+msgid "Accounting Rule Cells"
+msgstr ""
+
+msgid "Accounting Transaction"
+msgstr "Бухгалтерская Транзакция"
+
+msgid "Accounting Transaction Line"
+msgstr "Строка Проводки"
+
+msgid "Accounting Transaction Line added."
+msgstr "Добавлена Строка Проводки."
+
+msgid "Accounting Transaction Lines"
+msgstr "Строки Проводок"
+
+msgid "Accounting Transaction Module"
+msgstr ""
+
+msgid "Accounting Transaction Root Simulation Rule"
+msgstr ""
+
+msgid "Accounting Transactions"
+msgstr "Бухгалтерские Транзакции"
+
+msgid "Accounting View"
+msgstr "Главное (Проводки)"
+
+msgid "Accounting Workflow"
+msgstr "Бухгалтерское Workflow"
+
+msgid "Accounts"
+msgstr "Бухгалтерские Счета"
+
+msgid "Accounts to use in the third party's accounting."
+msgstr "Зеркальный счета в балансе контрагента. "
+
+msgid "Acknowledged"
+msgstr ""
+
+msgid "Acknowledged [state in event_workflow]"
+msgstr ""
+
+msgid "Acknowledgement"
+msgstr ""
+
+msgid "Acquire Local Roles"
+msgstr ""
+
+msgid "Acquisition Append Value"
+msgstr ""
+
+msgid "Acquisition Base Categories"
+msgstr ""
+
+msgid "Acquisition Copy Value"
+msgstr ""
+
+msgid "Acquisition Mask Value"
+msgstr ""
+
+msgid "Acquisition Object IDs"
+msgstr ""
+
+msgid "Acquisition Portal Types"
+msgstr ""
+
+msgid "Acquisition Sync Value"
+msgstr ""
+
+msgid "Action"
+msgstr "Действие"
+
+msgid "Action Information"
+msgstr ""
+
+msgid "Action..."
+msgstr "Выполнить ..."
+
+msgid "Actions"
+msgstr "Действия"
+
+msgid "Active"
+msgstr ""
+
+msgid "Active Preference"
+msgstr "Действующие Настройки"
+
+msgid "Activities"
+msgstr ""
+
+msgid "Activity"
+msgstr "Вид Деятельности"
+
+msgid "Activity Code"
+msgstr "Номер в ФСС"
+
+msgid "Activity Pending"
+msgstr ""
+
+msgid "Actor"
+msgstr "Исполнитель"
+
+msgid "Add ${document_template}"
+msgstr "Вставить Копию ${document_template}"
+
+msgid "Add ${portal_type}"
+msgstr "${portal_type}. Добавить."
+
+msgid "Add Permission"
+msgstr ""
+
+msgid "Add Requirements"
+msgstr "Добавить Набор Требований"
+
+msgid "Add to cart"
+msgstr "Положить в Корзину"
+
+msgid "Added Files"
+msgstr ""
+
+msgid "Added to cart."
+msgstr "Добавлено в корзину."
+
+msgid "Additional Price"
+msgstr "Дополнительная Цена"
+
+msgid "Additional Price Quantity Step"
+msgstr "Шаг Дополнительной Цены (Количество)"
+
+msgid "Additional Term (days)"
+msgstr "Дополнительный Срок (дней)"
+
+msgid "Address"
+msgstr "Адрес"
+
+msgid "Adopt Prevision"
+msgstr "Обновить из Зависимостей"
+
+msgid "Adopt Solver"
+msgstr ""
+
+msgid "Adopt prevision"
+msgstr "Обновить из Зависимостей"
+
+msgid "Advanced"
+msgstr ""
+
+msgid "Agent"
+msgstr "Агент"
+
+msgid "Agent Privilege"
+msgstr "Полномочия Агента"
+
+msgid "Agents"
+msgstr "Агенты"
+
+msgid "Aggregate"
+msgstr "Обобщать (Агрегировать)"
+
+msgid "Aggregated Items"
+msgstr "Партионный Учет"
+
+msgid "Aggregation Level"
+msgstr "Группировать Данные за"
+
+msgid "Alarm"
+msgstr ""
+
+msgid "Alarm Tool"
+msgstr ""
+
+msgid "Alarms"
+msgstr ""
+
+msgid "All"
+msgstr ""
+
+msgid "All Documents"
+msgstr ""
+
+msgid "Allowed Content Types"
+msgstr ""
+
+msgid "Amortisation Account"
+msgstr "Счет Накопленной Амортизации"
+
+msgid "Amortisation Details"
+msgstr "Бухгалтерский Учет"
+
+msgid "Amortisation Method"
+msgstr "Метод Амортизации"
+
+msgid "Amortisation Transaction"
+msgstr "Начисление Амортизации"
+
+msgid "Amortisation Transaction Line"
+msgstr "Строка Начисления Амортизации"
+
+msgid "Amount"
+msgstr "Сумма"
+
+msgid "Amount Limit"
+msgstr "Лимит Подписи"
+
+msgid "An account can have a Credit or a Debit Normal Balance"
+msgstr "Счет, который может иметь как дебетовое, так и кредитовое сальдо."
+
+msgid "An exclusive global discount ratio. This discount ratio is exclusive of any other discount."
+msgstr ""
+
+msgid "An optional account for monthly amortisation"
+msgstr "Опционально. Счет для начисления ежемесячной амортизации."
+
+msgid "Another input account"
+msgstr "Счет, аналогичный Счету — Источнику Поступления для отражения дополнительных расходов."
+
+msgid "Answer"
+msgstr "Ответ"
+
+msgid "Answered"
+msgstr "Отвеченный"
+
+msgid "Answered [state in query_workflow]"
+msgstr ""
+
+msgid "Application Id Generator"
+msgstr ""
+
+msgid "Applied Rule"
+msgstr ""
+
+msgid "Apply Changes to Skins"
+msgstr ""
+
+msgid "Apply Purchase Trade Condition"
+msgstr "Подставить Данные из Шаблона Закупки"
+
+msgid "Apply Sale Trade Condition"
+msgstr "Подставить Данные из Шаблона Продаж"
+
+msgid "Approval Requested"
+msgstr "Утверждение Запрошено"
+
+msgid "Approval Requested [state in ticket_workflow]"
+msgstr ""
+
+msgid "Approved"
+msgstr "Утвержденный"
+
+msgid "Archive"
+msgstr "Передать в Архив"
+
+msgid "Archived"
+msgstr "В Архиве"
+
+msgid "Archived [state in document_publication_workflow]"
+msgstr ""
+
+msgid "Ascending Display"
+msgstr ""
+
+msgid "Assign"
+msgstr "Поручить"
+
+msgid "Assign Bug"
+msgstr "Направить на Исправление"
+
+msgid "Assign Event"
+msgstr "Поручить"
+
+msgid "Assigned"
+msgstr "Поручен Исполнителю"
+
+msgid "Assigned Events"
+msgstr "Порученные Мероприятия"
+
+msgid "Assigned [state in bug_workflow]"
+msgstr ""
+
+msgid "Assigned [state in document_ingestion_workflow]"
+msgstr ""
+
+msgid "Assigned [state in document_publication_workflow]"
+msgstr ""
+
+msgid "Assigned [state in event_workflow]"
+msgstr ""
+
+msgid "Assignee"
+msgstr "Ответственный"
+
+msgid "Assignment"
+msgstr "Назначение"
+
+msgid "Assignment Start Date"
+msgstr "Начало Назначения"
+
+msgid "Assignment Stop Date"
+msgstr "Конец Назначения\n"
+
+msgid "Assignments"
+msgstr "Назначения"
+
+msgid "At Date"
+msgstr "По Дату"
+
+msgid "Attach Document"
+msgstr ""
+
+msgid "Attachments"
+msgstr "Вложение"
+
+msgid "Auto Planned"
+msgstr "Запланирован Автоматически"
+
+msgid "Auto Planned [state in order_workflow]"
+msgstr ""
+
+msgid "Automatic Solver"
+msgstr ""
+
+msgid "Available"
+msgstr "Доступно"
+
+msgid "BPM Order Workflow"
+msgstr ""
+
+msgid "Backup And Remove"
+msgstr ""
+
+msgid "Backup And Upgrade"
+msgstr ""
+
+msgid "Balance"
+msgstr "Сальдо"
+
+msgid "Balance Sheet"
+msgstr "Балансовый Отчет"
+
+msgid "Balance Transaction"
+msgstr ""
+
+msgid "Balance Transaction Line"
+msgstr ""
+
+msgid "Bank"
+msgstr "Банк"
+
+msgid "Bank Account"
+msgstr "Банковский Счет"
+
+msgid "Bank Account Number"
+msgstr "Номер Банковского Счета"
+
+msgid "Bank Account Type"
+msgstr "Вид Банковского Счета"
+
+msgid "Bank Accounts"
+msgstr "Банковские Счета"
+
+msgid "Bank Code"
+msgstr "БИК"
+
+msgid "Bank Country Code"
+msgstr "Код Страны Банка"
+
+msgid "Base"
+msgstr "База"
+
+msgid "Base Application"
+msgstr "Базы для Вычисления"
+
+msgid "Base Categories"
+msgstr "Базовые Категории"
+
+msgid "Base Category"
+msgstr "Базовая Категория"
+
+msgid "Base Contribution"
+msgstr "База"
+
+msgid "Base Domain"
+msgstr ""
+
+msgid "Base Price"
+msgstr "Базовая Цена"
+
+msgid "Base Price Quantity Step"
+msgstr "Ценовой Шаг (Количество)"
+
+msgid "Base Price Variation Axes"
+msgstr "Базовая Цена Зависит от"
+
+msgid "Base Type"
+msgstr ""
+
+msgid "Base Variant Movement Group"
+msgstr ""
+
+msgid "Base category range of matrix"
+msgstr "Базовые категории, от значения которых может зависеть цена ресурса."
+
+msgid "Begin"
+msgstr "Начало"
+
+msgid "Begin Date"
+msgstr "Дата Начала"
+
+msgid "Beginning Date"
+msgstr "Дата Вступления в Силу"
+
+msgid "Beginning Value (without tax)"
+msgstr "Начальная Стоимость (без налогов)"
+
+msgid "Being Closed"
+msgstr "Закрыт"
+
+msgid "Bill of Materials and Operations"
+msgstr "Состав Технологической Карты. Материалы и Работы"
+
+msgid "Billable Client"
+msgstr "Клиент-Плательщик"
+
+msgid "Billing Supplier"
+msgstr "Поставщик/Подрядчик"
+
+msgid "Binary data can't be displayed"
+msgstr ""
+
+msgid "Birth Name"
+msgstr "Девичья Фамилия"
+
+msgid "Birthday"
+msgstr "Дата Рождения"
+
+msgid "Birthplace"
+msgstr "Место Рождения"
+
+msgid "Book value at the date of this immobilisation movement"
+msgstr "Бухгалтерская стоимость элемента внеоборотных активов на дату создания данного документа."
+
+msgid "Branch Number"
+msgstr "Филиал Банка"
+
+msgid "Brand"
+msgstr "Бренд"
+
+msgid "Bug"
+msgstr "Уведомление об Ошибке"
+
+msgid "Bug Difficulty"
+msgstr "Сложность исправления ошибки"
+
+msgid "Bug Event workflow"
+msgstr "Workflow Описания Ошибок"
+
+msgid "Bug Line"
+msgstr "Описание Ошибки"
+
+msgid "Bug Module"
+msgstr ""
+
+msgid "Bug Priority"
+msgstr "Приоритет исправления ошибки"
+
+msgid "Bug Severity"
+msgstr "Важность ошибки"
+
+msgid "Bug Type"
+msgstr "Вид ошибки"
+
+msgid "Bug Workflow"
+msgstr "Workflow Ошибок"
+
+msgid "Bugs"
+msgstr "Уведомления об Ошибках"
+
+msgid "Bugs to Validate"
+msgstr "Ожидающие Подтверждения Ошибки"
+
+msgid "Build Amortisation"
+msgstr "Начислить Амортизацию"
+
+msgid "Build Business Template"
+msgstr ""
+
+msgid "Building"
+msgstr "Создаются"
+
+msgid "Building State"
+msgstr ""
+
+msgid "Building [state in delivery_causality_workflow]"
+msgstr ""
+
+msgid "Built"
+msgstr ""
+
+msgid "Built [state in business_template_building_workflow]"
+msgstr ""
+
+msgid "Business Application"
+msgstr ""
+
+msgid "Business Link"
+msgstr ""
+
+msgid "Business Link View"
+msgstr ""
+
+msgid "Business Links"
+msgstr ""
+
+msgid "Business Path"
+msgstr ""
+
+msgid "Business Paths"
+msgstr ""
+
+msgid "Business Process"
+msgstr ""
+
+msgid "Business Process Model"
+msgstr ""
+
+msgid "Business Process Models"
+msgstr ""
+
+msgid "Business Process Module"
+msgstr ""
+
+msgid "Business Processes"
+msgstr ""
+
+msgid "Business State"
+msgstr ""
+
+msgid "Business States"
+msgstr ""
+
+msgid "Business Template"
+msgstr ""
+
+msgid "Business Template Definition"
+msgstr ""
+
+msgid "Business Template ID"
+msgstr ""
+
+msgid "Business Template Name"
+msgstr ""
+
+msgid "Business Template URL"
+msgstr ""
+
+msgid "Business Templates"
+msgstr ""
+
+msgid "Business template downloaded successfully."
+msgstr ""
+
+msgid "Business templates updated successfully."
+msgstr ""
+
+msgid "BusinessTemplate_viewSvnShowFile"
+msgstr ""
+
+msgid "Buyer"
+msgstr "Покупатель"
+
+msgid "C/State"
+msgstr ""
+
+msgid "Cache Duration"
+msgstr ""
+
+msgid "Cache Expire Check Interval"
+msgstr ""
+
+msgid "Cache Factories"
+msgstr ""
+
+msgid "Cache Factory"
+msgstr ""
+
+msgid "Cache Plugin Type"
+msgstr ""
+
+msgid "Cache Plugins"
+msgstr ""
+
+msgid "Cache Tool"
+msgstr ""
+
+msgid "Cache duration"
+msgstr ""
+
+msgid "Calculate"
+msgstr ""
+
+msgid "Calculate Packing"
+msgstr ""
+
+msgid "Calculate Packing [action in packing_list_container_workflow]"
+msgstr ""
+
+msgid "Calculate [action in delivery_causality_workflow]"
+msgstr ""
+
+msgid "Calculating"
+msgstr "Проверяются"
+
+msgid "Calculating [state in delivery_causality_workflow]"
+msgstr ""
+
+msgid "Calculation Order"
+msgstr "Порядковый Номер"
+
+msgid "Calculation Script"
+msgstr "Используемый Скрипт "
+
+msgid "Calendar Event"
+msgstr "Календарь Событий"
+
+msgid "Calendar Exception"
+msgstr "Исключение из Календаря"
+
+msgid "Calendar Exceptions"
+msgstr "Исключения из Календаря"
+
+msgid "Calendar Lines"
+msgstr "Строки Календаря"
+
+msgid "Calendar Period Type"
+msgstr "Тик календарного периода"
+
+msgid "Calendar Periodicity"
+msgstr "Периодичность"
+
+msgid "Campaign"
+msgstr "Кампания"
+
+msgid "Campaign Module"
+msgstr ""
+
+msgid "Campaign Type"
+msgstr "Тип Кампании"
+
+msgid "Campaigns"
+msgstr "Кампании"
+
+msgid "Cancel"
+msgstr "Отменить"
+
+msgid "Cancel Accounting Period"
+msgstr "Аннулировать Бухгалтерский Период"
+
+msgid "Cancel Action"
+msgstr "Отменить Действие"
+
+msgid "Cancel Assignment"
+msgstr "Отменить Назначение"
+
+msgid "Cancel Career Step"
+msgstr "Отменить Этап Карьеры"
+
+msgid "Cancel Document Publication"
+msgstr ""
+
+msgid "Cancel Event"
+msgstr "Аннулировать Мероприятие"
+
+msgid "Cancel Inventory"
+msgstr "Аннулировать Оприходование"
+
+msgid "Cancel Order"
+msgstr "Аннулировать Заказ"
+
+msgid "Cancel Packing List"
+msgstr "Аннулировать Накладную"
+
+msgid "Cancel Ticket"
+msgstr "Аннулировать Тикет"
+
+msgid "Cancel Transaction"
+msgstr "Аннулировать Транзакцию"
+
+msgid "Canceled"
+msgstr "Аннулированный"
+
+msgid "Cancelled"
+msgstr "Аннулированный"
+
+msgid "Cancelled [state in accounting_period_workflow]"
+msgstr ""
+
+msgid "Cancelled [state in accounting_workflow]"
+msgstr ""
+
+msgid "Cancelled [state in assignment_workflow]"
+msgstr ""
+
+msgid "Cancelled [state in bug_event_workflow]"
+msgstr ""
+
+msgid "Cancelled [state in bug_workflow]"
+msgstr ""
+
+msgid "Cancelled [state in career_workflow]"
+msgstr ""
+
+msgid "Cancelled [state in document_publication_workflow]"
+msgstr ""
+
+msgid "Cancelled [state in event_workflow]"
+msgstr ""
+
+msgid "Cancelled [state in inventory_workflow]"
+msgstr ""
+
+msgid "Cancelled [state in order_workflow]"
+msgstr ""
+
+msgid "Cancelled [state in packing_list_workflow]"
+msgstr ""
+
+msgid "Cancelled [state in query_workflow]"
+msgstr ""
+
+msgid "Cancelled [state in sale_opportunity_workflow]"
+msgstr ""
+
+msgid "Cancelled [state in ticket_workflow]"
+msgstr ""
+
+msgid "Career"
+msgstr "Карьера"
+
+msgid "Career Begin Date"
+msgstr "Начало Этапа Карьеры"
+
+msgid "Career End Date"
+msgstr "Окончание Этапа Карьеры"
+
+msgid "Career Start Date"
+msgstr "Начало Этапа Карьеры"
+
+msgid "Career Steps"
+msgstr "Этапы Карьеры"
+
+msgid "Career Title"
+msgstr "Название Этапа Карьеры\n"
+
+msgid "Career Validation Workflow"
+msgstr "Workflow Карьеры"
+
+msgid "Cart"
+msgstr "Корзина"
+
+msgid "Cash Register"
+msgstr "Касса"
+
+msgid "Catalog Methods"
+msgstr ""
+
+msgid "Catalog Related Keys"
+msgstr ""
+
+msgid "Catalog Result Keys"
+msgstr ""
+
+msgid "Catalog Result Tables"
+msgstr ""
+
+msgid "Categories"
+msgstr "Категории"
+
+msgid "Category"
+msgstr ""
+
+msgid "Category Divergence Tester"
+msgstr ""
+
+msgid "Category Membership Divergence Tester"
+msgstr ""
+
+msgid "Category Movement Group"
+msgstr ""
+
+msgid "Category Tool"
+msgstr ""
+
+msgid "Category Types"
+msgstr ""
+
+msgid "Category types to group categories for portal methods"
+msgstr ""
+
+msgid "Causality"
+msgstr "Причина"
+
+msgid "Causality (Invoices ...)"
+msgstr "Основание (Инвойсы, Заявки ...)"
+
+msgid "Causality Assignment Movement Group"
+msgstr ""
+
+msgid "Causality Movement Group"
+msgstr ""
+
+msgid "Causality State"
+msgstr "Зависимости"
+
+msgid "Causality Workflow"
+msgstr ""
+
+msgid "Causality workflow"
+msgstr "Workflow Зависимостей"
+
+msgid "Change Function"
+msgstr "Изменить Функцию"
+
+msgid "Change Log"
+msgstr ""
+
+msgid "Change Password"
+msgstr "Изменить Пароль"
+
+msgid "Change State"
+msgstr "Изменить Состояние"
+
+msgid "ChangeLog"
+msgstr ""
+
+msgid "Chat Address"
+msgstr "Адрес для Чата"
+
+msgid "ChatAddress"
+msgstr "Адрес для Чата"
+
+msgid "Check All"
+msgstr ""
+
+msgid "Check if only one instance of the solver is possible per Solver Process."
+msgstr ""
+
+msgid "Check if the solver can merge multiple configuration values."
+msgstr ""
+
+msgid "Check if the solver can solve multiple lines at once."
+msgstr ""
+
+msgid "Check if the solver must be the only one to solve per line."
+msgstr ""
+
+msgid "Check if this solver is a automatic solver."
+msgstr ""
+
+msgid "Check out"
+msgstr "Оплата"
+
+msgid "Checked if the bank account has an overdraft facility."
+msgstr "Поле отмечено, если по данному счету разрешен овердрафт."
+
+msgid "Children"
+msgstr "Дети"
+
+msgid "City"
+msgstr "Город"
+
+msgid "Class"
+msgstr ""
+
+msgid "Class Tool"
+msgstr ""
+
+msgid "Classification"
+msgstr "Классификация"
+
+msgid "Clean Business Template"
+msgstr ""
+
+msgid "Clean SVN Unversioned Files"
+msgstr ""
+
+msgid "Clean Up SVN Locks"
+msgstr ""
+
+msgid "Client"
+msgstr "Клиент"
+
+msgid "Client Project"
+msgstr ""
+
+msgid "Client Reference"
+msgstr "Референс Клиента"
+
+msgid "Clone"
+msgstr ""
+
+msgid "Clone Ticket and Events"
+msgstr "Клонировать Тикет и Мероприятия"
+
+msgid "Close Account"
+msgstr "Закрыть Счет"
+
+msgid "Closed"
+msgstr "Закрытый"
+
+msgid "Closed Account"
+msgstr "Закрытый Счет"
+
+msgid "Closed Accounting Period"
+msgstr "Закрытый Бухгалтерский Период"
+
+msgid "Closed Date"
+msgstr "Дата Закрытия"
+
+msgid "Closed Period"
+msgstr "Закрытый Период"
+
+msgid "Closed [state in accounting_workflow]"
+msgstr ""
+
+msgid "Closed [state in bug_workflow]"
+msgstr ""
+
+msgid "Closed [state in ticket_workflow]"
+msgstr ""
+
+msgid "Closing Date"
+msgstr "Дата Закрытия"
+
+msgid "Clé de configuration"
+msgstr ""
+
+msgid "Codification"
+msgstr ""
+
+msgid "Collect Order Group"
+msgstr ""
+
+msgid "Collective Agreement"
+msgstr "Трудовой Договор"
+
+msgid "Colour"
+msgstr "Цвет"
+
+msgid "Column"
+msgstr "Столбец"
+
+msgid "Column Number"
+msgstr "Номер Столбца"
+
+msgid "Comment"
+msgstr "Комментарий"
+
+msgid "Comments"
+msgstr "Комментарий\n"
+
+msgid "Comments which can be read by internal users but unlike description, are not printed out on official documents."
+msgstr "Комментарии доступны для пользователей программы, но в отличие от описания, не печатаются на официальных документах."
+
+msgid "Comments will be stored in the workflow history of this document."
+msgstr ""
+
+msgid "Commit"
+msgstr ""
+
+msgid "Completed State List"
+msgstr ""
+
+msgid "Component"
+msgstr "Компонент"
+
+msgid "Component Individual Variation"
+msgstr "Индивидуальная Вариация\n"
+
+msgid "Component Module"
+msgstr ""
+
+msgid "Components"
+msgstr "Материалы"
+
+msgid "Composed Divergence Tester"
+msgstr ""
+
+msgid "Conceptual Id Generator"
+msgstr ""
+
+msgid "Condition"
+msgstr ""
+
+msgid "Configuration"
+msgstr ""
+
+msgid "Configuration Groupable"
+msgstr ""
+
+msgid "Configuration Property List Dict Method"
+msgstr ""
+
+msgid "Configure"
+msgstr ""
+
+msgid "Configure Categories"
+msgstr ""
+
+msgid "Configure Portal Types"
+msgstr ""
+
+msgid "Confirm"
+msgstr "Подтвердить"
+
+msgid "Confirm Order"
+msgstr "Подтвердить Заказ"
+
+msgid "Confirm Order Action"
+msgstr ""
+
+msgid "Confirm Order Action [action in order_workflow]"
+msgstr ""
+
+msgid "Confirm Order [action in order_workflow]"
+msgstr ""
+
+msgid "Confirm Packing List"
+msgstr ""
+
+msgid "Confirm Packing List [action in packing_list_workflow]"
+msgstr ""
+
+msgid "Confirm Transaction"
+msgstr "Подтвердить Транзакцию"
+
+msgid "Confirm Transactions"
+msgstr "Подтвердить Транзакции"
+
+msgid "Confirmed"
+msgstr "Подтвержденный"
+
+msgid "Confirmed [state in accounting_workflow]"
+msgstr ""
+
+msgid "Confirmed [state in order_workflow]"
+msgstr ""
+
+msgid "Confirmed [state in packing_list_workflow]"
+msgstr ""
+
+msgid "Conflicting Solvers"
+msgstr ""
+
+msgid "Consistency"
+msgstr ""
+
+msgid "Constraints"
+msgstr "Ограничения"
+
+msgid "Consumption"
+msgstr "Расход"
+
+msgid "Contact Function"
+msgstr ""
+
+msgid "Contact Type"
+msgstr ""
+
+msgid "Contacts"
+msgstr "Контакты"
+
+msgid "Contained Total Quantity"
+msgstr "Общее Количество Единиц в Контейнере"
+
+msgid "Container"
+msgstr "Упаковка"
+
+msgid "Container Cell"
+msgstr ""
+
+msgid "Container Line"
+msgstr "Содержимое Контейнера"
+
+msgid "Container State"
+msgstr "Стадия Упаковки"
+
+msgid "Container Workflow"
+msgstr "Упаковочное Workflow"
+
+msgid "Containers"
+msgstr "Контейнеры"
+
+msgid "Content"
+msgstr "Содержание"
+
+msgid "Content format"
+msgstr "Формат"
+
+msgid "Contents"
+msgstr "Содержание"
+
+msgid "Context"
+msgstr "Контекст"
+
+msgid "Contribute"
+msgstr ""
+
+msgid "Contribution Predicate"
+msgstr ""
+
+msgid "Contribution Registry Tool"
+msgstr ""
+
+msgid "Contribution Tool"
+msgstr ""
+
+msgid "Contributors"
+msgstr "Разработчики"
+
+msgid "Conversion Failed"
+msgstr ""
+
+msgid "Conversion Failed [state in processing_status_workflow]"
+msgstr ""
+
+msgid "Converted"
+msgstr ""
+
+msgid "Converted Inventory Report"
+msgstr "Отчет по Остаткам по Видам Измерения"
+
+msgid "Converted [state in processing_status_workflow]"
+msgstr ""
+
+msgid "Converting"
+msgstr ""
+
+msgid "Converting [state in processing_status_workflow]"
+msgstr ""
+
+msgid "Coordinate Function"
+msgstr "Характеристика"
+
+msgid "Coordinate Type"
+msgstr "Вид Данных"
+
+msgid "Coordinates"
+msgstr "Контактные Данные"
+
+msgid "Copy"
+msgstr ""
+
+msgid "Copy Roles"
+msgstr ""
+
+msgid "Copyright"
+msgstr ""
+
+msgid "Corporate Name"
+msgstr "Полное Наименование"
+
+msgid "Corporate Registration Code"
+msgstr "ОГРН"
+
+msgid "Create ERP5 Report"
+msgstr ""
+
+msgid "Create Line"
+msgstr ""
+
+msgid "Create Module"
+msgstr ""
+
+msgid "Create New Bug"
+msgstr "Сообщить о Новой Ошибке"
+
+msgid "Create New Event"
+msgstr "Создать Новое Мероприятие"
+
+msgid "Create New Events"
+msgstr "Создать Новые Мероприятия"
+
+msgid "Create New File"
+msgstr "Создать Новый Файл"
+
+msgid "Create New Module"
+msgstr ""
+
+msgid "Create New Web Page"
+msgstr "Создать Новую Web Страницу"
+
+msgid "Create Related Payment"
+msgstr "Создать Документ Оплаты"
+
+msgid "Create Related Payments"
+msgstr "Создать Документы Оплаты"
+
+msgid "Create Reversal Transactions"
+msgstr ""
+
+msgid "Create User"
+msgstr "Новый Пользователь"
+
+msgid "Created Clone ${portal_type}."
+msgstr ""
+
+msgid "Creation Date"
+msgstr "Дата Создания"
+
+msgid "Credential Recoveries"
+msgstr ""
+
+msgid "Credential Recovery"
+msgstr ""
+
+msgid "Credential Recovery Module"
+msgstr ""
+
+msgid "Credential Request"
+msgstr ""
+
+msgid "Credential Request Module"
+msgstr ""
+
+msgid "Credential Requests"
+msgstr ""
+
+msgid "Credential Update"
+msgstr ""
+
+msgid "Credential Update Module"
+msgstr ""
+
+msgid "Credential Updates"
+msgstr ""
+
+msgid "Credit"
+msgstr "Кредит"
+
+msgid "Credit Card"
+msgstr "Кредитная Карта"
+
+msgid "Credit Cards"
+msgstr "Кредитные Карты"
+
+msgid "Credit Normal Balance"
+msgstr "Активно-Пассивный"
+
+msgid "Criterion Properties"
+msgstr ""
+
+msgid "Currencies"
+msgstr "Валюты"
+
+msgid "Currency"
+msgstr "Валюта"
+
+msgid "Currency Code"
+msgstr "Код Валюты"
+
+msgid "Currency Exchange Cell"
+msgstr "Валютообменная Операция"
+
+msgid "Currency Exchange Cells"
+msgstr "Валютообменные Операции"
+
+msgid "Currency Exchange Line"
+msgstr "Обменный Курс"
+
+msgid "Currency Exchange Lines"
+msgstr "Обменные Курсы"
+
+msgid "Currency Exchange Rates"
+msgstr "Валютообменные Курсы"
+
+msgid "Currency List"
+msgstr "Список Валют"
+
+msgid "Currency Module"
+msgstr "Модуль \"Валюты\""
+
+msgid "Currency Purchase"
+msgstr "Покупка Валюты"
+
+msgid "Currency Sale"
+msgstr "Продажа Валюты"
+
+msgid "Currency Symbol"
+msgstr "Символ"
+
+msgid "Currency is not Defined."
+msgstr "Валюта не задана."
+
+msgid "Currency must be defined"
+msgstr "Валюта должна быть задана."
+
+msgid "Currency must be defined in preferences."
+msgstr "Валюта должна быть задана в настройках."
+
+msgid "Current"
+msgstr "Текущий"
+
+msgid "Current Owner"
+msgstr "Текущий Владелец"
+
+msgid "Current Password"
+msgstr "Текущий пароль"
+
+msgid "Current Site"
+msgstr "Текущее Местонахождение"
+
+msgid "Current Value"
+msgstr ""
+
+msgid "Current [state in edit_workflow]"
+msgstr ""
+
+msgid "Customer"
+msgstr "Клиент"
+
+msgid "Customer Account"
+msgstr "Счет в Балансе Клиента"
+
+msgid "Customer Reference"
+msgstr "Референс Клиента"
+
+msgid "Customer Transaction Reference"
+msgstr "Референс Транзакции у Клиента"
+
+msgid "Cut"
+msgstr ""
+
+msgid "D/Err"
+msgstr ""
+
+msgid "D/Rat"
+msgstr ""
+
+msgid "DIA"
+msgstr "Диаметр"
+
+msgid "Data Updated."
+msgstr "Данные Обновлены."
+
+msgid "Data updated."
+msgstr "Данные обновлены."
+
+msgid "Date"
+msgstr "Дата"
+
+msgid "Date Order"
+msgstr ""
+
+msgid "Date when the bank account was closed."
+msgstr ""
+
+msgid "Date when the bank account was open."
+msgstr ""
+
+msgid "DateTime Divergence Tester"
+msgstr ""
+
+msgid "DateTime Keys"
+msgstr ""
+
+msgid "Day / Month / Year"
+msgstr ""
+
+msgid "Day Movement Group"
+msgstr ""
+
+msgid "Days Of Month"
+msgstr "Дни Месяца"
+
+msgid "Days Of Week"
+msgstr "Дни Недели"
+
+msgid "Debit"
+msgstr "Дебет"
+
+msgid "Decimal Rounding"
+msgstr ""
+
+msgid "Decimal Rounding Option"
+msgstr ""
+
+msgid "Default"
+msgstr "По Умолчанию"
+
+msgid "Default Accounting Currency"
+msgstr "Валюта по Умолчанию"
+
+msgid "Default Address"
+msgstr "Адрес по Умолчанию"
+
+msgid "Default Career"
+msgstr "Основная Карьера"
+
+msgid "Default Configuration Property Dict Method"
+msgstr ""
+
+msgid "Default Email"
+msgstr "Основной Email"
+
+msgid "Default Export of Each Document"
+msgstr ""
+
+msgid "Default Export of Each Document (One sheet per view)"
+msgstr ""
+
+msgid "Default Fax"
+msgstr "Основной Факс"
+
+msgid "Default Language"
+msgstr "Язык по Умолчанию"
+
+msgid "Default Metric Type"
+msgstr "Вид Измерений по Умолчанию"
+
+msgid "Default Price"
+msgstr "Цена за ед."
+
+msgid "Default Quantity"
+msgstr "Количество по Умолчанию"
+
+msgid "Default Quantity of a resource in ERP5. It can be a product or it can be time quantity like hours or minutes for example. Quantity can be found in almost every business field of ERP5 and will always have this meaning, unless the term is different or precise, such as Priced Quantity for example."
+msgstr ""
+
+msgid "Default Variation"
+msgstr "Вид Вариаций"
+
+msgid "Default quantity"
+msgstr "Количество по умолчанию."
+
+msgid "Defines how simulation accounting movements will be created if the invoice movement matches the corresponding predicate"
+msgstr ""
+
+msgid "Defines whether a equivalence tester acts as a divergence provider."
+msgstr ""
+
+msgid "Defines whether a equivalence tester acts as a matching provider."
+msgstr ""
+
+msgid "Defines whether a equivalence tester acts as a updating provider."
+msgstr ""
+
+msgid "Definitively Close Accounting Period"
+msgstr "Окончательно Закрыть Бухгалтерский Период"
+
+msgid "Definitively Close Transaction"
+msgstr "Окончательно Закрыть Транзакцию"
+
+msgid "Delay"
+msgstr ""
+
+msgid "Delay (max)"
+msgstr ""
+
+msgid "Delay (min)"
+msgstr ""
+
+msgid "Delete"
+msgstr "Удалить"
+
+msgid "Delete Objects"
+msgstr "Удалить Объекты"
+
+msgid "Delete The Objects"
+msgstr "Удалить Объекты"
+
+msgid "Deleted"
+msgstr "Удален"
+
+msgid "Deleted [state in account_workflow]"
+msgstr ""
+
+msgid "Deleted [state in accounting_period_workflow]"
+msgstr ""
+
+msgid "Deleted [state in accounting_workflow]"
+msgstr ""
+
+msgid "Deleted [state in assignment_workflow]"
+msgstr ""
+
+msgid "Deleted [state in bug_event_workflow]"
+msgstr ""
+
+msgid "Deleted [state in bug_workflow]"
+msgstr ""
+
+msgid "Deleted [state in business_template_installation_workflow]"
+msgstr ""
+
+msgid "Deleted [state in document_ingestion_workflow]"
+msgstr ""
+
+msgid "Deleted [state in document_publication_workflow]"
+msgstr ""
+
+msgid "Deleted [state in event_workflow]"
+msgstr ""
+
+msgid "Deleted [state in inventory_workflow]"
+msgstr ""
+
+msgid "Deleted [state in notification_message_workflow]"
+msgstr ""
+
+msgid "Deleted [state in order_workflow]"
+msgstr ""
+
+msgid "Deleted [state in packing_list_workflow]"
+msgstr ""
+
+msgid "Deleted [state in preference_workflow]"
+msgstr ""
+
+msgid "Deleted [state in query_workflow]"
+msgstr ""
+
+msgid "Deleted [state in rule_validation_workflow]"
+msgstr ""
+
+msgid "Deleted [state in sale_opportunity_workflow]"
+msgstr ""
+
+msgid "Deleted [state in ticket_workflow]"
+msgstr ""
+
+msgid "Deleted [state in validation_workflow]"
+msgstr ""
+
+msgid "Deleted objects: ${object_ids}"
+msgstr "Удаленные объекты: ${object_ids}"
+
+msgid "Deleted."
+msgstr "Удален"
+
+msgid "Deliver"
+msgstr "Подтвердить Доставку"
+
+msgid "Deliver Packing List"
+msgstr "Подтвердить Доставку Груза"
+
+msgid "Delivered"
+msgstr "Доставка Подтверждена"
+
+msgid "Delivered [state in acknowledgement_workflow]"
+msgstr ""
+
+msgid "Delivered [state in bug_event_workflow]"
+msgstr ""
+
+msgid "Delivered [state in event_workflow]"
+msgstr ""
+
+msgid "Delivered [state in internal_packing_list_workflow]"
+msgstr ""
+
+msgid "Delivered [state in packing_list_workflow]"
+msgstr ""
+
+msgid "Delivery"
+msgstr ""
+
+msgid "Delivery After Generation Script"
+msgstr ""
+
+msgid "Delivery Builder"
+msgstr ""
+
+msgid "Delivery Builders"
+msgstr ""
+
+msgid "Delivery Causality Assignment Movement Group"
+msgstr ""
+
+msgid "Delivery Cell"
+msgstr ""
+
+msgid "Delivery Cell Portal Type"
+msgstr ""
+
+msgid "Delivery Cell Separate Order Methods"
+msgstr ""
+
+msgid "Delivery Date"
+msgstr "Дата Доставки"
+
+msgid "Delivery Error"
+msgstr ""
+
+msgid "Delivery Line Portal Type"
+msgstr ""
+
+msgid "Delivery Mode"
+msgstr "Способ доставки"
+
+msgid "Delivery Module"
+msgstr ""
+
+msgid "Delivery Portal Type"
+msgstr ""
+
+msgid "Delivery Ratio"
+msgstr ""
+
+msgid "Delivery Root Simulation Rule"
+msgstr ""
+
+msgid "Delivery Rule"
+msgstr ""
+
+msgid "Delivery Select Method"
+msgstr ""
+
+msgid "Delivery Simulation Rule"
+msgstr ""
+
+msgid "Delivery Solvers"
+msgstr ""
+
+msgid "Delivery Tool"
+msgstr ""
+
+msgid "Dependencies"
+msgstr ""
+
+msgid "Depreciation Account"
+msgstr "Счет Расходов на Амортизацию"
+
+msgid "Descending Display"
+msgstr ""
+
+msgid "Description"
+msgstr "Описание"
+
+msgid "Description of the query"
+msgstr "Описание Запроса"
+
+msgid "Destination"
+msgstr "Точка Назначения"
+
+msgid "Destination Carrier"
+msgstr ""
+
+msgid "Destination Decision"
+msgstr "Ответственное Лицо Исполнителя"
+
+msgid "Destination Method"
+msgstr ""
+
+msgid "Destination Project"
+msgstr "Проект Получателя"
+
+msgid "Destination Section"
+msgstr "Клиент"
+
+msgid "Detailed Diff Business Template"
+msgstr ""
+
+msgid "Details"
+msgstr "Детали"
+
+msgid "Determines if acquired value should be copied"
+msgstr ""
+
+msgid "Determines if the acquired value should be appended"
+msgstr ""
+
+msgid "Determines if the acquired value should be synced"
+msgstr ""
+
+msgid "Determines if the local value have priority"
+msgstr ""
+
+msgid "Diff"
+msgstr ""
+
+msgid "Diff Business Template"
+msgstr ""
+
+msgid "Differences"
+msgstr ""
+
+msgid "Difficulty"
+msgstr "Сложность"
+
+msgid "Dimension"
+msgstr ""
+
+msgid "Direction"
+msgstr "Вход./Исх."
+
+msgid "Disable Preference"
+msgstr "Выключить Настройки"
+
+msgid "Disabled"
+msgstr ""
+
+msgid "Disabled [state in preference_workflow]"
+msgstr ""
+
+msgid "Discount"
+msgstr "Скидка"
+
+msgid "Discount Line"
+msgstr ""
+
+msgid "Discount Lines"
+msgstr "Применяемые Шаблоны Скидок"
+
+msgid "Discount Model Line"
+msgstr "Шаблон Расчета Скидки"
+
+msgid "Discount Module"
+msgstr ""
+
+msgid "Discount Ratio"
+msgstr "Скидка (%)"
+
+msgid "Discount Ratio Quantity Step"
+msgstr "Шаг для Скидки (Количество)"
+
+msgid "Discount Ratio Variation Axes"
+msgstr "Величина Скидки Зависит от"
+
+msgid "Discounts"
+msgstr "Скидки"
+
+msgid "Distributed Ram Cache"
+msgstr ""
+
+msgid "Diverged"
+msgstr "Не Согласованы"
+
+msgid "Diverged [state in delivery_causality_workflow]"
+msgstr ""
+
+msgid "Divergence"
+msgstr ""
+
+msgid "Divergence Provider"
+msgstr ""
+
+msgid "Divergence Scope"
+msgstr ""
+
+msgid "Divergence Testers"
+msgstr ""
+
+msgid "Divergent"
+msgstr ""
+
+msgid "Divergent [action in delivery_causality_workflow]"
+msgstr ""
+
+msgid "Do not forget to logout or exit your browser when you are done."
+msgstr ""
+
+msgid "Do not use description but title line instead"
+msgstr "Если отмечено, то в печатной форме в поле \"Наименование товара (услуг...)\"\r\nвставляются названия строк, описывающих товар (услуги,...) в форме erp5. \r\nЕсли не отмечено, в печатном документе в поле \"Наименование \r\nтовара (услуг...)\" вставляется описание товара (услуг, ...)\r\nиз карточки товара (услуги,...)."
+
+msgid "Document"
+msgstr "Документ"
+
+msgid "Document Classes"
+msgstr ""
+
+msgid "Document Ingestion Message"
+msgstr ""
+
+msgid "Document Ingestion Messages"
+msgstr ""
+
+msgid "Document Ingestion Module"
+msgstr ""
+
+msgid "Document Module"
+msgstr ""
+
+msgid "Document Publication Workflow"
+msgstr ""
+
+msgid "Document Reference"
+msgstr "Референс Документа"
+
+msgid "Documents"
+msgstr "Документы"
+
+msgid "Documents to Submit"
+msgstr ""
+
+msgid "Documents which can be a follow-up to the current document."
+msgstr "Документы, которые могут дополнять настоящий документ."
+
+msgid "Documents which content is similar to the current document."
+msgstr "Документы, содержание которых подобно содержанию текущего документа."
+
+msgid "Documents which serve as reference to the current document."
+msgstr "Документы, которые служат в качестве ссылки на текущий документ."
+
+msgid "Domain"
+msgstr ""
+
+msgid "Domain Generator"
+msgstr ""
+
+msgid "Domain Tool"
+msgstr ""
+
+msgid "Domain Tree"
+msgstr ""
+
+msgid "Don't Display Negative Stock"
+msgstr "Не показывать Нулевой Остаток"
+
+msgid "Don't Display Positive Stock"
+msgstr "Не показывать Положительный Остаток"
+
+msgid "Don't Display Zero Stock"
+msgstr "Не показывать Нулевой Остаток"
+
+msgid "Don't display positive stock of the resource if stock is positive"
+msgstr "Не показывать в отчете строки, соответствующие ресурсам с положительым остатком."
+
+msgid "Don't display the negative stock of the resource if stock is negative"
+msgstr "Не показывать в отчете строки, соответствующие ресурсам с отрицательным остатком."
+
+msgid "Don't display zero stock of the resource if stock is equal to zero"
+msgstr "Не показывать в отчете строки, соответствующие ресурсам с нулевым остатком."
+
+msgid "Download Business Template"
+msgstr ""
+
+msgid "Download Business Template from URL"
+msgstr ""
+
+msgid "Download Business Templates from Repositories"
+msgstr ""
+
+msgid "Draft"
+msgstr "Черновик"
+
+msgid "Draft Campaigns"
+msgstr "Черновики Кампаний"
+
+msgid "Draft Events"
+msgstr "Черновики Мероприятий"
+
+msgid "Draft Meetings"
+msgstr "Черновики Встреч"
+
+msgid "Draft Support Requests"
+msgstr "Черновики Запросов на Техподдержку"
+
+msgid "Draft To Validate"
+msgstr "Черновики к Подтверждению"
+
+msgid "Draft [state in account_workflow]"
+msgstr ""
+
+msgid "Draft [state in accounting_period_workflow]"
+msgstr ""
+
+msgid "Draft [state in accounting_workflow]"
+msgstr ""
+
+msgid "Draft [state in acknowledgement_workflow]"
+msgstr ""
+
+msgid "Draft [state in assignment_workflow]"
+msgstr ""
+
+msgid "Draft [state in bug_event_workflow]"
+msgstr ""
+
+msgid "Draft [state in bug_workflow]"
+msgstr ""
+
+msgid "Draft [state in business_template_building_workflow]"
+msgstr ""
+
+msgid "Draft [state in career_workflow]"
+msgstr ""
+
+msgid "Draft [state in content_translation_workflow]"
+msgstr ""
+
+msgid "Draft [state in delivery_causality_workflow]"
+msgstr ""
+
+msgid "Draft [state in document_ingestion_workflow]"
+msgstr ""
+
+msgid "Draft [state in document_publication_workflow]"
+msgstr ""
+
+msgid "Draft [state in event_workflow]"
+msgstr ""
+
+msgid "Draft [state in external_document_publication_workflow]"
+msgstr ""
+
+msgid "Draft [state in inventory_workflow]"
+msgstr ""
+
+msgid "Draft [state in notification_message_workflow]"
+msgstr ""
+
+msgid "Draft [state in order_workflow]"
+msgstr ""
+
+msgid "Draft [state in packing_list_container_workflow]"
+msgstr ""
+
+msgid "Draft [state in packing_list_workflow]"
+msgstr ""
+
+msgid "Draft [state in publication_workflow]"
+msgstr ""
+
+msgid "Draft [state in query_workflow]"
+msgstr ""
+
+msgid "Draft [state in rule_validation_workflow]"
+msgstr ""
+
+msgid "Draft [state in sale_opportunity_workflow]"
+msgstr ""
+
+msgid "Draft [state in solver_process_workflow]"
+msgstr ""
+
+msgid "Draft [state in solver_workflow]"
+msgstr ""
+
+msgid "Draft [state in ticket_workflow]"
+msgstr ""
+
+msgid "Draft [state in user_account_workflow]"
+msgstr ""
+
+msgid "Draft [state in validation_workflow]"
+msgstr ""
+
+msgid "Drafts of purchase orders"
+msgstr "Черновики заявок на покупку"
+
+msgid "Drafts of sale orders"
+msgstr "Черновики заявок на продажу"
+
+msgid "Drafts to Publish"
+msgstr "Черновики Публикаций"
+
+msgid "Drafts to Validate"
+msgstr "Черновики к Подтверждению"
+
+msgid "Drawing"
+msgstr ""
+
+msgid "Dummy Class Tool"
+msgstr ""
+
+msgid "EAN 13 Code"
+msgstr "Штрих-Код (EAN 13)"
+
+msgid "EAN-13 Code"
+msgstr "Штрих-код"
+
+msgid "Edit"
+msgstr "Редактировать"
+
+msgid "Edit Shopping Cart"
+msgstr "Содержимое Корзины"
+
+msgid "Edit Workflow"
+msgstr "Workflow Редактирования"
+
+msgid "Edit [action in edit_workflow]"
+msgstr ""
+
+msgid "Effective Date"
+msgstr "Дата Вступления В Силу"
+
+msgid "Efficiency"
+msgstr "Коэффициент Использования"
+
+msgid "Email"
+msgstr ""
+
+msgid "Embedded"
+msgstr ""
+
+msgid "Embedded Document"
+msgstr "Документ Прикреплен"
+
+msgid "Embedded Document [state in document_publication_workflow]"
+msgstr ""
+
+msgid "Embedded [state in category_publication_workflow]"
+msgstr ""
+
+msgid "Employee Number"
+msgstr "Табельный Номер"
+
+msgid "Empty"
+msgstr "Пустой"
+
+msgid "Empty [state in processing_status_workflow]"
+msgstr ""
+
+msgid "Enable Preference"
+msgstr "Активировать Настройки"
+
+msgid "Enabled"
+msgstr ""
+
+msgid "Enabled [state in preference_workflow]"
+msgstr ""
+
+msgid "End"
+msgstr "Конец"
+
+msgid "End Date"
+msgstr "Дата Окончания"
+
+msgid "End of"
+msgstr ""
+
+msgid "End of (XXX - who did that and why ?)"
+msgstr ""
+
+msgid "End of Month"
+msgstr "В Конце Месяца"
+
+msgid "End of month"
+msgstr ""
+
+msgid "English"
+msgstr "Английский"
+
+msgid "Enquired"
+msgstr ""
+
+msgid "Enquired [state in sale_opportunity_workflow]"
+msgstr ""
+
+msgid "Entity"
+msgstr "Лицо"
+
+msgid "Error Message"
+msgstr "Сообщение об ошибке"
+
+msgid "Errors which make this movement invalid"
+msgstr "Ошибки выявленные при Контроле Параметров Амортизации."
+
+msgid "Event"
+msgstr "Мероприятие"
+
+msgid "Event Date"
+msgstr "Дата Мероприятия"
+
+msgid "Event Direction"
+msgstr "Входящий/Исходящий"
+
+msgid "Event Module"
+msgstr "Модуль \"Мероприятия\""
+
+msgid "Event Nature"
+msgstr "Сущность Мероприятия"
+
+msgid "Event Origin"
+msgstr "Предшествующее Мероприятие"
+
+msgid "Event Resources"
+msgstr "Ресурсры Мероприятия"
+
+msgid "Event Title"
+msgstr "Название Мероприятия"
+
+msgid "Event Type"
+msgstr "Тип Мероприятия"
+
+msgid "Events"
+msgstr "Мероприятия"
+
+msgid "Everything"
+msgstr ""
+
+msgid "Exception Date"
+msgstr "Дата Исключения"
+
+msgid "Exchange Rage"
+msgstr "Курс Обмена"
+
+msgid "Exchange Rate"
+msgstr "Курс"
+
+msgid "Exchange Type"
+msgstr "Вид Обмена"
+
+msgid "Exclusive Discount Ratio"
+msgstr ""
+
+msgid "Expected disposal price"
+msgstr "Ожидаемая Реализационная Стоимость "
+
+msgid "Expected item price when completely amortised."
+msgstr "Ожидаемая стоимость партии ВА после полной амортизации."
+
+msgid "Expense"
+msgstr "Расходы"
+
+msgid "Expiration Date"
+msgstr "Срок Действия до"
+
+msgid "Expire"
+msgstr ""
+
+msgid "Expired"
+msgstr ""
+
+msgid "Expired Protected"
+msgstr ""
+
+msgid "Expired Protected [state in category_publication_workflow]"
+msgstr ""
+
+msgid "Expired Published"
+msgstr ""
+
+msgid "Expired Published [state in category_publication_workflow]"
+msgstr ""
+
+msgid "Expired [state in category_publication_workflow]"
+msgstr ""
+
+msgid "Expired [state in event_workflow]"
+msgstr ""
+
+msgid "Expired [state in sale_opportunity_workflow]"
+msgstr ""
+
+msgid "Explanation"
+msgstr "Документ Движения"
+
+msgid "Explanation State"
+msgstr "Состояние Документа Движения"
+
+msgid "Export Business Template"
+msgstr ""
+
+msgid "Export Format"
+msgstr ""
+
+msgid "Export Mode"
+msgstr ""
+
+msgid "Export to Spreadsheet"
+msgstr ""
+
+msgid "Express"
+msgstr ""
+
+msgid "Express Support"
+msgstr ""
+
+msgid "Extensions"
+msgstr ""
+
+msgid "External Folder"
+msgstr "Внешняя Папка"
+
+msgid "External Source Module"
+msgstr ""
+
+msgid "External Sources"
+msgstr ""
+
+msgid "Extra Cost Account"
+msgstr "Счет Дополнительных Расходов"
+
+msgid "Extra Costs"
+msgstr "Дополнительные Расходы"
+
+msgid "FAX"
+msgstr "Факс"
+
+msgid "Factory Method ID"
+msgstr ""
+
+msgid "Failed"
+msgstr ""
+
+msgid "Failed [state in solver_process_workflow]"
+msgstr ""
+
+msgid "Failed [state in solver_workflow]"
+msgstr ""
+
+msgid "Fallback Base Categories"
+msgstr ""
+
+msgid "Fast Input"
+msgstr ""
+
+msgid "Fax"
+msgstr "Факс"
+
+msgid "Fax Message"
+msgstr "Факсовое Сообщение"
+
+msgid "File"
+msgstr "Файл"
+
+msgid "File State"
+msgstr "Состояние Файла"
+
+msgid "File Type"
+msgstr "Тип Файла"
+
+msgid "Files committed successfully in revision ${revision}."
+msgstr ""
+
+msgid "Files to be commited"
+msgstr ""
+
+msgid "Filter"
+msgstr ""
+
+msgid "Filter Content Types"
+msgstr ""
+
+msgid "Financial Information"
+msgstr "Финансовые Реквизиты"
+
+msgid "Financial Section"
+msgstr "Раздел Баланса"
+
+msgid "Find"
+msgstr ""
+
+msgid "First"
+msgstr ""
+
+msgid "First Causality Movement Group"
+msgstr ""
+
+msgid "First Name"
+msgstr "Имя"
+
+msgid "First Page"
+msgstr ""
+
+msgid "Fixed Quantity"
+msgstr ""
+
+msgid "Flat List"
+msgstr ""
+
+msgid "Float Divergence Tester"
+msgstr ""
+
+msgid "Float Number Style"
+msgstr ""
+
+msgid "Folder"
+msgstr ""
+
+msgid "Follow Up"
+msgstr "Последующее Мероприятие"
+
+msgid "Follow Up Ticket"
+msgstr "Последующий Тикет"
+
+msgid "Follow up"
+msgstr ""
+
+msgid "Format"
+msgstr "Формат"
+
+msgid "Format in which the user want to export the document"
+msgstr ""
+
+msgid "Free Text Question"
+msgstr ""
+
+msgid "Frequency (weeks)"
+msgstr ""
+
+msgid "Frequency In Days"
+msgstr ""
+
+msgid "Frequency In Hours"
+msgstr ""
+
+msgid "Frequency In Minutes"
+msgstr ""
+
+msgid "Frequency In Months"
+msgstr ""
+
+msgid "From Date"
+msgstr "С Даты"
+
+msgid "Frozen"
+msgstr ""
+
+msgid "Frozen State List"
+msgstr ""
+
+msgid "Full Inventory"
+msgstr "В Полном Объеме"
+
+msgid "Full Size Image"
+msgstr "Полноразмерное Изображение"
+
+msgid "Full Sized Image"
+msgstr "Полноразмерное Изображение"
+
+msgid "Full Text Keys"
+msgstr ""
+
+msgid "Function"
+msgstr "Функция"
+
+msgid "Functions"
+msgstr "Функции"
+
+msgid "Future"
+msgstr "Прогноз"
+
+msgid "GAP"
+msgstr "План счетов"
+
+msgid "GAP - ${gap_title}"
+msgstr "План счетов - ${gap_title}"
+
+msgid "GAP - Commercial Russian Accounting Plan"
+msgstr "Российский коммерческий план счетов"
+
+msgid "GAP Root"
+msgstr ""
+
+msgid "Gender"
+msgstr "Пол"
+
+msgid "General description of a document in ERP5. Descriptions are not supposed to be internal, and in a case of certain documents such as invoices for example, will be seen by your customers."
+msgstr "Общее описание документа в ERP5. Описания предназначены не только для внутренних пользователей. Клиентам и контрагентам может быть предоставлены права на просмостр."
+
+msgid "Generate POT File"
+msgstr ""
+
+msgid "Generate References"
+msgstr ""
+
+msgid "Geographic Address"
+msgstr "Географический Адрес"
+
+msgid "Geographic Incorporate Code"
+msgstr "ОГРН"
+
+msgid "Geographic Incorporation Code"
+msgstr "КПП"
+
+msgid "Globally Enabled"
+msgstr ""
+
+msgid "Globally Enabled [state in preference_workflow]"
+msgstr ""
+
+msgid "Glossary"
+msgstr "Глоссарий"
+
+msgid "Glossary Module"
+msgstr ""
+
+msgid "Glossary Term"
+msgstr ""
+
+msgid "Go"
+msgstr ""
+
+msgid "Grade"
+msgstr "Статус"
+
+msgid "Gross Weight"
+msgstr "Вес Брутто"
+
+msgid "Gross Weight (kg)"
+msgstr "Вес Брутто (кг)"
+
+msgid "Group"
+msgstr "Группа"
+
+msgid "Group Calendar"
+msgstr "Производственный Календарь"
+
+msgid "Group Calendars"
+msgstr "Производственные Календари"
+
+msgid "Group Presence Period"
+msgstr "Рабочий Период"
+
+msgid "Grouping Reference Fast Input"
+msgstr ""
+
+msgid "Groups"
+msgstr "Группы"
+
+msgid "Guess Portal Types from Modules"
+msgstr ""
+
+msgid "Guess Properties of Portal Types"
+msgstr ""
+
+msgid "HTML Diff"
+msgstr ""
+
+msgid "Handled Project"
+msgstr "Проект Поставщика"
+
+msgid "Handled by"
+msgstr "Администратор"
+
+msgid "Handler"
+msgstr "Администратор"
+
+msgid "Having trouble logging in? Make sure to enable cookies in your web browser."
+msgstr ""
+
+msgid "Height (m)"
+msgstr "Высота (м)"
+
+msgid "Hidden"
+msgstr ""
+
+msgid "Hidden Content Types"
+msgstr ""
+
+msgid "Hidden [state in document_publication_workflow]"
+msgstr ""
+
+msgid "Hide"
+msgstr ""
+
+msgid "Historical Comparison"
+msgstr ""
+
+msgid "History"
+msgstr "История"
+
+msgid "Hours"
+msgstr ""
+
+msgid "How much this currency is worth in terms of the reference currency."
+msgstr "Стоимость единицы данной валюты, выраженная в Базовой валюте."
+
+msgid "How much time shall be spent on path"
+msgstr ""
+
+msgid "How much time to wait before initiating path"
+msgstr ""
+
+msgid "I forgot my password!"
+msgstr ""
+
+msgid "I want to create an account"
+msgstr "Регистрация\r\n"
+
+msgid "IBAN"
+msgstr ""
+
+msgid "ID"
+msgstr ""
+
+msgid "ID of a script to test if the predicate should be applied."
+msgstr ""
+
+msgid "ID of a script to test if the rule should be applied."
+msgstr ""
+
+msgid "ID of method to get destination list of categories"
+msgstr ""
+
+msgid "ID of method to get source list of categories"
+msgstr ""
+
+msgid "ISO code of the currency or something similar"
+msgstr "ISO код валюты или другое принятое обозначение."
+
+msgid "Icon"
+msgstr ""
+
+msgid "Id Generator List"
+msgstr ""
+
+msgid "Id Generetor"
+msgstr ""
+
+msgid "Id Tool"
+msgstr ""
+
+msgid "Identifiant number"
+msgstr "Идентификационный номер"
+
+msgid "Identification"
+msgstr ""
+
+msgid "Identity Criterion"
+msgstr ""
+
+msgid "If 1 it is related to root of simulation tree (root explanation)"
+msgstr ""
+
+msgid "If checked, when installing the business template it will update workflow used by business templates"
+msgstr ""
+
+msgid "If set to 1, self must be associated to a delivery"
+msgstr "Если поле отмечено, то это последний этап данной цепочки поставок."
+
+msgid "If set, payment will occur at the end of the month of the payment term."
+msgstr "Если поле отмечено, то дата оплаты переносится на конец месяца, рассчитанного исходя из Основной Даты и Срока."
+
+msgid "Image"
+msgstr "Изображение"
+
+msgid "Image Module"
+msgstr ""
+
+msgid "Image Thumbnail"
+msgstr "Уменьшенное Изображение"
+
+msgid "Images"
+msgstr ""
+
+msgid "Immobilisation"
+msgstr "Внеоборотный актив"
+
+msgid "Immobilisation Account"
+msgstr "Счет Учета Внеоборотного Актива "
+
+msgid "Immobilisation Line"
+msgstr "Линия Учета Внеоборотных Активов"
+
+msgid "Immobilisation Lines"
+msgstr "Линии Учета Внеоборотных Активов"
+
+msgid "Immobilisation State"
+msgstr "Параметры Амортизации"
+
+msgid "Immobilisation Validity Errors"
+msgstr "Выявленные Ошибки"
+
+msgid "Immobilisations"
+msgstr "Внеоборотные Активы"
+
+msgid "Implementation State"
+msgstr "Ступень Внедрения"
+
+msgid "Import / Export"
+msgstr ""
+
+msgid "Import OpenOffice Document"
+msgstr ""
+
+msgid "Import from Spreadsheet"
+msgstr ""
+
+msgid "In"
+msgstr "К нам"
+
+msgid "Include english and translated version of all terms."
+msgstr "Если название поля переведено на родной язык,\r\nто в печатном документе оно указывается на двух языках: \r\nна английском и на родном."
+
+msgid "Incoming"
+msgstr "Входящий"
+
+msgid "Incoterm"
+msgstr "Инкотермс"
+
+msgid "Index"
+msgstr "Порядковый Номер"
+
+msgid "Index used to sort coordinates"
+msgstr "Используется для сортировки адресов лица."
+
+msgid "Indicate how often (in days) the event will happen (every x days)"
+msgstr ""
+
+msgid "Indicate how often (in hours) the event will happen (every x hours)"
+msgstr ""
+
+msgid "Indicate how often (in minutes) the event will happen (every x minutest)"
+msgstr ""
+
+msgid "Indicate how often (in week) the event will happen (every x weeks)"
+msgstr ""
+
+msgid "Indicate if an alarm is enabled or not (working or not)"
+msgstr ""
+
+msgid "Indicate when the periodic event will start"
+msgstr ""
+
+msgid "Indicate when the periodic event will stop"
+msgstr ""
+
+msgid "Indicates how often (in months) the event will happen (every x months)"
+msgstr ""
+
+msgid "Individual Variation"
+msgstr "Индивидуальная Вариация"
+
+msgid "Individual Variation Base Category"
+msgstr "Базовая Категория для Индивидуальных вариаций"
+
+msgid "Industrial Phase"
+msgstr "Стадия Производства"
+
+msgid "Info"
+msgstr "Инфо"
+
+msgid "Init Script ID"
+msgstr ""
+
+msgid "Initialised by Delivery Builder."
+msgstr ""
+
+msgid "Input Account"
+msgstr "Счет — Источник Поступления"
+
+msgid "Input data has errors. Please look at the error messages below."
+msgstr ""
+
+msgid "Input is required but no input given."
+msgstr "Данное поле обязательно для заполнения."
+
+msgid "Install"
+msgstr ""
+
+msgid "Install Business Template"
+msgstr ""
+
+msgid "Install Business Templates from Repositories"
+msgstr ""
+
+msgid "Installation Choice"
+msgstr ""
+
+msgid "Installation State"
+msgstr ""
+
+msgid "Installed"
+msgstr ""
+
+msgid "Installed Revision"
+msgstr ""
+
+msgid "Installed Version"
+msgstr ""
+
+msgid "Installed [state in business_template_installation_workflow]"
+msgstr ""
+
+msgid "Int Index"
+msgstr "Порядковый Номер"
+
+msgid "Integer use to sort agent"
+msgstr "Используется для сортировки."
+
+msgid "Internal"
+msgstr ""
+
+msgid "Internal Invoice Transaction"
+msgstr ""
+
+msgid "Internal Invoice Transaction Line"
+msgstr ""
+
+msgid "Internal Order"
+msgstr ""
+
+msgid "Internal Order Cell"
+msgstr ""
+
+msgid "Internal Order Line"
+msgstr ""
+
+msgid "Internal Order Module"
+msgstr ""
+
+msgid "Internal Orders"
+msgstr ""
+
+msgid "Internal Packing List"
+msgstr "Внутреннее Перемещение"
+
+msgid "Internal Packing List Cell"
+msgstr ""
+
+msgid "Internal Packing List Line"
+msgstr "Строка Внутреннего Перемещения"
+
+msgid "Internal Packing List Lines"
+msgstr "Строки Внутреннего Перемещения"
+
+msgid "Internal Packing List Module"
+msgstr ""
+
+msgid "Internal Packing List Movements"
+msgstr "Строки Внутреннего Перемещения"
+
+msgid "Internal Packing Lists"
+msgstr "Внутренние Перемещения"
+
+msgid "Internal Price"
+msgstr ""
+
+msgid "Internal Supplies"
+msgstr ""
+
+msgid "Internal Supply"
+msgstr ""
+
+msgid "Internal Supply Cell"
+msgstr ""
+
+msgid "Internal Supply Line"
+msgstr ""
+
+msgid "Internal Supply Module"
+msgstr ""
+
+msgid "International Form"
+msgstr "Международный Вариант Формы"
+
+msgid "Invalid"
+msgstr "Выявлена Ошибка"
+
+msgid "Invalidate"
+msgstr "Аннулировать"
+
+msgid "Invalidate Action"
+msgstr "Аннулировать"
+
+msgid "Invalidated"
+msgstr "Недействительный"
+
+msgid "Invalidated [state in account_workflow]"
+msgstr ""
+
+msgid "Invalidated [state in rule_validation_workflow]"
+msgstr ""
+
+msgid "Invalidated [state in validation_workflow]"
+msgstr ""
+
+msgid "Inventories"
+msgstr "Запасы"
+
+msgid "Inventory"
+msgstr "Оприходование"
+
+msgid "Inventory Cell"
+msgstr ""
+
+msgid "Inventory Date"
+msgstr "Дата Оприходования"
+
+msgid "Inventory Line"
+msgstr "Строка Оприходования"
+
+msgid "Inventory Lines"
+msgstr "Строки Оприходования"
+
+msgid "Inventory Module"
+msgstr ""
+
+msgid "Inventory Number"
+msgstr "Инвентарный Номер"
+
+msgid "Invoice"
+msgstr "Инвойс"
+
+msgid "Invoice Cell"
+msgstr ""
+
+msgid "Invoice Date"
+msgstr "Дата Инвойса"
+
+msgid "Invoice Line"
+msgstr "Строка Инвойса"
+
+msgid "Invoice Lines"
+msgstr "Строки Инвойса"
+
+msgid "Invoice Movement Group"
+msgstr ""
+
+msgid "Invoice No"
+msgstr "Номер Инвойса"
+
+msgid "Invoice Number"
+msgstr "Номер Инвойса"
+
+msgid "Invoice Recipient"
+msgstr "Получатель Инвойса"
+
+msgid "Invoice Root Simulation Rule"
+msgstr ""
+
+msgid "Invoice Rule"
+msgstr ""
+
+msgid "Invoice Sender"
+msgstr "Отправитель Инвойса"
+
+msgid "Invoice Simulation Rule"
+msgstr ""
+
+msgid "Invoice Transaction Rule"
+msgstr ""
+
+msgid "Invoice Transaction Simulation Rule"
+msgstr ""
+
+msgid "Invoice View"
+msgstr "Главное (Инвойс)"
+
+msgid "Invoiced Client"
+msgstr "Лицо, на Которое Выставлен Инвойс"
+
+msgid "Invoiced Customer"
+msgstr "Клиент, на Которого Выставлен Инвойс"
+
+msgid "Invoicing Rule"
+msgstr ""
+
+msgid "It is where the item is placed after it has been unimmobilised. It is debited by the current value of the item when it is unimmobilised (but not when the item attains a \"natural\" end of immobilisation)"
+msgstr "Счет, который дебетуют при списании внеоборотного актива на сумму текущей стоимости ОС (но не в момент полной амортизации — истечении срока службы)."
+
+msgid "Item"
+msgstr "Партия"
+
+msgid "Item Tracking"
+msgstr "Мониторинг Партии"
+
+msgid "Item Type List"
+msgstr "Виды Партий"
+
+msgid "Item portal types that *must* be aggregated for this document"
+msgstr "Виды партионного учета, которые должны вестись для данного ресурса."
+
+msgid "Item portal types that can be aggregated for this document"
+msgstr "Виды партионного учета, которые могут использоваться для данного ресурса."
+
+msgid "Item workflow"
+msgstr "Workflow Партионного Учета"
+
+msgid "Item(s) Copied."
+msgstr "Элемент(ы) скопирован(ы)."
+
+msgid "Item(s) Pasted."
+msgstr "Элемент(ы) Вставлен(ы)."
+
+msgid "Item(s) copied."
+msgstr "Элемент(ы) скопирован(ы)."
+
+msgid "Item(s) pasted."
+msgstr "Элемент(ы) Вставлен(ы)."
+
+msgid "Items"
+msgstr "Партионный Учет"
+
+msgid "Items copied."
+msgstr ""
+
+msgid "Items cut."
+msgstr ""
+
+msgid "Items paste in progress."
+msgstr ""
+
+msgid "Items+Copied."
+msgstr "Элементы+Скопированы"
+
+msgid "Journal"
+msgstr ""
+
+msgid "Journalise Transaction"
+msgstr "Создать Проводки"
+
+msgid "Journalised"
+msgstr "Проводки Созданы"
+
+msgid "Journalised [state in accounting_workflow]"
+msgstr ""
+
+msgid "Jump"
+msgstr "Осуществить Переход"
+
+msgid "Jump to Related Payment"
+msgstr "Перейти на Подчиненную Оплату"
+
+msgid "Jump..."
+msgstr "Осуществить Переход"
+
+msgid "Keyword Keys"
+msgstr ""
+
+msgid "Keywords"
+msgstr "Ключевые Слова"
+
+msgid "Landscape"
+msgstr "Портрет"
+
+msgid "Language"
+msgstr "Язык"
+
+msgid "Language Code"
+msgstr "Язык"
+
+msgid "Language of the web page, it uses code like en, fr, ja..."
+msgstr "Язык web-страницы, обычно используются коды \"ru\", \"en\", \"fr\" и т.п."
+
+msgid "Langue"
+msgstr ""
+
+msgid "Last"
+msgstr "Последний"
+
+msgid "Last Expand Simulation State"
+msgstr ""
+
+msgid "Last Name"
+msgstr "Фамилия"
+
+msgid "Last Page"
+msgstr ""
+
+msgid "Latest"
+msgstr ""
+
+msgid "Latest [state in content_translation_workflow]"
+msgstr ""
+
+msgid "Lead Time"
+msgstr ""
+
+msgid "Leave Request"
+msgstr "Заявление на Отпуск"
+
+msgid "Leave Request Period"
+msgstr "Период Отпуска"
+
+msgid "Leave Request Periods"
+msgstr "Периоды Отпуска"
+
+msgid "Leave Request Workflow"
+msgstr "Workflow Отпусков"
+
+msgid "Leave Requests"
+msgstr "Отпуска"
+
+msgid "Legal Form"
+msgstr "Правовая Форма"
+
+msgid "Legal form of business company."
+msgstr "Правовая форма организации."
+
+msgid "Length (m)"
+msgstr "Длина (м)"
+
+msgid "Lens Base Curve"
+msgstr "Кривизна линзы"
+
+msgid "Lens Cylinder"
+msgstr "Цилиндр линзы"
+
+msgid "Lens Cylinder Axis"
+msgstr "Ось цилиндра линзы"
+
+msgid "Lens Disposable"
+msgstr "Период плановой замены"
+
+msgid "Lens Power"
+msgstr "Оптическая сила линзы"
+
+msgid "Lens Purpose"
+msgstr "Функциональность линзы"
+
+msgid "Lens Wearing Schedule"
+msgstr "Режим ношения линзы"
+
+msgid "Letter"
+msgstr "Письмо"
+
+msgid "Level"
+msgstr ""
+
+msgid "License"
+msgstr ""
+
+msgid "Line Exclusive"
+msgstr ""
+
+msgid "Line Groupable"
+msgstr ""
+
+msgid "Linear Amortisation Details"
+msgstr "Параметры Линейной Амортизации"
+
+msgid "Link"
+msgstr "WWW Ссылка\n"
+
+msgid "List Mode"
+msgstr ""
+
+msgid "List Objects in Trash Bin"
+msgstr ""
+
+msgid "List of Documents"
+msgstr ""
+
+msgid "List of states for which related Simulation Movement is considered as completed"
+msgstr ""
+
+msgid "List of states for which related Simulation Movement is considered as frozen"
+msgstr ""
+
+msgid "Local ID of the object in its enclosing container"
+msgstr ""
+
+msgid "Local Permissions"
+msgstr "Локальные Права"
+
+msgid "Local Role Keys"
+msgstr ""
+
+msgid "Local Roles"
+msgstr "Локальные Роли"
+
+msgid "Location"
+msgstr "Местоположение"
+
+msgid "Log in"
+msgstr ""
+
+msgid "Log out"
+msgstr "Выйти из ERP5"
+
+msgid "Logged In as :"
+msgstr ""
+
+msgid "Logged in as :"
+msgstr "Пользователь:"
+
+msgid "Login"
+msgstr "Вход"
+
+msgid "Login and/or password is incorrect."
+msgstr "Имя пользователя или пароль введены неправильно."
+
+msgid "Login failure"
+msgstr "Не удалось войти под указанным логином"
+
+msgid "Login success"
+msgstr "Вход выполнен успешно"
+
+msgid "Logo"
+msgstr "Логотип"
+
+msgid "Long Title"
+msgstr ""
+
+msgid "Mail Message"
+msgstr "Email Сообщение"
+
+msgid "Main result of transformation"
+msgstr "Изделие, получаемое в результате данной технологической карты."
+
+msgid "Maintainers"
+msgstr ""
+
+msgid "Make Offer"
+msgstr "Предложить"
+
+msgid "Make a Template"
+msgstr "Скопировать Документ"
+
+msgid "Manage Business Templates"
+msgstr ""
+
+msgid "Manage Field Library"
+msgstr ""
+
+msgid "Manual Price"
+msgstr "Заданная Цена"
+
+msgid "Mapped Properties"
+msgstr ""
+
+msgid "Mapped Property"
+msgstr ""
+
+msgid "Mapped Value"
+msgstr ""
+
+msgid "Marital Status"
+msgstr "Семейное положение"
+
+msgid "Matching"
+msgstr ""
+
+msgid "Matching Provider"
+msgstr ""
+
+msgid "Material"
+msgstr "Материал"
+
+msgid "Materials"
+msgstr "Материалы"
+
+msgid "Max Criterion"
+msgstr ""
+
+msgid "Max. Delay (Day)"
+msgstr "Макс задержка (Дней)"
+
+msgid "Max. Flow"
+msgstr ""
+
+msgid "Max. Stock"
+msgstr ""
+
+msgid "Max. delay"
+msgstr "Макс.Срок"
+
+msgid "Measure"
+msgstr "Измерение"
+
+msgid "Measure Cell"
+msgstr ""
+
+msgid "Measures"
+msgstr "Измерения"
+
+msgid "Meeting"
+msgstr "Встреча"
+
+msgid "Meeting Module"
+msgstr ""
+
+msgid "Meeting Type"
+msgstr "Тип Встречи"
+
+msgid "Meetings"
+msgstr "Встречи"
+
+msgid "Membership Criteria"
+msgstr ""
+
+msgid "Membership Criterion Documents"
+msgstr ""
+
+msgid "Memcached Plugin"
+msgstr ""
+
+msgid "Memcached Tool"
+msgstr ""
+
+msgid "Message"
+msgstr "Сообщение"
+
+msgid "Message Translations"
+msgstr ""
+
+msgid "Messages"
+msgstr "Сообщения"
+
+msgid "Metadata"
+msgstr "Метаданные"
+
+msgid "Method that defines how to query all Simulation Movements which meet certain criteria"
+msgstr ""
+
+msgid "Metric Type"
+msgstr "Виды измерений"
+
+msgid "Middle Name"
+msgstr "Отчество"
+
+msgid "Milestone:"
+msgstr "Контрольный Этап"
+
+msgid "Milestones"
+msgstr "Контрольные Этапы"
+
+msgid "Min Criterion"
+msgstr ""
+
+msgid "Min. Delay (Day)"
+msgstr "Мин задержка (Дней)"
+
+msgid "Min. Flow"
+msgstr "Мин Количество"
+
+msgid "Min. Stock"
+msgstr ""
+
+msgid "Min. delay"
+msgstr "Мин. срок"
+
+msgid "Minimal quantity to use on a movement."
+msgstr "Минимальное количество для торговли, перемещения, использования."
+
+msgid "Minutes"
+msgstr ""
+
+msgid "Mirror Account"
+msgstr "Зеркальный Счет"
+
+msgid "Mirror Movement Group"
+msgstr ""
+
+msgid "Miss Container"
+msgstr ""
+
+msgid "Miss Container [action in packing_list_container_workflow]"
+msgstr ""
+
+msgid "Missing"
+msgstr "Не Завершено"
+
+msgid "Missing [state in packing_list_container_workflow]"
+msgstr ""
+
+msgid "Mobile Telephone"
+msgstr "Мобильный Телефон"
+
+msgid "Modification Date"
+msgstr "Дата Изменения"
+
+msgid "Modified"
+msgstr ""
+
+msgid "Modified Files"
+msgstr ""
+
+msgid "Modified [state in business_template_building_workflow]"
+msgstr ""
+
+msgid "Modified categories"
+msgstr ""
+
+msgid "Modify Transaction (journalise)"
+msgstr "Изменить Проводки и Отразить их на Счетах"
+
+msgid "Module"
+msgstr ""
+
+msgid "Module ID"
+msgstr ""
+
+msgid "Module Portal Type"
+msgstr ""
+
+msgid "Module Property"
+msgstr ""
+
+msgid "Module Title"
+msgstr ""
+
+msgid "Modules"
+msgstr "Модули"
+
+msgid "Money Quantity Style"
+msgstr ""
+
+msgid "Month / Day / Year"
+msgstr ""
+
+msgid "Monthly Amortisation Account"
+msgstr "Счет Месячной Амортизации"
+
+msgid "Monthly Range Movement Group"
+msgstr ""
+
+msgid "Months"
+msgstr "Месяца"
+
+msgid "Movement Groups"
+msgstr ""
+
+msgid "Movements"
+msgstr "Движения"
+
+msgid "Multiple Installation Of Business Templates"
+msgstr ""
+
+msgid "Multivalue Keys"
+msgstr ""
+
+msgid "Multivalued Membership Criteria"
+msgstr ""
+
+msgid "My Drafts of Accounting Transactions"
+msgstr "Мои Бухгалтерские Черновики"
+
+msgid "My Favourites"
+msgstr "Актуальные Документы и Меню"
+
+msgid "My Language"
+msgstr ""
+
+msgid "My shopping cart"
+msgstr "Моя корзина"
+
+msgid "Name"
+msgstr "Название"
+
+msgid "Name of the script which is called on each newly delivery created"
+msgstr ""
+
+msgid "National Identification Number"
+msgstr "Идентификационный Номер"
+
+msgid "Nationality"
+msgstr "Гражданство"
+
+msgid "Nested Line Movement Group"
+msgstr ""
+
+msgid "Net Converted Quantity Divergence Tester"
+msgstr ""
+
+msgid "Net Total Price"
+msgstr "Итоговая Сумма Инвойса"
+
+msgid "New"
+msgstr ""
+
+msgid "New Event"
+msgstr "Новое Мероприятие"
+
+msgid "New File"
+msgstr "Новый Файл"
+
+msgid "New Function"
+msgstr "Новая Функция"
+
+msgid "New Incoming Events"
+msgstr "Новые Входящие События"
+
+msgid "New Password"
+msgstr "Новый Пароль"
+
+msgid "New Value"
+msgstr ""
+
+msgid "New [state in document_ingestion_workflow]"
+msgstr ""
+
+msgid "New [state in event_workflow]"
+msgstr ""
+
+msgid "Next"
+msgstr ""
+
+msgid "Next Alarm Date"
+msgstr ""
+
+msgid "Next Page"
+msgstr ""
+
+msgid "No ${portal_type} Related."
+msgstr "Соответствующий(ая) ${portal_type} не Найден(а)."
+
+msgid "No ${portal_type} related."
+msgstr "Соответствующий(ая) ${portal_type} не найден(а)."
+
+msgid "No Leave Request Related"
+msgstr "Нет Соответствующих Заявлений на Отпуск"
+
+msgid "No Purchase Invoice Transaction Related"
+msgstr "Подчиненный Инвойс не Найден"
+
+msgid "No Purchase Packing List Related"
+msgstr "Соответствующая Приходная Накладная Не Найдена."
+
+msgid "No Query Related"
+msgstr "Запросов, соответствующих документу не найдено."
+
+msgid "No Sale Invoice Transaction Related"
+msgstr "Подчиненный Инвойс не Найден"
+
+msgid "No Sale Packing List Related"
+msgstr "Соответствующая Расходная Накладная Не Найдена."
+
+msgid "No such document was found."
+msgstr "Указанный документ не найден."
+
+msgid "No. Related Objects"
+msgstr "Нет Связанных Объектов"
+
+msgid "Node"
+msgstr "Узлы"
+
+msgid "Non Discountable Additional Price"
+msgstr ""
+
+msgid "None"
+msgstr ""
+
+msgid "Normal Credit Balance"
+msgstr "Пассивный Счет"
+
+msgid "Not Installed"
+msgstr ""
+
+msgid "Not Installed [state in business_template_installation_workflow]"
+msgstr ""
+
+msgid "Note"
+msgstr "Заметка"
+
+msgid "Nothing more to pay"
+msgstr "Документ уже полностью оплачен."
+
+msgid "Notification Message"
+msgstr "Сообщение"
+
+msgid "Notification Message Module"
+msgstr ""
+
+msgid "Notification Messages"
+msgstr "Почтовые Рассылки"
+
+msgid "Number"
+msgstr "Номер"
+
+msgid "Number of Children"
+msgstr "Число иждивенцев"
+
+msgid "Number of Columns"
+msgstr "Количество Столбцов"
+
+msgid "Number of Related Objects"
+msgstr "Количество Подчиненных Объектов"
+
+msgid "Number of months the item will be immobilised"
+msgstr "Количество месяцев, в течение которых ВА будет амортизован."
+
+msgid "Number of units involved in base prices"
+msgstr "Количество единиц ресурса, которое учтено в базовых ценах."
+
+msgid "Number of units involved in base prices. If Priced Quantity is 1, it means that this is a unit price. If 2, the price is given for two units, etc..."
+msgstr ""
+
+msgid "O/Rat"
+msgstr ""
+
+msgid "ODT Style"
+msgstr "ODT Стиль"
+
+msgid "OOo Document"
+msgstr ""
+
+msgid "Object"
+msgstr "Действия над Объектом"
+
+msgid "Object Created."
+msgstr "Объект Создан."
+
+msgid "Object Portal Type"
+msgstr ""
+
+msgid "Object Title"
+msgstr "Имя Объекта"
+
+msgid "Object copied from ${source_item}"
+msgstr ""
+
+msgid "Object created."
+msgstr "Объект создан."
+
+msgid "Objects"
+msgstr "Объекты"
+
+msgid "Offer"
+msgstr "Предложить"
+
+msgid "Offered"
+msgstr "Предложенный"
+
+msgid "Offered [state in order_workflow]"
+msgstr ""
+
+msgid "Offered [state in sale_opportunity_workflow]"
+msgstr ""
+
+msgid "Old Value"
+msgstr ""
+
+msgid "Only consider transactions in those states."
+msgstr ""
+
+msgid "Open"
+msgstr "Открыт"
+
+msgid "Open Account"
+msgstr "Открыть Счет"
+
+msgid "Open Accounting Period"
+msgstr "Открыть Бухгалтерский Период"
+
+msgid "Open Assignment"
+msgstr "Зарегистрировать Назначение"
+
+msgid "Open Bug"
+msgstr "Зарегистрировать Ошибку"
+
+msgid "Open Internal Order"
+msgstr ""
+
+msgid "Open Internal Order Module"
+msgstr ""
+
+msgid "Open Internal Orders"
+msgstr ""
+
+msgid "Open Project"
+msgstr "Зарегистрировать Проект"
+
+msgid "Open Purchase Order"
+msgstr ""
+
+msgid "Open Purchase Order Module"
+msgstr ""
+
+msgid "Open Purchase Orders"
+msgstr ""
+
+msgid "Open Sale Order"
+msgstr ""
+
+msgid "Open Sale Order Cell"
+msgstr ""
+
+msgid "Open Sale Order Line"
+msgstr ""
+
+msgid "Open Sale Order Module"
+msgstr ""
+
+msgid "Open Sales Order"
+msgstr ""
+
+msgid "Open Sales Orders"
+msgstr ""
+
+msgid "Open Ticket"
+msgstr "Зарегистрировать Тикет"
+
+msgid "Open [state in bug_workflow]"
+msgstr ""
+
+msgid "Open [state in ticket_workflow]"
+msgstr ""
+
+msgid "OpenOffice Source File"
+msgstr ""
+
+msgid "OpenOffice Source File Example"
+msgstr ""
+
+msgid "Opening Date"
+msgstr "Дата Открытия"
+
+msgid "Openned Account"
+msgstr "Открытый Счет"
+
+msgid "Operation"
+msgstr "Работа"
+
+msgid "Operations"
+msgstr "Работы"
+
+msgid "Operations Manager"
+msgstr "Исполнитель"
+
+msgid "Operators"
+msgstr "Участники"
+
+msgid "Option"
+msgstr "Опция"
+
+msgid "Optional Resource"
+msgstr "Дополнительный Ресурс"
+
+msgid "Optional Resources"
+msgstr "Дополнительные Ресурсы"
+
+msgid "Optional Variation Base Category"
+msgstr "Необязательная Базовая Категория для Вариаций\n"
+
+msgid "Order"
+msgstr "Заказ"
+
+msgid "Order Builder"
+msgstr ""
+
+msgid "Order Builders"
+msgstr ""
+
+msgid "Order Index"
+msgstr "Номер п/п"
+
+msgid "Order Line"
+msgstr ""
+
+msgid "Order Movement Group"
+msgstr ""
+
+msgid "Order Placed"
+msgstr "Заказ Оформлен"
+
+msgid "Order Placed [state in order_workflow]"
+msgstr ""
+
+msgid "Order Ratio"
+msgstr ""
+
+msgid "Order Root Simulation Rule"
+msgstr ""
+
+msgid "Order Rule"
+msgstr ""
+
+msgid "Order Tool"
+msgstr ""
+
+msgid "Order Workflow"
+msgstr "Workflow Заказов"
+
+msgid "Ordered"
+msgstr "Заказано"
+
+msgid "Organisation"
+msgstr "Организация"
+
+msgid "Organisation Module"
+msgstr ""
+
+msgid "Organisations"
+msgstr "Организации"
+
+msgid "Original Filename"
+msgstr "Оригинальное Имя Файла"
+
+msgid "Original Supplier or Worker"
+msgstr "Производитель"
+
+msgid "Other Parties"
+msgstr "Прочие Стороны"
+
+msgid "Others"
+msgstr "Прочее"
+
+msgid "Out"
+msgstr "От нас"
+
+msgid "Outcome"
+msgstr "Результат"
+
+msgid "Outdated"
+msgstr ""
+
+msgid "Outdated [state in content_translation_workflow]"
+msgstr ""
+
+msgid "Outgoing"
+msgstr "Исходящий"
+
+msgid "Outgoing Events"
+msgstr "Исходящие События"
+
+msgid "Outgoing [state in event_workflow]"
+msgstr ""
+
+msgid "Output Account"
+msgstr "Счет Расходов на Списание Внеоборотного Актива"
+
+msgid "Overdraft Facility"
+msgstr "Овердрафт Разрешен"
+
+msgid "Overdraft facility of a bank account"
+msgstr ""
+
+msgid "Owner"
+msgstr "Владелец"
+
+msgid "PDF"
+msgstr ""
+
+msgid "Package Details"
+msgstr "Описание упаковки"
+
+msgid "Packed"
+msgstr "Завершено"
+
+msgid "Packed [state in packing_list_container_workflow]"
+msgstr ""
+
+msgid "Packing List"
+msgstr "Накладная"
+
+msgid "Packing List Causality Workflow"
+msgstr "Workflow Зависимостей для Накладных"
+
+msgid "Packing List Container Workflow"
+msgstr ""
+
+msgid "Packing List Line"
+msgstr "Строка Накладной"
+
+msgid "Packing List Workflow"
+msgstr "Workflow Накладных"
+
+msgid "Packing Lists"
+msgstr "Накладные"
+
+msgid "Packing Lists related to this invoice."
+msgstr "Список накладных, относящихся к этому инвойсу."
+
+msgid "Page Content"
+msgstr ""
+
+msgid "Parent"
+msgstr ""
+
+msgid "Parent Delivery Category Movement Group"
+msgstr ""
+
+msgid "Parent Delivery Property Movement Group"
+msgstr ""
+
+msgid "Parent Explanation Movement Group"
+msgstr ""
+
+msgid "Partners"
+msgstr "Иждивенцы"
+
+msgid "Password"
+msgstr "Пароль"
+
+msgid "Password (confirm)"
+msgstr "Пароль (подтверждение)"
+
+msgid "Password Confirm"
+msgstr "Подтвердить Пароль"
+
+msgid "Password Confirmation"
+msgstr "Подтверждение Пароля"
+
+msgid "Password Tool"
+msgstr ""
+
+msgid "Password changed."
+msgstr "Пароль изменен."
+
+msgid "Password reset."
+msgstr "Пароль аннулирован."
+
+msgid "Password to commit in the svn"
+msgstr ""
+
+msgid "Paste"
+msgstr ""
+
+msgid "Path"
+msgstr ""
+
+msgid "Paths"
+msgstr ""
+
+msgid "Payee"
+msgstr "Бенефициар"
+
+msgid "Payer"
+msgstr "Плательщик"
+
+msgid "Payment"
+msgstr "Оплата"
+
+msgid "Payment Condition"
+msgstr "Условия Оплаты"
+
+msgid "Payment Date"
+msgstr "Дата Оплаты"
+
+msgid "Payment Mode"
+msgstr "Способ Оплаты"
+
+msgid "Payment Reference"
+msgstr "Ссылка на Платеж"
+
+msgid "Payment Rule"
+msgstr ""
+
+msgid "Payment Simulation Rule"
+msgstr ""
+
+msgid "Payment Transaction"
+msgstr "Учет Оплат"
+
+msgid "Paypal Api Username"
+msgstr "Логин"
+
+msgid "Pending"
+msgstr ""
+
+msgid "Pending [state in document_staging_workflow]"
+msgstr ""
+
+msgid "Pending [state in event_workflow]"
+msgstr ""
+
+msgid "Percent of Water"
+msgstr "Влагосодержание"
+
+msgid "Percentage of Total"
+msgstr "Доля от Итого (%)"
+
+msgid "Percentage of total quantity used as quantity. This is useful for example in the case of taxes which are not applied on the total price, but for example only on 95% of the price."
+msgstr ""
+
+msgid "Periodicity"
+msgstr ""
+
+msgid "Periodicity Start Date"
+msgstr ""
+
+msgid "Periodicity Stop Date"
+msgstr "Конечная Дата Периода"
+
+msgid "Permission"
+msgstr ""
+
+msgid "Person"
+msgstr "Физическое Лицо"
+
+msgid "Person Module"
+msgstr ""
+
+msgid "Persons"
+msgstr "Физические Лица"
+
+msgid "Phone Call"
+msgstr "Телефонный Звонок"
+
+msgid "Photo"
+msgstr "Фото"
+
+msgid "Place"
+msgstr "Оформить"
+
+msgid "Place Order"
+msgstr "Разместить Заказ"
+
+msgid "Place Order Action"
+msgstr ""
+
+msgid "Place Order Action [action in order_workflow]"
+msgstr ""
+
+msgid "Place Order [action in order_workflow]"
+msgstr ""
+
+msgid "Plan"
+msgstr "Запланировать"
+
+msgid "Plan Order"
+msgstr "Запланировать Заказ"
+
+msgid "Plan Order Action"
+msgstr ""
+
+msgid "Plan Order Action [action in order_workflow]"
+msgstr ""
+
+msgid "Plan Order [action in order_workflow]"
+msgstr ""
+
+msgid "Plan Transaction"
+msgstr "Запланировать транзакцию"
+
+msgid "Plan Transactions"
+msgstr "Запланировать Транзакции"
+
+msgid "Planned"
+msgstr "Запланированный"
+
+msgid "Planned [state in accounting_workflow]"
+msgstr ""
+
+msgid "Planned [state in bug_event_workflow]"
+msgstr ""
+
+msgid "Planned [state in order_workflow]"
+msgstr ""
+
+msgid "Please select one (or more) object."
+msgstr "Выберите один (или несколько) объектов."
+
+msgid "Please select one object."
+msgstr "Выберите один объект."
+
+msgid "Please select one or more items first."
+msgstr "Сперва выберите один или несколько элементов."
+
+msgid "Please set a ChangeLog message."
+msgstr ""
+
+msgid "Portal Skins Folder"
+msgstr ""
+
+msgid "Portal Type"
+msgstr ""
+
+msgid "Portal Type Roles"
+msgstr ""
+
+msgid "Portal Types"
+msgstr ""
+
+msgid "Position Announcement"
+msgstr "Объявление о Вакансии"
+
+msgid "Position Announcements"
+msgstr "Объявления о Вакансиях"
+
+msgid "Position Opportunities"
+msgstr "Соискатели на Должность"
+
+msgid "Position Opportunity"
+msgstr "Соискатель "
+
+msgid "Positions"
+msgstr "Вакансии"
+
+msgid "Post"
+msgstr "Отправить"
+
+msgid "Post Event"
+msgstr "Известить о Мероприятии"
+
+msgid "Post Query"
+msgstr "Отправить Запрос"
+
+msgid "Post Transaction to General Ledger"
+msgstr "Разнести Проводки по Бух.Счетам "
+
+msgid "Post a Query"
+msgstr "Отправить Запрос"
+
+msgid "Postal Code"
+msgstr "Индекс"
+
+msgid "Posted"
+msgstr "Отправленный"
+
+msgid "Posted [state in event_workflow]"
+msgstr ""
+
+msgid "Posted [state in query_workflow]"
+msgstr ""
+
+msgid "Posted to General Ledger"
+msgstr "Проводки Разнесены по Бух.Счетам"
+
+msgid "Posted to General Ledger [state in accounting_workflow]"
+msgstr ""
+
+msgid "Precision"
+msgstr "Точность"
+
+msgid "Predecessor"
+msgstr ""
+
+msgid "Predecessors"
+msgstr "Предшествующие Этапы"
+
+msgid "Predicate"
+msgstr ""
+
+msgid "Predicates"
+msgstr ""
+
+msgid "Preference"
+msgstr "Настройки"
+
+msgid "Preference Tool"
+msgstr ""
+
+msgid "Preference priority"
+msgstr ""
+
+msgid "Preferences"
+msgstr "Настройки"
+
+msgid "Prefix"
+msgstr "Обращение"
+
+msgid "Presence Period"
+msgstr "Рабочий Период"
+
+msgid "Presence Request"
+msgstr "Индивидуальный График"
+
+msgid "Presence Request Period"
+msgstr "Индивидуальный Рабочий Период"
+
+msgid "Presence Request Periods"
+msgstr "Индивидуальные Рабочие Периоды"
+
+msgid "Presence Requests"
+msgstr "Индивидуальные Графики"
+
+msgid "Presentation"
+msgstr ""
+
+msgid "Preview"
+msgstr "Предварительный Просмотр"
+
+msgid "Previous"
+msgstr ""
+
+msgid "Previous Page"
+msgstr ""
+
+msgid "Price"
+msgstr "Цена"
+
+msgid "Price Currency"
+msgstr "Валюта Инвойса"
+
+msgid "Price Precision"
+msgstr ""
+
+msgid "Price Validity"
+msgstr "Цены Применимы до"
+
+msgid "Price Variation Axes"
+msgstr "Ценовые Параметры "
+
+msgid "Price for one unit."
+msgstr "Цена за единицу."
+
+msgid "Priced Quantity"
+msgstr "Учтенное в Цене Количество"
+
+msgid "Print"
+msgstr "Печать"
+
+msgid "Print Invoice"
+msgstr "Печать Инвойса"
+
+msgid "Print Style"
+msgstr ""
+
+msgid "Printing format"
+msgstr "Формат вывода на печать."
+
+msgid "Priority"
+msgstr "Приоритет"
+
+msgid "Priority of the current action"
+msgstr ""
+
+msgid "Private"
+msgstr ""
+
+msgid "Private [state in document_staging_workflow]"
+msgstr ""
+
+msgid "Privilege"
+msgstr "Полномочия"
+
+msgid "Privileges"
+msgstr "Полномочия"
+
+msgid "Problem"
+msgstr ""
+
+msgid "Process Exclusive"
+msgstr ""
+
+msgid "Product"
+msgstr "Ресурс"
+
+msgid "Product Individual Variation"
+msgstr "Индивидуальная Вариация Товара"
+
+msgid "Product Individual Variations"
+msgstr "Индивидуальные Вариации Товара"
+
+msgid "Product Interest"
+msgstr "Продуктовая Линия"
+
+msgid "Product Line"
+msgstr "Продуктовая Линия"
+
+msgid "Product Module"
+msgstr ""
+
+msgid "Product or Service"
+msgstr "Товар или Услуга"
+
+msgid "Production Order"
+msgstr "Заказ на Производство"
+
+msgid "Production Order Line"
+msgstr "Строка Заказа на Производство"
+
+msgid "Production Order Lines"
+msgstr "Строки Заказа на Производство"
+
+msgid "Production Order Workflow"
+msgstr "Workflow Производственных Заказов"
+
+msgid "Production Orders"
+msgstr "Заказы на Производство"
+
+msgid "Production Orders to Plan"
+msgstr "Черновики Производственных Заказов"
+
+msgid "Production Packing List"
+msgstr "Производственная Накладная"
+
+msgid "Production Packing List Line"
+msgstr "Строка Производственной Накладной"
+
+msgid "Production Packing List Lines"
+msgstr "Строки Производственной Накладной"
+
+msgid "Production Packing List Workflow"
+msgstr "Workflow Производственных Накладных"
+
+msgid "Production Packing Lists"
+msgstr "Производственные Накладные"
+
+msgid "Production Packing Lists to Confirm"
+msgstr "Производственные Накладные к Подтверждению"
+
+msgid "Production Reduction Solver"
+msgstr ""
+
+msgid "Production Report"
+msgstr "Производственный Отчет"
+
+msgid "Production Report Line"
+msgstr "Строка Производственного Отчета"
+
+msgid "Production Report Lines"
+msgstr "Строки Производственного Отчета"
+
+msgid "Production Reports"
+msgstr "Производственные Отчеты"
+
+msgid "Production Reports to Confirm"
+msgstr "Производственные Отчеты к Подтверждению"
+
+msgid "Products"
+msgstr "Товары"
+
+msgid "Products the person is interested in."
+msgstr "Товары/услуги, в которых физическое лицо заинтересовано."
+
+msgid "Profile"
+msgstr "Справочно"
+
+msgid "Project"
+msgstr "Проект"
+
+msgid "Project Constraints"
+msgstr "Ограничения для Проекта"
+
+msgid "Project Line"
+msgstr "Строка Проекта"
+
+msgid "Project Lines"
+msgstr "Строки Проекта"
+
+msgid "Project Location"
+msgstr "Место Выполнения"
+
+msgid "Project Milestone"
+msgstr "Контрольный Этап Проета"
+
+msgid "Project Milestones"
+msgstr "Контрольные Этапы Проета"
+
+msgid "Project to Open"
+msgstr "Незарегистрированные Проекты "
+
+msgid "Projects"
+msgstr "Проекты"
+
+msgid "Property"
+msgstr ""
+
+msgid "Property Assignment Movement Group"
+msgstr ""
+
+msgid "Property Criteria"
+msgstr ""
+
+msgid "Property Divergence Tester"
+msgstr ""
+
+msgid "Property Grouping Movement Group"
+msgstr ""
+
+msgid "Property Mapping"
+msgstr ""
+
+msgid "Property Movement Group"
+msgstr ""
+
+msgid "Property Name"
+msgstr ""
+
+msgid "Property Sheets"
+msgstr ""
+
+msgid "Prospect Contacted"
+msgstr ""
+
+msgid "Prospect Contacted [state in sale_opportunity_workflow]"
+msgstr ""
+
+msgid "Protect"
+msgstr ""
+
+msgid "Protected"
+msgstr ""
+
+msgid "Protected [state in category_publication_workflow]"
+msgstr ""
+
+msgid "Provision"
+msgstr ""
+
+msgid "Public"
+msgstr ""
+
+msgid "Public [state in document_staging_workflow]"
+msgstr ""
+
+msgid "Public [state in external_document_publication_workflow]"
+msgstr ""
+
+msgid "Public description of the document."
+msgstr "Публичные комментарии к документу."
+
+msgid "Publication Date"
+msgstr "Дата Публикации"
+
+msgid "Publication Information"
+msgstr ""
+
+msgid "Publication Section"
+msgstr "Секция Публикации"
+
+msgid "Publication Sections describe the place from which the given page will be available."
+msgstr "Секция Публикации описывает место, из которого данная страница будет доступна."
+
+msgid "Publication State"
+msgstr "Состояние Публикации"
+
+msgid "Publication Workflow"
+msgstr "Workflow Публикаций"
+
+msgid "Publications"
+msgstr "Публикации"
+
+msgid "Publish"
+msgstr "Опубликовать"
+
+msgid "Publish Document"
+msgstr "Опубликовать Документ"
+
+msgid "Published"
+msgstr "Опубликованный"
+
+msgid "Published Alive"
+msgstr ""
+
+msgid "Published Alive [state in document_publication_workflow]"
+msgstr ""
+
+msgid "Published [state in category_publication_workflow]"
+msgstr ""
+
+msgid "Published [state in document_publication_workflow]"
+msgstr ""
+
+msgid "Published [state in publication_workflow]"
+msgstr ""
+
+msgid "Published:"
+msgstr "Опубликован:"
+
+msgid "Publisher"
+msgstr "Издатель"
+
+msgid "Purchase"
+msgstr "Закупка"
+
+msgid "Purchase Invoice Transaction"
+msgstr "Учет Инвойса на Закупку"
+
+msgid "Purchase Invoice Transaction Line"
+msgstr "Строка Инвойса на Закупку"
+
+msgid "Purchase Invoice Transaction Lines"
+msgstr "Строки Инвойса на Закупку"
+
+msgid "Purchase Invoice Transaction related to Purchase Packing List."
+msgstr "Инвойс на Закупку соответствующий Приходной Накладной"
+
+msgid "Purchase Order"
+msgstr "Заявка на Покупку"
+
+msgid "Purchase Order Cell"
+msgstr ""
+
+msgid "Purchase Order Line"
+msgstr "Строка Заявки на Покупку"
+
+msgid "Purchase Order Lines"
+msgstr "Строки Заявки на Покупку"
+
+msgid "Purchase Order Module"
+msgstr ""
+
+msgid "Purchase Order related to Purchase Invoice Transaction."
+msgstr "Заявка на Покупку, соответствующая Инвойсу."
+
+msgid "Purchase Orders"
+msgstr "Заявки на Покупку"
+
+msgid "Purchase Orders to Plan"
+msgstr "Черновики Заявок на Покупку"
+
+msgid "Purchase Packing List"
+msgstr "Приходная Накладная"
+
+msgid "Purchase Packing List Cell"
+msgstr ""
+
+msgid "Purchase Packing List Line"
+msgstr "Строка Приходной Накладной"
+
+msgid "Purchase Packing List Lines"
+msgstr "Строки Приходной Накладной"
+
+msgid "Purchase Packing List Module"
+msgstr ""
+
+msgid "Purchase Packing List Movements"
+msgstr "Строки Приходной Накладной"
+
+msgid "Purchase Packing List related to Purchase Invoice Transaction."
+msgstr "Приходная накладная, соответствующая Инвойсу на Закупку."
+
+msgid "Purchase Packing List to Confirm"
+msgstr "Приходная Накладная к Подтверждению"
+
+msgid "Purchase Packing Lists"
+msgstr "Приходные Накладные"
+
+msgid "Purchase Price"
+msgstr "Закупочная Цена"
+
+msgid "Purchase Supplies"
+msgstr "Прайс-Листы на Закупку"
+
+msgid "Purchase Supply"
+msgstr "Прайс-Лист на Закупку"
+
+msgid "Purchase Supply Cell"
+msgstr ""
+
+msgid "Purchase Supply Line"
+msgstr "Строка Прайс-Листа"
+
+msgid "Purchase Supply Lines"
+msgstr "Строки Прайс-Листа"
+
+msgid "Purchase Supply Module"
+msgstr ""
+
+msgid "Purchase Trade Condition"
+msgstr "Шаблон Закупки"
+
+msgid "Purchase Trade Condition Module"
+msgstr "Шаблоны Закупок. Модуль"
+
+msgid "Purchase Trade Conditions"
+msgstr "Шаблоны Закупок"
+
+msgid "Quantity"
+msgstr "Количество"
+
+msgid "Quantity (?)"
+msgstr ""
+
+msgid "Quantity < ${max_quantity}"
+msgstr "Количество < ${max_quantity}"
+
+msgid "Quantity Cancel Solver"
+msgstr ""
+
+msgid "Quantity Divergence Tester"
+msgstr ""
+
+msgid "Quantity Sign Movement Group"
+msgstr ""
+
+msgid "Quantity Split Solver"
+msgstr ""
+
+msgid "Quantity Step"
+msgstr "Ценовой Шаг (Количество)"
+
+msgid "Quantity Unit"
+msgstr "Единицы Измерения"
+
+msgid "Quantity Unit Conversion Definition"
+msgstr ""
+
+msgid "Quantity Unit Conversion Group"
+msgstr ""
+
+msgid "Quantity Unit Conversion Module"
+msgstr ""
+
+msgid "Queries"
+msgstr "Запросы"
+
+msgid "Query"
+msgstr "Запрос"
+
+msgid "Query Module"
+msgstr ""
+
+msgid "Query Type"
+msgstr "Вид Запроса"
+
+msgid "Question"
+msgstr "Вопрос"
+
+msgid "Quick Search"
+msgstr ""
+
+msgid "RSS Feed"
+msgstr ""
+
+msgid "Ram Cache"
+msgstr ""
+
+msgid "Ratio"
+msgstr "Размер (%)"
+
+msgid "Re-install Business Template"
+msgstr ""
+
+msgid "Ready"
+msgstr "Груз Готов к Отправке"
+
+msgid "Ready [state in packing_list_workflow]"
+msgstr ""
+
+msgid "Realm Server"
+msgstr ""
+
+msgid "Rebuild Business Template"
+msgstr ""
+
+msgid "Receive"
+msgstr "Подтвердить Получение"
+
+msgid "Receive Event"
+msgstr "Подтвердить Получение"
+
+msgid "Receive Packing List"
+msgstr "Подтвердить Получение Груза"
+
+msgid "Received"
+msgstr "Получено"
+
+msgid "Received [state in packing_list_workflow]"
+msgstr ""
+
+msgid "Recipient"
+msgstr "Получатель"
+
+msgid "Recipient or Beneficiary"
+msgstr "Получатель Товара"
+
+msgid "Recipient or Beneficiary must be defined"
+msgstr "Получатель (бенефициар) должен быть указан"
+
+msgid "Recipient or Beneficiary of the invoice"
+msgstr "Получатель (бенефициар) инвойса"
+
+msgid "Recipient or beneficiary of the supply"
+msgstr "Получатель (бенефициар) поставки"
+
+msgid "Recipients"
+msgstr "Получатели"
+
+msgid "Recorded Properties"
+msgstr ""
+
+msgid "Recur every periodicity hours (ex, at 10 and at 16 )"
+msgstr ""
+
+msgid "Recur every periodicity minute (ex, at 10 and at 16 )"
+msgstr ""
+
+msgid "Recur every periodicity week (ex, week 41 and 43)"
+msgstr "Повторяющиеся недели (например 41 и 43 неделя)."
+
+msgid "Recur on some days of the month (ex 5th, and 14th)"
+msgstr "Повторяющиеся дни месяца (например пятое и четырнадцатое)."
+
+msgid "Recur on some days of the week (ex monday and sunday)"
+msgstr "Повторяющиеся дни недели (например воскресенье и понедельник)."
+
+msgid "Recur on some months of the year (ex 5th, and 10th)"
+msgstr "Повторяющиеся месяца (например январь и июнь)."
+
+msgid "Reference"
+msgstr "Референс"
+
+msgid "Reference Currency"
+msgstr "Базовая Валюта"
+
+msgid "Reference Date"
+msgstr ""
+
+msgid "Reference of a document in ERP5, whatever the module considered. Exceptions to this rule can exist, and if so, terms will be described in the appropriate business field of this glossary. For example, the reference of a Payment Transaction has a specific name, as well as the Reference of Purchase and Sale Invoice Transactions. See the appropriate Glossary for further information."
+msgstr ""
+
+msgid "Reference of a page, should be unique to retrieve a page easily"
+msgstr "Идентификатор страницы. Должен быть уникальным для упрощения ее поиска."
+
+msgid "Referenced Documents"
+msgstr "Документы-Ссылки"
+
+msgid "Referential Date"
+msgstr ""
+
+msgid "Referral (Person or Announcement)"
+msgstr "Связь (Кандидат или Объявление)"
+
+msgid "Region"
+msgstr "Регион"
+
+msgid "Register New Skin if Present ?"
+msgstr ""
+
+msgid "Register or not a new skin if business template defines it"
+msgstr ""
+
+msgid "Registered Capital"
+msgstr "Уставный Капитал."
+
+msgid "Registered Skin Selection"
+msgstr ""
+
+msgid "Reject Offer"
+msgstr "Отклонить Предложение"
+
+msgid "Rejected"
+msgstr "Отклонён"
+
+msgid "Rejected [state in order_workflow]"
+msgstr ""
+
+msgid "Rejected [state in sale_opportunity_workflow]"
+msgstr ""
+
+msgid "Related Bug"
+msgstr "Подчиненное Уведомление об Ошибке"
+
+msgid "Related Business Template"
+msgstr ""
+
+msgid "Related Delivery(s)"
+msgstr "Подчиненные Доставки"
+
+msgid "Related Documents"
+msgstr "Связанные Документы"
+
+msgid "Related Events"
+msgstr "Связанные События"
+
+msgid "Related Invoice"
+msgstr "Соответствующий Инвойс"
+
+msgid "Related Invoice(s)"
+msgstr "Соответствующие Инвойсы"
+
+msgid "Related Objects"
+msgstr "Связанные Объекты"
+
+msgid "Related Order(s)"
+msgstr "Подчиненные Заказы"
+
+msgid "Related Payment Created"
+msgstr "Подчиненный Платеж Создан"
+
+msgid "Related Payment Transaction"
+msgstr "Подчиненная Оплата"
+
+msgid "Related Production Packing List"
+msgstr "Подчиненная Производственная Накладная"
+
+msgid "Related Production Report"
+msgstr "Подчиненный Производственный Отчет"
+
+msgid "Related Purchase Invoice"
+msgstr "Соответствующий Инвойс на Закупку"
+
+msgid "Related Purchase Order"
+msgstr "Подчиненная Заявка на Покупку"
+
+msgid "Related Purchase Packing List"
+msgstr "Подчиненная Приходная Накладная"
+
+msgid "Related Sale Invoice"
+msgstr "Соответствующий Инвойс на Продажу"
+
+msgid "Related Sale Invoice Transaction"
+msgstr "Соответствующий Инвойс на Продажу"
+
+msgid "Related Sale Order"
+msgstr "Подчиненная Заявка на Продажу"
+
+msgid "Related Sale Packing List"
+msgstr "Подчиненная Расходная Накладная"
+
+msgid "Related Supply Lines"
+msgstr ""
+
+msgid "Related Transformation"
+msgstr "Соответствующая Трансформация"
+
+msgid "Related Trash Bin"
+msgstr ""
+
+msgid "Relative Tolerance"
+msgstr ""
+
+msgid "Relative Tolerance (max)"
+msgstr ""
+
+msgid "Relative Tolerance (min)"
+msgstr ""
+
+msgid "Relative Tolerance Base"
+msgstr ""
+
+msgid "Relative Url"
+msgstr ""
+
+msgid "Released"
+msgstr ""
+
+msgid "Released Alive"
+msgstr ""
+
+msgid "Released Alive [state in document_publication_workflow]"
+msgstr ""
+
+msgid "Released [state in document_publication_workflow]"
+msgstr ""
+
+msgid "Remaining Amortisation Duration (months)"
+msgstr "Срок Амортизации (месяцев)"
+
+msgid "Remember my name"
+msgstr ""
+
+msgid "Reminder"
+msgstr ""
+
+msgid "Remove"
+msgstr ""
+
+msgid "Removed Files"
+msgstr ""
+
+msgid "Rename Proxy Field"
+msgstr ""
+
+msgid "Reorder Skin Selection ?"
+msgstr ""
+
+msgid "Replaced"
+msgstr ""
+
+msgid "Replaced [state in business_template_installation_workflow]"
+msgstr ""
+
+msgid "Report"
+msgstr "Отчет"
+
+msgid "Report Tree"
+msgstr ""
+
+msgid "Reporter"
+msgstr "Отправитель"
+
+msgid "Repositories"
+msgstr ""
+
+msgid "Request Approval"
+msgstr "Отправить на Утверждение"
+
+msgid "Request Approval of Manager"
+msgstr "Отправить на Утверждение"
+
+msgid "Request Keys"
+msgstr ""
+
+msgid "Request Translation"
+msgstr ""
+
+msgid "Requested Project"
+msgstr "Проект Клиента"
+
+msgid "Requested by"
+msgstr "Инициатор"
+
+msgid "Requester"
+msgstr "Инициатор"
+
+msgid "Required Item Type List"
+msgstr "Обязательные Виды Партий"
+
+msgid "Requirement"
+msgstr "Требование"
+
+msgid "Requirement Document"
+msgstr "Набор Требований"
+
+msgid "Requirement Movement Group"
+msgstr ""
+
+msgid "Requirement State"
+msgstr "Состояние Требования"
+
+msgid "Requirement Title"
+msgstr "Название Требования"
+
+msgid "Requirements"
+msgstr "Наборы Требований"
+
+msgid "Requirements Fast Input"
+msgstr "Быстрый Ввод Требований"
+
+msgid "Reset Prices"
+msgstr ""
+
+msgid "Resolve SVN Conflicted Files"
+msgstr ""
+
+msgid "Resolved"
+msgstr ""
+
+msgid "Resolved [state in bug_workflow]"
+msgstr ""
+
+msgid "Resource"
+msgstr "Ресурс"
+
+msgid "Resources"
+msgstr "Участники"
+
+msgid "Responded"
+msgstr ""
+
+msgid "Responded [state in event_workflow]"
+msgstr ""
+
+msgid "Returned Purchase Packing List"
+msgstr ""
+
+msgid "Returned Purchase Packing List Cell"
+msgstr ""
+
+msgid "Returned Purchase Packing List Line"
+msgstr ""
+
+msgid "Returned Purchase Packing List Module"
+msgstr ""
+
+msgid "Returned Purchase Packing Lists"
+msgstr ""
+
+msgid "Returned Sale Packing List"
+msgstr "Накладная на Возврат"
+
+msgid "Returned Sale Packing List Cell"
+msgstr ""
+
+msgid "Returned Sale Packing List Line"
+msgstr "Строка Накладной на Возврат"
+
+msgid "Returned Sale Packing List Lines"
+msgstr "Строки Накладной на Возврат"
+
+msgid "Returned Sale Packing List Module"
+msgstr ""
+
+msgid "Returned Sale Packing Lists"
+msgstr "Накладные на Возврат"
+
+msgid "Revert &amp; Update Business Template from SVN"
+msgstr ""
+
+msgid "Revision"
+msgstr "Номер Ревизии"
+
+msgid "Revision Number"
+msgstr ""
+
+msgid "Rights"
+msgstr "Права"
+
+msgid "Role"
+msgstr "Роль"
+
+msgid "Role Definition"
+msgstr "Определение Роли."
+
+msgid "Role Information"
+msgstr ""
+
+msgid "Role Keys"
+msgstr ""
+
+msgid "Roles"
+msgstr "Роль"
+
+msgid "Root Applied Rule Causality Movement Group"
+msgstr ""
+
+msgid "Root Explanation"
+msgstr ""
+
+msgid "Rounding Model"
+msgstr ""
+
+msgid "Rounding Sample"
+msgstr ""
+
+msgid "Rounding Tool"
+msgstr ""
+
+msgid "Rounding option."
+msgstr ""
+
+msgid "Rule"
+msgstr ""
+
+msgid "Rule Tool"
+msgstr ""
+
+msgid "Rules"
+msgstr ""
+
+msgid "Run Unit Tests"
+msgstr ""
+
+msgid "Running Balance"
+msgstr "Текущий остаток"
+
+msgid "Russian"
+msgstr "Русский"
+
+msgid "SO"
+msgstr ""
+
+msgid "SQL Connection String"
+msgstr ""
+
+msgid "SQL Non Continuous Increasing Id Generator"
+msgstr ""
+
+msgid "SQL Non Continuous Increasing Id Generetor"
+msgstr ""
+
+msgid "Salary Coefficient"
+msgstr "Коэффициент Зарплаты"
+
+msgid "Salary Level"
+msgstr "Зарплатный Уровень"
+
+msgid "Sale"
+msgstr "Продажа"
+
+msgid "Sale Invoice Lines"
+msgstr "Строки Инвойса на Продажу"
+
+msgid "Sale Invoice Transaction"
+msgstr "Учет Реализации"
+
+msgid "Sale Invoice Transaction Line"
+msgstr "Строка Инвойса на Реализацию"
+
+msgid "Sale Invoice Transaction related to Sale Packing List."
+msgstr "Учет Реализации, соответствующий Расходной Накладной."
+
+msgid "Sale Opportunities"
+msgstr "Сопровождения Продаж"
+
+msgid "Sale Opportunity"
+msgstr "Сопровождение Продажи"
+
+msgid "Sale Opportunity Module"
+msgstr ""
+
+msgid "Sale Opportunity Type"
+msgstr "Тип Сопровождения Продажи"
+
+msgid "Sale Order"
+msgstr "Заявка на Продажу"
+
+msgid "Sale Order Cell"
+msgstr ""
+
+msgid "Sale Order Line"
+msgstr "Строка Заявки на Продажу"
+
+msgid "Sale Order Lines"
+msgstr "Строки Заявки на Продажу"
+
+msgid "Sale Order Module"
+msgstr "Заявка на Продажу"
+
+msgid "Sale Order Planning Box"
+msgstr ""
+
+msgid "Sale Orders"
+msgstr "Заявки на Продажу"
+
+msgid "Sale Orders to Plan"
+msgstr "Черновики Заявок на Продажу"
+
+msgid "Sale Packing List"
+msgstr "Расходная Накладная"
+
+msgid "Sale Packing List Cell"
+msgstr ""
+
+msgid "Sale Packing List Line"
+msgstr "Строка Расходной Накладной"
+
+msgid "Sale Packing List Lines"
+msgstr "Строки Расходной Накладной"
+
+msgid "Sale Packing List Module"
+msgstr ""
+
+msgid "Sale Packing List Movements"
+msgstr "Строки Расходной Накладной"
+
+msgid "Sale Packing List related to Sale Order."
+msgstr "Расходная Накладная, соответствующая Заявке на Продажу."
+
+msgid "Sale Packing List to Process"
+msgstr "Расходные Накладные в Работе"
+
+msgid "Sale Packing List to process"
+msgstr "Расходные Накладные в Работе"
+
+msgid "Sale Packing Lists"
+msgstr "Расходные Накладные"
+
+msgid "Sale Supplies"
+msgstr "Прайс-Листы на Продажу"
+
+msgid "Sale Supply"
+msgstr "Прайс-Лист на Продажу"
+
+msgid "Sale Supply Cell"
+msgstr ""
+
+msgid "Sale Supply Line"
+msgstr "Строка Прайс-Листа"
+
+msgid "Sale Supply Lines"
+msgstr "Строки Прайс-Листа"
+
+msgid "Sale Supply Module"
+msgstr ""
+
+msgid "Sale Trade Condition"
+msgstr "Шаблон Продажи"
+
+msgid "Sale Trade Condition Module"
+msgstr "Шаблоны Продаж. Модуль"
+
+msgid "Sale Trade Conditions"
+msgstr "Шаблоны Продаж"
+
+msgid "Sales"
+msgstr ""
+
+msgid "Sales Price"
+msgstr "Продажная Цена"
+
+msgid "Save"
+msgstr ""
+
+msgid "Save Business Template"
+msgstr ""
+
+msgid "Saved in ${path} ."
+msgstr ""
+
+msgid "Scriptable Keys"
+msgstr ""
+
+msgid "Search"
+msgstr "Найти"
+
+msgid "Section"
+msgstr "Исходное Лицо"
+
+msgid "Section Account"
+msgstr "Счет в Балансе Исходного Лица"
+
+msgid "Section Bank Account"
+msgstr "Банковский Счет Плательщика"
+
+msgid "Section Category"
+msgstr "Наша Группа"
+
+msgid "Section Transaction Reference"
+msgstr "Референс Создания"
+
+msgid "Select Actions"
+msgstr ""
+
+msgid "Select Exchange"
+msgstr ""
+
+msgid "Select Favourite"
+msgstr ""
+
+msgid "Select Language"
+msgstr ""
+
+msgid "Select Module"
+msgstr ""
+
+msgid "Select Print"
+msgstr "Выберите Отчет"
+
+msgid "Select Template"
+msgstr ""
+
+msgid "Select appropriate document in the list."
+msgstr ""
+
+msgid "Seller"
+msgstr "Продавец"
+
+msgid "Send by Email"
+msgstr ""
+
+msgid "Sender"
+msgstr "Отправитель"
+
+msgid "Sender / Caller"
+msgstr "Отправитель/Инициатор"
+
+msgid "Sender or Caller"
+msgstr "Инициатор (Отправитель)"
+
+msgid "Sender or Provider"
+msgstr "Отправитель"
+
+msgid "Sent"
+msgstr ""
+
+msgid "Sent [state in bug_event_workflow]"
+msgstr ""
+
+msgid "Serial Number"
+msgstr "Серийный Номер"
+
+msgid "Service"
+msgstr "Услуга"
+
+msgid "Service Condition"
+msgstr "Прототип Услуги"
+
+msgid "Service Individual Variation"
+msgstr "Индивидуальная Вариация Услуги"
+
+msgid "Service Module"
+msgstr ""
+
+msgid "Service Report"
+msgstr "Отчет об Услугах"
+
+msgid "Service Reports"
+msgstr "Отчеты об Услугах"
+
+msgid "Services"
+msgstr "Услуги"
+
+msgid "Session Tool"
+msgstr ""
+
+msgid "Set List Setting"
+msgstr "Сохранить Настройку Списка"
+
+msgid "Set List Settting"
+msgstr "Сохранить Настройку Списка"
+
+msgid "Set Packing List Ready"
+msgstr "Подтвердить Готовность к Отправке"
+
+msgid "Set Ready"
+msgstr "Готово к Отправке"
+
+msgid "Set Relation"
+msgstr "Установить Зависимость"
+
+msgid "Set to True if inventory contains everything, False if it's only a partial inventory."
+msgstr "Данное поле отмечено, если данное оприходование товара содержит все. Не отмечено, если это частичное оприходование товара."
+
+msgid "Setting the 'Remember my name' option will set a cookie with your username, so that when you login next time, your user name will already be filled in for you."
+msgstr ""
+
+msgid "Severity"
+msgstr "Степень Важности"
+
+msgid "Shared"
+msgstr ""
+
+msgid "Shared Alive"
+msgstr ""
+
+msgid "Shared Alive [state in document_publication_workflow]"
+msgstr ""
+
+msgid "Shared [state in document_publication_workflow]"
+msgstr ""
+
+msgid "Ship"
+msgstr "Подтвердить Отправку"
+
+msgid "Ship Packing List"
+msgstr "Подтвердить Отправку Груза"
+
+msgid "Shipped"
+msgstr "Груз Отправлен"
+
+msgid "Shipped [state in packing_list_workflow]"
+msgstr ""
+
+msgid "Shipping"
+msgstr "Доставка"
+
+msgid "Shipping Date"
+msgstr "Дата Отгрузки"
+
+msgid "Shipping Price"
+msgstr "Цена за доставку"
+
+msgid "Shipping Service"
+msgstr "Способ доставки"
+
+msgid "Shopping cart summary"
+msgstr "Содержимое корзины"
+
+msgid "Short Message"
+msgstr ""
+
+msgid "Short Title"
+msgstr "Краткое Название"
+
+msgid "Show All"
+msgstr ""
+
+msgid "Show History"
+msgstr "Мониторинг"
+
+msgid "Signature Thumbnail"
+msgstr "Образец Подписи"
+
+msgid "Similar Documents"
+msgstr "Похожие Документы"
+
+msgid "Simulation Movement"
+msgstr ""
+
+msgid "Simulation Select Method"
+msgstr ""
+
+msgid "Simulation State"
+msgstr "Виды Состояний"
+
+msgid "Simulation Tool"
+msgstr ""
+
+msgid "Site"
+msgstr "Месторасположение"
+
+msgid "Site Message"
+msgstr ""
+
+msgid "Site Properties"
+msgstr ""
+
+msgid "Site or Warehouse"
+msgstr "Месторасположение или Склад"
+
+msgid "Sites"
+msgstr "Месторасположения"
+
+msgid "Size"
+msgstr "Размер"
+
+msgid "Size:"
+msgstr "Размер:"
+
+msgid "Skill"
+msgstr "Виды деятельности (ОКВЭД)"
+
+msgid "Skills"
+msgstr "ОКВЭД"
+
+msgid "Skin Folders"
+msgstr ""
+
+msgid "Social Code"
+msgstr "Страховой Номер"
+
+msgid "Social Form"
+msgstr "Организационная форма"
+
+msgid "Social Security Identification Number"
+msgstr "ИНН"
+
+msgid "Software Licence"
+msgstr ""
+
+msgid "Software Licence Module"
+msgstr ""
+
+msgid "Software Licences"
+msgstr ""
+
+msgid "Software Product"
+msgstr ""
+
+msgid "Software Product Module"
+msgstr ""
+
+msgid "Software Products"
+msgstr ""
+
+msgid "Sold"
+msgstr ""
+
+msgid "Sold [state in sale_opportunity_workflow]"
+msgstr ""
+
+msgid "Solved"
+msgstr "Согласованы"
+
+msgid "Solved [state in delivery_causality_workflow]"
+msgstr ""
+
+msgid "Solved [state in solver_process_workflow]"
+msgstr ""
+
+msgid "Solved [state in solver_workflow]"
+msgstr ""
+
+msgid "Solver Action Title"
+msgstr ""
+
+msgid "Solver Configuration"
+msgstr ""
+
+msgid "Solver Configuration Form ID"
+msgstr ""
+
+msgid "Solver Decision"
+msgstr ""
+
+msgid "Solver Process"
+msgstr ""
+
+msgid "Solver Process Tool"
+msgstr ""
+
+msgid "Solver Tool"
+msgstr ""
+
+msgid "Solver Type"
+msgstr ""
+
+msgid "Solvers"
+msgstr ""
+
+msgid "Solving"
+msgstr "Обновляются"
+
+msgid "Solving [state in delivery_causality_workflow]"
+msgstr ""
+
+msgid "Solving [state in solver_process_workflow]"
+msgstr ""
+
+msgid "Solving [state in solver_workflow]"
+msgstr ""
+
+msgid "Sorry+You+Can+Not+Delete+${count}+Items."
+msgstr "Извините+Вы+не+можете+удалить+${count}+элемента(ов)."
+
+msgid "Sorry, pending activities prevent changing id at this current stage"
+msgstr ""
+
+msgid "Sort"
+msgstr ""
+
+msgid "Sort Index"
+msgstr "Порядковый Номер"
+
+msgid "Sort Index will either give a calculation order or a sorting order of a document in a list that contains many documents."
+msgstr "Порядковый номер используется для сортировки документов в списках или порядок действий при вычислениях. "
+
+msgid "Sort skin folders by priority"
+msgstr ""
+
+msgid "Source"
+msgstr "Исходная Точка"
+
+msgid "Source Carrier"
+msgstr ""
+
+msgid "Source Decision"
+msgstr "Ответственное Лицо Заказчика"
+
+msgid "Source Method"
+msgstr ""
+
+msgid "Source Project"
+msgstr "Проект Отправителя"
+
+msgid "Source Section"
+msgstr "Исходное Лицо"
+
+msgid "Specialise"
+msgstr ""
+
+msgid "Specialise Reference"
+msgstr ""
+
+msgid "Specialised Business Process Models"
+msgstr ""
+
+msgid "Specialised Trade Conditions"
+msgstr "Базовый Шаблон"
+
+msgid "Specialised Trade Conditions and Business Processes"
+msgstr ""
+
+msgid "Specific function of a coordinate"
+msgstr "Специальная функция координат лица."
+
+msgid "Split Document"
+msgstr ""
+
+msgid "Split Document [state in document_publication_workflow]"
+msgstr ""
+
+msgid "Split Movement Group"
+msgstr ""
+
+msgid "Split and Defer"
+msgstr "Отделить и Отложить"
+
+msgid "Spreadsheet"
+msgstr ""
+
+msgid "Start"
+msgstr "Открыть"
+
+msgid "Start Accounting Period"
+msgstr "Открыть Бухгалтерский Период"
+
+msgid "Start After"
+msgstr "Начать не Ранее"
+
+msgid "Start Before"
+msgstr "Начать не Позднее"
+
+msgid "Start Building"
+msgstr ""
+
+msgid "Start Building [action in delivery_causality_workflow]"
+msgstr ""
+
+msgid "Start Career Step"
+msgstr "Начать Этап Карьеры"
+
+msgid "Start Date"
+msgstr "Начальная Дата"
+
+msgid "Start Date Range Max"
+msgstr ""
+
+msgid "Start Date Range Min"
+msgstr ""
+
+msgid "Started"
+msgstr "Открыт"
+
+msgid "Started [state in accounting_period_workflow]"
+msgstr ""
+
+msgid "Started [state in assignment_workflow]"
+msgstr ""
+
+msgid "Started [state in career_workflow]"
+msgstr ""
+
+msgid "State"
+msgstr "Состояние"
+
+msgid "Status"
+msgstr "Состояние Workflow"
+
+msgid "Status changed."
+msgstr "Состояние workflow изменено."
+
+msgid "Status+changed."
+msgstr "Состояние workflow изменено."
+
+msgid "Stock"
+msgstr "Запасы\n"
+
+msgid "Stock By Variation"
+msgstr "Запасы с Учетом Вариаций"
+
+msgid "Stock by Variation"
+msgstr "Запасы с Учетом Вариаций"
+
+msgid "Stock per Variation"
+msgstr "Запасы по Вариациям"
+
+msgid "Stop After"
+msgstr "Закончить не Ранее"
+
+msgid "Stop Before"
+msgstr "Закончить не Позднее"
+
+msgid "Stop Career Step"
+msgstr "Закончить Этап Карьеры"
+
+msgid "Stop Date"
+msgstr "Конечная Дата"
+
+msgid "Stopped"
+msgstr ""
+
+msgid "Stopped [state in accounting_period_workflow]"
+msgstr ""
+
+msgid "Stopped [state in assignment_workflow]"
+msgstr ""
+
+msgid "Stopped [state in career_workflow]"
+msgstr ""
+
+msgid "Store Interval"
+msgstr ""
+
+msgid "Store in the ZODB"
+msgstr ""
+
+msgid "Street Address"
+msgstr "Адрес"
+
+msgid "String Divergence Tester"
+msgstr ""
+
+msgid "Sub-Requirement Description"
+msgstr "Описание Подчиненного Требования"
+
+msgid "Sub-Requirement Title"
+msgstr "Название Подчиненного Требования"
+
+msgid "Sub-Requirements"
+msgstr "Подчиненные Требования"
+
+msgid "Subcategories"
+msgstr ""
+
+msgid "Submit"
+msgstr "Представить на Рассмотрение"
+
+msgid "Submit Document for Review"
+msgstr ""
+
+msgid "Submit Event"
+msgstr "Представить на Рассмотрение"
+
+msgid "Submitted"
+msgstr "Утвержден"
+
+msgid "Submitted Date"
+msgstr "Дата Отправки"
+
+msgid "Submitted [state in document_publication_workflow]"
+msgstr ""
+
+msgid "Submitted [state in notification_message_workflow]"
+msgstr ""
+
+msgid "Submitted [state in sale_opportunity_workflow]"
+msgstr ""
+
+msgid "Subscription Item"
+msgstr ""
+
+msgid "Subscription Item Module"
+msgstr ""
+
+msgid "Subscription Item Root Simulation Rule"
+msgstr ""
+
+msgid "Subscription Items"
+msgstr ""
+
+msgid "Subversion"
+msgstr ""
+
+msgid "Subversion Working Copy List"
+msgstr ""
+
+msgid "Successfully removed from shopping cart."
+msgstr "Успешно удалено из корзины."
+
+msgid "Successor"
+msgstr ""
+
+msgid "Suffix"
+msgstr "Префикс"
+
+msgid "Sumitted"
+msgstr "Утвержден"
+
+msgid "Summary Info"
+msgstr "Краткое описание"
+
+msgid "Supervisor"
+msgstr "Руководитель"
+
+msgid "Supplier"
+msgstr "Поставщик"
+
+msgid "Supplier Account"
+msgstr ""
+
+msgid "Supplier Project"
+msgstr ""
+
+msgid "Supplier Reference"
+msgstr "Референс Поставщика"
+
+msgid "Supply Cell"
+msgstr ""
+
+msgid "Supply Chain"
+msgstr "Цепочка Поставок"
+
+msgid "Supply Chain Module"
+msgstr "Модуль Управления Цепочками Поставок"
+
+msgid "Supply Chains"
+msgstr "Цепочки Поставок"
+
+msgid "Supply Line"
+msgstr ""
+
+msgid "Supply Link"
+msgstr "Этап Цепочки Поставок"
+
+msgid "Supply Links"
+msgstr "Этапы Цепочки Поставок"
+
+msgid "Supply Node"
+msgstr "Узел Цепочки Поставок"
+
+msgid "Supply Nodes"
+msgstr "Узлы Цепочки Поставок"
+
+msgid "Support Request"
+msgstr "Запрос на Техподдержку"
+
+msgid "Support Request Module"
+msgstr ""
+
+msgid "Support Request Type"
+msgstr "Тип Тех. Запроса"
+
+msgid "Support Requests"
+msgstr "Запросы на Техподдержку"
+
+msgid "Surcharge Ratio"
+msgstr "Надбавка (%)"
+
+msgid "Surcharge Ratio Quantity Step"
+msgstr "Шаг для Надбавки (Количество)"
+
+msgid "Surcharge Ratio Variation Axes"
+msgstr "Величина Надбавки Зависит от"
+
+msgid "Symbol"
+msgstr ""
+
+msgid "Synchronisation Tool"
+msgstr ""
+
+msgid "System Preference"
+msgstr "Системные Настройки"
+
+msgid "TALES Expression to define the URL of the action"
+msgstr ""
+
+msgid "TALES Expression to define the URL of the icon of the action"
+msgstr ""
+
+msgid "TALES Expression to define the applicability of the action"
+msgstr ""
+
+msgid "Target Product"
+msgstr "Готовое Изделие"
+
+msgid "Task"
+msgstr "Задача"
+
+msgid "Task Constraints"
+msgstr "Ограничения для Задачи"
+
+msgid "Task Line"
+msgstr "Строка Задачи"
+
+msgid "Task Report"
+msgstr "Отчет по Задачам"
+
+msgid "Task Report Line"
+msgstr "Строка Отчета по Задачам"
+
+msgid "Task Reports"
+msgstr "Отчеты по Задачам"
+
+msgid "Task Title"
+msgstr "Наименование Задачи"
+
+msgid "Tasks"
+msgstr "Задачи"
+
+msgid "Tasks to Validate"
+msgstr "Задачи, Ожидающие Подтверждения"
+
+msgid "Tax"
+msgstr "Налог\n"
+
+msgid "Tax Line"
+msgstr "Строка Налога"
+
+msgid "Tax Line Delivery Movement Group"
+msgstr ""
+
+msgid "Tax Lines"
+msgstr "Строки Налога"
+
+msgid "Tax Model Line"
+msgstr "Шаблон Расчета Налога"
+
+msgid "Tax Model Lines"
+msgstr "Применяемые Шаблоны Расчета Налогов"
+
+msgid "Tax Module"
+msgstr ""
+
+msgid "Tax Rule"
+msgstr ""
+
+msgid "Taxes"
+msgstr "Налоги"
+
+msgid "Telephone"
+msgstr "Телефон"
+
+msgid "Tell who requested the ticket"
+msgstr "Лицо, которое запросило реализацию данной кампании."
+
+msgid "Tells who requested the ticket"
+msgstr "Лицо, запросившее создание этого тикета."
+
+msgid "Template Tool"
+msgstr ""
+
+msgid "Templates"
+msgstr ""
+
+msgid "Temporarily Stopped"
+msgstr ""
+
+msgid "Temporarily Stopped [state in accounting_period_workflow]"
+msgstr ""
+
+msgid "Temporary Closed"
+msgstr "Временно Закрытый"
+
+msgid "Term"
+msgstr ""
+
+msgid "Term (days)"
+msgstr "Срок (дней)"
+
+msgid "Term Reference Date"
+msgstr ""
+
+msgid "Terminate the Current Career Step"
+msgstr "Удалить Текущий Этап Карьеры"
+
+msgid "Test Method ID"
+msgstr ""
+
+msgid "Tested Properties"
+msgstr ""
+
+msgid "Tested Property"
+msgstr ""
+
+msgid "Tested Property Title"
+msgstr ""
+
+msgid "Tested properties"
+msgstr ""
+
+msgid "Tested?"
+msgstr "Протестирован?"
+
+msgid "Tester Configuration"
+msgstr ""
+
+msgid "Text"
+msgstr "Текст"
+
+msgid "Text area field"
+msgstr "Комментарий к документу"
+
+msgid "The Date"
+msgstr "Дата"
+
+msgid "The EAN 13 code of this document"
+msgstr "Штрих-Код (EAN 13) этого документа."
+
+msgid "The EAN-13 code of this document"
+msgstr ""
+
+msgid "The FAX number."
+msgstr "Номер факса."
+
+msgid "The Financial Section for this account.\n\nUsed in some reports (Profit & Loss, Balance Sheet)  and budget."
+msgstr "Финансовый раздел, к которому относится данный счет.\n\nИспользуется в некоторых отчетах (Прибыли и Убытки, Баланс) и для бюджетирования."
+
+msgid "The ID of the configuration form."
+msgstr ""
+
+msgid "The Invoice Reference"
+msgstr "Ссылка на инвойс"
+
+msgid "The Order which caused this Packing List."
+msgstr "Заявка, соответствующая данной Накладной."
+
+msgid "The Payment Mode used."
+msgstr "Используемый метод оплаты."
+
+msgid "The Person's National Identification Number."
+msgstr "Персональный Национальный Идентификационный Номер."
+
+msgid "The Person's Social Code."
+msgstr "Номер страхования в ПФ."
+
+msgid "The Subversion working copies"
+msgstr ""
+
+msgid "The URL"
+msgstr "URL адрес"
+
+msgid "The Version of the Business Template"
+msgstr ""
+
+msgid "The Version of the Rule"
+msgstr ""
+
+msgid "The absolute references of the document (our reference)"
+msgstr "Абсолютная ссылка на документ (наша ссылка)."
+
+msgid "The absolute total price. This is exclusive with the \"Percentage Of Total\" field."
+msgstr "Абсолютная величина в валюте, не включаемая в \"Процент от Итога\" поле."
+
+msgid "The activity code of the organisation.\n\nThis code is specific to the local legislation. For instance, in France this is called \"Code APE\""
+msgstr "Регистрационный номер организации в ФСС."
+
+msgid "The activity of the person."
+msgstr "Виды деятельности физического лица."
+
+msgid "The agents."
+msgstr "Физические Лица."
+
+msgid "The amortisation method used for this particular immobilisation period"
+msgstr "Способ амортизации, используемый для данного внеоборотного актива в заданном периоде."
+
+msgid "The amount limit an agent is allowed to debit on a bank account"
+msgstr "Максимальная сумма списания со счета, на которую агент может дать подтверждение."
+
+msgid "The bank organisation in which this bank account was openned."
+msgstr ""
+
+msgid "The base categories to browse"
+msgstr ""
+
+msgid "The base categories to test"
+msgstr ""
+
+msgid "The base categories which allow multiple values and required AND test"
+msgstr ""
+
+msgid "The beginning date for validity of the currency exchange rate."
+msgstr "Момент вступления в силу данного валютного курса."
+
+msgid "The birth name, or maiden name of the person."
+msgstr "Девичья фамилия (фамилия в свидетельстве о рождении)."
+
+msgid "The branch code holding this bank account. This is the middle part of the BBAN."
+msgstr "Название (или Код) филиала банка, в котором открыт счет."
+
+msgid "The city."
+msgstr "Город, где расположена организация."
+
+msgid "The code of the bank."
+msgstr ""
+
+msgid "The contact persons involved"
+msgstr "Образцы"
+
+msgid "The content of the document considered as a text string"
+msgstr ""
+
+msgid "The corporate registration code of this organisation"
+msgstr "Регистрационный номер организации."
+
+msgid "The country code of the bank."
+msgstr "Код страны банка."
+
+msgid "The currency that is used by this bank account."
+msgstr ""
+
+msgid "The currency that is used for the accounting transaction."
+msgstr "Валюта, используемая для данной бухгалтерской транзакции."
+
+msgid "The currency that will be used for this company accounting."
+msgstr "Валюта, используемая для учета данной компании в нашем балансе."
+
+msgid "The current state of the document."
+msgstr "Текущее состояние (workflow state) открытого документа."
+
+msgid "The date at which products were shipped or the date at which a service started."
+msgstr ""
+
+msgid "The date at which shipped products were delivered or the date at which a service was completed."
+msgstr ""
+
+msgid "The date at wich the trash bin was created"
+msgstr ""
+
+msgid "The date of birth for the person."
+msgstr "Дата рождения персоны."
+
+msgid "The date the organisation was registered."
+msgstr "Дата регистрации организации."
+
+msgid "The date this accounting period ends."
+msgstr "Дата окончания бухгалтерского периода."
+
+msgid "The date this accounting period starts."
+msgstr "Дата начала бухгалтерского периода."
+
+msgid "The date this career step ends."
+msgstr "Дата окончания карьерного этапа."
+
+msgid "The date this career step starts."
+msgstr "Дата начала карьерного этапа."
+
+msgid "The date when a document is published."
+msgstr ""
+
+msgid "The date when the document expires."
+msgstr ""
+
+msgid "The date when the document starts being valid."
+msgstr ""
+
+msgid "The date which the movement starts"
+msgstr "Дата начала операции."
+
+msgid "The date which the movement stops"
+msgstr "Дата окончания операции."
+
+msgid "The default contained object id to look up"
+msgstr ""
+
+msgid "The default currency when creating new transactions."
+msgstr ""
+
+msgid "The default organisation to use when creating a new accounting transaction"
+msgstr ""
+
+msgid "The default section category for reporting"
+msgstr ""
+
+msgid "The end date for validity of the currency exchange rate."
+msgstr "Окончание срока действия данного валютного курса."
+
+msgid "The entity that emits the invoice."
+msgstr "Организация, выставляющая данный инвойс."
+
+msgid "The entity that receives the invoice."
+msgstr "Лицо, на которое выставлен данный инвойс."
+
+msgid "The first name of the person."
+msgstr "Имя данного физического лица."
+
+msgid "The format of the text content of this document"
+msgstr "Формат текста данного документа."
+
+msgid "The function assigned to the person."
+msgstr "Ключевые обязанности сотрудника."
+
+msgid "The function of the organisation."
+msgstr "Обязанности организации."
+
+msgid "The geographic incorporate code of this organisation, sometimes derivated from corporate code"
+msgstr "Основной государственный регистрационный номер."
+
+msgid "The grade of the person."
+msgstr "Образование физического лица."
+
+msgid "The group which the organisation is member of."
+msgstr "Группа, членом которой является организация"
+
+msgid "The invoice date for the supplier."
+msgstr "Дата выставления инвойса поставщиком."
+
+msgid "The invoiced person or organisation."
+msgstr "Организация, которой выставляется данный инвойс."
+
+msgid "The invoicing person or organisation."
+msgstr "Лицо, выставившее данный инвойс."
+
+msgid "The item is in this account while it is immobilised. It is debited at the immobilisation, and credited at the unimmobilisation"
+msgstr "Счет, на котором находится ВА, пока не списан.  Он дебетуется в момент постановки ВА на баланс."
+
+msgid "The languages displayed in the User Interface."
+msgstr ""
+
+msgid "The last name of the person."
+msgstr "Фамилия данного физического лица."
+
+msgid "The list of skills for this company."
+msgstr "Коды ОКВЭД."
+
+msgid "The logistic company in charge of delivering goods at the destination warehouse."
+msgstr ""
+
+msgid "The logistic company in charge of taking goods at the source warehouse."
+msgstr ""
+
+msgid "The marital status of the person."
+msgstr "Семейное положение физического лица."
+
+msgid "The maximal date (inclusive) for transactions"
+msgstr ""
+
+msgid "The maximal delay of a resource."
+msgstr ""
+
+msgid "The maximal delay time of a movement process."
+msgstr ""
+
+msgid "The maximal quantity to use on a movement."
+msgstr ""
+
+msgid "The maximal stock quantity of a resource."
+msgstr ""
+
+msgid "The middle name of the person."
+msgstr "Отчество физического лица."
+
+msgid "The minimal date (inclusive) for transactions"
+msgstr ""
+
+msgid "The minimal delay of a resource."
+msgstr ""
+
+msgid "The minimal delay time of a movement process."
+msgstr ""
+
+msgid "The minimal quantity to use on a movement."
+msgstr ""
+
+msgid "The minimal stock quantity of a resource."
+msgstr ""
+
+msgid "The mobile telephone number."
+msgstr ""
+
+msgid "The module which contains deliveries"
+msgstr ""
+
+msgid "The name of a document in ERP5"
+msgstr "Наименование документа в ERP5."
+
+msgid "The name of the Account"
+msgstr "Название бухгалтерского счета."
+
+msgid "The name of the business template, must not change between revision as this is the property used to retrieve old one when upgrading"
+msgstr ""
+
+msgid "The name of the collective agreement."
+msgstr "Номер и дата трудового/коллективного договора."
+
+msgid "The next date at which alarm will be executed"
+msgstr ""
+
+msgid "The number of children this person have."
+msgstr "Количество детей физического лица."
+
+msgid "The number of partner for the person."
+msgstr "Количество иждивенцев физического лица."
+
+msgid "The number of the bank account."
+msgstr "Номер банковского счета."
+
+msgid "The official name of this organisation"
+msgstr "Юридическое наименование организации."
+
+msgid "The organisation code for Value Added Tax."
+msgstr "НДС код (Value Added Tax identification number) - используется в целях налогообложения для организаций ЕС."
+
+msgid "The organisation code for social security."
+msgstr "Регистрационный номер организации в Пенсионном Фонде."
+
+msgid "The organisation for which the person works."
+msgstr "Организация, в который работает это физическое лицо."
+
+msgid "The organisation or person in charge of paying for the client."
+msgstr ""
+
+msgid "The organisation or person in charge of receiving the payment for the supplier."
+msgstr ""
+
+msgid "The organisation or person to whom merchandise or service is delivered over or provided to."
+msgstr "Юридическое или физическое лицо, которому поставляются товары или предоставляются услуги. "
+
+msgid "The organisation or person who is delivered goods or services in this operation"
+msgstr ""
+
+msgid "The organisation or person who sends merchandise or provides service."
+msgstr "Физическое или юридическое лицо, со склада которого отправляется товар, предоставляются услуги."
+
+msgid "The organisation's activity."
+msgstr "Вид деятельности организации."
+
+msgid "The original filename of the document"
+msgstr "Исходное имя файла, соответствующего документу."
+
+msgid "The password of the user.\n\nLeaving this password empty will not modify existing password."
+msgstr "Пароль физического лица на вход в программу. \n\nСуществующий пароль не будет изменен, если оставить это поле пустым."
+
+msgid "The percentage of the total price."
+msgstr "Процент от итоговой суммы."
+
+msgid "The person or organisation in charge of handling the sales process or of taking the sales decision."
+msgstr "Физическое или юридическое лицо, ответственное за сделку со стороны продавца. Агент."
+
+msgid "The person or organisation in charge of paying for the client."
+msgstr "Физическое или юридическое лицо, выполняющее оплату инвойса за клиента."
+
+msgid "The person or organisation in charge of receiving the payment for the supplier."
+msgstr "Физическое или юридическое лицо, на счет (в кассу) которого осуществляется оплата инвойса."
+
+msgid "The person or organisation in charge of selecting the supplier or taking the decision to place the order."
+msgstr "Физическое или юридическое лицо, ответственное за сделку со стороны покупателя. Агент."
+
+msgid "The person or organisation in charge of sending the invoice or handling administrative paperwork for the supplier."
+msgstr "Сотрудник или организация, ответственная за пересылку инвойса или выполняющая услуги по административному документообороту для поставщика."
+
+msgid "The person or organisation which the invoice should be sent to and who is in charge of handling administrative paperwork for the client."
+msgstr "Сотрудник или организация, ответственная за пересылку инвойса или выполняющая услуги по административному документообороту для клиента."
+
+msgid "The person's gender."
+msgstr "Пол данного физического лица."
+
+msgid "The person's nationality."
+msgstr "Гражданство физического лица."
+
+msgid "The portal types to browse"
+msgstr ""
+
+msgid "The postal code"
+msgstr "Почтовый индекс."
+
+msgid "The predicate categories"
+msgstr ""
+
+msgid "The preferred account chart."
+msgstr ""
+
+msgid "The preferred account number method."
+msgstr ""
+
+msgid "The preferred date order in which datetime field will be displayed (dd/mm/yyyy, yyyy/mm/dd, ...)"
+msgstr ""
+
+msgid "The preferred float number style in which float field will be displayed (with comma, point, space, ...)"
+msgstr ""
+
+msgid "The preferred money quantity style in which float field will be displayed (with comma, point, space, ...)"
+msgstr ""
+
+msgid "The prefix for the person's full name.\n\nUsually something like Dr. or Mr."
+msgstr "Обращение, употребляемое в речи перед фамилией. В русском языке: г-н, г-жа."
+
+msgid "The priority of the preference : in ascending order : user, site, global"
+msgstr ""
+
+msgid "The project to which this transaction is related to on the client side."
+msgstr ""
+
+msgid "The project to which this transaction is related to on the supplier side."
+msgstr ""
+
+msgid "The properties to test identity or range on"
+msgstr ""
+
+msgid "The quantity of resource."
+msgstr "Количество ресурса."
+
+msgid "The ration of resource that will at the end being transformed.\nIf efficiency is 90, it means we lost 10% in the transformation"
+msgstr "Отношение полезного расхода к норме расхода материалов (работ), установленной на производство единицы продукции (работы)."
+
+msgid "The reference currency in which the exchange rate is given."
+msgstr "Валюта, в единицах которой задан валютный курс."
+
+msgid "The references of the document for default destinations"
+msgstr "Ссылка на документ в документообороте клиента. "
+
+msgid "The references of the document for default sources"
+msgstr ""
+
+msgid "The region."
+msgstr "Регион (контенент, страна, федеральный округ)."
+
+msgid "The registered capital of this organisation."
+msgstr "Уставный капитал организации."
+
+msgid "The resource title involved"
+msgstr "Используемый в данной операции ресурс."
+
+msgid "The role of the person in the organisation."
+msgstr "Роль сотрудника в организации по отношению к программе."
+
+msgid "The role."
+msgstr "Роль для задания прав."
+
+msgid "The roles of the organisation."
+msgstr "Роль организации для нашей компании."
+
+msgid "The roles of the person in the organisation."
+msgstr ""
+
+msgid "The section Organisation for documents."
+msgstr ""
+
+msgid "The section category for documents; usually something like group/nexedi."
+msgstr ""
+
+msgid "The security key for this bank account. IBAN stands for International Bank Account Number"
+msgstr "IBAN означает International Bank Account Number (Международный Номер Банковского Счета)."
+
+msgid "The site where this organisation is located."
+msgstr "Месторасположение организации."
+
+msgid "The smallest transferrable amount expressed in the default unit"
+msgstr "Наименьшая сумма, которая может быть использована в программе, выраженная в основной валюте."
+
+msgid "The smallest unit of price."
+msgstr ""
+
+msgid "The street address.\n\nThis usually contains the street name, building number and apartment number (if any)."
+msgstr ""
+
+msgid "The suffix for the person full name.\n\nCan be something like 'Jr.'"
+msgstr "Дополнительное имя физического лица."
+
+msgid "The symbol used to represent the currency.\n\nIt is for example $, ¥, €, £..."
+msgstr ""
+
+msgid "The telephone number."
+msgstr "Телефонный номер."
+
+msgid "The text format used by default"
+msgstr "Формат текста, используемый по умолчанию"
+
+msgid "The title of the accounting transaction."
+msgstr "Название бухгалтерской транзакции."
+
+msgid "The title of the destination decision of this movement"
+msgstr "Ответственное лицо получателя товаров или услуг."
+
+msgid "The title of the destination of this movement"
+msgstr "Лицо, в распоряжении которого будут находиться ресурсы после завершения данной операции."
+
+msgid "The title of the destination project of this movement"
+msgstr "Название проекта, относящегося к клиенту."
+
+msgid "The title of the destination section of this movement"
+msgstr "Лицо - получатель товаров или услуг."
+
+msgid "The title of the document"
+msgstr "Название документа."
+
+msgid "The title of the document."
+msgstr "Заголовок документа."
+
+msgid "The title of the source administration of this movement"
+msgstr "Сотрудник или организация, ответственная за пересылку инвойса или выполняющая услуги по административному документообороту для поставщика."
+
+msgid "The title of the source decision of this movement"
+msgstr "Ответственное лицо со стороны поставщика."
+
+msgid "The title of the source of this movement"
+msgstr "Лицо, в распоряжении которого находятся ресурсы, относящиеся к данному документу."
+
+msgid "The title of the source project of this movement"
+msgstr "Название проекта, относящегося к поставщику."
+
+msgid "The title of the source section of this movement"
+msgstr "Название поставщика ресурсов."
+
+msgid "The title of the source trade of this movement"
+msgstr "Инициатор данного документа."
+
+msgid "The title of this career."
+msgstr "Название данного карьерного этапа или должности."
+
+msgid "The type of the account.\n\nThis category defines how the account will behave. For instance Payable or Receivable accounts will need to be used with a third party."
+msgstr "Вид счета.\n\nЭто категория определяет поведение форм, связанных с данным счетом. Например при выборе счета из раздела Дебиторы или Кредиторы требуется указать контрагента."
+
+msgid "The unit price for the base product, not taking into account options or discounts."
+msgstr "Базовая цена ресурса, не учитывающая скидки и надбавки."
+
+msgid "The username this person will use to log in the system.\n\nThe system will check that there isn't another user with the same username."
+msgstr "Имя пользователя, используемое физическим лицом для входа в программу.\n\nПри заведении нового пользователя в программе производится проверка на уникальность имени пользователя."
+
+msgid "The usual name of the organisation."
+msgstr ""
+
+msgid "The usual name of the person."
+msgstr "Фактическое наименование лица."
+
+msgid "The values above are the parameters of the transaction list displayed below.<br/>Those parameters have a portal wide scope and can be edited in the <a href='${url}'>preference screen</a>."
+msgstr "Вышеуказанные параметры используются в качестве критериев для отбора транзакций, приведенных ниже.<br/> Эти параметры широко используются в программе и могут быть отредактированы в <a href='${url}'>preference screen</a>.\n"
+
+msgid "The version of a document in ERP5"
+msgstr ""
+
+msgid "Third Parties"
+msgstr "Контрагенты"
+
+msgid "Third Party"
+msgstr "Контрагент"
+
+msgid "Third Party Account"
+msgstr "Счет в Балансе Контрагента"
+
+msgid "Third Party Bank Account"
+msgstr "Банковский Счет Контрагента"
+
+msgid "Third Party Reference"
+msgstr "Референс у Контрагента"
+
+msgid "Third Party Transaction Reference"
+msgstr "Референс у Контрагента"
+
+msgid "This account is credited by the value of the annuity at each financial year end ; its role is to gather annuities values in a single account. Then one can know the real value of the item by deducting amortisation account value from immobilisation account value. Amortisation account is entirely debited from the added annuities values when the item is unimmobilised."
+msgstr "Счет для накопления амортизации. Кредитуется на сумму ежегодной амортизации в конце каждого финансового года. Для получения текущей стоимости ВА нужно вычесть сальдо Счета накопленной амортизации из сальдо Счета учета ВА.  Счет Накопленной Амортизации закрывается дебетованием в конце срока амортизации или при реализации."
+
+msgid "This account is debited at the immobilisation, and credited at the unimmobilisation."
+msgstr "НДС по приобретенным ценностям (НДС - к возврату) дебетуется при постановке на учет."
+
+msgid "This account is debited by the value of the annuity at each financial year end."
+msgstr "Счет дебетуется на сумму ежегодных амортизационный начислений в конце каждого финансового года."
+
+msgid "This account is the one the item is coming from. It is credited by the value of the item when it is immobilised."
+msgstr "Счет, который кредитуется в момент постановки элемента Внеоборотных Активов на баланс."
+
+msgid "This movement will contribute to the selected bases."
+msgstr "Сумму рассчитанного налога добавить к выделенным базам."
+
+msgid "This option helps define whether an account is normally Credit or Debit balanced. Any asset and expense account will have a normal debit balance, while any liability, equity, and revenue account will have a normal credit balance. Checking this box will define the account as being a Normal Credit Balance"
+msgstr "Отметьте это поле, если счет - Пассивный. Пассивные счета имеют кредитовый остаток, Активные - дебетовый. Активно-Пассивные могут иметь и дебетовый, и кредитовый остаток."
+
+msgid "This price is added to immobilised price."
+msgstr "Величина, добавляемая к начальной стоимости партии Внеоборотных Активов."
+
+msgid "This rule will be applied on the selected bases."
+msgstr "Данное правило будет применено к объектам, базы которых соответствуют выделенным."
+
+msgid "Ticket"
+msgstr "Тикет"
+
+msgid "Ticket Workflow"
+msgstr "Тикет Workflow"
+
+msgid "Time"
+msgstr "Время"
+
+msgid "Title"
+msgstr "Название Документа"
+
+msgid "Title Movement Group"
+msgstr ""
+
+msgid "To represent batches (ex. of 100)"
+msgstr ""
+
+msgid "Tools"
+msgstr ""
+
+msgid "Topic Keys"
+msgstr ""
+
+msgid "Total"
+msgstr "Итого"
+
+msgid "Total Price"
+msgstr "Сумма Итого"
+
+msgid "Total Quantity"
+msgstr "Общее Количество"
+
+msgid "Tracking"
+msgstr "Мониторинг"
+
+msgid "Trade Condition Type"
+msgstr ""
+
+msgid "Trade Date"
+msgstr "Основная Дата"
+
+msgid "Trade Model"
+msgstr "Торговая Модель"
+
+msgid "Trade Model Cell"
+msgstr "Ячейка Торговой Модели"
+
+msgid "Trade Model Line"
+msgstr "Линия Торговой Модели"
+
+msgid "Trade Model Line with a Fixed Quantity. If this is set, Ratio is ignored."
+msgstr ""
+
+msgid "Trade Model Lines"
+msgstr "Линии Торговой Модели"
+
+msgid "Trade Model Path"
+msgstr ""
+
+msgid "Trade Model Paths"
+msgstr ""
+
+msgid "Trade Model Rule"
+msgstr "Правило Торговой Модели"
+
+msgid "Trade Model Simulation Rule"
+msgstr ""
+
+msgid "Trade Model Solver"
+msgstr ""
+
+msgid "Trade Phase"
+msgstr "Этап продажи"
+
+msgid "Trade Phases"
+msgstr "Этапы продажи"
+
+msgid "Trade State"
+msgstr ""
+
+msgid "Trade condition title"
+msgstr "Прототип условий"
+
+msgid "Transaction Reference"
+msgstr "Происхождение"
+
+msgid "Transaction Type"
+msgstr "Вид Операции"
+
+msgid "Transaction is not balanced."
+msgstr "Обороты по дебету и кредиту транзакции не равны."
+
+msgid "Transactions"
+msgstr "Финансовые Транзакции"
+
+msgid "Transactions Related To This Account"
+msgstr "Карточка счета"
+
+msgid "Transactions Related To This Bank Account"
+msgstr "Операции по Данному Банковскому Счету"
+
+msgid "Transactions Related To This Entity"
+msgstr "Относящиеся К Данному Лицу Проводки"
+
+msgid "Transactions Related to This Account"
+msgstr "Карточка счета"
+
+msgid "Transactions Related to This Bank Account"
+msgstr "Транзакции по Данному Банковскому Счету"
+
+msgid "Transactions Related to This Entity"
+msgstr "Относящиеся К Данному Лицу Проводки"
+
+msgid "Transformation"
+msgstr "Технологическая Карта"
+
+msgid "Transformation Module"
+msgstr ""
+
+msgid "Transformation Operation"
+msgstr "Выполняемая Работа"
+
+msgid "Transformation Operation Cell"
+msgstr ""
+
+msgid "Transformation Optional Resource"
+msgstr "Дополнительный Ресурс"
+
+msgid "Transformation Template"
+msgstr "Прототипы Технологической Карты"
+
+msgid "Transformation Transformed Resource"
+msgstr "Потребляемый Материал"
+
+msgid "Transformation Transformed Resource Cell"
+msgstr ""
+
+msgid "Transformations"
+msgstr "Технологические Карты"
+
+msgid "Translated"
+msgstr ""
+
+msgid "Translated [state in document_publication_workflow]"
+msgstr ""
+
+msgid "Translation"
+msgstr ""
+
+msgid "Translation Requested"
+msgstr ""
+
+msgid "Translation Requested [state in document_publication_workflow]"
+msgstr ""
+
+msgid "Translations"
+msgstr ""
+
+msgid "Trash Bin"
+msgstr ""
+
+msgid "Trash Bins"
+msgstr ""
+
+msgid "Trash Birth Date"
+msgstr ""
+
+msgid "Trash Folder"
+msgstr ""
+
+msgid "Trash Objects"
+msgstr "Удаленные Объекты"
+
+msgid "Trash Tool"
+msgstr ""
+
+msgid "True if use decimal alignment."
+msgstr ""
+
+msgid "Type"
+msgstr "Тип"
+
+msgid "Type of the cell for a delivery"
+msgstr ""
+
+msgid "Type of the delivery"
+msgstr ""
+
+msgid "Type of the line for a delivery"
+msgstr ""
+
+msgid "Type or Title of the query posted by a user"
+msgstr "Тип или Заголовок запроса, сделанного пользователем."
+
+msgid "Types Tool"
+msgstr ""
+
+msgid "URL"
+msgstr ""
+
+msgid "URL Crawler"
+msgstr ""
+
+msgid "Uncheck All"
+msgstr ""
+
+msgid "Undo"
+msgstr ""
+
+msgid "Unified Diff"
+msgstr ""
+
+msgid "Unify Solver"
+msgstr ""
+
+msgid "Uninstall Business Template"
+msgstr ""
+
+msgid "Unit"
+msgstr "Ед.изм."
+
+msgid "Unit Base Price"
+msgstr "Базовая Цена"
+
+msgid "Unit Conversions"
+msgstr ""
+
+msgid "Unit Price"
+msgstr "Цена за Единицу"
+
+msgid "Unit Test Classes"
+msgstr ""
+
+msgid "Unit Tests"
+msgstr ""
+
+msgid "Units"
+msgstr ""
+
+msgid "Update"
+msgstr "Обновить"
+
+msgid "Update Business Template Workflows"
+msgstr ""
+
+msgid "Update Business Template from SVN"
+msgstr ""
+
+msgid "Update Diff"
+msgstr ""
+
+msgid "Update Local Roles"
+msgstr ""
+
+msgid "Update Quantity from Container"
+msgstr "Учесть Только Упакованное"
+
+msgid "Update Repository Information"
+msgstr ""
+
+msgid "Update Tools"
+msgstr ""
+
+msgid "Update Translation ?"
+msgstr ""
+
+msgid "Update Variations"
+msgstr "Обновить Вариации"
+
+msgid "Update and Reindex Catalog ?"
+msgstr ""
+
+msgid "Updated"
+msgstr ""
+
+msgid "Updated Business Templates"
+msgstr ""
+
+msgid "Updated [state in assignment_workflow]"
+msgstr ""
+
+msgid "Updating"
+msgstr ""
+
+msgid "Updating Provider"
+msgstr ""
+
+msgid "Upgrade"
+msgstr ""
+
+msgid "Upgrade Business Templates from Repositories"
+msgstr ""
+
+msgid "Upload"
+msgstr "Загрузить"
+
+msgid "Upload Business Template"
+msgstr ""
+
+msgid "Upload File"
+msgstr "Загрузить Файл"
+
+msgid "Upload Module"
+msgstr "Загрузка Документов"
+
+msgid "Upload an image for the logo."
+msgstr "Загрузить файл, содержащий логотип."
+
+msgid "Upload the photo for this Product."
+msgstr ""
+
+msgid "Upload the photo for this person."
+msgstr "Загрузить фотографию для этого физического лица."
+
+msgid "Uploaded"
+msgstr ""
+
+msgid "Uploaded [state in processing_status_workflow]"
+msgstr ""
+
+msgid "Use"
+msgstr "Применение"
+
+msgid "Use Line Title"
+msgstr "Использовать Названия Строк"
+
+msgid "Use Unified Diff?"
+msgstr ""
+
+msgid "Use this measure by default to perform unit conversion\n(useful in cases where only a quantity unit is specified)."
+msgstr "Использовать текущий вид измерений по умолчанию для выполнения пересчета.\n(применимо только если заданы единицы измерения )\n"
+
+msgid "Useful for intermediated lines."
+msgstr ""
+
+msgid "User"
+msgstr "Пользователь"
+
+msgid "User Interface"
+msgstr ""
+
+msgid "User Interface Languages"
+msgstr ""
+
+msgid "User Login"
+msgstr "Имя пользователя"
+
+msgid "User Name"
+msgstr ""
+
+msgid "User Password"
+msgstr "Пароль Пользователя"
+
+msgid "User name"
+msgstr ""
+
+msgid "Username"
+msgstr "Логин"
+
+msgid "Usual Name"
+msgstr "Название"
+
+msgid "VAT Account"
+msgstr "НДС по Приобретенным Ценностям"
+
+msgid "VAT Amount"
+msgstr "Сумма НДС"
+
+msgid "VAT Code"
+msgstr "VAT Kод"
+
+msgid "VAT amount"
+msgstr "Сумма налога на добавленную стоимость."
+
+msgid "Valid"
+msgstr "Корректный"
+
+msgid "Valid From"
+msgstr ""
+
+msgid "Valid Until"
+msgstr ""
+
+msgid "Validate"
+msgstr "Подтвердить"
+
+msgid "Validate Accounting Transaction"
+msgstr "Подтвердить Бухгалтерскую Транзакцию"
+
+msgid "Validate Action"
+msgstr "Подтвердить"
+
+msgid "Validate Installation"
+msgstr "Подтвердить Установку"
+
+msgid "Validate Inventory"
+msgstr "Подтвердить Оприходование"
+
+msgid "Validate Transaction"
+msgstr "Подтвердить Транзакцию"
+
+msgid "Validate Workflow Action"
+msgstr "Подтвердить Действие Workflow"
+
+msgid "Validate [action in validation_workflow]"
+msgstr ""
+
+msgid "Validated"
+msgstr "Подтвержден"
+
+msgid "Validated [state in account_workflow]"
+msgstr ""
+
+msgid "Validated [state in inventory_workflow]"
+msgstr ""
+
+msgid "Validated [state in notification_message_workflow]"
+msgstr ""
+
+msgid "Validated [state in rule_validation_workflow]"
+msgstr ""
+
+msgid "Validated [state in validation_workflow]"
+msgstr ""
+
+msgid "Validation State"
+msgstr "Состояние Документа"
+
+msgid "Validation Workflow"
+msgstr ""
+
+msgid "Validity Beginning Date"
+msgstr "Дата Вступления в Силу"
+
+msgid "Validity End Date"
+msgstr "Конец действия"
+
+msgid "Validity Errors"
+msgstr "Ошибки при Заполнении"
+
+msgid "Validity Start Date"
+msgstr "Начало действия"
+
+msgid "Value"
+msgstr "Значение"
+
+msgid "Value of the measure, expressed in the selected quantity unit."
+msgstr "Коэффициент пересчета единицы измерения по отношению к базовой единице измерения (первой в списке единиц измерения для данного товара)."
+
+msgid "Variable Additional Price"
+msgstr ""
+
+msgid "Variant Movement Group"
+msgstr ""
+
+msgid "Variation"
+msgstr "Вариация"
+
+msgid "Variation Axes"
+msgstr "Виды Вариаций"
+
+msgid "Variation Base Category"
+msgstr "Базовая Категория для Вариаций"
+
+msgid "Variation Divergence Tester"
+msgstr ""
+
+msgid "Variation Property Movement Group"
+msgstr ""
+
+msgid "Vendor"
+msgstr "Поставщик"
+
+msgid "Vendor Transaction Reference"
+msgstr "Референс у Поставщика"
+
+msgid "Version"
+msgstr "Версия"
+
+msgid "Version of the web page"
+msgstr "Версия web-cтраницы."
+
+msgid "View"
+msgstr "Главное"
+
+msgid "View Accounting"
+msgstr "Главное (Бухучет)"
+
+msgid "View Old Revision"
+msgstr ""
+
+msgid "View SVN History"
+msgstr ""
+
+msgid "View SVN Repository Information"
+msgstr ""
+
+msgid "Visibility of the current action"
+msgstr ""
+
+msgid "Visible"
+msgstr ""
+
+msgid "Visit"
+msgstr "Визит"
+
+msgid "Volume (m&#179;)"
+msgstr "Объем (м&#179;)"
+
+msgid "Wait Time"
+msgstr ""
+
+msgid "Warehouse"
+msgstr "Склад"
+
+msgid "Web Message"
+msgstr "Web Сообщение"
+
+msgid "Web Page"
+msgstr "Web Страница"
+
+msgid "Web Page Module"
+msgstr ""
+
+msgid "Web Pages"
+msgstr "Web Страницы"
+
+msgid "Web Section"
+msgstr ""
+
+msgid "Web Site"
+msgstr "Web Сайт"
+
+msgid "Web Site Module"
+msgstr ""
+
+msgid "Web Sites"
+msgstr "Web Сайты"
+
+msgid "Webmaster"
+msgstr ""
+
+msgid "Weeks"
+msgstr "Недели"
+
+msgid "Weight (kg)"
+msgstr "Вес (кг.)"
+
+msgid "Welcome to ERP5"
+msgstr ""
+
+msgid "Welcome. You are currently logged in."
+msgstr "Добро пожаловать. Теперь вы вошли."
+
+msgid "When this periodic event will stop"
+msgstr "Дата окончания данного периода."
+
+msgid "Which date(e.g. start_date, stop_date) is referential on the Business Process"
+msgstr ""
+
+msgid "Width (m)"
+msgstr "Ширина (м)"
+
+msgid "Wizard Tool"
+msgstr ""
+
+msgid "Workflow Chains"
+msgstr ""
+
+msgid "Workflows"
+msgstr "Действия Workflow"
+
+msgid "Year / Month / Day"
+msgstr ""
+
+msgid "You are here:"
+msgstr "Вы здесь:"
+
+msgid "You are logged as"
+msgstr "Вы авторизовались как"
+
+msgid "You are not allowed to clone this object."
+msgstr ""
+
+msgid "You are not logged in"
+msgstr "Для доступа к личной информации авторизуйтесь"
+
+msgid "You can login with another user name or ${go_back}."
+msgstr ""
+
+msgid "You did not enter a floating point number."
+msgstr ""
+
+msgid "You do not have enough permissions to access this page."
+msgstr ""
+
+msgid "You have unsaved changes"
+msgstr ""
+
+msgid "You selected an item that was not in the list."
+msgstr ""
+
+msgid "Your current cart selection requires shipping."
+msgstr "Выберите способ доставки."
+
+msgid "Your current cart selection requires shipping. Please select shipping from"
+msgstr "Для оформления заказа необходимо выбрать способ доставки из "
+
+msgid "Your shopping cart is empty."
+msgstr "Ваша корзина пуста."
+
+msgid "ZODB Continuous Increasing Id Generator"
+msgstr ""
+
+msgid "ZODB Continuous Increasing Id Generetor"
+msgstr ""
+
+msgid "Zope Products"
+msgstr ""
+
+msgid "Zope Roles"
+msgstr ""
+
+msgid "a list of template names provided by this template"
+msgstr ""
+
+msgid "a list of template names required by this template"
+msgstr ""
+
+msgid "a string which can be used to sort objects in a list"
+msgstr ""
+
+msgid "acknowledged"
+msgstr ""
+
+msgid "additionnal term in a number of days"
+msgstr "Дополнительный Срок, выраженный в днях."
+
+msgid "an int which can be used to sort objects in a list"
+msgstr "Используется для сортировки однородных документов."
+
+msgid "another base category to get if everything else fails"
+msgstr ""
+
+msgid "answered"
+msgstr ""
+
+msgid "approved"
+msgstr ""
+
+msgid "archived"
+msgstr ""
+
+msgid "assigned"
+msgstr ""
+
+msgid "auto_planned"
+msgstr ""
+
+msgid "avg"
+msgstr ""
+
+msgid "building"
+msgstr ""
+
+msgid "built"
+msgstr ""
+
+msgid "calculating"
+msgstr ""
+
+msgid "cancelled"
+msgstr ""
+
+msgid "closed"
+msgstr ""
+
+msgid "confirmed"
+msgstr ""
+
+msgid "contacted"
+msgstr ""
+
+msgid "conversion_failed"
+msgstr ""
+
+msgid "converted"
+msgstr ""
+
+msgid "converting"
+msgstr ""
+
+msgid "count"
+msgstr ""
+
+msgid "current"
+msgstr ""
+
+msgid "default user name to commit in the svn repository"
+msgstr ""
+
+msgid "defines how to select existing Delivery which may eventually be updated with selected simulation movements"
+msgstr ""
+
+msgid "defines what to do with cell which share the same                       properties after being collecting."
+msgstr ""
+
+msgid "deleted"
+msgstr ""
+
+msgid "delivered"
+msgstr ""
+
+msgid "disabled"
+msgstr ""
+
+msgid "diverged"
+msgstr "Не Согласованы"
+
+msgid "draft"
+msgstr ""
+
+msgid "edit"
+msgstr "редактирование"
+
+msgid "embedded"
+msgstr ""
+
+msgid "empty"
+msgstr ""
+
+msgid "enabled"
+msgstr ""
+
+msgid "enquired"
+msgstr ""
+
+msgid "expired"
+msgstr ""
+
+msgid "expired_protected"
+msgstr ""
+
+msgid "expired_published"
+msgstr ""
+
+msgid "failed"
+msgstr ""
+
+msgid "global"
+msgstr ""
+
+msgid "global weight of the container"
+msgstr "Вес контейнера вместе с содержимым."
+
+msgid "go back"
+msgstr ""
+
+msgid "hidden"
+msgstr ""
+
+msgid "if checked, if will install all the missing tools in the site when installing the business template"
+msgstr ""
+
+msgid "index use to sort document"
+msgstr "Используется для сортировки однородных документов."
+
+msgid "installed"
+msgstr ""
+
+msgid "invalidated"
+msgstr ""
+
+msgid "is the payment required on the end of month"
+msgstr ""
+
+msgid "latest"
+msgstr ""
+
+msgid "matrixbox"
+msgstr ""
+
+msgid "max"
+msgstr ""
+
+msgid "min"
+msgstr ""
+
+msgid "missing"
+msgstr "Не Завершено"
+
+msgid "modified"
+msgstr ""
+
+msgid "my_first_name"
+msgstr ""
+
+msgid "my_last_name"
+msgstr ""
+
+msgid "my_password"
+msgstr ""
+
+msgid "my_payment_additional_term"
+msgstr ""
+
+msgid "my_payment_end_of_month"
+msgstr ""
+
+msgid "my_payment_term"
+msgstr ""
+
+msgid "my_user_id"
+msgstr ""
+
+msgid "new"
+msgstr ""
+
+msgid "not_installed"
+msgstr ""
+
+msgid "offered"
+msgstr ""
+
+msgid "open"
+msgstr ""
+
+msgid "ordered"
+msgstr ""
+
+msgid "outdated"
+msgstr ""
+
+msgid "pack"
+msgstr "Упаковка"
+
+msgid "packed"
+msgstr ""
+
+msgid "payment term in a number of days"
+msgstr "Срок оплаты выраженный в днях и отсчитываемый от Основной Даты."
+
+msgid "pending"
+msgstr ""
+
+msgid "planned"
+msgstr ""
+
+msgid "portal_alarms"
+msgstr ""
+
+msgid "portal_caches"
+msgstr ""
+
+msgid "portal_deliveries"
+msgstr ""
+
+msgid "portal_simulation"
+msgstr ""
+
+msgid "portal_types"
+msgstr ""
+
+msgid "posted"
+msgstr ""
+
+msgid "private"
+msgstr ""
+
+msgid "protected"
+msgstr ""
+
+msgid "public"
+msgstr ""
+
+msgid "published"
+msgstr ""
+
+msgid "published_alive"
+msgstr ""
+
+msgid "ready"
+msgstr ""
+
+msgid "rejected"
+msgstr ""
+
+msgid "released"
+msgstr ""
+
+msgid "released_alive"
+msgstr ""
+
+msgid "replaced"
+msgstr ""
+
+msgid "requested"
+msgstr ""
+
+msgid "responded"
+msgstr ""
+
+msgid "script used to do localized calculs"
+msgstr "Скрипт, используемый для вычисления."
+
+msgid "serial number of the container"
+msgstr "Серийный номер контейнера."
+
+msgid "shared"
+msgstr ""
+
+msgid "shared_alive"
+msgstr ""
+
+msgid "sold"
+msgstr ""
+
+msgid "solved"
+msgstr "Согласованы"
+
+msgid "solving"
+msgstr ""
+
+msgid "split"
+msgstr ""
+
+msgid "started"
+msgstr ""
+
+msgid "stopped"
+msgstr ""
+
+msgid "submitted"
+msgstr ""
+
+msgid "sum"
+msgstr ""
+
+msgid "the accountant transaction reference of the sale"
+msgstr "Ссылка на транзакцию - основание данного документа."
+
+msgid "the method used to get a dict of default properties."
+msgstr ""
+
+msgid "the method used to get a dict of possible values."
+msgstr ""
+
+msgid "the number of revision used by the business template. This number increases each time we commit a modification"
+msgstr ""
+
+msgid "titles of the documents which are in causality relation with delivery"
+msgstr "Документы, причинно-связанные с данным."
+
+msgid "translated"
+msgstr ""
+
+msgid "updated"
+msgstr ""
+
+msgid "uploaded"
+msgstr ""
+
+msgid "valid"
+msgstr "Действительный"
+
+msgid "validate"
+msgstr "Подтвердить"
+
+msgid "validated"
+msgstr ""
