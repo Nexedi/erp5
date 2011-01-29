@@ -1168,60 +1168,55 @@
         }\n
         //to populate the data \n
         function populate() {\n
-            if (option.isloading) {\n
+            if (option.isloading){\n
                 return true;\n
             }\n
             if (option.url && option.url != "") {\n
                 option.isloading = true;\n
                 //clearcontainer();\n
                 if (option.onBeforeRequestData && $.isFunction(option.onBeforeRequestData)) {\n
-                    option.onBeforeRequestData(1);\n
+                  option.onBeforeRequestData(1);\n
                 }\n
                 var zone = new Date().getTimezoneOffset() / 60 * -1;\n
                 var param = [\n
-                { name: "showdate", value: dateFormat.call(option.showday, i18n.xgcalendar.dateformat.fulldayvalue) },\n
-                { name: "viewtype", value: option.view },\n
-         { name: "timezone", value: zone }\n
-];\n
+                  {name: "showdate", value: dateFormat.call(option.showday, i18n.xgcalendar.dateformat.fulldayvalue)},\n
+                  {name: "viewtype", value: option.view},\n
+                  {name: "timezone", value: zone}\n
+                ];\n
                 if (option.extParam) {\n
-                    for (var pi = 0; pi < option.extParam.length; pi++) {\n
-                        param[param.length] = option.extParam[pi];\n
-                    }\n
+                  for (var pi = 0; pi < option.extParam.length; pi++) {\n
+                    param[param.length] = option.extParam[pi];\n
+                  }\n
                 }\n
-        \n
                 $.ajax({\n
-                    type: option.method, //\n
+                    type: option.method,//\n
                     url: option.url,\n
-                    data: param,           \n
-              //dataType: "text",  // fixed jquery 1.4 not support Ms Date Json Format /Date(@Tickets)/\n
+                    data: param,   \n
+                    //dataType: "text",  // fixed jquery 1.4 not support Ms Date Json Format /Date(@Tickets)/\n
                     dataType: "json",\n
                     dataFilter: function(data, type) { \n
-                        //return data.replace(/"\\\\\\/(Date\\([0-9-]+\\))\\\\\\/"/gi, "new $1");\n
-                        \n
-                        return data;\n
-                      },\n
-                    success: function(data) {//function(datastr) {                  \n
-            //datastr =datastr.replace(/"\\\\\\/(Date\\([0-9-]+\\))\\\\\\/"/gi, \'new $1\');            \n
-                        //var data = (new Function("return " + datastr))();\n
-                        if (data != null && data.error != null) {\n
-                            if (option.onRequestDataError) {\n
-                                option.onRequestDataError(1, data);\n
-                            }\n
+                      return data;\n
+                    },\n
+                    success: function(data) {\n
+                      if (data != null && data.error != null) {\n
+                        if (option.onRequestDataError) {\n
+                          option.onRequestDataError(1, data);\n
                         }\n
-                        else {\n
-                            data["start"] = parseDate(data["start"]);\n
-                            data["end"] = parseDate(data["end"]);\n
-                            $.each(data.events, function(index, value) { \n
-                                value[2] = parseDate(value[2]);\n
-                                value[3] = parseDate(value[3]); \n
-                            });\n
-                            responseData(data, data.start, data.end);\n
-                            pushER(data.start, data.end);\n
-                        }\n
-                        if (option.onAfterRequestData && $.isFunction(option.onAfterRequestData)) {\n
-                            option.onAfterRequestData(1);\n
-                        }\n
-                        option.isloading = false;\n
+                      }\n
+                      else {\n
+                        data["start"] = parseDate(data["start"]);\n
+                        data["end"] = parseDate(data["end"]);\n
+                        $.each(data.events, function(index, value) { \n
+                          value[2] = parseDate(value[2]);\n
+                          value[3] = parseDate(value[3]); \n
+                        });\n
+                        responseData(data, data.start, data.end);\n
+                        pushER(data.start, data.end);\n
+                      }\n
+                      if (option.onAfterRequestData && $.isFunction(option.onAfterRequestData)) {\n
+                        option.onAfterRequestData(1);\n
+                      }\n
+                      option.isloading = false;\n
                     },\n
                     error: function(data) { \n
             try {             \n
@@ -1731,11 +1726,12 @@
                 var od = data[3];\n
                 var zone = new Date().getTimezoneOffset() / 60 * -1;\n
                 var param = [{ "name": "calendarId", value: id },\n
-              { "name": "CalendarStartTime", value: dateFormat.call(start, i18n.xgcalendar.dateformat.fulldayvalue + " HH:mm") },\n
-              { "name": "CalendarEndTime", value: dateFormat.call(end, i18n.xgcalendar.dateformat.fulldayvalue + " HH:mm") },\n
-              { "name": "timezone", value: zone },\n
-              { "name": "title", value: title },\n
-];\n
+                             { "name": "CalendarStartTime", value: dateFormat.call(start, i18n.xgcalendar.dateformat.fulldayvalue + " HH:mm") },\n
+                             { "name": "CalendarEndTime", value: dateFormat.call(end, i18n.xgcalendar.dateformat.fulldayvalue + " HH:mm") },\n
+                             { "name": "timezone", value: zone },\n
+                             { "name": "title", value: title },\n
+                             { "name": "event_id", value: data[9]},\n
+                ];\n
                 var d;\n
                 if (option.quickUpdateHandler && $.isFunction(option.quickUpdateHandler)) {\n
                     option.quickUpdateHandler.call(this, param);\n
@@ -1815,10 +1811,10 @@
                     }\n
                     var zone = new Date().getTimezoneOffset() / 60 * -1;\n
                     var param = [{ "name": "CalendarTitle", value: what },\n
-            { "name": "CalendarStartTime", value: datestart },\n
-            { "name": "CalendarEndTime", value: dateend },\n
-            { "name": "IsAllDayEvent", value: allday },\n
-            { "name": "timezone", value: zone}];\n
+                                 { "name": "CalendarStartTime", value: datestart },\n
+                                 { "name": "CalendarEndTime", value: dateend },\n
+                                 { "name": "IsAllDayEvent", value: allday },\n
+                                 { "name": "timezone", value: zone}];\n
 \n
                     if (option.extParam) {\n
                         for (var pi = 0; pi < option.extParam.length; pi++) {\n
@@ -1835,24 +1831,22 @@
                         $("#bbit-cal-buddle").css("visibility", "hidden");\n
                         var newdata = [];\n
                         var tId = -1;\n
-                        option.onBeforeRequestData && option.onBeforeRequestData(2);\n
+                        option.onBeforeRequestData && option.onBeforeRequestData(2);                       \n
                         $.post(option.quickAddUrl, param, function(data) {\n
-                            if (data) {\n
-                                if (data.IsSuccess == true) {\n
-                                    option.isloading = false;\n
-                                    option.eventItems[tId][0] = data.Data;\n
-                                    option.eventItems[tId][8] = 1;\n
-                                    render();\n
-                                    option.onAfterRequestData && option.onAfterRequestData(2);\n
-                                }\n
-                                else {\n
-                                    option.onRequestDataError && option.onRequestDataError(2, data);\n
-                                    option.isloading = false;\n
-                                    option.onAfterRequestData && option.onAfterRequestData(2);\n
-                                }\n
-\n
+                          if (data) {\n
+                            if (data.IsSuccess == true) {\n
+                              option.isloading = false;\n
+                              option.eventItems[tId][0] = data.Data;\n
+                              option.eventItems[tId][8] = 1;\n
+                              render();\n
+                              option.onAfterRequestData && option.onAfterRequestData(2);\n
                             }\n
-\n
+                            else {\n
+                              option.onRequestDataError && option.onRequestDataError(2, data);\n
+                              option.isloading = false;\n
+                              option.onAfterRequestData && option.onAfterRequestData(2);\n
+                            }\n
+                          }\n
                         }, "json");\n
 \n
                         newdata.push(-1, what);\n
