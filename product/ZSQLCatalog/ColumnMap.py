@@ -94,7 +94,7 @@ class ColumnMap(object):
     self.raw_column_dict = {}
     # Entries: column name
     self.column_ignore_set = set()
-    self.join_table_set = set()
+    self.join_table_map = dict()
     # BBB: Remove join_query_list and its uses when all RelatedKey
     # methods have been converted to properly return each Join
     # condition separately, and all uses of catalog's from_expression
@@ -146,7 +146,7 @@ class ColumnMap(object):
         # When a column is registered  in default group and is explicitely
         # mapped to a table, we must mark its table as requiring a join with
         # catalog table (unless it's the catalog table, of course).
-        self._addJoinTable(table, group)
+        self._addJoinTableForColumn(table, table + "." + column, group)
 
   def ignoreColumn(self, column):
     self.column_ignore_set.add(column)
@@ -281,7 +281,7 @@ class ColumnMap(object):
           #   Although the list of tables those columns belong to is known
           #   earlier (in "build"), mapping them here
           #   - avoids code duplication (registerTable, resolveColumn,
-          #     _addJoinTable)
+          #     _addJoinTableForColumn)
           #   - offers user to vote for an unknown table, overriding this
           #     forced mapping.
           use_allowed = table_name == catalog_table_name or \
@@ -326,7 +326,7 @@ class ColumnMap(object):
       self.registerTable(table_name, group=group)
       self.resolveColumn(column_name, table_name, group=group)
       if table_name != catalog_table_name:
-        self._addJoinTable(table_name, group)
+        self._addJoinTableForColumn(table_name, column_name, group)
 
   @profiler_decorator
   def build(self, sql_catalog):
@@ -424,9 +424,9 @@ class ColumnMap(object):
         table_alias_number_dict[alias_table_name] = table_alias_number
       self.resolveTable(table_name, alias, group=group)
 
-    # now that we have all aliases, calculate inner joins comming from
+    # now that we have all aliases, calculate missing joins comming from
     # non-RelatedKey relationships (like full_text).
-    self._calculateInnerJoins()
+    self._calculateMissingJoins()
     # and all left joins that did not come from explicit queries
     # (i.e. joins comming from 'sort_on', 'select_dict', etc.)
     for join_query in join_query_to_build_list:
@@ -553,7 +553,7 @@ class ColumnMap(object):
     
 
   @profiler_decorator
-  def _addJoinTable(self, table_name, group=DEFAULT_GROUP_ID):
+  def _addJoinTableForColumn(self, table_name, column, group=DEFAULT_GROUP_ID):
     """
       Declare given table as requiring to be joined with catalog table on uid.
 
@@ -571,11 +571,11 @@ class ColumnMap(object):
         # Register uid column if it is not already
         self.registerColumn('uid')
         self.resolveColumn('uid', catalog_table)
-      self.join_table_set.add((group, table_name))
+      self.join_table_map.setdefault((group, table_name), set()).add(column)
 
   def getJoinTableAliasList(self):
     return [self.getTableAlias(table_name, group=group)
-            for (group, table_name) in self.join_table_set]
+            for (group, table_name) in self.join_table_map.keys()]
 
   def _getTableOverride(self, table_name):
     # self.table_override_map is a dictionary mapping table names to
@@ -671,20 +671,31 @@ class ColumnMap(object):
     self.table_definition = join_definition
 
   # def getFinalTableDefinition(self):
-  #   self._calculateInnerJoins()
+  #   self._calculateMissingJoins()
   #   return self.getTableDefinition()
 
-  def _calculateInnerJoins(self):
+  def _calculateMissingJoins(self):
+    left_join_set = set(self.left_join_list)
     self._setMinimalTableDefinition()
     catalog_table_alias = self.getCatalogTableAlias()
-    for group, table_name in self.join_table_set:
+    for (group, table_name), column_set in self.join_table_map.items():
+      # if any of the columns for this implicit join was requested as a
+      #left-join, then all columns will be subject to a left-join.
+      # XXX What if one of the columns was an actual query, as opposed to a
+      # sort column or select_dict? This would cause results in the main
+      # catalog that don't match the query to be present as well. We expect
+      # the user which passes a left_join_list to know what he is doing.
+      if column_set.intersection(left_join_set):
+        Join = LeftJoin
+      else:
+        Join = InnerJoin
       table_alias = self.getTableAlias(table_name, group=group)
       table_alias_def = self.makeTableAliasDefinition(table_name, table_alias)
       # XXX: perhaps refactor some of the code below to do:
       # self._inner_table_definition.addInnerJoin(TableAlias(...),
       #                                           condition=(...))
       self._inner_table_definition.replace(
-        InnerJoin(self._inner_table_definition.table_definition,
+        Join(self._inner_table_definition.table_definition,
                   table_alias_def,
                   # XXX ColumnMap shouldn't have SQL knowledge
                   condition=('`%s`.`uid` = `%s`.`uid`' %
