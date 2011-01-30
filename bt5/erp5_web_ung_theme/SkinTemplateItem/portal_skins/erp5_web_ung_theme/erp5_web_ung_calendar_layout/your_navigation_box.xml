@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>navigation_box</string> </value>
+            <value> <string>your_navigation_box</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -219,11 +219,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string encoding="cdata"><![CDATA[
-
-<a href="#" class ="email">Email</a> <a class="document">Documents</a> <a href="#" class="calendar">Calendar</a> <a id="left_message">Not Implemented yet</a>
-
-]]></string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>

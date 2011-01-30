@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>document_action_box</string> </value>
+            <value> <string>your_search_bar</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -271,7 +271,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>document_action_box</string> </value>
+                    <value> <string>search_bar</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -299,7 +299,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/WebSection_viewDocumentActionWidget</string> </value>
+            <value> <string>here/WebSection_viewSearchBar</string> </value>
         </item>
       </dictionary>
     </pickle>

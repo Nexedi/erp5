@@ -74,7 +74,7 @@
                     <key> <string>header header-left</string> </key>
                     <value>
                       <list>
-                        <string>search_bar</string>
+                        <string>your_search_bar</string>
                       </list>
                     </value>
                 </item>
@@ -82,7 +82,7 @@
                     <key> <string>header header-right</string> </key>
                     <value>
                       <list>
-                        <string>document_action_box</string>
+                        <string>your_document_action_box</string>
                       </list>
                     </value>
                 </item>
@@ -90,7 +90,7 @@
                     <key> <string>navigation navigation-left</string> </key>
                     <value>
                       <list>
-                        <string>navigation_box</string>
+                        <string>your_navigation_box</string>
                       </list>
                     </value>
                 </item>
@@ -98,7 +98,7 @@
                     <key> <string>navigation navigation-right</string> </key>
                     <value>
                       <list>
-                        <string>login_box</string>
+                        <string>your_login_box</string>
                       </list>
                     </value>
                 </item>

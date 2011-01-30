@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>favorite_box</string> </value>
+            <value> <string>your_menu_box</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -271,7 +271,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>favorite_box</string> </value>
+                    <value> <string>user_menu_box</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -299,7 +299,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/WebSection_viewFavoriteWidget</string> </value>
+            <value> <string>here/WebSection_viewMenuWidget</string> </value>
         </item>
       </dictionary>
     </pickle>

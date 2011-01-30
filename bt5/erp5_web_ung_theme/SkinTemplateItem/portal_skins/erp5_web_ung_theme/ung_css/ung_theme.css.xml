@@ -1025,6 +1025,10 @@ img[alt="calendar_logo_box"]{\n
 \n
 div#preference_dialog select{\n
   border: 0px;\n
+}\n
+\n
+a.your_listbox_title {\n
+  display: none\n
 }
 
 ]]></string> </value>

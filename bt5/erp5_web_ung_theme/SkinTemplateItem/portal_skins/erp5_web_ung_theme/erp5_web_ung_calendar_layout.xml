@@ -75,7 +75,7 @@
                     <key> <string>header header-left</string> </key>
                     <value>
                       <list>
-                        <string>calendar_logo_box</string>
+                        <string>your_calendar_logo_box</string>
                       </list>
                     </value>
                 </item>
@@ -83,8 +83,8 @@
                     <key> <string>main main-left</string> </key>
                     <value>
                       <list>
-                        <string>calendar_box</string>
-                        <string>date_selector_box</string>
+                        <string>your_calendar_box</string>
+                        <string>your_date_selector_box</string>
                       </list>
                     </value>
                 </item>
@@ -92,7 +92,7 @@
                     <key> <string>main main-right</string> </key>
                     <value>
                       <list>
-                        <string>event_box</string>
+                        <string>your_event_box</string>
                       </list>
                     </value>
                 </item>
@@ -100,7 +100,7 @@
                     <key> <string>navigation navigation-left</string> </key>
                     <value>
                       <list>
-                        <string>navigation_box</string>
+                        <string>your_navigation_box</string>
                       </list>
                     </value>
                 </item>
@@ -108,7 +108,7 @@
                     <key> <string>navigation navigation-right</string> </key>
                     <value>
                       <list>
-                        <string>login_box</string>
+                        <string>your_login_box</string>
                       </list>
                     </value>
                 </item>

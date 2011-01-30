@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>date_selector_box</string> </value>
+            <value> <string>your_toolbar</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -134,7 +134,9 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -217,11 +219,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string encoding="cdata"><![CDATA[
-
-<div id="datepicker"></div>
-
-]]></string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -229,7 +227,7 @@
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
@@ -273,7 +271,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>calendar_test_box</string> </value>
+                    <value> <string>Toolbar</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -289,6 +287,19 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>here/WebSection_viewToolbar</string> </value>
         </item>
       </dictionary>
     </pickle>

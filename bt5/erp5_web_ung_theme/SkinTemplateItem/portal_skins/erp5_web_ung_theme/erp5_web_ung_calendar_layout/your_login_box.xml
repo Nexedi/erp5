@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>login_box</string> </value>
+            <value> <string>your_login_box</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>

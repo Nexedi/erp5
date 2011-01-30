@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>search_bar</string> </value>
+            <value> <string>your_listbox_icon</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -271,7 +271,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>search_bar</string> </value>
+                    <value> <string>listbox_icon</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -283,7 +283,7 @@
                 </item>
                 <item>
                     <key> <string>width</string> </key>
-                    <value> <int>40</int> </value>
+                    <value> <int>4</int> </value>
                 </item>
               </dictionary>
             </value>
@@ -299,7 +299,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/WebSection_viewSearchBar</string> </value>
+            <value> <string>cell/WebPage_getUNGIcon</string> </value>
         </item>
       </dictionary>
     </pickle>
