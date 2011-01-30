@@ -137,6 +137,12 @@ function wtd(p){\n
   $("#showdaybtn").addClass("fcurrent");\n
 }\n
 \n
+i18n.xgcalendar.content = "Title"\n
+i18n.xgcalendar.location = "Event Id"\n
+i18n.xgcalendar.participant = "Event Type"\n
+i18n.xgcalendar.repeat_event = "Description"\n
+i18n.xgcalendar.event = "Title"\n
+\n
 $(document).ready(function() {     \n
   var DATA_FEED_URL = "Base_updateCalendarEventList";\n
   var op = {\n
