@@ -102,13 +102,13 @@ function Edit(data){\n
     $("form#create_new_event select").val(data[10]);\n
     $("input[name=\'title\']").attr("value", data[1]);\n
     $("input.start_date_field[name=\'start_date_year\']").attr("value", data[2].getFullYear());\n
-    $("input.start_date_field[name=\'start_date_month\']").attr("value", ""+data[2].getMonth() + 1);\n
+    $("input.start_date_field[name=\'start_date_month\']").attr("value", (parseInt(data[2].getMonth()) + 1));\n
     $("input.start_date_field[name=\'start_date_day\']").attr("value", data[2].getDate());\n
     $("input.start_date_field[name=\'start_date_hour\']").attr("value", data[2].getHours());\n
     $("input.start_date_field[name=\'start_date_minute\']").attr("value", data[2].getMinutes());\n
 \n
     $("input.stop_date_field[name=\'stop_date_year\']").attr("value", data[3].getFullYear());\n
-    $("input.stop_date_field[name=\'stop_date_month\']").attr("value", ""+data[3].getMonth() + 1);\n
+    $("input.stop_date_field[name=\'stop_date_month\']").attr("value", (parseInt(data[3].getMonth()) + 1));\n
     $("input.stop_date_field[name=\'stop_date_day\']").attr("value", data[3].getDate());\n
     $("input.stop_date_field[name=\'stop_date_hour\']").attr("value", data[3].getHours());\n
     $("input.stop_date_field[name=\'stop_date_minute\']").attr("value", data[3].getMinutes());\n
