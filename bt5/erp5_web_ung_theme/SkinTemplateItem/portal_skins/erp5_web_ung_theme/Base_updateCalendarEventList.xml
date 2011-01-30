@@ -60,8 +60,8 @@ import random\n
 \n
 def convertToERP5DateTime(date):\n
   date, hour = date.split()\n
-  day, month, year = date.split("/")\n
-  return DateTime("%s/%s/%s %s" % (year, month, day, hour))\n
+  month, day, year = date.split("/")\n
+  return DateTime("%s/%s/%s %s" % (month, day, year, hour))\n
 \n
 portal = context.getPortalObject()\n
 form = context.REQUEST.form\n

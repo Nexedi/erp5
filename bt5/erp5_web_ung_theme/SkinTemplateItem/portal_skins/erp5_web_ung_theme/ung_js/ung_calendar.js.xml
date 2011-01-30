@@ -71,14 +71,14 @@ function Edit(data){\n
          var dataHash = {};\n
          for (var i=0; i<data.length; i++)\n
            dataHash[data[i].name] = data[i].value;\n
-         start_date = dataHash.start_date_day + "/" + \n
-                      dataHash.start_date_month + "/" + \n
+         start_date = dataHash.start_date_month + "/" + \n
+                      dataHash.start_date_day + "/" + \n
                       dataHash.start_date_year + " " + \n
                       dataHash.start_date_hour + ":" + \n
                       dataHash.start_date_minute;\n
 \n
-         stop_date = dataHash.stop_date_day + "/" + \n
-                     dataHash.stop_date_month + "/" + \n
+         stop_date = dataHash.stop_date_month + "/" + \n
+                     dataHash.stop_date_day + "/" + \n
                      dataHash.stop_date_year + " " + \n
                      dataHash.stop_date_hour + ":" + \n
                      dataHash.stop_date_minute;\n
