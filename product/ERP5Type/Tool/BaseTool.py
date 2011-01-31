@@ -41,6 +41,7 @@ class BaseTool (UniqueObject, Folder):
     id = 'portal_base_tool'       # Override this
     meta_type = 'ERP5 Base Tool'  # Override this
     allowed_types = ()            # Override this
+    isIndexable = False
 
     # Declarative Security
     security = ClassSecurityInfo()
