@@ -47,25 +47,28 @@ class AccessorHolderType(type):
   def fromPropertyHolder(meta_type,
                          property_holder,
                          portal=None,
-                         accessor_holder_module_name=None):
+                         accessor_holder_module_name=None,
+                         initialize=True):
     """
     Create a new accessor holder class from the given Property Holder
     within the given accessor holder module
     """
     property_sheet_id = property_holder.__name__
-    setDefaultClassProperties(property_holder)
+    context = portal.portal_property_sheets
+    if initialize:
+      setDefaultClassProperties(property_holder)
 
-    try:
-      setDefaultProperties(property_holder,
-                           object=portal,
-                           portal=portal)
-    except:
-      LOG("Tool.PropertySheetTool", ERROR,
-          "Could not generate accessor holder class for %s (module=%s)" % \
-          (property_sheet_id, accessor_holder_module_name),
-          error=sys.exc_info())
+      try:
+        setDefaultProperties(property_holder,
+                             object=context,
+                             portal=portal)
+      except:
+        LOG("Tool.PropertySheetTool", ERROR,
+            "Could not generate accessor holder class for %s (module=%s)" % \
+            (property_sheet_id, accessor_holder_module_name),
+            error=sys.exc_info())
 
-      raise
+        raise
 
     # Create the new accessor holder class and set its module properly
     accessor_holder_class = meta_type(property_sheet_id, (object,), dict(
@@ -86,6 +89,10 @@ class AccessorHolderType(type):
     # Holder to the new accessor holder class (code coming from
     # createAccessor in Base.PropertyHolder)
     for id, fake_accessor in property_holder._getPropertyHolderItemList():
+      if callable(fake_accessor):
+        # not so fake ;)
+        setattr(accessor_holder_class, id, fake_accessor)
+        continue
       if not isinstance(fake_accessor, tuple):
         continue
 
@@ -131,7 +138,7 @@ def _generateBaseAccessorHolder(portal,
 
   property_holder = PropertyHolder(base_accessor_holder_id)
 
-  econtext = createExpressionContext(portal, portal)
+  econtext = createExpressionContext(portal_categories, portal)
   createRelatedAccessors(portal_categories,
                          property_holder,
                          econtext,
@@ -141,7 +148,7 @@ def _generateBaseAccessorHolder(portal,
                       property_holder,
                       portal,
                       'erp5.accessor_holder',
-                      skip_default=True)
+                      initialize=False)
   setattr(accessor_holder_module, base_accessor_holder_id, accessor_holder)
   generating_base_accessors = False
   return accessor_holder
@@ -177,7 +184,7 @@ def _generatePreferenceToolAccessorHolder(portal, accessor_holder_list,
                       property_holder,
                       portal,
                       'erp5.accessor_holder',
-                      skip_default=True)
+                      initialize=False)
   setattr(accessor_holder_module, 'PreferenceTool', accessor_holder)
   return accessor_holder
 
