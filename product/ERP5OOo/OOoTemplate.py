@@ -574,8 +574,9 @@ class OOoTemplate(ZopePageTemplate):
             'Validation of %s failed:\n%s' % (self.getId(), ''.join(err_list)))
 
     extension = None
+    mimetype = ooo_builder.getMimeType()
     mimetypes_registry = self.getPortalObject().mimetypes_registry
-    mimetype_object_list = mimetypes_registry.lookup(ooo_builder.getMimeType())
+    mimetype_object_list = mimetypes_registry.lookup(mimetype)
     for mimetype_object in mimetype_object_list:
       if mimetype_object.extensions:
         extension = mimetype_object.extensions[0]
@@ -592,7 +593,7 @@ class OOoTemplate(ZopePageTemplate):
     tmp_ooo = newTempOOoDocument(self, self.title_or_id())
     tmp_ooo.edit(data=ooo,
                  filename=filename,
-                 content_type=self.content_type,)
+                 content_type=mimetype,)
 
     format = opts.get('format', request.get('format', None))
     if format:
@@ -600,7 +601,7 @@ class OOoTemplate(ZopePageTemplate):
       # We already have OOo format data, so we do not need to call
       # convertToBaseFormat(), but just copy it into base_data property.
       tmp_ooo.setBaseData(ooo)
-      tmp_ooo.setBaseContentType(self.content_type)
+      tmp_ooo.setBaseContentType(mimetype)
 
     if request is not None and not batch_mode and not source:
       return tmp_ooo.index_html(REQUEST=request,
