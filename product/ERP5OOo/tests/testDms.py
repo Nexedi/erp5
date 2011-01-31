@@ -137,7 +137,7 @@ class TestDocumentMixin(ERP5TypeTestCase):
     return getattr(self.getPortal(),'document_module')
 
   def getBusinessTemplateList(self):
-    return ('erp5_base',
+    return ('erp5_full_text_myisam_catalog','erp5_base',
             'erp5_ingestion', 'erp5_ingestion_mysql_innodb_catalog',
             'erp5_web', 'erp5_dms')
 
