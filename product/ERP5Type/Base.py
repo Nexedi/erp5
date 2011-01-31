@@ -319,8 +319,8 @@ class PropertyHolder(object):
                                '__ac_permissions__',
                                '_erp5_properties'))
 
-  def __init__(self):
-    self.__name__ = 'PropertyHolder'
+  def __init__(self, name='PropertyHolder'):
+    self.__name__ = name
     self.security = ClassSecurityInfo() # We create a new security info object
     self.workflow_method_registry = {}
 
