@@ -1148,6 +1148,8 @@ class Base( CopyContainer,
     tv = getTransactionalVariable()
     if isinstance(portal_type, list):
       portal_type = tuple(portal_type)
+    elif portal_type is None:
+      portal_type = ()
     acquisition_key = ('_getDefaultAcquiredProperty', self.getPath(), key,
                        acquisition_object_id, base_category, portal_type,
                        copy_value, mask_value, sync_value, accessor_id, depends,
@@ -1333,6 +1335,8 @@ class Base( CopyContainer,
     tv = getTransactionalVariable()
     if isinstance(portal_type, list):
       portal_type = tuple(portal_type)
+    elif portal_type is None:
+      portal_type = ()
     acquisition_key = ('_getAcquiredPropertyList', self.getPath(), key, base_category,
                        portal_type, copy_value, mask_value, sync_value,
                        accessor_id, depends, storage_id, alt_accessor_id,
