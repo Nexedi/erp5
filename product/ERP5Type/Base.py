@@ -1682,7 +1682,7 @@ class Base( CopyContainer,
 
     unordered_key_list = [k for k in key_list if k not in edit_order]
     ordered_key_list = [k for k in edit_order if k in key_list]
-    restricted_method_list = []
+    restricted_method_set = set()
     if restricted:
       # retrieve list of accessors which doesn't use default permissions
       aq_key = self._aq_key()
@@ -1696,7 +1696,7 @@ class Base( CopyContainer,
       for permissions in prop_holder.__ac_permissions__:
         if permissions[0] not in ('Access contents information', 'Modify portal content'):
           for method in permissions[1]:
-            restricted_method_list.append(method)
+            restricted_method_set.add(method)
 
     getProperty = self.getProperty
     hasProperty = self.hasProperty
@@ -1723,7 +1723,7 @@ class Base( CopyContainer,
           if not keep_existing or not hasProperty(key):
             if restricted:
               accessor_name = 'set' + UpperCase(key)
-              if accessor_name in restricted_method_list:
+              if accessor_name in restricted_method_set:
                 # will raise Unauthorized when not allowed
                 guarded_getattr(self, accessor_name)
             modified_property_dict[key] = old_value
