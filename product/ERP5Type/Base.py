@@ -329,7 +329,7 @@ class PropertyHolder(object):
     self._constraints = []
     self.constraints = []
 
-  def _getItemList(self):
+  def _getPropertyHolderItemList(self):
     return [x for x in self.__dict__.items() if x[0] not in
         PropertyHolder.RESERVED_PROPERTY_SET]
 
@@ -437,7 +437,7 @@ class PropertyHolder(object):
     """
     accessor_method_item_list = []
     accessor_method_item_list_append = accessor_method_item_list.append
-    for x, y in self._getItemList():
+    for x, y in self._getPropertyHolderItemList():
       if isinstance(y, tuple):
         if y is PropertyHolder.WORKFLOW_METHOD_MARKER or x == '__ac_permissions__':
           continue
@@ -460,7 +460,7 @@ class PropertyHolder(object):
     """
     Return a list of tuple (id, method) for every workflow method
     """
-    return [x for x in self._getItemList() if isinstance(x[1], WorkflowMethod)
+    return [x for x in self._getPropertyHolderItemList() if isinstance(x[1], WorkflowMethod)
         or (isinstance(x[1], types.TupleType)
             and x[1] is PropertyHolder.WORKFLOW_METHOD_MARKER)]
 

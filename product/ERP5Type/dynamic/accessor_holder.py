@@ -85,7 +85,7 @@ class AccessorHolderType(type):
     # Set all the accessors (defined by a tuple) from the Property
     # Holder to the new accessor holder class (code coming from
     # createAccessor in Base.PropertyHolder)
-    for id, fake_accessor in property_holder._getItemList():
+    for id, fake_accessor in property_holder._getPropertyHolderItemList():
       if not isinstance(fake_accessor, tuple):
         continue
 
