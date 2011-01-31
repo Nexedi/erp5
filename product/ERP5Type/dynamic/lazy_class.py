@@ -213,9 +213,11 @@ class PortalTypeMetaClass(GhostBaseMetaClass):
 
     ERP5Base.aq_method_lock.acquire()
     portal_type = klass.__name__
+    from Products.ERP5.ERP5Site import getSite
+    site = getSite()
     try:
       try:
-        class_definition = generatePortalTypeClass(portal_type)
+        class_definition = generatePortalTypeClass(site, portal_type)
       except AttributeError:
         LOG("ERP5Type.Dynamic", WARNING,
             "Could not access Portal Type Object for type %r"

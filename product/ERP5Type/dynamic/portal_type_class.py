@@ -129,16 +129,13 @@ core_portal_type_class_dict = {
                   'generating': False}
   }
 
-def generatePortalTypeClass(portal_type_name):
+def generatePortalTypeClass(site, portal_type_name):
   """
   Given a portal type, look up in Types Tool the corresponding
   Base Type object holding the definition of this portal type,
   and computes __bases__ and __dict__ for the class that will
   be created to represent this portal type
   """
-  from Products.ERP5.ERP5Site import getSite
-  site = getSite()
-
   # LOG("ERP5Type.dynamic", INFO, "Loading portal type " + portal_type_name)
 
   global core_portal_type_class_dict
