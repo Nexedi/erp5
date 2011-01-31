@@ -246,23 +246,10 @@ class File(Document, CMFFile):
     return (mime_type, content)
 
   def _convert(self, format, **kw):
-    """According content_type of data we can proceed some Conversions.
-    The idea is to wrap data into TempDocument who support conversion
-    then return conversion from this temporary document.
-
-    mimetype                             Class of temp document
-
-    text/????                            newTempTextDocument
-    image/????                           newTempImage
-    application/pdf                      newTempPDFDocument
-    [ooo supported content_type list]    newTempOOoDocument
-    unknown                              no conversion supported
-
-    XXX Another idea of implementation from JPS: Changing dynamicaly the Class
-    of persistent_object.
-    for example any instance of File portal_type can follow TextDocument API
-    if content_type is 'text/html' and support conversion features of
-    TextDocument.
+    """File is not convertable.
+    Only original format and text formats are allowed.
+    However this document can migrate to another portal_type which support
+    conversions.
     """
     content_type = self.getContentType() or ''
     if format is None:
