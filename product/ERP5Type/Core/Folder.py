@@ -1523,11 +1523,13 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
       if getattr(aq_base(o), 'makeTemplateInstance', None) is not None:
         o.makeTemplateInstance()
 
-  def _delObject(self, id, dp=1):
+  def _delObject(self, id, dp=1, suppress_events=True):
     """
       _delObject is redefined here in order to make sure
       we do not do silent except while we remove objects
       from catalog
+
+      Note that we always suppress / do not use events.
     """
     object = self._getOb(id)
     object.manage_beforeDelete(object, self)
