@@ -100,9 +100,7 @@ if url is not None:\n
   filename=document.getId()\n
 else:\n
   # contribute file\n
-  filename = getattr(file, \'filename\', None)\n
-  document_kw.update({\'file\': file,\n
-                      \'filename\': filename,})\n
+  document_kw.update({\'file\': file})\n
   document = portal_contributions.newContent(**document_kw)\n
 \n
 is_existing_document_updated = False\n
