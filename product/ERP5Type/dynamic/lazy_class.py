@@ -11,6 +11,7 @@ from ZODB.broken import Broken, PersistentBroken
 from zLOG import LOG, WARNING, BLATHER
 
 from portal_type_class import generatePortalTypeClass
+from accessor_holder import AccessorHolderType
 
 # PersistentBroken can't be reused directly
 # because its « layout differs from 'GhostPortalType' »
@@ -19,7 +20,11 @@ ERP5BaseBroken = type('ERP5BaseBroken', (Broken, ERP5Base), dict(x
   if x[0] not in ('__dict__', '__module__', '__weakref__')))
 
 
-class GhostBaseMetaClass(ExtensionClass):
+# the meta class of a derived class must be a subclass of all of its bases:
+# since a portal type derives from both Zope Extension classes and
+# from Accessor Holders, both metaclasses are required, even if
+# only ExtensionClass is needed to run the house
+class GhostBaseMetaClass(ExtensionClass, AccessorHolderType):
   """
   Generate classes that will be used as bases of portal types to
   mark portal types as non-loaded and to force loading it.
