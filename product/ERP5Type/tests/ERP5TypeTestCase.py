@@ -400,37 +400,31 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
           getattr(self.getPortal(), 'currency', None))
 
     def _addPropertySheet(self, portal_type_name,
-                         property_sheet_name='TestPropertySheet',
-                         property_sheet_code=None):
+                          property_sheet_name='TestPropertySheet'):
       """Utility method to add a property sheet to a type information.
       You might be interested in the higer level method _addProperty
       This method registers all added property sheets, to be able to remove
       them in tearDown.
       """
-      # install the 'real' class tool
-      class_tool = self.getClassTool()
-
-      if property_sheet_code is not None:
-        class_tool.newPropertySheet(property_sheet_name)
-        # XXX need to commit the transaction at this point, because class tool
-        # files are no longer available to the current transaction.
+      portal_property_sheets = self.portal.portal_property_sheets
+      property_sheet = getattr(portal_property_sheets, property_sheet_name, None)
+      if property_sheet is None:
+        property_sheet = portal_property_sheets.newContent(id=property_sheet_name)
         transaction.commit()
-        class_tool.editPropertySheet(property_sheet_name, property_sheet_code)
-        transaction.commit()
-        class_tool.importPropertySheet(property_sheet_name)
 
       # We set the property sheet on the portal type
       types_tool = self.getTypesTool()
       ti = types_tool.getTypeInfo(portal_type_name)
       property_sheet_set = set(ti.getTypePropertySheetList())
       property_sheet_set.add(property_sheet_name)
-      ti._setTypePropertySheetList(list(property_sheet_set))
+      ti.setTypePropertySheetList(list(property_sheet_set))
+      transaction.commit()
 
       # remember that we added a property sheet for tear down
       self._added_property_sheets.setdefault(
                     portal_type_name, []).append(property_sheet_name)
-      # reset aq_dynamic cache
-      types_tool.resetDynamicDocuments()
+
+      return property_sheet
 
     def getRule(self, **kw):
       return self.portal.portal_rules.searchFolder(
