@@ -201,8 +201,8 @@ class TestMemcachedTool(ERP5TypeTestCase):
     transaction.commit()
     self.assertEquals(tested_dict.get(key), value)
     transaction.commit()
-    # Sleep 10s
-    time.sleep(self.expiration_time)
+    # Sleep epliration_time + 1 second to be sure that it is well expired
+    time.sleep(self.expiration_time + 1)
     # now value should have expired
     self.assertRaises(KeyError, tested_dict.__getitem__, key)
 
