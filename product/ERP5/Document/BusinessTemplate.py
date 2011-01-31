@@ -4719,15 +4719,15 @@ Business Template is a set of definitions, such as skins, portal types and categ
       generator_class = getattr(site, '_generator_class', ERP5Generator)
       gen = generator_class()
       # update activity tool first if necessary
-      if self.getTitle() == 'erp5_core' and self.getTemplateUpdateTool():
-        gen.setupLastTools(site)
-      if not force:
-        if len(object_to_update) == 0:
+      if self.getTitle() == 'erp5_core':
+        if self.getTemplateUpdateTool():
+          gen.setupLastTools(site)
+        if not force and len(object_to_update) == 0:
           # check if we have to update tools
-          if self.getTitle() == 'erp5_core' and self.getTemplateUpdateTool():
+          if self.getTemplateUpdateTool():
             LOG('Business Template', 0, 'Updating Tools')
             gen.setup(site, 0, update=1)
-          if self.getTitle() == 'erp5_core' and self.getTemplateUpdateBusinessTemplateWorkflow():
+          if self.getTemplateUpdateBusinessTemplateWorkflow():
             LOG('Business Template', 0, 'Updating Business Template Workflows')
             gen.setupWorkflow(site)
           return
@@ -4780,17 +4780,18 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
 
       # update tools if necessary
-      if self.getTitle() == 'erp5_core' and self.getTemplateUpdateTool():
-        LOG('Business Template', 0, 'Updating Tools')
-        gen.setup(site, 0, update=1)
+      if self.getTitle() == 'erp5_core':
+        if self.getTemplateUpdateTool():
+          LOG('Business Template', 0, 'Updating Tools')
+          gen.setup(site, 0, update=1)
 
-      # check if we have to update business template workflow
-      if self.getTitle() == 'erp5_core' and self.getTemplateUpdateBusinessTemplateWorkflow():
-        LOG('Business Template', 0, 'Updating Business Template Workflows')
-        gen.setupWorkflow(site)
-        # XXX keep TM in case update of workflow doesn't work
-        #         self._v_txn = WorkflowUpdateTM()
-        #         self._v_txn.register(update=1, gen=gen, site=site)
+        # check if we have to update business template workflow
+        if self.getTemplateUpdateBusinessTemplateWorkflow():
+          LOG('Business Template', 0, 'Updating Business Template Workflows')
+          gen.setupWorkflow(site)
+          # XXX keep TM in case update of workflow doesn't work
+          #         self._v_txn = WorkflowUpdateTM()
+          #         self._v_txn.register(update=1, gen=gen, site=site)
 
       # remove trashbin if empty
       if trashbin is not None:
