@@ -880,7 +880,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       for url, bt_title in business_template_list:
         start = time.time()
         get_install_kw = False
-        if bt_title in [x.getTitle() for x in template_tool.getInstalledBusinessTemplateList()]:
+        if bt_title in template_tool.getInstalledBusinessTemplateTitleList():
           if update_business_templates:
             if not quiet:
               ZopeTestCase._print('Updating %s business template ... ' % bt_title)
