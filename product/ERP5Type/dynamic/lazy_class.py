@@ -237,7 +237,8 @@ class PortalTypeMetaClass(GhostBaseMetaClass):
       for key, value in attribute_dict.iteritems():
         setattr(klass, key, value)
 
-      klass._categories = base_category_list
+      # XXX disabled
+      #klass._categories = base_category_list
 
       for interface in interface_list:
         classImplements(klass, interface)

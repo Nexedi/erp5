@@ -287,6 +287,11 @@ def generatePortalTypeClass(site, portal_type_name):
         erp5.accessor_holder,
         property_sheet_tool)
 
+      base_category_set = set(base_category_list)
+      for accessor_holder in accessor_holder_list:
+        base_category_set.update(accessor_holder._categories)
+      base_category_list = list(base_category_set)
+
     property_sheet_generating_portal_type_set.remove(portal_type_name)
 
   # LOG("ERP5Type.dynamic", INFO,
