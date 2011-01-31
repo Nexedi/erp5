@@ -463,7 +463,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       def _cache():
         return cached_var
       
-      from Products.ERP5Type.Cache import CachingMethod, clearCache
+      from Products.ERP5Type.Cache import CachingMethod
       cache = CachingMethod(_cache, id='testing_cache')
       
       self.assertEquals(cache(), cached_var)
@@ -473,7 +473,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       # cache hit -> still the old variable
       self.assertEquals(cache(), cached_var_orig)
         
-      clearCache()
+      self.portal.portal_caches.clearCache()
       self.assertEquals(cache(), cached_var)
 
     def test_07_afterCloneScript(self):
