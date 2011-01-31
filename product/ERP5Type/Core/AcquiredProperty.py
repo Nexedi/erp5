@@ -131,10 +131,10 @@ class AcquiredProperty(StandardProperty):
         StandardProperty.exportToFilesystemDefinition(self)
 
     acquisition_portal_type_value = self._convertValueToTalesExpression(
-      self.getAcquisitionPortalType())
+      self.getAcquisitionPortalType()) or ()
 
     portal_type_value = self._convertValueToTalesExpression(
-      self.getContentPortalType())
+      self.getContentPortalType()) or ()
 
     filesystem_property_dict.update(
       {'acquisition_base_category': self.getAcquisitionBaseCategoryList(),
