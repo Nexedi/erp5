@@ -59,6 +59,42 @@ def subprocess_capture(p):
           p.stderr and ''.join(stderr))
 
 
+class Persistent(object):
+  """Very simple persistent data storage for optimization purpose
+
+  This tool should become a standalone daemon communicating only with an ERP5
+  instance. But for the moment, it only execute 1 test suite and exists,
+  and test suite classes may want some information from previous runs.
+  """
+
+  def __init__(self, filename):
+    self._filename = filename
+
+  def __getattr__(self, attr):
+    if attr == '_db':
+      try:
+        db = file(self._filename, 'r+')
+      except IOError, e:
+        if e.errno != errno.ENOENT:
+          raise
+        db = file(self._filename, 'w+')
+      else:
+        try:
+          self.__dict__.update(eval(db.read()))
+        except StandardError:
+          pass
+      self._db = db
+      return db
+    self._db
+    return super(Persistent, self).__getattribute__(attr)
+
+  def sync(self):
+    self._db.seek(0)
+    db = dict(x for x in self.__dict__.iteritems() if x[0][:1] != '_')
+    pprint.pprint(db, self._db)
+    self._db.truncate()
+
+
 class SubprocessError(EnvironmentError):
   def __init__(self, status_dict):
     self.status_dict = status_dict
@@ -123,12 +159,14 @@ class Updater(object):
       self._git_svn_cache[ref2] = ref
       return r
 
-  def getRevision(self):
+  def getRevision(self, *path_list):
+    if not path_list:
+      path_list = self._path_list
     if os.path.isdir('.git'):
-      h = self._git('log', '-1', '--format=%H', '--', *self._path_list)
+      h = self._git('log', '-1', '--format=%H', '--', *path_list)
       return self._git_find_rev(h)
     if os.path.isdir('.svn'):
-      stdout = self.spawn('svn', 'info', *self._path_list)['stdout']
+      stdout = self.spawn('svn', 'info', *path_list)['stdout']
       return str(max(map(int, SVN_CHANGED_REV.findall(stdout))))
     raise NotImplementedError
 
@@ -196,6 +234,8 @@ class TestSuite(Updater):
       self.realtime_output = False
     elif os.isatty(1):
       self.realtime_output = True
+    self.persistent = Persistent('run_test_suite-%s.tmp'
+                                 % self.__class__.__name__)
 
   instance = property(lambda self: self._instance.id)
 
