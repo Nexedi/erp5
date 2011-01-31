@@ -100,6 +100,7 @@ function Edit(data){\n
     $("form#create_new_event").append("<input type=\'hidden\' id=\'event_id\'/>");\n
     $("input#event_id").attr("value", data[9]);\n
     $("form#create_new_event select").val(data[10]);\n
+    $("textarea[name=\'event_text_content\']").val(data[11]);\n
     $("input[name=\'title\']").attr("value", data[1]);\n
     $("input.start_date_field[name=\'start_date_year\']").attr("value", data[2].getFullYear());\n
     $("input.start_date_field[name=\'start_date_month\']").attr("value", (parseInt(data[2].getMonth()) + 1));\n
@@ -259,7 +260,7 @@ $(document).ready(function() {     \n
   });\n
   $("div#new_event_dialog").dialog({\n
     autoOpen: false,\n
-    height: 192,\n
+    height: 255,\n
     width: 410,\n
     modal: true,\n
   });\n

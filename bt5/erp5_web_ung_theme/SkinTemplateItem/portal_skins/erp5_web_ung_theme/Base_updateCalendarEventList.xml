@@ -97,7 +97,10 @@ if request_type == "list":\n
                                  start,\n
                                  end,\n
                                  0, display_minimized, 0,\n
-                                 random.randrange(-1,13), 1, event.getId(), event.getPortalType()])\n
+                                 random.randrange(-1,13), 1,\n
+                                 event.getId(),\n
+                                 event.getPortalType(),\n
+                                 event.getTextContent()])\n
   return dumps(event_dict)\n
 \n
 elif request_type == "remove":\n
