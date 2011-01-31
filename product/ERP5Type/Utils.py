@@ -3318,7 +3318,7 @@ def urlnormNormaliseUrl(url, base_url=None):
   except (AttributeError, UnicodeDecodeError, urlnorm.InvalidUrl):
     # This url is not valid, a better Exception will
     # be raised
-    return
+    return url
   url_split = urlparse.urlsplit(url)
   url_protocol = url_split[0]
   url_domain = url_split[1]
