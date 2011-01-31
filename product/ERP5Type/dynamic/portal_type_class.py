@@ -135,6 +135,13 @@ def generatePortalTypeClass(site, portal_type_name):
   Base Type object holding the definition of this portal type,
   and computes __bases__ and __dict__ for the class that will
   be created to represent this portal type
+
+  Returns tuple with 4 items:
+    - base_tuple: a tuple of classes to be used as __bases__
+    - interface_list: list of zope interfaces the portal type implements
+    - base_category_list: base categories defined on the portal_type itself
+       (a.k.a. excluding categories from Property sheets and documents)
+    - attribute dictionary: any additional attributes to put on the class
   """
   # LOG("ERP5Type.dynamic", INFO, "Loading portal type " + portal_type_name)
 
@@ -155,13 +162,14 @@ def generatePortalTypeClass(site, portal_type_name):
 
       # Don't do anything else, just allow to load fully the outer
       # portal type class
-      return ((klass,), [], {})
+      return ((klass,), [], [], {})
 
   # Do not use __getitem__ (or _getOb) because portal_type may exist in a
   # type provider other than Types Tool.
   portal_type = getattr(site.portal_types, portal_type_name, None)
 
   type_class = None
+  base_category_list = []
 
   if portal_type is not None:
     # type_class has a compatibility getter that should return
@@ -178,6 +186,7 @@ def generatePortalTypeClass(site, portal_type_name):
 
     mixin_list = portal_type.getTypeMixinList()
     interface_list = portal_type.getTypeInterfaceList()
+    base_category_list = portal_type.getTypeBaseCategoryList()
 
   # But if neither factory_init_method_id nor type_class are set on
   # the portal type, we have to try to guess, for compatibility.
@@ -306,6 +315,7 @@ def generatePortalTypeClass(site, portal_type_name):
 
   return (tuple(base_class_list),
           interface_class_list,
+          base_category_list,
           dict(portal_type=portal_type_name))
 
 from lazy_class import generateLazyPortalTypeClass
