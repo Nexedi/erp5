@@ -324,6 +324,11 @@ class PropertyHolder(object):
     self.security = ClassSecurityInfo() # We create a new security info object
     self.workflow_method_registry = {}
 
+    self._categories = []
+    self._properties = []
+    self._constraints = []
+    self.constraints = []
+
   def _getItemList(self):
     return [x for x in self.__dict__.items() if x[0] not in
         PropertyHolder.RESERVED_PROPERTY_SET]
