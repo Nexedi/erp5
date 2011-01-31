@@ -310,15 +310,14 @@ def _aq_reset():
 global method_registration_cache
 method_registration_cache = {}
 
-WORKFLOW_METHOD_MARKER = ('Base._doNothing',)
-RESERVED_TUPLE_PROPERTY = set(('_constraints', '_properties', '_categories',
-                               '__implements__', 'property_sheets',
-                               '_erp5_properties'))
-# It might be necessary to use another type for those reserved properties
-# ex. list type
 
-class PropertyHolder:
+class PropertyHolder(object):
   isRADContent = 1
+  WORKFLOW_METHOD_MARKER = ('Base._doNothing',)
+  RESERVED_PROPERTY_SET = set(('_constraints', '_properties', '_categories',
+                               '__implements__', 'property_sheets',
+                               '__ac_permissions__',
+                               '_erp5_properties'))
 
   def __init__(self):
     self.__name__ = 'PropertyHolder'
@@ -327,7 +326,7 @@ class PropertyHolder:
 
   def _getItemList(self):
     return [x for x in self.__dict__.items() if x[0] not in
-        RESERVED_TUPLE_PROPERTY]
+        PropertyHolder.RESERVED_PROPERTY_SET]
 
   # Accessor generation
   def createAccessor(self, id):
@@ -336,7 +335,7 @@ class PropertyHolder:
     """
     fake_accessor = getattr(self, id)
     ptype = self._portal_type
-    if fake_accessor is WORKFLOW_METHOD_MARKER:
+    if fake_accessor is PropertyHolder.WORKFLOW_METHOD_MARKER:
       # Case 1 : a workflow method only
       accessor = Base._doNothing
     else:
@@ -411,7 +410,7 @@ class PropertyHolder:
     if signature not in signature_list:
       self.workflow_method_registry[id] = signature_list + (signature,)
     if getattr(self, id, None) is None:
-      setattr(self, id, WORKFLOW_METHOD_MARKER)
+      setattr(self, id, PropertyHolder.WORKFLOW_METHOD_MARKER)
 
   def declareProtected(self, permission, accessor_name):
     """
@@ -435,7 +434,7 @@ class PropertyHolder:
     accessor_method_item_list_append = accessor_method_item_list.append
     for x, y in self._getItemList():
       if isinstance(y, tuple):
-        if y is WORKFLOW_METHOD_MARKER or x == '__ac_permissions__':
+        if y is PropertyHolder.WORKFLOW_METHOD_MARKER or x == '__ac_permissions__':
           continue
         if len(y) == 0:
           raise ValueError("problem at %s %s" % (self._portal_type, x))
@@ -458,7 +457,7 @@ class PropertyHolder:
     """
     return [x for x in self._getItemList() if isinstance(x[1], WorkflowMethod)
         or (isinstance(x[1], types.TupleType)
-            and x[1] is WORKFLOW_METHOD_MARKER)]
+            and x[1] is PropertyHolder.WORKFLOW_METHOD_MARKER)]
 
   def getWorkflowMethodIdList(self):
     """
@@ -956,7 +955,7 @@ class Base( CopyContainer,
       pass
     else:
       accessor = getattr(property_holder, id, None)
-      if type(accessor) is tuple and id not in RESERVED_TUPLE_PROPERTY:
+      if type(accessor) is tuple and id not in PropertyHolder.RESERVED_PROPERTY_SET:
         accessor = property_holder.createAccessor(id)
       return accessor
 

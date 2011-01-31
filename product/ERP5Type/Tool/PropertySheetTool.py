@@ -222,7 +222,7 @@ class PropertySheetTool(BaseTool):
       if not isinstance(fake_accessor, tuple):
         continue
 
-      if fake_accessor is ('Base._doNothing',):
+      if fake_accessor is PropertyHolder.WORKFLOW_METHOD_MARKER:
         # Case 1 : a workflow method only
         accessor = Base._doNothing
       else:
