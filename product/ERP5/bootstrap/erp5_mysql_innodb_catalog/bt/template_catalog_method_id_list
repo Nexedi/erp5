@@ -6,7 +6,6 @@ erp5_mysql_innodb/z0_drop_alarm
 erp5_mysql_innodb/z0_drop_catalog
 erp5_mysql_innodb/z0_drop_category
 erp5_mysql_innodb/z0_drop_delivery
-erp5_mysql_innodb/z0_drop_fulltext
 erp5_mysql_innodb/z0_drop_inventory
 erp5_mysql_innodb/z0_drop_inventory_stock
 erp5_mysql_innodb/z0_drop_item
@@ -24,7 +23,6 @@ erp5_mysql_innodb/z0_drop_translation
 erp5_mysql_innodb/z0_drop_versioning
 erp5_mysql_innodb/z0_uncatalog_alarm
 erp5_mysql_innodb/z0_uncatalog_category
-erp5_mysql_innodb/z0_uncatalog_fulltext
 erp5_mysql_innodb/z0_uncatalog_inventory
 erp5_mysql_innodb/z0_uncatalog_inventory_stock
 erp5_mysql_innodb/z0_uncatalog_item
@@ -38,7 +36,6 @@ erp5_mysql_innodb/z0_uncatalog_transformation
 erp5_mysql_innodb/z0_uncatalog_versioning
 erp5_mysql_innodb/z_catalog_alarm_list
 erp5_mysql_innodb/z_catalog_delivery_list
-erp5_mysql_innodb/z_catalog_fulltext_list
 erp5_mysql_innodb/z_catalog_inventory_list
 erp5_mysql_innodb/z_catalog_inventory_stock_list
 erp5_mysql_innodb/z_catalog_item_list
@@ -63,7 +60,6 @@ erp5_mysql_innodb/z_create_alarm
 erp5_mysql_innodb/z_create_catalog
 erp5_mysql_innodb/z_create_category
 erp5_mysql_innodb/z_create_delivery
-erp5_mysql_innodb/z_create_fulltext
 erp5_mysql_innodb/z_create_inventory
 erp5_mysql_innodb/z_create_inventory_stock
 erp5_mysql_innodb/z_create_item

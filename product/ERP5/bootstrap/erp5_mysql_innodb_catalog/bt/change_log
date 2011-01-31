@@ -1,3 +1,6 @@
+2011-01-31 Ivan
+* Remove default MyISAM full text search which is to be provided by a separate business template
+
 2011-01-28 Ivan
 * Add site configurable 'full_text' scriptable key
 
