@@ -100,6 +100,8 @@ for paysheet in paysheet_list :\n
       stop_date=paysheet.getStopDate())\n
   if model is not None:\n
     slice = model.getCell(slice_path)\n
+    if slice is None:\n
+      return 0.0\n
     plafond_max = slice.getQuantityRangeMax()\n
     plafond_min = slice.getQuantityRangeMin()\n
     gross_salary=paysheet.PaySheetTransaction_getMovementTotalPriceFromCategory(\\\n
