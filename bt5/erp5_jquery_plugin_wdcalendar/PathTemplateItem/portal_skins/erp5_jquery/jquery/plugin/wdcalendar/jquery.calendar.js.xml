@@ -1182,7 +1182,7 @@
                   {name: "showdate", value: dateFormat.call(option.showday, i18n.xgcalendar.dateformat.fulldayvalue)},\n
                   {name: "viewtype", value: option.view},\n
                   {name: "timezone", value: zone}\n
-                ];\n
+];\n
                 if (option.extParam) {\n
                   for (var pi = 0; pi < option.extParam.length; pi++) {\n
                     param[param.length] = option.extParam[pi];\n
@@ -1493,7 +1493,18 @@
         function parseED(data) {\n
             if (data.length > 6) {\n
                 var e = [];\n
-                e.push(data[0], data[1], new Date(data[2]), new Date(data[3]), parseInt(data[4]), parseInt(data[5]), parseInt(data[6]), data[7] != undefined ? parseInt(data[7]) : -1, data[8] != undefined ? parseInt(data[8]) : 0, data[9], data[10]);\n
+                e.push(data[0],\n
+                       data[1],\n
+                       new Date(data[2]), \n
+                       new Date(data[3]),\n
+                       parseInt(data[4]),\n
+                       parseInt(data[5]),\n
+                       parseInt(data[6]),\n
+                       data[7] != undefined ? parseInt(data[7]) : -1,\n
+                       data[8] != undefined ? parseInt(data[8]) : 0,\n
+                       data[9],\n
+                       data[10],\n
+                       data[11] != undefined ? data[11]: null);\n
                 return e;\n
             }\n
             return null;\n
@@ -1731,7 +1742,7 @@
                              { "name": "timezone", value: zone },\n
                              { "name": "title", value: title },\n
                              { "name": "event_id", value: data[9]},\n
-                ];\n
+];\n
                 var d;\n
                 if (option.quickUpdateHandler && $.isFunction(option.quickUpdateHandler)) {\n
                     option.quickUpdateHandler.call(this, param);\n
