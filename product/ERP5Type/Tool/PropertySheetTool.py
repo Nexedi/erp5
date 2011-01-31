@@ -192,8 +192,8 @@ class PropertySheetTool(BaseTool):
     property_holder._constraints = getattr(property_sheet, '_constraints', [])
 
     return AccessorHolderType.fromPropertyHolder(
-      self.getPortalObject(),
       property_holder,
+      self.getPortalObject(),
       'erp5.filesystem_accessor_holder')
 
   security.declarePrivate('createZodbPropertySheetAccessorHolder')
@@ -216,8 +216,8 @@ class PropertySheetTool(BaseTool):
       property_holder._constraints = definition_tuple
 
     return AccessorHolderType.fromPropertyHolder(
-      self.getPortalObject(),
       property_holder,
+      self.getPortalObject(),
       'erp5.accessor_holder')
 
   security.declareProtected(Permissions.ManagePortal,
