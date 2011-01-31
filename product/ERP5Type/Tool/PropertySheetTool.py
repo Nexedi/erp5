@@ -37,6 +37,7 @@ from Products.ERP5Type.Accessor import Translation
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.Expression import Expression
 from Products.ERP5Type.Base import Base, PropertyHolder
+from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Utils import setDefaultClassProperties, setDefaultProperties
 
 from zLOG import LOG, ERROR, INFO
@@ -210,7 +211,8 @@ class PropertySheetTool(BaseTool):
       _properties = property_holder._properties,
       # Necessary for getBaseCategoryList
       _categories = property_holder._categories,
-      _constraints = property_holder._constraints
+      _constraints = property_holder._constraints,
+      security = property_holder.security
       ))
 
     # Set all the accessors (defined by a tuple) from the Property
@@ -231,6 +233,8 @@ class PropertySheetTool(BaseTool):
       # Add the accessor to the accessor holder
       setattr(accessor_holder_class, id, accessor)
 
+    property_holder.security.apply(accessor_holder_class)
+    InitializeClass(accessor_holder_class)
     return accessor_holder_class
 
   security.declarePrivate('createFilesystemPropertySheetAccessorHolder')
