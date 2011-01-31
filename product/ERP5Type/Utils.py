@@ -3384,3 +3384,6 @@ def reencodeUrlEscapes(url):
       url += [_reencodeUrlEscapes_map[c] for c in part]
   except StopIteration:
     return ''.join(url)
+
+def createRelatedAccessors():
+  pass
