@@ -185,7 +185,7 @@ class PropertySheetTool(BaseTool):
     XXX: Workflows?
     XXX: Remove as soon as the migration is finished
     """
-    property_holder = PropertyHolder()
+    property_holder = PropertyHolder(property_sheet.__name__)
 
     property_holder._properties = getattr(property_sheet, '_properties', [])
     property_holder._categories = getattr(property_sheet, '_categories', [])
@@ -194,7 +194,6 @@ class PropertySheetTool(BaseTool):
     return _createCommonPropertySheetAccessorHolder(
       self.getPortalObject(),
       property_holder,
-      property_sheet.__name__,
       'erp5.filesystem_accessor_holder')
 
   security.declarePrivate('createZodbPropertySheetAccessorHolder')
@@ -208,20 +207,17 @@ class PropertySheetTool(BaseTool):
     definition_tuple = \
       self.exportPropertySheetToFilesystemDefinitionTuple(property_sheet)
 
-    property_holder = PropertyHolder()
+    property_sheet_name = property_sheet.getId()
+    property_holder = PropertyHolder(property_sheet_name)
 
     # Prepare the Property Holder
     property_holder._properties, \
       property_holder._categories, \
       property_holder._constraints = definition_tuple
 
-    property_sheet_name = property_sheet.getId()
-    property_holder.__name__ = property_sheet_name
-
     return _createAccessorHolderFromPropertyHolder(
       self.getPortalObject(),
       property_holder,
-      property_sheet_name,
       'erp5.accessor_holder')
 
   security.declareProtected(Permissions.ManagePortal,

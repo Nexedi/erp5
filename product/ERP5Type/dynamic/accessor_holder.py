@@ -43,15 +43,15 @@ from Products.ERP5Type.Globals import InitializeClass
 
 from zLOG import LOG, ERROR, INFO
 
-def _createAccessorHolderFromPropertyHolder(portal,
-                                            property_holder,
-                                            property_sheet_id,
+def _createAccessorHolderFromPropertyHolder(property_holder,
+                                            portal,
                                             accessor_holder_module_name):
   """
   Create a new accessor holder class from the given Property Holder
   within the given accessor holder module (when the migration will
   be finished, there should only be one accessor holder module)
   """
+  property_sheet_id = property_holder.__name__
   setDefaultClassProperties(property_holder)
 
   try:
@@ -128,7 +128,7 @@ def _generateBaseAccessorHolder(portal,
 
   base_category_list = portal_categories.objectIds()
 
-  property_holder = PropertyHolder()
+  property_holder = PropertyHolder(base_accessor_holder_id)
 
   econtext = createExpressionContext(portal, portal)
   createRelatedAccessors(portal_categories,
@@ -137,9 +137,8 @@ def _generateBaseAccessorHolder(portal,
                          base_category_list)
 
   accessor_holder = _createAccessorHolderFromPropertyHolder(
-                      portal,
                       property_holder,
-                      base_accessor_holder_id,
+                      portal,
                       'erp5.accessor_holder',
                       skip_default=True)
   setattr(accessor_holder_module, base_accessor_holder_id, accessor_holder)
@@ -148,7 +147,7 @@ def _generateBaseAccessorHolder(portal,
 
 def _generatePreferenceToolAccessorHolder(portal, accessor_holder_list,
     accessor_holder_module):
-  property_holder = PropertyHolder()
+  property_holder = PropertyHolder('PreferenceTool')
 
   from Products.ERP5Type.Accessor.TypeDefinition import list_types
   from Products.ERP5Type.Utils import convertToUpperCase
@@ -174,9 +173,8 @@ def _generatePreferenceToolAccessorHolder(portal, accessor_holder_list,
             property_holder.declareProtected(read_permission, attribute_name)
 
   accessor_holder = _createAccessorHolderFromPropertyHolder(
-                      portal,
                       property_holder,
-                      'PreferenceTool',
+                      portal,
                       'erp5.accessor_holder',
                       skip_default=True)
   setattr(accessor_holder_module, 'PreferenceTool', accessor_holder)
