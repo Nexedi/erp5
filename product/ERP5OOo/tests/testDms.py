@@ -2196,6 +2196,58 @@ return 1
       self.assertEquals(len(subject_result), 1)
       self.assertEquals(subject_result[0].getPath(), document.getPath())
 
+  def test_base_convertable_behaviour_with_successive_updates(self):
+    """Check that update content's document (with setData and setFile)
+    will refresh base_data and content_md5 as expected.
+
+    When cloning a document base_data must not be computed once again.
+    """
+    # create a document
+    upload_file = makeFileUpload('TEST-en-002.doc')
+    kw = dict(file=upload_file, synchronous_metadata_discovery=True)
+    document = self.portal.Base_contribute(**kw)
+    self.stepTic()
+    previous_md5 = document.getContentMd5()
+    previous_base_data = document.getBaseData()
+
+    # Clone document: base_data must not be computed once again
+    cloned_document = document.Base_createCloneDocument(batch_mode=True)
+    self.assertEquals(previous_md5, cloned_document.getContentMd5())
+    self.assertEquals(document.getData(), cloned_document.getData())
+    self.assertEquals(document.getBaseData(), cloned_document.getBaseData())
+    self.assertEquals(document.getExternalProcessingState(),
+                      cloned_document.getExternalProcessingState())
+    self.assertEquals(document.getExternalProcessingState(), 'converted')
+
+    # Update document with another content by using setData:
+    # base_data must be recomputed
+    document.edit(data=makeFileUpload('TEST-en-002.odt').read())
+    self.stepTic()
+    self.assertTrue(document.hasBaseData())
+    self.assertNotEquals(previous_base_data, document.getBaseData(),
+                         'base data is not refreshed')
+    self.assertNotEquals(previous_md5, document.getContentMd5())
+    self.assertEquals(document.getExternalProcessingState(), 'converted')
+    previous_md5 = document.getContentMd5()
+    previous_base_data = document.getBaseData()
+
+    # Update document with another content by using setFile:
+    # base_data must be recomputed
+    document.edit(file=makeFileUpload('TEST-en-002.doc'))
+    self.stepTic()
+    self.assertTrue(document.hasBaseData())
+    self.assertNotEquals(previous_base_data, document.getBaseData(),
+                         'base data is not refreshed')
+    self.assertNotEquals(previous_md5, document.getContentMd5())
+    self.assertEquals(document.getExternalProcessingState(), 'converted')
+
+    # Delete content: base_data must be deleted
+    document.edit(data=None)
+    self.stepTic()
+    self.assertFalse(document.hasBaseData())
+    self.assertFalse(document.hasContentMd5())
+    self.assertEquals(document.getExternalProcessingState(), 'empty')
+
   def _test_document_publication_workflow(self, portal_type, transition):
     document = self.getDocumentModule().newContent(portal_type=portal_type)
     self.portal.portal_workflow.doActionFor(document, transition)
