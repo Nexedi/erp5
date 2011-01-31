@@ -28,11 +28,13 @@
 ##############################################################################
 
 from Products.ERP5Type.Interactor.Interactor import Interactor
+import transaction
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
 class PortalTypeClassInteractor(Interactor):
   """
     This interactor handles all the calls to resetDynamicDocuments
-    which must be trigered whenever some parts of ERP5 
+    which must be trigered whenever some parts of ERP5
     are modified and require to generate again accessors
     and dynamic properties.
   """
@@ -52,12 +54,20 @@ class PortalTypeClassInteractor(Interactor):
 
   def resetDynamic(self, method_call_object, *args, **kw):
     """
-    Call resetDynamicDocuments
+    Call resetDynamicDocuments at the end of the transaction
     """
     from Products.ERP5.ERP5Site import getSite
     # method_call_object might be an unwrapped DCWorflowDefinition method,
     # no even belonging to a container.
     portal = getSite()
     types_tool = getattr(portal, 'portal_types', None)
-    if types_tool is not None:
-      types_tool.resetDynamicDocuments()
+    if types_tool is None:
+      return
+
+    # XXX this could be a generic doOnceAtEndOfTransaction in
+    # Interactor baseclass
+    tv = getTransactionalVariable()
+    key = 'Interactor.PortalTypeClassInteractor.resetDynamic'
+    if key not in tv:
+      tv[key] = None
+      transaction.get().addBeforeCommitHook(types_tool.resetDynamicDocuments)
