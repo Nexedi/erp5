@@ -222,14 +222,14 @@ class PortalTypeMetaClass(GhostBaseMetaClass):
         LOG("ERP5Type.Dynamic", WARNING,
             "Could not access Portal Type Object for type %r"
             % portal_type, error=sys.exc_info())
-        base_list = (ERP5BaseBroken, )
+        base_tuple = (ERP5BaseBroken, )
         attribute_dict = {}
         interface_list = []
       else:
-        base_list, interface_list, attribute_dict = class_definition
+        base_tuple, interface_list, attribute_dict = class_definition
 
       klass.__isghost__ = False
-      klass.__bases__ = base_list
+      klass.__bases__ = base_tuple
 
       for key, value in attribute_dict.iteritems():
         setattr(klass, key, value)
