@@ -59,9 +59,6 @@ from Persistence import Persistent
 
 WORKFLOW_TYPE = 'erp5_workflow' 
 
-class DummyTypeProvider(TypeProvider):
-  id = 'dummy_type_provider'
-
 from Products.MimetypesRegistry.common import MimeTypeException
 from Products.PortalTransforms.Transform import Transform
 Transform_tr_init = Transform._tr_init
@@ -6881,7 +6878,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals(getBusinessTemplateUrl(url_list[4:], not_exist_bt5), None)
 
   def test_type_provider(self):
-    self.portal._setObject('dummy_type_provider', DummyTypeProvider())
+    self.portal.newContent(id='dummy_type_provider', portal_type="Types Tool")
     type_provider = self.portal.dummy_type_provider
     types_tool = self.portal.portal_types
 
@@ -7005,7 +7002,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       self.assertFalse('dummy_type_provider' in types_tool.type_provider_list)
 
   def test_type_provider_2(self):
-    self.portal._setObject('dummy_type_provider', DummyTypeProvider())
+    self.portal.newContent(id='dummy_type_provider', portal_type="Types Tool")
     type_provider = self.portal.dummy_type_provider
     types_tool = self.portal.portal_types
 
