@@ -37,7 +37,7 @@ from Products.ERP5Type.Base import PropertyHolder
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.Expression import Expression
 
-from Products.ERP5Type.dynamic.accessor_holder import _createAccessorHolderFromPropertyHolder
+from Products.ERP5Type.dynamic.accessor_holder import AccessorHolderType
 
 from zLOG import LOG, ERROR, INFO
 
@@ -191,7 +191,7 @@ class PropertySheetTool(BaseTool):
     property_holder._categories = getattr(property_sheet, '_categories', [])
     property_holder._constraints = getattr(property_sheet, '_constraints', [])
 
-    return _createCommonPropertySheetAccessorHolder(
+    return AccessorHolderType.fromPropertyHolder(
       self.getPortalObject(),
       property_holder,
       'erp5.filesystem_accessor_holder')
@@ -215,7 +215,7 @@ class PropertySheetTool(BaseTool):
       property_holder._categories, \
       property_holder._constraints = definition_tuple
 
-    return _createAccessorHolderFromPropertyHolder(
+    return AccessorHolderType.fromPropertyHolder(
       self.getPortalObject(),
       property_holder,
       'erp5.accessor_holder')
