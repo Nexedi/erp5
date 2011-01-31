@@ -57,7 +57,7 @@ import glob
 from MethodObject import Method
 from Persistence import Persistent
 
-WORKFLOW_TYPE = 'erp5_workflow' 
+WORKFLOW_TYPE = 'erp5_workflow'
 
 from Products.MimetypesRegistry.common import MimeTypeException
 from Products.PortalTransforms.Transform import Transform
@@ -754,7 +754,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       selection = selection.split(',')
       if 'erp5_static' not in selection:
         selection.append('erp5_static')
-      ps.manage_skinLayers(skinpath=tuple(selection), skinname=skin_name, 
+      ps.manage_skinLayers(skinpath=tuple(selection), skinname=skin_name,
                            add_skin=1)
 
   def stepCreateSkinSubFolder(self, sequence=None, sequence_list=None, **kw):
@@ -1003,7 +1003,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     ps = self.getSkinsTool()
     skin_id = sequence.get('skin_folder_id')
     skin_folder = ps._getOb(skin_id, None)
-    # TODO 
+    # TODO
 
   def stepCheckSkinFolderExists(self, sequence=None,sequence_list=None, **kw):
     """
@@ -1048,7 +1048,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     bt.edit(template_skin_id_list=template_skin_id_list)
 
 
-  def stepAddRegistredSelectionToBusinessTemplate(self, sequence=None, 
+  def stepAddRegistredSelectionToBusinessTemplate(self, sequence=None,
                                                   sequence_list=None, **kw):
     """
     Add registered selection to business template
@@ -1058,7 +1058,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     bt.edit(template_registered_skin_selection_list = \
         ('%s | Foo' % sequence.get('skin_folder_id'), ))
 
-  def stepEditRegistredSelectionToBusinessTemplate(self, sequence=None, 
+  def stepEditRegistredSelectionToBusinessTemplate(self, sequence=None,
                                                   sequence_list=None, **kw):
     """
     Add registered selection to business template
@@ -5391,7 +5391,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     selection = selection.split(',')
     if skin_id not in selection:
       selection.append(skin_id)
-      ps.manage_skinLayers(skinpath=tuple(selection), 
+      ps.manage_skinLayers(skinpath=tuple(selection),
                            skinname='Foo', add_skin=1)
 
   def stepCheckSkinSelectionAdded(self, sequence=None, **kw):
@@ -5610,7 +5610,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     for bt in bt5_list:
       self.failUnless(bt in another_bt_list)
 
-    self.assertEquals(bt5_list, 
+    self.assertEquals(bt5_list,
                       templates_tool._getInstalledBusinessTemplateList())
 
   def test_getInstalledBusinessTemplateTitleList(self):
@@ -5709,7 +5709,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertNotEquals(old_bt, new_bt)
     self.assertEquals('erp5_csv_style', new_bt.getTitle())
     self.assertEquals('new_erp5_csv_style', new_bt.getId())
-    
+
     # Test if the new instance with same revision is not installed.
     old_bt = new_bt
     template_tool.updateBusinessTemplateFromUrl(url, id="not_installed_bt5")
@@ -5720,7 +5720,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     not_installed_bt5 = getattr(template_tool, "not_installed_bt5", None)
     self.assertNotEquals(not_installed_bt5, None)
     self.assertEquals('erp5_csv_style', not_installed_bt5.getTitle())
-    self.assertEquals(not_installed_bt5.getInstallationState(), 
+    self.assertEquals(not_installed_bt5.getInstallationState(),
                       "not_installed")
     self.assertEquals(not_installed_bt5.getRevision(), new_bt.getRevision())
 
@@ -5732,7 +5732,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     url = 'https://svn.erp5.org/repos/public/erp5/trunk/bt5/test_core'
     # don't install test_file
     keep_original_list = ( 'portal_skins/erp5_test/test_file', )
-    template_tool.updateBusinessTemplateFromUrl(url, 
+    template_tool.updateBusinessTemplateFromUrl(url,
                                    keep_original_list=keep_original_list)
     bt = template_tool.getInstalledBusinessTemplate('test_core')
     self.assertNotEquals(None, bt)
@@ -5747,12 +5747,12 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     from Products.ERP5Type.tests.utils import createZODBPythonScript
     portal = self.getPortal()
-    
+
     createZODBPythonScript(portal.portal_skins.custom,
                                    'BT_dummyA',
                                    'scripts_params=None',
                                    '# Script body\n'
-                                   'return context.setDescription("MODIFIED")') 
+                                   'return context.setDescription("MODIFIED")')
 
     createZODBPythonScript(portal.portal_skins.custom,
                                    'BT_dummyB',
@@ -5772,7 +5772,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     before_triggered_bt5_id_list = ['BT_dummyA', 'BT_dummyB']
     after_triggered_bt5_id_list = ['BT_dummyC']
     template_tool.updateBusinessTemplateFromUrl(url,
-                                   before_triggered_bt5_id_list=before_triggered_bt5_id_list, 
+                                   before_triggered_bt5_id_list=before_triggered_bt5_id_list,
                                    after_triggered_bt5_id_list=after_triggered_bt5_id_list)
     bt = template_tool.getInstalledBusinessTemplate('test_html_style')
     self.assertNotEquals(None, bt)
@@ -6321,7 +6321,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     self.assertTrue('Foo' not in self.portal.portal_skins.getSkinSelections())
 
-  def stepCheckSkinSelectionNotRemoved(self, sequence=None, 
+  def stepCheckSkinSelectionNotRemoved(self, sequence=None,
                                        sequence_list=None, **kw):
     """
     Check that a skin selection has not been removed.
@@ -6443,7 +6443,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
 
   # test of uid
   def test_40_BusinessTemplateUidOfCategoriesUnchanged(self, quiet=quiet, run=run_all_test):
-    """  
+    """
       Test that the uids of categories are unchanged during their reinstall
       Add sub categories with the title 'toto' and save their uid in a dict
       Create business template with the sub categories in path_template_list
@@ -6847,17 +6847,17 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     # How to define an existing and use INSTANCE_HOME_REPOSITORY?
     url_list = [ 'https://svn.erp5.org/repos/public/erp5/trunk/bt5',
                  'http://www.erp5.org/dists/snapshot/bt5',
-                 'http://www.erp5.org/dists/release/5.4.5/bt5', 
-                 "INSTANCE_HOME_REPOSITORY", 
+                 'http://www.erp5.org/dists/release/5.4.5/bt5',
+                 "INSTANCE_HOME_REPOSITORY",
                  'file:///opt/does/not/exist']
-    
+
     exist_bt5 = 'erp5_base'
     not_exist_bt5 = "erp5_not_exist"
     template_tool = self.portal.portal_templates
     getBusinessTemplateUrl = template_tool.getBusinessTemplateUrl
 
     # Test Exists
-    self.assertEquals(getBusinessTemplateUrl(url_list, exist_bt5), 
+    self.assertEquals(getBusinessTemplateUrl(url_list, exist_bt5),
                   'https://svn.erp5.org/repos/public/erp5/trunk/bt5/erp5_base')
     self.assertEquals(getBusinessTemplateUrl(url_list[1:], exist_bt5),
                       'http://www.erp5.org/dists/snapshot/bt5/erp5_base.bt5')
@@ -6949,14 +6949,14 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     finally:
       shutil.rmtree(export_dir)
 
-    # uninstall the workflow chain 
+    # uninstall the workflow chain
     pw._chains_by_type = cbt
     # unregister type provider
     types_tool.type_provider_list = registered_type_provider_list
     # uninstall the type provider (this will also uninstall the contained types)
     self.portal.manage_delObjects(['dummy_type_provider'])
     self.stepTic()
-    
+
     new_bt.install()
     try:
       type_provider = self.portal._getOb('dummy_type_provider', None)
@@ -6970,7 +6970,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       # is available from types tool
       self.assertTrue('Dummy Type' in [ti.getId() for
                       ti in types_tool.listTypeInfo()])
-      
+
       dummy_type = types_tool.getTypeInfo('Dummy Type')
       self.assertNotEquals(None, dummy_type)
       # all the configuration from the type is still here
@@ -6982,13 +6982,13 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       action_list = dummy_type.contentValues(portal_type='Action Information')
       self.assertEquals(['View'], [action.getTitle() for action in action_list])
       self.assertEquals(['view'], [action.getReference() for action in action_list])
-      
+
       role_list = dummy_type.contentValues(portal_type='Role Information')
       self.assertEquals(['Dummy Role Definition'],
                         [role.getTitle() for role in role_list])
-      
+
       self.assertEquals(('edit_workflow',), pw.getChainFor('Dummy Type'))
-      
+
       # and our type can be used
       instance = self.portal.newContent(portal_type='Dummy Type',
                                         id='test_document')
@@ -7073,7 +7073,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
           permission='',
           category='object_view')
     action_idx = len(self.portal.portal_actions._actions)
-    
+
     bt = self.portal.portal_templates.newContent(
                           portal_type='Business Template',
                           title='test_bt',
@@ -7095,7 +7095,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                         url='file:/%s' % export_dir)
     finally:
       shutil.rmtree(export_dir)
-    
+
     # manually uninstall the action
     self.portal.portal_actions.deleteActions(selections=[action_idx])
     self.stepTic()
@@ -7137,7 +7137,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                         url='file:/%s' % export_dir)
     finally:
       shutil.rmtree(export_dir)
-    
+
     # modify the document
     self.portal.exported_path.setTitle('Modified')
     self.stepTic()
@@ -7161,11 +7161,11 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       Copy, build and export a business template into the same transaction.
 
       Make sure all objects can be exported, when build() and export() are
-      into the same transaction. 
+      into the same transaction.
 
-      NOTES: 
+      NOTES:
        - it works for some business templates. (e.g. erp5_base)
-       - the object which does not have ._p_jar property is always an 
+       - the object which does not have ._p_jar property is always an
          ActionTemplateItem.
     """
     portal = self.getPortalObject()
