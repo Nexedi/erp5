@@ -53,11 +53,13 @@
             <value> <string>"""\n
   Use to contribute file to ERP5.\n
 """\n
-from Products.ERP5Type.Message import translateString\n
 from ZTUtils import make_query\n
 \n
-MARKER = [\'\', None]\n
 portal = context.getPortalObject()\n
+translateString = portal.Base_translateString\n
+\n
+\n
+MARKER = [\'\', None]\n
 portal_contributions = portal.portal_contributions\n
 context_url = context.getRelativeUrl()\n
 \n
