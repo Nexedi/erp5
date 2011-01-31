@@ -97,7 +97,6 @@ if url is not None:\n
       redirect_url= \'%s?%s\' %(cancel_url, \n
                             make_query(dict(portal_status_message=translateString("Wrong or not accessible URL address."))))\n
       return context.REQUEST.RESPONSE.redirect(redirect_url)\n
-  filename=document.getId()\n
 else:\n
   # contribute file\n
   document_kw.update({\'file\': file})\n
@@ -109,6 +108,7 @@ if synchronous_metadata_discovery:\n
   # this in an activity\n
   if document.isSupportBaseDataConversion():\n
     document.processFile()\n
+  filename = document.getFilename()\n
   merged_document = document.Document_convertToBaseFormatAndDiscoverMetadata(\n
                                filename=filename,\n
                                user_login=user_login,\n
