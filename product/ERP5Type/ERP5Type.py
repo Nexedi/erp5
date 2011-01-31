@@ -516,8 +516,9 @@ class ERP5TypeInformation(XMLObject,
       previous_state = [getattr(aq_base(self), x) for x in property_list]
       result = XMLObject._edit(self, *args, **kw)
       if previous_state != [getattr(aq_base(self), x) for x in property_list]:
-        from Products.ERP5Type.Base import _aq_reset
-        _aq_reset()
+        # XXX very dubious, isnt it done in interaction workflows?
+        # most likely, only base_category_list is missing
+        self.portal_types.resetDynamicDocuments()
       return result
 
     security.declareProtected(Permissions.AccessContentsInformation,
