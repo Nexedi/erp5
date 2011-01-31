@@ -2399,10 +2399,24 @@ class TestPropertySheet:
     def test_aq_reset_on_portal_types_properties_change(self):
       doc = self.portal.person_module.newContent(portal_type='Person')
       ti = self.getTypesTool()['Person']
-      self.assertFalse(hasattr(doc, 'getDestination'))
-      ti.edit(type_base_category_list=
-        ti.getTypeBaseCategoryList() + ['destination'])
-      self.assertTrue(hasattr(doc, 'getDestination'))
+      base_category_list = ti.getTypeBaseCategoryList()
+      # this test is poorly isolated, and the _19*_ add destination
+      # to the base categories
+      if 'destination' not in base_category_list:
+
+        self.assertFalse(hasattr(doc, 'getDestination'))
+        ti.edit(type_base_category_list=
+          base_category_list + ['destination'])
+
+        transaction.commit()
+        self.assertTrue(hasattr(doc, 'getDestination'))
+      else:
+        self.assertTrue(hasattr(doc, 'getDestination'))
+        base_category_list.remove('destination')
+        ti.edit(type_base_category_list=base_category_list)
+
+        transaction.commit()
+        self.assertFalse(hasattr(doc, 'getDestination'))
 
     def test_aq_reset_on_workflow_chain_change(self):
       doc = self.portal.person_module.newContent(portal_type='Person')
