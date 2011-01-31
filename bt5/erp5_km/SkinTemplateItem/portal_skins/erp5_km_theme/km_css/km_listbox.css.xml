@@ -41,7 +41,10 @@
             <value> <unicode encoding="cdata"><![CDATA[
 
 <tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/>\n
-\n
+div.listbox-content-fixed-width,\n
+div.listbox-tree{\n
+  width: auto;\n
+}\n
 /* Listbox action bar at bottom */\n
 div.listbox-action-widget {\n
   float:none;\n
@@ -279,8 +282,7 @@ div.listbox-page-navigation button.listbox_next_page span.image {\n
 \n
 div.listbox-page-navigation button.listbox_last_page span.image {\n
   background-image:url(km_img/2rightarrowv.png);\n
-}\n
-
+}
 
 ]]></unicode> </value>
         </item>
@@ -298,7 +300,7 @@ div.listbox-page-navigation button.listbox_last_page span.image {\n
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
-            <value> <string>utf-8</string> </value>
+            <value> <string>iso-8859-15</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
