@@ -31,6 +31,7 @@ from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from zLOG import LOG, WARNING, PANIC
 from Products.ERP5Type.interfaces import ITypeProvider, ITypesTool
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
 
 class ComposedObjectIds(object):
@@ -249,11 +250,35 @@ class TypesTool(TypeProvider):
 
       return res
 
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'resetDynamicDocumentsOnceAtTransactionBoundary')
+  def resetDynamicDocumentsOnceAtTransactionBoundary(self):
+    """
+    Schedule a single reset at the end of the transaction, only once.
+    The idea behind this is that a reset is (very) costly and that we want
+    to do it as little often as possible.
+    Moreover, doing it twice in a transaction is useless (but still twice
+    as costly).
+    And lastly, WorkflowMethods are not yet clever enough to allow this
+    possibility, as they schedule interactions depending on an instance path:
+    calling two times a setter on two different portal types during the
+    same transaction would call twice resetDynamicDocuments without this
+    TransactionalVariable check
+    """
+    tv = getTransactionalVariable()
+    key = 'TypesTool.resetDynamicDocumentsOnceAtTransactionBoundary'
+    if key not in tv:
+      tv[key] = None
+      transaction.get().addBeforeCommitHook(self.resetDynamicDocuments)
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'resetDynamicDocuments')
   def resetDynamicDocuments(self):
-    """Resets all dynamic documents: force reloading erp.* classes"""
+    """Resets all dynamic documents: force reloading erp.* classes
+
+    WARNING: COSTLY! Please double-check that
+    resetDynamicDocumentsOnceAtTransactionBoundary can't be used instead.
+    """
     synchronizeDynamicModules(self, force=True)
 
   security.declareProtected(Permissions.AddPortalContent,
