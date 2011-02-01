@@ -1791,7 +1791,11 @@
                 temparr.push(\'<table class="cb-table" cellSpacing="0" cellPadding="0"><tbody><tr><th class="cb-key">\');\n
                 temparr.push(i18n.xgcalendar.time, \':</th><td class=cb-value><div id="bbit-cal-buddle-timeshow"></div></td></tr><tr><th class="cb-key">\');\n
                 temparr.push(i18n.xgcalendar.content, \':</th><td class="cb-value"><div class="textbox-fill-wrapper"><div class="textbox-fill-mid"><input id="bbit-cal-what" class="textbox-fill-input"/></div></div><div class="cb-example">\');\n
-                temparr.push(i18n.xgcalendar.example, \'</div></td></tr></tbody></table><input id="bbit-cal-start" type="hidden"/><input id="bbit-cal-end" type="hidden"/><input id="bbit-cal-allday" type="hidden"/><input id="bbit-cal-quickAddBTN" value="\');\n
+                temparr.push(i18n.xgcalendar.example, \'</div></td></tr>\');\n
+                if (option.loadFieldOnDialog && $.isFunction(option.loadFieldOnDialog)){\n
+                  temparr.push("<tr>", option.loadFieldOnDialog(), "</tr>");\n
+                }\n
+                temparr.push(\'</tbody></table><input id="bbit-cal-start" type="hidden"/><input id="bbit-cal-end" type="hidden"/><input id="bbit-cal-allday" type="hidden"/><input id="bbit-cal-quickAddBTN" value="\');\n
                 temparr.push(i18n.xgcalendar.create_event, \'" type="button"/>&nbsp; <SPAN id="bbit-cal-editLink" class="lk">\');\n
                 temparr.push(i18n.xgcalendar.update_detail, \' <StrONG>&gt;&gt;</StrONG></SPAN></div></div></div><tr><td><div id="bl1" class="bubble-corner"><div class="bubble-sprite bubble-bl"></div></div><td><div class="bubble-bottom"></div><td><div id="br1" class="bubble-corner"><div class="bubble-sprite bubble-br"></div></div></tr></tbody></table><div id="bubbleClose1" class="bubble-closebutton"></div><div id="prong2" class="prong"><div class=bubble-sprite></div></div></div>\');\n
                 var tempquickAddHanler = temparr.join("");\n
