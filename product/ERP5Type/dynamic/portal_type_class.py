@@ -239,9 +239,10 @@ def generatePortalTypeClass(site, portal_type_name):
     # The Property Sheet Tool may be None if the code is updated but
     # the BT has not been upgraded yet with portal_property_sheets
     if property_sheet_tool is None:
-      LOG("ERP5Type.dynamic", WARNING,
-          "Property Sheet Tool was not found. Please update erp5_core "
-          "Business Template")
+      if not getattr(site, '_v_bootstrapping', False):
+        LOG("ERP5Type.dynamic", WARNING,
+            "Property Sheet Tool was not found. Please update erp5_core "
+            "Business Template")
     else:
       if portal_type is not None:
         # Get the Property Sheets defined on the portal_type and use the

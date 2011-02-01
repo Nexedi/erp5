@@ -1561,6 +1561,13 @@ class ERP5Generator(PortalGenerator):
     # Make sure reindex will not be called until business templates
     # will be installed
     setattr(portal, 'isIndexable', ConstantGetter('isIndexable', value=False))
+
+    # This is only used to refine log level.
+    # Has no functional use, and should never have any:
+    # if you use it for something else than a logging-oriented hint,
+    # trolls *will* chase you and haunt you in your dreams
+    portal._v_bootstrapping = True
+
     parent._setObject(id, portal)
     # Return the fully wrapped object.
     p = parent.this()._getOb(id)
@@ -1583,6 +1590,9 @@ class ERP5Generator(PortalGenerator):
     p._setProperty('management_page_charset', 'UTF-8', 'string')
     self.setup(p, create_userfolder, create_activities=create_activities,
         reindex=reindex, **kw)
+
+    p._v_bootstrapping = False
+
     return p
 
   def setupLastTools(self, p, create_activities=True, **kw):
