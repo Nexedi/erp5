@@ -975,17 +975,8 @@ class TestCMFCategory(ERP5TypeTestCase):
   def test_31_assert_raise_if_base_category_is_missing(self):
     #First remove Base Category
     self.portal.portal_categories.manage_delObjects(['region'])
-    get_transaction().commit()
-    self.tic()
-    # XXX should be done in an Interaction Workflow,
-    # with the guarantee that it's only ever called once per transaction,
-    # that is, if several categories get changed in the same transaction,
-    # call it only ONCE (that is not the case with the current
-    # 'once per transaction', which is actually 'once per transaction per object'
-    self.portal.portal_types.resetDynamicDocuments()
     obj = self.portal.person_module.newContent(portal_type='Person')
     get_transaction().commit()
-    self.tic()
     try:
       #Setters
       self.assertRaises(AttributeError, getattr, obj, 'setRegion')
@@ -1002,7 +993,6 @@ class TestCMFCategory(ERP5TypeTestCase):
       #add Base Category
       self.portal.portal_categories.newContent(id='region', portal_type='Base Category')
     get_transaction().commit()
-    self.tic()
     #check Method exists after base_category creation
     #Setters
     self.assertTrue(getattr(obj, 'setRegion') is not None)
