@@ -286,41 +286,41 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
       raise AttributeError("Could not find a portal type class in"
                            " class hierarchy")
 
-    ERP5Base.aq_method_lock.acquire()
     portal_type = klass.__name__
     from Products.ERP5.ERP5Site import getSite
     site = getSite()
+    ERP5Base.aq_method_lock.acquire()
     try:
       try:
+        try:
+          class_definition = generatePortalTypeClass(site, portal_type)
+        except AttributeError:
+          LOG("ERP5Type.Dynamic", WARNING,
+              "Could not access Portal Type Object for type %r"
+              % portal_type, error=sys.exc_info())
+          base_tuple = (ERP5BaseBroken, )
+          attribute_dict = {}
+          interface_list = []
+          base_category_list = []
+        else:
+          base_tuple, interface_list, base_category_list, attribute_dict = class_definition
 
-        class_definition = generatePortalTypeClass(site, portal_type)
-      except AttributeError:
-        LOG("ERP5Type.Dynamic", WARNING,
-            "Could not access Portal Type Object for type %r"
-            % portal_type, error=sys.exc_info())
-        base_tuple = (ERP5BaseBroken, )
-        attribute_dict = {}
-        interface_list = []
-        base_category_list = []
-      else:
-        base_tuple, interface_list, base_category_list, attribute_dict = class_definition
+        klass.__isghost__ = False
+        klass.__bases__ = base_tuple
 
-      klass.__isghost__ = False
-      klass.__bases__ = base_tuple
+        klass.resetAcquisitionAndSecurity()
 
-      klass.resetAcquisitionAndSecurity()
+        for key, value in attribute_dict.iteritems():
+          setattr(klass, key, value)
 
-      for key, value in attribute_dict.iteritems():
-        setattr(klass, key, value)
+        klass._categories = base_category_list
 
-      klass._categories = base_category_list
+        for interface in interface_list:
+          classImplements(klass, interface)
 
-      for interface in interface_list:
-        classImplements(klass, interface)
-
-      klass.generatePortalTypeAccessors(site)
-    except:
-      import traceback; traceback.print_exc()
+        klass.generatePortalTypeAccessors(site)
+      except Exception:
+        import traceback; traceback.print_exc()
     finally:
       ERP5Base.aq_method_lock.release()
 
