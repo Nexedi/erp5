@@ -41,11 +41,9 @@ from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from Products.ERP5Type.tests.testERP5Type import PropertySheetTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Form.PreferenceTool import Priority
-from Products.ERP5PropertySheetLegacy.PropertySheet.HtmlStylePreference import HtmlStylePreference
 
-default_large_image_height, = [pref.get('default')
-                               for pref in HtmlStylePreference._properties
-                               if pref['id'] == 'preferred_large_image_height']
+# should match what's configured by default in HtmlStylePreference
+default_large_image_height = 768
 
 
 class TestPreferences(PropertySheetTestCase):
@@ -562,11 +560,11 @@ class TestPreferences(PropertySheetTestCase):
     self.assertEqual(system_pref, preference_tool.getActiveSystemPreference())
 
   def test_boolean_accessor(self):
-    self._addPropertySheet('Preference', 'DummyPreference',
-        '''class DummyPreference:
-             _properties= ( {'id': 'dummy',
-                             'preference': True,
-                             'type': 'boolean',},)''')
+    self._addProperty('Preference', 'DummyPreference',
+                      portal_type='Standard Property',
+                      property_id='dummy',
+                      preference=True,
+                      elementary_type='boolean')
     portal_preferences = self.portal.portal_preferences
     self.assertFalse(portal_preferences.getDummy())
     self.assertFalse(portal_preferences.isDummy())
@@ -585,13 +583,14 @@ class TestPreferences(PropertySheetTestCase):
         preference level. """
     write_permission = 'Modify portal content'
     read_permission = 'Manage portal'
-    self._addPropertySheet('Preference', 'DummyPreference',
-        '''class DummyPreference:
-             _properties= ( {'id': 'preferred_toto',
-                             'write_permission' : 'Modify portal content',
-                             'read_permission'  : 'Manage portal',
-                             'preference': 1,
-                             'type': 'string',},)''')
+
+    self._addProperty('Preference', 'DummyPreference',
+                      property_id='preferred_toto',
+                      portal_type='Standard Property',
+                      preference=1,
+                      write_permission='Modify portal content',
+                      read_permission='Manage portal',
+                      elementary_type='string')
 
     obj = self.portal.portal_preferences.newContent(portal_type='Preference')
     obj.enable()
@@ -634,12 +633,12 @@ class TestPreferences(PropertySheetTestCase):
     default_preference_string = 'Default Name'
     normal_preference_string = 'Normal Preference'
     system_preference_string = 'System Preference'
-    self._addPropertySheet('Preference', 'DummySystemPreference',
-        '''class DummySystemPreference:
-             _properties= ( {'id': 'dummystring',
-                             'default': '%s',
-                             'preference': True,
-                             'type': 'string',},)''' % default_preference_string)
+    self._addProperty('Preference', 'DummySystemPreference',
+                      portal_type='Standard Property',
+                      property_id='dummystring',
+                      property_default='python: "%s"' % default_preference_string,
+                      preference=True,
+                      elementary_type='string')
     portal_preferences = self.portal.portal_preferences
     self.assertEqual(default_preference_string,
         portal_preferences.getDummystring())
@@ -668,12 +667,12 @@ class TestPreferences(PropertySheetTestCase):
     default_preference_string = 'Default Name'
     normal_preference_string = 'Normal Preference'
     system_preference_string = 'System Preference'
-    self._addPropertySheet('Preference', 'DummySystemPreference',
-        '''class DummySystemPreference:
-             _properties= ( {'id': 'dummystring',
-                             'default': '%s',
-                             'preference': True,
-                             'type': 'string',},)''' % default_preference_string)
+    self._addProperty('Preference', 'DummySystemPreference',
+                      portal_type='Standard Property',
+                      property_id='dummystring',
+                      property_default='python: "%s"' % default_preference_string,
+                      preference=True,
+                      elementary_type='string')
     portal_preferences = self.portal.portal_preferences
     self.assertEqual(default_preference_string,
         portal_preferences.getDummystring())
