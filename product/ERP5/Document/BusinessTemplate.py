@@ -3664,23 +3664,23 @@ class PropertySheetTemplateItem(DocumentTemplateItem,
     if not self._perform_migration:
       return DocumentTemplateItem.install(self, context, **kw)
 
-    # With format 0 of Business Template, the objects are stored in
-    # '_archive' whereas they are stored in '_objects' with format
-    # version 1
-    bt_format_version = context.getTemplateFormatVersion()
-
-    if bt_format_version == 0 and \
-       not self._is_already_migrated(self._archive.keys()):
-      self._migrateAllFilesystemPropertySheets(context,
-                                               self._archive,
-                                               self._objects,
-                                               kw.get('object_to_update'))
-    elif bt_format_version == 1 and \
-         not self._is_already_migrated(self._objects.keys()):
-      self._migrateAllFilesystemPropertySheets(context,
-                                               self._objects,
-                                               self._archive,
-                                               kw.get('object_to_update'))
+#    # With format 0 of Business Template, the objects are stored in
+#    # '_archive' whereas they are stored in '_objects' with format
+#    # version 1
+#    bt_format_version = context.getTemplateFormatVersion()
+#
+#    if bt_format_version == 0 and \
+#       not self._is_already_migrated(self._archive.keys()):
+#      self._migrateAllFilesystemPropertySheets(context,
+#                                               self._archive,
+#                                               self._objects,
+#                                               kw.get('object_to_update'))
+#    elif bt_format_version == 1 and \
+#         not self._is_already_migrated(self._objects.keys()):
+#      self._migrateAllFilesystemPropertySheets(context,
+#                                               self._objects,
+#                                               self._archive,
+#                                               kw.get('object_to_update'))
 
     return ObjectTemplateItem.install(self, context, **kw)
 
