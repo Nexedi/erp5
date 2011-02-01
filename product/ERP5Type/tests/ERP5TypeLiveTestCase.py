@@ -68,9 +68,9 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
     sometimes but should remain an exception because they hinder
     productivity by adding an extra time to build the
     environment (which is already built in live instances). 
-        
+
     All other test classes should derive from ERP5TypeLiveTestCase.
-    
+
     TODO: 
     - An eplicit list of exceptions to live tests remains to be
       defined. 
@@ -79,17 +79,13 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
     def getPortalName(self):
       """ Return the default ERP5 site id.
       """
-      return self.getPortalObject().getId()
+      return self.portal.getId()
 
     def getPortal(self):
       """Returns the portal object, i.e. the "fixture root".
       """
-      # Assumes that portal exists (which has sense) and that there is only one
-      # ERP5 site in Zope (which is always the case)
-      if self.app.meta_type == 'ERP5 Site':
-        return self.app
-      return [q for q in self.app.objectValues() if q.meta_type == 'ERP5 Site'
-          ][0]
+      from Products.ERP5Site import getSite
+      return getSite(get_request())
 
     getPortalObject = getPortal
 
@@ -103,7 +99,12 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
 
     def _close(self):
       '''Closes the ZODB connection.'''
+      revert = transaction.get().__hash__() != self.initial_transaction_hash
       transaction.abort()
+      if revert:
+        if self.activity_tool_subscribed:
+          self.portal.portal_activities.subscribe()
+          transaction.commit()
 
     def _setup(self):
         '''Change some site properties in order to be ready for live test
@@ -132,21 +133,7 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
 
     def _app(self):
         '''Returns the app object for a test.'''
-        request = get_request()
-        return request.PARENTS[-1]
-
-    def afterSetUp(self):
-      '''Called after setUp() has completed. This is
-         far and away the most useful hook.
-      '''
-      pass
-
-    def beforeSetUp(self):
-      '''Called before the ZODB connection is opened,
-           at the start of setUp(). By default begins
-           a new transaction.
-      '''
-      pass
+        return self.getPortal().aq_parent
 
     def beforeClear(self):
       '''Called before _clear(). Subclasses should
@@ -161,15 +148,6 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
       '''
       PortalTestCase.tearDown(self)
 
-    def beforeClose(self):
-      """
-      put back site properties that were disabled for unit test
-      """
-      if transaction.get().__hash__() != self.initial_transaction_hash:
-        if self.activity_tool_subscribed:
-          self.portal.portal_activities.subscribe()
-          transaction.commit()
-      PortalTestCase.beforeClose(self)
 
 def runLiveTest(test_list, verbosity=1, stream=None, **kw):
   from Products.ERP5Type.tests.runUnitTest import DebugTestResult
@@ -214,7 +192,5 @@ def runLiveTest(test_list, verbosity=1, stream=None, **kw):
   if stream is None:
     output = StringIO()
   output.write("**Running Live Test:\n")
-  def _print(msg):
-    output.write(msg)
-  ZopeTestCase._print = _print
+  ZopeTestCase._print = output.write
   result = TestRunner(stream=output, verbosity=verbosity).run(suite)
