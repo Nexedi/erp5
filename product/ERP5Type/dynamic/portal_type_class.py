@@ -32,6 +32,7 @@ import inspect
 from types import ModuleType
 
 from dynamic_module import registerDynamicModule
+from accessor_holder import _generateBaseAccessorHolder, _generatePreferenceToolAccessorHolder
 
 from Products.ERP5Type.Base import _aq_reset, Base
 from Products.ERP5Type.Globals import InitializeClass
@@ -286,6 +287,14 @@ def generatePortalTypeClass(site, portal_type_name):
         property_sheet_set,
         erp5.accessor_holder,
         property_sheet_tool)
+
+      # XXX a hook to add per-portal type accessor holders maybe?
+      if portal_type_name == "Preference Tool":
+        accessor_holder = _generatePreferenceToolAccessorHolder(
+                            site,
+                            accessor_holder_list,
+                            erp5.accessor_holder)
+        accessor_holder_list.insert(0, accessor_holder)
 
       base_category_set = set(base_category_list)
       for accessor_holder in accessor_holder_list:
