@@ -151,6 +151,17 @@ div#faddbtn.fbutton {\n
 \n
 div#faddbtn.fbutton div {\n
     padding: 6px;\n
+}\n
+\n
+div#faddbtn.fbutton span.addcal:hover {\n
+  cursor: pointer;\n
+}\n
+\n
+div#faddbtn.fbutton span.addcal {\n
+  background: url("http://localhost:18080/erp5/ung_images/button_background.png") repeat scroll 0 0 transparent;\n
+  border: 1px solid #BBBBBB;\n
+  padding: 2px 4px;\n
+  background-color: #EDF1D5;\n
 }</string> </value>
         </item>
         <item>
