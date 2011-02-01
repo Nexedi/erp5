@@ -501,26 +501,6 @@ class ERP5TypeInformation(XMLObject,
       """
       return self.constructTempInstance(self, self.getId()).propertyMap()
 
-    def _edit(self, *args, **kw):
-      """
-        Method overload
-
-        Reset _aq_dynamic if property_sheet definition has changed)
-
-        XXX This is only good in single thread mode.
-            In ZEO environment, we should call portal_activities
-            in order to implement a broadcast update
-            on production hosts
-      """
-      property_list = 'factory', 'property_sheet_list', 'base_category_list'
-      previous_state = [getattr(aq_base(self), x) for x in property_list]
-      result = XMLObject._edit(self, *args, **kw)
-      if previous_state != [getattr(aq_base(self), x) for x in property_list]:
-        # XXX very dubious, isnt it done in interaction workflows?
-        # most likely, only base_category_list is missing
-        self.portal_types.resetDynamicDocuments()
-      return result
-
     security.declareProtected(Permissions.AccessContentsInformation,
                               'PrincipiaSearchSource')
     def PrincipiaSearchSource(self):
