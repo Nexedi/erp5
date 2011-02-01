@@ -1241,10 +1241,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(erp5_sql_deferred_connection is not None)
     self.assertEquals('Z MySQL Deferred Database Connection',
                       erp5_sql_deferred_connection.meta_type)
-    for method in ['z0_drop_fulltext',
-                   'z0_uncatalog_fulltext',
-                   'z_catalog_fulltext_list',
-                   'z_create_fulltext', ]:
+    for method in ['z0_uncatalog_fulltext',
+                   'z_catalog_fulltext_list']:
       self.assertEquals('erp5_sql_deferred_connection',
                 getattr(self.getCatalogTool().getSQLCatalog(),
                               method).connection_id)
