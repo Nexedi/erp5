@@ -187,7 +187,12 @@ def _generatePreferenceToolAccessorHolder(portal, accessor_holder_list,
         # XXX read_permission and write_permissions defined at
         # property sheet are not respected by this.
         # only properties marked as preference are used
+
+        # properties have already been 'converted' and _list is appended
+        # to list_types properties
         attribute = prop['id']
+        if attribute.endswith('_list'):
+          attribute = prop['base_id']
         attr_list = [ 'get%s' % convertToUpperCase(attribute)]
         if prop['type'] == 'boolean':
           attr_list.append('is%s' % convertToUpperCase(attribute))
