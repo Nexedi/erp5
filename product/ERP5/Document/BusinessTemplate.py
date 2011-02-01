@@ -816,11 +816,18 @@ class ObjectTemplateItem(BaseTemplateItem):
     if context.getTemplateFormatVersion() == 1:
       upgrade_list = []
       type_name = self.__class__.__name__.split('TemplateItem')[-2]
-      for path in self._objects:
+      for path, obj in self._objects.iteritems():
         if installed_item._objects.has_key(path):
           upgrade_list.append((path, installed_item._objects[path]))
         else: # new object
           modified_object_list[path] = 'New', type_name
+
+        # if that's an old style class, use a portal type class instead
+        migrateme = getattr(obj, '_migrateToPortalTypeClass', None)
+        if migrateme is not None:
+          migrateme()
+        self._objects[path] = obj
+
       # update _p_jar property of objects cleaned by removeProperties
       transaction.savepoint(optimistic=True)
       for path, old_object in upgrade_list:
@@ -1006,7 +1013,7 @@ class ObjectTemplateItem(BaseTemplateItem):
           workflow_history = None
           old_obj = container._getOb(object_id, None)
           object_existed = old_obj is not None
-          if old_obj is not None:
+          if object_existed:
             # Object already exists
             recurse(saveHook, old_obj)
             if getattr(aq_base(old_obj), 'groups', None) is not None:
@@ -1920,10 +1927,24 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
       PersistentMigrationMixin._no_migration -= 1
     return object_key_list
 
-  # XXX : this method is kept temporarily, but can be removed once all bt5 are
-  # re-exported with separated workflow-chain information
   def install(self, context, trashbin, **kw):
+    if context.getTemplateFormatVersion() == 1:
+      object_list = self._objects
+    else:
+      object_list = self._archive
+
+    for path, obj in object_list.iteritems():
+        # if that's an old style class, use a portal type class instead
+        # XXX PortalTypeTemplateItem-specific
+        migrateme = getattr(obj, '_migrateToPortalTypeClass', None)
+        if migrateme is not None:
+          migrateme()
+        object_list[path] = obj
+
     ObjectTemplateItem.install(self, context, trashbin, **kw)
+
+    # XXX : following be removed once all bt5 are
+    # re-exported with separated workflow-chain information
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
     # We now need to setup the list of workflows corresponding to
@@ -1933,10 +1954,6 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
     # best solution, by default it is 'default_workflow', which is
     # not very usefull
     default_chain = ''
-    if context.getTemplateFormatVersion() == 1:
-      object_list = self._objects
-    else:
-      object_list = self._archive
     for path in object_list.keys():
       if update_dict.has_key(path) or force:
         if not force:
@@ -3478,7 +3495,7 @@ class PropertySheetTemplateItem(DocumentTemplateItem,
   # If set to False, then the migration of Property Sheets will never
   # be performed, required until the code of ZODB Property Sheets is
   # stable and completely documented
-  _perform_migration = False
+  _perform_migration = True
 
   # Only meaningful for filesystem Property Sheets
   local_file_reader_name = staticmethod(readLocalPropertySheet)
@@ -4336,6 +4353,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
          , 'icon'           : 'file_icon.gif'
          , 'product'        : 'ERP5Type'
          , 'factory'        : 'addBusinessTemplate'
+         , 'type_class'     : 'BusinessTemplate'
          , 'immediate_view' : 'BusinessTemplate_view'
          , 'allow_discussion'     : 1
          , 'allowed_content_types': (

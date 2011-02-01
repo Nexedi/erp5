@@ -62,7 +62,7 @@ class TranslationProviderBase(object):
     """
     property_domain_dict = {}
 
-    for prop in self._getPropertyHolder()._properties:
+    for prop in self._getPropertyHolder().getAccessorHolderPropertyList():
       prop_id = prop['id']
       if prop.get('translatable') and prop_id not in property_domain_dict:
         domain_name = prop.get('translation_domain')

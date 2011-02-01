@@ -2,12 +2,17 @@
 
 import sys
 
+from Products.ERP5Type import Permissions
+from Products.ERP5Type.Accessor.Constant import Getter as ConstantGetter
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Base import Base as ERP5Base
+from Products.ERP5Type.Base import PropertyHolder, initializePortalTypeDynamicWorkflowMethods
+from Products.ERP5Type.Utils import createAllCategoryAccessors, createExpressionContext, UpperCase
 from ExtensionClass import ExtensionClass, pmc_init_of
 
 from zope.interface import classImplements
 from ZODB.broken import Broken, PersistentBroken
+from AccessControl import ClassSecurityInfo
 from zLOG import LOG, WARNING, BLATHER
 
 from portal_type_class import generatePortalTypeClass
@@ -87,7 +92,7 @@ class GhostBaseMetaClass(ExtensionClass, AccessorHolderType):
 
 InitGhostBase = GhostBaseMetaClass('InitGhostBase', (ERP5Base,), {})
 
-class PortalTypeMetaClass(GhostBaseMetaClass):
+class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
   """
   Meta class that is used by portal type classes
 
@@ -113,6 +118,9 @@ class PortalTypeMetaClass(GhostBaseMetaClass):
     for parent in bases:
       if issubclass(type(parent), PortalTypeMetaClass):
         PortalTypeMetaClass.subclass_register.setdefault(parent, []).append(cls)
+
+    cls.security = ClassSecurityInfo()
+    cls.workflow_method_registry = {}
 
     cls.__isghost__ = True
     super(GhostBaseMetaClass, cls).__init__(name, bases, dictionary)
@@ -166,11 +174,14 @@ class PortalTypeMetaClass(GhostBaseMetaClass):
       for attr in cls.__dict__.keys():
         if attr not in ('__module__',
                         '__doc__',
+                        'security',
+                        'workflow_method_registry',
                         '__isghost__',
                         'portal_type'):
           delattr(cls, attr)
       # generate a ghostbase that derives from all previous bases
       ghostbase = GhostBaseMetaClass('GhostBase', cls.__bases__, {})
+      cls.workflow_method_registry.clear()
       cls.__bases__ = (ghostbase,)
       cls.__isghost__ = True
       cls.resetAcquisitionAndSecurity()
@@ -190,6 +201,69 @@ class PortalTypeMetaClass(GhostBaseMetaClass):
       return getattr(cls, name)
 
     raise AttributeError
+
+  def generatePortalTypeAccessors(cls, site):
+    createAllCategoryAccessors(site,
+                               cls,
+                               cls._categories,
+                               createExpressionContext(site, site))
+    # make sure that category accessors from the portal type definition
+    # are generated, no matter what
+    # XXX this code is duplicated here, in PropertySheetTool, and in Base
+    # and anyway is ugly, as tuple-like registration does not help
+    for id, fake_accessor in cls._getPropertyHolderItemList():
+      if not isinstance(fake_accessor, tuple):
+        continue
+
+      if fake_accessor is PropertyHolder.WORKFLOW_METHOD_MARKER:
+        # Case 1 : a workflow method only
+        accessor = ERP5Base._doNothing
+      else:
+        # Case 2 : a workflow method over an accessor
+        (accessor_class, accessor_args, key) = fake_accessor
+        accessor = accessor_class(id, key, *accessor_args)
+
+      # Add the accessor to the accessor holder
+      setattr(cls, id, accessor)
+
+    portal_workflow = getattr(site, 'portal_workflow', None)
+    if portal_workflow is None:
+      if not getattr(site, '_v_bootstrapping', False):
+        LOG("ERP5Type.Dynamic", WARNING,
+            "Could not generate workflow methods for %s"
+            % cls.__name__)
+    else:
+      initializePortalTypeDynamicWorkflowMethods(cls, portal_workflow)
+
+    # portal type group methods, isNodeType, isResourceType...
+    from Products.ERP5Type.ERP5Type import ERP5TypeInformation
+    # XXX possible optimization:
+    # generate all methods on Base accessor holder, with all methods
+    # returning False, and redefine on portal types only those returning True,
+    # aka only those for the group they belong to
+    for group in ERP5TypeInformation.defined_group_list:
+      value = cls.__name__ in site._getPortalGroupedTypeSet(group)
+      accessor_name = 'is' + UpperCase(group) + 'Type'
+      setattr(cls, accessor_name, ConstantGetter(accessor_name, group, value))
+      cls.declareProtected(Permissions.AccessContentsInformation,
+                           accessor_name)
+
+    from Products.ERP5Type.Cache import initializePortalCachingProperties
+    initializePortalCachingProperties(site)
+
+  # TODO in reality much optimization can be done for all
+  # PropertyHolder methods:
+  # - workflow methods are only on the MetaType erp5.portal_type method
+  # Iterating over the complete MRO is nonsense and inefficient
+  def _getPropertyHolderItemList(cls):
+    cls.loadClass()
+    result = PropertyHolder._getPropertyHolderItemList(cls)
+    for parent in cls.mro():
+      if parent.__module__ == 'erp5.accessor_holder':
+        for x in parent.__dict__.items():
+          if x[0] not in PropertyHolder.RESERVED_PROPERTY_SET:
+            result.append(x)
+    return result
 
   def loadClass(cls):
     """
@@ -218,6 +292,7 @@ class PortalTypeMetaClass(GhostBaseMetaClass):
     site = getSite()
     try:
       try:
+
         class_definition = generatePortalTypeClass(site, portal_type)
       except AttributeError:
         LOG("ERP5Type.Dynamic", WARNING,
@@ -238,11 +313,14 @@ class PortalTypeMetaClass(GhostBaseMetaClass):
       for key, value in attribute_dict.iteritems():
         setattr(klass, key, value)
 
-      # XXX disabled
-      #klass._categories = base_category_list
+      klass._categories = base_category_list
 
       for interface in interface_list:
         classImplements(klass, interface)
+
+      klass.generatePortalTypeAccessors(site)
+    except:
+      import traceback; traceback.print_exc()
     finally:
       ERP5Base.aq_method_lock.release()
 

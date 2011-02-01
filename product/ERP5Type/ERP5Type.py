@@ -396,9 +396,8 @@ class ERP5TypeInformation(XMLObject,
       return ob
 
     def _getPropertyHolder(self):
-      ob = self.constructTempInstance(self, self.getId())
-      ob._aq_dynamic('id')
-      return ob.aq_portal_type[ob._aq_key()]
+      import erp5.portal_type as module
+      return getattr(module, self.getId())
 
     security.declarePrivate('updatePropertySheetDefinitionDict')
     def updatePropertySheetDefinitionDict(self, definition_dict):
@@ -499,7 +498,7 @@ class ERP5TypeInformation(XMLObject,
       """
       Returns the list of properties which are specific to the portal type.
       """
-      return self.constructTempInstance(self, self.getId()).propertyMap()
+      return self.__class__.propertyMap()
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'PrincipiaSearchSource')

@@ -93,11 +93,3 @@ class Preference( Folder ):
   def disable(self):
     """Workflow method"""
     self._clearCache()
-
-  def _aq_dynamic(self, id):
-    """ force _aq_dynamic on preference tool, because list of property sheet of
-        preferences depends on the code of PreferenceTool._aq_dynamic"""
-    if not PreferenceTool.aq_preference_generated:
-      portal = self.getPortalObject()
-      portal.portal_preferences._aq_dynamic('dummy')
-    return Preference.inheritedAttribute('_aq_dynamic')(self, id)

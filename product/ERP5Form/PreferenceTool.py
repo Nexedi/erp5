@@ -30,17 +30,15 @@
 from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityManagement import getSecurityManager,\
                           setSecurityManager, newSecurityManager
-from AccessControl.PermissionRole import  PermissionRole
 from MethodObject import Method
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from zLOG import LOG, PROBLEM
 
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Tool.BaseTool import BaseTool
-from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type import Permissions
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.Utils import convertToUpperCase
-from Products.ERP5Type.Accessor.TypeDefinition import list_types
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Form import _dtmldir
 
@@ -51,76 +49,6 @@ class Priority:
   SITE  = 1
   GROUP = 2
   USER  = 3
-
-def updatePreferenceClassPropertySheetList():
-  # XXX obsolete, and now handled in dynamic.portal_type_class
-
-  from Products.ERP5Form.Document.Preference import Preference
-  # 'Static' property sheets defined on the class
-  class_property_sheet_list = Preference.property_sheets
-  # Time to lookup for preferences defined on other modules
-  property_sheets = list(class_property_sheet_list)
-  for id in dir(PropertySheet):
-    if id.endswith('Preference'):
-      ps = getattr(PropertySheet, id)
-      if not isinstance(ps, basestring) and ps not in property_sheets:
-        property_sheets.append(ps)
-  class_property_sheet_list = tuple(property_sheets)
-  Preference.property_sheets = class_property_sheet_list
-
-
-def createPreferenceToolAccessorList(portal) :
-  """
-    Initialize all Preference methods on the preference tool.
-    This method must be called on startup.
-
-    This tool is capable of updating the list of Preference
-    property sheets by looking at all registered property sheets
-    and considering those which name ends with 'Preference'
-  """
-  property_list = []
-
-  # 'Static' property sheets defined on the class
-  # The Preference class should be imported from the common location
-  # in ERP5Type since it could be overloaded in another product
-  from Products.ERP5Type.Document.Preference import Preference
-  for property_sheet in Preference.property_sheets:
-    if not isinstance(property_sheet, basestring):
-      property_list += property_sheet._properties
-
-  if not len(property_list):
-    return
-
-  # 'Dynamic' property sheets added by portal_type
-  pref_portal_type = portal.portal_types.getTypeInfo('Preference')
-  if pref_portal_type is None:
-    LOG('ERP5Form.PreferenceTool', PROBLEM,
-        'Preference type information is not installed.')
-  else:
-    pref_portal_type.updatePropertySheetDefinitionDict(
-      {'_properties': property_list})
-
-
-  # Generate common method names
-  for prop in property_list:
-    if prop.get('preference'):
-      # XXX read_permission and write_permissions defined at
-      # property sheet are not respected by this.
-      # only properties marked as preference are used
-      attribute = prop['id']
-      attr_list = [ 'get%s' % convertToUpperCase(attribute)]
-      if prop['type'] == 'boolean':
-        attr_list.append('is%s' % convertToUpperCase(attribute))
-      if prop['type'] in list_types :
-        attr_list.append('get%sList' % convertToUpperCase(attribute))
-      for attribute_name in attr_list:
-        method = PreferenceMethod(attribute_name, prop.get('default'))
-        setattr(PreferenceTool, attribute_name, method)
-      read_permission = prop.get('read_permission')
-      if read_permission:
-        setattr(PreferenceTool, attribute_name + '__roles__',
-            PermissionRole(read_permission))
-
 
 class func_code: pass
 
@@ -206,23 +134,6 @@ class PreferenceTool(BaseTool):
     if method is not None:
       return method(default)
     return default
-
-  def _aq_dynamic(self, id):
-    # XXX as soon as zodb property sheets are put everywhere, this can
-    # be safely deleted
-    base_value = PreferenceTool.inheritedAttribute('_aq_dynamic')(self, id)
-    if not PreferenceTool.aq_preference_generated:
-      updatePreferenceClassPropertySheetList()
-
-      portal = self.getPortalObject()
-      while portal.portal_type != 'ERP5 Site':
-        portal = portal.aq_parent.aq_inner.getPortalObject()
-      createPreferenceToolAccessorList(portal)
-
-      PreferenceTool.aq_preference_generated = True
-      if base_value is None:
-        return getattr(self, id)
-    return base_value
 
   security.declareProtected(Permissions.ModifyPortalContent, "setPreference")
   def setPreference(self, pref_name, value) :

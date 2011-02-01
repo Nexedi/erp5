@@ -502,6 +502,8 @@ class ActivityTool (Folder, UniqueObject):
     allowed_types = ( 'CMF Active Process', )
     security = ClassSecurityInfo()
 
+    isIndexable = False
+
     manage_options = tuple(
                      [ { 'label' : 'Overview', 'action' : 'manage_overview' }
                      , { 'label' : 'Activities', 'action' : 'manageActivities' }

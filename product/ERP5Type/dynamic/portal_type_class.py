@@ -28,6 +28,7 @@
 ##############################################################################
 
 import sys
+import os
 import inspect
 from types import ModuleType
 
@@ -291,6 +292,16 @@ def generatePortalTypeClass(site, portal_type_name):
         erp5.accessor_holder,
         property_sheet_tool)
 
+      if "Base" in property_sheet_set:
+        accessor_holder = None
+        # useless if Base Category is not yet here
+        if hasattr(erp5.accessor_holder, "Base Category"):
+          accessor_holder = _generateBaseAccessorHolder(
+                              site,
+                              erp5.accessor_holder)
+        if accessor_holder is not None:
+          accessor_holder_list.append(accessor_holder)
+
       # XXX a hook to add per-portal type accessor holders maybe?
       if portal_type_name == "Preference Tool":
         accessor_holder = _generatePreferenceToolAccessorHolder(
@@ -397,6 +408,8 @@ def initializeDynamicModules():
   erp5.temp_portal_type = registerDynamicModule('erp5.temp_portal_type',
                                                 loadTempPortalTypeClass)
 
+required_tool_list = [('portal_types', 'Base Type'),
+                      ('portal_property_sheets', 'BaseType')]
 last_sync = -1
 def synchronizeDynamicModules(context, force=False):
   """
@@ -423,12 +436,63 @@ def synchronizeDynamicModules(context, force=False):
       return
     last_sync = cookie
 
-  LOG("ERP5Type.dynamic", 0, "Resetting dynamic classes")
 
   import erp5
 
   Base.aq_method_lock.acquire()
   try:
+
+    migrated = False
+    for tool_id, line_id in required_tool_list:
+      # if the instance has no property sheet tool, or incomplete
+      # property sheets, we need to import some data to bootstrap
+      # (only likely to happen on the first run ever)
+      tool = getattr(portal, tool_id, None)
+      if tool is not None:
+        if getattr(tool, line_id, None) is None:
+          # tool exists, but is incomplete
+          portal._delObject(tool_id)
+        else:
+          # tool exists, Base Type is represented; probably OK
+          continue
+
+      if not migrated:
+        # XXX: if some portal types are missing, for instance
+        # if some Tools have no portal types, this is likely to fail with an
+        # error. On the other hand, we can't proceed without this change,
+        # and if we dont import the xml, the instance wont start.
+        portal.migrateToPortalTypeClass()
+        migrated = True
+
+      LOG('ERP5Site', INFO, 'importing transitional %s tool'
+          ' from Products.ERP5.bootstrap to be able to load'
+          ' core items...' % tool_id)
+
+      from Products.ERP5.ERP5Site import getBootstrapDirectory
+      bundle_path = os.path.join(getBootstrapDirectory(),
+                                 '%s.xml' % tool_id)
+      assert os.path.exists(bundle_path), 'Please update ERP5 product'
+
+      try:
+        tool = portal._importObjectFromFile(
+            bundle_path,
+            id=tool_id,
+            verify=False,
+            set_owner=False,
+            suppress_events=True)
+        from Products.ERP5.Document.BusinessTemplate import _recursiveRemoveUid
+        _recursiveRemoveUid(tool)
+        portal._setOb(tool_id, tool)
+      except:
+        import traceback; traceback.print_exc()
+        raise
+
+      if not getattr(portal, '_v_bootstrapping', False):
+        LOG('ERP5Site', INFO, 'Transition successful, please update your'
+            ' business templates')
+
+
+    LOG("ERP5Type.dynamic", 0, "Resetting dynamic classes")
     for class_name, klass in inspect.getmembers(erp5.portal_type,
                                                 inspect.isclass):
       klass.restoreGhostState()

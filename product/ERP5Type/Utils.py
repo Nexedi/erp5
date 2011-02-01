@@ -1301,7 +1301,8 @@ def getExistingBaseCategoryList(portal, base_cat_list):
   category_tool = getattr(portal, 'portal_categories', None)
   if category_tool is None:
     # most likely, accessor generation when bootstrapping a site
-    warnings.warn("Category Tool is missing. Accessors can not be generated.")
+    if not getattr(portal, '_v_bootstrapping', False):
+      warnings.warn("Category Tool is missing. Accessors can not be generated.")
     return ()
 
   new_base_cat_list = []
@@ -1577,13 +1578,6 @@ def setDefaultProperties(property_holder, object=None, portal=None):
                       portal=portal)
     # Create Category Accessors
     createAllCategoryAccessors(portal, property_holder, cat_list, econtext)
-    if object is not None and property_holder.__name__ == "Base":
-                            # XXX use if possible is and real class
-      if portal is not None:
-        portal_categories = getattr(portal, 'portal_categories', None)
-      else:
-        portal_categories = None
-      createRelatedAccessors(portal_categories, property_holder, econtext)
 
     property_holder.constraints = []
     for constraint in constraint_list:
@@ -1641,29 +1635,6 @@ def setDefaultProperties(property_holder, object=None, portal=None):
         #else:
         #  # setattr(property_holder, prop['id'], defaults[prop['type']])
         #  pass
-
-    # Create for every portal type group an accessor (like isPortalDeliveryType)
-    # In the future, this should probably use categories
-    if portal is not None and object is not None: # we can not do anything without portal
-      # import lately in order to avoid circular dependency
-      from Products.ERP5Type.ERP5Type import ERP5TypeInformation
-      portal_type = object.portal_type
-      for group in ERP5TypeInformation.defined_group_list:
-        value = portal_type in portal._getPortalGroupedTypeSet(group)
-        prop = {
-           'id'          : group,
-           'description' : "accessor to know the membership of portal group %s" \
-               % group,
-           'type'        : 'group_type',
-           'default'     : value,
-           'group_type' : group,
-           }
-        createDefaultAccessors(
-            property_holder,
-            prop['id'],
-            prop=prop,
-            read_permission=Permissions.AccessContentsInformation,
-            portal=portal)
 
 #####################################################
 # Accessor initialization
@@ -2767,6 +2738,7 @@ def createGroupTypeAccessors(property_holder, prop,
   Generate accessors that allows to know if we belongs to a particular
   group of portal types
   """
+  raise ValueError("This method is not used. Remove it?")
   # Getter
   group = prop['group_type']
   accessor_name = 'is' + UpperCase(group) + 'Type'
@@ -2933,7 +2905,8 @@ def createTranslationLanguageAccessors(property_holder, property,
 
   localizer = getattr(portal, 'Localizer', None)
   if localizer is None:
-    warnings.warn("Localizer is missing. Accessors can not be generated.")
+    if not getattr(portal, '_v_bootstrapping', False):
+      warnings.warn("Localizer is missing. Accessors can not be generated.")
     return
 
   for language in localizer.get_languages():
