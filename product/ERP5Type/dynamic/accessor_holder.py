@@ -112,9 +112,22 @@ class AccessorHolderType(type):
     return accessor_holder_class
 
 
-generating_base_accessors = False
+generating_base_accessor_holder = False
 def _generateBaseAccessorHolder(portal,
     accessor_holder_module):
+  """
+  Create once an accessor holder that contains all accessors common to
+  all portal types: erp5.accessor_holder.BaseAccessorHolder
+
+  * Related category accessors are generated here.
+  In the future we would like as well:
+  * the has.*Property accessors
+  * the is.*Type group accessors
+
+  It's important to remember that this accessor holder will be the last
+  class added to a portal type class, and that it will always be added,
+  to all living ERP5 objects.
+  """
   base_accessor_holder_id = 'BaseAccessorHolder'
 
   accessor_holder = getattr(accessor_holder_module,
@@ -123,15 +136,15 @@ def _generateBaseAccessorHolder(portal,
   if accessor_holder is not None:
     return accessor_holder
 
-  global generating_base_accessors
-  if generating_base_accessors:
+  global generating_base_accessor_holder
+  if generating_base_accessor_holder:
     # can cause recursion, as accessing categories generates category properties
     return None
-  generating_base_accessors = True
+  generating_base_accessor_holder = True
 
   portal_categories = getattr(portal, 'portal_categories', None)
   if portal_categories is None:
-    generating_base_accessors = False
+    generating_base_accessor_holder = False
     return None
 
   base_category_list = portal_categories.objectIds()
@@ -150,11 +163,18 @@ def _generateBaseAccessorHolder(portal,
                       'erp5.accessor_holder',
                       initialize=False)
   setattr(accessor_holder_module, base_accessor_holder_id, accessor_holder)
-  generating_base_accessors = False
+  generating_base_accessor_holder = False
   return accessor_holder
 
 def _generatePreferenceToolAccessorHolder(portal, accessor_holder_list,
     accessor_holder_module):
+  """
+  Generate a specific Accessor Holder that will be put on the Preference Tool.
+  (This used to happen in ERP5Form.PreferenceTool._aq_dynamic)
+
+  We iterate over all properties that do exist on the system, select the
+  preferences out of those, and generate the getPreferred.* accessors.
+  """
   property_holder = PropertyHolder('PreferenceTool')
 
   from Products.ERP5Type.Accessor.TypeDefinition import list_types
