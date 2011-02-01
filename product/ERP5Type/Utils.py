@@ -1319,6 +1319,96 @@ def getExistingBaseCategoryList(portal, base_cat_list):
       new_base_cat_list.append(base_cat)
   return tuple(new_base_cat_list)
 
+def createRelatedAccessors(portal_categories, property_holder, econtext,
+                           base_category_list=None):
+  if base_category_list is None:
+    base_category_list = []
+    # first extend the Tales category definitions into base_category_list
+    for cat in base_category_dict:
+      if isinstance(cat, Expression):
+        result = cat(econtext)
+        if isinstance(result, (list, tuple)):
+          base_category_list.extend(result)
+        else:
+          base_category_list.append(result)
+      else:
+        base_category_list.append(cat)
+
+  for cat in base_category_list:
+    # Get read and write permission
+    cat_object = portal_categories.get(cat, None)
+    if cat_object is not None:
+      read_permission = Permissions.__dict__.get(
+                              cat_object.getReadPermission(),
+                              Permissions.AccessContentsInformation)
+      if isinstance(read_permission, Expression):
+        read_permission = read_permission(econtext)
+      write_permission = Permissions.__dict__.get(
+                              cat_object.getWritePermission(),
+                              Permissions.ModifyPortalContent)
+      if isinstance(write_permission, Expression):
+        write_permission = write_permission(econtext)
+    else:
+      read_permission = Permissions.AccessContentsInformation
+      write_permission = Permissions.ModifyPortalContent
+    # Actually create accessors
+    createRelatedValueAccessors(property_holder, cat, read_permission=read_permission)
+  # Unnecessary to create these accessors more than once.
+  base_category_dict.clear()
+
+
+def createAllCategoryAccessors(portal, property_holder, cat_list, econtext):
+  if portal is not None:
+    portal_categories = getattr(portal, 'portal_categories', None)
+  else:
+    portal_categories = None
+  for cat in cat_list:
+    # Create free text accessors.
+    prop = {
+      'id'         : '%s_free_text' % cat,
+      'description': 'free text to specify %s' % cat,
+      'type'       : 'text',
+      'default'    : '',
+      'mode'       : 'w'
+    }
+    # XXX These are only for backward compatibility.
+    if cat == 'group':
+      prop['storage_id'] = 'group'
+    elif cat == 'site':
+      prop['storage_id'] = 'location'
+    createDefaultAccessors(
+                      property_holder,
+                      prop['id'],
+                      prop=prop,
+                      read_permission=Permissions.AccessContentsInformation,
+                      write_permission=Permissions.ModifyPortalContent,
+                      portal=portal)
+
+    # Get read and write permission
+    if portal_categories is not None:
+      cat_object = portal_categories.get(cat, None)
+    else:
+      cat_object = None
+    if cat_object is not None:
+      read_permission = Permissions.__dict__.get(
+                              cat_object.getReadPermission(),
+                              Permissions.AccessContentsInformation)
+      if isinstance(read_permission, Expression):
+        read_permission = read_permission(econtext)
+      write_permission = Permissions.__dict__.get(
+                              cat_object.getWritePermission(),
+                              Permissions.ModifyPortalContent)
+      if isinstance(write_permission, Expression):
+        write_permission = write_permission(econtext)
+    else:
+      read_permission = Permissions.AccessContentsInformation
+      write_permission = Permissions.ModifyPortalContent
+    # Actualy create accessors
+    createCategoryAccessors(property_holder, cat,
+      read_permission=read_permission, write_permission=write_permission)
+    createValueAccessors(property_holder, cat,
+      read_permission=read_permission, write_permission=write_permission)
+
 default_translation_property_dict = {
   'id' : 'translation_domain',
   'description' : '',
@@ -1486,93 +1576,14 @@ def setDefaultProperties(property_holder, object=None, portal=None):
                       write_permission=write_permission,
                       portal=portal)
     # Create Category Accessors
-    for cat in cat_list:
-      # Create free text accessors.
-      prop = {
-        'id'         : '%s_free_text' % cat,
-        'description': 'free text to specify %s' % cat,
-        'type'       : 'text',
-        'default'    : '',
-        'mode'       : 'w'
-      }
-      # XXX These are only for backward compatibility.
-      if cat == 'group':
-        prop['storage_id'] = 'group'
-      elif cat == 'site':
-        prop['storage_id'] = 'location'
-      createDefaultAccessors(
-                        property_holder,
-                        prop['id'],
-                        prop=prop,
-                        read_permission=Permissions.AccessContentsInformation,
-                        write_permission=Permissions.ModifyPortalContent,
-                        portal=portal)
-
-      # Get read and write permission
-      if portal is not None:
-        cat_object = portal.portal_categories.get(cat, None)
-      else:
-        cat_object = None
-      if cat_object is not None:
-        read_permission = Permissions.__dict__.get(
-                                cat_object.getReadPermission(),
-                                Permissions.AccessContentsInformation)
-        if isinstance(read_permission, Expression):
-          read_permission = read_permission(econtext)
-        write_permission = Permissions.__dict__.get(
-                                cat_object.getWritePermission(),
-                                Permissions.ModifyPortalContent)
-        if isinstance(write_permission, Expression):
-          write_permission = write_permission(econtext)
-      else:
-        read_permission = Permissions.AccessContentsInformation
-        write_permission = Permissions.ModifyPortalContent
-      # Actualy create accessors
-      createCategoryAccessors(property_holder, cat,
-        read_permission=read_permission, write_permission=write_permission)
-      createValueAccessors(property_holder, cat,
-        read_permission=read_permission, write_permission=write_permission)
+    createAllCategoryAccessors(portal, property_holder, cat_list, econtext)
     if object is not None and property_holder.__name__ == "Base":
                             # XXX use if possible is and real class
-      base_category_list = []
-      # first extend the Tales category definitions into base_category_list
-      for cat in base_category_dict:
-        if isinstance(cat, Expression):
-          result = cat(econtext)
-          if isinstance(result, (list, tuple)):
-            base_category_list.extend(result)
-          else:
-            base_category_list.append(result)
-        else:
-          base_category_list.append(cat)
-
       if portal is not None:
         portal_categories = getattr(portal, 'portal_categories', None)
       else:
         portal_categories = None
-      for cat in base_category_list:
-        # Get read and write permission
-        cat_object = None
-        if portal_categories is not None:
-          cat_object = portal_categories.get(cat, None)
-        if cat_object is not None:
-          read_permission = Permissions.__dict__.get(
-                                  cat_object.getReadPermission(),
-                                  Permissions.AccessContentsInformation)
-          if isinstance(read_permission, Expression):
-            read_permission = read_permission(econtext)
-          write_permission = Permissions.__dict__.get(
-                                  cat_object.getWritePermission(),
-                                  Permissions.ModifyPortalContent)
-          if isinstance(write_permission, Expression):
-            write_permission = write_permission(econtext)
-        else:
-          read_permission = Permissions.AccessContentsInformation
-          write_permission = Permissions.ModifyPortalContent
-        # Actually create accessors
-        createRelatedValueAccessors(property_holder, cat, read_permission=read_permission)
-      # Unnecessary to create these accessors more than once.
-      base_category_dict.clear()
+      createRelatedAccessors(portal_categories, property_holder, econtext)
 
     property_holder.constraints = []
     for constraint in constraint_list:
@@ -3384,6 +3395,3 @@ def reencodeUrlEscapes(url):
       url += [_reencodeUrlEscapes_map[c] for c in part]
   except StopIteration:
     return ''.join(url)
-
-def createRelatedAccessors():
-  pass
