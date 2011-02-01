@@ -218,7 +218,7 @@ class PDFDocument(Image):
 
     command_result = None
     try:
-      command = ['pdf2djvu', tmp.name]
+      command = ['/usr/bin/pdf2djvu', tmp.name]
       try:
         command_result = Popen(command, stdout=PIPE).communicate()[0]
       except OSError, e:
