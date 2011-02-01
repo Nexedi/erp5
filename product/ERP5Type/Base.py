@@ -169,7 +169,7 @@ class WorkflowMethod(Method):
     # New implementation does not use any longer wrapWorkflowMethod
     # but directly calls the workflow methods
     try:
-      wf = getToolByName(instance.getPortalObject(), 'portal_workflow')
+      wf = getattr(instance.getPortalObject(), 'portal_workflow')
     except AttributeError:
       # XXX instance is unwrapped(no acquisition)
       # XXX I must think that what is a correct behavior.(Yusei)
@@ -179,10 +179,10 @@ class WorkflowMethod(Method):
     instance_path = instance.getPhysicalPath()
     portal_type = instance.portal_type
     transactional_variable = getTransactionalVariable()
-    invoke_once_item_list = self._invoke_once.get(portal_type, {}).items()
+    invoke_once_dict = self._invoke_once.get(portal_type, {})
     valid_invoke_once_item_list = []
     # Only keep those transitions which were never invoked
-    for wf_id, transition_list in invoke_once_item_list:
+    for wf_id, transition_list in invoke_once_dict.iteritems():
       valid_transition_list = []
       for transition_id in transition_list:
         once_transition_key = ('Products.ERP5Type.Base.WorkflowMethod.__call__',
