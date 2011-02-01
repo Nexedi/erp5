@@ -83,18 +83,31 @@ class PropertySheetTestCase(ERP5TypeTestCase):
     transaction.commit()
     super(PropertySheetTestCase, self).tearDown()
 
-  def _addProperty(self, portal_type_name, property_sheet_id, property_id,
+  def _addProperty(self, portal_type_name, property_sheet_id,
+                   property_id=None,
                    commit=True, **kw):
-    """quickly add a property to a type"""
-    self.assertTrue('portal_type' in kw)
+    """quickly add a property to a type
+
+    It always associate / create the property sheet with id
+    property_sheet_id to the portal type portal_type_name.
+
+    When property_sheet_id is passed, we create a property of this
+    id, using kw** as parameters to the constructor.
+    """
 
     ps = self._addPropertySheet(portal_type_name,
                                 property_sheet_name=property_sheet_id)
-    property = getattr(ps, property_id, None)
-    if property is not None:
-      ps._delObject(property_id)
 
-    property = ps.newContent(reference=property_id, **kw)
+    if property_id is not None:
+      if "\n" in property_id:
+        raise ValueError("Please update this test to use ZODB property sheets")
+
+      self.assertTrue('portal_type' in kw)
+      property = getattr(ps, property_id, None)
+      if property is not None:
+        ps._delObject(property_id)
+
+      property = ps.newContent(reference=property_id, **kw)
     if commit:
       transaction.commit()
 

@@ -399,12 +399,16 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
           getattr(self.getPortal(), 'currency', None))
 
     def _addPropertySheet(self, portal_type_name,
-                          property_sheet_name='TestPropertySheet'):
+                          property_sheet_name='TestPropertySheet',
+                          deprecated=None):
       """Utility method to add a property sheet to a type information.
       You might be interested in the higer level method _addProperty
       This method registers all added property sheets, to be able to remove
       them in tearDown.
       """
+      if deprecated is not None:
+        raise ValueError("Please update this test to use ZODB property sheets")
+
       portal_property_sheets = self.portal.portal_property_sheets
       property_sheet = getattr(portal_property_sheets, property_sheet_name, None)
       if property_sheet is None:
