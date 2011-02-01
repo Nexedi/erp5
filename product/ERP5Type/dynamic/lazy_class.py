@@ -131,6 +131,7 @@ class PortalTypeMetaClass(GhostBaseMetaClass):
 
     @see Products.ERP5Type.Base.Base._propertyMap
     """
+    cls.loadClass()
     property_list = []
     for klass in cls.mro():
       if klass.__module__ == 'erp5.accessor_holder':
