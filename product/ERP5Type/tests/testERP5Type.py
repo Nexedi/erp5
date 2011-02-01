@@ -76,8 +76,11 @@ class PropertySheetTestCase(ERP5TypeTestCase):
         if psheet in property_sheet_set:
           property_sheet_set.remove(psheet)
       ti._setTypePropertySheetList(list(property_sheet_set))
+    # this is useful if somehow the interaction workflows is set
+    # wrongly. If the interaction has been called already it does nothing,
+    # but in the other hand, if isolates the test "just in case"
+    ttool.resetDynamicDocumentsOnceAtTransactionBoundary()
     transaction.commit()
-    ttool.resetDynamicDocuments()
     super(PropertySheetTestCase, self).tearDown()
 
   def _addProperty(self, portal_type_name, property_sheet_id, property_id, **kw):

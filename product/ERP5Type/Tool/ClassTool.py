@@ -61,7 +61,6 @@ from Products.ERP5Type.Utils import readLocalDocument, writeLocalDocument, getLo
 from Products.ERP5Type.Utils import readLocalConstraint, writeLocalConstraint, getLocalConstraintList
 from Products.ERP5Type.InitGenerator import getProductDocumentPathList
 
-from Products.ERP5Type.Base import _aq_reset
 from Products.ERP5Type.Base import newTempDocumentationHelper
 
 from Products.ERP5Type import allowClassTool
@@ -222,7 +221,7 @@ if allowClassTool():
     def reimport(self, status, class_id):
       if status and self.__importer is not None:
         self.__importer(class_id)
-        _aq_reset()
+        self.portal_types.resetDynamicDocumentsOnceAtTransactionBoundary()
       
     def _getOb(self, key, default=_MARKER ):
       if key in self.objectIds():
@@ -550,7 +549,7 @@ class %s(XMLObject):
 
         # Clear object cache and reset _aq_dynamic after reload
         self._clearCache()
-        _aq_reset()
+        self.portal_types.resetDynamicDocumentsOnceAtTransactionBoundary()
 
         if REQUEST is not None and class_path is None:
           REQUEST.RESPONSE.redirect('%s/manage_editDocumentForm?class_id=%s&manage_tabs_message=Document+Reloaded+Successfully' % (self.absolute_url(), class_id))
@@ -661,7 +660,7 @@ class %s:
         # Reset _aq_dynamic after reload
         # There is no need to reset the cache in this case because
         # XXX it is not sure however that class defined propertysheets will be updated
-        _aq_reset()
+        self.portal_types.resetDynamicDocumentsOnceAtTransactionBoundary()
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_editPropertySheetForm?class_id=%s&manage_tabs_message=PropertySheet+Reloaded+Successfully' % (self.absolute_url(), class_id))
 
@@ -928,7 +927,7 @@ class %s(Constraint):
         # Reset _aq_dynamic after reload
         # There is no need to reset the cache in this case because
         # XXX it is not sure however that class defined propertysheets will be updated
-        _aq_reset()
+        self.portal_types.resetDynamicDocumentsOnceAtTransactionBoundary()
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_editConstraintForm?class_id=%s&manage_tabs_message=Constraint+Reloaded+Successfully' % (self.absolute_url(), class_id))
 
