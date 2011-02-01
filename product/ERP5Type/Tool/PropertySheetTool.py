@@ -201,13 +201,11 @@ class PropertySheetTool(BaseTool):
     """
     Create a new accessor holder from the given ZODB Property Sheet
     (the accessors are created through a Property Holder)
-
-    XXX: Workflows?
     """
+    property_sheet_name = property_sheet.getId()
     definition_tuple = \
       self.exportPropertySheetToFilesystemDefinitionTuple(property_sheet)
 
-    property_sheet_name = property_sheet.getId()
     property_holder = PropertyHolder(property_sheet_name)
 
     # Prepare the Property Holder
