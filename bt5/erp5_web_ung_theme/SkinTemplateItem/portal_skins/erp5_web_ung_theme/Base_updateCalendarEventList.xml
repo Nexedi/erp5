@@ -77,7 +77,10 @@ portal_type_list = ["Acknowledgement",\n
                     "Web Message"]\n
 \n
 if request_type == "list":\n
-  event_list = portal.event_module.searchFolder()\n
+  kw = {}\n
+  if form.has_key("SearchableText"):\n
+    kw["SearchableText"] = form.get("SearchableText")\n
+  event_list = portal.event_module.searchFolder(**kw)\n
   now = DateTime()\n
   event_dict = {}\n
   event_dict["events"] = []\n
@@ -100,7 +103,7 @@ if request_type == "list":\n
                                  random.randrange(-1,13), 1,\n
                                  event.getId(),\n
                                  event.getPortalType(),\n
-                                 event.getTextContent()])\n
+                                 event.getDescription()])\n
   return dumps(event_dict)\n
 \n
 elif request_type == "remove":\n
@@ -122,8 +125,8 @@ elif request_type == "update":\n
   event = context.restrictedTraverse(catalog_object.getPath())\n
   if title and event.getTitle() != title:\n
     event.setTitle(title)\n
-  if text_content and event.getTextContent() != text_content:\n
-    event.setTextContent(text_content)\n
+  if text_content and event.getDescription() != text_content:\n
+    event.setDescription(text_content)\n
   event.setStartDate(start_date)\n
   event.setStopDate(end_date)\n
   return dumps({"IsSuccess": True})\n

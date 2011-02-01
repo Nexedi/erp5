@@ -62,7 +62,7 @@ portal = context.getPortalObject()\n
 event = portal.event_module.newContent(portal_type=portal_type, title=event_title)\n
 event.setStartDate(start_date)\n
 event.setStopDate(stop_date)\n
-event.setTextContent(text_content)\n
+event.setDescription(text_content)\n
 </string> </value>
         </item>
         <item>

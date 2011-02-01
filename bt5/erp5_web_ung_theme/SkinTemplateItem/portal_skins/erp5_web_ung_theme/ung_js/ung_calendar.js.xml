@@ -278,7 +278,7 @@ $(document).ready(function() {     \n
   });\n
   $("div#new_event_dialog").dialog({\n
     autoOpen: false,\n
-    height: 255,\n
+    height: 258,\n
     width: 410,\n
     modal: true,\n
   });\n
@@ -293,6 +293,10 @@ $(document).ready(function() {     \n
         $("#txtdatetimeshow").text(p.datestrshow);\n
       }\n
      }\n
+  });\n
+  $("input#submit-search").click(function(event){\n
+    event.preventDefault();\n
+    alert($("input[name=\'searchable-text\']").val());\n
   });\n
 });
 

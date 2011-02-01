@@ -67,10 +67,6 @@ a#BBIT_DP_CONTAINER {\n
   left: 0px !important;\n
 }\n
 \n
-input[type="text"] {\n
-  border: 0px;\n
-}\n
-\n
 div.main-left div#datepicker.hasDatepicker {\n
   margin: 4px -3px -3px;\n
 }\n
@@ -134,10 +130,6 @@ td.ui-datepicker-days-cell-over, td.ui-datepicker-week-end.ui-datepicker-current
   background: url("images/ui-bg_glass_75_dae6f6_1x400.png") repeat-x scroll 50% 50% #DAE6F6;\n
 }\n
 \n
-textarea {\n
-  border: 0px;\n
-}\n
-\n
 table.ui-datepicker-calendar thead, div.ui-datepicker-inline div.ui-datepicker-header {\n
   background: none repeat scroll 0 0 transparent;\n
 }\n
@@ -162,6 +154,32 @@ div#faddbtn.fbutton span.addcal {\n
   border: 1px solid #BBBBBB;\n
   padding: 2px 4px;\n
   background-color: #EDF1D5;\n
+}\n
+\n
+div.header-left fieldset.widget div.field input[type="submit"] {\n
+  background: url("http://localhost:18080/erp5/ung_images/button_background.png") repeat scroll 0 0 transparent;\n
+  border: 1px solid #BBBBBB;\n
+  padding-top: 1px;\n
+  position: relative;\n
+  top: 1px;\n
+  -moz-border-radius: 4px 4px 4px 4px;\n
+}\n
+\n
+input[type="text"], textarea {\n
+  border: 1px solid #B0C2C8;\n
+}\n
+\n
+div.header-left fieldset.widget div.field {\n
+  display: inline-block;\n
+}\n
+\n
+img[alt="calendar_logo_box"] {\n
+  position: relative;\n
+  top: 7px;\n
+}\n
+\n
+div.header-left {\n
+  margin-top: -9px;\n
 }</string> </value>
         </item>
         <item>
