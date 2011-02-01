@@ -296,7 +296,36 @@ $(document).ready(function() {     \n
   });\n
   $("input#submit-search").click(function(event){\n
     event.preventDefault();\n
-    alert($("input[name=\'searchable-text\']").val());\n
+    $("div#dvCalMain.calmain div#gridcontainer").css("background", "none repeat scroll 0 0 #FFFFFF");\n
+    $("div#dvwkcontaienr.wktopcontainer").hide();\n
+    $("div#gridcontainer div#dvtec.scolltimeevent").hide();\n
+    $("div#gridcontainer div.event-listview,div#gridcontainer div.toolbar-listview").remove();\n
+    var tableList = Array();\n
+    tableList.push("<div class=\'toolbar-listview\'>",\n
+                   "<table width=\'100%\' cellspacing=\'0\' cellpadding=\'2\'>",\n
+                   "<tbody>",\n
+                   "<tr><td>Back to Calendar</td><td>Results:</td>",\n
+                   "</tbody></table></div>");\n
+    tableList.push("<div class=\'event-listview\'>");\n
+    tableList.push("<table width=\'100%\' cellspacing=\'0\' cellpadding=\'2\'><tbody>");\n
+    $.ajax({\n
+           url:"Base_updateCalendarEventList?request_type=list",\n
+           dataType: "json",\n
+           success: function(data){\n
+             var eventTableList = Array();\n
+             var eventList = data.events;    \n
+             for (var i = 0; i < eventList.length; i++){\n
+               eventTableList.push("<tr><td>");\n
+               eventTableList.push(eventList[i][2]);\n
+               eventTableList.push("</td><td>");\n
+               eventTableList.push(eventList[i][1]);\n
+               eventTableList.push("</td></tr>");\n
+             }\n
+             $("div.event-listview tbody").append(eventTableList.join(""));\n
+           },\n
+    });\n
+    tableList.push("</tbody></table></div>");\n
+    $("div#gridcontainer").append(tableList.join(""));\n
   });\n
 });
 

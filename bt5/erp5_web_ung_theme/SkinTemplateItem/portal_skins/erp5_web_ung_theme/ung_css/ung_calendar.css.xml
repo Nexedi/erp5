@@ -180,6 +180,11 @@ img[alt="calendar_logo_box"] {\n
 \n
 div.header-left {\n
   margin-top: -9px;\n
+}\n
+\n
+div#gridcontainer div.event-listview tr td {\n
+  border-bottom: 1px solid #CCC;\n
+  padding: 9px;\n
 }</string> </value>
         </item>
         <item>
