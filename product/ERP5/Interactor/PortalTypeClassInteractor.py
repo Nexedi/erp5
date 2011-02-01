@@ -28,8 +28,6 @@
 ##############################################################################
 
 from Products.ERP5Type.Interactor.Interactor import Interactor
-import transaction
-from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
 class PortalTypeClassInteractor(Interactor):
   """
@@ -63,11 +61,4 @@ class PortalTypeClassInteractor(Interactor):
     types_tool = getattr(portal, 'portal_types', None)
     if types_tool is None:
       return
-
-    # XXX this could be a generic doOnceAtEndOfTransaction in
-    # Interactor baseclass
-    tv = getTransactionalVariable()
-    key = 'Interactor.PortalTypeClassInteractor.resetDynamic'
-    if key not in tv:
-      tv[key] = None
-      transaction.get().addBeforeCommitHook(types_tool.resetDynamicDocuments)
+    types_tool.resetDynamicDocumentsOnceAtTransactionBoundary()
