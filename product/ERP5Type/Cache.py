@@ -57,7 +57,11 @@ def initializePortalCachingProperties(self):
     # we set is_cache_initialized right now to prevent infinite loops
     is_cache_initialized = 1
     ## update cache structure from portal_caches
-    portal_caches.updateCache()
+    try:
+      portal_caches.updateCache()
+    except AttributeError:
+      is_cache_initialized = 0
+      return
     # we mark the cache as ready after initialization, because initialization
     # itself will cause cache misses that we want to ignore
     is_cache_ready = 1
