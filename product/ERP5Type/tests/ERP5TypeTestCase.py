@@ -69,7 +69,6 @@ from Testing import ZopeTestCase
 from Testing.ZopeTestCase import PortalTestCase, user_name
 from Products.CMFCore.utils import getToolByName
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
-from Products.ERP5Type.Base import _aq_reset
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from zLOG import LOG, DEBUG
 
@@ -410,7 +409,6 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       property_sheet = getattr(portal_property_sheets, property_sheet_name, None)
       if property_sheet is None:
         property_sheet = portal_property_sheets.newContent(id=property_sheet_name)
-        transaction.commit()
 
       # We set the property sheet on the portal type
       types_tool = self.getTypesTool()
@@ -418,7 +416,6 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       property_sheet_set = set(ti.getTypePropertySheetList())
       property_sheet_set.add(property_sheet_name)
       ti.setTypePropertySheetList(list(property_sheet_set))
-      transaction.commit()
 
       # remember that we added a property sheet for tear down
       self._added_property_sheets.setdefault(
@@ -917,7 +914,6 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       '''
       portal_name = self.getPortalName()
       title = self.getTitle()
-      from Products.ERP5Type.Base import _aq_reset
       if portal_name in failed_portal_installation:
         raise SetupSiteError(
             'Installation of %s already failed, giving up' % portal_name)
@@ -1017,11 +1013,9 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
               setattr(app,'isIndexable', 1)
               portal.portal_catalog.manage_hotReindexAll()
 
+            portal.portal_types.resetDynamicDocumentsOnceAtTransactionBoundary()
             transaction.commit()
             self.tic(not quiet)
-
-            # Reset aq dynamic, so all unit tests will start again
-            _aq_reset()
 
             # Log out
             if not quiet:

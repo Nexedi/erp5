@@ -83,7 +83,8 @@ class PropertySheetTestCase(ERP5TypeTestCase):
     transaction.commit()
     super(PropertySheetTestCase, self).tearDown()
 
-  def _addProperty(self, portal_type_name, property_sheet_id, property_id, **kw):
+  def _addProperty(self, portal_type_name, property_sheet_id, property_id,
+                   commit=True, **kw):
     """quickly add a property to a type"""
     self.assertTrue('portal_type' in kw)
 
@@ -94,7 +95,8 @@ class PropertySheetTestCase(ERP5TypeTestCase):
       ps._delObject(property_id)
 
     property = ps.newContent(reference=property_id, **kw)
-    transaction.commit()
+    if commit:
+      transaction.commit()
 
 class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     """Tests ERP5TypeInformation and per portal type generated accessors.
@@ -1230,6 +1232,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
          setDefault[Property] are working correctly
       """
       self._addProperty('Person', 'Person_lang', 'available_language',
+                        commit=False,
                         **self.DEFAULT_LANGUAGE_PROP)
       self._addProperty('Email', 'Email_lang', 'available_language',
                         **self.DEFAULT_LANGUAGE_PROP)
@@ -1365,6 +1368,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       Check in particular that both behave the same way regarding acquisition
       """
       self._addProperty('Person', 'Person_19d', 'name_included_in_address',
+                        commit=False,
                         portal_type='Standard Property',
                         property_default="python: True",
                         elementary_type="boolean")
@@ -2733,6 +2737,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       on a mono valued acquired property
       """
       self._addProperty('Person', 'Person_foobar', 'foo_bar',
+                        commit=False,
                         elementary_type='string',
                         portal_type='Standard Property')
       self._addProperty('Email', 'Email_foobar', 'foo_bar',
