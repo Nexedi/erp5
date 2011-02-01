@@ -98,9 +98,6 @@ Options:
                              Port number used to connect to conversion server
                              (Oood), the value will be stored at default preference.
                              By default 8008 is used.
-  --use_dummy_mail_host      Replace the MailHost by DummyMailHost.
-                             This prevent the instance send emails.
-                             By default Original MailHost is used.
   --random_activity_priority=[SEED]
                              Force activities to have a random priority, to make
                              random failures (due to bad activity dependencies)
@@ -610,7 +607,6 @@ def main(argument_list=None):
         "enable_full_indexing=",
         "run_only=",
         "update_only=",
-        "use_dummy_mail_host",
         "update_business_templates",
         "random_activity_priority=",
         "activity_node=",
@@ -698,8 +694,6 @@ def main(argument_list=None):
       os.environ["erp5_dump_sql"] = "0"
       os.environ["erp5_tests_data_fs_path"] = os.path.join(
                                       live_instance_path, 'var', 'Data.fs')
-    elif opt == "--use_dummy_mail_host":
-      os.environ["use_dummy_mail_host"] = "1"
     elif opt == "--random_activity_priority":
       os.environ["random_activity_priority"] = arg or \
         str(random.randrange(0, 1<<16))

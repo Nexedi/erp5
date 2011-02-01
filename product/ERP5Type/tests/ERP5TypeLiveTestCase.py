@@ -101,6 +101,7 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
       '''Closes the ZODB connection.'''
       revert = transaction.get().__hash__() != self.initial_transaction_hash
       transaction.abort()
+      self._restoreMailHost()
       if revert:
         if self.activity_tool_subscribed:
           self.portal.portal_activities.subscribe()
@@ -115,6 +116,7 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
         self.activity_tool_subscribed = self.getPortalObject()\
                 .portal_activities.isSubscribed()
         self.portal.portal_activities.unsubscribe()
+        self._setUpDummyMailHost()
 
     def setUp(self):
         '''Sets up the fixture. Do not override,

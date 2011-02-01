@@ -54,25 +54,23 @@ class FileUpload(file):
     self.headers = {}
 
 # dummy objects
-class DummyMailHost(MailHost):
+class DummyMailHostMixin(object):
   """Dummy Mail Host that doesn't really send messages and keep a copy in
   _last_message attribute.
-  To use it, you have to replace existing mailhost in afterSetUp:
-    
-    if 'MailHost' in portal.objectIds():
-      portal.manage_delObjects(['MailHost'])
-    portal._setObject('MailHost', DummyMailHost('MailHost'))
   """
   _last_message = ()
   _previous_message = ()
   _message_list = []
-  def _send( self, mfrom, mto, messageText, immediate=False ):
-    """Record message in _last_message."""
-    self._previous_message = self._last_message
-    self._last_message = (mfrom, mto, messageText)
-    self._message_list.append(self._last_message)
 
-  def _decodeMessage(self, messageText):
+  @classmethod
+  def _send(cls, mfrom, mto, messageText, immediate=False):
+    """Record message in _last_message."""
+    cls._previous_message = cls._last_message
+    cls._last_message = (mfrom, mto, messageText)
+    cls._message_list.append(cls._last_message)
+
+  @staticmethod
+  def _decodeMessage(messageText):
     """ Decode message"""
     message_text = messageText
     for part in message_from_string(messageText).walk():
@@ -81,15 +79,20 @@ class DummyMailHost(MailHost):
         message_text = part.get_payload(decode=1)
     return message_text
 
-  def getMessageList(self, decode=True):
+  @classmethod
+  def getMessageList(cls, decode=True):
     """ Return message list"""
     if decode:
-      return [ (m[0], m[1], self._decodeMessage(m[2])) for m in self._message_list]
-    return self._message_list
+      return [(m[0], m[1], cls._decodeMessage(m[2])) for m in cls._message_list]
+    return cls._message_list
 
-  def getLastLog(self):
+  @classmethod
+  def getLastLog(cls):
     """ Return last message """
-    return self._last_message
+    return cls._last_message
+
+class DummyMailHost(DummyMailHostMixin, MailHost):
+  pass
 
 
 class DummyTranslationService:
