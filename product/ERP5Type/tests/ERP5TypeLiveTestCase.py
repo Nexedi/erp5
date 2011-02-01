@@ -214,4 +214,7 @@ def runLiveTest(test_list, verbosity=1, stream=None, **kw):
   if stream is None:
     output = StringIO()
   output.write("**Running Live Test:\n")
+  def _print(msg):
+    output.write(msg)
+  ZopeTestCase._print = _print
   result = TestRunner(stream=output, verbosity=verbosity).run(suite)
