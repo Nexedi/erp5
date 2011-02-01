@@ -27,15 +27,15 @@
         <item>
             <key> <string>after_script_name</string> </key>
             <value>
-              <tuple/>
+              <list>
+                <string>DynamicClassGeneration_resetDynamicDocuments</string>
+              </list>
             </value>
         </item>
         <item>
             <key> <string>before_commit_script_name</string> </key>
             <value>
-              <list>
-                <string>DynamicClassGeneration_resetDynamicDocuments</string>
-              </list>
+              <tuple/>
             </value>
         </item>
         <item>

@@ -1,3 +1,9 @@
+2011-02-01 nicolas.dumazet
+* Changes to dynamic_class_generation_interaction_workflow:
+* use resetDynamicDocumentsOnceAtTransactionBoundary so that several changes to portal types during the same transaction are cheaper.
+* change trigger to happen after action since it's always queued at end of transaction anyway
+* add ERP5TypeInformation._setBaseCategoryList to triggers as well so that accessors are regenerated when base categories are changed.
+
 2011-01-28 Kazuhiko
 * support 'Paths of objects whose workflow history should be kept' and 'Paths of objects that should be kept' in Business Template definition.
 * support more 'Removed but ...' and 'Modified but ...' cases in business template installation dialogue.
