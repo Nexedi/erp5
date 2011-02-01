@@ -129,10 +129,13 @@ elif request_type == "update":\n
   return dumps({"IsSuccess": True})\n
 \n
 elif request_type == "add":\n
+  portal_type = form.get("portal_type")\n
+  if not portal_type:\n
+    return dumps({"IsSuccess": False})\n
   end_date = convertToERP5DateTime(form.get("CalendarEndTime"))\n
   start_date = convertToERP5DateTime(form.get("CalendarStartTime"))\n
   event_title = form.get("CalendarTitle")\n
-  event = portal.event_module.newContent(portal_type="Web Message", title=event_title)\n
+  event = portal.event_module.newContent(portal_type=portal_type, title=event_title)\n
   event.setStartDate(start_date)\n
   event.setStopDate(end_date)\n
   return dumps({"IsSuccess": True, "Data": {"title": event_title}})\n
