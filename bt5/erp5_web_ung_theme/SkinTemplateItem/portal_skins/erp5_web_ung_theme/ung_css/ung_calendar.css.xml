@@ -108,8 +108,7 @@ div#datepicker .ui-widget-content {\n
   top: 0px;\n
 }\n
 \n
-div.main-left .ui-state-default, \n
- div.main-left .ui-widget-content .ui-state-default,\n
+div.main-left .ui-widget-content .ui-state-default,\n
  div.main-left .ui-widget-header .ui-state-default {\n
   background: none !important;\n
   border: 1px solid #FFF;\n
@@ -133,9 +132,12 @@ div#ui-datepicker-div.ui-datepicker {\n
 }\n
 \n
 td.ui-datepicker-days-cell-over, td.ui-datepicker-week-end.ui-datepicker-current-day {\n
-    background: url("images/ui-bg_glass_75_dae6f6_1x400.png") repeat-x scroll 50% 50% #DAE6F6;\n
+  background: url("images/ui-bg_glass_75_dae6f6_1x400.png") repeat-x scroll 50% 50% #DAE6F6;\n
 }\n
-</string> </value>
+\n
+textarea {\n
+  border: 0px;\n
+}</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
