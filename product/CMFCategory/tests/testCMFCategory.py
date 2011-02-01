@@ -32,7 +32,6 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
-from Products.ERP5Type.Base import _aq_reset
 
 try:
   from transaction import get as get_transaction
@@ -978,8 +977,12 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.portal.portal_categories.manage_delObjects(['region'])
     get_transaction().commit()
     self.tic()
-    #call _aq_reset to regenerate Accessors
-    _aq_reset()
+    # XXX should be done in an Interaction Workflow,
+    # with the guarantee that it's only ever called once per transaction,
+    # that is, if several categories get changed in the same transaction,
+    # call it only ONCE (that is not the case with the current
+    # 'once per transaction', which is actually 'once per transaction per object'
+    self.portal.portal_types.resetDynamicDocuments()
     obj = self.portal.person_module.newContent(portal_type='Person')
     get_transaction().commit()
     self.tic()
