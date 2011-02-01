@@ -255,7 +255,9 @@ def generatePortalTypeClass(site, portal_type_name):
         # XXX maybe this should be a generic hook, adding property sheets
         # dynamically for a given portal type name? If done well, this
         # system could perhaps help erp5_egov to get rid of aq_dynamic
-        if portal_type_name in ("Preference Tool", "Preference"):
+        if portal_type_name in ("Preference Tool",
+                                "Preference",
+                                "System Preference"):
           for property_sheet in zodb_property_sheet_set:
             if property_sheet.endswith('Preference'):
               property_sheet_set.add(property_sheet)
