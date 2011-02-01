@@ -62,13 +62,6 @@
         </div>\n
       </div>\n
       <div id="caltoolbar" class="ctoolbar">\n
-        <div id="faddbtn" class="fbutton">\n
-          <div>\n
-            <span title=\'Click to Create New Event\' class="addcal">\n
-              New Event\n
-            </span>\n
-          </div>\n
-        </div>\n
         <div id="showtodaybtn" class="fbutton">\n
           <div>\n
             <span title=\'Click to back to today\' class="showtoday">\n

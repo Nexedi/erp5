@@ -217,7 +217,13 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string encoding="cdata"><![CDATA[
+
+<div id="faddbtn" class="fbutton">\n
+<div>           <span title=\'Click to Create New Event\' class="addcal"> New Event </span></div>\n
+</div><div id="datepicker"></div>
+
+]]></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
