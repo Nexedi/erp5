@@ -102,7 +102,8 @@ class PropertySheetTestCase(ERP5TypeTestCase):
       if "\n" in property_id:
         raise ValueError("Please update this test to use ZODB property sheets")
 
-      self.assertTrue('portal_type' in kw)
+      self.assertTrue('portal_type' in kw, "You need to specify the portal_type"
+          " you want to use to create that new property")
       property = getattr(ps, property_id, None)
       if property is not None:
         ps._delObject(property_id)
