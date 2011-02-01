@@ -1825,11 +1825,13 @@
                         return false;\n
                     }\n
                     var zone = new Date().getTimezoneOffset() / 60 * -1;\n
+                    var portalType = $("select[name=\'portal_type\']").val();\n
                     var param = [{ "name": "CalendarTitle", value: what },\n
                                  { "name": "CalendarStartTime", value: datestart },\n
                                  { "name": "CalendarEndTime", value: dateend },\n
                                  { "name": "IsAllDayEvent", value: allday },\n
-                                 { "name": "timezone", value: zone}];\n
+                                 { "name": "timezone", value: zone},\n
+                                 { "name": "portal_type", value: portalType}];\n
 \n
                     if (option.extParam) {\n
                         for (var pi = 0; pi < option.extParam.length; pi++) {\n
