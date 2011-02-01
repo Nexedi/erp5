@@ -139,6 +139,22 @@ function wtd(p){\n
   $("#showdaybtn").addClass("fcurrent");\n
 }\n
 \n
+function createFieldToInsertOnDialog(){\n
+  return "<th class=\'cb-key\'>Event Type</th>" + \n
+         "<td class=\'cb-value\'><select name=\'portal_type\'>" +\n
+         "<option>Acknowledgement</option>" +\n
+         "<option>Fax Message</option>" + \n
+         "<option>Letter</option>" +\n
+         "<option>Mail Message</option>" +\n
+         "<option>Note</option>" + \n
+         "<option>Phone Call</option>" +\n
+         "<option>Short Message</option>" +\n
+         "<option>Site Message</option>" + \n
+         "<option>Visit</option>" +\n
+         "<option>Web Message</option>" +\n
+         "</select></td>"\n
+}\n
+\n
 i18n.xgcalendar.content = "Title"\n
 i18n.xgcalendar.location = "Event Id"\n
 i18n.xgcalendar.participant = "Event Type"\n
@@ -163,6 +179,7 @@ $(document).ready(function() {     \n
     quickAddUrl: DATA_FEED_URL + "?request_type=add",\n
     quickUpdateUrl: DATA_FEED_URL + "?request_type=update",\n
     quickDeleteUrl: DATA_FEED_URL + "?request_type=remove",\n
+    loadFieldOnDialog: createFieldToInsertOnDialog, \n
   };\n
   var $dv = $("#calhead");\n
   var _MH = document.documentElement.clientHeight;\n
