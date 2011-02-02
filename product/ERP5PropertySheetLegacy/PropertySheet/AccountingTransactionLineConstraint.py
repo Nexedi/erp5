@@ -41,7 +41,7 @@ class AccountingTransactionLineConstraint:
                     ' and not object.getDestination(portal_type="Account")',
       'type': 'CategoryExistence',
       'source' : 1,
-      'portal_type': 'Account',
+      'portal_type': ('Account',),
       'message_category_not_set': 'Account must be defined on lines',
     },
     { 'id': 'destination_existence',
@@ -52,7 +52,7 @@ class AccountingTransactionLineConstraint:
         ' and not object.getSource(portal_type="Account")',
       'type': 'CategoryExistence',
       'destination' : 1,
-      'portal_type': 'Account',
+      'portal_type': ('Account',),
       'message_category_not_set': 'Account must be defined on lines',
     },
 
