@@ -136,10 +136,11 @@ class PropertySheetTool(BaseTool):
         constraint_class_name = constraint_class_name.replace('Constraint', '')
 
         if constraint_class_name not in filesystem_constraint_class_name_list:
-          raise ValueError, "PropertySheet %s: Constraint %s: No Portal " \
-                "Type defined for type '%s'" % (new_property_sheet_name,
-                                                constraint['id'],
-                                                constraint['type'])
+          LOG("Tool.PropertySheetTool", WARNING,
+              "PropertySheet %s: No matching Constraint found for Portal '%s'" % \
+              (new_property_sheet_name, portal_type_id))
+
+          continue
 
       portal_type_dict[constraint_class_name] = portal_type_id
 
