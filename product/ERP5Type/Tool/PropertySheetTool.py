@@ -39,7 +39,7 @@ from Products.CMFCore.Expression import Expression
 
 from Products.ERP5Type.dynamic.accessor_holder import AccessorHolderType
 
-from zLOG import LOG, ERROR, INFO
+from zLOG import LOG, ERROR, INFO, WARNING
 
 class PropertySheetTool(BaseTool):
   """
@@ -146,7 +146,18 @@ class PropertySheetTool(BaseTool):
     portal_type_dict.update(self._merged_portal_type_dict)
 
     for constraint in getattr(klass, '_constraints', ()):
-      portal_type = portal_type_dict[constraint['type']]
+      try:
+        portal_type = portal_type_dict[constraint['type']]
+      except KeyError:
+        # TODO: Constraints without Portal Type yet (e.g. Constraints
+        # which have not been migrated yet (within BTs or per-project
+        # Products)) are simply *ignored* for now
+        LOG("Tool.PropertySheetTool", WARNING,
+            "Not migrating constraint %s to portal_property_sheets" % \
+            constraint['type'])
+
+        continue
+
       portal_type_class = types_tool.getPortalTypeClass(portal_type)
 
       # Create the new constraint
