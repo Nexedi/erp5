@@ -284,6 +284,17 @@ def generatePortalTypeClass(site, portal_type_name):
     import erp5
 
     if property_sheet_set:
+      if "Base" in property_sheet_set:
+        accessor_holder = None
+        # useless if Base Category is not yet here
+        # or if we're currently generating accessors for Base Categories
+        if hasattr(erp5.accessor_holder, "BaseCategory"):
+          accessor_holder = _generateBaseAccessorHolder(
+                              site,
+                              erp5.accessor_holder)
+        if accessor_holder is not None:
+          accessor_holder_list.append(accessor_holder)
+
       # Initialize ZODB Property Sheets accessor holders
       _fillAccessorHolderList(
         accessor_holder_list,
@@ -291,16 +302,6 @@ def generatePortalTypeClass(site, portal_type_name):
         property_sheet_set,
         erp5.accessor_holder,
         property_sheet_tool)
-
-      if "Base" in property_sheet_set:
-        accessor_holder = None
-        # useless if Base Category is not yet here
-        if hasattr(erp5.accessor_holder, "Base Category"):
-          accessor_holder = _generateBaseAccessorHolder(
-                              site,
-                              erp5.accessor_holder)
-        if accessor_holder is not None:
-          accessor_holder_list.append(accessor_holder)
 
       # XXX a hook to add per-portal type accessor holders maybe?
       if portal_type_name == "Preference Tool":
