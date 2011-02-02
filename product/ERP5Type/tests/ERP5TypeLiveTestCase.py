@@ -84,7 +84,7 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
     def getPortal(self):
       """Returns the portal object, i.e. the "fixture root".
       """
-      from Products.ERP5Site import getSite
+      from Products.ERP5.ERP5Site import getSite
       return getSite(get_request())
 
     getPortalObject = getPortal
