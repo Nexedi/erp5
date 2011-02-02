@@ -185,6 +185,21 @@ div.header-left {\n
 div#gridcontainer div.event-listview tr td {\n
   border-bottom: 1px solid #CCC;\n
   padding: 9px;\n
+}\n
+\n
+div#gridcontainer div.toolbar-listview {\n
+  background: none repeat scroll 0 0 #E3E9FF !important;\n
+  padding: 6px;\n
+}\n
+\n
+a#back-calendar {\n
+  color: #20C;\n
+  font-weight: bolder;\n
+}\n
+\n
+td#resultview {\n
+  text-align: center;\n
+  font-size: 10pt;\n
 }</string> </value>
         </item>
         <item>

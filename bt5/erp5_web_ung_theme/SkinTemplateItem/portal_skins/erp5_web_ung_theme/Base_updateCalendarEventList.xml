@@ -80,6 +80,7 @@ if request_type == "list":\n
   kw = {}\n
   if form.has_key("SearchableText"):\n
     kw["SearchableText"] = form.get("SearchableText")\n
+    kw["sort_on"] = (("delivery.start_date", "ASC"))\n
   event_list = portal.event_module.searchFolder(**kw)\n
   now = DateTime()\n
   event_dict = {}\n

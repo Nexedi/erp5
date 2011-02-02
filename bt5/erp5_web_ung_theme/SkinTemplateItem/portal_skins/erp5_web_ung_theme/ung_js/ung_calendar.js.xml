@@ -304,7 +304,9 @@ $(document).ready(function() {     \n
     tableList.push("<div class=\'toolbar-listview\'>",\n
                    "<table width=\'100%\' cellspacing=\'0\' cellpadding=\'2\'>",\n
                    "<tbody>",\n
-                   "<tr><td>Back to Calendar</td><td>Results:</td>",\n
+                   "<tr><td>",\n
+                   "<a id=\'back-calendar\' href=\'#\'> « Back to Calendar</a>",\n
+                   "</td><td id=\'resultview\'>Results:</td>",\n
                    "</tbody></table></div>");\n
     tableList.push("<div class=\'event-listview\'>");\n
     tableList.push("<table width=\'100%\' cellspacing=\'0\' cellpadding=\'2\'><tbody>");\n
@@ -327,6 +329,10 @@ $(document).ready(function() {     \n
                eventTableList.push("</td></tr>");\n
              }\n
              $("div.event-listview tbody").append(eventTableList.join(""));\n
+             $("td#resultview").append("<b>" + " " +\n
+                                       $("div.event-listview tbody tr").length + \n
+                                       "</b>" + " to " + \n
+                                       "<b>" + text + "</b>");\n
            },\n
     });\n
     tableList.push("</tbody></table></div>");\n
