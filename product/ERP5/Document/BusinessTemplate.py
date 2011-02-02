@@ -3623,12 +3623,13 @@ class PropertySheetTemplateItem(DocumentTemplateItem,
     # Migrate all the filesystem Property Sheets of the Business
     # Template if any
     property_sheet_tool = context.getPortalObject().portal_property_sheets
+    property_sheet_id_set = set(property_sheet_tool.objectIds())
 
     for class_id in migrate_object_dict:
       # If the Property Sheet already exists in ZODB, then skip it,
       # otherwise it should not be needed anymore once the deletion
       # code of the filesystem Property Sheets is enabled
-      if class_id in property_sheet_tool:
+      if class_id in property_sheet_id_set:
         raise RuntimeError('Conflict when migrating Property Sheet %s: ' \
                            'already exists in portal_property_sheets' % \
                            class_id)
