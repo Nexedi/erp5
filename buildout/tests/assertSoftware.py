@@ -758,13 +758,13 @@ class AssertPythonMysql(AssertSoftwareMixin):
       if d.startswith('MySQL_python'):
         path = os.path.join('develop-eggs', d, '_mysql.so')
         elf_dict = readElfAsDict(path)
-        self.assertEqual(sorted(['libc', 'libcrypt', 'libcrypto', 'libm',
-      'libmysqlclient_r', 'libnsl', 'libpthread', 'libssl', 'libz']),
+        self.assertEqual(sorted(['libc', 'libcrypt', 'libm',
+      'libmysqlclient_r', 'libnsl', 'libpthread', 'librt', 'libz']),
           elf_dict['library_list'])
         soft_dir = os.path.join(os.path.abspath(os.curdir), 'parts')
         expected_rpath_list = [os.path.join(soft_dir, software, 'lib') for
             software in ['zlib', 'openssl']]
-        expected_rpath_list.append(os.path.join(os.path.abspath(os.curdir), 'parts', 'mysql-tritonn-5.0', 'lib', 'mysql'))
+        expected_rpath_list.append(os.path.join(os.path.abspath(os.curdir), 'parts', 'mariadb', 'lib', 'mysql'))
         self.assertEqual(sorted(expected_rpath_list), elf_dict['runpath_list'])
 
 class AssertApache(AssertSoftwareMixin):
