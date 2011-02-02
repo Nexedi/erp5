@@ -228,7 +228,7 @@ failed_portal_installation = {}
 
 # have we installed business templates ?
 # this is a mapping 'list of business template -> boolean
-setup_done = {}
+setup_done = set()
 
 def _getConnectionStringDict():
   """Returns the connection strings used for this test.
@@ -930,9 +930,9 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
         app.test_portal_name = portal_name
 
         global setup_done
-        portal = app._getOb(portal_name, None)
-        if portal is None or not setup_done.get(tuple(business_template_list)):
-          setup_done[tuple(business_template_list)] = 1
+        setup_key = (portal_name,) + tuple(business_template_list)
+        if setup_key not in setup_done:
+          setup_done.add(setup_key)
           business_template_list = \
             self._getBTPathAndIdList(business_template_list)
           try:
@@ -951,7 +951,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
               setattr(app, 'isIndexable', 0)
               reindex = 0
 
-            if portal is None:
+            if app._getOb(portal_name, None) is None:
               if not quiet:
                 ZopeTestCase._print('Adding %s ERP5 Site ... ' % portal_name)
 
