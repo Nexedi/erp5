@@ -1424,10 +1424,13 @@ class ActivityTool (Folder, UniqueObject):
       return message_count
 
     security.declareProtected( CMFCorePermissions.ManagePortal , 'newActiveProcess' )
-    def newActiveProcess(self, **kw):
-      from ActiveProcess import addActiveProcess
-      new_id = str(self.generateNewId())
-      return addActiveProcess(self, new_id, **kw)
+    def newActiveProcess(self, REQUEST=None, **kw):
+      # note: if one wants to create an Actice Process without ERP5 products,
+      # she can call ActiveProcess.addActiveProcess
+      obj = self.newContent(portal_type="Active Process", **kw)
+      if REQUEST is not None:
+        REQUEST['RESPONSE'].redirect( 'manage_main' )
+      return obj
 
     # Active synchronisation methods
     security.declarePrivate('validateOrder')
