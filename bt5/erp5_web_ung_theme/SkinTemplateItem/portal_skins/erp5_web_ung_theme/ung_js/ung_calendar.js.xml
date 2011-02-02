@@ -308,9 +308,14 @@ $(document).ready(function() {     \n
                    "</tbody></table></div>");\n
     tableList.push("<div class=\'event-listview\'>");\n
     tableList.push("<table width=\'100%\' cellspacing=\'0\' cellpadding=\'2\'><tbody>");\n
+    text = $("input[name=\'searchable-text\']").val();\n
+    paramList = [{name: "request_type", value: "list"}];\n
+    if (text != "")\n
+      paramList.push({name: "SearchableText", value: text});\n
     $.ajax({\n
-           url:"Base_updateCalendarEventList?request_type=list",\n
+           url:"Base_updateCalendarEventList",\n
            dataType: "json",\n
+           data : paramList,\n
            success: function(data){\n
              var eventTableList = Array();\n
              var eventList = data.events;    \n
