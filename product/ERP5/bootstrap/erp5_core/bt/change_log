@@ -1,3 +1,6 @@
+2011-02-02 nicolas.dumazet
+* Add Activity Tool and Active Processes portal types
+
 2011-02-01 nicolas.dumazet
 * Changes to dynamic_class_generation_interaction_workflow:
 * use resetDynamicDocumentsOnceAtTransactionBoundary so that several changes to portal types during the same transaction are cheaper.
