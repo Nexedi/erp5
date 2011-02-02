@@ -4281,7 +4281,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
-  @expectedFailure
   def test_151_BusinessTemplateWithPropertySheetMigration(self, quiet=quiet,
                                                           run=run_all_test):
     if not run:
