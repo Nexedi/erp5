@@ -1610,9 +1610,8 @@ class ERP5Generator(PortalGenerator):
     make sure that we do not put un the queue the full reindexation
     """
     # Add Activity Tool
-    if create_activities and not p.hasObject('portal_activities'):
-      addTool = p.manage_addProduct['CMFActivity'].manage_addTool
-      addTool('CMF Activity Tool', None) # Allow user to select active/passive
+    if create_activities:
+      addERP5Tool(p, 'portal_activities', 'Activity Tool')
       # Initialize Activities
       p.portal_activities.manageClearActivities(keep=0)
 
