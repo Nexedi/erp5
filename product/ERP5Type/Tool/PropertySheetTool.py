@@ -128,8 +128,11 @@ class PropertySheetTool(BaseTool):
 
     # Mapping between the filesystem 'type' field and Portal Types ID
     portal_type_dict = {}
-    for search_result in types_tool.searchFolder(id='% Constraint'):
-      portal_type_id = search_result.getId()
+
+    for portal_type_id in types_tool.objectIds():
+      if not portal_type_id.endswith(' Constraint'):
+        continue
+
       constraint_class_name = portal_type_id.replace(' ', '')
 
       if constraint_class_name not in filesystem_constraint_class_name_list:
