@@ -318,7 +318,12 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
         for interface in interface_list:
           classImplements(klass, interface)
 
-        klass.generatePortalTypeAccessors(site)
+        if len(base_tuple) > 1:
+          # skip this during the early Base Type / Types Tool generation
+          # because they dont have accessors, and will mess up
+          # workflow methods. We KNOW that we will re-load this type
+          # anyway
+          klass.generatePortalTypeAccessors(site)
       except Exception:
         import traceback; traceback.print_exc()
     finally:
