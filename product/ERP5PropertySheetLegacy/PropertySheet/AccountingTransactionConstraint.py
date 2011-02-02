@@ -50,7 +50,7 @@ class AccountingTransactionConstraint:
                      ' in ("cancelled", "deleted")'
                      ' and object.portal_type!="Purchase Invoice Transaction"',
       'type': 'PropertyExistence',
-      'start_date' : 1,
+      'start_date' : None,
     },
 
     { 'id': 'date_existence_purchase',
@@ -60,7 +60,7 @@ class AccountingTransactionConstraint:
                      ' in ("cancelled", "deleted")'
                      ' and object.portal_type=="Purchase Invoice Transaction"',
       'type': 'PropertyExistence',
-      'stop_date' : 1,
+      'stop_date' : None,
     },
 
     { 'id': 'currency_existence',

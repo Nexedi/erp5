@@ -84,7 +84,7 @@ class TradeOrder:
     { 'id'            : 'start_date',
       'description'   : 'Start Date must be defined',
       'type'          : 'PropertyExistence',
-      'start_date'    : 1,
+      'start_date'    : None,
       'message_no_such_property' : "Shipping Date must be defined",
     },
     { 'id'            : 'date_coherency',
