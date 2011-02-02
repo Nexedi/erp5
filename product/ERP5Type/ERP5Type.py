@@ -436,6 +436,11 @@ class ERP5TypeInformation(XMLObject,
       return getattr(aq_base(self), 'type_class', None)
 
     security.declareProtected(Permissions.AccessContentsInformation,
+                              'getTypeFactoryMethodId')
+    def getTypeFactoryMethodId(self):
+      return getattr(aq_base(self), 'factory', ())
+
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getTypeMixinList')
     def getTypeMixinList(self):
       return getattr(aq_base(self), 'type_mixin', ())
