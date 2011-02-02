@@ -1193,6 +1193,7 @@ def initializeProduct( context,
 
   # Register Objets
   for c in object_classes:
+    registerDocumentClass(c.__module__, c.__name__)
     icon = getattr(c, 'icon', None)
     permission = getattr(c, 'permission_type', None)
     context.registerClass(c,
