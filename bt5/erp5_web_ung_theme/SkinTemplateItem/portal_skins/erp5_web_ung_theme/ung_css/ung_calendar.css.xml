@@ -184,7 +184,7 @@ div.header-left {\n
 \n
 div#gridcontainer div.event-listview tr td {\n
   border-bottom: 1px solid #CCC;\n
-  padding: 9px;\n
+  padding: 11px;\n
 }\n
 \n
 div#gridcontainer div.toolbar-listview {\n
@@ -198,8 +198,19 @@ a#back-calendar {\n
 }\n
 \n
 td#resultview {\n
-  text-align: center;\n
+  text-align: right;\n
   font-size: 10pt;\n
+}\n
+\n
+tr#today-event td:first-child{\n
+  background: none repeat scroll 0 0 #FFF7D7;\n
+  border-color: #FAD163 #FAD163 #CCCCCC;\n
+  border-style: solid;\n
+  border-width: 0 1px 1px 0;\n
+}\n
+\n
+div.event-listview table tbody tr td:first-child {\n
+  width: 12%;\n
 }</string> </value>
         </item>
         <item>

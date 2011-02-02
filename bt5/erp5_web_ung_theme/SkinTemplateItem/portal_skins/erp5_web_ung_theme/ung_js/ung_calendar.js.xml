@@ -320,9 +320,17 @@ $(document).ready(function() {     \n
            data : paramList,\n
            success: function(data){\n
              var eventTableList = Array();\n
-             var eventList = data.events;    \n
+             var eventList = data.events;\n
+             var currentDate = new Date();\n
              for (var i = 0; i < eventList.length; i++){\n
-               eventTableList.push("<tr><td>");\n
+               var eventDate = new Date(eventList[i][2]);\n
+               if (eventDate.getMonth() == currentDate.getMonth() && eventDate.getDate() == currentDate.getDate()){\n
+                 eventTableList.push("<tr id=\'today-event\'>");\n
+               }\n
+               else {\n
+                 eventTableList.push("<tr>");\n
+               }\n
+               eventTableList.push("<td>");\n
                eventTableList.push(eventList[i][2]);\n
                eventTableList.push("</td><td>");\n
                eventTableList.push(eventList[i][1]);\n
@@ -338,7 +346,11 @@ $(document).ready(function() {     \n
     tableList.push("</tbody></table></div>");\n
     $("div#gridcontainer").append(tableList.join(""));\n
   });\n
-});
+});\n
+\n
+window.onload = function(){\n
+  $("div#dvCalMain.calmain").parent().css("padding", "0 0 0 1px");\n
+}
 
 ]]></string> </value>
         </item>
