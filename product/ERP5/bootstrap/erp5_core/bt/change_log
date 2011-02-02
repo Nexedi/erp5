@@ -1,3 +1,9 @@
+2011-02-02 arnaud.fontaine
+* Remove Category Acquired Membership Arity Constraint portal type in favor of Category Membership Arity Constraint and add a boolean in the view to handle both.
+* Add a boolean in Category Existence Constraint view to handle Category Acquired Existence Constraint.
+* Add missing Active Process in Activity Tools allowed_content_type.
+* constraint_portal_type for CategoryExistenceConstraint_view, CategoryMembershipArityConstraint_view and CategoryRelatedMembershipArityConstraint_view should have always been a string to allow definition with a TALES Expression.
+
 2011-02-02 nicolas.dumazet
 * Add Activity Tool and Active Processes portal types
 

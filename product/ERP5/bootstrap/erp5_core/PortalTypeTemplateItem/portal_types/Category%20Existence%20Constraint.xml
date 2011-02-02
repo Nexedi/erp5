@@ -33,7 +33,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A Category Existence Constraint checks whether an object contains the given categories</string> </value>
+            <value> <string>A Category Existence Constraint checks whether an object contains the given categories without or with Acquisition</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

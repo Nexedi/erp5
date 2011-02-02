@@ -10,14 +10,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>description</string>
                 <string>title</string>
-                <string>view_separator</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_constraint_portal_type_list</string> </value>
+            <value> <string>my_use_acquisition</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -73,8 +73,12 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>Check category existence acquisition</string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_lines_field</string> </value>
+                    <value> <string>my_checkbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -86,16 +90,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Constraint Portal Types</string> </value>
-                </item>
-                <item>
-                    <key> <string>view_separator</string> </key>
-                    <value> <string encoding="cdata"><![CDATA[
-
-<br />\n
-
-
-]]></string> </value>
+                    <value> <string>Use acquisition</string> </value>
                 </item>
               </dictionary>
             </value>

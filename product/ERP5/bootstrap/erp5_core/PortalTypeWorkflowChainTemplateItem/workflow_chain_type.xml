@@ -32,10 +32,6 @@
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Category Acquired Membership Arity Constraint</type>
-  <workflow>dynamic_class_generation_interaction_workflow</workflow>
- </chain>
- <chain>
   <type>Category Existence Constraint</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
