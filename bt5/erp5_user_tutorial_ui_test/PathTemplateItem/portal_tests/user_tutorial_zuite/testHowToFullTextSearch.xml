@@ -1,0 +1,200 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+<head>\n
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
+<title>Full Text Search</title>\n
+</head>\n
+<body tal:define="configuration python: here.Zuite_getHowToInfo();\n
+                  search_name_string python: configuration[\'full_text_person_title\'];\n
+                  search_organisation_string python: configuration[\'full_text_organisation_title\'];">\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="3">Full Text Search</td></tr>\n
+</thead><tbody>\n
+\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment">init</span>\n
+\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/Zuite_setUpFullTextSearchTest</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Init Ok</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities </span>\n
+\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user">Login As Functional Test User</span>\n
+\n
+<!-- Search with empty string -->\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_your_search_text</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>ERP5Site_viewQuickSearchResultList:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextNotPresent</td>\n
+  <td>Search Results</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyElementPresent</td>\n
+  <td>id=transition_message</td>\n
+  <td></td>\n
+</tr>\n
+<!-- Search persons by full name -->\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/view</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_your_search_text</td>\n
+  <td tal:content="search_name_string"></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>ERP5Site_viewQuickSearchResultList:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Search Results</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td tal:content="search_name_string"></td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td tal:content="python: configuration[\'full_text_person_reference\']">reference</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Person</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<!-- Search Organisation -->\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_your_search_text</td>\n
+  <td tal:content="search_organisation_string"></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>ERP5Site_viewQuickSearchResultList:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Search Results</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td tal:content="search_organisation_string"></td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Organisation</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_manager">Login As Manager</span>\n
+\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/Zuite_tearDownFullTextSearchTest</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Clean Ok</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities </span>\n
+\n
+</tbody>\n
+</table>\n
+</body>\n
+</html>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>testHowToFullTextSearch</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

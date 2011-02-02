@@ -1,0 +1,276 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+<head>\n
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
+<title>How-To Product</title>\n
+</head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="3">How-To Product</td></tr>\n
+</thead><tbody>\n
+\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment">init</span>\n
+\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/Zuite_setUpProductTest</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Init Ok</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities">Wait for activities</span>\n
+\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user">Login As Functional Test User</span>\n
+\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=Products</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>//select[@name="select_action"]</td>\n
+  <td>Add Product</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="transition_message"]</td>\n
+  <td>Object created.</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//li[@class="selected"]/a/span</td>\n
+  <td>View</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_title"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'product_howto_product_title\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_reference"]</td>\n
+  <td>RL 01</td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>//select[@name="field_my_product_line"]</td>\n
+  <td>Equipment/Construction</td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>//select[@name="field_my_base_contribution_list"]</td>\n
+  <td>Taxable</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name="Base_edit:method"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=Purchase</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_purchase_supply_line_source_title"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'product_howto_organisation_title\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="subfield_field_my_purchase_supply_line_start_date_range_max_year"]</td>\n
+  <td>2010</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+ <td>//input[@name="subfield_field_my_purchase_supply_line_start_date_range_max_month"]</td>\n
+  <td>10</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="subfield_field_my_purchase_supply_line_start_date_range_max_day"]</td>\n
+  <td>01</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_purchase_supply_line_base_price"]</td>\n
+  <td>0.50</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_purchase_supply_line_priced_quantity"]</td>\n
+  <td>1</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name="Base_edit:method"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=Sale</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_sale_supply_line_base_price"]</td>\n
+  <td>1</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_sale_supply_line_priced_quantity"]</td>\n
+  <td>1</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name="Base_edit:method"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>//select[@name="select_action"]</td>\n
+  <td>Validate</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@id="dialog_submit_button"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//li[@class="selected"]/a/span</td>\n
+  <td>Sale</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="transition_message"]</td>\n
+  <td>Status changed.</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=View</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@title="The current state of the document."]/div[1]</td>\n
+  <td>Validated</td>\n
+</tr>\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities">Wait for activities</span>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/view</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=Products</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="breadcrumb"]/a[1]</td>\n
+  <td>ERP5</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="breadcrumb"]/a[2]</td>\n
+  <td>Products</td>\n
+</tr>\n
+<tal:block tal:content="structure python: here.Zuite_generateListboxBrowsing(listbox_selection=([\'title\', here.Zuite_getHowToInfo()[\'product_howto_product_title\']],), enter_object=True)"/>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="breadcrumb"]/a[3]</td>\n
+  <td>RL 01</td>\n
+</tr>\n
+\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_manager">Login As Manager</span>\n
+\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/Zuite_tearDownProductTest</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Clean Ok</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities </span>\n
+\n
+</tbody>\n
+</table>\n
+</body>\n
+</html>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>testHowToProduct</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

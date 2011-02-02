@@ -1,0 +1,239 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+<head>\n
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
+<title>How-To Create Campaigns</title>\n
+</head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="3">How-To Create Campaigns</td></tr>\n
+</thead><tbody>\n
+\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment">init</span>\n
+\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/Zuite_setUpCampaignTest</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Init Ok</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities </span>\n
+\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user">Login As Functional Test User</span>\n
+\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=Campaigns</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>//select[@name="select_action"]</td>\n
+  <td>Add Campaign</td>\n
+</tr>\n
+<tr>\n
+  <td>waitForCondition</td>\n
+  <td>selenium.isTextPresent("Title")</td>\n
+  <td>60000</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_title"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'campaign_howto_campaign_title\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_reference"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'campaign_howto_campaign_reference\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_source_section_title"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'campaign_howto_organisation_title\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_source_decision_title"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'campaign_howto_person_title\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_source_title"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'campaign_howto_person2_title\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_destination_title"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'campaign_howto_organisation_title\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//textarea[@name="field_my_source_trade_title_list"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'campaign_howto_person2_title\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="subfield_field_my_start_date_year"]</td>\n
+  <td>2000</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="subfield_field_my_start_date_month"]</td>\n
+  <td>10</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="subfield_field_my_start_date_day"]</td>\n
+  <td>10</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="subfield_field_my_stop_date_year"]</td>\n
+  <td>3000</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="subfield_field_my_stop_date_month"]</td>\n
+  <td>11</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="subfield_field_my_stop_date_day"]</td>\n
+  <td>11</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_quantity"]</td>\n
+  <td>0.9</td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>//select[@name="field_my_quantity_unit"]</td>\n
+  <td>Time/Day</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_price"]</td>\n
+  <td>20.00</td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>//select[@name="field_my_price_currency"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'campaign_howto_currency_tag\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name="Base_edit:method"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="transition_message"]</td>\n
+  <td>Data updated.</td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>//select[@name="select_action"]</td>\n
+  <td>Open Ticket</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@id="dialog_submit_button"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//label[normalize-space(text())=\'State\']/../div</td>\n
+  <td>Open</td>\n
+</tr>\n
+\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_manager">Login As Manager</span>\n
+\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/Zuite_tearDownCampaignTest</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Clean Ok</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities </span>\n
+\n
+</tbody>\n
+</table>\n
+</body>\n
+</html>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>testHowToCampaign</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

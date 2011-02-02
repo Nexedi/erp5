@@ -1,0 +1,15 @@
+28-01-2011 lucas
+- Fixed testHowToIncomingEvent
+- Fixed testHowToInstanceI18N
+- Fixed testHowToOrganisation
+- Fixed testHowToOutgoingEvent
+- Fixed testHowToPerson
+
+27-01-2011 lucas
+- Fixed testHowToCampaign.
+- Fixed testHowToCreateEvent.
+- Fixed testHowToFullTextSearch
+
+26-01-2011 lucas
+- Applied some name convention.
+- All the test Page Templates is now rendering without error.
