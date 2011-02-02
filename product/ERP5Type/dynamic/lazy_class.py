@@ -119,11 +119,14 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
       if issubclass(type(parent), PortalTypeMetaClass):
         PortalTypeMetaClass.subclass_register.setdefault(parent, []).append(cls)
 
-    cls.security = ClassSecurityInfo()
     cls.workflow_method_registry = {}
 
     cls.__isghost__ = True
     super(GhostBaseMetaClass, cls).__init__(name, bases, dictionary)
+
+    # InitializeClass is evil and removes the security info. Set it up AFTER
+    # superclass initialization
+    cls.security = ClassSecurityInfo()
 
   @classmethod
   def getSubclassList(metacls, cls):
@@ -147,18 +150,21 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
 
     return property_list
 
-  def resetAcquisitionAndSecurity(cls):
+  def resetAcquisition(cls):
     # First, fill the __get__ slot of the class
     # that has been null'ed after resetting its __bases__
     # This descriptor is the magic allowing __of__ and our
     # _aq_dynamic trick
     pmc_init_of(cls)
-    # Then, call __class_init__ on the class for security
-    InitializeClass(cls)
 
     # And we need to do the same thing on subclasses
     for subclass in PortalTypeMetaClass.getSubclassList(cls):
       pmc_init_of(subclass)
+
+  def setSecurity(cls):
+    # note that after this call the 'security' attribute will be gone.
+    InitializeClass(cls)
+    for subclass in PortalTypeMetaClass.getSubclassList(cls):
       InitializeClass(subclass)
 
   def restoreGhostState(cls):
@@ -174,7 +180,6 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
       for attr in cls.__dict__.keys():
         if attr not in ('__module__',
                         '__doc__',
-                        'security',
                         'workflow_method_registry',
                         '__isghost__',
                         'portal_type'):
@@ -184,7 +189,8 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
       cls.workflow_method_registry.clear()
       cls.__bases__ = (ghostbase,)
       cls.__isghost__ = True
-      cls.resetAcquisitionAndSecurity()
+      cls.resetAcquisition()
+      cls.security = ClassSecurityInfo()
 
   def __getattr__(cls, name):
     """
@@ -308,7 +314,7 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
         klass.__isghost__ = False
         klass.__bases__ = base_tuple
 
-        klass.resetAcquisitionAndSecurity()
+        klass.resetAcquisition()
 
         for key, value in attribute_dict.iteritems():
           setattr(klass, key, value)
@@ -318,12 +324,14 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
         for interface in interface_list:
           classImplements(klass, interface)
 
+        # skip this during the early Base Type / Types Tool generation
+        # because they dont have accessors, and will mess up
+        # workflow methods. We KNOW that we will re-load this type anyway
         if len(base_tuple) > 1:
-          # skip this during the early Base Type / Types Tool generation
-          # because they dont have accessors, and will mess up
-          # workflow methods. We KNOW that we will re-load this type
-          # anyway
           klass.generatePortalTypeAccessors(site)
+          # need to set %s__roles__ for generated methods
+          cls.setSecurity()
+
       except Exception:
         import traceback; traceback.print_exc()
     finally:
