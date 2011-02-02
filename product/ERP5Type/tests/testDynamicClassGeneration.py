@@ -1029,16 +1029,17 @@ class TestZodbImportFilesystemPropertySheet(ERP5TypeTestCase):
         # Some fields may not defined a default value (such as 'id')
         continue
 
-  def _checkPropertyField(self,
-                          property_sheet_name,
-                          field_name,
-                          filesystem_value,
-                          zodb_value):
+  def _checkPropertyOrConstraintField(self,
+                                      property_sheet_name,
+                                      field_name,
+                                      filesystem_value,
+                                      zodb_value):
     """
-    Check whether the given filesystem property value and the given
-    ZODB property value are equal
+    Check whether the given filesystem property or constraint value
+    and the given ZODB property value are equal
     """
-    if isinstance(zodb_value, (list, tuple)):
+    if isinstance(zodb_value, (list, tuple)) and \
+       isinstance(filesystem_value, (list, tuple)):
       self.failIfDifferentSet(
         zodb_value, filesystem_value,
         msg="%s: %s: filesystem value: %s, ZODB value: %s" % \
@@ -1067,43 +1068,44 @@ class TestZodbImportFilesystemPropertySheet(ERP5TypeTestCase):
           (property_sheet_name, field_name, filesystem_value,
            zodb_value))
 
-  def _checkPropertyDefinitionTuple(self,
-                                    property_sheet_name,
-                                    filesystem_property_tuple,
-                                    zodb_property_tuple):
+  def _checkPropertyOrConstraintDefinitionTuple(self,
+                                                property_sheet_name,
+                                                filesystem_property_tuple,
+                                                zodb_property_tuple):
     """
-    Check whether all properties have been properly converted from
-    the filesystem to the ZODB Property Sheet
+    Check whether all properties or constraints have been properly
+    converted from the filesystem to the ZODB Property Sheet
     """
-    # Check whether all the properties are present in the given ZODB
-    # Property Sheet
+    # Check whether all the properties or constraints are present in
+    # the given ZODB Property Sheet
     self.assertEqual(
       len(filesystem_property_tuple), len(zodb_property_tuple),
       msg="%s: too many properties: filesystem: %s, ZODB: %s" % \
       (property_sheet_name, filesystem_property_tuple, zodb_property_tuple))
 
-    # Map filesystem property IDs to their definition
+    # Map filesystem property or constraint IDs to their definition
     filesystem_property_id_dict = {}
     for property_dict in filesystem_property_tuple:
       filesystem_property_id_dict[property_dict['id']] = property_dict
 
-    # Check each property defined in ZODB against the filesystem dict
-    # defined before
+    # Check each property or constraint defined in ZODB against the
+    # filesystem dict defined before
     for zodb_property_dict in zodb_property_tuple:
       # Meaningful to ensure that there is no missing field within a
-      # property
+      # property or constraint
       validated_field_counter = 0
 
       filesystem_property_dict = \
          filesystem_property_id_dict[zodb_property_dict['id']]
 
-      # Check each property field
+      # Check each property or constraint field
       for field_name, zodb_value in zodb_property_dict.iteritems():
         if field_name in filesystem_property_dict:
-          self._checkPropertyField(property_sheet_name,
-                                   field_name,
-                                   filesystem_property_dict[field_name],
-                                   zodb_value)
+          self._checkPropertyOrConstraintField(
+            property_sheet_name, field_name,
+            filesystem_property_dict[field_name],
+            zodb_value)
+
         # As we are using accessors when exporting the ZODB Property
         # Sheet to its filesystem definition, there may be additional
         # fields set to their default value
@@ -1162,8 +1164,6 @@ class TestZodbImportFilesystemPropertySheet(ERP5TypeTestCase):
     Create Property Sheets on portal_property_sheets from their
     definition on the filesystem and then test that they are
     equivalent
-
-    TODO: Constraints
     """
     portal = self.getPortalObject().portal_property_sheets
 
@@ -1172,6 +1172,7 @@ class TestZodbImportFilesystemPropertySheet(ERP5TypeTestCase):
     for name, klass in PropertySheet.__dict__.iteritems():
       if name[0] == '_' or isinstance(klass, basestring):
         continue
+
       filesystem_property_sheet = klass
       property_sheet_name = name
 
@@ -1183,19 +1184,25 @@ class TestZodbImportFilesystemPropertySheet(ERP5TypeTestCase):
       zodb_property_sheet = portal.createPropertySheetFromFilesystemClass(
         filesystem_property_sheet)
 
-      zodb_property_tuple, zodb_category_tuple, zodb_constraint_tuple = \
+      zodb_property_tuple, zodb_category_tuple, zodb_constraint_class_tuple = \
           portal.exportPropertySheetToFilesystemDefinitionTuple(
               zodb_property_sheet)
 
-      self._checkPropertyDefinitionTuple(property_sheet_name,
-                                         getattr(filesystem_property_sheet,
-                                                 '_properties', []),
-                                         zodb_property_tuple)
+      self._checkPropertyOrConstraintDefinitionTuple(
+        property_sheet_name,
+        getattr(filesystem_property_sheet, '_properties', []),
+        zodb_property_tuple)
 
       self._checkCategoryTuple(property_sheet_name,
                                getattr(filesystem_property_sheet,
                                        '_categories', []),
                                zodb_category_tuple)
+
+      self._checkPropertyOrConstraintDefinitionTuple(
+        property_sheet_name, getattr(filesystem_property_sheet,
+                                     '_constraints', []),
+        [ zodb_constraint_class.exportToFilesystemDefinitionDict() \
+          for zodb_constraint_class in zodb_constraint_class_tuple ])
 
 def test_suite():
   suite = unittest.TestSuite()

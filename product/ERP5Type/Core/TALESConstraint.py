@@ -61,6 +61,8 @@ class TALESConstraint(ConstraintMixin):
   meta_type = 'ERP5 TALES Constraint'
   portal_type = 'TALES Constraint'
 
+  __compatibility_class_name__ = 'TALESConstraint'
+
   property_sheets = ConstraintMixin.property_sheets + \
                     (PropertySheet.TALESConstraint,)
 
@@ -86,3 +88,18 @@ class TALESConstraint(ConstraintMixin):
                                   mapping=dict(error=str(e)))]
 
     return []
+
+  _message_id_tuple = ('message_expression_false',
+                       'message_expression_error')
+
+  @staticmethod
+  def _convertFromFilesystemDefinition(expression):
+    yield dict(expression=expression)
+
+  def exportToFilesystemDefinitionDict(self):
+    filesystem_definition_dict = super(TALESConstraint,
+                                       self).exportToFilesystemDefinitionDict()
+
+    filesystem_definition_dict['expression'] = self.getExpression()
+
+    return filesystem_definition_dict

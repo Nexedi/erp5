@@ -32,7 +32,7 @@ from Products.ERP5Type import PropertySheet
 
 class AccountingTransactionBalanceConstraint(ConstraintMixin):
   """
-  Check that accounting transaction total debit and total credit are equals.
+  Check that accounting transaction total debit and total credit are equal.
 
   This is only relevant for ZODB Property Sheets (filesystem Property
   Sheets rely on Products.ERP5.Constraint.AccountingTransactionBalance
@@ -40,6 +40,8 @@ class AccountingTransactionBalanceConstraint(ConstraintMixin):
   """
   meta_type = 'ERP5 Accounting Transaction Balance Constraint'
   portal_type = 'Accounting Transaction Balance Constraint'
+
+  __compatibility_class_name__ = 'AccountingTransactionBalance'
 
   property_sheets = ConstraintMixin.property_sheets + \
                     (PropertySheet.AccountingTransactionBalanceConstraint,)
@@ -89,3 +91,6 @@ class AccountingTransactionBalanceConstraint(ConstraintMixin):
           break
 
     return error_list
+
+  _message_id_tuple = ('message_transaction_not_balanced_for_source',
+                       'message_transaction_not_balanced_for_destination')

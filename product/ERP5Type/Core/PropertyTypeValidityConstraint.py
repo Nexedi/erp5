@@ -44,6 +44,8 @@ class PropertyTypeValidityConstraint(ConstraintMixin):
   meta_type = 'ERP5 Property Type Validity Constraint'
   portal_type = 'Property Type Validity Constraint'
 
+  __compatibility_class_name__ = 'PropertyTypeValidity'
+
   property_sheets = ConstraintMixin.property_sheets + \
                     (PropertySheet.PropertyTypeValidityConstraint,)
 
@@ -133,3 +135,8 @@ class PropertyTypeValidityConstraint(ConstraintMixin):
           obj.setProperty(property_id, oldvalue)
 
     return error_list
+
+  _message_id_tuple = ('message_unknown_type',
+                       'message_incorrect_type',
+                       'message_incorrect_type_fix_failed',
+                       'message_incorrect_type_fixed')

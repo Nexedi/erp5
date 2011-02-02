@@ -41,6 +41,8 @@ class TransactionQuantityValueFeasabilityConstraint(ConstraintMixin):
     meta_type = 'ERP5 Transaction Quantity Value Feasability Constraint'
     portal_type = 'Transaction Quantity Value Feasability Constraint'
 
+    __compatibility_class_name__ = 'TransactionQuantityValueFeasability'
+
     def _checkConsistency(self, object, fixit=0):
       """
       Check if the quantity of the transaction is possible

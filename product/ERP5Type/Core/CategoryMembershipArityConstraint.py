@@ -29,12 +29,14 @@
 ##############################################################################
 
 from Products.ERP5Type.mixin.constraint import ConstraintMixin
+from Products.CMFCore.Expression import Expression
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 
 class CategoryMembershipArityConstraint(ConstraintMixin):
   """
-  This constraint checks if an object respects the arity.
+  This constraint checks if an object respects the arity (with or
+  without acquisition depending on use_acquisition value).
 
   This is only relevant for ZODB Property Sheets (filesystem Property
   Sheets rely on Products.ERP5Type.Constraint.CategoryMembershipArity
@@ -51,6 +53,8 @@ class CategoryMembershipArityConstraint(ConstraintMixin):
   """
   meta_type = 'ERP5 Category Membership Arity Constraint'
   portal_type = 'Category Membership Arity Constraint'
+
+  __compatibility_class_name__ = 'CategoryMembershipArity'
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -102,3 +106,73 @@ class CategoryMembershipArityConstraint(ConstraintMixin):
     return [self._generateError(obj,
                                 self._getMessage(message_id),
                                 mapping)]
+
+
+  _message_id_tuple = ('message_arity_too_small',
+                       'message_arity_not_in_range',
+                       'message_arity_with_portal_type_too_small',
+                       'message_arity_with_portal_type_not_in_range')
+
+  @staticmethod
+  def _preConvertBaseFromFilesystemDefinition(filesystem_definition_dict):
+    """
+    CategoryAcquiredMembershipArity and CategoryMembershipArity
+    filesystem Constraints have been merged into a single Document for
+    ZODB Constraint by adding 'use_acquisition' attribute
+    """
+    return dict(use_acquisition=(filesystem_definition_dict['type'] == \
+                                 'CategoryAcquiredMembershipArity'))
+
+  @staticmethod
+  def _convertFromFilesystemDefinition(min_arity,
+                                       portal_type=(),
+                                       max_arity=None,
+                                       base_category=()):
+    """
+    @see ERP5Type.mixin.constraint.ConstraintMixin._convertFromFilesystemDefinition
+
+    Filesystem definition example:
+    { 'id'            : 'source',
+      'description'   : '',
+      'type'          : 'CategoryMembershipArity',
+      'min_arity'     : '1',
+      'max_arity'     : '1',
+      'portal_type'   : ('Organisation', ),
+      'base_category' : ('source',)
+      'condition'     : 'python: object.getPortalType() == 'Foo',
+    }
+    """
+    constraint_portal_type_str = isinstance(portal_type, Expression) and \
+        portal_type.text or 'python: ' + repr(portal_type)
+
+    zodb_property_dict = dict(
+      min_arity=int(min_arity),
+      constraint_portal_type=constraint_portal_type_str,
+      constraint_base_category_list=base_category)
+
+    if max_arity is not None:
+      zodb_property_dict['max_arity'] = int(max_arity)
+
+    yield zodb_property_dict
+
+  def exportToFilesystemDefinitionDict(self):
+    filesystem_definition_dict = super(CategoryMembershipArityConstraint,
+                                       self).exportToFilesystemDefinitionDict()
+
+    # There is only one ZODB Constraint class for filesystem
+    # Constraints CategoryMembershipArity and
+    # CategoryAcquiredMembershipArity constraints
+    if self.getUseAcquisition():
+      filesystem_definition_dict['type'] = 'CategoryAcquiredMembershipArity'
+
+    filesystem_definition_dict['min_arity'] = str(self.getMinArity())
+
+    if self.hasMaxArity():
+      filesystem_definition_dict['max_arity'] = str(self.getMaxArity())
+
+    filesystem_definition_dict['portal_type'] = \
+        Expression(self.getConstraintPortalType())
+
+    filesystem_definition_dict['base_category'] = self.getConstraintBaseCategoryList()
+
+    return filesystem_definition_dict

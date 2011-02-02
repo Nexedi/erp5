@@ -29,13 +29,15 @@
 ##############################################################################
 
 from Products.ERP5Type.mixin.constraint import ConstraintMixin
+from Products.CMFCore.Expression import Expression
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 
 class CategoryExistenceConstraint(ConstraintMixin):
   """
   This constraint checks whether a category has been defined on this
-  object (without acquisition).
+  object (with or without acquisition depending on use_acquisition
+  value).
 
   This is only relevant for ZODB Property Sheets (filesystem Property
   Sheets rely on Products.ERP5Type.Constraint.CategoryExistence
@@ -43,6 +45,8 @@ class CategoryExistenceConstraint(ConstraintMixin):
   """
   meta_type = 'ERP5 Category Existence Constraint'
   portal_type = 'Category Existence Constraint'
+
+  __compatibility_class_name__ = 'CategoryExistence'
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -52,8 +56,13 @@ class CategoryExistenceConstraint(ConstraintMixin):
                     (PropertySheet.CategoryExistenceConstraint,)
 
   def _calculateArity(self, obj, base_category, portal_type_list):
-    return len(obj.getCategoryMembershipList(base_category,
-                                             portal_type=portal_type_list))
+    if self.getUseAcquisition():
+      category_membership_list_function = obj.getAcquiredCategoryMembershipList
+    else:
+      category_membership_list_function = obj.getCategoryMembershipList
+
+    return len(category_membership_list_function(base_category,
+                                                 portal_type=portal_type_list))
 
   def _checkConsistency(self, obj, fixit=0):
     """
@@ -81,13 +90,54 @@ class CategoryExistenceConstraint(ConstraintMixin):
 
     return error_list
 
-class CategoryAcquiredExistenceConstraint(CategoryExistenceConstraint):
-  """
-  This constraint checks whether a category has been defined on this
-  object (with acquisition). This is only relevant for ZODB Property
-  Sheets (filesystem Property Sheets rely on
-  Products.ERP5Type.Constraint.CategoryExistence instead).
-  """
-  def _calculateArity(self, obj, base_category, portal_type_list):
-    return len(obj.getAcquiredCategoryMembershipList(
-      base_category, portal_type=portal_type_list))
+  _message_id_tuple = ('message_category_not_set',
+                       'message_category_not_associated_with_portal_type')
+
+  @staticmethod
+  def _preConvertBaseFromFilesystemDefinition(filesystem_definition_dict):
+    """
+    CategoryExistence and CategoryAcquiredExistence filesystem
+    Constraints have been merged into a single Document for ZODB
+    Constraint by adding 'use_acquisition' attribute
+    """
+    return dict(use_acquisition=(filesystem_definition_dict['type'] == \
+                                 'CategoryAcquiredExistence'))
+
+  @staticmethod
+  def _convertFromFilesystemDefinition(portal_type=(),
+                                       **base_category_dict):
+    """
+    @see ERP5Type.mixin.constraint.ConstraintMixin._convertFromFilesystemDefinition
+
+    Filesystem definition example:
+    { 'id'            : 'category_existence',
+      'description'   : 'Category causality must be defined',
+      'type'          : 'CategoryExistence',
+      'portal_type'   : ('Person', 'Organisation'),
+      'causality'     : None,
+      'condition'     : 'python: object.getPortalType() == 'Foo',
+    }
+    """
+    constraint_portal_type_str = isinstance(portal_type, Expression) and \
+        portal_type.text or 'python: ' + repr(portal_type)
+
+    yield dict(constraint_base_category_list=base_category_dict.keys(),
+               constraint_portal_type=constraint_portal_type_str)
+
+  def exportToFilesystemDefinitionDict(self):
+    filesystem_definition_dict = super(CategoryExistenceConstraint,
+                                       self).exportToFilesystemDefinitionDict()
+
+    # There is only one ZODB Constraint class for filesystem
+    # Constraints CategoryExistence and CategoryAcquiredExistence
+    # constraints
+    if self.getUseAcquisition():
+      filesystem_definition_dict['type'] = 'CategoryAcquiredExistence'
+
+    filesystem_definition_dict['portal_type'] = \
+        Expression(self.getConstraintPortalType())
+
+    for category in self.getConstraintBaseCategoryList():
+      filesystem_definition_dict[category] = 1
+
+    return filesystem_definition_dict

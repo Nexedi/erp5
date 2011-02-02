@@ -43,6 +43,8 @@ class ResourceMeasuresConsistencyConstraint(ConstraintMixin):
   meta_type = 'ERP5 Resource Measures Consistency Constraint'
   portal_type = 'Resource Measures Consistency Constraint'
 
+  __compatibility_class_name__ = 'ResourceMeasuresConsistency'
+
   property_sheets = ConstraintMixin.property_sheets + \
                     (PropertySheet.ResourceMeasuresConsistencyConstraint,)
 
@@ -103,3 +105,9 @@ class ResourceMeasuresConsistencyConstraint(ConstraintMixin):
             error('message_missing_metric_type', metric_type=quantity)
 
     return error_list
+
+  _message_id_tuple = ('message_measure_no_quantity_unit',
+                       'message_measure_no_quantity',
+                       'message_duplicate_metric_type',
+                       'message_duplicate_default_measure',
+                       'message_missing_metric_type')

@@ -78,6 +78,10 @@ class PropertySheetTool(BaseTool):
 
     return 'Standard Property'
 
+  _merged_portal_type_dict = {
+    'CategoryAcquiredExistence': 'Category Existence Constraint',
+    'CategoryAcquiredMembershipArity': 'Category Membership Arity Constraint'}
+
   security.declareProtected(Permissions.ModifyPortalContent,
                             'createPropertySheetFromFilesystemClass')
   def createPropertySheetFromFilesystemClass(self, klass):
@@ -85,7 +89,9 @@ class PropertySheetTool(BaseTool):
     Create a new Property Sheet in portal_property_sheets from a given
     filesystem-based Property Sheet definition.
     """
-    new_property_sheet = self.newContent(id=klass.__name__,
+    new_property_sheet_name = klass.__name__
+
+    new_property_sheet = self.newContent(id=new_property_sheet_name,
                                          portal_type='Property Sheet')
 
     types_tool = self.getPortalObject().portal_types
@@ -111,6 +117,41 @@ class PropertySheetTool(BaseTool):
       # Create the new category
       portal_type_class.importFromFilesystemDefinition(new_property_sheet,
                                                        category)
+
+    # Get filesystem Constraint names to be able to map them properly
+    # to ZODB Constraint Portal Types as some filesystem constraint
+    # names are 'NAMEConstraint' or 'NAME'
+    from Products.ERP5Type import Constraint as FilesystemConstraint
+    filesystem_constraint_class_name_list = [
+      class_name for class_name in FilesystemConstraint.__dict__ \
+      if class_name[0] != '_' ]
+
+    # Mapping between the filesystem 'type' field and Portal Types ID
+    portal_type_dict = {}
+    for search_result in types_tool.searchFolder(id='% Constraint'):
+      portal_type_id = search_result.getId()
+      constraint_class_name = portal_type_id.replace(' ', '')
+
+      if constraint_class_name not in filesystem_constraint_class_name_list:
+        constraint_class_name = constraint_class_name.replace('Constraint', '')
+
+        if constraint_class_name not in filesystem_constraint_class_name_list:
+          raise ValueError, "PropertySheet %s: Constraint %s: No Portal " \
+                "Type defined for type '%s'" % (new_property_sheet_name,
+                                                constraint['id'],
+                                                constraint['type'])
+
+      portal_type_dict[constraint_class_name] = portal_type_id
+
+    portal_type_dict.update(self._merged_portal_type_dict)
+
+    for constraint in getattr(klass, '_constraints', ()):
+      portal_type = portal_type_dict[constraint['type']]
+      portal_type_class = types_tool.getPortalTypeClass(portal_type)
+
+      # Create the new constraint
+      portal_type_class.importFromFilesystemDefinition(new_property_sheet,
+                                                       constraint)
 
     return new_property_sheet
 

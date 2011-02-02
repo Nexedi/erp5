@@ -28,6 +28,7 @@
 ##############################################################################
 
 from Products.ERP5Type.mixin.constraint import ConstraintMixin
+from Products.CMFCore.Expression import Expression
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 
@@ -52,6 +53,8 @@ class ContentExistenceConstraint(ConstraintMixin):
   """
   meta_type = 'ERP5 Content Existence Constraint'
   portal_type = 'Content Existence Constraint'
+
+  __compatibility_class_name__ = 'ContentExistence'
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -87,3 +90,32 @@ class ContentExistenceConstraint(ConstraintMixin):
     return [self._generateError(obj,
                                 self._getMessage(message_id),
                                 mapping)]
+
+  _message_id_tuple = ('message_no_subobject',
+                       'message_no_subobject_portal_type')
+
+  @staticmethod
+  def _convertFromFilesystemDefinition(portal_type=()):
+    """
+    @see ERP5Type.mixin.constraint.ConstraintMixin._convertFromFilesystemDefinition
+
+    Filesystem definition example:
+    { 'id'            : 'line',
+      'description'   : 'Object have to contain a Line',
+      'type'          : 'ContentExistence',
+      'portal_type'   : ('Line', ),
+    }
+    """
+    constraint_portal_type_str = isinstance(portal_type, Expression) and \
+        portal_type.text or 'python: ' + repr(portal_type)
+
+    yield dict(constraint_portal_type=constraint_portal_type_str)
+
+  def exportToFilesystemDefinitionDict(self):
+    filesystem_definition_dict = super(ContentExistenceConstraint,
+                                       self).exportToFilesystemDefinitionDict()
+
+    filesystem_definition_dict['portal_type'] = \
+        Expression(self.getConstraintPortalType())
+
+    return filesystem_definition_dict

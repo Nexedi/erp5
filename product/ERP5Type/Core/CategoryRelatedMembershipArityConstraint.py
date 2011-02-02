@@ -57,6 +57,8 @@ class CategoryRelatedMembershipArityConstraint(CategoryMembershipArityConstraint
   meta_type = 'ERP5 Category Related Membership Arity Constraint'
   portal_type = 'Category Related Membership Arity Constraint'
 
+  __compatibility_class_name__ = 'CategoryRelatedMembershipArity'
+
   property_sheets = CategoryMembershipArityConstraint.property_sheets + \
       (PropertySheet.CategoryRelatedMembershipArityConstraint,)
 
