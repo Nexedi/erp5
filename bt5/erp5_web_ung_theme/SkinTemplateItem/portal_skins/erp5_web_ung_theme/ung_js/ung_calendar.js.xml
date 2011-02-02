@@ -296,6 +296,8 @@ $(document).ready(function() {     \n
   });\n
   $("input#submit-search").click(function(event){\n
     event.preventDefault();\n
+    if ($("input[name=\'searchable-text\']").val() == "")\n
+      return false;\n
     $("div#dvCalMain.calmain div#gridcontainer").css("background", "none repeat scroll 0 0 #FFFFFF");\n
     $("div#dvwkcontaienr.wktopcontainer").hide();\n
     $("div#gridcontainer div#dvtec.scolltimeevent").hide();\n
@@ -324,16 +326,23 @@ $(document).ready(function() {     \n
              var currentDate = new Date();\n
              for (var i = 0; i < eventList.length; i++){\n
                var eventDate = new Date(eventList[i][2]);\n
+               var hourSymbol = "am";\n
                if (eventDate.getMonth() == currentDate.getMonth() && eventDate.getDate() == currentDate.getDate()){\n
                  eventTableList.push("<tr id=\'today-event\'>");\n
                }\n
                else {\n
                  eventTableList.push("<tr>");\n
                }\n
-               eventTableList.push("<td>");\n
-               eventTableList.push(eventList[i][2]);\n
-               eventTableList.push("</td><td>");\n
-               eventTableList.push(eventList[i][1]);\n
+               var dateSplitted = eventList[i][2].split(" ");\n
+               if (eventDate.getHours() >= 12)\n
+                 hourSymbol = "pm";\n
+               eventTableList.push("<td id=\'event-date\'>");\n
+               eventTableList.push(dateSplitted[0]);\n
+               eventTableList.push("</td>");\n
+               eventTableList.push("<td id=\'time-range\'>", \n
+                                   dateSplitted[1] + hourSymbol,\n
+                                   "</td>");\n
+               eventTableList.push("<td>", eventList[i][1]);\n
                eventTableList.push("</td></tr>");\n
              }\n
              $("div.event-listview tbody").append(eventTableList.join(""));\n
