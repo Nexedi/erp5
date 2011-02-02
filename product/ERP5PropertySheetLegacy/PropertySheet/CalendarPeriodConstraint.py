@@ -37,14 +37,14 @@ class CalendarPeriodConstraint:
       'description': 'Date must be defined',
       'message_no_such_property': 'Start date must be defined',
       'type': 'PropertyExistence',
-      'start_date' : 1,
+      'start_date' : None,
     },
 
     { 'id': 'stop_date_existence',
       'description': 'Date must be defined',
       'message_no_such_property': 'Stop date must be defined',
       'type': 'PropertyExistence',
-      'stop_date' : 1,
+      'stop_date' : None,
     },
 
     { 'id': 'resource_existence',
