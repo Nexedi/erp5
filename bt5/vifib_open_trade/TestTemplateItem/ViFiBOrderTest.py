@@ -132,11 +132,14 @@ class ViFiBOrderTest(ERP5TypeLiveTestCase):
     # XXX
     #self.login('jp')    
 
-  def beforeClear(self):
-    """This method should be moved up to ERP5TypeLiveTestCase
-    or to a subclass of it
-    """
-    self.cleanupGarbage()
+  #def beforeClear(self):
+  #  """This method should be moved up to ERP5TypeLiveTestCase
+  #  or to a subclass of it
+  #
+  #  XXX beforeClear was removed from ERP5TypeLiveTestCase
+  #  XXX when should should cleanupGarbage be called ?
+  #  """
+  #  self.cleanupGarbage()
 
   def collectGarbage(self, document):
     """Keeps a list of documents to erase at the end of the test

@@ -118,37 +118,12 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
         self.portal.portal_activities.unsubscribe()
         self._setUpDummyMailHost()
 
-    def setUp(self):
-        '''Sets up the fixture. Do not override,
-           use the hooks instead.
-        '''
-        try:
-            self.beforeSetUp()
-            self.app = self._app()
-            self.portal = self._portal()
-            self._setup()
-            self.afterSetUp()
-        except:
-            self.beforeClear()
-            self._clear()
-            raise
+    setUp = PortalTestCase.setUp
+    tearDown = PortalTestCase.tearDown
 
     def _app(self):
         '''Returns the app object for a test.'''
         return self.getPortal().aq_parent
-
-    def beforeClear(self):
-      '''Called before _clear(). Subclasses should
-      use it to garbage collect objects which must not remain
-      in the system
-      '''
-      pass
-
-    def tearDown(self):
-      '''Tears down the fixture. Do not override,
-         use the hooks instead.
-      '''
-      PortalTestCase.tearDown(self)
 
 
 def runLiveTest(test_list, verbosity=1, stream=None, **kw):
