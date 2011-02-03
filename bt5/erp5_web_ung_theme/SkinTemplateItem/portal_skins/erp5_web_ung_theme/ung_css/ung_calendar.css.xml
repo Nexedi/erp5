@@ -176,6 +176,7 @@ div.header-left fieldset.widget div.field {\n
 img[alt="calendar_logo_box"] {\n
   position: relative;\n
   top: 7px;\n
+  cursor: pointer;\n
 }\n
 \n
 div.header-left {\n

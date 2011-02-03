@@ -334,6 +334,9 @@ $(document).ready(function() {     \n
     tableList.push("</tbody></table></div>");\n
     $("div#gridcontainer").append(tableList.join(""));\n
   });\n
+  $("img[alt=\'calendar_logo_box\']").click(function(){\n
+    window.location.reload();\n
+  });\n
 });\n
 \n
 window.onload = function(){\n
