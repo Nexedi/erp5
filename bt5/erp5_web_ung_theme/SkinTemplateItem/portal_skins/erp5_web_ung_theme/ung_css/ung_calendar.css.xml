@@ -109,6 +109,7 @@ div.main-left .ui-widget-content .ui-state-default,\n
   background: none !important;\n
   border: 1px solid #FFF;\n
 }\n
+\n
 div.ui-datepicker-inline div.ui-datepicker-header {\n
   border: 1px solid #FFF !important;\n
 }\n
@@ -154,6 +155,11 @@ div#faddbtn.fbutton span.addcal {\n
   border: 1px solid #BBBBBB;\n
   padding: 2px 4px;\n
   background-color: #EDF1D5;\n
+}\n
+\n
+input#bbit-cal-quickAddBTN {\n
+  background: url("http://localhost:18080/erp5/ung_images/button_background.png") repeat scroll 0 0 transparent;\n
+  border: 1px solid #BBBBBB;\n
 }\n
 \n
 div.header-left fieldset.widget div.field input[type="submit"] {\n
@@ -266,6 +272,20 @@ div#display-datetime.fbutton:hover, span#text-datetime:hover {\n
 .ui-datepicker .ui-datepicker-prev span,\n
  .ui-datepicker .ui-datepicker-next span {\n
   -moz-border-radius: 9px 9px 9px 9px;\n
+}\n
+\n
+input#bbit-cal-quickAddBTN {\n
+  background: url("http://localhost:18080/erp5/ung_images/button_background.png") repeat scroll 0 0 transparent;\n
+  border: 1px solid #BBBBBB;\n
+}\n
+\n
+td.cb-value select {\n
+  border: 1px solid #BBBBBB;\n
+}\n
+\n
+.ui-datepicker .ui-datepicker-prev:hover, .ui-datepicker .ui-datepicker-next:hover {\n
+  background: transparent;\n
+  border: 1px solid #FFF;\n
 }</string> </value>
         </item>
         <item>
