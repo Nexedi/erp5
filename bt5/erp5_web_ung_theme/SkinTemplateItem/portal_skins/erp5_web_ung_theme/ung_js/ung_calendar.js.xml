@@ -179,6 +179,7 @@ $(document).ready(function() {     \n
   $("#caltoolbar").noSelect();\n
   //to show day view\n
   $("#showdaybtn").click(function(e) {\n
+    $("div.toolbar-listview, div.event-listview").remove();\n
     $("#caltoolbar div.fcurrent").each(function() {\n
       $(this).removeClass("fcurrent");\n
     })\n
@@ -188,6 +189,7 @@ $(document).ready(function() {     \n
   });\n
   //to show week view\n
   $("#showweekbtn").click(function(e) {\n
+    $("div.toolbar-listview, div.event-listview").remove();\n
     $("#caltoolbar div.fcurrent").each(function() {\n
       $(this).removeClass("fcurrent");\n
     })\n
@@ -197,7 +199,7 @@ $(document).ready(function() {     \n
   });\n
   //to show month view\n
   $("#showmonthbtn").click(function(e) {\n
-    //document.location.href="#month";\n
+    $("div.toolbar-listview, div.event-listview").remove();\n
     $("#caltoolbar div.fcurrent").each(function() {\n
       $(this).removeClass("fcurrent");\n
     })\n
@@ -325,6 +327,8 @@ $(document).ready(function() {     \n
                op.view = "day";\n
                $("#gridcontainer").bcalendar(op).BcalGetOp();\n
              });\n
+             $("div#gridcontainer").css("height", \n
+               $("div#gridcontainer table tbody tr").length*$("div.event-listview tr").height() + "px");\n
            },\n
     });\n
     tableList.push("</tbody></table></div>");\n
