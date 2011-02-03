@@ -37,6 +37,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions
 from Products.ERP5Type import PropertySheet
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
+from Products.ERP5Type.Accessor.Base import Getter as BaseGetter
 from Products.ERP5Type.Core.Folder import Folder
 from Products.CMFCategory.Renderer import Renderer
 from Products.ERP5Type.Utils import sortValueList
@@ -931,6 +932,14 @@ class BaseCategory(Category):
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getBaseCategory')
     getBaseCategory = getBaseCategoryValue
+
+    # Hardcode these getters as they are used when generating
+    # accessors
+    getReadPermission = BaseGetter('getReadPermission', 'read_permission',
+                                   'string')
+
+    getWritePermission = BaseGetter('getWritePermission', 'write_permission',
+                                    'string')
 
 InitializeClass( Category )
 InitializeClass( BaseCategory )
