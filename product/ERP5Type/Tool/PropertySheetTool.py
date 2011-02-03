@@ -172,7 +172,8 @@ class PropertySheetTool(BaseTool):
 
   security.declareProtected(Permissions.ManagePortal,
                             'createAllPropertySheetsFromFilesystem')
-  def createAllPropertySheetsFromFilesystem(self, REQUEST=None):
+  def createAllPropertySheetsFromFilesystem(self, erase_existing=False,
+      REQUEST=None):
     """
     Create Property Sheets in portal_property_sheets from _all_
     filesystem Property Sheets
@@ -186,7 +187,7 @@ class PropertySheetTool(BaseTool):
       if name[0] == '_':
         continue
 
-      if name in self.portal_property_sheets.objectIds():
+      if erase_existing and name in self.portal_property_sheets.objectIds():
         self.portal_property_sheets.deleteContent(name)
         transaction.commit()
 
