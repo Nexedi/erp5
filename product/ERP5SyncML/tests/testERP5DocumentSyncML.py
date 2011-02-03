@@ -37,7 +37,7 @@ from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5SyncML.Conduit.ERP5DocumentConduit import ERP5DocumentConduit
 from Products.ERP5SyncML.SyncCode import SyncCode
 from zLOG import LOG
-from base64 import b16encode 
+from base64 import b16encode
 import transaction
 from ERP5Diff import ERP5Diff
 from lxml import etree
@@ -159,15 +159,15 @@ class TestERP5DocumentSyncMLMixin(ERP5TypeTestCase):
     portal_id = self.getPortalId()
     portal_sync = self.getSynchronizationTool()
     if portal_sync.getSubscription(self.sub_id1) is None:
-      portal_sync.manage_addSubscription(title=self.sub_id1, 
+      portal_sync.manage_addSubscription(title=self.sub_id1,
                   publication_url=self.publication_url,
-                  subscription_url=self.subscription_url['two_way'], 
+                  subscription_url=self.subscription_url['two_way'],
                   destination_path='/%s/document_client1' % portal_id,
-                  source_uri='Document:', 
-                  target_uri='Document', 
-                  query= self.sub_query1, 
-                  xml_mapping=self.xml_mapping, 
-                  conduit=self.sub_conduit1, 
+                  source_uri='Document:',
+                  target_uri='Document',
+                  query= self.sub_query1,
+                  xml_mapping=self.xml_mapping,
+                  conduit=self.sub_conduit1,
                   #alert_code=SyncCode.TWO_WAY,
                   gpg_key='',
                   activity_enabled=True,
@@ -181,16 +181,16 @@ class TestERP5DocumentSyncMLMixin(ERP5TypeTestCase):
     portal_sync = self.getSynchronizationTool()
     if portal_sync.getPublication(self.pub_id) is None:
       portal_sync.manage_addPublication(title=self.pub_id,
-                  publication_url=self.publication_url, 
-                  destination_path='/%s/document_server' % portal_id, 
-                  source_uri='Document', 
-                  query=self.pub_query, 
-                  xml_mapping=self.xml_mapping, 
+                  publication_url=self.publication_url,
+                  destination_path='/%s/document_server' % portal_id,
+                  source_uri='Document',
+                  query=self.pub_query,
+                  xml_mapping=self.xml_mapping,
                   conduit=self.pub_conduit,
                   gpg_key='',
                   activity_enabled=True,
                   authentication_format='b64',
-                  authentication_type='syncml:auth-basic') 
+                  authentication_type='syncml:auth-basic')
     pub = portal_sync.getPublication(self.pub_id)
     self.assertTrue(pub is not None)
 
@@ -240,7 +240,7 @@ class TestERP5DocumentSyncMLMixin(ERP5TypeTestCase):
 
   def getDocumentClientFromServer(self):
     return getattr(self.portal, 'document_client_from_server', None)
-  
+
   def getDocumentServer(self):
     return getattr(self.portal, 'document_server', None)
 
@@ -296,7 +296,7 @@ class TestERP5DocumentSyncMLMixin(ERP5TypeTestCase):
     if not quiet:
       ZopeTestCase._print('\nTest Document Server')
       LOG('Testing... ', 0, 'documentServer')
-    self.createDocumentModules(one_way) 
+    self.createDocumentModules(one_way)
     document_id = ''
     document_server = self.getDocumentServer()
     if getattr(document_server, self.id1, None) is not None:
@@ -330,7 +330,7 @@ class TestERP5DocumentSyncMLMixin(ERP5TypeTestCase):
     """
     document_server = self.getDocumentServer()
     if getattr(document_server, str(id), None) is not None:
-      self.clearDocumentModules()  
+      self.clearDocumentModules()
     doc_text = document_server.newContent(id=id, portal_type=portal_type)
     kw = {'reference': reference, 'version': version, 'language': language}
     doc_text.edit(**kw)
@@ -483,7 +483,7 @@ class TestERP5DocumentSyncMLMixin(ERP5TypeTestCase):
        document_client1._getOb(self.id2))
 
   def checkDocument(self, id=id, document=None, filename=None,
-                    size_filename=None, reference='P-SYNCML.Text', 
+                    size_filename=None, reference='P-SYNCML.Text',
                     portal_type='Text', version='001', language='en',
                     description=''):
     """
@@ -500,7 +500,7 @@ class TestERP5DocumentSyncMLMixin(ERP5TypeTestCase):
         self.assertEquals(size_filename, document.get_size())
     else:
       self.fail("Document is None for check these informations")
- 
+
   def checkXMLsSynchronized(self):
     document_server = self.getDocumentServer()
     document_client1 = self.getDocumentClient1()
@@ -530,7 +530,7 @@ class TestERP5DocumentSyncMLMixin(ERP5TypeTestCase):
                        reference=reference,
                        filename=self.filename_odt,
                        size_filename=self.size_filename_odt)
-    self.checkXMLsSynchronized() 
+    self.checkXMLsSynchronized()
 
   def assertXMLViewIsEqual(self, sub_id, object_pub=None, object_sub=None,
                                                                   force=False):
@@ -737,7 +737,7 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
     self.checkFirstSynchronizationWithMultiDocument(nb_document=nb_document)
 
   def test_06_UpdateMultiData(self, quiet=0):
-    # Add various data in server 
+    # Add various data in server
     # modification in client and server for synchronize
     if not quiet:
       ZopeTestCase._print('\nTest Update Multi Data ')
@@ -829,7 +829,7 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
   def test_07_SynchronizeWithStrangeIdGenerator(self, quiet=0):
     """
     By default, the synchronization process use the id in order to
-    recognize objects (because by default, getGid==getId. Here, we will see 
+    recognize objects (because by default, getGid==getId. Here, we will see
     if it also works with a somewhat strange getGid
     """
     if not quiet:
@@ -920,7 +920,7 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
     # we will take :
     # description et file on document_server
     # short_title on document_client1
-    for conflict in conflict_list : 
+    for conflict in conflict_list :
       subscriber = conflict.getSubscriber()
       property = conflict.getPropertyId()
       resolved = False
@@ -944,7 +944,7 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
     document_s = document_server._getOb(self.id1)
     document_c = document_client1._getOb(self.id1)
     self.assertXMLViewIsEqual(self.sub_id1, document_s, document_c1)
-    # the workflow has one more "workflow" in document_c1 
+    # the workflow has one more "workflow" in document_c1
     #self.synchronize(self.sub_id1)
     #self.assertXMLViewIsEqual(self.sub_id1, document_s, document_c1)
 
@@ -1068,7 +1068,7 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
     file = makeFileUpload(self.filename_odt)
     document_c.edit(file=file)
     #document_c.convertToBaseFormat()
-    kw = {'short_title' : self.short_title2} 
+    kw = {'short_title' : self.short_title2}
     document_s.edit(**kw)
     transaction.commit()
     self.tic()
@@ -1082,7 +1082,7 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
     self.assertEquals(document_c.getShortTitle(), self.short_title2)
     self.assertEqual(document_s.getFilename(), self.filename_text)
     self.assertEquals(self.size_filename_text, document_s.get_size())
-    self.assertEquals(document_s.getShortTitle(), self.short_title2) 
+    self.assertEquals(document_s.getShortTitle(), self.short_title2)
 
     #reset for refresh sync
     #after synchronize, the client object retrieve value of server
@@ -1090,7 +1090,7 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
     nb_message1 = self.synchronize(self.sub_id_from_server)
     self.assertEqual(document_c.getFilename(), self.filename_text)
     self.assertEquals(self.size_filename_text, document_c.get_size())
-    self.assertEquals(document_c.getShortTitle(), self.short_title2) 
+    self.assertEquals(document_c.getShortTitle(), self.short_title2)
     self.checkSynchronizationStateIsSynchronized()
     document_s = document_server._getOb(self.id1)
     document_c = document_client1._getOb(self.id1)
