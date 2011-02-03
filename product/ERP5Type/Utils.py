@@ -1601,7 +1601,7 @@ def setDefaultProperties(property_holder, object=None, portal=None):
         if not prop.get('base_id', None):
           new_prop['base_id'] = prop['id']
           new_prop['id'] = prop['id'] + '_list'
-      if prop.has_key('acquisition_base_category')\
+      if prop.get('acquisition_base_category') is not None \
               and not prop.get('acquisition_copy_value'):
         # Set acquisition values as read only if no value is copied
         new_prop['mode'] = 'r'
@@ -1676,7 +1676,7 @@ def createDefaultAccessors(property_holder, id, prop = None,
 
   ######################################################
   # Create Getters
-  elif prop.has_key('acquisition_base_category'):
+  elif prop.get('acquisition_base_category') is not None:
     # Create getters for an acquired property
     # XXXX Missing Boolean accessor
     accessor_args = (
@@ -1754,7 +1754,7 @@ def createDefaultAccessors(property_holder, id, prop = None,
       if not hasattr(property_holder, accessor_name) or override:
         property_holder.registerAccessor(accessor_name, id, Acquired.ListGetter, accessor_args)
       # AcquiredProperty Getters
-      if prop.has_key('acquired_property_id'):
+      if prop.get('acquired_property_id'):
         for aq_id in prop['acquired_property_id']:
           composed_id = "%s_%s" % (id, aq_id)
           # Getter
@@ -1899,7 +1899,7 @@ def createDefaultAccessors(property_holder, id, prop = None,
     accessor_name = '_baseGet' + UpperCase(id) + 'ValueList'
     if not hasattr(property_holder, accessor_name) or override:
       property_holder.registerAccessor(accessor_name, id, Content.ValueListGetter, accessor_args)
-    if prop.has_key('acquired_property_id'):
+    if prop.get('acquired_property_id'):
       for aq_id in prop['acquired_property_id']:
         for composed_id in ("%s_%s" % (id, aq_id), "default_%s_%s" % (id, aq_id)) :
           accessor_name = 'get' + UpperCase(composed_id)
