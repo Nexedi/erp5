@@ -87,7 +87,7 @@ def Base_asXML(object, root=None):
                       portal_type=self.getPortalType()))
 
   # We have to find every property
-  for prop_id in self.propertyIds():
+  for prop_id in set(self.propertyIds()):
     # In most case, we should not synchronize acquired properties
     if prop_id not in ('uid', 'workflow_history', 'id', 'portal_type',):
       value = self.getProperty(prop_id)
