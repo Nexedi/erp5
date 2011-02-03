@@ -9,12 +9,17 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>base_category</string>
+                <string>portal_type</string>
+                <string>proxy_listbox_ids</string>
+                <string>title</string>
+              </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_version</string> </value>
+            <value> <string>my_view_mode_template_transformation_title_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -70,16 +75,50 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>base_category</string> </key>
+                    <value> <string>specialise</string> </value>
+                </item>
+                <item>
+                    <key> <string>default_module</string> </key>
+                    <value> <string>transformation_module</string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_version</string> </value>
+                    <value> <string>my_multi_relation_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewPDMFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>portal_type</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>Transformation</string>
+                          <string>Transformation</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>proxy_listbox_ids</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>TransformationModule_viewTransformationList/listbox</string>
+                          <string>Transformation</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Transformation Template</string> </value>
                 </item>
               </dictionary>
             </value>
