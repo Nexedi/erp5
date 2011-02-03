@@ -85,11 +85,11 @@ class BaseTool (UniqueObject, Folder):
       types_tool = self.getPortalObject().portal_types
       type_definition = getattr(types_tool, portal_type, None)
       if type_definition is None:
-        from Products.ERP5.Document.Document import NotConvertedError
-        raise NotConvertedError( 
+        LOG('BaseTool._migrateToPortalTypeClass', WARNING,
             "No portal type definition was found for Tool '%s'"
             " (class %s, portal_type '%s')"
             % (self.getRelativeUrl(), self.__class__.__name__, portal_type))
+        return
 
       type_class = type_definition.getTypeClass()
       if type_class in ('Folder', None):
@@ -99,10 +99,10 @@ class BaseTool (UniqueObject, Folder):
         if document_class_name in document_class_registry:
           type_definition.type_class = document_class_name
         else:
-          from Products.ERP5.Document.Document import NotConvertedError
-          raise NotConvertedError( 
+          LOG('BaseTool._migrateToPortalTypeClass', WARNING,
               'No document class could be found for portal type %s'
               % portal_type)
+          return
 
       return super(BaseTool, self)._migrateToPortalTypeClass()
 
