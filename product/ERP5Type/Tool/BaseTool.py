@@ -82,7 +82,8 @@ class BaseTool (UniqueObject, Folder):
       # type_class, or sometimes have no type definitions at all.
       # Check that everything is alright before trying
       # to migrate the tool:
-      types_tool = self.getPortalObject().portal_types
+      from Products.ERP5.ERP5Site import getSite
+      types_tool = getSite().portal_types
       type_definition = getattr(types_tool, portal_type, None)
       if type_definition is None:
         LOG('BaseTool._migrateToPortalTypeClass', WARNING,
