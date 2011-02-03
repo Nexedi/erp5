@@ -234,6 +234,38 @@ div#showreflashbtn.fbutton,\n
 \n
 span#text-datetime {\n
   margin-top: 4px;\n
+}\n
+\n
+div#display-datetime.fbutton:hover, span#text-datetime:hover {\n
+  background: none !important;\n
+  border: 1px solid #BBCCFF !important;\n
+}\n
+\n
+.ui-datepicker .ui-datepicker-title {\n
+  margin: 0 0.3em;\n
+  text-align: left;\n
+}\n
+\n
+.ui-datepicker .ui-datepicker-next {\n
+  right: -2px;\n
+}\n
+\n
+.ui-datepicker .ui-datepicker-prev {\n
+  left: 10.5em;\n
+}\n
+\n
+.ui-datepicker .ui-datepicker-title {\n
+  color: #20C;\n
+  text-decoration: underline;\n
+}\n
+\n
+.ui-widget-header .ui-icon {\n
+  background-image: url("jquery/ui/css/erp5-theme/images/ui-icons_2e83ff_256x240.png") !important;\n
+}\n
+\n
+.ui-datepicker .ui-datepicker-prev span,\n
+ .ui-datepicker .ui-datepicker-next span {\n
+  -moz-border-radius: 9px 9px 9px 9px;\n
 }</string> </value>
         </item>
         <item>

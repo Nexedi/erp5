@@ -238,7 +238,7 @@ $(document).ready(function() {     \n
   //go to today\n
   $("#showtodaybtn").click(function() {\n
     var optionList = $("#gridcontainer").gotoDate().BcalGetOp();\n
-    $("div#display-datetime span#text-datetime").text(p.datestrshow);\n
+    $("div#display-datetime span#text-datetime").text(optionList.datestrshow);\n
   });\n
   //previous date range\n
   $("#sfprevbtn").click(function() {\n
@@ -327,8 +327,14 @@ $(document).ready(function() {     \n
                op.view = "day";\n
                $("#gridcontainer").bcalendar(op).BcalGetOp();\n
              });\n
-             $("div#gridcontainer").css("height", \n
-               $("div#gridcontainer table tbody tr").length*$("div.event-listview tr").height() + "px");\n
+             if ($("div.event-listview tr").height() > 0){\n
+               $("div#gridcontainer").css("height", \n
+                 $("div#gridcontainer table tbody tr").length*$("div.event-listview tr").height() + "px");\n
+             } else {\n
+               $("div#gridcontainer")\n
+                   .css("height", "54px")\n
+                   .append("No Results");\n
+             }\n
            },\n
     });\n
     tableList.push("</tbody></table></div>");\n
