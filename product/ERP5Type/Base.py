@@ -3904,7 +3904,7 @@ class Base( CopyContainer,
       except AttributeError:
         return
       id = self.getId()
-      parent._delObject(id)
+      parent._delOb(id)
       parent._setOb(id, self)
 
   security.declareProtected(Permissions.DeletePortalContent,
