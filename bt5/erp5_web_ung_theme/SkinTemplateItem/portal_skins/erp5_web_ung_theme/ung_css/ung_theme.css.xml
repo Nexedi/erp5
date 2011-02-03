@@ -880,9 +880,9 @@ fieldset.center.editable div.field label, \n
 \n
 span#ui-dialog-title-preference_dialog {\n
   margin: 0;\n
-  margin-top: -3px;\n
+  margin-top: -2px;\n
   margin-left: -10px;\n
-  font-size: 17px;\n
+  font-size: 15px;\n
   color: #222222 !important;\n
 }\n
 \n

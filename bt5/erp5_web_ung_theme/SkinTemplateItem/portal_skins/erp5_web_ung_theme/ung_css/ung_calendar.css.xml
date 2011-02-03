@@ -210,7 +210,25 @@ tr#today-event td:first-child{\n
 }\n
 \n
 div.event-listview table tbody tr td:first-child {\n
-  width: 12%;\n
+  width: 9%;\n
+}\n
+\n
+td#event-date {\n
+  color: #2200CC;\n
+  cursor: pointer;\n
+  font-size: 10pt;\n
+  font-weight: bold;\n
+}\n
+\n
+td#time-range {\n
+  width: 9%;\n
+  text-align: center;\n
+}\n
+div#showreflashbtn.fbutton,\n
+ div#showdaybtn.fbutton,\n
+ div#showmonthbtn.fbutton,\n
+ div#showweekbtn.fbutton {\n
+  float: right !important;\n
 }</string> </value>
         </item>
         <item>

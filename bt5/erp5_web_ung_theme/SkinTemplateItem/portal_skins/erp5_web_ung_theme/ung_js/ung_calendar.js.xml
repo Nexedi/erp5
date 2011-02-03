@@ -186,14 +186,14 @@ $(document).ready(function() {     \n
   var dvH = $dv.height() + 2;\n
   op.height = _MH - dvH;\n
   op.eventItems =[];\n
-  var p = $("#gridcontainer").bcalendar(op).BcalGetOp();\n
-  if (p && p.datestrshow) {\n
-    $("#txtdatetimeshow").text(p.datestrshow);\n
-  }\n
+  //ar p = $("#gridcontainer").bcalendar(op).BcalGetOp();\n
+  console.log($("#gridcontainer").bcalendar(op).BcalGetOp().datestrshow);\n
+  //if (p && p.datestrshow) {\n
+  //  $("#txtdatetimeshow").text(p.datestrshow);\n
+  //}\n
   $("#caltoolbar").noSelect();\n
   //to show day view\n
   $("#showdaybtn").click(function(e) {\n
-    //document.location.href="#day";\n
     $("#caltoolbar div.fcurrent").each(function() {\n
       $(this).removeClass("fcurrent");\n
     })\n
@@ -205,7 +205,6 @@ $(document).ready(function() {     \n
   });\n
   //to show week view\n
   $("#showweekbtn").click(function(e) {\n
-    //document.location.href="#week";\n
     $("#caltoolbar div.fcurrent").each(function() {\n
       $(this).removeClass("fcurrent");\n
     })\n
@@ -299,8 +298,8 @@ $(document).ready(function() {     \n
     if ($("input[name=\'searchable-text\']").val() == "")\n
       return false;\n
     $("div#dvCalMain.calmain div#gridcontainer").css("background", "none repeat scroll 0 0 #FFFFFF");\n
-    $("div#dvwkcontaienr.wktopcontainer").hide();\n
-    $("div#gridcontainer div#dvtec.scolltimeevent").hide();\n
+    $("div#dvwkcontaienr.wktopcontainer").remove();\n
+    $("div#gridcontainer div#dvtec.scolltimeevent").remove();\n
     $("div#gridcontainer div.event-listview,div#gridcontainer div.toolbar-listview").remove();\n
     var tableList = Array();\n
     tableList.push("<div class=\'toolbar-listview\'>",\n
@@ -336,9 +335,9 @@ $(document).ready(function() {     \n
                var dateSplitted = eventList[i][2].split(" ");\n
                if (eventDate.getHours() >= 12)\n
                  hourSymbol = "pm";\n
-               eventTableList.push("<td id=\'event-date\'>");\n
-               eventTableList.push(dateSplitted[0]);\n
-               eventTableList.push("</td>");\n
+               eventTableList.push("<td id=\'event-date\'>",\n
+                                   dateSplitted[0],\n
+                                   "</td>");\n
                eventTableList.push("<td id=\'time-range\'>", \n
                                    dateSplitted[1] + hourSymbol,\n
                                    "</td>");\n
@@ -350,6 +349,11 @@ $(document).ready(function() {     \n
                                        $("div.event-listview tbody tr").length + \n
                                        "</b>" + " to " + \n
                                        "<b>" + text + "</b>");\n
+             $("div.event-listview tbody td#event-date").click(function(){\n
+               op.showday = new Date($(this).text());\n
+               op.view = "day";\n
+               $("#gridcontainer").bcalendar(op).BcalGetOp();\n
+             });\n
            },\n
     });\n
     tableList.push("</tbody></table></div>");\n
