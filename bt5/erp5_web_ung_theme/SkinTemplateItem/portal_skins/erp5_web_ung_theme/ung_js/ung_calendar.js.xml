@@ -129,16 +129,6 @@ function Delete(data, callback){\n
   hiConfirm("Are You Sure to Delete this Event", \'Confirm\', function(r){ r && callback(0);});\n
 }\n
 \n
-function wtd(p){\n
-  if (p && p.datestrshow) {\n
-    $("#display-datetime").text(p.datestrshow);\n
-  }\n
-  $("#caltoolbar div.fcurrent").each(function() {\n
-    $(this).removeClass("fcurrent");\n
-  })\n
-  $("#showdaybtn").addClass("fcurrent");\n
-}\n
-\n
 function createFieldToInsertOnDialog(){\n
   return "<th class=\'cb-key\'>Event Type</th>" + \n
          "<td class=\'cb-value\'><select name=\'portal_type\'>" +\n
@@ -170,7 +160,6 @@ $(document).ready(function() {     \n
     DeleteCmdhandler:Delete,\n
     weekstartday: 0,\n
     ViewCmdhandler:View,\n
-    onWeekOrMonthToDay:wtd,\n
     onBeforeRequestData: callBeforeRequest,\n
     onAfterRequestData: callAfterRequest,\n
     onRequestDataError: callOnError,\n
