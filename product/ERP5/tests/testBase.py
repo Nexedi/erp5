@@ -41,7 +41,6 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.Base import Base
 from zExceptions import BadRequest
 from Products.ERP5Type.tests.backportUnittest import skip
-from Products.ERP5Type.Tool.ClassTool import _aq_reset
 from Products.ERP5Type.Workflow import addWorkflowByType
 from Products.CMFCore.WorkflowCore import WorkflowException
 
@@ -136,7 +135,8 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     self.getWorkflowTool().setChainForPortalTypes(
         ['Organisation'], ())
-    _aq_reset()
+
+    transaction.commit()
 
   def stepAssociateWorkflows(self, sequence=None, sequence_list=None, **kw):
     """
@@ -144,7 +144,8 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     self.getWorkflowTool().setChainForPortalTypes(
         ['Organisation'], ('validation_workflow', 'edit_workflow'))
-    _aq_reset()
+
+    transaction.commit()
 
   def stepAssociateWorkflowsExcludingEdit(self, sequence=None, 
                                           sequence_list=None, **kw):
@@ -153,7 +154,8 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     self.getWorkflowTool().setChainForPortalTypes(
         ['Organisation'], ('validation_workflow',))
-    _aq_reset()
+
+    transaction.commit()
 
   def stepCreateObject(self, sequence=None, sequence_list=None, **kw):
     """
@@ -950,6 +952,9 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     pw = self.getWorkflowTool()
     dummy_worlflow_id = 'never_existent_workflow'
     addWorkflowByType(pw, 'erp5_workflow', dummy_worlflow_id)
+
+    transaction.commit()
+
     cbt = pw._chains_by_type
     props = {}
     for id, wf_ids in cbt.iteritems():
@@ -959,8 +964,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     pw.manage_changeWorkflows('', props = props)
     pw.manage_delObjects([dummy_worlflow_id])
 
-    # Make sure that _aq_dynamic will be called again.
-    _aq_reset()
+    transaction.commit()
 
     try:
       self.assertRaises(AttributeError, getattr, obj,
@@ -976,6 +980,8 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
                     if wf_id != dummy_worlflow_id]
         props['chain_%s' % id] = ','.join(wf_ids)
       pw.manage_changeWorkflows('', props = props)
+
+      transaction.commit()
 
   def test_14_UpdateRoleMappingwithNoDefinedRoleAndAcquisitionActivatedOnWorkflow(self, quiet=quiet, run=run_all_test):
     """updateRoleMappingsFor does a logical AND between all workflow defining security,
