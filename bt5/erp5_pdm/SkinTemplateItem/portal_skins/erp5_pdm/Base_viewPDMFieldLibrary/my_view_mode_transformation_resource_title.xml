@@ -154,7 +154,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(x, x) for x in here.getPortalProductTypeList()]</string> </value>
+            <value> <string>python: [(x, x) for x in here.getPortalResourceTypeList()]</string> </value>
         </item>
       </dictionary>
     </pickle>
