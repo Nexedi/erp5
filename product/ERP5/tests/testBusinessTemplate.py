@@ -2405,7 +2405,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     Check migration of Property Sheets from the Filesystem to ZODB
     """
     property_sheet_tool = self.getPortalObject().portal_property_sheets
-    self.failUnless('UnitTest' in property_sheet_tool)
+    self.failUnless('UnitTest' in property_sheet_tool.objectIds())
 
     property_list = property_sheet_tool.UnitTest.contentValues()
 
