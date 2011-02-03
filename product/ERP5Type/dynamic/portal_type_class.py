@@ -40,7 +40,6 @@ from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Utils import setDefaultClassProperties
 from Products.ERP5Type import document_class_registry, mixin_class_registry
 
-from zope.interface import classImplements
 from zLOG import LOG, ERROR, INFO, WARNING
 
 def _importClass(classpath):
@@ -191,6 +190,10 @@ def generatePortalTypeClass(site, portal_type_name):
     mixin_list = portal_type.getTypeMixinList()
     interface_list = portal_type.getTypeInterfaceList()
     base_category_list = portal_type.getTypeBaseCategoryList()
+  else:
+    LOG("ERP5Type.dynamic", WARNING,
+        "Cannot find a portal type definition for '%s', trying to guess..."
+        % portal_type_name)
 
   # But if neither factory_init_method_id nor type_class are set on
   # the portal type, we have to try to guess, for compatibility.
@@ -246,42 +249,41 @@ def generatePortalTypeClass(site, portal_type_name):
         LOG("ERP5Type.dynamic", WARNING,
             "Property Sheet Tool was not found. Please update erp5_core "
             "Business Template")
+      zodb_property_sheet_set = set()
     else:
-      if portal_type is not None:
-        # Get the Property Sheets defined on the portal_type and use the
-        # ZODB Property Sheet rather than the filesystem only if it
-        # exists in ZODB
-        zodb_property_sheet_set = set(property_sheet_tool.objectIds())
-        for property_sheet in portal_type.getTypePropertySheetList():
-          if property_sheet in zodb_property_sheet_set:
-            property_sheet_set.add(property_sheet)
-
-        # XXX maybe this should be a generic hook, adding property sheets
-        # dynamically for a given portal type name? If done well, this
-        # system could perhaps help erp5_egov to get rid of aq_dynamic
-        if portal_type_name in ("Preference Tool",
-                                "Preference",
-                                "System Preference"):
-          for property_sheet in zodb_property_sheet_set:
-            if property_sheet.endswith('Preference'):
-              property_sheet_set.add(property_sheet)
-      else:
-        zodb_property_sheet_set = set()
-
-      # Get the Property Sheets defined on the document and its bases
-      # recursively. Fallback on the filesystem Property Sheet only and
-      # only if the ZODB Property Sheet does not exist
-      from Products.ERP5Type.Base import getClassPropertyList
-      for property_sheet in getClassPropertyList(klass):
-        # If the Property Sheet is a string, then this is a ZODB
-        # Property Sheet
-        #
-        # NOTE: The Property Sheets of a document should be given as a
-        #       string from now on
-        if not isinstance(property_sheet, basestring):
-          property_sheet = property_sheet.__name__
+      zodb_property_sheet_set = set(property_sheet_tool.objectIds())
+    if portal_type is not None:
+      # Get the Property Sheets defined on the portal_type and use the
+      # ZODB Property Sheet rather than the filesystem only if it
+      # exists in ZODB
+      for property_sheet in portal_type.getTypePropertySheetList():
         if property_sheet in zodb_property_sheet_set:
           property_sheet_set.add(property_sheet)
+
+    # XXX maybe this should be a generic hook, adding property sheets
+    # dynamically for a given portal type name? If done well, this
+    # system could perhaps help erp5_egov to get rid of aq_dynamic
+    if portal_type_name in ("Preference Tool",
+                            "Preference",
+                            "System Preference"):
+      for property_sheet in zodb_property_sheet_set:
+        if property_sheet.endswith('Preference'):
+          property_sheet_set.add(property_sheet)
+
+    # Get the Property Sheets defined on the document and its bases
+    # recursively. Fallback on the filesystem Property Sheet only and
+    # only if the ZODB Property Sheet does not exist
+    from Products.ERP5Type.Base import getClassPropertyList
+    for property_sheet in getClassPropertyList(klass):
+      # If the Property Sheet is a string, then this is a ZODB
+      # Property Sheet
+      #
+      # NOTE: The Property Sheets of a document should be given as a
+      #       string from now on
+      if not isinstance(property_sheet, basestring):
+        property_sheet = property_sheet.__name__
+      if property_sheet in zodb_property_sheet_set:
+        property_sheet_set.add(property_sheet)
 
     import erp5
 
