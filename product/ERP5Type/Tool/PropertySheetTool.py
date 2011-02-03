@@ -187,13 +187,15 @@ class PropertySheetTool(BaseTool):
       if name[0] == '_':
         continue
 
-      if erase_existing and name in self.portal_property_sheets.objectIds():
-        self.portal_property_sheets.deleteContent(name)
-        transaction.commit()
+      if name in self.portal_property_sheets.objectIds():
+        if erase_existing:
+          self.portal_property_sheets.deleteContent(name)
+          transaction.commit()
+        else:
+          continue
 
       LOG("Tool.PropertySheetTool", INFO,
           "Creating %s in portal_property_sheets" % repr(name))
-
       self.createPropertySheetFromFilesystemClass(klass)
       transaction.commit()
 
