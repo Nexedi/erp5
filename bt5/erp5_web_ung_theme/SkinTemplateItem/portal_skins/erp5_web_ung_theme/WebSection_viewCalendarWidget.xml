@@ -69,6 +69,15 @@
             </span>\n
           </div>\n
         </div>\n
+        <div id="sfprevbtn" title="Prev" class="fbutton">\n
+          <span class="fprev"></span>\n
+        </div>\n
+        <div id="sfnextbtn" title="Next" class="fbutton">\n
+          <span class="fnext"></span>\n
+        </div>\n
+        <div id="display-datetime" class="fbutton">\n
+          <span id="text-datetime"> </span>\n
+        </div>\n
         <div id="showdaybtn" class="fbutton">\n
           <div>\n
             <span title=\'Day\' class="showdayview">\n
@@ -97,13 +106,6 @@
             </span>\n
           </div>\n
         </div>\n
-        <div id="sfprevbtn" title="Prev" class="fbutton">\n
-          <span class="fprev"></span>\n
-        </div>\n
-        <div id="sfnextbtn" title="Next" class="fbutton">\n
-          <span class="fnext"></span>\n
-        </div>\n
-        <div class="clear"></div>\n
         </div>\n
       </div>\n
       <div style="padding:1px;">\n

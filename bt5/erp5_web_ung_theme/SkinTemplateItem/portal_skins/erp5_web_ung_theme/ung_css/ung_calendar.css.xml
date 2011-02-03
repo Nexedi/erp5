@@ -229,6 +229,10 @@ div#showreflashbtn.fbutton,\n
  div#showmonthbtn.fbutton,\n
  div#showweekbtn.fbutton {\n
   float: right !important;\n
+}\n
+\n
+span#text-datetime {\n
+  margin-top: 4px;\n
 }</string> </value>
         </item>
         <item>

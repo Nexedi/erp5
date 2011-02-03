@@ -183,7 +183,8 @@ $(document).ready(function() {     \n
       $(this).removeClass("fcurrent");\n
     })\n
     $(this).addClass("fcurrent");\n
-    $("#gridcontainer").swtichView("day").BcalGetOp();\n
+    var optionList = $("#gridcontainer").swtichView("day").BcalGetOp();\n
+    $("div#display-datetime span#text-datetime").text(optionList.datestrshow);\n
   });\n
   //to show week view\n
   $("#showweekbtn").click(function(e) {\n
@@ -191,7 +192,8 @@ $(document).ready(function() {     \n
       $(this).removeClass("fcurrent");\n
     })\n
     $(this).addClass("fcurrent");\n
-    $("#gridcontainer").swtichView("week").BcalGetOp();\n
+    var optionList = $("#gridcontainer").swtichView("week").BcalGetOp();\n
+    $("div#display-datetime span#text-datetime").text(optionList.datestrshow);\n
   });\n
   //to show month view\n
   $("#showmonthbtn").click(function(e) {\n
@@ -200,7 +202,8 @@ $(document).ready(function() {     \n
       $(this).removeClass("fcurrent");\n
     })\n
     $(this).addClass("fcurrent");\n
-    $("#gridcontainer").swtichView("month").BcalGetOp();\n
+    var optionList = $("#gridcontainer").swtichView("month").BcalGetOp();\n
+    $("div#display-datetime span#text-datetime").text(optionList.datestrshow);\n
   });\n
   $("#showreflashbtn").click(function(e){\n
     $("#gridcontainer").reload();\n
@@ -232,15 +235,18 @@ $(document).ready(function() {     \n
   });\n
   //go to today\n
   $("#showtodaybtn").click(function() {\n
-    $("#gridcontainer").gotoDate().BcalGetOp();\n
+    var optionList = $("#gridcontainer").gotoDate().BcalGetOp();\n
+    $("div#display-datetime span#text-datetime").text(p.datestrshow);\n
   });\n
   //previous date range\n
   $("#sfprevbtn").click(function() {\n
-    $("#gridcontainer").previousRange().BcalGetOp();\n
+    var optionList = $("#gridcontainer").previousRange().BcalGetOp();\n
+    $("div#display-datetime span#text-datetime").text(optionList.datestrshow);\n
   });\n
   //next date range\n
   $("#sfnextbtn").click(function() {\n
-    $("#gridcontainer").nextRange().BcalGetOp();\n
+    var optionList = $("#gridcontainer").nextRange().BcalGetOp();\n
+    $("div#display-datetime span#text-datetime").text(optionList.datestrshow);\n
   });\n
   $("div#new_event_dialog").dialog({\n
     autoOpen: false,\n
@@ -254,7 +260,8 @@ $(document).ready(function() {     \n
       var month = dateList[0] - 1;\n
       var day = dateList[1];\n
       var year = dateList[2];\n
-      $("#gridcontainer").gotoDate(new Date(year, month, day)).BcalGetOp();\n
+      var optionList = $("#gridcontainer").gotoDate(new Date(year, month, day)).BcalGetOp();\n
+      $("div#display-datetime span#text-datetime").text(optionList.datestrshow);\n
      }\n
   });\n
   $("input#submit-search").click(function(event){\n
