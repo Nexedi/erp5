@@ -4295,18 +4295,21 @@ VALUES
     })[0][0], module_len)
 
   def test_getParentUid(self, quiet=quiet):
-    from Products.ERP5Type.Document.Person import Person
-    from Products.ERP5Type.Document.Assignment import Assignment
+    from Products.ERP5.Document.Assignment import Assignment
+    import erp5.portal_type
     person_module = self.getPersonModule()
 
-    person = Person(person_module.generateNewId())
+    person_id = person_module.generateNewId()
+    person = erp5.portal_type.Person(person_id)
     person.setDefaultReindexParameters(activate_kw={'after_tag': self.id()})
-    person = person_module[person_module._setObject(person.id, person)]
+    person = person_module[person_module._setObject(person_id, person)]
     self.assertFalse('uid' in person.__dict__)
     person.uid = None
-    assignment = Assignment(person.generateNewId())
+
+    assignment_id = person.generateNewId()
+    assignment = erp5.portal_type.Assignment(assignment_id)
     assignment.setDefaultReindexParameters(activate_kw={'tag': self.id()})
-    assignment = person[person._setObject(assignment.id, assignment)]
+    assignment = person[person._setObject(assignment_id, assignment)]
     self.assertFalse('uid' in assignment.__dict__)
     assignment.uid = None
     transaction.commit()
