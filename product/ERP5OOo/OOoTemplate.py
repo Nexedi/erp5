@@ -531,10 +531,6 @@ class OOoTemplate(ZopePageTemplate):
                                  media_type=document_dict['doc_type'],
                                  content=document_dict['document'])
 
-    # Debug mode
-    if request.get('debug',0):
-      return doc_xml
-
     # Replace content.xml in master openoffice template
     ooo_builder.replace(self.ooo_xml_file_id, doc_xml)
 
