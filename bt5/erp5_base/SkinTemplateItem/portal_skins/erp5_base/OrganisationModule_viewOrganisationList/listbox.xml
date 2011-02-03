@@ -113,8 +113,8 @@
                           <string>FAX</string>
                         </tuple>
                         <tuple>
-                          <string>default_address_text</string>
-                          <string>Address</string>
+                          <string>child_address_SearchableText</string>
+                          <string>Address (Full Text)</string>
                         </tuple>
                         <tuple>
                           <string>social_form_translated_title</string>
@@ -277,6 +277,10 @@
                         <tuple>
                           <string>modification_date</string>
                           <string>Modification Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>child_address_SearchableText</string>
+                          <string>Address (Full Text)</string>
                         </tuple>
                       </list>
                     </value>
