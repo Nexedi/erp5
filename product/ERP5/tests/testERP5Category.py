@@ -90,8 +90,7 @@ class TestERP5Category(ERP5TypeTestCase):
     type_info = self.getTypeTool().Organisation
     type_info._setTypeBaseCategoryList([self.base_cat, self.base_cat2])
 
-    # Reset aq dynamic
-    _aq_reset()
+    transaction.commit()
 
     organisation_module = self.getOrganisationModule()
     if not organisation_module.has_key('1'):
@@ -322,6 +321,7 @@ class TestERP5Category(ERP5TypeTestCase):
     ttool = self.getTypesTool()
     ttool['Organisation']._setTypeBaseCategoryList(['test_aq_category'])
     ttool['Telephone']._setTypeBaseCategoryList(['test_aq_category'])
+    transaction.commit()
 
     doc = self.organisation
     subdoc = doc['1']
