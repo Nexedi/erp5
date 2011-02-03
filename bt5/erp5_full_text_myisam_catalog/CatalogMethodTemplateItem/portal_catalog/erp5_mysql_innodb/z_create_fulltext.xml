@@ -64,7 +64,7 @@
 #\n
 CREATE TABLE `full_text` (\n
   `uid` BIGINT UNSIGNED NOT NULL,\n
-  `SearchableText` text,\n
+  `SearchableText` MEDIUMTEXT,\n
   PRIMARY KEY  (`uid`),\n
   FULLTEXT `SearchableText` (`SearchableText`)\n
 ) ENGINE=MyISAM;\n
