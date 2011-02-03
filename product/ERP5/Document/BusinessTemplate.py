@@ -546,6 +546,23 @@ class BaseTemplateItem(Implicit, Persistent):
   def importFile(self, bta, **kw):
     bta.importFiles(item=self)
 
+  def migrateToPortalTypeClass(self, obj):
+    klass = obj.__class__
+    if klass.__module__ == 'erp5.portal_type':
+      return obj
+    portal_type = getattr(aq_base(obj), 'portal_type', None)
+    if portal_type is None:
+      portal_type = getattr(klass, 'portal_type', None)
+
+    if portal_type is None:
+      # ugh?
+      return obj
+    import erp5.portal_type
+    newklass = getattr(erp5.portal_type, portal_type)
+    assert klass != newklass
+    obj.__class__ = newklass
+    return obj
+
   def removeProperties(self, obj, export):
     """
     Remove unneeded properties for export
@@ -569,6 +586,8 @@ class BaseTemplateItem(Implicit, Persistent):
         attr_set.update(('_arg', 'template'))
       elif interfaces.IIdGenerator.providedBy(obj):
         attr_set.update(('last_max_id_dict', 'last_id_dict'))
+    else:
+      obj = self.migrateToPortalTypeClass(obj)
 
     for attr in obj.__dict__.keys():
       if attr in attr_set or attr.startswith('_cache_cookie_'):
