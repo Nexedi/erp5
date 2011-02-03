@@ -1410,7 +1410,7 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
       self.erp5_site_global_id = global_id
 
   security.declareProtected(Permissions.ManagePortal, 'migrateToPortalTypeClass')
-  def migrateToPortalTypeClass(self):
+  def migrateToPortalTypeClass(self, REQUEST=None):
     """Compatibility code that allows migrating a site to portal type classes.
     
     We consider that a Site is migrated if its Types Tool is migrated
@@ -1421,6 +1421,11 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
       return
     if types_tool.__class__.__module__ == 'erp5.portal_type':
       # nothing to do, already migrated
+      if REQUEST is not None:
+        return REQUEST.RESPONSE.redirect(
+          '%s?portal_status_message=' \
+          'Nothing to do, already migrated.' % \
+          self.absolute_url())
       return
 
     # note that the site itself is not migrated (ERP5Site is not a portal type)
@@ -1436,6 +1441,12 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
       if method is None:
         continue
       method()
+
+    if REQUEST is not None:
+      return REQUEST.RESPONSE.redirect(
+        '%s?portal_status_message=' \
+        'Successfully migrated tools and types to portal type classes.' % \
+        self.absolute_url())
 
 Globals.InitializeClass(ERP5Site)
 
