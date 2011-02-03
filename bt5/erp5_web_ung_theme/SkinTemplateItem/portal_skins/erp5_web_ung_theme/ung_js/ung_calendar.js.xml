@@ -131,7 +131,7 @@ function Delete(data, callback){\n
 \n
 function wtd(p){\n
   if (p && p.datestrshow) {\n
-    $("#txtdatetimeshow").text(p.datestrshow);\n
+    $("#display-datetime").text(p.datestrshow);\n
   }\n
   $("#caltoolbar div.fcurrent").each(function() {\n
     $(this).removeClass("fcurrent");\n
@@ -185,12 +185,8 @@ $(document).ready(function() {     \n
   var _MH = document.documentElement.clientHeight;\n
   var dvH = $dv.height() + 2;\n
   op.height = _MH - dvH;\n
-  op.eventItems =[];\n
-  //ar p = $("#gridcontainer").bcalendar(op).BcalGetOp();\n
-  console.log($("#gridcontainer").bcalendar(op).BcalGetOp().datestrshow);\n
-  //if (p && p.datestrshow) {\n
-  //  $("#txtdatetimeshow").text(p.datestrshow);\n
-  //}\n
+  op.eventItems = [];\n
+  $("#gridcontainer").bcalendar(op).BcalGetOp();\n
   $("#caltoolbar").noSelect();\n
   //to show day view\n
   $("#showdaybtn").click(function(e) {\n
@@ -198,10 +194,7 @@ $(document).ready(function() {     \n
       $(this).removeClass("fcurrent");\n
     })\n
     $(this).addClass("fcurrent");\n
-    var p = $("#gridcontainer").swtichView("day").BcalGetOp();\n
-    if (p && p.datestrshow) {\n
-      $("#txtdatetimeshow").text(p.datestrshow);\n
-    }\n
+    $("#gridcontainer").swtichView("day").BcalGetOp();\n
   });\n
   //to show week view\n
   $("#showweekbtn").click(function(e) {\n
@@ -209,10 +202,7 @@ $(document).ready(function() {     \n
       $(this).removeClass("fcurrent");\n
     })\n
     $(this).addClass("fcurrent");\n
-    var p = $("#gridcontainer").swtichView("week").BcalGetOp();\n
-    if (p && p.datestrshow){\n
-      $("#txtdatetimeshow").text(p.datestrshow);\n
-    }\n
+    $("#gridcontainer").swtichView("week").BcalGetOp();\n
   });\n
   //to show month view\n
   $("#showmonthbtn").click(function(e) {\n
@@ -221,10 +211,7 @@ $(document).ready(function() {     \n
       $(this).removeClass("fcurrent");\n
     })\n
     $(this).addClass("fcurrent");\n
-    var p = $("#gridcontainer").swtichView("month").BcalGetOp();\n
-    if (p && p.datestrshow) {\n
-      $("#txtdatetimeshow").text(p.datestrshow);\n
-    }\n
+    $("#gridcontainer").swtichView("month").BcalGetOp();\n
   });\n
   $("#showreflashbtn").click(function(e){\n
     $("#gridcontainer").reload();\n
@@ -256,24 +243,15 @@ $(document).ready(function() {     \n
   });\n
   //go to today\n
   $("#showtodaybtn").click(function() {\n
-    var p = $("#gridcontainer").gotoDate().BcalGetOp();\n
-    if (p && p.datestrshow) {\n
-      $("#txtdatetimeshow").text(p.datestrshow);\n
-    }\n
+    $("#gridcontainer").gotoDate().BcalGetOp();\n
   });\n
   //previous date range\n
   $("#sfprevbtn").click(function() {\n
-    var p = $("#gridcontainer").previousRange().BcalGetOp();\n
-    if (p && p.datestrshow) {\n
-      $("#txtdatetimeshow").text(p.datestrshow);\n
-    }\n
+    $("#gridcontainer").previousRange().BcalGetOp();\n
   });\n
   //next date range\n
   $("#sfnextbtn").click(function() {\n
-    var p = $("#gridcontainer").nextRange().BcalGetOp();\n
-    if (p && p.datestrshow) {\n
-      $("#txtdatetimeshow").text(p.datestrshow);\n
-    }\n
+    $("#gridcontainer").nextRange().BcalGetOp();\n
   });\n
   $("div#new_event_dialog").dialog({\n
     autoOpen: false,\n
@@ -287,10 +265,7 @@ $(document).ready(function() {     \n
       var month = dateList[0] - 1;\n
       var day = dateList[1];\n
       var year = dateList[2];\n
-      var p = $("#gridcontainer").gotoDate(new Date(year, month, day)).BcalGetOp();\n
-      if (p && p.datestrshow) {\n
-        $("#txtdatetimeshow").text(p.datestrshow);\n
-      }\n
+      $("#gridcontainer").gotoDate(new Date(year, month, day)).BcalGetOp();\n
      }\n
   });\n
   $("input#submit-search").click(function(event){\n
