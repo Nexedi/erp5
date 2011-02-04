@@ -1567,7 +1567,7 @@ class CategoryTemplateItem(ObjectTemplateItem):
   def afterInstall(self):
     if self._installed_new_category:
       # reset accessors if we installed a new category
-      _aq_reset()
+      self.portal_types.resetDynamicDocumentsOnceAtTransactionBoundary()
 
 class SkinTemplateItem(ObjectTemplateItem):
 

@@ -70,5 +70,4 @@ class BaseCategory(CMFBaseCategory, XMLObject):
       """
          Reset Accessors
       """
-      _aq_reset()
       CMFBaseCategory.manage_afterAdd(self, item, container)
