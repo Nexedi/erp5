@@ -21,6 +21,8 @@ def patchActivityTool():
     setattr(ActivityTool, '_orig_' + name, orig_function)
     setattr(ActivityTool, name, function)
     function.__doc__ = orig_function.__doc__
+    # make life easier when inspecting the wrapper with ipython
+    function._original = orig_function
 
   # When a ZServer can't be started, the node name ends with ':' (no port).
   @patch
@@ -140,7 +142,7 @@ class ProcessingNodeTestCase(backportUnittest.TestCase, ZopeTestCase.TestCase):
                          % error_log[-1]
       self.fail(error_message)
 
-  def tic(self, verbose=0):
+  def tic(self, verbose=0, stop_condition=lambda message_list: False):
     """Execute pending activities"""
     # Some tests like testDeferredStyle require that we use self.getPortal()
     # instead of self.portal in order to setup current skin.
@@ -151,9 +153,11 @@ class ProcessingNodeTestCase(backportUnittest.TestCase, ZopeTestCase.TestCase):
         old_message_count = 0
         start = time.time()
       count = 1000
-      getMessageList = portal_activities.getMessageList
-      message_count = len(getMessageList(include_processing=1))
-      while message_count:
+      def getMessageList():
+        return portal_activities.getMessageList(include_processing=1)
+      message_list = getMessageList()
+      message_count = len(message_list)
+      while message_count and not stop_condition(message_list):
         if verbose and old_message_count != message_count:
           ZopeTestCase._print(' %i' % message_count)
           old_message_count = message_count
@@ -161,7 +165,8 @@ class ProcessingNodeTestCase(backportUnittest.TestCase, ZopeTestCase.TestCase):
         if Lifetime._shutdown_phase:
           # XXX CMFActivity contains bare excepts
           raise KeyboardInterrupt
-        message_count = len(getMessageList(include_processing=1))
+        message_list = getMessageList()
+        message_count = len(message_list)
         # This prevents an infinite loop.
         count -= 1
         if count == 0:
