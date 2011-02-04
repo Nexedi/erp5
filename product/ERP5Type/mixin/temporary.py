@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from cPickle import PicklingError
 from Acquisition import aq_base
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as \
   PropertyConstantGetter
@@ -37,6 +38,10 @@ class TemporaryDocumentMixin(object):
   isIndexable = 0
   isTempDocument = PropertyConstantGetter('isTempDocument', value=True)
   __roles__ = None
+
+  def __getstate__(self):
+    # disallow persistent storage
+    raise PicklingError("Temporary objects can't be pickled")
 
   def reindexObject(self, *args, **kw):
     pass
