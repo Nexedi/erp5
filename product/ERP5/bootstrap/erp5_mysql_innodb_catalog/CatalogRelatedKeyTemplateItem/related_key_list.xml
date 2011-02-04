@@ -2,6 +2,7 @@
  <key>base_category_id | category,catalog/id/z_related_base_category_id</key>
  <key>career_skill_id | category,catalog,catalog/id/z_related_career_skill</key>
  <key>career_skill_title | category,catalog,catalog/title/z_related_career_skill</key>
+ <key>children_reference | catalog/reference/z_related_children_reference</key>
  <key>deliveryLineType | movement,catalog/portal_type/z_related_uid_or_parent_uid</key>
  <key>explanation_portal_type | movement,catalog/portal_type/z_related_explanation</key>
  <key>explanation_simulation_state | movement,catalog/simulation_state/z_related_explanation</key>
