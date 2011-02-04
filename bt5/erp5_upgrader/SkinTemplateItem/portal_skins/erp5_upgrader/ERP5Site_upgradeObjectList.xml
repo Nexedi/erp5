@@ -56,7 +56,7 @@
 """\n
 from Products.ERP5Type.Log import log\n
 portal_templates = context.portal_templates\n
-validation_dict = context.ERP5Site_getUpgraderSignature(\'object_action_dict\')\n
+validation_dict = context.ERP5Site_getUpgraderSignature.get(\'object_action_dict\', {})\n
 param_not_provided = "PARAM_NOT_PROVIDED"\n
 \n
 # get list of title of bt5 that are installed.\n

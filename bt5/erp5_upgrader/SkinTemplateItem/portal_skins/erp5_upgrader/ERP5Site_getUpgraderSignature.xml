@@ -158,7 +158,7 @@ AFTER_TRIGGERED_BT5_SCRIPT_ID_DICT = {\'erp5_mysql_innodb_catalog\': (\'ERP5Site
 # A list bt5 which require reinstallation\n
 #   ie. the upgrader will call reinstall\n
 #   on each of them and revert all local changes.\n
-REINSTALABLE_BT5_ID_LIST = ()\n
+REINSTALLABLE_BT5_ID_LIST = ()\n
 \n
 # A snapshot of workflow chains which are known to be valid\n
 #   this snapshot will be generated automatically from release\n
@@ -351,7 +351,7 @@ signature_dict = {\n
  , \'before_triggered_bt5_id_dict\': BEFORE_TRIGGERED_BT5_SCRIPT_ID_DICT\n
  , \'after_triggered_bt5_id_dict\': AFTER_TRIGGERED_BT5_SCRIPT_ID_DICT\n
    # Provide a list of bt5 which require reinstallation\n
- , \'reinstalable_bt5_id_list\': REINSTALABLE_BT5_ID_LIST\n
+ , \'reinstallable_bt5_id_list\': REINSTALLABLE_BT5_ID_LIST\n
    # Provides a list of bt5 path and items which must not be upgraded or deleted\n
  , \'keep_original_dict\': KEEP_ORIGINAL_DICT\n
    # Provides a list of bt5 path which require some action after upgrade\n

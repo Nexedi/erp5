@@ -86,15 +86,15 @@ if not upgrade:\n
 # update all public bt5s\n
 previous_bt5_id = None\n
 bt5_counter = 0\n
-required_bt5_id_list = signature[\'required_bt5_id_list\']\n
-upgradable_bt5_id_list = signature[\'upgradable_bt5_id_list\']\n
-reinstalable_bt5_id_list = signature[\'reinstalable_bt5_id_list\']\n
-before_triggered_bt5_id_dict = signature[\'before_triggered_bt5_id_dict\']\n
-after_triggered_bt5_id_dict = signature[\'after_triggered_bt5_id_dict\']\n
-update_catalog_bt5_id_list = signature[\'update_catalog_bt5_id_list\']\n
+required_bt5_id_list = signature.get(\'required_bt5_id_list\', [])\n
+upgradable_bt5_id_list = signature.get(\'upgradable_bt5_id_list\', [])\n
+reinstallable_bt5_id_list = signature.get(\'reinstallable_bt5_id_list\', signature.get(\'reinstalable_bt5_id_list\', []))\n
+before_triggered_bt5_id_dict = signature.get(\'before_triggered_bt5_id_dict\', [])\n
+after_triggered_bt5_id_dict = signature.get(\'after_triggered_bt5_id_dict\', [])\n
+update_catalog_bt5_id_list = signature.get(\'update_catalog_bt5_id_list\', [])\n
 \n
 \n
-base_url_list = signature[\'bt5_base_url_list\']\n
+base_url_list = signature.get(\'bt5_base_url_list\', [])\n
 installed_bt5_title_list = [o.getTitle() for o in portal_templates.getInstalledBusinessTemplateList()]\n
 \n
 bt5_counter = portal_templates.countFolder()[0][0]\n
@@ -119,7 +119,7 @@ def installBT5(bt5_title, previous_bt5, bt5_counter):\n
   update_catalog = bt5_title in update_catalog_bt5_id_list \n
   before_triggered_bt5_id_list = before_triggered_bt5_id_dict.get(bt5_title, ())\n
   after_triggered_bt5_id_list = after_triggered_bt5_id_dict.get(bt5_title, ())\n
-  keep_original_list = signature[\'keep_original_dict\'].get(bt5_title, ())\n
+  keep_original_list = signature.get(\'keep_original_dict\', {}).get(bt5_title, ())\n
   portal_templates.activate(**kw).updateBusinessTemplateFromUrl(\n
                     bt5_url, id = bt5_id,  \n
                     keep_original_list=keep_original_list,\n
@@ -162,7 +162,7 @@ for bt in required_bt5_id_list:\n
   bt_id = installBT5(bt, previous_bt5, bt5_counter)\n
   previous_bt5 = bt_id\n
 \n
-for bt in reinstalable_bt5_id_list:\n
+for bt in reinstallable_bt5_id_list:\n
   bt5_counter += 1\n
   bt_id = reinstallBT5(bt, previous_bt5, bt5_counter)\n
   previous_bt5 = bt_id\n

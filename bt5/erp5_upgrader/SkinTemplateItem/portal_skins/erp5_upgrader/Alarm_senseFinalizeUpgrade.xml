@@ -59,11 +59,11 @@
 # Setup skins\n
 context.ERP5Site_setupUpgraderSkinSelection()\n
 \n
-alarm_dict = context.ERP5Site_getUpgraderSignature("alarm_dict")\n
+alarm_dict = context.ERP5Site_getUpgraderSignature.get(\'alarm_dict\', {})\n
 if not alarm_dict.get(context.getId(), True):\n
   return False\n
 \n
-for script_id in context.ERP5Site_getUpgraderSignature(\'finalize_upgrade_script_list\'):\n
+for script_id in context.ERP5Site_getUpgraderSignature.get(\'finalize_upgrade_script_list\', []):\n
   if len(getattr(context, script_id)()) > 0:\n
     return True\n
 \n

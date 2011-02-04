@@ -54,7 +54,7 @@
 """\n
 message_list = []\n
 portal_alarms = context.portal_alarms\n
-alarm_tool_configuration_list = context.ERP5Site_getUpgraderSignature("alarm_tool_configuration_list")\n
+alarm_tool_configuration_list = context.ERP5Site_getUpgraderSignature.get(\'alarm_tool_configuration_list\', [])\n
 if alarm_tool_configuration_list is None:\n
   return message_list\n
 \n

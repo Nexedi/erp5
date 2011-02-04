@@ -53,7 +53,7 @@
             <value> <string>"""\n
   verify if the workflow was updated, if is not updated update it.\n
 """\n
-workflow_chain_dict = context.ERP5Site_getUpgraderSignature(\'workflow_chain_dict\')\n
+workflow_chain_dict = context.ERP5Site_getUpgraderSignature.get(\'workflow_chain_dict\', {})\n
 if workflow_chain_dict is None:\n
   # If no signature, ignore.\n
   return []\n

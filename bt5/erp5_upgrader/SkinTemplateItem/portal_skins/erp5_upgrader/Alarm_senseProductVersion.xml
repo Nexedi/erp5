@@ -55,7 +55,7 @@
 """\n
   Here we make sure the installed products are the right ones\n
 """\n
-alarm_dict = context.ERP5Site_getUpgraderSignature("alarm_dict")\n
+alarm_dict = context.ERP5Site_getUpgraderSignature.get(\'alarm_dict\', {})\n
 if not alarm_dict.get(context.getId(), True):\n
   return False\n
 \n

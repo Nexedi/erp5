@@ -53,7 +53,7 @@
             <value> <string>"""\n
   Migrate Object Classes based on upgrade signature\n
 """\n
-class_signature_list = context.ERP5Site_getUpgraderSignature(\'upgrade_object_class_list\')\n
+class_signature_list = context.ERP5Site_getUpgraderSignature.get(\'upgrade_object_class_list\', [])\n
 \n
 portal = context.getPortalObject()\n
 message_list = []\n

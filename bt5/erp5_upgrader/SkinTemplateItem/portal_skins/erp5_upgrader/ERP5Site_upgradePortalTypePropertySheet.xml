@@ -56,7 +56,7 @@
 \n
 message_list = []\n
 \n
-portal_type_property_sheet_list = context.ERP5Site_getUpgraderSignature("portal_type_property_sheet_list")\n
+portal_type_property_sheet_list = context.ERP5Site_getUpgraderSignature.get(\'portal_type_property_sheet_list\', [])\n
 \n
 for expected_property_sheet, portal_type_id_list in portal_type_property_sheet_list:\n
 \n

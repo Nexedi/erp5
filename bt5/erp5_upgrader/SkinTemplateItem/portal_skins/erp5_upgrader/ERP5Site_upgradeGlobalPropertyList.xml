@@ -53,7 +53,7 @@
             <value> <string>portal = context.getPortalObject()\n
 message_list = []\n
 is_upgrade_required = 0\n
-site_property_dict = portal.ERP5Site_getUpgraderSignature(\'erp5_site_property_dict\')\n
+site_property_dict = portal.ERP5Site_getUpgraderSignature.get(\'erp5_site_property_dict\', {})\n
 \n
 for prop in site_property_dict:\n
   if site_property_dict[prop] != getattr(portal,prop , None):\n

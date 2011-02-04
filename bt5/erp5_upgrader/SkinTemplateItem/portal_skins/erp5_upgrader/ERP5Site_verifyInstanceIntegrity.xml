@@ -57,7 +57,7 @@
 """\n
 message_list = []\n
 \n
-for script_id in context.ERP5Site_getUpgraderSignature(\'integrity_verification_script_id_list\'):\n
+for script_id in context.ERP5Site_getUpgraderSignature.get(\'integrity_verification_script_id_list\', []):\n
   result = context.ERP5Site_runVerificationScript(script_id)\n
   if result is not None:\n
     message_list.append(result)\n
