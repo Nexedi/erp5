@@ -3651,7 +3651,7 @@ class PropertySheetTemplateItem(DocumentTemplateItem,
       # otherwise it should not be needed anymore once the deletion
       # code of the filesystem Property Sheets is enabled
       if class_id in property_sheet_id_set:
-        # XXX an Conduit must be able to merge modifications
+        # XXX a Conduit must be able to merge modifications
         # from FS PropertySheets into ZODB PropertySheets
         warn('Conflict when migrating Property Sheet %s: ' \
              'already exists in portal_property_sheets and '\
