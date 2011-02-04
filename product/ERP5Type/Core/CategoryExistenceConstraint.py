@@ -69,7 +69,9 @@ class CategoryExistenceConstraint(ConstraintMixin):
     Check the object's consistency.
     """
     error_list = []
-    portal_type_list = self.getConstraintPortalTypeList()
+    portal_type_list = self._getExpressionValue(obj,
+                                                self.getConstraintPortalType())
+
     # For each attribute name, we check if defined
     for base_category in self.getConstraintBaseCategoryList():
       mapping = dict(base_category=base_category)

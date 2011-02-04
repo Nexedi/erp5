@@ -77,7 +77,8 @@ class CategoryMembershipArityConstraint(ConstraintMixin):
     base_category_list = self.getConstraintBaseCategoryList()
     min_arity = self.getMinArity()
     max_arity = self.getMaxArity()
-    portal_type_list = self.getConstraintPortalTypeList()
+    portal_type_list = self._getExpressionValue(obj,
+                                                self.getConstraintPortalType())
 
     # Check arity and compare it with the min and max
     arity = self._calculateArity(obj, base_category_list, portal_type_list)
