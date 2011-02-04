@@ -56,8 +56,6 @@
 This script is used in an alarm that acts as a cron job.\n
 It will start an instance upgrade if any of the following alarms:\n
 - bt5_upgrader (supported)\n
-- product_upgrader (supported)\n
-- system_upgrader (supported)\n
 \n
 "sense" a need of an upgrade. This alarm is likely to disappear soon as it\'s needed \n
  due to lack of functionality (which is that alarms can not automatically "solve" themselves).\n
@@ -110,14 +108,6 @@ def launchUpgraderAlarm(alarm_id, after_method_id=[]):\n
 # There is one strict order to run the alarms\n
 # This is required because the one alarms depends the previous one be\n
 # Fully done.\n
-previous_method_id = launchUpgraderAlarm(\'system_upgrader\')\n
-previous_method_id = launchUpgraderAlarm(\'product_upgrader\', \n
-                                     after_method_id = previous_method_id)\n
-\n
-\n
-previous_method_id.extend(["ERP5Site_restartZopeInstance",\n
-                           "ERP5Site_clearActivities"])\n
-\n
 previous_method_id = launchUpgraderAlarm(\'bt5_upgrader\', \n
                                     after_method_id = previous_method_id)\n
 \n
@@ -128,8 +118,7 @@ previous_method_id.extend([\'updateBusinessTemplateFromUrl\',\n
 previous_method_id = launchUpgraderAlarm(\'finalize_upgrader\',\n
                                    after_method_id = previous_method_id)\n
 \n
-for alarm_id in [\'system_upgrader\', \'product_upgrader\', \n
-               \'bt5_upgrader\' , \'finalize_upgrader\']:\n
+for alarm_id in [\'bt5_upgrader\' , \'finalize_upgrader\']:\n
 \n
    upgrader_alarm = getattr(portal_alarms, alarm_id, None)\n
    if upgrader_alarm is not None and upgrader_alarm.sense():\n
