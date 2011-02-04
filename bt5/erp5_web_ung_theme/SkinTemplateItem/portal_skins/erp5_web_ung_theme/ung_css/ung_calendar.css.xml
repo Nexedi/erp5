@@ -257,7 +257,7 @@ div#display-datetime.fbutton:hover, span#text-datetime:hover {\n
 }\n
 \n
 .ui-datepicker .ui-datepicker-prev {\n
-  left: 10.5em;\n
+  left: 10.2em;\n
 }\n
 \n
 .ui-datepicker .ui-datepicker-title {\n
@@ -266,7 +266,7 @@ div#display-datetime.fbutton:hover, span#text-datetime:hover {\n
 }\n
 \n
 .ui-widget-header .ui-icon {\n
-  background-image: url("jquery/ui/css/erp5-theme/images/ui-icons_2e83ff_256x240.png") !important;\n
+  background-image: url("ung_images/ui-icons_88aaee_256x240.png") !important;\n
 }\n
 \n
 .ui-datepicker .ui-datepicker-prev span,\n
