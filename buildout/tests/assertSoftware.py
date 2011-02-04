@@ -1639,7 +1639,7 @@ class AssertImagemagick(AssertSoftwareMixin):
       'libjpeg',
       'libltdl',
       'libm',
-      'libpng14',
+      'libpng15',
       'libpthread',
       'libtiff',
       'libz',
@@ -1786,8 +1786,8 @@ class AssertLibpng(AssertSoftwareMixin):
       'zlib',
       ])
 
-  def test_ld_libpng14(self):
-    self.assertLibraryList('parts/libpng/lib/libpng14.so',[
+  def test_ld_libpng15(self):
+    self.assertLibraryList('parts/libpng/lib/libpng15.so',[
       'libc',
       'libm',
       'libz',
@@ -2171,7 +2171,7 @@ class AssertGraphviz(AssertSoftwareMixin):
       'libgraph',
       'libm',
       'libpathplan',
-      'libpng14',
+      'libpng15',
       'libxdot',
       'libz',
       ], [
