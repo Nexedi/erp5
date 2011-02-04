@@ -480,7 +480,6 @@ def synchronizeDynamicModules(context, force=False):
         LOG('ERP5Site', INFO, 'Transition successful, please update your'
             ' business templates')
 
-
     LOG("ERP5Type.dynamic", 0, "Resetting dynamic classes")
     for class_name, klass in inspect.getmembers(erp5.portal_type,
                                                 inspect.isclass):
@@ -493,6 +492,8 @@ def synchronizeDynamicModules(context, force=False):
   finally:
     Base.aq_method_lock.release()
 
-  # Necessary because accessors are wrapped in WorkflowMethod by
-  # _aq_dynamic (performed in createAccessorHolder)
-  _aq_reset()
+  # Some method generations are based on portal methods, and portal
+  # methods cache results. So it is safer to invalidate the cache.
+  cache_tool = getattr(context, 'portal_caches', None)
+  if cache_tool is not None:
+    cache_tool.clearCache()

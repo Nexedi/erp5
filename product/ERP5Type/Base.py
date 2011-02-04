@@ -290,22 +290,15 @@ class WorkflowMethod(Method):
       self._invoke_always = {}
 
 def _aq_reset():
-  # using clear to prevent changing the reference
-  Base.aq_method_generated.clear()
-  Base.aq_portal_type.clear()
-  Base.aq_related_generated = 0
-  try:
-    from Products.ERP5Form.PreferenceTool import PreferenceTool
-    PreferenceTool.aq_preference_generated = False
-  except ImportError:
-    LOG('ERP5Type', LOG, "ERP5Form.PreferenceTool not found")
+  warnings.warn("_aq_reset is deprecated in favor of "\
+                "portal_types.resetDynamicDocumentsOnceAtTransactionBoundary, "\
+                "calling this method affects greatly performances",
+                DeprecationWarning, stacklevel=2)
 
-  # Some method generations are based on portal methods, and portal methods cache results.
-  # So it is safer to invalidate the cache.
-  clearCache()
-
-  # Reset workflow methods so that they no longer invoke workflows
-  resetRegisteredWorkflowMethod()
+  # Callers expect to re-generates accessors right now, so call
+  # resetDynamicDocuments to maintain backward-compatibility
+  from Products.ERP5.ERP5Site import getSite
+  getSite().portal_types.resetDynamicDocuments()
 
 global method_registration_cache
 method_registration_cache = {}
