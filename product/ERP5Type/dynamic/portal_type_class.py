@@ -35,6 +35,8 @@ from types import ModuleType
 from dynamic_module import registerDynamicModule
 from accessor_holder import _generateBaseAccessorHolder, _generatePreferenceToolAccessorHolder
 
+
+from Products.ERP5Type.mixin.temporary import TemporaryDocumentMixin
 from Products.ERP5Type.Base import _aq_reset, Base
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Utils import setDefaultClassProperties
@@ -389,26 +391,8 @@ def initializeDynamicModules():
     """
     klass = getattr(portal_type_container, portal_type_name)
 
-    from Products.ERP5Type.Accessor.Constant import PropertyGetter as \
-      PropertyConstantGetter
-
-    class TempDocument(klass):
-      isTempDocument = PropertyConstantGetter('isTempDocument', value=True)
-      __roles__ = None
-    TempDocument.__name__ = "Temp " + portal_type_name
-
-    # Replace some attributes.
-    for name in ('isIndexable', 'reindexObject', 'recursiveReindexObject',
-                 'activate', 'setUid', 'setTitle', 'getTitle', 'getUid'):
-      setattr(TempDocument, name, getattr(klass, '_temp_%s' % name))
-
-    # Make some methods public.
-    for method_id in ('reindexObject', 'recursiveReindexObject',
-                      'activate', 'setUid', 'setTitle', 'getTitle',
-                      'edit', 'setProperty', 'getUid', 'setCriterion',
-                      'setCriterionPropertyList'):
-      setattr(TempDocument, '%s__roles__' % method_id, None)
-    return TempDocument
+    return type("Temporary %s" % portal_type_name,
+                (TemporaryDocumentMixin, klass), {})
 
   erp5.temp_portal_type = registerDynamicModule('erp5.temp_portal_type',
                                                 loadTempPortalTypeClass)

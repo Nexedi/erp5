@@ -3280,44 +3280,6 @@ class Base( CopyContainer,
     from Products.ERP5Type.Error import Error
     return Error(**kw)
 
-
-  _temp_isIndexable = 0
-
-  def _temp_reindexObject(self, *args, **kw):
-    pass
-
-  def _temp_recursiveReindexObject(self, *args, **kw):
-    pass
-
-  def _temp_activate(self, *args, **kw):
-    return self
-
-  def _temp_setUid(self, value):
-    self.uid = value # Required for Listbox so that no casting happens when we use TempBase to create new objects
-
-  def _temp_getUid(self):
-    try:
-      return getattr(aq_base(self), 'uid')
-    except AttributeError:
-      value = self.getId()
-      self.setUid(value)
-      return value
-
-  def _temp_setTitle(self, value):
-    """
-    Required so that getProperty('title') will work on tempBase objects
-    The dynamic acquisition work very well for a lot of properties, but
-    not for title. For example, if we do setProperty('organisation_url'), then
-    even if organisation_url is not in a propertySheet, the method getOrganisationUrl
-    will be generated. But this does not work for title, because I(seb)'m almost sure
-    there is somewhere a method '_setTitle' or 'setTitle' with no method getTitle on Base.
-    That why setProperty('title') and getProperty('title') does not work.
-    """
-    self.title = value
-
-  def _temp_getTitle(self):
-    return getattr(self,'title',None)
-
   security.declarePublic('log')
   def log(self, description, content='', level=INFO):
     """Put a log message """
