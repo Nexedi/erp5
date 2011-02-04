@@ -72,6 +72,7 @@ Preference | view
 Preference | view_template
 Property Existence Constraint | predicate
 Property Existence Constraint | view
+Property Sheet Tool | migrate_ps_from_fs
 Property Sheet Tool | view
 Property Sheet | view
 Property Type Validity Constraint | predicate
