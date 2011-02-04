@@ -55,6 +55,8 @@ class TemporaryDocumentMixin(object):
   def setUid(self, value):
     self.uid = value # Required for Listbox so that no casting happens when we use TempBase to create new objects
 
+  _setUid = setUid
+
   def getUid(self):
     try:
       return getattr(aq_base(self), 'uid')
