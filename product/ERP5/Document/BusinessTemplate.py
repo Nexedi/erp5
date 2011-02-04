@@ -3651,9 +3651,10 @@ class PropertySheetTemplateItem(DocumentTemplateItem,
       # otherwise it should not be needed anymore once the deletion
       # code of the filesystem Property Sheets is enabled
       if class_id in property_sheet_id_set:
-        raise RuntimeError('Conflict when migrating Property Sheet %s: ' \
-                           'already exists in portal_property_sheets' % \
-                           class_id)
+        warn('Conflict when migrating Property Sheet %s: ' \
+             'already exists in portal_property_sheets' % class_id,
+             UserWarning)
+        continue
 
       filesystem_property_sheet_path = \
           self._getFilesystemPropertySheetPath(class_id)
