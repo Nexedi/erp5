@@ -11,6 +11,7 @@
             <value>
               <list>
                 <string>columns</string>
+                <string>editable_columns</string>
                 <string>hide_rows_on_no_search_criterion</string>
                 <string>portal_types</string>
                 <string>title</string>
@@ -81,6 +82,21 @@
                         <tuple>
                           <string>id</string>
                           <string>Name</string>
+                        </tuple>
+                        <tuple>
+                          <string>children_reference</string>
+                          <string>Defined Property Ids</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>editable_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>children_reference</string>
+                          <string>Defined Property Ids</string>
                         </tuple>
                       </list>
                     </value>

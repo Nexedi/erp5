@@ -88,7 +88,9 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_children_reference</string>
+                      </list>
                     </value>
                 </item>
                 <item>
