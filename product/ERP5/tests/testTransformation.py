@@ -143,6 +143,8 @@ class TestTransformation(TestTransformationMixin, BaseTestUnitConversion):
     # like movements, order lines and so on.
     self._addPropertySheet('Amount', ps_id)
     self._addPropertySheet(self.transformed_resource_portal_type, ps_id)
+    # need to force accessor regeneration after portal type changes
+    transaction.commit()
 
     transformation = self.createTransformation()
     transformed_resource = self.createTransformedResource(transformation)
