@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2007 Nexedi SARL and Contributors. All Rights Reserved.
@@ -35,9 +36,9 @@ class IConduit(Interface):
     - updating an object attributes from an XUpdate XML stream
 
     (Conduits are not in charge of creating new objects which
-    are eventually missing in a synchronisation process)
+    are eventually missing in a synchronization process)
 
-    If an object has be created during a synchronisation process,
+    If an object has be created during a synchronization process,
     the way to proceed consists in:
 
     1- creating an empty instance of the appropriate class
@@ -45,9 +46,9 @@ class IConduit(Interface):
 
     2- updating that empty instance with the conduit
 
-    The first implementation of ERP5 synchronisation
+    The first implementation of ERP5 synchronization
     will define a default location to create new objects and
-    a default class. This will be defined at the level of the synchronisation
+    a default class. This will be defined at the level of the synchronization
     tool
 
     XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx
@@ -116,12 +117,36 @@ class IConduit(Interface):
 
     """
 
-  def getGidFromObject(object):
+  def getGidFromObject(object, configurable_gid_dictionary=None):
     """
     return the Gid composed with the object informations
+     - object is the document on which for we are building the gid.
+       It is usefull to interogate properties of this document itself.
+     - configurable_gid_dictionary optional argument which is supposed to be a dictionary
+     with parameters usefull to build the GID.
+       property_list = ordered_list of properties to interrogate
+       prefix = string to add in first place of the outputted string
+       safe = True or False. True means raise an error if interrogated property is
+       empty or doesn't exists.
+       if generated GID is empty an error is allways raised
     """
 
   def getGidFromXML(xml, namespace, gid_from_xml_list):
     """
     return the Gid composed with xml informations
     """ 
+
+  def applyDiff(original_data, diff):
+    """Patch original data with given diff
+    and return patched data
+
+    original_data - can be plain/text or text/xml data
+    diff - diff generated with difflib or xupdate
+    """
+
+  def generateDiff(old_data, new_data):
+    """return a diff between old_data and new_data
+    respecting mimetype of handled data.
+    text/xml => xupdate
+    plain/text => difflib
+    """
