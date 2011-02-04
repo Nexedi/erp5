@@ -532,7 +532,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
         type_class='Folder',
         type_property_sheet_list=('TestMigration',),
         type_base_category_list=('test_category_existence_constraint',),
-        type_allowed_content_type_list=('Content Existence Constraint',))
+        type_filter_content_type=False)
 
     # Create a test module, meaningful to force generation of
     # TestMigration accessor holders and check the constraints
