@@ -147,11 +147,6 @@ UPGRADABLE_BT5_ID_LIST = (\n
 #  if they are not already installed\n
 REQUIRED_BT5_ID_LIST = ()\n
 \n
-# A list bt5 which are required for the upgrade\n
-#  ie. the upgrader will install them even\n
-#  if they are not already installed\n
-REQUIRED_BT5_ID_LIST = ()\n
-\n
 # A list bt5 which are required to upgrade catalog.\n
 # After the bt5 be updated, update catalog will be trigger.\n
 UPDATE_CATALOG_BT5_ID_LIST = ()\n
