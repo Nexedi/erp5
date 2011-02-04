@@ -89,7 +89,7 @@ class BaseTool (UniqueObject, Folder):
         LOG('BaseTool._migrateToPortalTypeClass', WARNING,
             "No portal type definition was found for Tool '%s'"
             " (class %s, portal_type '%s')"
-            % (self.getRelativeUrl(), self.__class__.__name__, portal_type))
+            % (self.getId(), self.__class__.__name__, portal_type))
         return
 
       type_class = type_definition.getTypeClass()
