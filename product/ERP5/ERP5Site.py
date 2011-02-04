@@ -1621,7 +1621,7 @@ class ERP5Generator(PortalGenerator):
     make sure that we do not put un the queue the full reindexation
     """
     # Add Activity Tool
-    if create_activities:
+    if create_activities and not p.hasObject('portal_activities'):
       addERP5Tool(p, 'portal_activities', 'Activity Tool')
       # Initialize Activities
       p.portal_activities.manageClearActivities(keep=0)
