@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>z_related_children_reference</string> </value>
+            <value> <string>z_related_children</string> </value>
         </item>
         <item>
             <key> <string>src</string> </key>
