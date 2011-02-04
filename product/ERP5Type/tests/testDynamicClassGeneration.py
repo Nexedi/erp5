@@ -403,21 +403,23 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
       portal_type='Content Existence Constraint',
       constraint_portal_type='python: ("Content Existence Constraint")')
 
-  def _newCategoryMembershipArityConstraint(self, reference, portal_type):
+  def _newCategoryMembershipArityConstraint(self,
+                                            reference,
+                                            use_acquisition=False):
     """
     Create a new Category Membership Arity Constraint within test
-    Property Sheet, allowing testing of Category Acquired Membership
-    Arity Constraint too
+    Property Sheet (with or without acquisition)
     """
     self.getPortal().portal_categories.newContent(
       id=reference, portal_type='Base Category')
 
     self.test_property_sheet.newContent(
       reference=reference,
-      portal_type=portal_type,
+      portal_type='Category Membership Arity Constraint',
       min_arity=1,
       max_arity=1,
-      constraint_portal_type=('Test Migration',),
+      use_acquisition=use_acquisition,
+      constraint_portal_type="python: ('Test Migration',)",
       constraint_base_category=(reference,))
 
   def _newCategoryRelatedMembershipArityConstraint(self):
@@ -431,7 +433,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
       portal_type='Category Related Membership Arity Constraint',
       min_arity=1,
       max_arity=1,
-      constraint_portal_type=('Test Migration',),
+      constraint_portal_type="python: ('Test Migration',)",
       constraint_base_category=('gender',))
 
   def _newTALESConstraint(self):
@@ -486,17 +488,16 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
       # Sheet
       self._newContentExistenceConstraint()
 
-      # Create a Category Membership Arity Constraint in the test
-      # Property Sheet
+      # Create a Category Membership Arity Constraint without
+      # acquisition in the test Property Sheet
       self._newCategoryMembershipArityConstraint(
-        'test_category_membership_arity_constraint',
-        'Category Membership Arity Constraint')
+        'test_category_membership_arity_constraint')
 
-      # Create a Category Acquired Membership Arity Constraint in the
-      # test Property Sheet
+      # Create a Category Membership Arity Constraint with acquisition
+      # in the test Property Sheet
       self._newCategoryMembershipArityConstraint(
-        'test_category_acquired_membership_arity_constraint',
-        'Category Acquired Membership Arity Constraint')
+        'test_category_membership_arity_constraint_with_acquisition',
+        use_acquisition=True)
 
       # Create a Category Related Membership Arity Constraint in the
       # test Property Sheet
@@ -942,7 +943,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
                           ('test_category_membership_arity_constraint/'\
                            'Test Migration',))
 
-  def testCategoryAcquiredMembershipArityConstraint(self):
+  def testCategoryMembershipArityConstraintWithAcquisition(self):
     """
     Take the test module and check whether the Category Acquired
     Membership Arity Constraint is there. Until a Base Category is set
@@ -951,9 +952,9 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     XXX: Test with acquisition?
     """
     self._checkConstraint(
-      'test_category_acquired_membership_arity_constraint',
+      'test_category_membership_arity_constraint_with_acquisition',
       self.test_module.setCategoryList,
-      ('test_category_acquired_membership_arity_constraint/Test Migration',))
+      ('test_category_membership_arity_constraint_with_acquisition/Test Migration',))
 
   def testCategoryRelatedMembershipArityConstraint(self):
     """
