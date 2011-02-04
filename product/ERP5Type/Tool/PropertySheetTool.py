@@ -200,10 +200,11 @@ class PropertySheetTool(BaseTool):
       transaction.commit()
 
     if REQUEST is not None:
-      return self.REQUEST.RESPONSE.redirect(
-        '%s?portal_status_message=' \
-        'Property Sheets successfully imported from filesystem to ZODB.' % \
-        self.absolute_url())
+      portal = self.getPortalObject()
+      message = portal.Base_translateString('Property Sheets successfully'\
+                                          ' imported from filesystem to ZODB.')
+      return self.Base_redirect('view',
+                                keep_items={'portal_status_message': message})
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'exportPropertySheetToFilesystemDefinitionTuple')
