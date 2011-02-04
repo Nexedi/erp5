@@ -1,0 +1,15 @@
+<allowed_content_type_list>
+ <portal_type id="SyncML Publication">
+  <item>SyncML Subscription</item>
+ </portal_type>
+ <portal_type id="SyncML Signature">
+  <item>SyncML Conflict</item>
+ </portal_type>
+ <portal_type id="SyncML Subscription">
+  <item>SyncML Signature</item>
+ </portal_type>
+ <portal_type id="Synchronization Tool">
+  <item>SyncML Publication</item>
+  <item>SyncML Subscription</item>
+ </portal_type>
+</allowed_content_type_list>

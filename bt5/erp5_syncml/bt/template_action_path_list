@@ -1,0 +1,10 @@
+SyncML Publication | reset_publication
+SyncML Publication | view
+SyncML Publication | view_conflict
+SyncML Signature | view
+SyncML Subscription | reset_subscription
+SyncML Subscription | start_synchronization
+SyncML Subscription | vew
+SyncML Subscription | view_conflict
+Synchronization Tool | view
+portal_actions | portal_synchronizations_action

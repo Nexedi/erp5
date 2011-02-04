@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Property Existence Constraint" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>constraint_property</string> </key>
+            <value>
+              <tuple>
+                <string>conduit_module_id</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>property_existence</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Conduit Module ID is not defined</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>7</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Property Existence Constraint</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
