@@ -96,6 +96,9 @@ class TestCalendar(ERP5ReportTestCase):
     self._addPropertySheet('Presence Request Period', 'CalendarPeriodConstraint')
     self._addPropertySheet('Group Presence Period', 'CalendarPeriodConstraint')
 
+    # regenerate accessors after category changes & portal type changes
+    transaction.commit()
+
   def beforeTearDown(self):
     transaction.abort()
     for module in (self.portal.group_calendar_module,
