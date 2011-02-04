@@ -144,13 +144,15 @@ def generatePortalTypeClass(site, portal_type_name):
   Returns tuple with 4 items:
     - base_tuple: a tuple of classes to be used as __bases__
     - interface_list: list of zope interfaces the portal type implements
-    - base_category_list: base categories defined on the portal_type itself
-       (a.k.a. excluding categories from Property sheets and documents)
     - attribute dictionary: any additional attributes to put on the class
   """
   # LOG("ERP5Type.dynamic", INFO, "Loading portal type " + portal_type_name)
 
   global core_portal_type_class_dict
+
+  attribute_dict = dict(portal_type=portal_type_name,
+                        _categories=[],
+                        constraints=[])
 
   if portal_type_name in core_portal_type_class_dict:
     if not core_portal_type_class_dict[portal_type_name]['generating']:
@@ -167,14 +169,13 @@ def generatePortalTypeClass(site, portal_type_name):
 
       # Don't do anything else, just allow to load fully the outer
       # portal type class
-      return ((klass,), [], [], {})
+      return ((klass,), [], attribute_dict)
 
   # Do not use __getitem__ (or _getOb) because portal_type may exist in a
   # type provider other than Types Tool.
   portal_type = getattr(site.portal_types, portal_type_name, None)
 
   type_class = None
-  base_category_list = []
 
   if portal_type is not None:
     # type_class has a compatibility getter that should return
@@ -191,7 +192,7 @@ def generatePortalTypeClass(site, portal_type_name):
 
     mixin_list = portal_type.getTypeMixinList()
     interface_list = portal_type.getTypeInterfaceList()
-    base_category_list = portal_type.getTypeBaseCategoryList()
+    attribute_dict['_categories'] = portal_type.getTypeBaseCategoryList()
   else:
     LOG("ERP5Type.dynamic", WARNING,
         "Cannot find a portal type definition for '%s', trying to guess..."
@@ -317,10 +318,12 @@ def generatePortalTypeClass(site, portal_type_name):
                             erp5.accessor_holder)
         accessor_holder_list.insert(0, accessor_holder)
 
-      base_category_set = set(base_category_list)
+      base_category_set = set(attribute_dict['_categories'])
       for accessor_holder in accessor_holder_list:
         base_category_set.update(accessor_holder._categories)
-      base_category_list = list(base_category_set)
+        attribute_dict['constraints'].extend(accessor_holder.constraints)
+
+      attribute_dict['_categories'] = list(base_category_set)
 
     property_sheet_generating_portal_type_set.remove(portal_type_name)
 
@@ -350,8 +353,7 @@ def generatePortalTypeClass(site, portal_type_name):
 
   return (tuple(base_class_list),
           interface_class_list,
-          base_category_list,
-          dict(portal_type=portal_type_name))
+          attribute_dict)
 
 from lazy_class import generateLazyPortalTypeClass
 def initializeDynamicModules():

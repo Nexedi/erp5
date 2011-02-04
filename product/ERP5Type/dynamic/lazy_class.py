@@ -305,11 +305,10 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
               "Could not access Portal Type Object for type %r"
               % portal_type, error=sys.exc_info())
           base_tuple = (ERP5BaseBroken, )
-          attribute_dict = {}
+          attribute_dict = dict(_categories=[], constraints=[])
           interface_list = []
-          base_category_list = []
         else:
-          base_tuple, interface_list, base_category_list, attribute_dict = class_definition
+          base_tuple, interface_list, attribute_dict = class_definition
 
         klass.__isghost__ = False
         klass.__bases__ = base_tuple
@@ -318,8 +317,6 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
 
         for key, value in attribute_dict.iteritems():
           setattr(klass, key, value)
-
-        klass._categories = base_category_list
 
         for interface in interface_list:
           classImplements(klass, interface)
