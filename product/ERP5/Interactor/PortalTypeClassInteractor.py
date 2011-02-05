@@ -37,8 +37,12 @@ class PortalTypeClassInteractor(Interactor):
     and dynamic properties.
   """
   def install(self):
+    # changing chains or workflows on Workflow Tool
     from Products.CMFCore.WorkflowTool import WorkflowTool
     self.on(WorkflowTool.manage_changeWorkflows).doAfter(self.resetDynamic)
+    self.on(WorkflowTool.setDefaultChain).doAfter(self.resetDynamic)
+    self.on(WorkflowTool.setChainForPortalTypes).doAfter(self.resetDynamic)
+
     from Products.DCWorkflow.Transitions import Transitions
     self.on(Transitions.addTransition).doAfter(self.resetDynamic)
     self.on(Transitions.deleteTransitions).doAfter(self.resetDynamic)
@@ -46,6 +50,7 @@ class PortalTypeClassInteractor(Interactor):
     self.on(TransitionDefinition.setProperties).doAfter(self.resetDynamic)
     from Products.DCWorkflow.Variables import Variables
     self.on(Variables.setStateVar).doAfter(self.resetDynamic)
+
     from Products.Localizer.Localizer import Localizer
     self.on(Localizer.add_language).doAfter(self.resetDynamic)
     self.on(Localizer.del_language).doAfter(self.resetDynamic)
