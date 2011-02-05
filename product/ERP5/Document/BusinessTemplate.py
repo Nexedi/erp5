@@ -37,7 +37,7 @@ from AccessControl import ClassSecurityInfo, Unauthorized, getSecurityManager
 from Products.CMFCore.utils import getToolByName
 from Products.PythonScripts.PythonScript import PythonScript
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
-from Products.ERP5Type.Base import WorkflowMethod, _aq_reset
+from Products.ERP5Type.Base import WorkflowMethod
 from Products.ERP5Type.Utils import readLocalDocument, \
                                     writeLocalDocument, \
                                     importLocalDocument, \
@@ -3700,8 +3700,6 @@ class PropertySheetTemplateItem(DocumentTemplateItem,
       # Skip meaningless backup of the object as it has just been
       # migrated
       update_parameter_dict[key] = 'migrate'
-
-    transaction.commit()
 
   def install(self, context, **kw):
     if not self._perform_migration:
