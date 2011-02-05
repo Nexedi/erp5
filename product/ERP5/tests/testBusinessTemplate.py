@@ -2453,7 +2453,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     ps_id = sequence.get('ps_title', None)
     self.failIf(ps_id is None)
-    self.failIf(ps_id in self.getPortalObject().portal_property_sheets)
+    self.failIf(ps_id in self.getPortalObject().portal_property_sheets.objectIds())
 
   def stepCreateUpdatedPropertySheet(self, sequence=None, sequence_list=None, **kw):
     """
