@@ -131,6 +131,9 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.getTypesTool().getTypeInfo('Person').filter_content_types = 0
       transaction.commit()
 
+      # save workflow chain for Person type
+      self.person_chain = self.getWorkflowTool().getChainFor('Person')
+
     def beforeTearDown(self):
       transaction.abort()
       for module in [ self.getPersonModule(),
@@ -142,6 +145,10 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       if getattr(self, 'person_acquire_local_roles', None) is not None:
         self.getTypesTool().getTypeInfo('Person').acquire_local_roles = self.person_acquire_local_roles
         self.portal.portal_caches.clearAllCache()
+
+      # restore workflows for other tests
+      self.getWorkflowTool().setChainForPortalTypes(
+        ['Person'], self.person_chain)
 
       super(TestERP5Type, self).beforeTearDown()
 
@@ -2436,25 +2443,21 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
 
     def test_aq_reset_on_workflow_chain_change(self):
       doc = self.portal.person_module.newContent(portal_type='Person')
-      ti = self.getTypesTool()['Person']
       self.assertFalse(hasattr(doc, 'getCausalityState'))
       # chain the portal type with a workflow that has 'causality_state' as
       # state variable name, this should regenerate the getCausalityState
       # accessor. This test might have to be updated whenever
       # delivery_causality_workflow changes.
-      self.portal.portal_workflow.manage_changeWorkflows(
-          default_chain='',
-          props=dict(chain_Person='delivery_causality_workflow'))
+      self.getWorkflowTool().setChainForPortalTypes(
+        ['Person'], ('delivery_causality_workflow'))
 
       transaction.commit()
       self.assertTrue(hasattr(doc, 'getCausalityState'))
 
     def test_aq_reset_on_workflow_method_change(self):
       doc = self.portal.person_module.newContent(portal_type='Person')
-      ti = self.getTypesTool()['Person']
-      self.portal.portal_workflow.manage_changeWorkflows(
-          default_chain='',
-          props=dict(chain_Person='delivery_causality_workflow'))
+      self.getWorkflowTool().setChainForPortalTypes(
+        ['Person'], ('delivery_causality_workflow'))
 
       transaction.commit()
       self.assertTrue(hasattr(doc, 'diverge'))
@@ -2475,10 +2478,8 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
 
     def test_aq_reset_on_workflow_state_variable_change(self):
       doc = self.portal.person_module.newContent(portal_type='Person')
-      ti = self.getTypesTool()['Person']
-      self.portal.portal_workflow.manage_changeWorkflows(
-          default_chain='',
-          props=dict(chain_Person='delivery_causality_workflow'))
+      self.getWorkflowTool().setChainForPortalTypes(
+        ['Person'], ('delivery_causality_workflow'))
 
       transaction.commit()
       self.assertTrue(hasattr(doc, 'getCausalityState'))
