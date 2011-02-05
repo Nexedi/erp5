@@ -136,16 +136,12 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.getWorkflowTool().setChainForPortalTypes(
         ['Organisation'], ())
 
-    transaction.commit()
-
   def stepAssociateWorkflows(self, sequence=None, sequence_list=None, **kw):
     """
       Associate workflow to the portal type
     """
     self.getWorkflowTool().setChainForPortalTypes(
         ['Organisation'], ('validation_workflow', 'edit_workflow'))
-
-    transaction.commit()
 
   def stepAssociateWorkflowsExcludingEdit(self, sequence=None, 
                                           sequence_list=None, **kw):
@@ -154,8 +150,6 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     self.getWorkflowTool().setChainForPortalTypes(
         ['Organisation'], ('validation_workflow',))
-
-    transaction.commit()
 
   def stepCreateObject(self, sequence=None, sequence_list=None, **kw):
     """
