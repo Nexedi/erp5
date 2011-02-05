@@ -58,10 +58,10 @@ class TestPreferences(PropertySheetTestCase):
     self.createPreferences()
 
   def beforeTearDown(self):
+    transaction.abort()
     portal_preferences = self.getPreferenceTool()
     portal_preferences.manage_delObjects(list(portal_preferences.objectIds()))
-    transaction.commit()
-    self.tic()
+    super(TestPreferences, self).beforeTearDown()
 
   def createPreferences(self):
     """ create some preferences objects  """
@@ -560,11 +560,12 @@ class TestPreferences(PropertySheetTestCase):
     self.assertEqual(system_pref, preference_tool.getActiveSystemPreference())
 
   def test_boolean_accessor(self):
-    self._addProperty('Preference', 'DummyPreference',
-                      portal_type='Standard Property',
-                      property_id='dummy',
-                      preference=True,
-                      elementary_type='boolean')
+    self._addProperty('Preference',
+        'test_boolean_accessor Preference',
+        portal_type='Standard Property',
+        property_id='dummy',
+        preference=True,
+        elementary_type='boolean')
     portal_preferences = self.portal.portal_preferences
     self.assertFalse(portal_preferences.getDummy())
     self.assertFalse(portal_preferences.isDummy())
@@ -584,13 +585,14 @@ class TestPreferences(PropertySheetTestCase):
     write_permission = 'Modify portal content'
     read_permission = 'Manage portal'
 
-    self._addProperty('Preference', 'DummyPreference',
-                      property_id='preferred_toto',
-                      portal_type='Standard Property',
-                      preference=1,
-                      write_permission='Modify portal content',
-                      read_permission='Manage portal',
-                      elementary_type='string')
+    self._addProperty('Preference',
+        'test_property_sheet_security_on_permission Preference',
+        property_id='preferred_toto',
+        portal_type='Standard Property',
+        preference=1,
+        write_permission='Modify portal content',
+        read_permission='Manage portal',
+        elementary_type='string')
 
     obj = self.portal.portal_preferences.newContent(portal_type='Preference')
     obj.enable()
@@ -633,12 +635,13 @@ class TestPreferences(PropertySheetTestCase):
     default_preference_string = 'Default Name'
     normal_preference_string = 'Normal Preference'
     system_preference_string = 'System Preference'
-    self._addProperty('Preference', 'DummySystemPreference',
-                      portal_type='Standard Property',
-                      property_id='dummystring',
-                      property_default='python: "%s"' % default_preference_string,
-                      preference=True,
-                      elementary_type='string')
+    self._addProperty('Preference',
+        'test_system_preference_value_prefererred Preference',
+        portal_type='Standard Property',
+        property_id='dummystring',
+        property_default='python: "%s"' % default_preference_string,
+        preference=True,
+        elementary_type='string')
     portal_preferences = self.portal.portal_preferences
     self.assertEqual(default_preference_string,
         portal_preferences.getDummystring())
@@ -667,12 +670,13 @@ class TestPreferences(PropertySheetTestCase):
     default_preference_string = 'Default Name'
     normal_preference_string = 'Normal Preference'
     system_preference_string = 'System Preference'
-    self._addProperty('Preference', 'DummySystemPreference',
-                      portal_type='Standard Property',
-                      property_id='dummystring',
-                      property_default='python: "%s"' % default_preference_string,
-                      preference=True,
-                      elementary_type='string')
+    self._addProperty('Preference',
+        'test_system_preference_value_prefererred_clear_cache_disabled Preference',
+        portal_type='Standard Property',
+        property_id='dummystring',
+        property_default='python: "%s"' % default_preference_string,
+        preference=True,
+        elementary_type='string')
     portal_preferences = self.portal.portal_preferences
     self.assertEqual(default_preference_string,
         portal_preferences.getDummystring())

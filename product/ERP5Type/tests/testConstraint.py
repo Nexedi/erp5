@@ -72,8 +72,7 @@ class TestConstraint(PropertySheetTestCase):
     transaction.abort()
     module = self.portal.organisation_module
     module.manage_delObjects(list(module.objectIds()))
-    transaction.commit()
-    self.tic()
+    super(TestConstraint, self).beforeTearDown()
 
   def createCategories(self):
     """

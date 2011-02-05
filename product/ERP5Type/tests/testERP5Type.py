@@ -27,7 +27,6 @@
 ##############################################################################
 
 import cPickle
-import md5
 import unittest
 import sys
 
@@ -42,7 +41,6 @@ from Products.ERP5Type.tests.utils import LogInterceptor
 from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.tests.utils import installRealClassTool
-from Products.ERP5Type.Utils import removeLocalPropertySheet
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl import getSecurityManager
 from AccessControl import Unauthorized
@@ -64,9 +62,8 @@ class PropertySheetTestCase(ERP5TypeTestCase):
     super(PropertySheetTestCase,self).setUp()
     installRealClassTool(self.getPortal())
 
-  def tearDown(self):
+  def beforeTearDown(self):
     """Clean up """
-    transaction.abort()
     ttool = self.getTypesTool()
     # remove all property sheet we added to type informations
     for ti_name, psheet_list in self._added_property_sheets.items():
@@ -81,7 +78,8 @@ class PropertySheetTestCase(ERP5TypeTestCase):
     # but in the other hand, if isolates the test "just in case"
     ttool.resetDynamicDocumentsOnceAtTransactionBoundary()
     transaction.commit()
-    super(PropertySheetTestCase, self).tearDown()
+    self.tic()
+    super(PropertySheetTestCase, self).beforeTearDown()
 
   def _addProperty(self, portal_type_name, property_sheet_id,
                    property_id=None,
@@ -145,8 +143,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
         self.getTypesTool().getTypeInfo('Person').acquire_local_roles = self.person_acquire_local_roles
         self.portal.portal_caches.clearAllCache()
 
-      transaction.commit()
-      self.tic()
+      super(TestERP5Type, self).beforeTearDown()
 
     def loginWithNoRole(self):
       uf = self.portal.acl_users
@@ -828,10 +825,12 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       """Tests that the default value is returned correctly when a default
       value is defined using the property sheet.
       """
-      self._addProperty('Person', 'Person_dummy_ps_prop', 'dummy_ps_prop',
-                        elementary_type='string',
-                        portal_type='Standard Property',
-                        property_default='python: "ps_default"')
+      self._addProperty('Person',
+          'test_15b_DefaultValueDefinedOnPropertySheet',
+          'dummy_ps_prop',
+          elementary_type='string',
+          portal_type='Standard Property',
+          property_default='python: "ps_default"')
 
       module = self.getPersonModule()
       person = module.newContent(id='1', portal_type='Person')
@@ -860,10 +859,12 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       """Tests that the default value is returned correctly when a default
       value is defined using the property sheet, on list accesors.
       """
-      self._addProperty('Person', 'Person_dummy_ps_prop', 'dummy_ps_prop',
-                        elementary_type='lines',
-                        portal_type='Standard Property',
-                        property_default='python: [1,2,3]')
+      self._addProperty('Person',
+          'test_15b_ListAccessorsDefaultValueDefinedOnPropertySheet',
+          'dummy_ps_prop',
+          elementary_type='lines',
+          portal_type='Standard Property',
+          property_default='python: [1,2,3]')
 
       module = self.getPersonModule()
       person = module.newContent(id='1', portal_type='Person')
@@ -905,9 +906,11 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     def test_16_SimpleStringAccessor(self):
       """Tests a simple string accessor.
       This is also a way to test _addProperty method """
-      self._addProperty('Person', 'Person_dummy_ps_prop', 'dummy_ps_prop',
-                        elementary_type='string',
-                        portal_type='Standard Property')
+      self._addProperty('Person',
+          'test_16_SimpleStringAccessor',
+          'dummy_ps_prop',
+          elementary_type='string',
+          portal_type='Standard Property')
       person = self.getPersonModule().newContent(id='1', portal_type='Person')
       self.assertEquals('string', person.getPropertyType('dummy_ps_prop'))
       self.assertTrue(hasattr(person, 'getDummyPsProp'))
@@ -1008,8 +1011,10 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       # For testing purposes, we add a default_organisation inside a person,
       # and we add code to generate a 'default_organisation_title' property on
       # this person that will returns the organisation title.
-      self._addProperty('Person', 'Person_organisation', 'organisation',
-                        **self.DEFAULT_ORGANISATION_TITLE_PROP)
+      self._addProperty('Person',
+          'test_18_SimpleContentAccessor',
+          'organisation',
+          **self.DEFAULT_ORGANISATION_TITLE_PROP)
       person = self.getPersonModule().newContent(id='1', portal_type='Person')
       self.assertTrue(hasattr(person, 'getDefaultOrganisationTitle'))
       self.assertTrue(hasattr(person, 'setDefaultOrganisationTitle'))
@@ -1070,8 +1075,10 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       # This is test is very similar to test_18_SimpleContentAccessor, but we
       # use reference instead of title, because Reference accessors are
       # generated.
-      self._addProperty('Person', 'Person_organisation', 'organisation',
-                        **self.DEFAULT_ORGANISATION_TITLE_PROP)
+      self._addProperty('Person',
+          'test_18_SimpleContentAccessorWithGeneratedAccessor',
+          'organisation',
+          **self.DEFAULT_ORGANISATION_TITLE_PROP)
       person = self.getPersonModule().newContent(id='1', portal_type='Person')
       self.assertTrue(hasattr(person, 'getDefaultOrganisationReference'))
       self.assertTrue(hasattr(person, 'setDefaultOrganisationReference'))
@@ -1128,8 +1135,10 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       that may have the same id, using same scenario as test_18
       Note that we only test Setter for now.
       """
-      self._addProperty('Person', 'Person_organisation', 'organisation',
-                        **self.DEFAULT_ORGANISATION_TITLE_PROP)
+      self._addProperty('Person',
+          'test_18b_ContentAccessorWithIdClash',
+          'organisation',
+          **self.DEFAULT_ORGANISATION_TITLE_PROP)
       person = self.getPersonModule().newContent(id='1', portal_type='Person')
       another_person = self.getPersonModule().newContent(
                                         id='default_organisation',
@@ -1170,8 +1179,10 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       # defined, then we will acquire the default organisation title of the
       # `destination` person. This is a stupid example, but it works with
       # objects we have in our testing environnement
-      self._addProperty('Person', 'Person_organisation', 'organisation',
-                        **self.DEFAULT_ORGANISATION_TITLE_ACQUIRED_PROP)
+      self._addProperty('Person',
+          'test_19_AcquiredContentAccessor',
+          'organisation',
+          **self.DEFAULT_ORGANISATION_TITLE_ACQUIRED_PROP)
       # add destination base category to Person TI
       person_ti = self.getTypesTool().getTypeInfo('Person')
       base_category_list = person_ti.getTypeBaseCategoryList()
@@ -1202,8 +1213,10 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       that may have the same id, using same scenario as test_19
       Note that we only test Setter for now.
       """
-      self._addProperty('Person', 'Person_organisation', 'organisation',
-                        **self.DEFAULT_ORGANISATION_TITLE_ACQUIRED_PROP)
+      self._addProperty('Person',
+          'test_19b_AcquiredContentAccessorWithIdClash',
+          'organisation',
+          **self.DEFAULT_ORGANISATION_TITLE_ACQUIRED_PROP)
       # add destination base category to Person TI
       person_ti = self.getTypesTool().getTypeInfo('Person')
       base_category_list = person_ti.getTypeBaseCategoryList()
@@ -1245,11 +1258,15 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
          We check in particular that getDefault[Property] and
          setDefault[Property] are working correctly
       """
-      self._addProperty('Person', 'Person_lang', 'available_language',
-                        commit=False,
-                        **self.DEFAULT_LANGUAGE_PROP)
-      self._addProperty('Email', 'Email_lang', 'available_language',
-                        **self.DEFAULT_LANGUAGE_PROP)
+      self._addProperty('Person',
+          'test_19c_AcquiredTokensAccessor_Person',
+          'available_language',
+          commit=False,
+          **self.DEFAULT_LANGUAGE_PROP)
+      self._addProperty('Email',
+          'test_19c_AcquiredTokensAccessor_Email',
+          'available_language',
+          **self.DEFAULT_LANGUAGE_PROP)
 
       # Category setters (list, set, default)
       person = self.getPersonModule().newContent(id='1', portal_type='Person')
@@ -1281,8 +1298,10 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
          setDefault[Property] are working correctly
          This test focus on acquisition_mask_value parameter
       """
-      self._addProperty('Person', 'Person_19c2', 'subordination_organisation_reference',
-                        **self.SUBORDINATION_ORGANISATION_REFERENCE)
+      self._addProperty('Person',
+          'test_19c2_AcquiredStringAccessor',
+          'subordination_organisation_reference',
+          **self.SUBORDINATION_ORGANISATION_REFERENCE)
 
       person = self.getPersonModule().newContent(portal_type='Person')
       organisation = self.getOrganisationModule()\
@@ -1327,8 +1346,10 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
          setDefault[Property] are working correctly
          This test focus on acquisition_mask_value parameter
       """
-      self._addProperty('Person', 'Person_19c3', 'subordination_organisation_source_reference',
-                        **self.SUBORDINATION_ORGANISATION_SOURCE_REFERENCE)
+      self._addProperty('Person',
+          'test_19c3_AcquiredStringAccessor',
+          'subordination_organisation_source_reference',
+          **self.SUBORDINATION_ORGANISATION_SOURCE_REFERENCE)
 
       person = self.getPersonModule().newContent(portal_type='Person')
       organisation = self.getOrganisationModule()\
@@ -1381,21 +1402,26 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       Boolean accessors generate both an getPropertyName and an isPropertyName
       Check in particular that both behave the same way regarding acquisition
       """
-      self._addProperty('Person', 'Person_19d', 'name_included_in_address',
-                        commit=False,
-                        portal_type='Standard Property',
-                        property_default="python: True",
-                        elementary_type="boolean")
-      self._addProperty('Email', 'Email_19d', 'name_included_in_address',
-                        content_acquired_property_id=('name_included_in_address', ),
-                        acquisition_base_category=( 'parent', ),
-                        acquisition_portal_type="python: ( 'Person', )",
-                        acquisition_copy_value=0,
-                        acquisition_mask_value=1,
-                        acquisition_accessor_id='getNameIncludedInAddress',
-                        portal_type='Acquired Property',
-                        property_default="python: True",
-                        elementary_type="boolean")
+      self._addProperty('Person',
+          'test_19d_AcquiredBooleanAccessor_Person',
+          'name_included_in_address',
+          commit=False,
+          portal_type='Standard Property',
+          property_default="python: True",
+          elementary_type="boolean")
+      self._addProperty('Email',
+          'test_19d_AcquiredBooleanAccessor_Email',
+          'name_included_in_address',
+          'name_included_in_address',
+          content_acquired_property_id=('name_included_in_address', ),
+          acquisition_base_category=( 'parent', ),
+          acquisition_portal_type="python: ( 'Person', )",
+          acquisition_copy_value=0,
+          acquisition_mask_value=1,
+          acquisition_accessor_id='getNameIncludedInAddress',
+          portal_type='Acquired Property',
+          property_default="python: True",
+          elementary_type="boolean")
 
       person = self.getPersonModule().newContent(portal_type='Person')
       email = person.newContent(portal_type='Email')
@@ -1814,9 +1840,11 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       """Test 'has' Accessor.
       This accessor returns true if the property is set on the document.
       """
-      self._addProperty('Person', 'Person_foobar', 'foo_bar',
-                        elementary_type='string',
-                        portal_type='Standard Property')
+      self._addProperty('Person',
+          'test_26_hasAccessors',
+          'foo_bar',
+          elementary_type='string',
+          portal_type='Standard Property')
       obj = self.getPersonModule().newContent(portal_type='Person')
       self.assertTrue(hasattr(obj, 'hasFooBar'))
       self.failIf(obj.hasFooBar())
@@ -2193,16 +2221,18 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
           region_category.restrictedTraverse, "beta")
 
       # Define the acquired property
-      self._addProperty('Person', 'Person_test_unaccessible', 'wrapped_region_title',
-                        portal_type='Acquired Property',
-                        elementary_type='lines',
-                        description='The title of the region',
-                        content_acquired_property_id=('description', ),
-                        acquisition_base_category=( 'region', ),
-                        acquisition_portal_type="python: ( 'Category', )",
-                        alt_accessor_id=('_categoryGetRegionTitle', ),
-                        acquisition_copy_value=0,
-                        acquisition_accessor_id='getTitle')
+      self._addProperty('Person',
+          'Person_test_unaccessible',
+          'wrapped_region_title',
+          portal_type='Acquired Property',
+          elementary_type='lines',
+          description='The title of the region',
+          content_acquired_property_id=('description', ),
+          acquisition_base_category=( 'region', ),
+          acquisition_portal_type="python: ( 'Category', )",
+          alt_accessor_id=('_categoryGetRegionTitle', ),
+          acquisition_copy_value=0,
+          acquisition_accessor_id='getTitle')
 
       # Create a new person, and associate it to beta and gamma.
       module = self.getPersonModule()
@@ -2282,9 +2312,9 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
                         logged_errors[0].getMessage())
 
     def test_list_accessors(self):
-      self._addProperty('Person', 'Person_dummy', 'dummy',
-                        elementary_type='lines',
-                        portal_type='Standard Property')
+      self._addProperty('Person', 'test_list_accessors', 'dummy',
+          elementary_type='lines',
+          portal_type='Standard Property')
       module = self.getPersonModule()
       # we set the property on the module, to check acquisition works as
       # expected.
@@ -2310,11 +2340,13 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.assertEquals(person.getDummySet(), ['value'])
 
     def test_translated_accessors(self):
-      self._addProperty('Person', 'Person_dummy', 'dummy',
-                        elementary_type='string',
-                        translatable=1,
-                        translation_domain='erp5_ui',
-                        portal_type='Standard Property')
+      self._addProperty('Person',
+          'test_translated_accessors',
+          'dummy',
+          elementary_type='string',
+          translatable=1,
+          translation_domain='erp5_ui',
+          portal_type='Standard Property')
       self.portal.Localizer = DummyLocalizer()
       doc = self.portal.person_module.newContent(portal_type='Person')
 
@@ -2546,9 +2578,11 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
 
     def test_DefaultSecurityOnAccessors(self):
       # Test accessors are protected correctly
-      self._addProperty('Person', 'Person_foobar', 'foo_bar',
-                        elementary_type='string',
-                        portal_type='Standard Property')
+      self._addProperty('Person',
+          'test_DefaultSecurityOnAccessors',
+          'foo_bar',
+          elementary_type='string',
+          portal_type='Standard Property')
       obj = self.getPersonModule().newContent(portal_type='Person')
 
       self.assertTrue(guarded_hasattr(obj, 'setFooBar'))
@@ -2567,9 +2601,11 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
 
     def test_DefaultSecurityOnListAccessors(self):
       # Test list accessors are protected correctly
-      self._addProperty('Person', 'Person_foobar', 'foo_bar',
-                        elementary_type='lines',
-                        portal_type='Standard Property')
+      self._addProperty('Person',
+          'test_DefaultSecurityOnListAccessors',
+          'foo_bar',
+          elementary_type='lines',
+          portal_type='Standard Property')
       obj = self.getPersonModule().newContent(portal_type='Person')
       self.assertTrue(guarded_hasattr(obj, 'setFooBarList'))
       self.assertTrue(guarded_hasattr(obj, 'getFooBarList'))
@@ -2624,11 +2660,13 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     def test_PropertySheetSecurityOnAccessors(self):
       # Test accessors are protected correctly when you specify the permission
       # in the property sheet.
-      self._addProperty('Person', 'Person_foobar', 'foo_bar',
-                        elementary_type='string',
-                        write_permission='Set own password',
-                        read_permission='Manage users',
-                        portal_type='Standard Property')
+      self._addProperty('Person',
+          'test_PropertySheetSecurityOnAccessors',
+          'foo_bar',
+          elementary_type='string',
+          write_permission='Set own password',
+          read_permission='Manage users',
+          portal_type='Standard Property')
       obj = self.getPersonModule().newContent(portal_type='Person')
       self.assertTrue(guarded_hasattr(obj, 'setFooBar'))
       self.assertTrue(guarded_hasattr(obj, 'getFooBar'))
@@ -2643,11 +2681,13 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.assertFalse(guarded_hasattr(obj, 'getFooBar'))
 
     def test_edit(self):
-      self._addProperty('Person', 'Person_foobar', 'foo_bar',
-                        elementary_type='string',
-                        write_permission='Set own password',
-                        read_permission='Manage users',
-                        portal_type='Standard Property')
+      self._addProperty('Person',
+          'test_edit',
+          'foo_bar',
+          elementary_type='string',
+          write_permission='Set own password',
+          read_permission='Manage users',
+          portal_type='Standard Property')
       obj = self.getPersonModule().newContent(portal_type='Person')
       obj.edit(foo_bar="v1")
       self.assertEqual(obj.getFooBar(), "v1")
@@ -2724,9 +2764,11 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       Check that we can use setPropertyList and getPropertyList
       on a mono valued property
       """
-      self._addProperty('Person', 'Person_foobar', 'foo_bar',
-                        elementary_type='string',
-                        portal_type='Standard Property')
+      self._addProperty('Person',
+          'testPropertyListWithMonoValuedProperty',
+          'foo_bar',
+          elementary_type='string',
+          portal_type='Standard Property')
       person = self.getPersonModule().newContent(portal_type='Person')
       email = person.newContent(portal_type='Email')
       self.assertEquals(None, getattr(person, 'getFooBarList', None))
@@ -2750,19 +2792,23 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       Check that we can use setPropertyList and getPropertyList
       on a mono valued acquired property
       """
-      self._addProperty('Person', 'Person_foobar', 'foo_bar',
-                        commit=False,
-                        elementary_type='string',
-                        portal_type='Standard Property')
-      self._addProperty('Email', 'Email_foobar', 'foo_bar',
-                        elementary_type='string',
-                        portal_type='Acquired Property',
-                        content_acquired_property_id=('description', ),
-                        acquisition_base_category=( 'parent', ),
-                        acquisition_portal_type="python: ( 'Person', )",
-                        acquisition_copy_value=0,
-                        acquisition_mask_value=1,
-                        acquisition_accessor_id='getFooBar')
+      self._addProperty('Person',
+          'testPropertyListOnMonoValuedAcquiredProperty_Person',
+          'foo_bar',
+          commit=False,
+          elementary_type='string',
+          portal_type='Standard Property')
+      self._addProperty('Email',
+          'testPropertyListOnMonoValuedAcquiredProperty_Email',
+          'foo_bar',
+          elementary_type='string',
+          portal_type='Acquired Property',
+          content_acquired_property_id=('description', ),
+          acquisition_base_category=( 'parent', ),
+          acquisition_portal_type="python: ( 'Person', )",
+          acquisition_copy_value=0,
+          acquisition_mask_value=1,
+          acquisition_accessor_id='getFooBar')
       person = self.getPersonModule().newContent(portal_type='Person')
       email = person.newContent(portal_type='Email')
       self.assertEquals(email.getPropertyList('foo_bar'), [None])
@@ -2780,9 +2826,11 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       Check that we can use setPropertyList and getPropertyList
       on a multi valued property
       """
-      self._addProperty('Person', 'Person_foobar', 'foo_bar',
-                        elementary_type='lines',
-                        portal_type='Standard Property')
+      self._addProperty('Person',
+          'testPropertyListWithMultiValuedProperty',
+          'foo_bar',
+          elementary_type='lines',
+          portal_type='Standard Property')
       person = self.getPersonModule().newContent(portal_type='Person')
       # We have None, like test_list_accessors
       self.assertEquals(person.getFooBarList(), None)
