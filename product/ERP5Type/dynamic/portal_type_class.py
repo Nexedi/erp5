@@ -37,7 +37,7 @@ from accessor_holder import _generateBaseAccessorHolder, _generatePreferenceTool
 
 
 from Products.ERP5Type.mixin.temporary import TemporaryDocumentMixin
-from Products.ERP5Type.Base import _aq_reset, Base
+from Products.ERP5Type.Base import Base, resetRegisteredWorkflowMethod
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Utils import setDefaultClassProperties
 from Products.ERP5Type import document_class_registry, mixin_class_registry
@@ -493,6 +493,13 @@ def synchronizeDynamicModules(context, force=False):
         delattr(erp5.accessor_holder, property_sheet_id)
   finally:
     Base.aq_method_lock.release()
+
+  # It's okay for classes to keep references to old methods - maybe.
+  # but we absolutely positively need to clear the workflow chains
+  # stored in WorkflowMethod objects: our generation of workflow
+  # methods adds/registers/wraps existing methods, but does not
+  # remove old chains. Do it now.
+  resetRegisteredWorkflowMethod()
 
   # Some method generations are based on portal methods, and portal
   # methods cache results. So it is safer to invalidate the cache.
