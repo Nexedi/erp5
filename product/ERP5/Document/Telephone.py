@@ -282,7 +282,6 @@ class Telephone(Coordinate, Base):
       # Trying to get the country and area from dict,
       # but if it fails must be get from preference
       preference_tool = self.portal_preferences
-      import pdb; pdb.set_trace()
       if country in ['', None]:
         country = preference_tool.getPreferredTelephoneDefaultCountryNumber('')
       if area in ['', None]:
