@@ -60,7 +60,7 @@
                 <string>_setTypeMixin.*</string>
                 <string>_setTypeInterface.*</string>
                 <string>_setTypePropertySheet.*</string>
-                <string>_setBaseCategory.*</string>
+                <string>_setTypeBaseCategory.*</string>
               </list>
             </value>
         </item>
