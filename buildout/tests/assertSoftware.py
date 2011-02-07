@@ -112,8 +112,8 @@ IGNORABLE_LINKED_LIB_LIST = (
 SKIP_PART_LIST = (
   'parts/boost-lib-download',
   'parts/mariadb__compile__',
-  'parts/openoffice-bin',
-  'parts/openoffice-bin__unpack__',
+  'parts/libreoffice-bin',
+  'parts/libreoffice-bin__unpack__',
   'parts/products-erp5',
 )
 
