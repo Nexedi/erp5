@@ -3657,6 +3657,9 @@ class PropertySheetTemplateItem(DocumentTemplateItem,
              'already exists in portal_property_sheets and '\
              'cannot be updated automatically for now. ' % class_id,
              UserWarning)
+        del migrate_object_dict[class_id]
+        if class_id in object_dict:
+          del object_dict[class_id]
         continue
 
       filesystem_property_sheet_path = \
