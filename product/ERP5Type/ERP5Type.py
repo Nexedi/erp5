@@ -239,7 +239,7 @@ class ERP5TypeInformation(XMLObject,
     # with great care.
     defined_group_list = (
       # Framework
-      'alarm', 'rule',
+      'alarm', 'rule', 'constraint',
       # ERP5 UBM (5 Classes)
       'resource', 'node', 'item',
       'path', # movement is generated from all *_movement group above.
