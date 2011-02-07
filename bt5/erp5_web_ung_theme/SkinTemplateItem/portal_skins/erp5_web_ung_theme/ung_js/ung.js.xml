@@ -410,10 +410,6 @@ $().ready(function(){\n
     event.preventDefault();\n
     showNotImplementedMessage("a#right_message");\n
   });\n
-  $("a.email").click(function(event){\n
-    event.preventDefault();\n
-    showNotImplementedMessage("a#left_message");\n
-  });\n
   $("a#login").click(function(event){\n
     event.preventDefault();\n
     $("div.header-left div.field input, div.main-right, div.main-left").hide();\n
