@@ -121,8 +121,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>ung_domain</string>
-                          <string>UNG Documents</string>
+                          <string>ung_mail_domain</string>
+                          <string>Mail Domain</string>
                         </tuple>
                       </list>
                     </value>
