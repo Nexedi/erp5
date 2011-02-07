@@ -103,7 +103,7 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     self.getWorkflowTool().setChainForPortalTypes(
                   [self.portal_type],'test_workflow, validation_workflow')
     _aq_reset() # XXX Fails XXX _setLastId not found when doing newContent
-  
+
   def createInteractionWorkflowWithTwoInteractions(self):
     id = 'test_workflow'
     wf_type = "interaction_workflow (Web-configurable interaction workflow)"
@@ -274,7 +274,7 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     self.assertEquals(organisation.getDescription(),'a')
     organisation.setActivityCode('acode')
     self.assertEquals(organisation.getDescription(),'aa')
-    
+
   def test_09(self, quiet=0, run=run_all_test):
     if not run: return
     if not quiet:
@@ -296,7 +296,7 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
            "context.setDescription(description + 'a')"
     self.scriptA.ZPythonScript_edit(params, body)
     self.scriptB.ZPythonScript_edit(params, body.replace("'a'", "'b'"))
-    
+
     self.createData()
     organisation = self.organisation
     organisation.edit()
@@ -307,7 +307,7 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     self.assert_(organisation.getDescription() in ('ab', 'ba'),
         "description should be 'ab' or 'ba', it is %s" %
         organisation.getDescription())
-    
+
   def test_10(self, quiet=0, run=run_all_test):
     if not run: return
     if not quiet:
@@ -325,7 +325,7 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
            "context.setDescription(description + 'a')"
     self.scriptA.ZPythonScript_edit(params, body)
     self.scriptB.ZPythonScript_edit(params, body.replace("'a'", "'b'"))
-    
+
     self.createData()
     organisation = self.organisation
     organisation.edit()
@@ -336,7 +336,7 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     self.assert_(organisation.getDescription() in ('ab', 'ba'),
         "description should be 'ab' or 'ba', it is %s" %
         organisation.getDescription())
-    
+
   def test_11(self, quiet=0, run=run_all_test):
     if not run: return
     if not quiet:
@@ -454,7 +454,7 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     # - edit:setVatCode(bara)
     self.assertEquals(organisation.getVatCode(),'bara')
 
-    
+
   def test_14_BeforeScriptParameters(self, quiet=0, run=run_all_test):
     if not run: return
     if not quiet:
@@ -601,7 +601,7 @@ context.setTitle('Bar')
                       'Access contents information', ['Role1'], 0)
     self.assertEquals(self.organisation.nonExistantMethod__roles__,
                       ('Role1',))
-    
+
   def test_security_defined(self):
     # wrapping a method in an interaction workflow adds a default security to
     # this method, but does not override existing security definition
@@ -659,4 +659,3 @@ def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestInteractionWorkflow))
   return suite
-
