@@ -37,7 +37,7 @@
             <value> <unicode encoding="cdata"><![CDATA[
 
 <tal:block tal:define="portal_path python: here.getWebSiteValue().absolute_url();">\n
- <a class="email" tal:attributes="href string:${portal_path}/email">Email</a>\n
+ <a class="email" tal:attributes="href string:${portal_path}/mail">Email</a>\n
  <a class="documents" tal:attributes="href string:${portal_path}">Documents</a>\n
  <a class="calendar" tal:attributes="href string:${portal_path}/calendar">Calendar</a>\n
 </tal:block>\n
