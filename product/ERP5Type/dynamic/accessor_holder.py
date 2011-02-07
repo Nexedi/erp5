@@ -111,10 +111,8 @@ class AccessorHolderType(type):
     InitializeClass(accessor_holder_class)
     return accessor_holder_class
 
-
-generating_base_accessor_holder = False
 def _generateBaseAccessorHolder(portal,
-    accessor_holder_module):
+                                accessor_holder_module):
   """
   Create once an accessor holder that contains all accessors common to
   all portal types: erp5.accessor_holder.BaseAccessorHolder
@@ -136,15 +134,9 @@ def _generateBaseAccessorHolder(portal,
   if accessor_holder is not None:
     return accessor_holder
 
-  global generating_base_accessor_holder
-  if generating_base_accessor_holder:
-    # can cause recursion, as accessing categories generates category properties
-    return None
-  generating_base_accessor_holder = True
-
+  # When setting up the site, there will be no portal_categories
   portal_categories = getattr(portal, 'portal_categories', None)
   if portal_categories is None:
-    generating_base_accessor_holder = False
     return None
 
   base_category_list = portal_categories.objectIds()
@@ -163,7 +155,6 @@ def _generateBaseAccessorHolder(portal,
                       'erp5.accessor_holder',
                       initialize=False)
   setattr(accessor_holder_module, base_accessor_holder_id, accessor_holder)
-  generating_base_accessor_holder = False
   return accessor_holder
 
 def _generatePreferenceToolAccessorHolder(portal, accessor_holder_list,
@@ -212,4 +203,3 @@ def _generatePreferenceToolAccessorHolder(portal, accessor_holder_list,
                       initialize=False)
   setattr(accessor_holder_module, 'PreferenceTool', accessor_holder)
   return accessor_holder
-

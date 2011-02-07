@@ -70,13 +70,10 @@ def _createAccessorHolderList(site,
   accessor_holder_list = []
 
   if "Base" in property_sheet_name_set:
-    accessor_holder_class = None
-
     # useless if Base Category is not yet here or if we're currently
     # generating accessors for Base Categories
-    if hasattr(erp5.accessor_holder, "BaseCategory"):
-      accessor_holder_class = _generateBaseAccessorHolder(site,
-                                                          erp5.accessor_holder)
+    accessor_holder_class = _generateBaseAccessorHolder(site,
+                                                        erp5.accessor_holder)
 
     if accessor_holder_class is not None:
       accessor_holder_list.append(accessor_holder_class)
