@@ -36,6 +36,14 @@
             <value> <string>A Content Existence Constraint checks whether an object has at least one subobject of the optionally specified Portal Types</string> </value>
         </item>
         <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <tuple>
+                <string>constraint</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>Content Existence Constraint</string> </value>
         </item>

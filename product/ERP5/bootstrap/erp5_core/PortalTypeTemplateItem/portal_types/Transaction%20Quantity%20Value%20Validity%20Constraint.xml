@@ -36,6 +36,14 @@
             <value> <string>A Transaction Quantity Value Validity Constraint checks whether the quantity of the transaction is greater than the balance of the source</string> </value>
         </item>
         <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <tuple>
+                <string>constraint</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>Transaction Quantity Value Validity Constraint</string> </value>
         </item>

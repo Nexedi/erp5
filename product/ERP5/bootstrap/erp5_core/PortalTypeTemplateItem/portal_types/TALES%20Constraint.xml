@@ -36,6 +36,14 @@
             <value> <string>A TALES Constraint checks whether the expression is not evaluated as false</string> </value>
         </item>
         <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <tuple>
+                <string>constraint</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>TALES Constraint</string> </value>
         </item>

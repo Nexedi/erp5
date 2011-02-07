@@ -36,6 +36,14 @@
             <value> <string>A Category Membership Arity Constraint checks whether an object respects the arity without or with Acquisition</string> </value>
         </item>
         <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <tuple>
+                <string>constraint</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>Category Membership Arity Constraint</string> </value>
         </item>

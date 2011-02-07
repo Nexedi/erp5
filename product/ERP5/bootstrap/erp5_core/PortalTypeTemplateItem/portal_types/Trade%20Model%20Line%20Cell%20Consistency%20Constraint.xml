@@ -36,6 +36,14 @@
             <value> <string>A Trade Model Line Cell Consistency Constraint checks whether Trade Model Line should contain cells</string> </value>
         </item>
         <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <tuple>
+                <string>constraint</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>Trade Model Line Cell Consistency Constraint</string> </value>
         </item>

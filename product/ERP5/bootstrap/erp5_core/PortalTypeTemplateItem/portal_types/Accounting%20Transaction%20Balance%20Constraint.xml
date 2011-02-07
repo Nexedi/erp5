@@ -36,6 +36,14 @@
             <value> <string>An Accounting Transaction Balance Constraint checks whether accounting transaction total debit and total credit are equal</string> </value>
         </item>
         <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <tuple>
+                <string>constraint</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>Accounting Transaction Balance Constraint</string> </value>
         </item>

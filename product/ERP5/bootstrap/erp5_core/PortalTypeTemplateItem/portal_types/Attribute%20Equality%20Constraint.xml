@@ -36,6 +36,14 @@
             <value> <string>An Attribute Equality Constraint checks whether the attribute value is valid</string> </value>
         </item>
         <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <tuple>
+                <string>constraint</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>Attribute Equality Constraint</string> </value>
         </item>
