@@ -63,8 +63,6 @@ message_list.extend(context.ERP5Site_upgradePythonExecutable())\n
 \n
 message_list.extend(context.ERP5Site_upgradeSoftwareHome())\n
 \n
-message_list.extend(context.ERP5Site_upgradeProductPath())\n
-\n
 message_list.extend(context.ERP5Site_upgradeBusinessTemplateList())\n
 \n
 message_list.extend(context.ERP5Site_upgradeGlobalPropertyList())\n

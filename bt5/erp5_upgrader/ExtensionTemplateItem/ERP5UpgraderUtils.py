@@ -47,27 +47,6 @@ def ERP5Site_editERP5SiteProperty(self, prop, value):
   method(prop, value)
   return True
 
-def ERP5Site_verifyProductPathUpgrade(self):
-  """
-    Due activities concurrency, it is needed that the upgrade process
-    only proceed after restart be sucessfully done. 
-
-    This script make sure that the process will wait for the
-    Prodcuts be upgraded to proceed.
-
-    This method is not elegant solution but it is essential part 
-    between restart zope and update Activities.
-  """
-  # check if the products are already updated.
-  if len(self.ERP5Site_upgradeProductPath()) > 0:
-    # Wait at least 20 seconds before try again
-    # This will prevent the activities be invoked
-    # too early.
-    sleep(20)
-    # Force failure for restart the activity
-    raise 
-  return
-
 def ERP5Site_restartZopeInstance(self):
   """
     Zope must be restart after update the Products or Software

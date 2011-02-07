@@ -1,3 +1,9 @@
+2011-02-07 Kazuhiko
+* remove set and upgrade product_path, that should be handled by instance creation in buildout.
+
+2011-02-04 Kazuhiko
+* remove system_upgrader and product_upgrader, that should be handled by instance creation in buildout.
+
 2010-09-30 lucas
 * Added message to be logged if during the upgrade of the Local Roles for security groups the Portal Type document does not exists.
 
