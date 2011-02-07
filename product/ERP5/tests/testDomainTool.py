@@ -56,6 +56,20 @@ class TestDomainTool(TestPredicateMixIn):
     """
     return ('erp5_base','erp5_pdm', 'erp5_trade', 'erp5_apparel')
 
+  def afterSetUp(self):
+    domain_tool = self.getDomainTool()
+
+    # Query to restrict searches to 'interesting' predicates:
+    # - ignore simulation rules, which are now predicates
+    # - ignore as well constraints, which are predicates
+    self.portal_type_query = Query(
+        operator='AND',
+        portal_type=['!=%s' % x for x
+          in domain_tool.getPortalRuleTypeList()
+          + ('Base Domain', 'Contribution Predicate')
+          + domain_tool.getPortalConstraintTypeList()])
+    super(TestDomainTool, self).afterSetUp()
+
   def beforeTearDown(self):
     transaction.abort()
 
@@ -148,16 +162,9 @@ class TestDomainTool(TestPredicateMixIn):
     order_line = self.getOrderLine()
     domain_tool = self.getDomainTool()
 
-    # ignore simulation rules, which are now predicates
-    rule_query = Query(
-        operator='AND',
-        portal_type=['!=%s' % x for x
-          in domain_tool.getPortalRuleTypeList()
-          + ('Base Domain', 'Contribution Predicate')])
-
     # Test with order line and predicate to none
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,
-        portal_type=rule_query)
+        portal_type=self.portal_type_query)
     self.assertEquals(len(predicate_list),1) # Actually, a predicate where
                                              # nothing is defined is ok
 
@@ -166,7 +173,7 @@ class TestDomainTool(TestPredicateMixIn):
     transaction.commit()
     self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,
-        portal_type=rule_query)
+        portal_type=self.portal_type_query)
     self.assertEquals(len(predicate_list),1)
 
     # Test with order line not none and predicate to identity
@@ -197,7 +204,7 @@ class TestDomainTool(TestPredicateMixIn):
     transaction.commit()
     self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,
-        portal_type=rule_query)
+        portal_type=self.portal_type_query)
     self.assertEquals(len(predicate_list),0)
 
     # Test with order line not none and predicate to max
@@ -319,7 +326,7 @@ class TestDomainTool(TestPredicateMixIn):
     self.tic()
     domain_tool = self.getDomainTool()
     context = self.resource.asContext(categories=['resource/%s' % self.resource.getRelativeUrl()])
-    mapped_value = domain_tool.generateMappedValue(context)
+    mapped_value = domain_tool.generateMappedValue(context, portal_type="Supply Line")
     self.assertEquals(mapped_value.getBasePrice(),23)
 
   def test_04_GenerateMappedValueWithRanges(self, quiet=0, run=run_all_test):
@@ -404,16 +411,24 @@ class TestDomainTool(TestPredicateMixIn):
     context = self.resource.asContext(
                      categories=['resource/%s' % self.resource.getRelativeUrl(),
                      'variation/%s/blue' % self.resource.getRelativeUrl()])
-    mapped_value = domain_tool.generateMappedValue(context,sort_method=sort_method)
+    mapped_value = domain_tool.generateMappedValue(context,
+                     portal_type=self.portal_type_query,
+                     sort_method=sort_method)
     self.assertEquals(mapped_value.getProperty('base_price'),45)
-    mapped_value = domain_tool.generateMappedValue(context,sort_key_method=sort_key_method)
+    mapped_value = domain_tool.generateMappedValue(context,
+                     portal_type=self.portal_type_query,
+                     sort_key_method=sort_key_method)
     self.assertEquals(mapped_value.getProperty('base_price'),45)
     context = self.resource.asContext(
                      categories=['resource/%s' % self.resource.getRelativeUrl(),
                      'variation/%s/red' % self.resource.getRelativeUrl()])
-    mapped_value = domain_tool.generateMappedValue(context,sort_method=sort_method)
+    mapped_value = domain_tool.generateMappedValue(context,
+                     portal_type=self.portal_type_query,
+                     sort_method=sort_method)
     self.assertEquals(mapped_value.getProperty('base_price'),26)
-    mapped_value = domain_tool.generateMappedValue(context,sort_key_method=sort_key_method)
+    mapped_value = domain_tool.generateMappedValue(context,
+                     portal_type=self.portal_type_query,
+                     sort_key_method=sort_key_method)
     self.assertEquals(mapped_value.getProperty('base_price'),26)
     # Now check the price
     self.assertEquals(self.resource.getPrice(context=self.resource.asContext(
@@ -443,9 +458,9 @@ class TestDomainTool(TestPredicateMixIn):
     # Basic sanity checks
     self.assertTrue(predicate_both_match.test(document))
     self.assertFalse(predicate_one_match.test(document))
-    self.assertTrue(predicate_one_match not in portal_domains.searchPredicateList(document, test=1))
+    self.assertTrue(predicate_one_match not in portal_domains.searchPredicateList(document, portal_type=self.portal_type_query, test=1))
     # Real test
-    self.assertTrue(predicate_one_match not in portal_domains.searchPredicateList(document, test=0))
+    self.assertTrue(predicate_one_match not in portal_domains.searchPredicateList(document, portal_type=self.portal_type_query, test=0))
 
   def test_07_NonLeftJoinModeOfSearchPredicateList(self, quiet=0, run=run_all_test):
     if not run: return
