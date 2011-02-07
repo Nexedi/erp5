@@ -1633,6 +1633,8 @@ class AssertImagemagick(AssertSoftwareMixin):
       'libbz2',
       'libc',
       'libdl',
+      'libexpat',
+      'libfontconfig',
       'libfreetype',
       'libjasper',
       'libjbig',
@@ -1647,9 +1649,11 @@ class AssertImagemagick(AssertSoftwareMixin):
 
   core_rpath_list = [
       'bzip2',
+      'fontconfig',
       'freetype',
       'jasper',
       'jbigkit',
+      'libexpat',
       'libjpeg',
       'libpng',
       'libtiff',
