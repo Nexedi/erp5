@@ -126,7 +126,7 @@ class TestPasswordTool(ERP5TypeTestCase):
     Check existence of password tool
     """
     self._assertUserExists('userA', 'passwordA')
-    
+
   def stepCheckUserLoginWithNewPassword(self, sequence=None, sequence_list=None, **kw):
     """
     Check existence of password tool
@@ -307,7 +307,7 @@ class TestPasswordTool(ERP5TypeTestCase):
                       'ModifyExpirationDate ' \
                       'GoToRandomAddress Tic '  \
                       'CheckUserLogin CheckUserNotLoginWithBadPassword ' \
-                      
+
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
@@ -330,7 +330,7 @@ class TestPasswordTool(ERP5TypeTestCase):
                       'CheckNoRequestRemains ' \
                       'GoToRandomAddressTwice Tic '  \
                       'CheckUserLogin CheckUserNotLoginWithBadPassword ' \
-                      
+
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
@@ -353,7 +353,7 @@ class TestPasswordTool(ERP5TypeTestCase):
 
     self._assertUserExists('userA', 'passwordA')
     self._assertUserExists('userB', 'passwordB')
-    
+
     self.assertEquals(0, len(self.portal.portal_password._password_request_dict))
     self.portal.portal_password.mailPasswordResetRequest(user_login="userA")
     self.assertEquals(1, len(self.portal.portal_password._password_request_dict))
@@ -405,7 +405,7 @@ class TestPasswordTool(ERP5TypeTestCase):
     self.tic()
 
     self._assertUserExists('userZ ', 'passwordZ')
-    
+
     self.assertEquals(0, len(self.portal.portal_password._password_request_dict))
     # No reset should be send if trailing space is not entered
     self.portal.portal_password.mailPasswordResetRequest(user_login="userZ")
