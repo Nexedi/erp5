@@ -255,6 +255,7 @@ def getSearchDialog(self, REQUEST=None):
           default_search_key = 'Keyword'
         addKeywordSearchStringField(column_id, column_title,
                                     default_search_key=default_search_key)
+        continue
       else:
         addListField(short_column_id, column_title)
         continue
