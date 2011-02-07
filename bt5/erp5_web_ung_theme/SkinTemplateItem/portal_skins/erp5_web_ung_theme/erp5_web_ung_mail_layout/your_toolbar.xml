@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_search_box</string> </value>
+            <value> <string>your_toolbar</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -219,8 +219,14 @@
                     <key> <string>default</string> </key>
                     <value> <string encoding="cdata"><![CDATA[
 
-<input name="searchable-text" type="text"/>\n
-<input id="submit-search" type="submit" value="Search Mail" />
+<div class="toolbar">\n
+<button title="Archive" name="" type="submit" class="archive">Archive</button>\n
+<button title="Report Spam" name="#" type="submit" class="report_spam">Report Spam</button>\n
+<button title="Delete" name="WebSection_deleteObjectList:method" type="submit" class="delete">Delete</button>\n
+<button title="Labels" name="" type="submit" class="labels">Labels</button>\n
+<button title="More Actions" name="" type="submit" class="actions">More Actions</button>\n
+\n
+</div>
 
 ]]></string> </value>
                 </item>
@@ -230,7 +236,7 @@
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
@@ -274,7 +280,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Search</string> </value>
+                    <value> <string>Toolbar</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>

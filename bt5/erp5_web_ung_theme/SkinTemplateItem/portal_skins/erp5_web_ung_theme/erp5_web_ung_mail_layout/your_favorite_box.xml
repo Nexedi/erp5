@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_search_box</string> </value>
+            <value> <string>your_favorite_box</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -219,8 +219,7 @@
                     <key> <string>default</string> </key>
                     <value> <string encoding="cdata"><![CDATA[
 
-<input name="searchable-text" type="text"/>\n
-<input id="submit-search" type="submit" value="Search Mail" />
+<div class="favorite"></div>
 
 ]]></string> </value>
                 </item>
@@ -230,7 +229,7 @@
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
@@ -274,7 +273,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Search</string> </value>
+                    <value> <string>favorite_box</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>

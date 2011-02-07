@@ -219,6 +219,8 @@
                     <key> <string>default</string> </key>
                     <value> <string encoding="cdata"><![CDATA[
 
+<link href="\n
+ung_css/ung_mail.css" rel="stylesheet" type="text/css"/>\n
 <div class="gadget-column"> <div class="file-quick-search"></div></div>
 
 ]]></string> </value>
