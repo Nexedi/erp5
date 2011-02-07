@@ -43,6 +43,12 @@ div.favorite {\n
   background-color: #c8d6ff;\n
   border-top: 4px solid #BBCCFF;\n
   padding-top: 1px;\n
+}\n
+\n
+button.compose_mail {\n
+  background-image: url("ung_images/button_background.png");\n
+  border: 1px solid #BBBBBB;\n
+  -moz-border-radius: 4px;\n
 }</string> </value>
         </item>
         <item>

@@ -221,6 +221,7 @@
 
 <link href="\n
 ung_css/ung_mail.css" rel="stylesheet" type="text/css"/>\n
+<button title="Compose Mail" name="" type="submit" class="compose_mail">Compose Mail</button>\n
 <div class="gadget-column"> <div class="file-quick-search"></div></div>
 
 ]]></string> </value>

@@ -91,6 +91,8 @@
                     <key> <string>main main-right</string> </key>
                     <value>
                       <list>
+                        <string>your_favorite_box</string>
+                        <string>your_toolbar</string>
                         <string>your_listbox</string>
                       </list>
                     </value>
