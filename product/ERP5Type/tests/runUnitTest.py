@@ -706,7 +706,11 @@ def main(argument_list=None):
     elif opt == "--zserver":
       os.environ["zserver"] = arg
     elif opt == "--products_path":
-      os.environ["PRODUCTS_PATH"] = arg
+      import Products
+      for products_path in arg.split(','):
+        Products.__path__.append(products_path)
+        for test_path in glob(os.path.join(products_path, '*', 'tests')):
+          sys.path.append(test_path)
     elif opt == "--sys_path":
       sys.path.extend(arg.split(','))
     elif opt == "--instance_home":
