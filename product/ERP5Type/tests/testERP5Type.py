@@ -445,6 +445,24 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.assertTrue(person_object.hasActivity())
       self.tic()
 
+      # category tool, base categories, properties
+      # are likely to be handled specifically for accessor generation,
+      # since they are the first portal types to be loaded.
+      # double-check that they also have group accessors
+      category_tool = self.portal.portal_categories.aq_inner
+      method = getattr(category_tool, 'getRegionRelatedList', None)
+      self.assertNotEquals(None, method)
+
+      region_category = category_tool.region.aq_inner
+      method = getattr(region_category, 'getRegionRelatedList', None)
+      self.assertNotEquals(None, method)
+
+      property_sheet_tool = self.portal.portal_property_sheets
+      person_property_sheet = property_sheet_tool.Person.aq_inner
+      method = getattr(person_property_sheet, 'getRegionRelatedList', None)
+      self.assertNotEquals(None, method)
+
+
     def test_05_setProperty(self):
       """
         In this test we create a subobject (ie. a phone number)
