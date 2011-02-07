@@ -33,7 +33,7 @@ import email.Header
 import transaction
 
 from Products.CMFCore.WorkflowCore import WorkflowException
-from Products.ERP5Type.tests.utils import DummyMailHost, FileUpload
+from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
                                                        _getConversionServerDict
 from Products.ERP5OOo.tests.testIngestion import FILENAME_REGULAR_EXPRESSION
@@ -61,18 +61,10 @@ class BaseTestCRM(ERP5TypeTestCase):
 
   def afterSetUp(self):
     super(BaseTestCRM, self).afterSetUp()
-    # add a dummy mailhost not to send real messages
-    self.oldMailHost = getattr(self.portal, 'MailHost', None)
-    if self.oldMailHost is not None:
-      self.portal.manage_delObjects(['MailHost'])
-      self.portal._setObject('MailHost', DummyMailHost('MailHost'))
+    self.portal.MailHost.reset()
 
   def beforeTearDown(self):
     transaction.abort()
-    # restore the original MailHost
-    if self.oldMailHost is not None:
-      self.portal.manage_delObjects(['MailHost'])
-      self.portal._setObject('MailHost', DummyMailHost('MailHost'))
     # clear modules if necessary
     for module_name in clear_module_name_list:
       module = self.portal.unrestrictedTraverse(module_name)

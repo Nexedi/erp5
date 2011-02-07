@@ -34,7 +34,6 @@ from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.ERP5Type.tests.utils import DummyMailHost
 from DateTime import DateTime
 
 class TestPasswordTool(ERP5TypeTestCase):
@@ -52,11 +51,8 @@ class TestPasswordTool(ERP5TypeTestCase):
 
 
   def afterSetUp(self):
-    portal = self.getPortal()
-    if 'MailHost' in portal.objectIds():
-      portal.manage_delObjects(['MailHost'])
-    portal._setObject('MailHost', DummyMailHost('MailHost'))
-    portal.email_from_address = 'site@example.invalid'
+    self.portal.email_from_address = 'site@example.invalid'
+    self.portal.MailHost.reset()
     self.portal.portal_caches.clearAllCache()
 
   def beforeTearDown(self):
@@ -70,7 +66,7 @@ class TestPasswordTool(ERP5TypeTestCase):
 
   def getUserFolder(self):
     """Returns the acl_users. """
-    return self.getPortal().acl_users
+    return self.portal.acl_users
 
   def _assertUserExists(self, login, password):
     """Checks that a user with login and password exists and can log in to the

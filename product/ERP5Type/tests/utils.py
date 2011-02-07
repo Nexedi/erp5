@@ -91,6 +91,12 @@ class DummyMailHostMixin(object):
     """ Return last message """
     return cls._last_message
 
+  @classmethod
+  def reset(cls):
+    cls._last_message = ()
+    cls._previous_message = ()
+    cls._message_list = []
+
 class DummyMailHost(DummyMailHostMixin, MailHost):
   pass
 
