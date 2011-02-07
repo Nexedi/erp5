@@ -11,10 +11,10 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>subject</string> </key>
+                    <key> <string>validation_state</string> </key>
                     <value>
                       <list>
-                        <string>inbox</string>
+                        <string>new</string>
                       </list>
                     </value>
                 </item>
@@ -31,7 +31,7 @@
             <key> <string>criterion_property</string> </key>
             <value>
               <tuple>
-                <string>subject</string>
+                <string>validation_state</string>
               </tuple>
             </value>
         </item>
