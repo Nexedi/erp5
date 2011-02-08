@@ -1,0 +1,7 @@
+<type_roles>
+  <role id='Auditor'>
+   <property id='title'>Cloudooo Auditor</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromSelf</property>
+   <multi_property id='base_category'>group</multi_property>
+  </role>
+</type_roles>
