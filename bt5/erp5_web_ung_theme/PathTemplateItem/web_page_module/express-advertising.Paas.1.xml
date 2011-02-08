@@ -1,0 +1,297 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Page" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_cached_data</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_cached_mime</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_cached_size</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_cached_time</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>classification/collaborative/team</string>
+                <string>contributor/person_module/1088</string>
+                <string>contributor/person_module/1270</string>
+                <string>contributor/person_module/619</string>
+                <string>publication_section/website/product</string>
+                <string>publication_section/marketing/express/hosting</string>
+                <string>group/nexedi/tio</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>express-advertising.Paas.1</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>1</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>express-advertising.Paas.1</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>fr</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Page</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value> <string>Développez vos gadgets</string> </value>
+        </item>
+        <item>
+            <key> <string>subject</string> </key>
+            <value>
+              <tuple>
+                <string>advertising</string>
+                <string>Paas</string>
+                <string>developer mode</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+${css_model_short}\r\n
+\r\n
+<table id="es_main">\r\n
+ <tr>\r\n
+   <td colspan=2 id="es_banner">\r\n
+     <span id="es_banner_title">\r\n
+Hébergement\r\n
+     </span>\r\n
+   </td>\r\n
+ </tr>\r\n
+ <tr>\r\n
+   <td id="es_left">\r\n
+     <div id="es_title">\r\n
+Mode développeur                                                                              \r\n
+     </div>\r\n
+     <div id="es_main_text_div">\r\n
+       <span id="es_main_text">\r\n
+<p><img src="graphic-bullet.Ads" style="margin-right:5px;"/><b>Créez et personnalisez vos catégories</b></p>\r\n
+<p>Vous pouvez créer de nouvelles catégories ou customiser les catégories deja existantes grâce au mode développeur. Notez que vous aurez besoin de conaître un minimum comment Zope fonctionne et avoir des notions du language Python.</p>\r\n
+\r\n
+<p><img src="graphic-bullet.Ads" style="margin-right:5px;"/><b>Modifiez le code source!</b></p>\r\n
+<p>Modifiez le code source afin qu\'ERP5 Expres s\'adapte parfaitement à votre problématique de gestion quotidienne. Que vous ayez besoin de changer les workflows existant ou de créer de nouvelles fonctionnalités, vous serez libre de le faire. Si toutefois vous souhaitez modifier votre environnement ERP5 Express mais n\'avez pas de connaissances en Python ou en Zope, nous pouvons le faire pour vous. Vous pouvez contacter notre équipe de customisation afin de recevoir un devis: sales@nexedi.com</p>\r\n
+\r\n
+\r\n
+       </span><br />\r\n
+    </div> \r\n
+  </td>\r\n
+ \r\n
+   <td id="es_right">\r\n
+     <div id="es_picture_right">\r\n
+       <img src=""/>\r\n
+     </div>\r\n
+     <div>\r\n
+       <span id="es_title_right">\r\n
+Développez vos propres fonctionnalités\r\n
+       </span>\r\n
+     </div>\r\n
+     <ul id="es_list"> \r\n
+<li>Créez et personnalisez vos catégories</li> \r\n
+<li>Modifiez le code source!</li> \r\n
+     </ul>\r\n
+ \r\n
+   </td> \r\n
+ </tr>\r\n
+ <tr>\r\n
+   <td>\r\n
+     <div id="es_bottom_bar">\r\n
+       <form action="WebSite_viewExpressPaymentDialog" id="es_form">\r\n
+         <input type="hidden" name="tag" value="838d9c9a7f9b834b48583b26275369472e7e22ebead2b001">\r\n
+         <input type="submit" onclick="this.form.submit();" id="es_image_input" value=" "/>                                                                                                                                      \r\n
+       </form>\r\n
+       <span id="es_price">\r\n
+80€/mois\r\n
+       </span>\r\n
+     <div> \r\n
+   </td>  \r\n
+   <td>\r\n
+     <a href="${contact}">\r\n
+       <div id="es_contact">\r\n
+       </div>\r\n
+     </a>                                                                                                                                                 \r\n
+   </td> \r\n
+ <tr>\r\n
+  ${bottom_links}\r\n
+</table>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>text_content_substitution_mapping_method_id</string> </key>
+            <value> <string>WebPage_getProductDesignDict</string> </value>
+        </item>
+        <item>
+            <key> <string>text_format</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Développez vos propres fonctionnalités</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <tuple>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <tuple>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
