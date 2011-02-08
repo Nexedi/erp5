@@ -50,90 +50,49 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
   Check installed business templates one \n
   by one. If one of the business templates does not \n
-  use the latest release, then we need to migrate.\n
-\n
-  NOTE: this means that if a system uses custom\n
-  business templates (ie. dedicate), upgrader \n
-  will for now fail.\n
+  use the latest revision, then we need to install.\n
 """\n
 # Initialize variables\n
-portal_templates = context.getPortalObject().portal_templates\n
-signature = context.ERP5Site_getUpgraderSignature()\n
-release = signature[\'release\']\n
-is_upgradable = False\n
+portal = context.getPortalObject()\n
+portal_templates = portal.portal_templates\n
+signature = portal.ERP5Site_getUpgraderSignature()\n
 message_list = []\n
 \n
-# verify only core is enough for now. \n
-template_version = context.ERP5Site_getBusinessTemplateVersion()\n
-if template_version != release:\n
-  is_upgradable = True\n
-\n
-# No need to upgrade (system is up to date)\n
-if not is_upgradable:\n
-  return message_list\n
-\n
-message_list.append(\\\n
-         "Upgrade Required for Business Templates, Expected: %s , Current: %s." \\\n
-            % (release, template_version))\n
-\n
-# Notify that Business Template requires upgrade\n
-if not upgrade:\n
-  return message_list\n
-\n
-# update all public bt5s\n
 previous_bt5_id = None\n
 bt5_counter = 0\n
+available_bt5_list = portal_templates.getRepositoryBusinessTemplateList(newest_only=True)\n
+available_bt5_id_list = [x.title for x in available_bt5_list]\n
 required_bt5_id_list = signature.get(\'required_bt5_id_list\', [])\n
+if len(required_bt5_id_list) == 0:\n
+  # by default, we try to upgrade all business templates from repositories.\n
+  required_bt5_id_list = [i.title for i in available_bt5_list]\n
 upgradable_bt5_id_list = signature.get(\'upgradable_bt5_id_list\', [])\n
 reinstallable_bt5_id_list = signature.get(\'reinstallable_bt5_id_list\', signature.get(\'reinstalable_bt5_id_list\', []))\n
 before_triggered_bt5_id_dict = signature.get(\'before_triggered_bt5_id_dict\', [])\n
 after_triggered_bt5_id_dict = signature.get(\'after_triggered_bt5_id_dict\', [])\n
 update_catalog_bt5_id_list = signature.get(\'update_catalog_bt5_id_list\', [])\n
 \n
+bt5_id_list = dict([(x, True) for x in list(required_bt5_id_list) + \\\n
+                                       list(upgradable_bt5_id_list) + \\\n
+                                       list(reinstallable_bt5_id_list) \\\n
+                    if x in available_bt5_id_list]).keys()\n
 \n
-base_url_list = signature.get(\'bt5_base_url_list\', [])\n
+# sort by dependencies\n
+bt5_list = [portal_templates.decodeRepositoryBusinessTemplateUid(x.uid) for x in \\\n
+           available_bt5_list if x.title in bt5_id_list]\n
+bt5_list = portal_templates.sortBusinessTemplateList(bt5_list)\n
+\n
 installed_bt5_title_list = [o.getTitle() for o in portal_templates.getInstalledBusinessTemplateList()]\n
 \n
 bt5_counter = portal_templates.countFolder()[0][0]\n
 \n
-def installBT5(bt5_title, previous_bt5, bt5_counter):\n
-  bt5_id = "%s_%s_%s" % (bt5_counter,  bt5_title, release)\n
-  # no need to update a bt5 if it\'s to be explicitly added later \n
-  bt5_url = portal_templates.getBusinessTemplateUrl(base_url_list, bt5_title)\n
-  if portal_templates.has_key(bt5_id):\n
-    raise ValueError, \'Business Template %s has already been imported\' % bt5_id\n
-  if bt5_url is None:\n
-    message_list.append("%s was ignored because was not possible found"\n
-                        "the bt5 into the followed repositories: %s" % \\\n
-                        (bt5_title, base_url_list)  )\n
-    return previous_bt5\n
-  kw = dict(activity = "SQLQueue", tag = bt5_id)\n
-  if previous_bt5 is not None:\n
-    kw[\'after_tag\'] = previous_bt5\n
-    # We must make sure all documents from previous installations \n
-    # are already indexed (specially categories).\n
-    kw[\'after_method_id\'] = "immediateReindexObject"\n
-  update_catalog = bt5_title in update_catalog_bt5_id_list \n
-  before_triggered_bt5_id_list = before_triggered_bt5_id_dict.get(bt5_title, ())\n
-  after_triggered_bt5_id_list = after_triggered_bt5_id_dict.get(bt5_title, ())\n
-  keep_original_list = signature.get(\'keep_original_dict\', {}).get(bt5_title, ())\n
-  portal_templates.activate(**kw).updateBusinessTemplateFromUrl(\n
-                    bt5_url, id = bt5_id,  \n
-                    keep_original_list=keep_original_list,\n
-                    before_triggered_bt5_id_list=before_triggered_bt5_id_list,\n
-                    after_triggered_bt5_id_list=after_triggered_bt5_id_list,\n
-                    update_catalog=update_catalog)\n
-\n
-  previous_bt5_id = bt5_id\n
-  bt5_counter += 1\n
-  message_list.append("\\tUpdate %s as %s"  % (bt5_url, bt5_id))\n
-  return bt5_id\n
-\n
-def reinstallBT5(bt5_title, previous_bt5, bt5_counter):\n
-  bt5_id = "%s_%s_%s" % (bt5_counter, bt5_title, release)\n
+def installBT5(bt5_url, bt5_title, previous_bt5, bt5_counter, force=False):\n
+  bt5_id = "%s_%s" % (bt5_counter,  bt5_title)\n
   kw = dict(activity="SQLQueue", tag=bt5_id)\n
   if previous_bt5 is not None:\n
     kw[\'after_tag\'] = previous_bt5\n
@@ -141,36 +100,51 @@ def reinstallBT5(bt5_title, previous_bt5, bt5_counter):\n
     # are already indexed (specially categories).\n
     kw[\'after_method_id\'] = "immediateReindexObject"\n
   update_catalog = bt5_title in update_catalog_bt5_id_list\n
-  portal_templates.activate(**kw).TemplateTool_reinstallBT5(\n
-                                                    bt5_title,\n
-                                                    update_catalog=update_catalog)\n
-\n
+  before_triggered_bt5_id_list = before_triggered_bt5_id_dict.get(bt5_title, ())\n
+  after_triggered_bt5_id_list = after_triggered_bt5_id_dict.get(bt5_title, ())\n
+  keep_original_list = signature.get(\'keep_original_dict\', {}).get(bt5_title, ())\n
+  if upgrade:\n
+    portal_templates.activate(**kw).updateBusinessTemplateFromUrl(\n
+                    bt5_url, # id=bt5_id,  \n
+                    keep_original_list=keep_original_list,\n
+                    before_triggered_bt5_id_list=before_triggered_bt5_id_list,\n
+                    after_triggered_bt5_id_list=after_triggered_bt5_id_list,\n
+                    update_catalog=update_catalog,\n
+                    reinstall=force)\n
   previous_bt5_id = bt5_id\n
   bt5_counter += 1\n
-  message_list.append("\\t%s Reinstalling"  % (bt5_id))\n
+  message_list.append("\\tInstall %s from %s"  % (bt5_title, bt5_url))\n
   return bt5_id\n
 \n
 previous_bt5 = None\n
-for bt in upgradable_bt5_id_list:\n
-  if bt in installed_bt5_title_list:\n
-    bt5_counter += 1\n
-    bt_id = installBT5(bt, previous_bt5, bt5_counter)\n
-    previous_bt5 = bt_id\n
-    \n
-for bt in required_bt5_id_list:\n
-  bt5_counter += 1\n
-  bt_id = installBT5(bt, previous_bt5, bt5_counter)\n
-  previous_bt5 = bt_id\n
+for repository, bt5_id in bt5_list:\n
+  new_bt = [x for x in available_bt5_list \\\n
+            if portal_templates.decodeRepositoryBusinessTemplateUid(x.uid) == (repository, bt5_id)][0]\n
+  bt5_url = \'/\'.join((repository, bt5_id))\n
+  bt5_title = new_bt.title\n
+  if bt5_title in reinstallable_bt5_id_list:\n
+    bt5_id = installBT5(bt5_url, bt5_title, previous_bt5, bt5_counter, force=True)\n
+    previous_bt5 = bt5_id\n
+  else:\n
+    installed_bt = portal_templates.getInstalledBusinessTemplate(bt5_title, strict=True)\n
+    if installed_bt is not None:\n
+      if installed_bt.getRevision() >= new_bt.revision:\n
+        continue\n
+    if bt5_title in required_bt5_id_list:\n
+      bt5_counter += 1\n
+      bt5_id = installBT5(bt5_url, bt5_title, previous_bt5, bt5_counter)\n
+      previous_bt5 = bt5_id\n
+    elif bt5_title in installed_bt5_title_list: # update_bt5_id_list\n
+      bt5_counter += 1\n
+      bt5_id = installBT5(bt5_url, bt5_title, previous_bt5, bt5_counter)\n
+      previous_bt5 = bt5_id\n
 \n
-for bt in reinstallable_bt5_id_list:\n
-  bt5_counter += 1\n
-  bt_id = reinstallBT5(bt, previous_bt5, bt5_counter)\n
-  previous_bt5 = bt_id\n
-\n
-message_list.append("Upgrade Executed for Business Configuration using activities.")\n
+message_list.append("Business templates will be installed using activities.")\n
 \n
 return message_list\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
