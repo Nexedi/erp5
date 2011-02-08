@@ -62,6 +62,7 @@ class OpenOrder(Supply):
                     , PropertySheet.Comment
                     , PropertySheet.Arrow
                     , PropertySheet.Order
+                    , PropertySheet.Version
                     )
 
   # Expandable Interface Implementation
