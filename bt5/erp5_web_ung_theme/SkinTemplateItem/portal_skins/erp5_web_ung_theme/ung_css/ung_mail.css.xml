@@ -49,6 +49,7 @@ button.compose_mail {\n
   background-image: url("ung_images/button_background.png");\n
   border: 1px solid #BBBBBB;\n
   -moz-border-radius: 4px;\n
+  margin-top: 5px;\n
 }\n
 \n
 span.your_listbox-current-item-number {\n
@@ -68,13 +69,43 @@ div.toolbar {\n
 }\n
 \n
 span.listbox-current-page-start-number,\n
-  span.listbox-current-page-stop-number,\n
-  span.listbox-current-page-total-number {\n
+ span.listbox-current-page-stop-number,\n
+ span.listbox-current-page-total-number {\n
   font-weight: bold;\n
 }\n
 \n
 div.listbox-content table.listbox tbody tr td:last-child {\n
- text-align: right;\n
+  text-align: right;\n
+}\n
+\n
+div.mail-navigation {\n
+  font-size: 13px;\n
+  cursor: pointer;\n
+  margin-left: 15px;\n
+}\n
+\n
+div.separator {\n
+  border-bottom: 1px solid #E3E9FF\n
+}\n
+\n
+a#advertisement-name {\n
+  color: #0000CC;\n
+  margin-left: 8px;\n
+  text-decoration: underline;\n
+}\n
+\n
+div.favorite span {\n
+  font-size: 80%;\n
+}\n
+\n
+a#advertisement-url { \n
+  color: #006633 !important;\n
+  text-decoration: none;\n
+}\n
+\n
+div.favorite a {\n
+  float: left;\n
+  margin-top: 2px;\n
 }</string> </value>
         </item>
         <item>

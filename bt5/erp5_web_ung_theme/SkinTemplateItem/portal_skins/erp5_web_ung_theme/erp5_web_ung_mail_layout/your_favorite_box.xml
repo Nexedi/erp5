@@ -219,7 +219,15 @@
                     <key> <string>default</string> </key>
                     <value> <string encoding="cdata"><![CDATA[
 
-<div class="favorite"></div>
+<div class="favorite">\n
+<a id="advertisement-name" href="http://www.freecloudalliance.org " target="_blank">\n
+Free Cloud Appliance\n
+</a> -\n
+<a id="advertisement-url" href="http://www.freecloudalliance.org " target="_blank">\n
+http://www.freecloudalliance.org\n
+</a>\n
+<span class="advertisement-description">Open Source IaaS, PaaS and SaaS for the Enterprise</span>\n
+</div>
 
 ]]></string> </value>
                 </item>

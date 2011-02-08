@@ -134,7 +134,9 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -217,14 +219,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string encoding="cdata"><![CDATA[
-
-<link href="\n
-ung_css/ung_mail.css" rel="stylesheet" type="text/css"/>\n
-<button title="Compose Mail" name="" type="submit" class="compose_mail">Compose Mail</button>\n
-<div class="gadget-column"> <div class="file-quick-search"></div></div>
-
-]]></string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -292,6 +287,19 @@ ung_css/ung_mail.css" rel="stylesheet" type="text/css"/>\n
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>here/WebSection_MailMenuBox</string> </value>
         </item>
       </dictionary>
     </pickle>
