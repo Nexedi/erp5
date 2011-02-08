@@ -536,8 +536,10 @@ class ActivityTool (Folder, UniqueObject):
       LOG('ActivityTool', 0, real_SQLDict_setPriority(src__=1, **kw))
       return real_SQLDict_setPriority(**kw)
 
-    def __init__(self):
-        return Folder.__init__(self, ActivityTool.id)
+    def __init__(self, id=None):
+        if id is None:
+          id = ActivityTool.id
+        return Folder.__init__(self, id)
 
     # Filter content (ZMI))
     def filtered_meta_types(self, user=None):
