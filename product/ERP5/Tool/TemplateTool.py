@@ -994,6 +994,36 @@ class TemplateTool (BaseTool):
                         in sorted_bt_list]
       return sorted_bt_list
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'sortDownloadedBusinessTemplateList')
+    def sortDownloadedBusinessTemplateList(self, id_list):
+      """
+      Sort a list of already downloaded business templates according to
+      dependencies
+
+      id_list : list of business template's id in portal_templates.
+      """
+      def isDepend(a, b):
+        # return True if a depends on b.
+        dependency_list = [x.split(' ')[0] for x in a.getDependencyList()]
+        provision_list = list(b.getProvisionList()) + [b.getTitle()]
+        for i in provision_list:
+          if i in dependency_list:
+            return True
+          return False
+
+      sorted_bt_list = []
+      for bt_id in id_list:
+        bt = self._getOb(bt_id)
+        for j in range(len(sorted_bt_list)):
+          if isDepend(sorted_bt_list[j], bt):
+            sorted_bt_list.insert(j, bt)
+            break
+        else:
+           sorted_bt_list.append(bt)
+      sorted_bt_list = [bt.getId() for bt in sorted_bt_list]
+      return sorted_bt_list
+
     security.declareProtected( Permissions.AccessContentsInformation,
                                'getRepositoryBusinessTemplateList' )
     def getRepositoryBusinessTemplateList(self, update_only=False, **kw):
