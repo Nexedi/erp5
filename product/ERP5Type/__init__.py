@@ -90,13 +90,17 @@ def initialize( context ):
   from Tool import (ClassTool, CacheTool, MemcachedTool, SessionTool,
                     TypesTool, WebServiceTool, PropertySheetTool)
   import Document
-  import Base, XMLObject
+  from Base import Base, DocumentationHelper
+  import XMLObject
   from ERP5Type import ERP5TypeInformation
   import CodingStyle
   # Define documents, classes, constructors and tools
   object_classes = ()
   content_constructors = ()
-  content_classes = Base.Base, XMLObject.XMLObject, ERP5TypeInformation
+  content_classes = ( Base,
+                      DocumentationHelper,
+                      XMLObject.XMLObject,
+                      ERP5TypeInformation )
   portal_tools = ( ClassTool.ClassTool,
                    CacheTool.CacheTool,
                    MemcachedTool.MemcachedTool,
