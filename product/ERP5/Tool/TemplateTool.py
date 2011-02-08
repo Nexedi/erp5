@@ -966,19 +966,33 @@ class TemplateTool (BaseTool):
                               'sortBusinessTemplateList')
     def sortBusinessTemplateList(self, bt_list):
       """
-       Sort a list of bt according to dependencies
+      Sort a list of business template in repositories according to
+      dependencies
+
+      bt_list : list of (repository, id) tuple.
       """
-      result_list = []
-      for repository, id in bt_list:
-        dependency_list = self.getDependencyList((repository, id))
-        dependency_list.append((repository, id))
-        for dependency in dependency_list:
-          if dependency[0] == 'meta':
-            provider_list = self.getProviderList(dependency[1])
-            dependency = self.findProviderInBTList(provider_list, bt_list)
-          if dependency not in result_list:
-            result_list.append(dependency)
-      return result_list
+      def isDepend(a, b):
+        # return True if a depends on b.
+        dependency_list = [x.split(' ')[0] for x in a['dependency_list']]
+        provision_list = list(b['provision_list']) + [b['title']]
+        for i in provision_list:
+          if i in dependency_list:
+            return True
+          return False
+
+      sorted_bt_list = []
+      for repository, bt_id in bt_list:
+        bt = [x for x in self.repository_dict[repository] \
+              if x['id'] == bt_id][0]
+        for j in range(len(sorted_bt_list)):
+          if isDepend(sorted_bt_list[j][1], bt):
+            sorted_bt_list.insert(j, (repository, bt))
+            break
+        else:
+           sorted_bt_list.append((repository, bt))
+      sorted_bt_list = [(repository, bt['id']) for repository, bt \
+                        in sorted_bt_list]
+      return sorted_bt_list
 
     security.declareProtected( Permissions.AccessContentsInformation,
                                'getRepositoryBusinessTemplateList' )
