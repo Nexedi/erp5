@@ -1026,7 +1026,8 @@ class TemplateTool (BaseTool):
 
     security.declareProtected( Permissions.AccessContentsInformation,
                                'getRepositoryBusinessTemplateList' )
-    def getRepositoryBusinessTemplateList(self, update_only=False, **kw):
+    def getRepositoryBusinessTemplateList(self, update_only=False,
+                                          newest_only=False, **kw):
       """Get the list of Business Templates in repositories.
       """
       version_state_title_dict = { 'new' : 'New', 'present' : 'Present',
@@ -1036,7 +1037,7 @@ class TemplateTool (BaseTool):
       template_list = []
 
       template_item_list = []
-      if update_only:
+      if update_only or newest_only:
         # First of all, filter Business Templates in repositories.
         template_item_dict = {}
         for repository, property_dict_list in self.repository_dict.items():
@@ -1060,20 +1061,23 @@ class TemplateTool (BaseTool):
                    and property_dict['revision'] \
                    and int(previous_property_dict['revision']) < int(property_dict['revision']):
                       template_item_dict[title] = (repository, property_dict)
-        # Next, select only updated business templates.
-        for repository, property_dict in template_item_dict.values():
-          installed_bt = \
-              self.getInstalledBusinessTemplate(property_dict['title'], strict=True)
-          if installed_bt is not None:
-            diff_version = self.compareVersions(installed_bt.getVersion(),
-                                                property_dict['version'])
-            if diff_version < 0:
-              template_item_list.append((repository, property_dict))
-            elif diff_version == 0 \
-                 and installed_bt.getRevision() \
-                 and property_dict['revision'] \
-                 and int(installed_bt.getRevision()) < int(property_dict['revision']):
-                   template_item_list.append((repository, property_dict))
+        if update_only:
+          # Next, select only updated business templates.
+          for repository, property_dict in template_item_dict.values():
+            installed_bt = \
+                self.getInstalledBusinessTemplate(property_dict['title'], strict=True)
+            if installed_bt is not None:
+              diff_version = self.compareVersions(installed_bt.getVersion(),
+                                                  property_dict['version'])
+              if diff_version < 0:
+                template_item_list.append((repository, property_dict))
+              elif diff_version == 0 \
+                   and installed_bt.getRevision() \
+                   and property_dict['revision'] \
+                   and int(installed_bt.getRevision()) < int(property_dict['revision']):
+                     template_item_list.append((repository, property_dict))
+        else:
+          template_item_list = template_item_dict.values()
       else:
         for repository, property_dict_list in self.repository_dict.items():
           for property_dict in property_dict_list:
@@ -1237,11 +1241,8 @@ class TemplateTool (BaseTool):
       BusinessTemplate_getModifiedObject = \
         aq_base(getattr(self, 'BusinessTemplate_getModifiedObject'))
 
-      listbox_object_list = BusinessTemplate_getModifiedObject.__of__(imported_bt5)()
-      if reinstall:
-        log('Reinstall all items')
-        install_kw = dict.fromkeys(imported_bt5.getItemsList(), 'install')
-      else:
+      if not reinstall:
+        listbox_object_list = BusinessTemplate_getModifiedObject.__of__(imported_bt5)()
         install_kw = {}
         previous_bt5 = self.getInstalledBusinessTemplate(bt_title)
         if previous_bt5 is not None and \
@@ -1249,34 +1250,38 @@ class TemplateTool (BaseTool):
           log("%s is already installed with same or newer revision." % bt_title)
           return imported_bt5
 
-      for listbox_line in listbox_object_list:
-        item = listbox_line.object_id
-        state = listbox_line.object_state
-        removed = state.startswith('Removed')
-        if removed:
-          # The following condition could not be used to automatically decide
-          # if an item must be kept or not. For example, this would not work
-          # for items installed by PortalTypeWorkflowChainTemplateItem.
-          maybe_moved = installed_dict.get(listbox_line.object_id, '')
-          log('%s: %s%s' % (state, item,
-            maybe_moved and ' (moved to %s ?)' % maybe_moved))
-        else:
-          installed_dict[item] = bt_title
-        # if a bt5 item is removed we may still want to keep it
-        if ((removed or state in ('Modified', 'New'))
-            and item in keep_original_list):
-          install_kw[item] = 'nothing'
-          log("Keep %r" % item)
-        else:
-          install_kw[item] = listbox_line.choice_item_list[0][1]
+        for listbox_line in listbox_object_list:
+          item = listbox_line.object_id
+          state = listbox_line.object_state
+          removed = state.startswith('Removed')
+          if removed:
+            # The following condition could not be used to automatically decide
+            # if an item must be kept or not. For example, this would not work
+            # for items installed by PortalTypeWorkflowChainTemplateItem.
+            maybe_moved = installed_dict.get(listbox_line.object_id, '')
+            log('%s: %s%s' % (state, item,
+              maybe_moved and ' (moved to %s ?)' % maybe_moved))
+          else:
+            installed_dict[item] = bt_title
+          # if a bt5 item is removed we may still want to keep it
+          if ((removed or state in ('Modified', 'New'))
+              and item in keep_original_list):
+            install_kw[item] = 'nothing'
+            log("Keep %r" % item)
+          else:
+            install_kw[item] = listbox_line.choice_item_list[0][1]
 
       # Run before script list
       for before_triggered_bt5_id in before_triggered_bt5_id_list:
         log('Execute %r' % before_triggered_bt5_id)
         imported_bt5.unrestrictedTraverse(before_triggered_bt5_id)()
 
-      imported_bt5.install(object_to_update=install_kw,
-                           update_catalog=update_catalog)
+      if reinstall:
+        imported_bt5.install(force=True,
+                             update_catalog=update_catalog)
+      else:
+        imported_bt5.install(object_to_update=install_kw,
+                             update_catalog=update_catalog)
 
       # Run After script list
       for after_triggered_bt5_id in after_triggered_bt5_id_list:
