@@ -1,0 +1,214 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+portal = context.getPortalObject()\n
+#We must be anonymous to no create conflict in security\n
+if not portal.portal_membership.isAnonymousUser():\n
+  return context.WebSite_logout(message="You have been disconnect from your previous document. Please resend your file.")\n
+\n
+#Create reference\n
+reference = context.WebSection_generateRandomReference()\n
+\n
+#Create new user with this reference\n
+module = portal.getDefaultModule(\'Person\')\n
+person = module.newContent(portal_type=\'Person\',\n
+                  reference=reference,\n
+                  description=context.REQUEST.get(\'HTTP_X_FORWARDED_FOR\',\'Found no ip\'),\n
+                 )\n
+person.setGroup(reference)\n
+assignement = person.newContent(portal_type="Assignment",group="my_group")\n
+assignement.open()\n
+person.validate()\n
+\n
+document = context.Base_contribute(file=file, \n
+url=None, \n
+portal_type=None, \n
+classification="personal/private", \n
+synchronous_metadata_discovery=None, \n
+redirect_to_document=False, \n
+attach_document_to_context=False, \n
+use_context_for_container=False, \n
+redirect_url=None, \n
+cancel_url=None, \n
+batch_mode=False, \n
+max_repeat=0, \n
+editable_mode = 1, \n
+follow_up_list=None, \n
+user_login=reference,\n
+reference=reference\n
+)\n
+#XXX-Conflict between contributor property and contributor property. We must use value to be sure to use the property\n
+document.setContributorValue(person);\n
+original_name = document.getSourceReference()\n
+if original_name:\n
+  dot_position = original_name.rfind(\'.\')\n
+  if dot_position > 0:\n
+    document.setTitle(original_name[0:dot_position])\n
+  else:\n
+    document.setTitle(original_name)\n
+\n
+#Set document in release_alive state to allow assignee to see and modify the document\n
+document.releaseAlive()\n
+\n
+#Get param and key to connect the user\n
+param, key = person.Person_getEncryptedLogin()\n
+\n
+#Store real path in session for Document_getJSONInformation \n
+portal_sessions = context.portal_sessions\n
+session = portal_sessions[reference]\n
+session[\'document_url\'] = document.getRelativeUrl()\n
+\n
+#Redirect the user on waiting conversion dialog\n
+context.Base_redirect(\'WebSection_viewWaitingConversion\',keep_items={\'portal_status_message\': "Please wait : we are converting your file",\n
+                                                                     param: key})\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>file,**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>file</string>
+                            <string>kw</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>reference</string>
+                            <string>module</string>
+                            <string>person</string>
+                            <string>assignement</string>
+                            <string>None</string>
+                            <string>False</string>
+                            <string>document</string>
+                            <string>original_name</string>
+                            <string>dot_position</string>
+                            <string>_getitem_</string>
+                            <string>_getiter_</string>
+                            <string>param</string>
+                            <string>key</string>
+                            <string>portal_sessions</string>
+                            <string>session</string>
+                            <string>_write_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSection_uploadFile</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

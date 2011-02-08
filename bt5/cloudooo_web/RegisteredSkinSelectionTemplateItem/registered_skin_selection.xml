@@ -1,0 +1,18 @@
+<registered_skin_selection>
+ <skin_folder_selection>
+  <skin_folder>cloudooo_erp5_base</skin_folder>
+  <skin_selection>Claudooo,View</skin_selection>
+ </skin_folder_selection>
+ <skin_folder_selection>
+  <skin_folder>cloudooo_erp5_ingestion</skin_folder>
+  <skin_selection>Claudooo,View</skin_selection>
+ </skin_folder_selection>
+ <skin_folder_selection>
+  <skin_folder>cloudooo_web</skin_folder>
+  <skin_selection>Claudooo,View</skin_selection>
+ </skin_folder_selection>
+ <skin_folder_selection>
+  <skin_folder>cloudooo_web_theme</skin_folder>
+  <skin_selection>Claudooo</skin_selection>
+ </skin_folder_selection>
+</registered_skin_selection>
