@@ -61,8 +61,9 @@ defaut_dict = {\'mode\': \'ext2\', # full text search mode\n
               }\n
 for key, item in defaut_dict.items():\n
   operator = \';%s\' %key\n
-  if operator not in value:\n
+  if operator not in value and value not in (\'\', None):\n
     value = \'%s%s=%s\' %(value, operator, item)\n
+\n
 query = Query(**{\'sphinxse_query\': value})\n
 return query\n
 </string> </value>
