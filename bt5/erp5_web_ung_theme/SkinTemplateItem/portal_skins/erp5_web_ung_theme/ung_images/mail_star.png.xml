@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Image" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts97172099.7</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>mail_star.png</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/png</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABAAAAAPCAIAAABiEdh4AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB
+CUlEQVQokY2SoZLEIAyGw87WgEgNghgMoqrvr2swfYQaRIPAtDNHxVXcCTq7ndKb26hMko/8SRDL
+1zdUltfUtu3+09Spx211jNF734j9I2BdV0QkImb+CGBmrTURhRD+By4yalVPAEgxhBD2/chZa4tD
+RMMwHGTTWGu1sWKe5xijc67ufrFpmowxD4UaEb33Oee/SnPO3ntEVKhFuUNZJQDUraZpAgBjjEL9
+Hlqhdl2/LEv9NgC4ri/VcN7S7ZmUUimlc+QNMDMRvWQUJQCgtc5rugFCCAXw3ksppZTjOOacjTFl
+vGLPsx5m3rat7w/FiBhjlFKmlFx3AOL1WxuxM7M29jJGiuEc/AUEZ4V1DmCTQAAAAABJRU5ErkJg
+gg==</string> </value>
+        </item>
+        <item>
+            <key> <string>height</string> </key>
+            <value> <int>15</int> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>343</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>width</string> </key>
+            <value> <int>16</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

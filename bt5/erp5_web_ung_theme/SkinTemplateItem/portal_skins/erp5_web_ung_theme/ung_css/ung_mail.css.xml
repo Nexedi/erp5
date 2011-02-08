@@ -49,6 +49,32 @@ button.compose_mail {\n
   background-image: url("ung_images/button_background.png");\n
   border: 1px solid #BBBBBB;\n
   -moz-border-radius: 4px;\n
+}\n
+\n
+span.your_listbox-current-item-number {\n
+  display: none;\n
+}\n
+\n
+div.toolbar button.archive {\n
+  margin-left: 18px;\n
+}\n
+\n
+tr.listbox-label-line {\n
+  display: none;\n
+}\n
+\n
+div.toolbar {\n
+  border-bottom: 1px solid #DEDEDE;\n
+}\n
+\n
+span.listbox-current-page-start-number,\n
+  span.listbox-current-page-stop-number,\n
+  span.listbox-current-page-total-number {\n
+  font-weight: bold;\n
+}\n
+\n
+div.listbox-content table.listbox tbody tr td:last-child {\n
+ text-align: right;\n
 }</string> </value>
         </item>
         <item>
