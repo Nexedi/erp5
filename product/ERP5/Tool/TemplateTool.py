@@ -1056,7 +1056,7 @@ class TemplateTool (BaseTool):
           installed_version = ''
           installed_revision = ''
         version_state_title = version_state_title_dict[version_state]
-        uid = b64encode(cPickle.dumps((repository, id)))
+        uid = self.encodeRepositoryBusinessTemplateUid(repository, id)
         obj = newTempBusinessTemplate(self, 'temp_' + uid,
                                       version_state = version_state,
                                       version_state_title = version_state_title,
