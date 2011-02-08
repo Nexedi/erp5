@@ -58,12 +58,8 @@
 """\n
 \n
 # Alarm dict is used to enable/disable upgrade alarms.\n
-# ie.: If you don\'t want upgrade products in some environments\n
-# you can just define \'product_upgrader\' : False.\n
 \n
 ALARM_DICT = {\n
- "system_upgrader" : False,\n
- "product_upgrader" : False,\n
  "bt5_upgrader" : True,\n
  "finalize_upgrader" : True\n
 }\n

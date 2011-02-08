@@ -21,10 +21,8 @@
         <item>
             <key> <string>description</string> </key>
             <value> <string>This alarms acts as a cron job. It will start an instance upgrade if any of the following this alarms sequence:\n
-1) system_upgrader (supported)\n
-2) product_upgrader (supported)\n
-3) bt5_upgrader (supported)\n
-4) finalize_upgrader (supported)\n
+1) bt5_upgrader (supported)\n
+2) finalize_upgrader (supported)\n
 \n
 "sense" a need of an upgrade. This alarm is likely to disappear soon as it\'s needed due to lack of functionality (which is that alarms can not automatically "solve" themselves).</string> </value>
         </item>

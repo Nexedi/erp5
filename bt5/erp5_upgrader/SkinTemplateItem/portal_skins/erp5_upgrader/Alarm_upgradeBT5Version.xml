@@ -73,18 +73,6 @@ active_process = active_process.getPath()\n
 \n
 message_list = []\n
 \n
-system_upgrader_sense = portal_alarms.system_upgrader.sense()\n
-product_upgrader_sense = portal_alarms.product_upgrader.sense()\n
-\n
-if system_upgrader_sense and product_upgrader_sense:\n
-  activate(active_process=active_process,\n
-           activity=\'SQLQueue\',\n
-           priority=2).Alarm_saveActiveResult(\n
-              summary="ERROR: Upgrade BT5 not started",\n
-              severity=0,\n
-              detail=\'System Upgrader Sense: %s , Product Upgrader Sense : %s\' \\\n
-                       % ( system_upgrader_sense, product_upgrader_sense))\n
-\n
 # update existing bt5\n
 message_list.extend(context.ERP5Site_upgradeBusinessTemplateList(upgrade=1))\n
 \n

@@ -118,8 +118,6 @@ class TestLiveUpgrader(ERP5TypeLiveTestCase):
     self.assertEquals(signature['alarm_tool_configuration_list'], ())
 
     # By default we upgrade software, products, bt5 and so on.
-    self.assertTrue(signature['alarm_dict']["system_upgrader"])
-    self.assertTrue(signature['alarm_dict']["product_upgrader"])
     self.assertTrue(signature['alarm_dict']["bt5_upgrader"])
     self.assertTrue(signature['alarm_dict']["finalize_upgrader"])
 
