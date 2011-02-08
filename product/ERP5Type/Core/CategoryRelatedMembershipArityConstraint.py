@@ -30,6 +30,7 @@
 ##############################################################################
 
 from Products.ERP5Type import PropertySheet
+from Products.CMFCore.Expression import Expression
 from Products.ERP5Type.Core.CategoryMembershipArityConstraint \
           import CategoryMembershipArityConstraint
 
