@@ -166,6 +166,8 @@ print "#### Indexing delivery builders ####"\n
 print "#### Indexing order builders ####"\n
 # Next we index portal types\n
 print "#### Indexing portal types ####"\n
+# Next we index portal_property_sheets\n
+print "#### Indexing portal property sheets ####"\n
 \n
 folder_tag = \'module\'\n
 folder_after_tag = (\'category\', \'person_stage_1\', \'group_person_stage_1\')\n
@@ -176,6 +178,7 @@ tool_list = [portal.portal_templates, portal.portal_trash,\n
              portal.portal_domains, portal.portal_rules,\n
              portal.portal_deliveries, portal.portal_orders,\n
              portal.portal_caches, portal.portal_types,\n
+             portal.portal_property_sheets,\n
              portal.portal_ids, portal.portal_memcached]\n
 possible_tool_list = [\'portal_gadgets\', \'portal_contribution_registry\',\n
                       \'portal_roundings\', \'portal_contributions\']\n
