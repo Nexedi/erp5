@@ -3691,7 +3691,7 @@ class PropertySheetTemplateItem(DocumentTemplateItem,
       # Update 'migrate_object_dict' with the new path
       key = 'portal_property_sheets/%s' % class_id
 
-      migrate_object_dict[key] = new_property_sheet
+      migrate_object_dict[key] = new_property_sheet.aq_base
       del migrate_object_dict[class_id]
 
       # Remove old reference in 'object_dict' as it does not make
