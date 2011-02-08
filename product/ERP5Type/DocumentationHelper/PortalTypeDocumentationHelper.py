@@ -29,7 +29,6 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.Base import Base
 from DocumentationHelper import DocumentationHelper, TempObjectLibrary
 from DocumentationSection import DocumentationSection
 from PortalTypeInstanceDocumentationHelper import PortalTypeInstanceDocumentationHelper
@@ -270,9 +269,8 @@ class PortalTypeDocumentationHelper(DocumentationHelper):
 
   def _getPropertyHolder(self):
     portal_type = getPortalType(self.uri)
-    temp_object = self.getTempInstance(portal_type)
-    dir_temp = dir(temp_object)
-    return Base.aq_portal_type[(portal_type, temp_object.__class__)]
+    import erp5.portal_type
+    return getattr(erp5.portal_type, portal_type)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getWorkflowMethodIdList')
   def getWorkflowMethodIdList(self):
@@ -300,8 +298,10 @@ class PortalTypeDocumentationHelper(DocumentationHelper):
     Return a list of tuple (id, method) for every class method
     """
     portal_type = getPortalType(self.uri)
-    klass = self.getTempInstance(portal_type).__class__.__bases__[0]
-    return self._getPropertyHolder().getClassMethodIdList(klass, **kw)
+    import erp5.portal_type
+    klass = getattr(erp5.portal_type, portal_type)
+    document_class = klass.__bases__[0]
+    return klass.getClassMethodIdList(document_class, **kw)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getClassMethodUriList')
   def getClassMethodUriList(self, inherited=0, **kw):
@@ -310,7 +310,8 @@ class PortalTypeDocumentationHelper(DocumentationHelper):
     """
     method_id_list = self.getClassMethodIdList(inherited=inherited, **kw)
     portal_type = getPortalType(self.uri)
-    klass = self.getTempInstance(portal_type).__class__.__bases__[0]
+    import erp5.portal_type
+    klass = getattr(erp5.portal_type, portal_type)
     class_name = klass.__name__
     module = klass.__module__
     uri_prefix = '%s.%s.' % (module, class_name)

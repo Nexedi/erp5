@@ -331,9 +331,9 @@ class PropertyHolder(object):
     Invokes appropriate factory and create an accessor
     """
     fake_accessor = getattr(self, id)
-    ptype = getattr(self, '_portal_type', None)
+    ptype = getattr(self, 'portal_type', None)
     if ptype is None:
-      ptype = self.portal_type
+      ptype = self._portal_type
     if fake_accessor is PropertyHolder.WORKFLOW_METHOD_MARKER:
       # Case 1 : a workflow method only
       accessor = Base._doNothing
@@ -437,7 +437,7 @@ class PropertyHolder(object):
         if y is PropertyHolder.WORKFLOW_METHOD_MARKER or x == '__ac_permissions__':
           continue
         if len(y) == 0:
-          raise ValueError("problem at %s %s" % (self._portal_type, x))
+          continue
         if not issubclass(y[0], Accessor):
           continue
       elif not isinstance(y, Accessor):
@@ -1595,7 +1595,12 @@ class Base( CopyContainer,
       Content properties are filtered out in getPropertyIdList so
       that rendering in ZMI is compatible with Zope standard properties
     """
-    return [property['id'] for property in self._erp5_properties if property['type'] == 'content']
+    result = set()
+    for parent_class in self.__class__.mro():
+      for property in getattr(parent_class, '_properties', []):
+        if property['type'] == 'content':
+          result.add(property['id'])
+    return list(result)
 
   security.declareProtected( Permissions.View, 'getStandardPropertyIdList' )
   def getStandardPropertyIdList(self):
@@ -1603,7 +1608,12 @@ class Base( CopyContainer,
       Return standard properties of the current instance.
       Unlike getPropertyIdList, properties are not converted or rewritten here.
     """
-    return [property['id'] for property in self._erp5_properties if property['type'] != 'content']
+    result = set()
+    for parent_class in self.__class__.mro():
+      for property in getattr(parent_class, '_properties', []):
+        if property['type'] != 'content':
+          result.add(property['id'])
+    return list(result)
 
   # Catalog Related
   security.declareProtected( Permissions.View, 'getObject' )
