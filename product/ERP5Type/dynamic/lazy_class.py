@@ -161,7 +161,7 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
     for subclass in PortalTypeMetaClass.getSubclassList(cls):
       pmc_init_of(subclass)
 
-  def setSecurity(cls):
+  def setupSecurity(cls):
     # note that after this call the 'security' attribute will be gone.
     InitializeClass(cls)
     for subclass in PortalTypeMetaClass.getSubclassList(cls):
@@ -327,7 +327,7 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
         if len(base_tuple) > 1:
           klass.generatePortalTypeAccessors(site)
           # need to set %s__roles__ for generated methods
-          cls.setSecurity()
+          cls.setupSecurity()
 
       except Exception:
         import traceback; traceback.print_exc()
