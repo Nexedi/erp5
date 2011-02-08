@@ -78,6 +78,7 @@ class SimulationTool(BaseTool):
     meta_type = 'ERP5 Simulation Tool'
     portal_type = 'Simulation Tool'
     allowed_types = ( 'ERP5 Applied Rule', )
+    isIndexable = True
 
     # Declarative Security
     security = ClassSecurityInfo()
