@@ -444,6 +444,7 @@ div.toolbar button, div.gadget-action input#upload {\n
   color: #333333;\n
   border: 1px solid #BBBBBB;\n
   background-image: url(\'<dtml-var expr="portal_url()">/ung_images/button_background.png\');\n
+  -moz-border-radius: 4px;\n
 }\n
 \n
 .menu_create_object {\n
@@ -467,6 +468,7 @@ div.toolbar button, div.gadget-action input#upload {\n
   padding-left:2px;\n
   padding-right:14px;\n
   text-align:justify;\n
+  -moz-border-radius: 4px;\n
 }\n
 \n
 .menu_create_object ul {\n
