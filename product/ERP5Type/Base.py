@@ -1259,16 +1259,16 @@ class Base( CopyContainer,
     # and return it as a list
     if accessor_name.endswith('List'):
       mono_valued_accessor_name = accessor_name[:-4]
-      method = getattr(self, mono_valued_accessor_name, None)
+      method = getattr(self.__class__, mono_valued_accessor_name, None)
       if method is not None:
         # We have a monovalued property
         if d is _MARKER:
-          result = method(**kw)
+          result = method(self, **kw)
         else:
           try:
-            result = method(d, **kw)
+            result = method(self, d, **kw)
           except TypeError:
-            result = method(**kw)
+            result = method(self, **kw)
         if not isinstance(result, (list, tuple)):
           result = [result]
         return result

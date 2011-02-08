@@ -2859,6 +2859,27 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       person.setPropertyList('foo_bar', [])
       self.assertEquals(person.getFooBarList(), [])
 
+    def testPropertyNoAcquisition(self):
+      """
+      Check that getPropertyList (and getProperty as well as
+      getPropertyList calls getProperty) do not get the property
+      defined on its parent through acquisition
+      """
+      self._addProperty('Person Module',
+                        'testPropertyListWithMultivaluedPropertyNoAcquisition',
+                        'multivalued_no_acquisition',
+                        elementary_type='lines',
+                        portal_type='Standard Property')
+
+      person_module = self.getPersonModule()
+      person_module.setPropertyList('multivalued_no_acquisition', ['foo'])
+      self.assertEquals(
+        person_module.getPropertyList('multivalued_no_acquisition'), ['foo'])
+
+      person = self.getPersonModule().newContent(portal_type='Person')
+      self.assertEquals(
+        person.getPropertyList('multivalued_no_acquisition', ['bar']), ['bar'])
+
     def testUndefinedProperties(self):
       """
       Make sure that getProperty and setProperty on a property not defined
