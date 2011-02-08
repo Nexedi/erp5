@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts95279629.97</string> </value>
+            <value> <string>ts97173866.97</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -73,15 +73,37 @@ function requestPasswordReset(script_name){\n
   main_form.submit();\n
 };\n
 \n
-function showPopik(dom_id, what, delay){\n
-  /* Show details pop up in search mode */\n
-  var obj = $("#" + dom_id);\n
-  if(what==true){obj.show();}\n
-  else{obj.hide();}\n
+var popup_local_dict={};\n
+var popup_request_dict={};\n
+function showPopik(dom_id, action, path){\n
+  /* \n
+  Show / Hide popup details window up in search mode.\n
+  */\n
+  var popup = $("#" + dom_id);\n
+  function delayedDocumentDetailsPopupWindowLoad(){\n
+    $.ajax({url:path+"/Document_getPopupInfo", \n
+            success: function(data){\n
+                           popup.html(data);\n
+                           popup.show();\n
+                           popup_local_dict[dom_id] = data;}});\n
+  }\n
+  \n
+  if (action){\n
+    if (path==\'\'){popup.show();}\n
+    else{\n
+      // we must request popup info with another request\n
+      popup_html = popup_local_dict[dom_id];\n
+      popup_request = popup_request_dict[dom_id]\n
+      if (popup_html==undefined&&popup_request==undefined){\n
+        popup_request_dict[dom_id] = path;\n
+        setTimeout(delayedDocumentDetailsPopupWindowLoad, 1000);\n
+      }\n
+      else{popup.show();}\n
+    }\n
+  }\n
+  else{popup.hide();}\n
 }\n
-\n
-\n
-\n
+ \n
 
 
 ]]></string> </value>
@@ -92,7 +114,7 @@ function showPopik(dom_id, what, delay){\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1886</int> </value>
+            <value> <int>2649</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
