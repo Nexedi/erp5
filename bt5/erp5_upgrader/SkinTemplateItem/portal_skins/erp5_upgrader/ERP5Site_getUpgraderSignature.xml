@@ -71,9 +71,6 @@ ALARM_DICT = {\n
 # The destination release provided by this upgrader\n
 DESTINATION_RELEASE = \'5.4.7\'\n
 \n
-ZOPE_VERSION = "2.12.13"\n
-\n
-PYTHON_VERSION = "2.6"\n
 # The list of URLs to get bt5 from.\n
 # Those places MUST be a Repository and contains a bt5list, if bt5list list\n
 # is not present, the directory will NOT be used to upgrade the instance.\n
@@ -333,10 +330,6 @@ signature_dict = {\n
    \'alarm_dict\' : ALARM_DICT\n
    # Defines the default release for bt5\n
  , \'release\': DESTINATION_RELEASE\n
-   # Defines the default version for zope\n
- , \'zope\': ZOPE_VERSION\n
-   # Defines the default version for python\n
- , \'python\': PYTHON_VERSION\n
    # Defines the default release for products\n
  , \'product\': DESTINATION_RELEASE\n
    # Defines the default location of bt5\n

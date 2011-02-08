@@ -43,46 +43,6 @@ import os
 # Methods introduced into portal_introspection into 5.4.3
 #
 
-# XXX This method is a copy and paste of IntrospectionTool.getSystemSignatureDict
-# This should be kept until versions lower than 5.4.3 still supported. 
-def getSystemSignatureDict(self):
-  """
-    Returns a dictionnary with all versions of installed libraries
-
-    {
-       'python': '2.4.3'
-     , 'pysvn': '1.2.3'
-     , 'ERP5' : "5.4.3"       
-    }
-    NOTE: consider using autoconf / automake tools ?
-  """
-  def tuple_to_format_str(t):
-     return '.'.join([str(i) for i in t])
-  from Products import ERP5 as erp5_product
-  erp5_product_path =  erp5_product.__file__.split("/")[:-1]
-  try:
-    erp5_v = open("/".join((erp5_product_path) + ["VERSION.txt"])).read().strip()
-    erp5_version = erp5_v.replace("ERP5 ", "")
-  except:
-    erp5_version = None
-
-  from App import version_txt
-  zope_version = tuple_to_format_str(version_txt.getZopeVersion()[:3])
-
-  from sys import version_info
-  # Get only x.x.x numbers.
-  py_version = tuple_to_format_str(version_info[:3])
-  try:
-    import pysvn
-    # Convert tuple to x.x.x format
-    pysvn_version =  tuple_to_format_str(pysvn.version)
-  except:
-    pysvn_version = None
-  
-  return { "python" : py_version , "pysvn"  : pysvn_version ,
-           "erp5"   : erp5_version, "zope"   : zope_version
-         }
-
 # XXX This method is a copy and paste of IntrospectionTool._loadExternalConfig
 # This should be kept until versions lower than 5.4.3 still supported. 
 # NOT USED BY EXTERNAL METHOD

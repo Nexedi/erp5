@@ -1,3 +1,6 @@
+2011-02-08 Kazuhiko
+* remove handling zope version and python version, that should be handled by instance creation in buildout.
+
 2011-02-07 Kazuhiko
 * check 'Update Business Template Workflows' and remove overriding of portal_workflow/business_template_installation_workflow/scripts/BusinessTemplate_install in this business template, but add it in 'Paths of objects that should be kept'.
 * remove set and upgrade product_path, that should be handled by instance creation in buildout.

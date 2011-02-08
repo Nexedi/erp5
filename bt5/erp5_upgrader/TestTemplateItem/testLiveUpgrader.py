@@ -86,8 +86,6 @@ class TestLiveUpgrader(ERP5TypeLiveTestCase):
                           'reinstalable_bt5_id_list',
                           'keep_original_dict',
                           'object_action_dict',
-                          'zope',
-                          'python',
                           'integrity_verification_script_id_list',
                           'catalog_filter_dict',
                           'update_role_portal_type_list',
