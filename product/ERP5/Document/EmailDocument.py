@@ -172,13 +172,6 @@ class EmailDocument(TextDocument):
     """
     return False
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'hasBaseData')
-  def hasBaseData(self):
-    """
-    """
-    return self.hasFile() or self.hasTextContent()
-
-
   security.declareProtected(Permissions.AccessContentsInformation, 'getContentInformation')
   def getContentInformation(self):
     """
