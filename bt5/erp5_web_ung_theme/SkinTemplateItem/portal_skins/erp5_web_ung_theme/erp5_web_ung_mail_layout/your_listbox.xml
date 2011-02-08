@@ -102,7 +102,7 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>email_thread.start_date</string>
+                          <string>date</string>
                           <string>Date</string>
                         </tuple>
                       </list>
