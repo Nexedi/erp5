@@ -221,8 +221,9 @@ var resizeIFrameOnLoad = function() {\n
   var object_list = $("object.auto_height");\n
   for( var i=0; i<object_list.length; i++) {\n
     var object_document = object_list[i];\n
-    var doc = object_document.contentDocument.documentElement;\n
-    object_document.style.height = doc.offsetHeight + \'px\';\n
+    var inner_frame = object_document.contentDocument;\n
+    if (inner_frame){\n
+      object_document.style.height = inner_frame.documentElement.offsetHeight + \'px\';}\n
   }\n
 }\n
 \n
