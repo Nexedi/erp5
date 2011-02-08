@@ -550,7 +550,6 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
 
   dc_workflow_dict = dict()
   interaction_workflow_dict = dict()
-
   for wf in portal_workflow.getWorkflowsFor(portal_type):
     wf_id = wf.id
     wf_type = wf.__class__.__name__
@@ -3421,7 +3420,7 @@ class Base( CopyContainer,
     dynamic_accessor_list = [] # Accessors
     found_accessors = {}       # Accessor names : filled by PortalType-level
                                # scan, and used in PropertySheet-level scan.
-    dochelper = newTempDocumentationHelper(self.getParentValue(), self.getId(),
+    dochelper = newTempDocumentationHelper(self, self.getId(),
                   title=item_id, type=item_class.__name__,
                   description=inspect.getdoc(documented_item),
                 )
@@ -3439,9 +3438,22 @@ class Base( CopyContainer,
     for k, v in item_class.__dict__.items():
       if k in excluded_property_set:
         continue
+      if k.startswith('_base') or k.startswith('_category'):
+        continue
       subdochelper = newTempDocumentationHelper(dochelper, k,
                   title=k, description=inspect.getdoc(v),
                   security=repr(getattr(documented_item, '%s__roles__' % (k,),None)))
+      if callable(v):
+        try:
+          my_type = v.__class__.__name__
+          subdochelper.setType(my_type)
+        except AttributeError:
+          pass
+        if 'Setter' not in my_type and \
+           'Getter' not in my_type and \
+           'Tester' not in my_type: # Accessors are handled separatelly.
+          dynamic_method_list.append(subdochelper)
+
       try:
         subdochelper.setType(v.__class__.__name__)
       except AttributeError:
@@ -3468,22 +3480,6 @@ class Base( CopyContainer,
 
     # PortalType-level methods
     # XXX: accessing portal_type directly because accessors are not generated on instances
-    if getattr(documented_item, 'portal_type', None) is not None:
-      aq_key = documented_item._aq_key()
-      for k, v in Base.aq_portal_type[aq_key].__dict__.items():
-        if callable(v) and not (k.startswith('_base') or k.startswith('_category')):
-          subdochelper = newTempDocumentationHelper(dochelper, k,
-                    title=k, description=inspect.getdoc(v),
-                    security=repr(getattr(documented_item, '%s__roles__' % (k,),None)))
-          try:
-            my_type = v.__class__.__name__
-            subdochelper.setType(my_type)
-          except AttributeError:
-            pass
-          if 'Setter' not in my_type and \
-             'Getter' not in my_type and \
-             'Tester' not in my_type: # Accessors are handled separatelly.
-            dynamic_method_list.append(subdochelper)
 # KEEPME: usefull to track the differences between accessors defined on
 # PortalType and the one detected on the documented item.
 #          else:
@@ -3823,12 +3819,9 @@ class TempBase(Base):
 InitializeClass(TempBase)
 
 def newTempDocumentationHelper(folder, id, REQUEST=None, **kw):
-  o = TempDocumentationHelper(id)
-  o = o.__of__(folder)
-  if kw is not None:
-    o._edit(force_update=1, **kw)
-  return o
-
+  type_tool = folder.getPortalObject().portal_types
+  type_info = getattr(type_tool, 'Documentation Helper')
+  return type_info.constructTempInstance(folder, id, **kw)
 
 class DocumentationHelper(Base):
   """

@@ -1101,14 +1101,13 @@ def initialize( context ):
           XXX: this code is (almost) duplicated from ERP5Types/Base.py:asDocumentationHelper
         """
 
-        from Products.ERP5Type import document_class_registry
-        from Products.ERP5Type.dynamic.portal_type_class import _importClass
+        import erp5.portal_type
         # XXX so this is ugly, but should disappear with classes in ZODB
-        my_class = _importClass(document_class_registry[class_id])
+        my_class = getattr(erp5.portal_type, class_id)
 
         method_list = []
         property_list = []
-        dochelper = newTempDocumentationHelper(self.getPortalObject(), class_id, title=class_id,
+        dochelper = newTempDocumentationHelper(self, self.getId(), title=class_id,
                       type=my_class.__class__.__name__,
                       description=inspect.getdoc(my_class))
         try:
