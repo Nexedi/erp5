@@ -88,7 +88,6 @@ from zope.interface import classImplementsOnly, implementedBy
 
 from string import join
 import sys, re
-from Products.ERP5Type.PsycoWrapper import psyco
 
 from cStringIO import StringIO
 from socket import gethostname, gethostbyaddr
@@ -538,79 +537,6 @@ def initializeClassDynamicProperties(self, klass):
 def initializePortalTypeDynamicProperties(self, klass, ptype, aq_key, portal):
   raise ValueError("No reason to go through this no more with portal type classes")
 
-  ## Init CachingMethod which implements caching for ERP5
-  from Products.ERP5Type.Cache import initializePortalCachingProperties
-  initializePortalCachingProperties(portal)
-
-  if aq_key not in Base.aq_portal_type:
-    # Mark as generated
-    prop_holder = PropertyHolder()
-    # Recurse to parent object
-    parent_object = self.aq_inner.aq_parent
-    parent_klass = parent_object.__class__
-    parent_type = parent_object.portal_type
-    if getattr(parent_klass, 'isRADContent', 0) and \
-        (ptype != parent_type or klass != parent_klass):
-      parent_aq_key = parent_object._aq_key()
-      if parent_aq_key not in Base.aq_portal_type:
-        initializePortalTypeDynamicProperties(parent_object, parent_klass,
-                                              parent_type,
-                                              parent_aq_key, portal)
-
-    prop_list = list(getattr(klass, '_properties', []))
-    cat_list = list(getattr(klass, '_categories', []))
-    constraint_list = list(getattr(klass, '_constraints', []))
-    ps_definition_dict = {'_properties': prop_list,
-                          '_categories': cat_list,
-                          '_constraints': constraint_list}
-
-    # Initialize portal_type properties (XXX)
-    # Always do it before processing klass.property_sheets (for compatibility).
-    # Because of the order we generate accessors, it is still possible
-    # to overload data access for some accessors.
-    ptype_object = portal.portal_types.getTypeInfo(ptype)
-    if ptype_object is not None:
-      ptype_object.updatePropertySheetDefinitionDict(ps_definition_dict)
-
-    for base in getClassPropertyList(klass):
-      # FIXME: With ZODB Property Sheets, there should only be the
-      # name of the Property Sheet as a string. aq_dynamic should not
-      # be necessary as soon as all the Documents and Property Sheets
-      # have been migrated. This is kept for backward compatility with
-      # the filesystem Property Sheet (see ERP5Type.dynamic.portal_type_class)
-      if isinstance(base, basestring):
-        # The property Sheet might be in ERP5PropertySheetLegacy,
-        # give it a try. If it's not there, no need to warn or log
-        # heavily: it just means that it will be a ZODB propertysheet
-        from Products.ERP5Type import PropertySheet
-        base = getattr(PropertySheet, base)
-        if isinstance(base, basestring):
-          continue
-
-      for list_name, current_list in ps_definition_dict.items():
-        try:
-          current_list += getattr(base, list_name, ())
-        except TypeError:
-          raise ValueError("%s is not a list for %s" % (list_name, base))
-
-    prop_holder._portal_type = ptype
-    prop_holder._properties = prop_list
-    prop_holder._categories = cat_list
-    prop_holder._constraints = constraint_list
-    from Utils import setDefaultClassProperties, setDefaultProperties
-    setDefaultClassProperties(prop_holder)
-    setDefaultProperties(prop_holder, object=self, portal=portal)
-    #LOG('initializeDefaultProperties: %s' % ptype, 0, str(prop_holder.__dict__))
-    initializePortalTypeDynamicWorkflowMethods(self, klass, ptype, prop_holder,
-                                               portal)
-    # We can now associate it after initialising security
-    InitializeClass(prop_holder)
-    prop_holder.__propholder__ = prop_holder
-    # For now, this line below is commented, because this breaks
-    # _aq_dynamic without JP's patch to Zope for an unknown reason.
-    #klass.__ac_permissions__ = prop_holder.__ac_permissions__
-    Base.aq_portal_type[aq_key] = prop_holder
-
 def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
   """We should now make sure workflow methods are defined
   and also make sure simulation state is defined."""
@@ -937,101 +863,6 @@ class Base( CopyContainer,
   def _aq_dynamic(self, id):
     # ahah! disabled, thanks to portal type classes
     return None
-
-    # _aq_dynamic has been created so that callable objects
-    # and default properties can be associated per portal type
-    # and per class. Other uses are possible (ex. WebSection).
-    ptype = self.portal_type
-    klass = self.__class__
-    aq_key = (ptype, klass) # We do not use _aq_key() here for speed
-
-    # If this is a portal_type property and everything is already defined
-    # for that portal_type, try to return a value ASAP
-    try:
-      property_holder = Base.aq_portal_type[aq_key]
-    except KeyError:
-      pass
-    else:
-      accessor = getattr(property_holder, id, None)
-      if type(accessor) is tuple and id not in PropertyHolder.RESERVED_PROPERTY_SET:
-        accessor = property_holder.createAccessor(id)
-      return accessor
-
-    Base.aq_method_lock.acquire()
-    try:
-      if aq_key in Base.aq_portal_type:
-        # Another thread generated accessors just before we acquired the lock
-        # so we must simply retry.
-        return getattr(self, id, None)
-      if aq_key in Base.aq_method_generating:
-        # We are already generating accessors for this aq_key.
-        # Return immediately to prevent infinite loops.
-        return
-      # Store that we are generating for this aq_key, because _aq_dynamic may
-      # be called recursively. A typical example is that to generate methods
-      # for a document, we'll have to generate methods for Types Tool and
-      # Base Category portal.
-      Base.aq_method_generating.append(aq_key)
-      try:
-        # Proceed with property generation
-        # Generate class methods
-        initializeClassDynamicProperties(self, klass)
-
-        # Iterate until an ERP5 Site is obtained.
-        portal = self.getPortalObject()
-        while portal.portal_type != 'ERP5 Site':
-          portal = portal.aq_parent.aq_inner.getPortalObject()
-
-        # Generate portal_type methods
-        initializePortalTypeDynamicProperties(self, klass, ptype, aq_key, portal)
-      finally:
-        del Base.aq_method_generating[-1]
-
-      # Generate Related Accessors
-      if not Base.aq_related_generated:
-        Base.aq_related_generated = 1
-        from Utils import createRelatedValueAccessors
-        portal_types = getToolByName(portal, 'portal_types', None)
-        generated_bid = set()
-        econtext = createExpressionContext(object=self, portal=portal)
-        # Use 'items' instead of 'iteritems' because PropertySheet.__dict__ may
-        # be modified by another thread (that, for example, installs a BT).
-        for pid, ps in PropertySheet.__dict__.items():
-          if pid[0] != '_':
-            base_category_list = []
-            for cat in getattr(ps, '_categories', ()):
-              if isinstance(cat, Expression):
-                result = cat(econtext)
-                if isinstance(result, (list, tuple)):
-                  base_category_list.extend(result)
-                else:
-                  base_category_list.append(result)
-              else:
-                base_category_list.append(cat)
-            for bid in base_category_list:
-              if bid not in generated_bid:
-                createRelatedValueAccessors(None, bid)
-                generated_bid.add(bid)
-        for ptype in portal_types.listTypeInfo():
-          for bid in ptype.getTypeBaseCategoryList():
-            if bid not in generated_bid :
-              createRelatedValueAccessors(None, bid)
-              generated_bid.add(bid)
-
-      # We suppose that if we reach this point
-      # then it means that all code generation has succeeded
-      # (no except should hide that). We can safely return None
-      # if id does not exist as a dynamic property
-      # Baseline: accessor generation failures should always
-      #           raise an exception up to the user
-      return getattr(self, id, None)
-    finally:
-      Base.aq_method_lock.release()
-
-    # Proceed with standard acquisition
-    return None
-
-  psyco.bind(_aq_dynamic)
 
   # Constructor
   def __init__(self, id, uid=None, rid=None, sid=None, **kw):
