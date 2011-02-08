@@ -58,7 +58,7 @@ class TestUNG(ERP5TypeTestCase):
             'erp5_jquery_plugin_jqchart',
             'erp5_jquery_plugin_colorpicker',
             'erp5_jquery_plugin_elastic',
-            'erp5_jquery_plugin_wdcalendar'
+            'erp5_jquery_plugin_wdcalendar',
             'erp5_jquery_sheet_editor',
             'erp5_xinha_editor',
             'erp5_svg_editor',
