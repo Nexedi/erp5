@@ -1,4 +1,5 @@
 2011-02-08 Kazuhiko
+* remove upgrading MySQL charset part, that should be handled by buildout MySQL setup and reindexing with clear_catalog=1.
 * remove handling zope version and python version, that should be handled by instance creation in buildout.
 
 2011-02-07 Kazuhiko

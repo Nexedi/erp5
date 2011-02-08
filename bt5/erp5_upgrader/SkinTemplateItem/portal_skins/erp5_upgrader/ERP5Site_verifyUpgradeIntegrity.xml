@@ -69,8 +69,6 @@ message_list.extend(context.ERP5Site_upgradeWorkflowChain())\n
 \n
 message_list.extend(context.ERP5Site_upgradeSQLCatalog())\n
 \n
-message_list.extend(context.ERP5Site_upgradeMySQLCharset())\n
-\n
 if getattr(context, \'WizardTool_isPersonReferenceGloballyUnique\', None) is not None:\n
   if len(context.PersonModule_getUserAccountList(\'occupied\')) == 0 and \\\n
       getattr(portal.acl_users, \'nexedi_authentication\', None) is not None:\n
