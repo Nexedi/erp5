@@ -17,12 +17,15 @@ allow_class(FormValidationError)
 
 class ValidationError(Exception):
     
-    def __init__(self, error_key, field):
+    def __init__(self, error_key, field, error_text=None):
         Exception.__init__(self, error_key)
         self.error_key = error_key
         self.field_id = field.id
         self.field = field
-        self.error_text = field.get_error_message(error_key)
+        if error_text is not None:
+          self.error_text = error_text
+        else:
+          self.error_text = field.get_error_message(error_key)
 
 allow_class(ValidationError)
 
