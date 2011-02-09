@@ -108,8 +108,7 @@ def launchUpgraderAlarm(alarm_id, after_method_id=[]):\n
 # There is one strict order to run the alarms\n
 # This is required because the one alarms depends the previous one be\n
 # Fully done.\n
-previous_method_id = launchUpgraderAlarm(\'bt5_upgrader\', \n
-                                    after_method_id = previous_method_id)\n
+previous_method_id = launchUpgraderAlarm(\'bt5_upgrader\')\n
 \n
 previous_method_id.extend([\'updateBusinessTemplateFromUrl\',\n
                            \'TemplateTool_reinstallBT5\',\n
