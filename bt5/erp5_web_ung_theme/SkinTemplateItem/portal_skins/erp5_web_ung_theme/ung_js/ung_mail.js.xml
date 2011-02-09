@@ -30,7 +30,7 @@
             <key> <string>raw</string> </key>
             <value> <string>function saveEmailThread(event){\n
   event.preventDefault();\n
-  formData = new Array();\n
+  var formData = new Array();\n
   $("div.compose-mail-page textarea, div.compose-mail-page input").each(function(){\n
     formData.push({name: $(this).attr("id"), value: $(this).attr("value")});\n
   });\n
@@ -44,6 +44,7 @@
 }\n
 \n
 $().ready(function(){\n
+  var baseUrl = window.location.href.split("?")[0];\n
   $("button#compose-mail").click(function(event){\n
     event.preventDefault();\n
     $("div.main-right fieldset.widget").hide();\n
@@ -64,7 +65,15 @@ $().ready(function(){\n
     });\n
   });\n
   $("img[alt=\'mail_logo_box\']").click(function(){\n
-    window.location.reload();\n
+    window.location.href = baseUrl + "?reset:int=1";\n
+  });\n
+  $("input#submit-search").click(function(event){\n
+    event.preventDefault();\n
+    var text = $("input[name=\'searchable-text\']").attr("value").replace(/\\ /g,"%20");\n
+    window.location.href = baseUrl + "?SearchableText=" + text;\n
+  });\n
+  $("input[name=\'searchable-text\']").keypress(function(event){\n
+    (event.which == 13) ? $("input#submit-search").click() : null;\n
   });\n
 });</string> </value>
         </item>
