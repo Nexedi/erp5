@@ -333,19 +333,20 @@ class TemplateTool (BaseTool):
             prop_path = posixpath.join(tar.members[0].name, 'bt', pid)
             try:
               info = tar.getmember(prop_path)
+              value = tar.extractfile(info).read()
             except KeyError:
-              continue
-            value = tar.extractfile(info).read()
+              value = None
             if value is 'None':
               # At export time, we used to export non-existent properties:
               #   str(obj.getProperty('non-existing')) == 'None'
               # Discard them
               continue
-            if prop_type == 'text' or prop_type == 'string' \
-                                   or prop_type == 'int':
-              prop_dict[pid] = value
-            elif prop_type == 'lines' or prop_type == 'tokens':
-              prop_dict[pid[:-5]] = value.splitlines()
+            if prop_type in ('text', 'string'):
+              prop_dict[pid] = value or ''
+            elif prop_type in ('int', 'boolean'):
+              prop_dict[pid] = value or 0
+            elif prop_type in ('lines', 'tokens'):
+              prop_dict[pid[:-5]] = (value or '').splitlines()
           prop_dict.pop('id', '')
           bt.edit(**prop_dict)
           # import all other files from bt
