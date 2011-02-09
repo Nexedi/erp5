@@ -10,6 +10,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>all_columns</string>
                 <string>columns</string>
                 <string>count_method</string>
                 <string>domain_root_list</string>
@@ -20,6 +21,7 @@
                 <string>search</string>
                 <string>select</string>
                 <string>selection_name</string>
+                <string>sort</string>
                 <string>title</string>
               </list>
             </value>
@@ -81,6 +83,12 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>all_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
                 <item>
                     <key> <string>columns</string> </key>
                     <value>
@@ -167,6 +175,17 @@
                 <item>
                     <key> <string>selection_name</string> </key>
                     <value> <string>ung_mail_list_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>email_thread.start_date</string>
+                          <string>DESC</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
