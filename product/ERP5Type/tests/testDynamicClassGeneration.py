@@ -1022,7 +1022,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     person = person_module.newContent(portal_type="Person")
     try:
       person.newContent(portal_type="Career")
-    except TypeError:
+    except:
       self.fail("Arrow Property Sheet could not be generated")
 
 from Products.CMFCore.Expression import Expression
