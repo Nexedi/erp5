@@ -64,6 +64,7 @@
                 <string>navigation navigation-right</string>
                 <string>main main-left</string>
                 <string>main main-right</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -75,7 +76,17 @@
                     <key> <string>header header-left</string> </key>
                     <value>
                       <list>
+                        <string>your_mail_logo_box</string>
                         <string>your_search_box</string>
+                        <string>your_style_box</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list>
+                        <string>your_listbox_date</string>
                       </list>
                     </value>
                 </item>
@@ -95,7 +106,6 @@
                         <string>your_toolbar</string>
                         <string>your_listbox</string>
                         <string>your_listbox_icon</string>
-                        <string>your_listbox_date</string>
                       </list>
                     </value>
                 </item>

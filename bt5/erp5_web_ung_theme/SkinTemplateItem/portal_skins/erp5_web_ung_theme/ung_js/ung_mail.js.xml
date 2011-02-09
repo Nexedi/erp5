@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ung_mail.js</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>function saveEmailThread(event){\n
+  event.preventDefault();\n
+  formData = new Array();\n
+  $("div.compose-mail-page textarea, div.compose-mail-page input").each(function(){\n
+    formData.push({name: $(this).attr("id"), value: $(this).attr("value")});\n
+  });\n
+  formData.push({name: "action", value: "save"});\n
+  $.ajax({\n
+     type: "post",\n
+     url: "ERP5Site_createNewEmailThread",\n
+     data: formData,\n
+     mediaType: "json",\n
+  });\n
+}\n
+\n
+$().ready(function(){\n
+  $("button#compose-mail").click(function(event){\n
+    event.preventDefault();\n
+    $("div.main-right fieldset.widget").hide();\n
+    $("div.main-right").css("background-color", "#BBCCFF");\n
+    $("div.main-right").load("EmailThread_formView", {}, function(){\n
+      $("button#discard-mail").click(function(){\n
+        window.location.reload();\n
+      });\n
+      $("span#add-cc-field").click(function(){\n
+        $(this).hide();\n
+        $("tr#cc").show();\n
+      });\n
+      $("span#add-bcc-field").click(function(){\n
+        $(this).hide();\n
+        $("tr#bcc").show();\n
+      });\n
+      $("button#save-mail").click(saveEmailThread);\n
+    });\n
+  });\n
+  $("img[alt=\'mail_logo_box\']").click(function(){\n
+    window.location.reload();\n
+  });\n
+});</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

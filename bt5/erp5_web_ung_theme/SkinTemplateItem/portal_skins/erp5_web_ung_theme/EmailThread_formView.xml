@@ -36,18 +36,62 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<div class="mail-navigation">\n
-  <span class="mail-action">\n
-    Mail\n
-  </span>\n
+<div class="compose-mail-page">\n
+<button title="Send" type="submit" id="send-mail"> Send </button>\n
+<button title="Save" type="submit" id="save-mail"> Save </button>\n
+<button title="Discard" type="submit" id="discard-mail"> Discard </button>\n
+<div class="compose-mail">\n
+<form>\n
+<table id="form-table">\n
+   <tr>\n
+     <td valign="top">\n
+          <label for="to">To: </label>\n
+        </td>\n
+        <td valign="top">\n
+          <textarea rows="2" type="text" cols="100" id="to" name="to"/>\n
+        </td>\n
+     </tr>\n
+     <tr>\n
+        <td valign="top">\n
+        </td>\n
+        <td valign="top">\n
+          <span id="add-cc-field"> Add Cc </span>\n
+          <span id="add-bcc-field"> Add Bcc </span>\n
+        </td>\n
+     </tr>\n
+     <tr id="cc">\n
+        <td valign="top">\n
+          <label for="cc">Cc: </label>\n
+        </td>\n
+        <td valign="top">\n
+          <textarea type="text" cols="100" id="cc">\n
+        </td>\n
+     </tr>\n
+     <tr id="bcc">\n
+        <td valign="top">\n
+          <label for="bcc">Bcc: </label>\n
+        </td>\n
+        <td valign="top">\n
+          <textarea type="text" cols="100" id="bcc">\n
+        </td>\n
+     </tr>\n
+     <tr>\n
+        <td valign="top">\n
+          <label for="subject">Subject: </label>\n
+        </td>\n
+        <td valign="top">\n
+          <input type="text" size="80" name="subject" id="subject"/>\n
+        </td>\n
+     </tr>\n
+  </table>\n
+<br/>\n
+<textarea type="text" id="text-content" cols="110" rows="15"/>\n
+<form>\n
 </div>\n
-<div class="separator"></div>\n
-  <button title="Compose Mail" name="" type="submit" id="compose-mail">\n
-    Compose Mail\n
-  </button>\n
-<div class="gadget-column">\n
-  <div class="file-quick-search">\n
-  </div>\n
+<br/>\n
+<button title="Send" type="submit" id="send-mail"> Send </button>\n
+<button title="Save" type="submit" id="save-mail"> Save </button>\n
+<button title="Discard" type="submit" id="discard-mail"> Discard </button>\n
 </div>
 
 ]]></unicode> </value>
@@ -62,7 +106,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSection_MailMenuBox</string> </value>
+            <value> <string>EmailThread_formView</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>

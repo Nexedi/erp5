@@ -50,17 +50,26 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Script to custom the date using, for example, abbreviated months\n
-  i.e\n
-    Feb 7\n
-  XXX - check if it is possible with DateField\n
-"""\n
-date = context.getStartDate()\n
-if date.isCurrentDay():\n
-  return date.AMPMMinutes()\n
-else:\n
-  return "%s %s" % (date.aMonth(), date.day())\n
+            <value> <string>from DateTime import DateTime\n
+\n
+form = context.REQUEST.form\n
+\n
+person = context.ERP5Site_getAuthenticatedMemberPersonValue()\n
+sender_email = "freecloudalliance@freecloudalliance.org"\n
+\n
+if person and person.getEmail():\n
+  sender_email = person.getEmailText()\n
+\n
+email_thread_module = context.email_thread_module\n
+email = email_thread_module.newContent(portal_type="Email Thread")\n
+email.setStartDate(DateTime())\n
+email.setSender(sender_email)\n
+email.setRecipient(form.get("to"))\n
+email.setCcRecipient(form.get("cc"))\n
+email.setBccRecipient(form.get("bcc"))\n
+email.setTitle(form.get("subject"))\n
+if form.get("action") == "send":\n
+  context.portal_workflow.doActionFor(context, \'post_action\')\n
 </string> </value>
         </item>
         <item>
@@ -68,8 +77,16 @@ else:\n
             <value> <string></string> </value>
         </item>
         <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
-            <value> <string>EmailThread_getCustomDate</string> </value>
+            <value> <string>ERP5Site_createNewEmailThread</string> </value>
         </item>
       </dictionary>
     </pickle>

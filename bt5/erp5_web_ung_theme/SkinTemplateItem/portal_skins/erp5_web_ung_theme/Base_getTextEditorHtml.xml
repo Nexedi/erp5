@@ -51,16 +51,13 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  Script to custom the date using, for example, abbreviated months\n
-  i.e\n
-    Feb 7\n
-  XXX - check if it is possible with DateField\n
+  This script is hack to get the html of FCKEditor. \n
+  The goals is open the html form to send e-mail without reload the page.\n
+  XXX - This script will be remove as soon as possible to use a good way\n
 """\n
-date = context.getStartDate()\n
-if date.isCurrentDay():\n
-  return date.AMPMMinutes()\n
-else:\n
-  return "%s %s" % (date.aMonth(), date.day())\n
+extra_content = extra_context = {"inputvalue": "", "inputname": "Compose Mail"}\n
+\n
+return context.fckeditor_wysiwyg_support.pt_render(extra_context=extra_context)\n
 </string> </value>
         </item>
         <item>
@@ -69,7 +66,7 @@ else:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>EmailThread_getCustomDate</string> </value>
+            <value> <string>Base_getTextEditorHtml</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -1,4 +1,10 @@
-2011-02-07
+2011-02-09 gabriel
+* Add logo to UNG Mail
+* Add Form to compose a new email
+* Refactor code to display in listbox the hour instead of the date when the email was created in current day
+* Add javascript file to UNG Mail
+
+2011-02-07 gabriel
 * Initial commit to UNG Mail
 * Added Web Section and form to Mail
 * Add domain to UNG Mail
