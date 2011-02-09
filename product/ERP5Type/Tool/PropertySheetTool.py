@@ -39,7 +39,7 @@ from Products.CMFCore.Expression import Expression
 
 from Products.ERP5Type.dynamic.accessor_holder import AccessorHolderType
 
-from zLOG import LOG, ERROR, INFO, WARNING
+from zLOG import LOG, INFO, WARNING
 
 class PropertySheetTool(BaseTool):
   """
