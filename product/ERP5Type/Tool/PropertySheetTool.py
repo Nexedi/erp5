@@ -236,26 +236,6 @@ class PropertySheetTool(BaseTool):
 
     return (properties, categories, constraints)
 
-  security.declarePrivate('createFilesystemPropertySheetAccessorHolder')
-  def createFilesystemPropertySheetAccessorHolder(self, property_sheet):
-    """
-    Create a new accessor holder from the given filesystem Property
-    Sheet (the accessors are created through a Property Holder)
-
-    XXX: Workflows?
-    XXX: Remove as soon as the migration is finished
-    """
-    property_holder = PropertyHolder(property_sheet.__name__)
-
-    property_holder._properties = getattr(property_sheet, '_properties', [])
-    property_holder._categories = getattr(property_sheet, '_categories', [])
-    property_holder._constraints = getattr(property_sheet, '_constraints', [])
-
-    return AccessorHolderType.fromPropertyHolder(
-      property_holder,
-      self.getPortalObject(),
-      'erp5.filesystem_accessor_holder')
-
   security.declarePrivate('createZodbPropertySheetAccessorHolder')
   def createZodbPropertySheetAccessorHolder(self, property_sheet):
     """
