@@ -1034,7 +1034,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     except:
       self.fail("Creating an empty Category Property raises an error")
 
-    arrow.newContent(portal_type="Dynamic Category Property")
+    dynamic_category = arrow.newContent(portal_type="Dynamic Category Property")
     transaction.commit()
     try:
       person.newContent(portal_type="Career")
@@ -1047,6 +1047,16 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
       person.newContent(portal_type="Career")
     except:
       self.fail("Creating an empty Constraint raises an error")
+
+    # be really nasty, and test that code is still foolproof
+    # (this None value should never appear in an expression... unless
+    # the method has a mistake)
+    dynamic_category.setCategoryExpression('python: ["foo", None, "region"]')
+    transaction.commit()
+    try:
+      person.newContent(portal_type="Career")
+    except:
+      self.fail("Creating an invalid Category Expression raises an error")
 
 from Products.CMFCore.Expression import Expression
 
