@@ -95,9 +95,9 @@ def _createAccessorHolderList(site,
                 getattr(property_sheet_tool,
                         property_sheet_name))
 
-      except AttributeError:
+      except:
         LOG("ERP5Type.dynamic", ERROR,
-            "Ignoring missing Property Sheet " + property_sheet_name)
+            "Ignoring missing or Invalid Property Sheet " + property_sheet_name)
 
         raise
 
