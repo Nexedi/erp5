@@ -2877,8 +2877,15 @@ class ActionTemplateItem(ObjectTemplateItem):
         container.manage_delObjects([obj.id
           for obj in container.getActionInformationList()
           if obj.getReference() in action_dict])
-        for obj in action_dict.itervalues():
-          container._importOldAction(obj)
+        for name, obj in action_dict.iteritems():
+          imported_action = container._importOldAction(obj).aq_base
+
+          # if that's an old style class, use a portal type class instead
+          # XXX PortalTypeTemplateItem-specific
+          migrateme = getattr(imported_action, '_migrateToPortalTypeClass', None)
+          if migrateme is not None:
+            migrateme()
+
     else:
       BaseTemplateItem.install(self, context, trashbin, **kw)
       p = context.getPortalObject()
