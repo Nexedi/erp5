@@ -60,6 +60,7 @@ from Products.ERP5Type.Utils import convertToUpperCase, PersistentMigrationMixin
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
+from Products.ERP5Type.Core.PropertySheet import PropertySheet as PropertySheetDocument
 from OFS.Traversable import NotFound
 from OFS import SimpleItem, XMLExportImport
 from cStringIO import StringIO
@@ -3632,7 +3633,8 @@ class PropertySheetTemplateItem(DocumentTemplateItem,
                            "contain a class with the same name" % \
                            class_id)
 
-    return property_sheet_tool.createPropertySheetFromFilesystemClass(klass)
+    return PropertySheetDocument.importFromFilesystemDefinition(
+        property_sheet_tool, klass)
 
   def _migrateAllFilesystemPropertySheets(self,
                                           context,
