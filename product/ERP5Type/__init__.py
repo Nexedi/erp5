@@ -165,7 +165,8 @@ ModuleSecurityInfo('Products.ERP5Type.Utils').declarePublic(
     'sortValueList', 'convertToUpperCase', 'UpperCase',
     'convertToMixedCase', 'cartesianProduct', 'sleep', 'getCommonTimeZoneList',
     'int2letter', 'getMessageIdWithContext', 'getTranslationStringWithContext',
-    'Email_parseAddressHeader', 'guessEncodingFromText')
+    'Email_parseAddressHeader', 'guessEncodingFromText',
+    'isValidTALESExpression')
 
 allow_module('Products.ERP5Type.Message')
 ModuleSecurityInfo('Products.ERP5Type.Message').declarePublic('translateString')

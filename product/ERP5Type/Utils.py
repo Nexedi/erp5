@@ -3367,3 +3367,22 @@ def reencodeUrlEscapes(url):
       url += [_reencodeUrlEscapes_map[c] for c in part]
   except StopIteration:
     return ''.join(url)
+
+from zope.tales.engine import Engine
+from zope.tales.tales import CompilerError
+
+def isValidTALESExpression(value):
+  """return if given value is valid TALES Expression.
+  This validator only validates Syntax of TALES Expression,
+  it does not tell that Expression is callable on given context
+
+  - value: string we try to compile
+
+  return tuple: (boolean result, error_message or None)
+  """
+  try:
+    Engine.compile(value)
+  except CompilerError, message:
+    return False, message
+  else:
+    return True, None
