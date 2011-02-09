@@ -221,8 +221,18 @@ class PropertySheetTool(BaseTool):
     categories = []
 
     for property in property_sheet.contentValues():
-      portal_type = property.getPortalType()
       property_definition = property.exportToFilesystemDefinition()
+
+      # If a category doesn't have a name yet or the constraint class
+      # returned is None, then just skip it
+      if property_definition is None:
+        LOG("Tool.PropertySheetTool", INFO,
+            "Skipping property with ID '%s' in Property Sheet '%s'" % \
+            (property.getId(), property_sheet.getId()))
+
+        continue
+
+      portal_type = property.getPortalType()
 
       if portal_type == "Category Property" or \
          portal_type == "Dynamic Category Property":
