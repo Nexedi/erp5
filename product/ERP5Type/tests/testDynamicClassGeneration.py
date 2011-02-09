@@ -1022,7 +1022,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     # try to create a Career, which uses Arrow Property Sheet
     try:
       person.newContent(portal_type="Career")
-    except:
+    except Exception:
       # Arrow property holder could not be created from the
       # invalid Arrow Property Sheet
       self.fail("Creating an empty Acquired Property raises an error")
@@ -1031,21 +1031,21 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     transaction.commit()
     try:
       person.newContent(portal_type="Career")
-    except:
+    except Exception:
       self.fail("Creating an empty Category Property raises an error")
 
     dynamic_category = arrow.newContent(portal_type="Dynamic Category Property")
     transaction.commit()
     try:
       person.newContent(portal_type="Career")
-    except:
+    except Exception:
       self.fail("Creating an empty Dynamic Category Property raises an error")
 
     arrow.newContent(portal_type="Property Existence Constraint")
     transaction.commit()
     try:
       person.newContent(portal_type="Career")
-    except:
+    except Exception:
       self.fail("Creating an empty Constraint raises an error")
 
     # be really nasty, and test that code is still foolproof
@@ -1055,7 +1055,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     transaction.commit()
     try:
       person.newContent(portal_type="Career")
-    except:
+    except Exception:
       self.fail("Creating an invalid Category Expression raises an error")
 
 from Products.CMFCore.Expression import Expression

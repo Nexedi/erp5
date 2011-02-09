@@ -93,7 +93,7 @@ def _createAccessorHolderList(site,
         property_sheet = getattr(property_sheet_tool, property_sheet_name)
         accessor_holder_class = property_sheet.createAccessorHolder()
 
-      except:
+      except Exception:
         LOG("ERP5Type.dynamic", ERROR,
             "Ignoring missing or Invalid Property Sheet " + property_sheet_name)
 
@@ -467,7 +467,7 @@ def synchronizeDynamicModules(context, force=False):
         from Products.ERP5.Document.BusinessTemplate import _recursiveRemoveUid
         _recursiveRemoveUid(tool)
         portal._setOb(tool_id, tool)
-      except:
+      except Exception:
         import traceback; traceback.print_exc()
         raise
 
