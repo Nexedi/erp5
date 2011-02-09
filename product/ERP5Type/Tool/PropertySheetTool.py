@@ -34,9 +34,9 @@ from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Accessor import Translation
 from Products.CMFCore.utils import getToolByName
-from Products.CMFCore.Expression import Expression
+from Products.ERP5Type.Core.PropertySheet import PropertySheet as PropertySheetDocument
 
-from zLOG import LOG, INFO, WARNING
+from zLOG import LOG, INFO
 
 class PropertySheetTool(BaseTool):
   """
@@ -59,114 +59,6 @@ class PropertySheetTool(BaseTool):
             [Translation.TRANSLATION_DOMAIN_CONTENT_TRANSLATION]
             )
 
-  @staticmethod
-  def _guessFilesystemPropertyPortalType(attribute_dict):
-    """
-    Guess the Portal Type of a filesystem-based Property Sheet from
-    the attributes of the given property
-    """
-    for key in attribute_dict:
-      if key.startswith('acqui') or \
-         key in ('alt_accessor_id',
-                 # Specific to 'content' type
-                 'portal_type',
-                 'translation_acquired_property'):
-        return 'Acquired Property'
-
-    return 'Standard Property'
-
-  _merged_portal_type_dict = {
-    'CategoryAcquiredExistence': 'Category Existence Constraint',
-    'CategoryAcquiredMembershipArity': 'Category Membership Arity Constraint'}
-
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'createPropertySheetFromFilesystemClass')
-  def createPropertySheetFromFilesystemClass(self, klass):
-    """
-    Create a new Property Sheet in portal_property_sheets from a given
-    filesystem-based Property Sheet definition.
-    """
-    new_property_sheet_name = klass.__name__
-
-    new_property_sheet = self.newContent(id=new_property_sheet_name,
-                                         portal_type='Property Sheet')
-
-    types_tool = self.getPortalObject().portal_types
-
-    for attribute_dict in getattr(klass, '_properties', []):
-      # The property could be either a Standard or an Acquired
-      # Property
-      portal_type_class = types_tool.getPortalTypeClass(
-        self._guessFilesystemPropertyPortalType(attribute_dict))
-
-      # Create the new property and set its attributes
-      portal_type_class.importFromFilesystemDefinition(new_property_sheet,
-                                                       attribute_dict)
-
-    for category in getattr(klass, '_categories', []):
-      # A category may be a TALES Expression rather than a plain
-      # string
-      portal_type = isinstance(category, Expression) and \
-        'Dynamic Category Property' or 'Category Property'
-
-      portal_type_class = types_tool.getPortalTypeClass(portal_type)
-
-      # Create the new category
-      portal_type_class.importFromFilesystemDefinition(new_property_sheet,
-                                                       category)
-
-    # Get filesystem Constraint names to be able to map them properly
-    # to ZODB Constraint Portal Types as some filesystem constraint
-    # names are 'NAMEConstraint' or 'NAME'
-    from Products.ERP5Type import Constraint as FilesystemConstraint
-    filesystem_constraint_class_name_list = [
-      class_name for class_name in FilesystemConstraint.__dict__ \
-      if class_name[0] != '_' ]
-
-    # Mapping between the filesystem 'type' field and Portal Types ID
-    portal_type_dict = {}
-
-    for portal_type_id in types_tool.objectIds():
-      if not portal_type_id.endswith(' Constraint'):
-        continue
-
-      constraint_class_name = portal_type_id.replace(' ', '')
-
-      if constraint_class_name not in filesystem_constraint_class_name_list:
-        constraint_class_name = constraint_class_name.replace('Constraint', '')
-
-        if constraint_class_name not in filesystem_constraint_class_name_list:
-          LOG("Tool.PropertySheetTool", WARNING,
-              "PropertySheet %s: No matching Constraint found for Portal '%s'" % \
-              (new_property_sheet_name, portal_type_id))
-
-          continue
-
-      portal_type_dict[constraint_class_name] = portal_type_id
-
-    portal_type_dict.update(self._merged_portal_type_dict)
-
-    for constraint in getattr(klass, '_constraints', ()):
-      try:
-        portal_type = portal_type_dict[constraint['type']]
-      except KeyError:
-        # TODO: Constraints without Portal Type yet (e.g. Constraints
-        # which have not been migrated yet (within BTs or per-project
-        # Products)) are simply *ignored* for now
-        LOG("Tool.PropertySheetTool", WARNING,
-            "Not migrating constraint %s to portal_property_sheets" % \
-            constraint['type'])
-
-        continue
-
-      portal_type_class = types_tool.getPortalTypeClass(portal_type)
-
-      # Create the new constraint
-      portal_type_class.importFromFilesystemDefinition(new_property_sheet,
-                                                       constraint)
-
-    return new_property_sheet
-
   security.declareProtected(Permissions.ManagePortal,
                             'createAllPropertySheetsFromFilesystem')
   def createAllPropertySheetsFromFilesystem(self, erase_existing=False,
@@ -174,8 +66,6 @@ class PropertySheetTool(BaseTool):
     """
     Create Property Sheets in portal_property_sheets from _all_
     filesystem Property Sheets
-
-    XXX: only meaningful for testing?
     """
     from Products.ERP5Type import PropertySheet
 
@@ -184,7 +74,7 @@ class PropertySheetTool(BaseTool):
       if name[0] == '_':
         continue
 
-      if name in self.portal_property_sheets.objectIds():
+      if name in self.objectIds():
         if erase_existing:
           self.portal_property_sheets.deleteContent(name)
           transaction.commit()
@@ -193,7 +83,8 @@ class PropertySheetTool(BaseTool):
 
       LOG("Tool.PropertySheetTool", INFO,
           "Creating %s in portal_property_sheets" % repr(name))
-      self.createPropertySheetFromFilesystemClass(klass)
+
+      PropertySheetDocument.importFromFilesystemDefinition(self, klass)
       transaction.commit()
 
     if REQUEST is not None:

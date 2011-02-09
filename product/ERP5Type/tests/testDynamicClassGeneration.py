@@ -34,6 +34,7 @@ import transaction
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
+from Products.ERP5Type.Core.PropertySheet import PropertySheet as PropertySheetDocument
 
 from zope.interface import Interface, implementedBy
 
@@ -1230,6 +1231,7 @@ class TestZodbImportFilesystemPropertySheet(ERP5TypeTestCase):
     from Products.ERP5PropertySheetLegacy import PropertySheet
     import os
 
+    property_sheets_tool = self.portal.portal_property_sheets
     property_sheet_legacy_class_dict = {}
     for module in os.listdir(os.path.dirname(PropertySheet.__file__)):
       if module == '__init__.py' or module[-3:] != '.py':
@@ -1250,11 +1252,11 @@ class TestZodbImportFilesystemPropertySheet(ERP5TypeTestCase):
       filesystem_property_sheet.__name__ = "%s_%s" % \
           (self.__class__.__name__, property_sheet_name)
 
-      zodb_property_sheet = portal.createPropertySheetFromFilesystemClass(
-        filesystem_property_sheet)
+      zodb_property_sheet = PropertySheetDocument.importFromFilesystemDefinition(
+        property_sheets_tool, filesystem_property_sheet)
 
       self.assertTrue(filesystem_property_sheet.__name__ in \
-                      self.portal.portal_property_sheets.objectIds())
+                      property_sheets_tool)
 
       zodb_property_tuple, zodb_category_tuple, zodb_constraint_class_tuple = \
           zodb_property_sheet.exportToFilesystemDefinition()
