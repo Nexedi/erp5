@@ -76,6 +76,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
     # mimetype oriented conversions (iengine interface)
 
+    security.declarePrivate('unregisterTransform')
     def unregisterTransform(self, name):
         """ unregister a transform
         name is the name of a registered transform
@@ -85,6 +86,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             self._delObject(name)
 
 
+    security.declarePrivate('convertTo')
     def convertTo(self, target_mimetype, orig, data=None, object=None,
                   usedby=None, context=None, **kwargs):
         """Convert orig to a given mimetype
@@ -587,6 +589,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
     # mimetype oriented conversions (iengine interface)
 
+    security.declarePrivate('registerTransform')
     def registerTransform(self, transform):
         """register a new transform
 
