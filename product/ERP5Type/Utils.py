@@ -1499,6 +1499,12 @@ def setDefaultProperties(property_holder, object=None, portal=None):
     converted_prop_list = []
     converted_prop_set = set()
     for prop in prop_list:
+      if prop['type'] not in type_definition:
+        LOG("ERP5Type.Utils", INFO,
+            "Invalid type '%s' of property '%s' for Property Sheet '%s'" % \
+            (prop['type'], prop['id'], property_holder.__name__))
+        continue
+
       read_permission = prop.get('read_permission',
                                  Permissions.AccessContentsInformation)
       if isinstance(read_permission, Expression):
@@ -1507,9 +1513,7 @@ def setDefaultProperties(property_holder, object=None, portal=None):
                                   Permissions.ModifyPortalContent)
       if isinstance(write_permission, Expression):
         write_permission = write_permission(econtext)
-      if prop['type'] not in type_definition:
-        raise TypeError, '"%s" is invalid type for propertysheet' % \
-                                            prop['type']
+
       if 'base_id' in prop:
         continue
       if prop['id'] not in converted_prop_set:

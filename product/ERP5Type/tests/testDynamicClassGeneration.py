@@ -999,6 +999,32 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
                           self.test_module.setTitle,
                           'my_property_type_validity_constraint_title')
 
+  def testAddEmptyProperty(self):
+    """
+    When users create properties in a PropertySheet, the property
+    is first empty.
+    Check that accessor generation can cope with such invalid
+    properties
+    """
+    property_sheet_tool = self.portal.portal_property_sheets
+    arrow = property_sheet_tool.Arrow
+
+    # Action -> add Acquired Property
+    arrow.newContent(portal_type="Acquired Property")
+    # a user is doing this, so commit after each request
+    transaction.commit()
+
+    accessor = getattr(property_sheet_tool, "setTitle", None)
+    # sites used to break at this point
+    self.assertNotEquals(None, accessor)
+    # try to create a Career, which uses Arrow Property Sheet
+    person_module = self.portal.person_module
+    person = person_module.newContent(portal_type="Person")
+    try:
+      person.newContent(portal_type="Career")
+    except TypeError:
+      self.fail("Arrow Property Sheet could not be generated")
+
 from Products.CMFCore.Expression import Expression
 
 class TestZodbImportFilesystemPropertySheet(ERP5TypeTestCase):
