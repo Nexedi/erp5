@@ -239,3 +239,8 @@ class ConstraintMixin(Predicate):
       filesystem_definition_dict[message_id] = self._getMessage(message_id)
 
     return filesystem_definition_dict
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'applyOnAccessorHolder')
+  def applyOnAccessorHolder(self, accessor_holder, expression_context):
+    accessor_holder.constraints.append(self)

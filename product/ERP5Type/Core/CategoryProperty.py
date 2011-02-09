@@ -65,3 +65,10 @@ class CategoryProperty(XMLObject):
     """
     return context.newContent(portal_type=cls.portal_type,
                               reference=category_name)
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'applyOnAccessorHolder')
+  def applyOnAccessorHolder(self, accessor_holder, expression_context):
+    reference = self.getReference()
+    if reference is not None:
+      accessor_holder._categories.append(reference)

@@ -70,3 +70,13 @@ class DynamicCategoryProperty(XMLObject):
     """
     return context.newContent(portal_type=cls.portal_type,
                               category_expression=category_expression.text)
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'applyOnAccessorHolder')
+  def applyOnAccessorHolder(self, accessor_holder, expression_context):
+    expression_string = self.getCategoryExpression()
+    if expression_string is not None:
+      expression = Expression(expression_string)
+      for category_id in expression(expression_context):
+        if category_id is not None:
+          accessor_holder._categories.append(category_id)
