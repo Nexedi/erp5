@@ -1455,17 +1455,6 @@ def setDefaultProperties(property_holder, object=None, portal=None):
     # a list of declarative consistency definitions (ie. constraints)
     # Do not consider superclass _constraints definition
     constraint_list = property_holder.__dict__.get('_constraints', [])
-    for base in property_holder.property_sheets:
-      for prop in base._properties:
-        # Copy the dict so that Expression objects are not overwritten.
-        prop_list.append(prop.copy())
-      if hasattr(base, '_categories'):
-        if isinstance(base._categories, (tuple, list)):
-          cat_list += base._categories
-        else:
-          cat_list.append(base._categories)
-      if hasattr(base, '_constraints'):
-        constraint_list += base._constraints
 
     # Evaluate TALES expressions.
     for prop in prop_list:
