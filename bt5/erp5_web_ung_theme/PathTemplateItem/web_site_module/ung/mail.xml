@@ -77,7 +77,7 @@
         </item>
         <item>
             <key> <string>content_layout</string> </key>
-            <value> <string>erp5_web_ung_mail_content_layout</string> </value>
+            <value> <string>erp5_web_ung_content_layout</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
