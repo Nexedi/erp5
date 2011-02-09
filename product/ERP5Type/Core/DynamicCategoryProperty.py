@@ -55,7 +55,11 @@ class DynamicCategoryProperty(XMLObject):
     """
     Return the filesystem definition of the property
     """
-    return Expression(self.getCategoryExpression())
+    expression_string = self.getCategoryExpression()
+    if expression_string is None:
+      return None
+
+    return Expression(expression_string)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'importFromFilesystemDefinition')
