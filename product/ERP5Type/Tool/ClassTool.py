@@ -255,6 +255,7 @@ if allowClassTool():
       id = 'portal_classes'
       meta_type = 'ERP5 Class Tool'
       portal_type = 'Class Tool'
+      isIndexable = False
 
       # Declarative Security
       security = ClassSecurityInfo()
@@ -1261,6 +1262,7 @@ else:
       id = 'portal_classes'
       meta_type = 'ERP5 Dummy Class Tool'
       portal_type = 'Dummy Class Tool'
+      isIndexable = False
 
       # Declarative Security
       security = ClassSecurityInfo()
