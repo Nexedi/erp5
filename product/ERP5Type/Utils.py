@@ -1308,6 +1308,11 @@ def getExistingBaseCategoryList(portal, base_cat_list):
 
   new_base_cat_list = []
   for base_cat in base_cat_list:
+    if base_cat is None:
+      # a Dynamic Category Property specifies a TALES Expression which
+      # may return a list containing None, so just skip it
+      continue
+
     key = (base_cat,)
     try:
       value = cache[key]
