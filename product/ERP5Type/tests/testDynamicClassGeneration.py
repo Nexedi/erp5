@@ -1227,12 +1227,21 @@ class TestZodbImportFilesystemPropertySheet(ERP5TypeTestCase):
     """
     portal = self.getPortalObject().portal_property_sheets
 
-    from Products.ERP5Type import PropertySheet
-    # Get all the property sheets defined on the filesystem
-    for name, klass in PropertySheet.__dict__.iteritems():
-      if name[0] == '_' or isinstance(klass, basestring):
+    from Products.ERP5PropertySheetLegacy import PropertySheet
+    import os
+
+    property_sheet_legacy_class_dict = {}
+    for module in os.listdir(os.path.dirname(PropertySheet.__file__)):
+      if module == '__init__.py' or module[-3:] != '.py':
         continue
 
+      filename = module[:-3]
+
+      property_sheet_legacy_class_dict[filename] = \
+        getattr(__import__(filename, locals(), globals()), filename)
+
+    # Get all the property sheets defined on the filesystem
+    for name, klass in property_sheet_legacy_class_dict.iteritems():
       filesystem_property_sheet = klass
       property_sheet_name = name
 
@@ -1243,6 +1252,9 @@ class TestZodbImportFilesystemPropertySheet(ERP5TypeTestCase):
 
       zodb_property_sheet = portal.createPropertySheetFromFilesystemClass(
         filesystem_property_sheet)
+
+      self.assertTrue(filesystem_property_sheet.__name__ in \
+                      self.portal.portal_property_sheets.objectIds())
 
       zodb_property_tuple, zodb_category_tuple, zodb_constraint_class_tuple = \
           portal.exportPropertySheetToFilesystemDefinitionTuple(
