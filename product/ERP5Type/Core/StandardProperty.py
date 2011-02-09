@@ -114,15 +114,14 @@ class StandardProperty(XMLObject):
                                     'string')
 
   @staticmethod
-  def _convertValueToTalesExpression(value):
+  def _getExpressionFromString(expression_string):
     """
-    Convert a string value to a TALES expression for attributes listed
-    in '_expression_attribute_tuple'
+    Get a TALES Expression instance from a string value
     """
-    if value is None:
+    if expression_string is None:
       return None
 
-    return Expression(value)
+    return Expression(expression_string)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'exportToFilesystemDefinition')
@@ -130,8 +129,7 @@ class StandardProperty(XMLObject):
     """
     Return the filesystem definition of this ZODB property
     """
-    property_default_value = self._convertValueToTalesExpression(
-      self.getPropertyDefault())
+    property_default_value = self._getExpressionFromString(self.getPropertyDefault())
 
     return {'id': self.getReference(),
             'description': self.getDescription(),
