@@ -29,11 +29,16 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.SupplyCell import SupplyCell
+from Products.ERP5.Document.OrderCell import OrderCell
 
-class OpenOrderCell(SupplyCell):
+class OpenOrderCell(SupplyCell, OrderCell):
     """
       A OpenOrderCell allows to define specific quantities
       for each variation of a resource in an Open Order Line.
+
+      TODO:
+      - make sure that this should be (or not) a subclass
+        of OrderCell
     """
     meta_type = 'ERP5 Open Order Cell'
     portal_type = 'Open Order Cell'

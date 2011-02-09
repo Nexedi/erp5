@@ -33,8 +33,9 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5.Document.Supply import Supply
+from Products.ERP5.Document.Order import Order
 
-class OpenOrder(Supply):
+class OpenOrder(Supply, Order):
   """
     An OpenOrder is a collection of Open Order Lines
 
