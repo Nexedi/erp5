@@ -1008,6 +1008,8 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     """
     property_sheet_tool = self.portal.portal_property_sheets
     arrow = property_sheet_tool.Arrow
+    person_module = self.portal.person_module
+    person = person_module.newContent(portal_type="Person")
 
     # Action -> add Acquired Property
     arrow.newContent(portal_type="Acquired Property")
@@ -1018,12 +1020,33 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     # sites used to break at this point
     self.assertNotEquals(None, accessor)
     # try to create a Career, which uses Arrow Property Sheet
-    person_module = self.portal.person_module
-    person = person_module.newContent(portal_type="Person")
     try:
       person.newContent(portal_type="Career")
     except:
-      self.fail("Arrow Property Sheet could not be generated")
+      # Arrow property holder could not be created from the
+      # invalid Arrow Property Sheet
+      self.fail("Creating an empty Acquired Property raises an error")
+
+    arrow.newContent(portal_type="Category Property")
+    transaction.commit()
+    try:
+      person.newContent(portal_type="Career")
+    except:
+      self.fail("Creating an empty Category Property raises an error")
+
+    arrow.newContent(portal_type="Dynamic Category Property")
+    transaction.commit()
+    try:
+      person.newContent(portal_type="Career")
+    except:
+      self.fail("Creating an empty Dynamic Category Property raises an error")
+
+    arrow.newContent(portal_type="Property Existence Constraint")
+    transaction.commit()
+    try:
+      person.newContent(portal_type="Career")
+    except:
+      self.fail("Creating an empty Constraint raises an error")
 
 from Products.CMFCore.Expression import Expression
 
