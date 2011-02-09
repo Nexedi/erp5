@@ -33,11 +33,8 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Accessor import Translation
-from Products.ERP5Type.Base import PropertyHolder
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.Expression import Expression
-
-from Products.ERP5Type.dynamic.accessor_holder import AccessorHolderType
 
 from zLOG import LOG, INFO, WARNING
 
@@ -205,68 +202,6 @@ class PropertySheetTool(BaseTool):
                                           ' imported from filesystem to ZODB.')
       return self.Base_redirect('view',
                                 keep_items={'portal_status_message': message})
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'exportPropertySheetToFilesystemDefinitionTuple')
-  def exportPropertySheetToFilesystemDefinitionTuple(self, property_sheet):
-    """
-    Export a given ZODB Property Sheet to its filesystem definition as
-    tuple (properties, categories, constraints)
-
-    XXX: Move this code and the accessor generation code (from Utils)
-         within their respective documents
-    """
-    properties = []
-    constraints = []
-    categories = []
-
-    for property in property_sheet.contentValues():
-      property_definition = property.exportToFilesystemDefinition()
-
-      # If a category doesn't have a name yet or the constraint class
-      # returned is None, then just skip it
-      if property_definition is None:
-        LOG("Tool.PropertySheetTool", INFO,
-            "Skipping property with ID '%s' in Property Sheet '%s'" % \
-            (property.getId(), property_sheet.getId()))
-
-        continue
-
-      portal_type = property.getPortalType()
-
-      if portal_type == "Category Property" or \
-         portal_type == "Dynamic Category Property":
-        categories.append(property_definition)
-
-      elif portal_type.endswith('Constraint'):
-        constraints.append(property_definition)
-
-      else:
-        properties.append(property_definition)
-
-    return (properties, categories, constraints)
-
-  security.declarePrivate('createZodbPropertySheetAccessorHolder')
-  def createZodbPropertySheetAccessorHolder(self, property_sheet):
-    """
-    Create a new accessor holder from the given ZODB Property Sheet
-    (the accessors are created through a Property Holder)
-    """
-    property_sheet_name = property_sheet.getId()
-    definition_tuple = \
-      self.exportPropertySheetToFilesystemDefinitionTuple(property_sheet)
-
-    property_holder = PropertyHolder(property_sheet_name)
-
-    # Prepare the Property Holder
-    property_holder._properties, \
-      property_holder._categories, \
-      property_holder._constraints = definition_tuple
-
-    return AccessorHolderType.fromPropertyHolder(
-      property_holder,
-      self.getPortalObject(),
-      'erp5.accessor_holder')
 
   security.declareProtected(Permissions.ManagePortal,
                             'getPropertyAvailablePermissionList')

@@ -1257,8 +1257,7 @@ class TestZodbImportFilesystemPropertySheet(ERP5TypeTestCase):
                       self.portal.portal_property_sheets.objectIds())
 
       zodb_property_tuple, zodb_category_tuple, zodb_constraint_class_tuple = \
-          portal.exportPropertySheetToFilesystemDefinitionTuple(
-              zodb_property_sheet)
+          zodb_property_sheet.exportToFilesystemDefinition()
 
       self._checkPropertyOrConstraintDefinitionTuple(
         property_sheet_name,

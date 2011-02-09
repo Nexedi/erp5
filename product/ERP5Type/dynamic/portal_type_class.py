@@ -90,10 +90,8 @@ def _createAccessorHolderList(site,
     except AttributeError:
       # Generate the accessor holder as it has not been done yet
       try:
-        accessor_holder_class = \
-            property_sheet_tool.createZodbPropertySheetAccessorHolder(
-                getattr(property_sheet_tool,
-                        property_sheet_name))
+        property_sheet = getattr(property_sheet_tool, property_sheet_name)
+        accessor_holder_class = property_sheet.createAccessorHolder()
 
       except:
         LOG("ERP5Type.dynamic", ERROR,
