@@ -161,6 +161,18 @@ class TestERP5Simulation(TestPackingListMixin, ERP5TypeTestCase):
     """
     self._checkSolverState(sequence, sequence_list, 'solved')
 
+  def test_00_simulationToolIsIndexed(self):
+    """
+    Parts of simulation (only legacy & "legacy legacy" simulation?)
+    expect the simulation tool to be indexed in SQL queries, notably
+    thanks to grand_parent related keys on Simulation Movements
+    """
+    portal_catalog = self.portal.portal_catalog
+
+    portal_simulation_path = self.portal.portal_simulation.getPath()
+    self.assertEquals(1,
+        len(portal_catalog(path=portal_simulation_path)))
+
   def test_01_splitAndDefer(self, quiet=quiet, run=run_all_test):
     """
       Change the quantity on an delivery line, then
