@@ -1,3 +1,6 @@
+2011-02-09 Kazuhiko
+* compare revisions as int not as str in ERP5Site_upgradeBusinessTemplateList.
+
 2011-02-08 Kazuhiko
 * rewrite ERP5Site_upgradeBusinessTemplateList more generic based on business template repositories.
 * remove upgrading MySQL charset part, that should be handled by buildout MySQL setup and reindexing with clear_catalog=1.

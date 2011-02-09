@@ -128,7 +128,7 @@ for repository, bt5_id in bt5_list:\n
   else:\n
     installed_bt = portal_templates.getInstalledBusinessTemplate(bt5_title, strict=True)\n
     if installed_bt is not None:\n
-      if installed_bt.getRevision() >= new_bt.revision:\n
+      if int(installed_bt.getRevision() or 0) >= int(new_bt.revision or 0):\n
         continue\n
     if bt5_title in required_bt5_id_list:\n
       bt5_counter += 1\n
