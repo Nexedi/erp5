@@ -73,8 +73,8 @@ if len(required_bt5_id_list) == 0:\n
   required_bt5_id_list = [i.title for i in available_bt5_list]\n
 upgradable_bt5_id_list = signature.get(\'upgradable_bt5_id_list\', [])\n
 reinstallable_bt5_id_list = signature.get(\'reinstallable_bt5_id_list\', signature.get(\'reinstalable_bt5_id_list\', []))\n
-before_triggered_bt5_id_dict = signature.get(\'before_triggered_bt5_id_dict\', [])\n
-after_triggered_bt5_id_dict = signature.get(\'after_triggered_bt5_id_dict\', [])\n
+before_triggered_bt5_id_dict = signature.get(\'before_triggered_bt5_id_dict\', {})\n
+after_triggered_bt5_id_dict = signature.get(\'after_triggered_bt5_id_dict\', {})\n
 update_catalog_bt5_id_list = signature.get(\'update_catalog_bt5_id_list\', [])\n
 \n
 bt5_id_list = dict([(x, True) for x in list(required_bt5_id_list) + \\\n
