@@ -1350,14 +1350,8 @@ def createRelatedAccessors(portal_categories, property_holder, econtext,
                               Permissions.AccessContentsInformation)
       if isinstance(read_permission, Expression):
         read_permission = read_permission(econtext)
-      write_permission = Permissions.__dict__.get(
-                              cat_object.getWritePermission(),
-                              Permissions.ModifyPortalContent)
-      if isinstance(write_permission, Expression):
-        write_permission = write_permission(econtext)
     else:
       read_permission = Permissions.AccessContentsInformation
-      write_permission = Permissions.ModifyPortalContent
     # Actually create accessors
     createRelatedValueAccessors(property_holder, cat, read_permission=read_permission)
   # Unnecessary to create these accessors more than once.
