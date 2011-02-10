@@ -67,26 +67,6 @@ ALARM_DICT = {\n
 # The destination release provided by this upgrader\n
 DESTINATION_RELEASE = \'5.4.7\'\n
 \n
-# The list of URLs to get bt5 from.\n
-# Those places MUST be a Repository and contains a bt5list, if bt5list list\n
-# is not present, the directory will NOT be used to upgrade the instance.\n
-BT5_URL_BASE_LIST = ( \'file:///srv/share/bt5/%s\' % DESTINATION_RELEASE ,\n
-                      \'http://www.erp5.org/dists/release/%s/bt5/\' % DESTINATION_RELEASE,\n
-                      # XXX Use snapshot folder to test upgrade to HEAD\n
-                      \'http://www.erp5.org/dists/snapshot/bt5/\',\n
-                      \'file:///srv/share/bt5/upgrade\',\n
-                      # INSTANCE_HOME_REPOSITORY represents $INSTANCE_HOME/bt5 \n
-                      # It is not possible get the instance home into ZODB easily,\n
-                      # so the detection script find the appropriate repository \n
-                      # for the Business Templates.\n
-                      \'INSTANCE_HOME_REPOSITORY\' ,\n
-                    )\n
-\n
-if getattr(context, "ERP5Site_getBT5UrlBaseList", None) is not None:\n
-  # XXX This script should be present when it is required custom places for\n
-  # run upgrade (ie.: unit tests)\n
-  BT5_URL_BASE_LIST = context.ERP5Site_getBT5UrlBaseList()\n
-\n
 # A list of bt5 which the upgrader can upgrade\n
 #   ie. a bt5 not in this list will not be upgraded\n
 #   by having an explicit list we can handle dedicate\n
@@ -333,8 +313,6 @@ signature_dict = {\n
  , \'release\': DESTINATION_RELEASE\n
    # Defines the default release for products\n
  , \'product\': DESTINATION_RELEASE\n
-   # Defines the default location of bt5\n
- , \'bt5_base_url_list\': BT5_URL_BASE_LIST\n
    # Provides a snapshot of how workflow chains should be configured\n
  , \'workflow_chain_dict\': WORKFLOW_CHAIN_DICT\n
    # Provides a list of required bt5 (without which upgrader wont\'t work)\n

@@ -76,7 +76,6 @@ class TestLiveUpgrader(ERP5TypeLiveTestCase):
     signature_key_list = ('alarm_dict',
                           'release',
                           'product',
-                          'bt5_base_url_list',
                           'workflow_chain_dict',
                           'required_bt5_id_list',
                           'upgradable_bt5_id_list',
