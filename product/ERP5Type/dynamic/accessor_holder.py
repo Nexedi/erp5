@@ -46,7 +46,7 @@ from zLOG import LOG, ERROR, INFO
 class AccessorHolderType(type):
   _skip_permission_tuple = (Permissions.AccessContentsInformation,
                             Permissions.ModifyPortalContent)
-  def registerAccessor(cls,
+  def _next_registerAccessor(cls,
                        accessor,
                        permission):
     accessor_name = accessor.__name__
