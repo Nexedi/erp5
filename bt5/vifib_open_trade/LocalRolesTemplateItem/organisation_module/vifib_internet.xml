@@ -1,0 +1,19 @@
+<local_roles_item>
+ <local_roles>
+  <role id='HR-AGNT_my_group'>
+   <item>Assignor</item>
+  </role>
+  <role id='IS-DEV'>
+   <item>Auditor</item>
+  </role>
+  <role id='IS-SYSAD'>
+   <item>Auditor</item>
+  </role>
+  <role id='admin'>
+   <item>Owner</item>
+  </role>
+  <role id='customer'>
+   <item>Auditor</item>
+  </role>
+ </local_roles>
+</local_roles_item>
