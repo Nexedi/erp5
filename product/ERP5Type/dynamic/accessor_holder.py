@@ -41,6 +41,9 @@ from Products.ERP5Type.Utils import createRelatedAccessors, createExpressionCont
 from Products.ERP5Type.Utils import setDefaultClassProperties, setDefaultProperties
 from Products.ERP5Type.Globals import InitializeClass
 
+from Products.ERP5Type.Utils import UpperCase
+from Products.ERP5Type.Accessor import Related, RelatedValue
+
 from zLOG import LOG, ERROR, INFO
 
 class AccessorHolderType(type):
@@ -187,27 +190,28 @@ def _generatePreferenceToolAccessorHolder(portal, accessor_holder_list,
 
   for accessor_holder in accessor_holder_list:
     for prop in accessor_holder._properties:
-      if prop.get('preference'):
-        # XXX read_permission and write_permissions defined at
-        # property sheet are not respected by this.
-        # only properties marked as preference are used
+      if not prop.get('preference'):
+        continue
+      # XXX read_permission and write_permissions defined at
+      # property sheet are not respected by this.
+      # only properties marked as preference are used
 
-        # properties have already been 'converted' and _list is appended
-        # to list_types properties
-        attribute = prop['id']
-        if attribute.endswith('_list'):
-          attribute = prop['base_id']
-        attr_list = [ 'get%s' % convertToUpperCase(attribute)]
-        if prop['type'] == 'boolean':
-          attr_list.append('is%s' % convertToUpperCase(attribute))
-        if prop['type'] in list_types :
-          attr_list.append('get%sList' % convertToUpperCase(attribute))
-        read_permission = prop.get('read_permission')
-        for attribute_name in attr_list:
-          method = PreferenceMethod(attribute_name, prop.get('default'))
-          setattr(property_holder, attribute_name, method)
-          if read_permission:
-            property_holder.declareProtected(read_permission, attribute_name)
+      # properties have already been 'converted' and _list is appended
+      # to list_types properties
+      attribute = prop['id']
+      if attribute.endswith('_list'):
+        attribute = prop['base_id']
+      attr_list = [ 'get%s' % convertToUpperCase(attribute)]
+      if prop['type'] == 'boolean':
+        attr_list.append('is%s' % convertToUpperCase(attribute))
+      if prop['type'] in list_types :
+        attr_list.append('get%sList' % convertToUpperCase(attribute))
+      read_permission = prop.get('read_permission')
+      for attribute_name in attr_list:
+        method = PreferenceMethod(attribute_name, prop.get('default'))
+        setattr(property_holder, attribute_name, method)
+        if read_permission:
+          property_holder.declareProtected(read_permission, attribute_name)
 
   accessor_holder = AccessorHolderType.fromPropertyHolder(
                       property_holder,
@@ -216,3 +220,133 @@ def _generatePreferenceToolAccessorHolder(portal, accessor_holder_list,
                       initialize=False)
   setattr(accessor_holder_module, 'PreferenceTool', accessor_holder)
   return accessor_holder
+
+related_accessor_definition_dict = {
+  # List getter
+  RelatedValue.ListGetter: (
+    'get%sRelatedValueList',
+    '_categoryGet%sRelatedValueList',
+  ),
+
+  # Set getter
+  RelatedValue.SetGetter: (
+    'get%sRelatedValueSet',
+    '_categoryGet%sRelatedValueSet',
+  ),
+
+  # Default value getter
+  RelatedValue.DefaultGetter: (
+    'getDefault%sRelatedValue',
+    'get%sRelatedValue',
+    '_categoryGetDefault%sRelatedValue',
+    '_categoryGet%sRelatedValue',
+  ),
+
+  # Related Relative Url
+  Related.ListGetter: (
+    'get%sRelatedList',
+    '_categoryGet%sRelatedList',
+  ),
+
+  # Related as Set
+  Related.SetGetter: (
+    'get%sRelatedSet',
+    '_categoryGet%sRelatedSet',
+  ),
+
+  # Default getter
+  Related.DefaultGetter: (
+    'getDefault%sRelated',
+    'get%sRelated',
+    '_categoryGetDefault%sRelated',
+    '_categoryGet%sRelated',
+  ),
+
+  # Related Ids (ie. reverse relation getters)
+  RelatedValue.IdListGetter: (
+    'get%sRelatedIdList',
+    '_categoryGet%sRelatedIdList',
+  ),
+
+  # Related Ids as Set
+  RelatedValue.IdSetGetter: (
+    'get%sRelatedIdSet',
+    '_categoryGet%sRelatedIdSet',
+  ),
+
+  # Default Id getter
+  RelatedValue.DefaultIdGetter: (
+    'getDefault%sRelatedId',
+    'get%sRelatedId',
+    '_categoryGetDefault%sRelatedId',
+    '_categoryGet%sRelatedId',
+  ),
+
+  # Related Title list
+  RelatedValue.TitleListGetter: (
+    'get%sRelatedTitleList',
+    '_categoryGet%sRelatedTitleList',
+  ),
+
+  # Related Title Set
+  RelatedValue.TitleSetGetter: (
+    'get%sRelatedTitleSet',
+    '_categoryGet%sRelatedTitleSet',
+  ),
+
+  # Related default title
+  RelatedValue.DefaultTitleGetter: (
+    'getDefault%sRelatedTitle',
+    'get%sRelatedTitle',
+    '_categoryGetDefault%sRelatedTitle',
+    '_categoryGet%sRelatedTitle',
+  ),
+
+  # Related Property list
+  RelatedValue.PropertyListGetter: (
+    'get%sRelatedPropertyList',
+    '_categoryGet%sRelatedPropertyList',
+  ),
+
+  # Related Property Set
+  RelatedValue.PropertySetGetter: (
+    'get%sRelatedPropertySet',
+    '_categoryGet%sRelatedPropertySet',
+  ),
+
+  # Related default title
+  RelatedValue.DefaultPropertyGetter: (
+    'getDefault%sRelatedProperty',
+    'get%sRelatedProperty',
+    '_categoryGetDefault%sRelatedProperty',
+    '_categoryGet%sRelatedProperty',
+  ),
+}
+def applyCategoryAsRelatedValueAccessor(accessor_holder,
+                                        category_id,
+                                        category_tool):
+  """
+  Take one category_id, generate and apply all related value accessors
+  implied by this category, and apply/set them to the accessor_holder
+  """
+  cat_object = category_tool.get(category_id, None)
+  if cat_object is not None:
+    read_permission = Permissions.__dict__.get(
+                            cat_object.getReadPermission(),
+                            Permissions.AccessContentsInformation)
+  else:
+    read_permission = Permissions.AccessContentsInformation
+
+  uppercase_id = UpperCase(category_id)
+
+  # two special cases
+  accessor_name = uppercase_id[0].lower() + uppercase_id[1:]
+  accessor = RelatedValue.ListGetter(accessor_name + 'RelatedValues', id)
+  accessor_holder.registerAccessor(accessor, read_permission)
+  accessor = RelatedValue.IdListGetter(accessor_name + 'RelatedIds', id)
+  accessor_holder.registerAccessor(accessor, read_permission)
+
+  for accessor_class, accessor_name_list in related_accessor_definition_dict.items():
+    for accessor_name in accessor_name_list:
+      accessor = accessor_class(accessor_name % uppercase_id, id)
+      accessor_holder.registerAccessor(accessor, read_permission)

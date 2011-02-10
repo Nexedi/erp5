@@ -193,9 +193,9 @@ class CategoryProperty(XMLObject):
 
     accessor_name = uppercase_reference[0].lower() + uppercase_reference[1:]
     accessor = Value.ListGetter(accessor_name + 'Values', id)
-    accessor_holder.registerAccessor(accessor_holder, read_permission)
+    accessor_holder.registerAccessor(accessor, read_permission)
     accessor = Value.IdListGetter(accessor_name + 'Ids', id)
-    accessor_holder.registerAccessor(accessor_holder, read_permission)
+    accessor_holder.registerAccessor(accessor, read_permission)
 
     # then getters
     for id_format, accessor_class in cls.getter_definition_dict.iteritems():

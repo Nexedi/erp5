@@ -242,5 +242,5 @@ class ConstraintMixin(Predicate):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'applyOnAccessorHolder')
-  def applyOnAccessorHolder(self, accessor_holder, expression_context):
+  def applyOnAccessorHolder(self, accessor_holder, expression_context, portal):
     accessor_holder.constraints.append(self)
