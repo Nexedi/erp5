@@ -1,3 +1,6 @@
+2011-02-10 Kazuhiko
+* add one more 'uid' column in z_catalog_sphinxse_index_list and add ERP5Site_checkSphinxSE script that cheks if all documents having SearchableText are well indexed in SphinxSE.
+
 2011-01-28 Ivan
 * Define Sphinx's full_text key implementation.
 

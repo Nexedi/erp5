@@ -64,7 +64,8 @@ VALUES\n
 <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
 (\n
   <dtml-sqlvar expr="uid[loop_item]" type="int">,\n
-  <dtml-sqlvar expr="(SearchableText[loop_item] or \'\')" type="string">\n
+  <dtml-sqlvar expr="(SearchableText[loop_item] or \'\')" type="string">,\n
+  <dtml-sqlvar expr="uid[loop_item]" type="int">\n
 )\n
 <dtml-if sequence-end>\n
 <dtml-else>\n
