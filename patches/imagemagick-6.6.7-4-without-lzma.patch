@@ -1,0 +1,22 @@
+--- ImageMagick-6.6.7-4/configure~	2011-02-10 11:50:21.704561096 +0100
++++ ImageMagick-6.6.7-4/configure	2011-02-10 12:23:45.612561097 +0100
+@@ -28251,7 +28251,7 @@
+ #
+ have_lzma='no'
+ LZMA_LIBS=''
+-if test "$with_lzma" != 'no' || test "$with_tiff" != 'no'; then
++if test "$with_lzma" != 'no'; then
+     { $as_echo "$as_me:${as_lineno-$LINENO}: result: -------------------------------------------------------------" >&5
+ $as_echo "-------------------------------------------------------------" >&6; }
+   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for LZMA" >&5
+--- ImageMagick-6.6.7-4/configure.ac~	2011-02-10 11:50:21.693561096 +0100
++++ ImageMagick-6.6.7-4/configure.ac	2011-02-10 12:23:40.013561098 +0100
+@@ -2290,7 +2290,7 @@
+ #
+ have_lzma='no'
+ LZMA_LIBS=''
+-if test "$with_lzma" != 'no' || test "$with_tiff" != 'no'; then
++if test "$with_lzma" != 'no'; then
+     AC_MSG_RESULT([-------------------------------------------------------------])
+   AC_MSG_CHECKING(for LZMA)
+   AC_MSG_RESULT()
