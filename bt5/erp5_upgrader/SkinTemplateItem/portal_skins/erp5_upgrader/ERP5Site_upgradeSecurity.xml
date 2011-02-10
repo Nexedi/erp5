@@ -68,7 +68,7 @@ if not upgrade:\n
 \n
 portal = context.getPortalObject()\n
 portal_workflow = portal.portal_workflow\n
-workflow_id_list = portal.ERP5Site_getUpgraderSignature(\'update_security_workflow_id_list\', [])\n
+workflow_id_list = portal.ERP5Site_getUpgraderSignature().get(\'update_security_workflow_id_list\', [])\n
 for workflow_id in workflow_id_list:\n
   workflow = getattr(portal_workflow, workflow_id, None)\n
   if workflow is not None:\n
@@ -79,7 +79,7 @@ message_list.append(\n
             (\'\\n\\t\'.join(workflow_id_list)))\n
 \n
 types_tool = portal.portal_types\n
-portal_type_list = portal.ERP5Site_getUpgraderSignature(\'update_role_portal_type_list\', [])\n
+portal_type_list = portal.ERP5Site_getUpgraderSignature().get(\'update_role_portal_type_list\', [])\n
 \n
 for pt in portal_type_list:\n
   portal_type_document = types_tool.getTypeInfo(pt)\n

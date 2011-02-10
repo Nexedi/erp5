@@ -51,7 +51,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>message_list = []\n
-expect_expression_dict = context.ERP5Site_getUpgraderSignature(\'catalog_filter_dict\')\n
+expect_expression_dict = context.ERP5Site_getUpgraderSignature().get(\'catalog_filter_dict\', None)\n
 if expect_expression_dict is None:\n
   # If key is not provided, ignore.\n
   return []\n
