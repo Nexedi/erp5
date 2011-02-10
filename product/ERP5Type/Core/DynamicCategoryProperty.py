@@ -30,9 +30,9 @@ from AccessControl import ClassSecurityInfo
 from Products.CMFCore.Expression import Expression
 
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Type.Core.CategoryProperty import CategoryProperty
 
-class DynamicCategoryProperty(XMLObject):
+class DynamicCategoryProperty(CategoryProperty):
   """
   Define a Dynamic Category Property Document for a ZODB Property
   Sheets (a dynamic category is defined by a TALES expression rather
@@ -73,10 +73,17 @@ class DynamicCategoryProperty(XMLObject):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'applyOnAccessorHolder')
-  def applyOnAccessorHolder(self, accessor_holder, expression_context):
+  def applyOnAccessorHolder(self, accessor_holder, expression_context, portal):
     expression_string = self.getCategoryExpression()
     if expression_string is not None:
       expression = Expression(expression_string)
-      for category_id in expression(expression_context):
-        if category_id is not None:
-          accessor_holder._categories.append(category_id)
+      value = expression(expression_context)
+
+      category_tool = getattr(portal, 'portal_categories', None)
+      if not isinstance(value, (tuple, list)):
+        value = [value]
+      for category_id in value:
+        self.applyPropertyOnAccessorHolder(accessor_holder,
+                                           category_id,
+                                           category_tool)
+        accessor_holder._categories.append(category_id)

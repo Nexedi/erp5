@@ -213,3 +213,9 @@ class PropertySheet(Folder):
                                                        constraint)
 
     return property_sheet
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'applyOnAccessorHolder')
+  def applyOnAccessorHolder(self, accessor_holder, expression_context, portal):
+    for property in self.contentValues():
+      property.applyOnAccessorHolder(accessor_holder, expression_context, portal)
