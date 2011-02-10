@@ -213,7 +213,7 @@ else:\n
 \n
 unique_per_account = resource.isUniquePerAccount()\n
 aggregate_list = []\n
-for i in xrange(quantity):\n
+for i in xrange(int(quantity)):\n
   if create == 1:\n
     item = module.newContent(activate_kw={\'tag\': tag, \'priority\':4})\n
     context.log(\'New Item created with Id\', item.getId())\n
