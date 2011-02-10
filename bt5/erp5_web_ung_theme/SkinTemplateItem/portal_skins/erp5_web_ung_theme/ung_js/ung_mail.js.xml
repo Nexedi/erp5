@@ -29,7 +29,6 @@
         <item>
             <key> <string>raw</string> </key>
             <value> <string>function saveEmailThread(event){\n
-  console.log(event);\n
   event.preventDefault();\n
   var formData = new Array();\n
   $("div.compose-mail-page textarea, div.compose-mail-page input").each(function(){\n
