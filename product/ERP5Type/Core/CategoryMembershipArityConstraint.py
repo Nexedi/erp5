@@ -64,8 +64,12 @@ class CategoryMembershipArityConstraint(ConstraintMixin):
                     (PropertySheet.CategoryMembershipArityConstraint,)
 
   def _calculateArity(self, obj, base_category_list, portal_type_list):
-    return len(obj.getCategoryMembershipList(base_category_list,
-                                             portal_type=portal_type_list))
+    if self.getUseAcquisition():
+      return len(obj.getAcquiredCategoryMembershipList(base_category_list,
+                                               portal_type=portal_type_list))
+    else:
+      return len(obj.getCategoryMembershipList(base_category_list,
+                                               portal_type=portal_type_list))
 
   def _checkConsistency(self, obj, fixit=0):
     """
