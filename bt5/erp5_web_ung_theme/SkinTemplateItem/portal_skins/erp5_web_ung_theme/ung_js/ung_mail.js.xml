@@ -29,18 +29,24 @@
         <item>
             <key> <string>raw</string> </key>
             <value> <string>function saveEmailThread(event){\n
+  console.log(event);\n
   event.preventDefault();\n
   var formData = new Array();\n
   $("div.compose-mail-page textarea, div.compose-mail-page input").each(function(){\n
     formData.push({name: $(this).attr("id"), value: $(this).attr("value")});\n
   });\n
-  formData.push({name: "action", value: "save"});\n
+  formData.push({name: "action", value: event.currentTarget.id});\n
   $.ajax({\n
      type: "post",\n
      url: "ERP5Site_createNewEmailThread",\n
      data: formData,\n
      mediaType: "json",\n
   });\n
+  if (event.currentTarget.id == "send-mail"){\n
+    var baseUrl = window.location.href.split("?")[0];\n
+    window.location.href = baseUrl + "?reset:int=1";\n
+  }\n
+    \n
 }\n
 \n
 $().ready(function(){\n
@@ -61,7 +67,8 @@ $().ready(function(){\n
         $(this).hide();\n
         $("tr#bcc").show();\n
       });\n
-      $("button#save-mail").click(saveEmailThread);\n
+      $("button#save-mail, button#send-mail").click(saveEmailThread);\n
+      \n
     });\n
   });\n
   $("img[alt=\'mail_logo_box\']").click(function(){\n

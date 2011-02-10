@@ -68,8 +68,9 @@ email.setRecipient(form.get("to"))\n
 email.setCcRecipient(form.get("cc"))\n
 email.setBccRecipient(form.get("bcc"))\n
 email.setTitle(form.get("subject"))\n
-if form.get("action") == "send":\n
-  context.portal_workflow.doActionFor(context, \'post_action\')\n
+email.setTextContent(form.get("text-content"))\n
+if form.get("action") == "send-mail":\n
+  context.portal_workflow.doActionFor(email, \'post_action\')\n
 </string> </value>
         </item>
         <item>
