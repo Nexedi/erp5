@@ -1,3 +1,6 @@
+2011-02-10 Kazuhiko
+* support 'update_security_workflow_id_list' in upgrade signature.
+
 2011-02-09 Kazuhiko
 * compare revisions as int not as str in ERP5Site_upgradeBusinessTemplateList.
 
