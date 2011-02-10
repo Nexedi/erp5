@@ -50,34 +50,27 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from DateTime import DateTime\n
+            <value> <string>from Products.ERP5Type.JSONEncoder import encodeInJson as dumps\n
 \n
+portal = context.getPortalObject()\n
 form = context.REQUEST.form\n
 \n
-person = context.ERP5Site_getAuthenticatedMemberPersonValue()\n
-sender_email = "freecloudalliance@freecloudalliance.org"\n
+data_dict = {}\n
 \n
-if person and person.getEmail():\n
-  sender_email = person.getEmailText()\n
+email_thread_uid = form.get("email_thread_uid")\n
 \n
-email_thread_module = context.email_thread_module\n
-event_id = form.get("event_id")\n
-if event_id:\n
-  email = context.portal_catalog.getResultValue(portal_type="Email Thread", id=event_id)\n
-else:\n
-  email = email_thread_module.newContent(portal_type="Email Thread")\n
+email = portal.portal_catalog.getResultValue(portal_type="Email Thread",\n
+                                             uid=email_thread_uid)\n
 \n
-email.setStartDate(DateTime())\n
-email.setSender(sender_email)\n
-email.setRecipient(form.get("to"))\n
-email.setCcRecipient(form.get("cc"))\n
-email.setBccRecipient(form.get("bcc"))\n
-email.setTitle(form.get("subject"))\n
-email.setTextContent(form.get("text-content"))\n
-if form.get("action") == "send-mail":\n
-  context.portal_workflow.doActionFor(email, \'post_action\')\n
+data_dict["subject"] = email.getTitle()\n
+data_dict["to"] = email.getRecipient()\n
+data_dict["cc"] = email.getCcRecipient()\n
+data_dict["bcc"] = email.getBccRecipient()\n
+data_dict["text_content"] = email.getTextContent()\n
+data_dict["state"] = email.getValidationState()\n
+data_dict["id"] = email.getId()\n
 \n
-return email.getId()\n
+return dumps(data_dict)\n
 </string> </value>
         </item>
         <item>
@@ -94,7 +87,7 @@ return email.getId()\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Site_createNewEmailThread</string> </value>
+            <value> <string>ERP5Site_loadEmailThreadData</string> </value>
         </item>
       </dictionary>
     </pickle>
