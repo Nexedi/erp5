@@ -44,8 +44,8 @@ from Products.ERP5Type.Globals import InitializeClass
 from zLOG import LOG, ERROR, INFO
 
 class AccessorHolderType(type):
-  _skip_permission_set = set(Permissions.AccessContentsInformation,
-                             Permissions.ModifyPortalContent)
+  _skip_permission_tuple = (Permissions.AccessContentsInformation,
+                            Permissions.ModifyPortalContent)
   def registerAccessor(cls,
                        accessor,
                        permission):
@@ -53,7 +53,7 @@ class AccessorHolderType(type):
     setattr(cls, accessor_name, accessor)
     # private accessors do not need declarative security
     if accessor_name[0] != '_' and \
-        permission not in AccessorHolderType._skip_permission_set:
+        permission not in AccessorHolderType._skip_permission_tuple:
       cls.security.declareProtected(permission, accessor_name)
 
   @classmethod
