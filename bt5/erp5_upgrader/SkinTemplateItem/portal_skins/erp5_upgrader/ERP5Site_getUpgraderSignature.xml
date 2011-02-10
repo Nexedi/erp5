@@ -64,9 +64,6 @@ ALARM_DICT = {\n
  "finalize_upgrader" : True\n
 }\n
 \n
-# The destination release provided by this upgrader\n
-DESTINATION_RELEASE = \'5.4.7\'\n
-\n
 # A list of bt5 which the upgrader can upgrade\n
 #   ie. a bt5 not in this list will not be upgraded\n
 #   by having an explicit list we can handle dedicate\n
@@ -254,7 +251,6 @@ CATALOG_FILTER_DICT = None\n
 #\n
 \n
 INTEGRITY_VERIFICATION_SCRIPT_ID_LIST = (\'ERP5Site_verifyUpgradeIntegrity\',\n
-                                         \'ERP5Site_verifyBT5UpgradeIntegrity\',\n
                                          \'ERP5Site_verifyMemcachedIntegrity\',\n
                                          \'ERP5Site_verifySQLCatalogFilterIntegrity\',\n
                                          \'ERP5Site_verifyActivityIntegrity\')\n
@@ -309,10 +305,6 @@ RECATALOG = False\n
 signature_dict = {\n
    # Defines the alarms enabled for the upgrade\n
    \'alarm_dict\' : ALARM_DICT\n
-   # Defines the default release for bt5\n
- , \'release\': DESTINATION_RELEASE\n
-   # Defines the default release for products\n
- , \'product\': DESTINATION_RELEASE\n
    # Provides a snapshot of how workflow chains should be configured\n
  , \'workflow_chain_dict\': WORKFLOW_CHAIN_DICT\n
    # Provides a list of required bt5 (without which upgrader wont\'t work)\n

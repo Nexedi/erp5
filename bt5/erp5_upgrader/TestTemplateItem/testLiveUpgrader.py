@@ -74,8 +74,6 @@ class TestLiveUpgrader(ERP5TypeLiveTestCase):
       or change API Definition.
     """
     signature_key_list = ('alarm_dict',
-                          'release',
-                          'product',
                           'workflow_chain_dict',
                           'required_bt5_id_list',
                           'upgradable_bt5_id_list',
