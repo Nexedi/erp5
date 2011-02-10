@@ -35,6 +35,7 @@ moving specialized code here.
 """
 import sys
 
+from Products.ERP5Type import Permissions
 from Products.ERP5Type.Base import PropertyHolder, Base
 from Products.ERP5Type.Utils import createRelatedAccessors, createExpressionContext
 from Products.ERP5Type.Utils import setDefaultClassProperties, setDefaultProperties
@@ -43,6 +44,18 @@ from Products.ERP5Type.Globals import InitializeClass
 from zLOG import LOG, ERROR, INFO
 
 class AccessorHolderType(type):
+  _skip_permission_set = set(Permissions.AccessContentsInformation,
+                             Permissions.ModifyPortalContent)
+  def registerAccessor(cls,
+                       accessor,
+                       permission):
+    accessor_name = accessor.__name__
+    setattr(cls, accessor_name, accessor)
+    # private accessors do not need declarative security
+    if accessor_name[0] != '_' and \
+        permission not in AccessorHolderType._skip_permission_set:
+      cls.security.declareProtected(permission, accessor_name)
+
   @classmethod
   def fromPropertyHolder(meta_type,
                          property_holder,
