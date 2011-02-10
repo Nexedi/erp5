@@ -770,10 +770,6 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     # the erp5 site
     self.portal = self.getPortal()
 
-    # XXX: should be done by erp5_banking_core business template
-    catalog = self.portal.portal_catalog.getSQLCatalog()
-    catalog.sql_catalog_role_keys = ()
-
     # the default currency for the site
     if not self.portal.hasProperty('reference_currency_id'):
       self.portal.manage_addProperty('reference_currency_id', 'EUR', type='string')
