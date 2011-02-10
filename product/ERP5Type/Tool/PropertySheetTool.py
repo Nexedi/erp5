@@ -73,6 +73,8 @@ class PropertySheetTool(BaseTool):
     for name, klass in PropertySheet.__dict__.iteritems():
       if name[0] == '_':
         continue
+      elif isinstance(klass, str): # Property Sheet is not available
+        continue
 
       if name in self.objectIds():
         if erase_existing:
