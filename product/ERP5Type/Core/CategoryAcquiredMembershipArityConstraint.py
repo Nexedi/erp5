@@ -50,7 +50,6 @@ class CategoryAcquiredMembershipArityConstraint(CategoryMembershipArityConstrain
   def _calculateArity(self, obj):
     base_category = self.constraint_definition['base_category']
     portal_type = self.constraint_definition['portal_type']
-    import pdb; pdb.set_trace()
     return len(obj.getAcquiredCategoryMembershipList(base_category,
                                               portal_type=portal_type))
 
