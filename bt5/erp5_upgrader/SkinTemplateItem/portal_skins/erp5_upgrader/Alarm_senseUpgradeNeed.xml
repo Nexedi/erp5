@@ -111,7 +111,6 @@ def launchUpgraderAlarm(alarm_id, after_method_id=[]):\n
 previous_method_id = launchUpgraderAlarm(\'bt5_upgrader\')\n
 \n
 previous_method_id.extend([\'updateBusinessTemplateFromUrl\',\n
-                           \'TemplateTool_reinstallBT5\',\n
                            \'immediateReindexObject\'])\n
 \n
 previous_method_id = launchUpgraderAlarm(\'finalize_upgrader\',\n

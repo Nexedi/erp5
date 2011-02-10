@@ -118,24 +118,6 @@ def ERP5Site_runVerificationScript(self, method_id):
     return 'Script %s fail to run, Exception: %s , message: %s .' % (method_id, e.__class__, e )
   if len(integrity_result) > 0:
     return '%s : \n - %s ' % (method_id, '\n - '.join(integrity_result))
-  
-def TemplateTool_reinstallBT5(self, bt5_title, update_catalog=0):
-  """This method get the installed Business Template,
-  then reinstall it to overwrite all local changes.
-  """
-  portal = self.getPortalObject()
-  portal_templates = portal.portal_templates
-  installed_bt5 = portal_templates.getInstalledBusinessTemplate(bt5_title)
-  BusinessTemplate_getModifiedObject = \
-      aq_base(getattr(portal, 'BusinessTemplate_getModifiedObject', None))
-  if BusinessTemplate_getModifiedObject is None:
-    portal.changeSkin('View')
-    BusinessTemplate_getModifiedObject = \
-      aq_base(portal.BusinessTemplate_getModifiedObject)
-
-  # Call reinstall
-  installed_bt5.reinstall(update_catalog=update_catalog)
-  log("Reinstalled %s" % (bt5_title,))
 
 def ERP5Site_changeAuthoredDocumentListOwnership(self, old_owner, new_owner):
   """
