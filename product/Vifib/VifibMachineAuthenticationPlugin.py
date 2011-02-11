@@ -293,6 +293,46 @@ class VifibMachineAuthenticationPlugin(BasePlugin):
                 user_name=principal.getId(),
                 path=self.getPhysicalPath())
 
+  #
+  #   IUserEnumerationPlugin implementation
+  #
+  security.declarePrivate( 'enumerateUsers' )
+  def enumerateUsers(self, id=None, login=None, exact_match=False,
+                   sort_by=None, max_results=None, **kw):
+    """ See IUserEnumerationPlugin.
+    """
+    if id is None:
+      id = login
+    if isinstance(id, str):
+      id = (id,)
+    if isinstance(id, list):
+      id = tuple(id)
+
+    user_info = []
+    plugin_id = self.getId()
+
+    id_list = []
+    for user_id in id:
+      if SUPER_USER == user_id:
+        info = { 'id' : SUPER_USER
+                , 'login' : SUPER_USER
+                , 'pluginid' : plugin_id
+                }
+        user_info.append(info)
+      else:
+        id_list.append(user_id)
+
+    if id_list:
+      for user in self.getUserByLogin(tuple(id_list)):
+          info = { 'id' : user.getReference()
+                 , 'login' : user.getReference()
+                 , 'pluginid' : plugin_id
+                 }
+
+          user_info.append(info)
+
+    return tuple(user_info)
+
 #List implementation of class
 classImplements(VifibMachineAuthenticationPlugin,
                 plugins.IAuthenticationPlugin)
@@ -301,6 +341,9 @@ classImplements( VifibMachineAuthenticationPlugin,
                )
 classImplements( VifibMachineAuthenticationPlugin,
                plugins.IGroupsPlugin
+               )
+classImplements( VifibMachineAuthenticationPlugin,
+               plugins.IUserEnumerationPlugin
                )
 
 
