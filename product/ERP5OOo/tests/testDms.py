@@ -1017,7 +1017,6 @@ class TestDocument(TestDocumentMixin):
     parsed_string = parse(search_string)
     self.assertEquals(parsed_string['portal_type'], ['Document','Presentation','"Web Page"'])
 
-  @expectedFailure
   def test_11_Base_getAdvancedSearchResultList(self):
     """
     Test search string search capabilities using Base_getAdvancedSearchResultList script.
@@ -1097,11 +1096,13 @@ class TestDocument(TestDocumentMixin):
     self.assertSameSet([document_1,web_page_1], getAdvancedSearchStringResultList(**kw))
     
     # exact word search
-    kw = {'searchabletext_phrase': 'linux python'}
+    kw = {'searchabletext_any': '*',
+          'searchabletext_phrase': 'linux python'}
     self.assertSameSet([document_1], getAdvancedSearchStringResultList(**kw))
-    kw = {'searchabletext_phrase': 'python linux'}
+    kw = {'searchabletext_any': '*',
+          'searchabletext_phrase': 'python linux'}
     self.assertSameSet([document_2], getAdvancedSearchStringResultList(**kw))
-    kw = {'searchabletext_any': '',
+    kw = {'searchabletext_any': '*',
           'searchabletext_phrase': 'python linux knowledge system'}
     self.assertSameSet([document_2], getAdvancedSearchStringResultList(**kw))
     
