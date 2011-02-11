@@ -776,7 +776,7 @@ class TestDocument(TestDocumentMixin):
     self.stepTic()
 
     def getAdvancedSearchTextResultList(searchable_text, portal_type=None,src__=0):
-      kw = {'SearchableText': searchable_text}
+      kw = {'full_text': searchable_text}
       if portal_type is not None:
         kw['portal_type'] = portal_type
       if src__==1:
@@ -793,11 +793,11 @@ class TestDocument(TestDocumentMixin):
       getAdvancedSearchTextResultList("Great", ('Person', 'Web Page')))
     # full text search with whole title of a document
     self.assertSameSet([document_3], \
-      getAdvancedSearchTextResultList(document_3.getTitle()))
+      getAdvancedSearchTextResultList(document_3.getTitle(), ('Presentation',)))
     # full text search with reference part of searchable_text 
     # (i.e. not specified with 'reference:' - simply part of search text)
     self.assertSameSet([document_3], \
-      getAdvancedSearchTextResultList(document_3.getReference()))
+      getAdvancedSearchTextResultList(document_3.getReference(), ('Presentation',)))
 
    # full text search with reference
     self.assertSameSet([web_page], \
@@ -831,7 +831,7 @@ class TestDocument(TestDocumentMixin):
     self.assertSameSet([document_1, web_page], \
       getAdvancedSearchTextResultList('language:en'))
     self.assertSameSet([document_1], \
-      getAdvancedSearchTextResultList('Hello language:en'))
+      getAdvancedSearchTextResultList('ScriptableKey language:en'))
     self.assertSameSet([document_2], \
       getAdvancedSearchTextResultList('language:fr'))
     self.assertSameSet([web_page], \
