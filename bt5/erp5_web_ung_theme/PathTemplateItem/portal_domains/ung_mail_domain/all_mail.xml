@@ -9,13 +9,34 @@
         <item>
             <key> <string>_identity_criterion</string> </key>
             <value>
-              <dictionary/>
+              <dictionary>
+                <item>
+                    <key> <string>validation_state</string> </key>
+                    <value>
+                      <list>
+                        <string>draft</string>
+                        <string>new</string>
+                        <string>sent</string>
+                        <string>read</string>
+                        <string>replied</string>
+                      </list>
+                    </value>
+                </item>
+              </dictionary>
             </value>
         </item>
         <item>
             <key> <string>_range_criterion</string> </key>
             <value>
               <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>criterion_property</string> </key>
+            <value>
+              <tuple>
+                <string>validation_state</string>
+              </tuple>
             </value>
         </item>
         <item>
