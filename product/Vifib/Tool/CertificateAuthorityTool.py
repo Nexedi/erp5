@@ -67,10 +67,11 @@ class CertificateAuthorityTool(BaseTool):
   portal_type = 'Certificate Authority Tool'
   security = ClassSecurityInfo()
   allowed_types = ()
+  isIndexable = 0
 
   certificate_authority_path = ''
   openssl_binary = ''
-  
+
   manage_options = (({'label': 'Edit',
                       'action': 'manage_editCertificateAuthorityToolForm',},
                      )
