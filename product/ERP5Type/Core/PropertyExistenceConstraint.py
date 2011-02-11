@@ -89,6 +89,17 @@ class PropertyExistenceConstraint(ConstraintMixin):
   _message_id_tuple = ('message_no_such_property',)
 
   @staticmethod
+  def _preConvertBaseFromFilesystemDefinition(filesystem_definition_dict):
+    """
+    Remove 'message_property_not_set' which used to be defined in
+    filesystem Property Existence constraint but were useless, so
+    remove it before converting the constraint for backward
+    compatibility
+    """
+    filesystem_definition_dict.pop('message_property_not_set', None)
+    return {}
+
+  @staticmethod
   def _convertFromFilesystemDefinition(**property_dict):
     """
     @see ERP5Type.mixin.constraint.ConstraintMixin._convertFromFilesystemDefinition
