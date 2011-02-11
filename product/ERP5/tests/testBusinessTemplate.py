@@ -2427,14 +2427,14 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     Check presence of Property Sheet
     """
+    ps_title = sequence.get('ps_title', None)
     ps_path = sequence.get('ps_path', None)
     ps_data = sequence.get('ps_data', None)
     self.failUnless(ps_path is not None)
-    self.failUnless(os.path.exists(ps_path))
-    # check data in property sheet
-    f = file(ps_path, 'r')
-    data = f.read()
-    self.assertEqual(data, ps_data)
+    # Property Sheet will not be installed in file sytem
+    self.failIf(os.path.exists(ps_path))
+    # Property Sheet will be installed in ZODB
+    self.failUnless(getattr(self.portal.portal_property_sheets, ps_title, None) is not None)
 
   def stepCheckPropertySheetRemoved(self, sequence=None, sequencer_list=None, **kw):
     """
@@ -2476,14 +2476,14 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     Check presence of Property Sheet
     """
+    ps_title = sequence.get('ps_title', None)
     ps_path = sequence.get('ps_path', None)
     ps_data = sequence.get('ps_data_u', None)
     self.failUnless(ps_path is not None)
-    self.failUnless(os.path.exists(ps_path))
-    # check data in property sheet
-    f = file(ps_path, 'r')
-    data = f.read()
-    self.assertEqual(data, ps_data)
+    # Property Sheet will not be installed in file sytem
+    self.failIf(os.path.exists(ps_path))
+    # Property Sheet will be installed in ZODB
+    self.failUnless(getattr(self.portal.portal_property_sheets, ps_title, None) is not None)
 
   # Test Constraint
   def stepCreateConstraint(self, sequence=None, sequence_list=None, **kw):
