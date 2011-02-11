@@ -108,7 +108,7 @@ class CertificateAuthorityTool(BaseTool):
     """Checks Certificate Authority configuration, raises CertificateAuthorityDamaged"""
     if not self.certificate_authority_path:
       raise CertificateAuthorityDamaged('Certificate authority path is not '
-        'configured' % self.certificate_authority_path)
+        'configured')
     if not os.path.isdir(self.certificate_authority_path):
       raise CertificateAuthorityDamaged('Path to Certificate Authority %r is '
         'wrong' % self.certificate_authority_path)
