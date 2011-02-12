@@ -194,7 +194,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     catalog = self.portal.portal_catalog.erp5_mysql_innodb
     for method_id in ('z_fake_method', 'z_another_fake_method'):
       if method_id in catalog.objectIds():
-        catalog.manage_delObjects(['z_fake_method'])
+        catalog.manage_delObjects([method_id])
       sql_uncatalog_object = list(catalog.sql_uncatalog_object)
       if method_id in sql_uncatalog_object:
         sql_uncatalog_object.remove(method_id)
