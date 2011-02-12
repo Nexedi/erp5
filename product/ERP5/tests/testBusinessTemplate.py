@@ -202,8 +202,14 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
         catalog.sql_uncatalog_object = tuple(sql_uncatalog_object)
       if method_id in catalog.filter_dict:
         del catalog.filter_dict[method_id]
-    if 'another_file' in self.portal.objectIds():
-      self.portal.manage_delObjects(['another_file'])
+    for obj_id in ('another_file', 'test_document', 'dummy_type_provider'):
+      if obj_id in self.portal.objectIds():
+        self.portal.manage_delObjects([obj_id])
+    types_tool = self.portal.portal_types
+    registered_type_provider_list = list(types_tool.type_provider_list)
+    if 'dummy_type_provider' in registered_type_provider_list:
+      registered_type_provider_list.remove('dummy_type_provider')
+      types_tool.type_provider_list = tuple(registered_type_provider_list)
     property_sheet_tool = self.getPortalObject().portal_property_sheets
     for property_sheet in ('UnitTest',):
       if property_sheet in property_sheet_tool.objectIds():
