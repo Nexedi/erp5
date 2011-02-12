@@ -190,6 +190,24 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     for business_template in self.getTemplateTool().contentValues():
       if business_template.getTitle() == 'geek template':
         self.getTemplateTool().manage_delObjects([business_template.getId()])
+    self.stepRemoveAllTrashBins()
+    catalog = self.portal.portal_catalog.erp5_mysql_innodb
+    for method_id in ('z_fake_method', 'z_another_fake_method'):
+      if method_id in catalog.objectIds():
+        catalog.manage_delObjects(['z_fake_method'])
+      sql_uncatalog_object = list(catalog.sql_uncatalog_object)
+      if method_id in sql_uncatalog_object:
+        sql_uncatalog_object.remove(method_id)
+        sql_uncatalog_object.sort()
+        catalog.sql_uncatalog_object = tuple(sql_uncatalog_object)
+      if method_id in catalog.filter_dict:
+        del catalog.filter_dict[method_id]
+    if 'another_file' in self.portal.objectIds():
+      self.portal.manage_delObjects(['another_file'])
+    property_sheet_tool = self.getPortalObject().portal_property_sheets
+    for property_sheet in ('UnitTest',):
+      if property_sheet in property_sheet_tool.objectIds():
+        property_sheet_tool.manage_delObjects([property_sheet])
     transaction.commit()
     self._ignore_log_errors()
 
