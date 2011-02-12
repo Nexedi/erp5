@@ -2435,11 +2435,33 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     Remove Property Sheet
     """
+    ps_title = sequence.get('ps_title', None)
     ps_path = sequence.get('ps_path', None)
     self.failUnless(ps_path is not None)
     self.failUnless(os.path.exists(ps_path))
     os.remove(ps_path)
     self.failIf(os.path.exists(ps_path))
+    return
+    # Property Sheet will not be installed in file sytem
+    self.failIf(os.path.exists(ps_path))
+    # Property Sheet will be installed in ZODB
+    self.failUnless(getattr(self.portal.portal_property_sheets, ps_title, None) is not None)
+    self.portal.portal_property_sheets.manage_delObjects([ps_title])
+    self.failIf(getattr(self.portal.portal_property_sheets, ps_title, None) is not None)
+
+  def stepRemovePropertySheetFromZODB(self, sequence=None, sequencer_list=None, **kw):
+    """
+    Remove Property Sheet from ZODB
+    """
+    ps_title = sequence.get('ps_title', None)
+    ps_path = sequence.get('ps_path', None)
+    self.failUnless(ps_path is not None)
+    # Property Sheet will not be installed in file sytem
+    self.failIf(os.path.exists(ps_path))
+    # Property Sheet will be installed in ZODB
+    self.failUnless(getattr(self.portal.portal_property_sheets, ps_title, None) is not None)
+    self.portal.portal_property_sheets.manage_delObjects([ps_title])
+    self.failIf(getattr(self.portal.portal_property_sheets, ps_title, None) is not None)
 
   def stepCheckPropertySheetExists(self, sequence=None, sequencer_list=None, **kw):
     """
@@ -4382,7 +4404,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckNoTrashBin \
                        CheckSkinsLayers \
                        CheckPropertySheetExists \
-                       RemovePropertySheet \
+                       RemovePropertySheetFromZODB \
                        CreateUpdatedPropertySheet \
                        CreateNewBusinessTemplate \
                        UseExportBusinessTemplate \
@@ -4820,7 +4842,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        RemoveCatalogMethod \
                        RemoveKeysAndTable \
                        RemoveRole \
-                       RemovePropertySheet \
+                       RemovePropertySheetFromZODB \
                        RemoveBusinessTemplate \
                        RemoveAllTrashBins \
                        '
@@ -4909,7 +4931,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        RemoveCatalogMethod \
                        RemoveKeysAndTable \
                        RemoveRole \
-                       RemovePropertySheet \
+                       RemovePropertySheetFromZODB \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
@@ -5006,7 +5028,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        RemoveCatalogMethod \
                        RemoveKeysAndTable \
                        RemoveRole \
-                       RemovePropertySheet \
+                       RemovePropertySheetFromZODB \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
