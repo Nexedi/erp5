@@ -1292,6 +1292,7 @@ class TestClosingPeriod(AccountingTestCase):
 
     # now check content of stock table
     q = self.portal.erp5_sql_connection.manage_test
+    # 3 lines, one with quantity 3.3, 2 with quantity 0
     self.assertEquals(1, q(
       "SELECT count(*) FROM stock WHERE portal_type="
       "'Balance Transaction Line'")[0][0])
@@ -1915,9 +1916,11 @@ class TestClosingPeriod(AccountingTestCase):
                     section_uid=self.section.getUid(),
                     node_uid=node_uid))
     # and only one movement is returned by getMovementHistoryList
-    self.assertEquals(1, len(stool.getMovementHistoryList(
+    movement_history_list = stool.getMovementHistoryList(
                     section_uid=self.section.getUid(),
-                    node_uid=node_uid)))
+                    node_uid=node_uid)
+    self.assertEquals(1, len(movement_history_list))
+    self.assertEquals([100], [x.total_price  for x in movement_history_list])
     
     # the account 'goods_sales' has a balance of -100
     node_uid = self.account_module.goods_sales.getUid()
@@ -1940,6 +1943,42 @@ class TestClosingPeriod(AccountingTestCase):
     self.assertEquals(100, stool.getInventory(
                               section_uid=self.section.getUid(),
                               node_uid=node_uid))
+
+    # Now check that even if we change the old movement and we
+    # reindex the balance, the stock will still be the same
+    getInventoryList = self.portal.portal_simulation.getInventoryList
+    def getInventoryQuantityList():
+      quantity_list = [x.inventory for x in getInventoryList(
+         section_uid=self.section.getUid(),
+         node_uid=node_uid)]
+      quantity_list.sort()
+      return quantity_list
+    # 100 for the transaction, 0 for the balance
+    # because in the balance we put exactly what we have in stock
+    self.assertEquals(getInventoryQuantityList(),
+                      [100])
+    def setQuantityOnTransaction1(quantity):
+      for line in transaction1.objectValues():
+        if line.getSourceDebit():
+          line.setSourceDebit(quantity)
+        if line.getSourceCredit():
+          line.setSourceCredit(quantity)
+      transaction.commit()
+      self.tic()
+      balance.reindexObject()
+      transaction.commit()
+      self.tic()
+    setQuantityOnTransaction1(99)
+    # 99 for the transaction, 1 for the balance
+    # because in the balance we have 100, which is 1 more
+    # than actual stock of 99
+    self.assertEquals(getInventoryQuantityList(),
+                      [1, 99])
+    setQuantityOnTransaction1(100)
+    # Then finally we check that we have again same thing
+    # as initial conditions
+    self.assertEquals(getInventoryQuantityList(),
+                      [100])
 
   def test_InventoryIndexingNodeDiffOnNode(self):
     # Balance Transactions are indexed as Inventories.
@@ -2231,9 +2270,12 @@ class TestClosingPeriod(AccountingTestCase):
     self.assertEquals(-150, stool.getInventory(
                               section_uid=self.section.getUid(),
                               node_uid=node_uid))
-    self.assertEquals(2, len(stool.getMovementHistoryList(
+    movement_history_list = stool.getMovementHistoryList(
                               section_uid=self.section.getUid(),
-                              node_uid=node_uid)))
+                              node_uid=node_uid)
+    self.assertEquals(2, len(movement_history_list))
+    self.assertEquals([-50, -100], [x.total_quantity for x in \
+          movement_history_list])
 
 
   def test_BalanceTransactionDateInInventoryAPI(self):

@@ -32,6 +32,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Inventory import Inventory
 from Products.ERP5.Document.AccountingTransaction import AccountingTransaction
+import types
 
 
 class InventoryKey(UserDict):
@@ -356,9 +357,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
       
       # we were doing with reversed calculation, so negate deltas again.
       # Also we remove stocks that have 0 quantity and price.
-      return [negateStock(s) for s in stock_diff_list
-              if round(s['quantity'], precision) and
-                 round(s['total_price'], precision)]
+      return [negateStock(s) for s in stock_diff_list]
 
     def negateStock(stock):
       negated_stock = stock.copy()
@@ -394,6 +393,12 @@ class BalanceTransaction(AccountingTransaction, Inventory):
     arguments and returns a temp object edited with those properties.
     """
     from Products.ERP5Type.Document import newTempAccountingTransactionLine
+    # When have to reindex temp objects with quantity 0 in
+    # order to update stock if delta become 0, but but redefining
+    # isAccountable we do not insert 0 lines in stock
+    def isAccountable(self):
+      return self.getProperty('total_price', 0) != 0 or \
+             self.getProperty('quantity', 0) != 0
     def factory(*args, **kw):
       doc = newTempAccountingTransactionLine(self, kw.pop('id', self.getId()),
                                              uid=self.getUid())
@@ -403,6 +408,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
       if destination_total_asset_price is not None:
         kw['destination_total_asset_price'] = destination_total_asset_price
       doc._edit(*args, **kw)
+      doc.isAccountable = types.MethodType(isAccountable, doc)
 
       if relative_url:
         
