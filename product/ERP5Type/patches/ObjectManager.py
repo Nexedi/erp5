@@ -46,3 +46,9 @@ def ObjectManager_importObjectFromFile(self, filepath, verify=1, set_owner=1, id
     return ob
 
 ObjectManager._importObjectFromFile=ObjectManager_importObjectFromFile
+
+# BACK: allow using 'some_id in folder' construct in 2.8
+def ObjectManager_contains(self, name):
+  return name in self.objectIds()
+if '__contains__' not in ObjectManager.__dict__:
+  ObjectManager.__contains__ = ObjectManager_contains
