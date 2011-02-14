@@ -2,7 +2,6 @@ from Products.Formulator.Field import ZMIField
 from Products.Formulator import Widget
 from Products.Formulator.DummyField import fields
 from Products.Formulator import Validator
-from Products.ERP5Form.ListBox import lazyMethod
 
 class VideoWidget(Widget.TextWidget):
   """
@@ -127,22 +126,20 @@ class VideoWidget(Widget.TextWidget):
     else:
       return []
 
-  def getContext(self):
-    """Return the context of rendering this Field..
+  def getContext(self, field, REQUEST):
+    """Return the context of rendering this Field.
     """
-    value = self.request.get('here')
+    value = REQUEST.get('here')
     if value is None:
-      value = self.getForm().aq_parent
+      value = self.getForm(field).aq_parent
     return value
 
-  getContext = lazyMethod(getContext)
 
-  def getForm(self):
+  def getForm(self, field):
     """Return the form which contains the Field.
     """
-    return self.field.aq_parent
+    return field.aq_parent
 
-  getForm = lazyMethod(getForm)
 
 VideoWidgetInstance = VideoWidget()
 
