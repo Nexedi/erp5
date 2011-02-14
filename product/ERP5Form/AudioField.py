@@ -11,7 +11,7 @@ class AudioWidget(Widget.TextWidget):
     """
     property_names = Widget.TextWidget.property_names + \
             ['audio_controls', 'audio_error_message', 'audio_loop', \
-                'audio_preload', 'audio_autoplay']
+                'audio_preload', 'audio_autoplay', 'js_enabled', 'audio_player']
 
     audio_controls = fields.StringField('audio_controls',
                            title='Audio Controls',
@@ -47,6 +47,22 @@ class AudioWidget(Widget.TextWidget):
                            default='',
                            required=0)
 
+    js_enabled = fields.CheckBoxField('js_enabled',
+        title='Enable on the fly video player change (based on java script)',
+        description='Define if javascript is enabled or not on the current Video',
+        default=1,
+        required=1)
+
+    audio_player = fields.ListField('audio_player',
+                                   title='Audio Player',
+                                   description=(
+        "The video player to be used to show video."),
+                                   default="html5_audio",
+                                   required=1,
+                                   size=1,
+                                   items=[('HTML5 Audio', 'html5_audio'),
+                                          ('Flowplayer', 'flowplayer'),])
+
     def render(self, field, key, value, REQUEST, render_prefix=None):
         return self.render_view(field, value, REQUEST, render_prefix)
 
@@ -61,6 +77,31 @@ class AudioWidget(Widget.TextWidget):
                               preload=field.get_value('audio_preload'),
                               autoplay=field.get_value('audio_autoplay'),
                               contents=field.get_value('audio_error_message'))
+
+    def get_javascript_list(self, field, REQUEST=None):
+        """
+        Returns list of javascript needed by the widget
+        """
+        if field.get_value('js_enabled'):
+            audio_player = field.get_value('audio_player')
+            context = getContext(field, REQUEST)
+            if audio_player == 'html5_audio':
+                # XXX Instead of harcoding library name
+                # it should be better to call a python script, as
+                # it is done on type base method.
+                return ['%s/html5media.min.js' % context.portal_url()]
+            elif audio_player == 'flowplayer':
+                return ['%s/flowplayer.min.js' % context.portal_url()]
+        else:
+            return []
+
+def getContext(field, REQUEST):
+    """Return the context of rendering this VideoField.
+    """
+    value = REQUEST.get('here')
+    if value is None:
+        value = getForm(field).aq_parent
+    return value
 
 AudioWidgetInstance = AudioWidget()
 

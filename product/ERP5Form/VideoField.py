@@ -12,7 +12,7 @@ class VideoWidget(Widget.TextWidget):
     property_names = Widget.TextWidget.property_names + \
             ['video_controls', 'video_error_message', 'video_loop', \
                 'video_width', 'video_height', 'video_preload', \
-                'video_autoplay']
+                'video_autoplay', 'js_enabled', 'video_player']
 
     video_controls = fields.StringField('video_controls',
                            title='Video Controls',
@@ -62,6 +62,22 @@ class VideoWidget(Widget.TextWidget):
                            default='',
                            required=0)
 
+    js_enabled = fields.CheckBoxField('js_enabled',
+        title='Enable on the fly video player change (based on java script)',
+        description='Define if javascript is enabled or not on the current Video',
+        default=1,
+        required=1)
+
+    video_player = fields.ListField('video_player',
+                                   title='Video Player',
+                                   description=(
+        "The video player to be used to show video."),
+                                   default="html5_video",
+                                   required=1,
+                                   size=1,
+                                   items=[('HTML5 Video', 'html5_video'),
+                                          ('Flowplayer', 'flowplayer'),])
+
     def render(self, field, key, value, REQUEST, render_prefix=None):
         return self.render_view(field, value, REQUEST, render_prefix)
 
@@ -78,6 +94,32 @@ class VideoWidget(Widget.TextWidget):
                               preload=field.get_value('video_preload'),
                               autoplay=field.get_value('video_autoplay'),
                               contents=field.get_value('video_error_message'))
+
+    def get_javascript_list(self, field, REQUEST=None):
+        """
+        Returns list of javascript needed by the widget
+        """
+        if field.get_value('js_enabled'):
+            video_player = field.get_value('video_player')
+            context = getContext(field, REQUEST)
+            if video_player == 'html5_video':
+                # XXX Instead of harcoding library name
+                # it should be better to call a python script, as
+                # it is done on type base method.
+                return []
+#                return ['%s/html5media.min.js' % context.portal_url()]
+            elif video_player == 'flowplayer':
+                return ['%s/flowplayer.min.js' % context.portal_url()]
+        else:
+            return []
+
+def getContext(field, REQUEST):
+    """Return the context of rendering this VideoField.
+    """
+    value = REQUEST.get('here')
+    if value is None:
+        value = getForm(field).aq_parent
+    return value
 
 VideoWidgetInstance = VideoWidget()
 
