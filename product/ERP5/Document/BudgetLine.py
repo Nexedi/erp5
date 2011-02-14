@@ -81,6 +81,7 @@ class BudgetLine(Predicate, XMLMatrix, VariatedMixin):
                   self.getPortalReservedInventoryStateList() +
                   self.getPortalCurrentInventoryStateList() +
                   self.getPortalTransitInventoryStateList())
+    kw['simulation_period'] = ''
     return self._getBudgetDict(**kw)
 
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -102,7 +103,7 @@ class BudgetLine(Predicate, XMLMatrix, VariatedMixin):
 
     return budget_dict
 
-  def _getBudgetDict(self, **kw):
+  def _getBudgetDict(self, simulation_period='Current', **kw):
     """Use getCurrentInventoryList to compute all budget cell consumptions at
     once, and returns them in a dict.
     """
@@ -118,8 +119,13 @@ class BudgetLine(Predicate, XMLMatrix, VariatedMixin):
     sign = self.BudgetLine_getConsumptionSign()
     cell_key_cache = dict()
     budget_dict = dict()
-    for brain in self.getPortalObject().portal_simulation\
-                             .getCurrentInventoryList(**query_dict):
+
+    portal = self.getPortalObject()
+    getInventoryList = portal.portal_simulation.getInventoryList
+    if simulation_period == 'Current':
+      getInventoryList = portal.portal_simulation.getCurrentInventoryList
+
+    for brain in getInventoryList(**query_dict):
       cell_key = budget_model._getCellKeyFromInventoryListBrain(brain, self,
                                        cell_key_cache=cell_key_cache)
       # XXX total_quantity or total_price ??

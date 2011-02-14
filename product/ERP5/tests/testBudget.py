@@ -406,8 +406,29 @@ class TestBudget(ERP5TypeTestCase):
                   portal_type='Accounting Transaction Line',
                   source_value=self.portal.account_module.fixed_assets,
                   source_credit=100)
-    atransaction.stop()
+    atransaction.confirm()
 
+    # a confirmed transaction engages budget
+    transaction.commit()
+    self.tic()
+
+    self.assertEquals(
+      {('source/account_module/fixed_assets', 'account_type/asset'): 0.0,
+       ('source/account_module/goods_purchase', 'account_type/expense'): 0.0},
+        budget_line.getConsumedBudgetDict())
+
+    self.assertEquals(
+      {('source/account_module/fixed_assets', 'account_type/asset'): -100.0,
+       ('source/account_module/goods_purchase', 'account_type/expense'): 100.0},
+        budget_line.getEngagedBudgetDict())
+
+    self.assertEquals(
+      {('source/account_module/fixed_assets', 'account_type/asset'): 102.0,
+       ('source/account_module/goods_purchase', 'account_type/expense'): -99.0},
+        budget_line.getAvailableBudgetDict())
+
+    atransaction.stop()
+    # a stopped transaction consumes budget
     transaction.commit()
     self.tic()
 
