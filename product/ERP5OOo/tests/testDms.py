@@ -219,6 +219,40 @@ class TestDocument(TestDocumentMixin):
   def clearCache(self):
     self.portal.portal_caches.clearAllCache()
 
+  def getPreferences(self, image_display):
+    preference_tool = self.portal.getPortalObject().portal_preferences
+    height_preference = 'preferred_%s_image_height' % (image_display,)
+    width_preference = 'preferred_%s_image_width' % (image_display,)
+    height = int(preference_tool.getPreference(height_preference))
+    width = int(preference_tool.getPreference(width_preference))
+    return (width, height)
+
+  def getURLSizeList(self, uri, **kw):
+    # __ac=RVJQNVR5cGVUZXN0Q2FzZTo%3D is encoded ERP5TypeTestCase with empty password
+    url = '%s?%s&__ac=%s' %(uri, urllib.urlencode(kw), 'RVJQNVR5cGVUZXN0Q2FzZTo%3D')
+    format=kw.get('format', 'jpeg')
+    infile = urllib.urlopen(url)
+    # save as file with proper incl. format filename (for some reasons PIL uses this info)
+    filename = "%s%stest-image-format-resize.%s" %(os.getcwd(), os.sep, format)
+    f = open(filename, "w")
+    image_data = infile.read()
+    f.write(image_data)
+    f.close()
+    infile.close()
+    file_size = len(image_data)
+    try:
+      from PIL import Image
+      image = Image.open(filename)
+      image_size = image.size
+    except ImportError:
+      from subprocess import Popen, PIPE
+      identify_output = Popen(['identify', filename],
+                              stdout=PIPE).communicate()[0]
+      image_size = tuple(map(lambda x:int(x),
+                             identify_output.split()[2].split('x')))
+    os.remove(filename)
+    return image_size, file_size
+
   ## tests
 
   def test_01_HasEverything(self):
@@ -1925,6 +1959,34 @@ return 1
     self.assertTrue('odg' in presentation.getTargetFormatList())
     self.assertTrue('jpg' in presentation.getTargetFormatList())
     self.assertTrue('png' in presentation.getTargetFormatList())
+  
+  @expectedFailure
+  def test_convertWebPageToImageOnTraversal(self):
+    """
+    Test converting to image Web Page portal types on traversal i.e.:
+    - web_page_module/1?quality=100&display=xlarge&format=jpeg
+    
+    Test Web Page cusing embedded Images into ZODB case (in its HTML body)
+    
+    XXX: when fixed should become part of test_convertToImageOnTraversal (only traverse part)
+    """
+    display = 'thumbnail'
+    preffered_size_for_display = self.getPreferences(display)
+    convert_kw = {'display':display, 
+                  'format':'jpeg', 
+                  'quality':100}
+    web_page_document = self.portal.web_page_module.newContent(portal_type="Web Page")
+    web_page_document.setTextContent('<b> test </b>')
+    self.stepTic()
+    
+    web_page_document_url = '%s/%s' %(self.portal.absolute_url(), web_page_document.getRelativeUrl())
+    web_page_image_size, web_page_file_size = self.getURLSizeList(web_page_document_url, **convert_kw)
+    self.assertTrue(max(preffered_size_for_display) - max(web_page_image_size) <= 1)
+    
+    # set embedded Image which exists in ERP5 and check we can produce a thuumbnail of a Web Page
+    web_page_document.setTextContent('<b> test </b><img src="images/favourite.png"/>')
+    self.stepTic()
+    web_page_image_size, web_page_file_size = self.getURLSizeList(web_page_document_url, **convert_kw)
 
   def test_convertToImageOnTraversal(self):
     """
@@ -1949,46 +2011,13 @@ return 1
     image_document.edit(file=upload_file)
     self.stepTic()
 
-    def getPreferences(image_display):
-      preference_tool = self.portal.getPortalObject().portal_preferences
-      height_preference = 'preferred_%s_image_height' % (image_display,)
-      width_preference = 'preferred_%s_image_width' % (image_display,)
-      height = int(preference_tool.getPreference(height_preference))
-      width = int(preference_tool.getPreference(width_preference))
-      return (width, height)
-
-    def getURLSizeList(uri, **kw):
-      # __ac=RVJQNVR5cGVUZXN0Q2FzZTo%3D is encoded ERP5TypeTestCase with empty password
-      url = '%s?%s&__ac=%s' %(uri, urllib.urlencode(kw), 'RVJQNVR5cGVUZXN0Q2FzZTo%3D')
-      format=kw.get('format', 'jpeg')
-      infile = urllib.urlopen(url)
-      # save as file with proper incl. format filename (for some reasons PIL uses this info)
-      filename = "%s%stest-image-format-resize.%s" %(os.getcwd(), os.sep, format)
-      f = open(filename, "w")
-      image_data = infile.read()
-      f.write(image_data)
-      f.close()
-      infile.close()
-      file_size = len(image_data)
-      try:
-        from PIL import Image
-        image = Image.open(filename)
-        image_size = image.size
-      except ImportError:
-        from subprocess import Popen, PIPE
-        identify_output = Popen(['identify', filename],
-                                stdout=PIPE).communicate()[0]
-        image_size = tuple(map(lambda x:int(x),
-                               identify_output.split()[2].split('x')))
-      os.remove(filename)
-      return image_size, file_size
-
     ooo_document_url = '%s/%s' %(self.portal.absolute_url(), ooo_document.getRelativeUrl())
     pdf_document_url = '%s/%s' %(self.portal.absolute_url(), pdf_document.getRelativeUrl())
     image_document_url = '%s/%s' %(self.portal.absolute_url(), image_document.getRelativeUrl())
+   
     for display in ('nano', 'micro', 'thumbnail', 'xsmall', 'small', 'medium', 'large', 'xlarge',):
       max_tollerance_px = 1
-      preffered_size_for_display = getPreferences(display)
+      preffered_size_for_display = self.getPreferences(display)
       for format in ('png', 'jpeg', 'gif',):
         convert_kw = {'display':display, \
                       'format':format, \
@@ -1997,15 +2026,15 @@ return 1
         # so allow some tollerance which is produced by respective portal_transform command
 
         # any OOo based portal type
-        ooo_document_image_size, ooo_document_file_size = getURLSizeList(ooo_document_url, **convert_kw)
+        ooo_document_image_size, ooo_document_file_size = self.getURLSizeList(ooo_document_url, **convert_kw)
         self.assertTrue(max(preffered_size_for_display) - max(ooo_document_image_size) <= max_tollerance_px)
 
         # PDF
-        pdf_document_image_size, pdf_document_file_size = getURLSizeList(pdf_document_url, **convert_kw)
+        pdf_document_image_size, pdf_document_file_size = self.getURLSizeList(pdf_document_url, **convert_kw)
         self.assertTrue(max(preffered_size_for_display) - max(pdf_document_image_size) <= max_tollerance_px)
 
         # Image
-        image_document_image_size, image_document_file_size = getURLSizeList(image_document_url, **convert_kw)
+        image_document_image_size, image_document_file_size = self.getURLSizeList(image_document_url, **convert_kw)
         self.assertTrue(max(preffered_size_for_display) - max(image_document_image_size) <= max_tollerance_px)
 
     # test changing image quality will decrease its file size
@@ -2013,13 +2042,13 @@ return 1
       convert_kw = {'display':'xlarge', \
                     'format':'jpeg', \
                     'quality':100}
-      image_document_image_size_100p,image_document_file_size_100p = getURLSizeList(url, **convert_kw)
+      image_document_image_size_100p,image_document_file_size_100p = self.getURLSizeList(url, **convert_kw)
       # decrease in quality should decrease its file size
       convert_kw['quality'] = 5.0
-      image_document_image_size_5p,image_document_file_size_5p = getURLSizeList(url, **convert_kw)
+      image_document_image_size_5p,image_document_file_size_5p = self.getURLSizeList(url, **convert_kw)
       # removing quality should enable defaults settings which should be reasonable between 5% and 100%
       del convert_kw['quality']
-      image_document_image_size_no_quality,image_document_file_size_no_quality = getURLSizeList(url, **convert_kw)
+      image_document_image_size_no_quality,image_document_file_size_no_quality = self.getURLSizeList(url, **convert_kw)
       # check file sizes
       self.assertTrue(image_document_file_size_100p > image_document_file_size_no_quality and \
                       image_document_file_size_no_quality > image_document_file_size_5p)
