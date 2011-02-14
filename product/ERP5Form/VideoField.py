@@ -70,6 +70,7 @@ class VideoWidget(Widget.TextWidget):
             return ''
         return Widget.render_element("video",
                               src=value,
+                              extra=field.get_value('extra'),
                               controls=field.get_value('video_controls'),
                               loop=field.get_value('video_loop'),
                               width=field.get_value('video_width'),

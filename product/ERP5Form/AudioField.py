@@ -55,6 +55,7 @@ class AudioWidget(Widget.TextWidget):
             return ''
         return Widget.render_element("audio",
                               src=value,
+                              extra=field.get_value('extra'),
                               controls=field.get_value('audio_controls'),
                               loop=field.get_value('audio_loop'),
                               preload=field.get_value('audio_preload'),
