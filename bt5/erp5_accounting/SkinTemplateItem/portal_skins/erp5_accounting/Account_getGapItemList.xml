@@ -57,6 +57,8 @@ categories from the GAP set in preferences, otherwise it will return\n
 categories from all available GAP.\n
 """\n
 \n
+portal = context.getPortalObject()\n
+\n
 display_cache = {}\n
 def display(x):\n
   if x not in display_cache:\n
@@ -69,11 +71,9 @@ def display(x):\n
 \n
   return display_cache[x]\n
 \n
-def getGapItemList(only_preferred_gap):\n
-  ctool = context.getPortalObject().portal_categories\n
+def getGapItemList(only_preferred_gap, gap_root=None):\n
+  ctool = portal.portal_categories\n
   if only_preferred_gap:\n
-    gap_root = context.getPortalObject().portal_preferences\\\n
-                    .getPreferredAccountingTransactionGap()\n
     if gap_root:\n
       return ctool.resolveCategory(gap_root).getCategoryChildItemList(\n
         base=False, is_self_excluded=True, display_method=display,\n
@@ -89,7 +89,8 @@ def getGapItemList(only_preferred_gap):\n
 \n
 from Products.ERP5Type.Cache import CachingMethod\n
 getGapItemList = CachingMethod(getGapItemList, id=\'Account_getGapItemList\', cache_factory=\'erp5_content_long\')\n
-return getGapItemList(only_preferred_gap=only_preferred_gap)\n
+return getGapItemList(only_preferred_gap=only_preferred_gap,\n
+                gap_root=portal.portal_preferences.getPreferredAccountingTransactionGap())\n
 </string> </value>
         </item>
         <item>
