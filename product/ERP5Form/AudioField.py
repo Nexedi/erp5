@@ -90,7 +90,7 @@ class AudioWidget(Widget.TextWidget):
       script_element = """<script language="JavaScript">
                              flowplayer("player", "%s/flowplayer.swf");
                          </script>""" % self.getContext(field, REQUEST).getPortalObject().portal_url()
-      return ' '.join(a_element,script_element)
+      return ' '.join([a_element,script_element])
 
 
   def get_javascript_list(self, field, REQUEST=None):
