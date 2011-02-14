@@ -131,7 +131,6 @@
                         <string>my_effective_date</string>
                         <string>my_expiration_date</string>
                         <string>my_total_price</string>
-                        <string>my_total_net_price</string>
                         <string>my_comment</string>
                         <string>my_translated_simulation_state_title</string>
                       </list>
