@@ -788,7 +788,7 @@ class TestDocument(TestDocumentMixin):
       getAdvancedSearchTextResultList('ScriptableKey'))
     self.assertEqual(len(getAdvancedSearchTextResultList('RelatedKey')), 0)
     self.assertSameSet([document_1, document_2], \
-      getAdvancedSearchTextResultList('make'))
+      getAdvancedSearchTextResultList('make', ('File',)))
     self.assertSameSet([web_page, person], \
       getAdvancedSearchTextResultList("Great", ('Person', 'Web Page')))
     # full text search with whole title of a document
