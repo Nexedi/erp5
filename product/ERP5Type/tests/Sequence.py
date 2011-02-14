@@ -99,6 +99,9 @@ class Sequence:
     self._played_index = 0
     self._context = context
 
+  def __getitem__(self, key):
+    return self._dict[key]
+
   def asText(self):
     """
     Representation of the current Sequence. Useful for debuggers.
