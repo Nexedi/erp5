@@ -205,7 +205,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     #LOG('ERP5Conduit.deleteNode', INFO, 'object path:%s' % object.getPath())
     #LOG('ERP5Conduit deleteNode', INFO, 'object_id:%r' % object_id)
     if object_id is not None:
-      self._deleteContent(object=object, object_id=object_id)
+      self._deleteContent(object=object, object_id=object_id, kw)
       return []
     xml = self.convertToXml(xml)
     #LOG('ERP5Conduit deleteNode', INFO, etree.tostring(xml, pretty_print=True))
@@ -218,7 +218,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       pass
     elif context_to_delete != object:
       self._deleteContent(object=context_to_delete.getParentValue(),
-                                           object_id=context_to_delete.getId())
+                                           object_id=context_to_delete.getId(),
+                          kw)
     else:
       #same context
       if [role for role in LOCAL_ROLE_LIST if role in xpath_expression]:
@@ -236,7 +237,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     return []
 
   security.declareProtected(Permissions.ModifyPortalContent, 'deleteObject')
-  def deleteObject(self, object, object_id):
+  def deleteObject(self, object, object_id, **kw):
     try:
       object._delObject(object_id)
     except (AttributeError, KeyError):
@@ -1038,11 +1039,11 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     return self.editDocument(object=object, **args)
 
-  def _deleteContent(self, object=None, object_id=None):
+  def _deleteContent(self, object=None, object_id=None, **kw):
     """
       This is the method for delete the object
     """
-    return self.deleteObject(object, object_id)
+    return self.deleteObject(object, object_id, **kw)
 
   def getContentType(self):
     """Content-Type of binded data
