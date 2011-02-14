@@ -416,7 +416,7 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     self.createInteractionWorkflow()
     self.interaction.setProperties(
             'afterEdit',
-            method_id='setTitle',
+            method_id='_setTitle',
             after_script_name=('afterEdit',))
     params = 'sci,**kw'
     body = "context = sci.object\n" +\
@@ -567,7 +567,7 @@ context.setTitle('Bar')
     self.createInteractionWorkflow()
     self.interaction.setProperties(
             'regexp',
-            method_id='set.*',
+            method_id='_set.* set.*',
             after_script_name=('afterEdit',))
 
     call_list = self.portal.REQUEST['call_list'] = []
@@ -577,13 +577,17 @@ context.setTitle('Bar')
     organisation = self.organisation
     # all methods matching set.* regular expression are matched
     organisation.setDescription('')
-    self.assertEquals(len(call_list), 1)
+    # two calls: setDescription, _setDescription
+    self.assertEquals(len(call_list), 2)
     organisation.setTitle('')
-    self.assertEquals(len(call_list), 2)
+    # two calls: setTitle, _setTitle
+    self.assertEquals(len(call_list), 4)
     organisation.getDescription()
-    self.assertEquals(len(call_list), 2)
+    # no calls
+    self.assertEquals(len(call_list), 4)
     organisation.edit(description='desc')
-    self.assertEquals(len(call_list), 3)
+    # two calls: one to _setProperty, and one to _setDescription
+    self.assertEquals(len(call_list), 6)
 
 
   def test_security(self):
