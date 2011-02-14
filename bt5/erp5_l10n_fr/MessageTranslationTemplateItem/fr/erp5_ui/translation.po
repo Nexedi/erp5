@@ -8990,6 +8990,9 @@ msgstr "Entité"
 msgid "Section Account"
 msgstr "Compte"
 
+msgid "Section Accounting Currency"
+msgstr "Devise de comptabilité de la section"
+
 msgid "Section Bank Account"
 msgstr "Compte en banque"
 
