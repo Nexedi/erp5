@@ -71,8 +71,11 @@ selection_columns = (\n
   (\'mirror_section_title\', \'Third Party\',),\n
   (\'mirror_payment_title\', \'Third Party Bank Account\',),\n
   (\'mirror_section_region_title\', \'Third Party Region\',),\n
+  (\'function_reference\',\n
+      \'%s Reference\' % context.AccountingTransactionLine_getFunctionBaseCategoryTitle()), \n
   (\'function_title\',\n
       context.AccountingTransactionLine_getFunctionBaseCategoryTitle()),\n
+  (\'funding_reference\', \'Funding Reference\',),\n
   (\'funding_title\', \'Funding\',),\n
   (\'project_title\', \'Project\',),\n
   (\'product_line\', \'Product Line\'),\n
@@ -80,9 +83,11 @@ selection_columns = (\n
   (\'date\', \'Operation Date\'),\n
   (\'debit_price\', \'Converted Debit\'),\n
   (\'credit_price\', \'Converted Credit\'),\n
+  (\'price\', \'Converted Net\'),\n
   (\'currency\', \'Accounting Currency\'),\n
   (\'debit\', \'Debit\'),\n
   (\'credit\', \'Credit\'),\n
+  (\'quantity\', \'Net\'),\n
   (\'resource\', \'Transaction Currency\'),\n
   (\'translated_portal_type\', \'Line Type\'),\n
   (\'parent_translated_portal_type\', \'Transaction Type\'),\n

@@ -61,6 +61,7 @@ selection_params = portal_selections.getSelectionParamsFor(selection_name)\n
 section_category = selection_params.get(\'section_category\')\n
 section_category_strict = selection_params.get(\'section_category_strict\')\n
 \n
+\n
 def isSource(accounting_transaction):\n
   if section_category:\n
     source_section = accounting_transaction.getSourceSectionValue()\n
@@ -118,7 +119,7 @@ def getAccountReference(node):\n
 \n
 def getTitle(document):\n
   if document is not None:\n
-    return document.getTitle()\n
+    return document.getTranslatedTitle()\n
   return \'\'\n
 \n
 bank_account_title_cache = dict()\n
@@ -155,7 +156,11 @@ def getAccountingCurrencyReference(section_relative_url):\n
 \n
 \n
 portal_type = context.getPortalAccountingMovementTypeList()\n
+\n
+displayed_delivery_dict = dict()\n
 for delivery in delivery_list:\n
+  if delivery.uid in displayed_delivery_dict: continue\n
+  displayed_delivery_dict[delivery.uid] = True\n
   delivery = delivery.getObject()\n
   is_source = isSource(delivery)\n
   is_destination = isDestination(delivery)\n
@@ -193,15 +198,19 @@ for delivery in delivery_list:\n
         mirror_payment_title=getBankAccountTitle(movement.getDestinationPaymentValue()),\n
         mirror_section_region_title=movement.getDestinationRegionTranslatedTitle(),\n
         function_title=getTitle(movement.getSourceFunctionValue()),\n
+        function_reference=movement.getSourceFunctionReference(),\n
         project_title=getTitle(movement.getSourceProjectValue()),\n
         funding_title=getTitle(movement.getSourceFundingValue()),\n
+        funding_reference=movement.getSourceFundingReference(),\n
         product_line=movement.getProductLineTranslatedTitle(),\n
         date=movement.getStartDate(),\n
         debit_price=movement.getSourceInventoriatedTotalAssetDebit(),\n
         credit_price=movement.getSourceInventoriatedTotalAssetCredit(),\n
+        price=(movement.getSourceInventoriatedTotalAssetCredit() - movement.getSourceInventoriatedTotalAssetDebit()),\n
         currency=getAccountingCurrencyReference(movement.getSourceSection()),\n
         debit=movement.getSourceDebit(),\n
         credit=movement.getSourceCredit(),\n
+        quantity=(movement.getSourceCredit() - movement.getSourceDebit()),\n
         resource=movement.getResourceReference(),\n
         quantity_precision=movement.getQuantityPrecisionFromResource(movement.getResource()),\n
         translated_portal_type=movement.getTranslatedPortalType(),\n
@@ -239,15 +248,19 @@ for delivery in delivery_list:\n
         mirror_section_region_title=movement.getSourceRegionTranslatedTitle(),\n
         mirror_payment_title=getBankAccountTitle(movement.getSourcePaymentValue()),\n
         function_title=getTitle(movement.getDestinationFunctionValue()),\n
+        function_reference=movement.getDestinationFunctionReference(),\n
         funding_title=getTitle(movement.getDestinationFundingValue()),\n
+        funding_reference=movement.getDestinationFundingReference(),\n
         project_title=getTitle(movement.getDestinationProjectValue()),\n
         product_line=movement.getProductLineTranslatedTitle(),\n
         date=movement.getStopDate(),\n
         debit_price=movement.getDestinationInventoriatedTotalAssetDebit(),\n
         credit_price=movement.getDestinationInventoriatedTotalAssetCredit(),\n
+        price=(movement.getDestinationInventoriatedTotalAssetCredit() - movement.getDestinationInventoriatedTotalAssetDebit()),\n
         currency=getAccountingCurrencyReference(movement.getDestinationSection()),\n
         debit=movement.getDestinationDebit(),\n
         credit=movement.getDestinationCredit(),\n
+        quantity=(movement.getDestinationCredit() - movement.getDestinationDebit()),\n
         resource=movement.getResourceReference(),\n
         quantity_precision=movement.getQuantityPrecisionFromResource(movement.getResource()),\n
         translated_portal_type=movement.getTranslatedPortalType(),\n
