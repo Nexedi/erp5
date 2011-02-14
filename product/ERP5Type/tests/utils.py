@@ -238,7 +238,7 @@ def _recreateMemcachedTool(portal):
   from Products.ERP5Type.Tool import MemcachedTool
   reload(MemcachedTool)
   portal.manage_delObjects(['portal_memcached'])
-  portal._setObject('portal_memcached', MemcachedTool.MemcachedTool())
+  portal.newContent(id='portal_memcached', portal_type="Memcached Tool")
 
 # test runner shared functions
 def getMySQLArguments():
