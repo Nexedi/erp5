@@ -61,6 +61,8 @@
 from pprint import pformat\n
 portal = context.getPortalObject()\n
 request= portal.REQUEST\n
+from_date = request.get(\'from_date\')\n
+at_date = request.get(\'at_date\')\n
 \n
 # this report can be called on a budget ...\n
 if context.getPortalType() == \'Budget\':\n
@@ -74,8 +76,6 @@ else:\n
   # ... or on the budget module, and in this case, all budgets are used\n
   defined_group = request[\'section_category\']\n
   strict_section_membership = request.get(\'section_category_strict\', False)\n
-  from_date = request.get(\'from_date\')\n
-  at_date = request.get(\'at_date\')\n
   validation_state = request.get(\'validation_state\', [])\n
   \n
   budget_list = portal.portal_catalog.searchResults(\n
@@ -163,8 +163,21 @@ for budget in budget_list:\n
     \n
     level_1_line_list = []\n
 \n
-    consumed_budget_dict = budget_line.getConsumedBudgetDict()\n
-    engaged_budget_dict = budget_line.getEngagedBudgetDict()\n
+    if at_date and from_date:\n
+      consumed_budget_dict = budget_line.getConsumedBudgetDict(\n
+                                    from_date=from_date, at_date=at_date)\n
+      engaged_budget_dict = budget_line.getEngagedBudgetDict(\n
+                                    from_date=from_date, at_date=at_date)\n
+    elif at_date:\n
+      consumed_budget_dict = budget_line.getConsumedBudgetDict(at_date=at_date)\n
+      engaged_budget_dict = budget_line.getEngagedBudgetDict(at_date=at_date)\n
+    elif from_date:\n
+      consumed_budget_dict = budget_line.getConsumedBudgetDict(from_date=from_date)\n
+      engaged_budget_dict = budget_line.getEngagedBudgetDict(from_date=from_date)\n
+    else:\n
+      consumed_budget_dict = budget_line.getConsumedBudgetDict()\n
+      engaged_budget_dict = budget_line.getEngagedBudgetDict()\n
+\n
     budget_line_cell_range = budget_line.BudgetLine_asCellRange()\n
     budget_line_as_cell_range_matrixbox =\\\n
           budget_line.BudgetLine_asCellRange(matrixbox=1)\n
