@@ -64,6 +64,7 @@ class TestXHTML(ERP5TypeTestCase):
   def getBusinessTemplateList():
     """  """
     return ( # dependency order
+      'erp5_core_proxy_field_legacy',
       'erp5_base',
       'erp5_trade',
 
