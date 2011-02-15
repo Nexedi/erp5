@@ -162,7 +162,7 @@ class CategoryProperty(XMLObject):
                       accessor_holder=accessor_holder,
                       reference='%s_free_text' % category_id,
                       elementary_type='text',
-                      is_multivalues=False,
+                      multivalued=False,
                       property_default='',
                       storage_id=storage_id,
                       read_permission=Permissions.AccessContentsInformation,
@@ -185,7 +185,7 @@ class CategoryProperty(XMLObject):
       write_permission = Permissions.ModifyPortalContent
 
     # Actually create accessors
-    uppercase_reference = UpperCase(id)
+    uppercase_reference = UpperCase(category_id)
 
     # three special cases
     accessor = Category.Tester('has' + uppercase_reference, id)
