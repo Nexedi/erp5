@@ -40,7 +40,7 @@ class DownloadableMixin:
 
   ### Content processing methods
   security.declareProtected(Permissions.View, 'index_html')
-  @fill_args_from_request
+  @fill_args_from_request('display', 'quality', 'resolution', 'frame')
   def index_html(self, REQUEST, RESPONSE, format=_MARKER, **kw):
     """
       We follow here the standard Zope API for files and images
