@@ -35,6 +35,7 @@ from Products.ERP5Type.Accessor import Category, Value, Alias
 from Products.ERP5Type.Utils import UpperCase
 
 from Products.ERP5Type.Core.StandardProperty import StandardProperty
+from zLOG import LOG, WARNING
 
 class CategoryProperty(XMLObject):
   """
@@ -150,6 +151,17 @@ class CategoryProperty(XMLObject):
                                     accessor_holder,
                                     category_id,
                                     category_tool):
+    if category_tool is None:
+      return
+
+    cat_object = category_tool.get(category_id, None)
+    if cat_object is None:
+      LOG("ERP5Type.Core.CategoryProperty", WARNING,
+          "Base Category %r is missing. Accessors can not be generated." % \
+          category_id)
+
+      return
+
     # Create free text accessors.
     # XXX These are only for backward compatibility.
     storage_id = None
@@ -160,6 +172,7 @@ class CategoryProperty(XMLObject):
 
     StandardProperty.applyPropertyOnAccessorHolder(
                       accessor_holder=accessor_holder,
+                      portal=category_tool,
                       reference='%s_free_text' % category_id,
                       elementary_type='text',
                       multivalued=False,
@@ -169,20 +182,10 @@ class CategoryProperty(XMLObject):
                       write_permission=Permissions.ModifyPortalContent)
 
     # Get read and write permission
-    if category_tool is not None:
-      cat_object = category_tool.get(category_id, None)
-    else:
-      cat_object = None
-    if cat_object is not None:
-      read_permission = Permissions.__dict__.get(
-                              cat_object.getReadPermission(),
-                              Permissions.AccessContentsInformation)
-      write_permission = Permissions.__dict__.get(
-                              cat_object.getWritePermission(),
-                              Permissions.ModifyPortalContent)
-    else:
-      read_permission = Permissions.AccessContentsInformation
-      write_permission = Permissions.ModifyPortalContent
+    read_permission = Permissions.__dict__.get(cat_object.getReadPermission(),
+                                               Permissions.AccessContentsInformation)
+    write_permission = Permissions.__dict__.get(cat_object.getWritePermission(),
+                                                Permissions.ModifyPortalContent)
 
     # Actually create accessors
     uppercase_reference = UpperCase(category_id)
