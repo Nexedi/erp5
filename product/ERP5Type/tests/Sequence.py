@@ -102,6 +102,9 @@ class Sequence:
   def __getitem__(self, key):
     return self._dict[key]
 
+  def __setitem__(self, key, value):
+    self._dict[key] = value
+
   def asText(self):
     """
     Representation of the current Sequence. Useful for debuggers.
