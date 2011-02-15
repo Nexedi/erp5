@@ -61,6 +61,16 @@ class DefaultGetter(BaseGetter):
       self._property_type = property_type
       self._null = type_definition[property_type]['null']
       self._default = default
+
+      # These values are hashed by _get*AcquiredProperty: to be
+      # hashable, they need to be converted to tuples
+      if isinstance(acquisition_base_category, list):
+        acquisition_base_category = tuple(acquisition_base_category)
+      if isinstance(acquisition_object_id, list):
+        acquisition_object_id = tuple(acquisition_object_id)
+      if isinstance(acquisition_portal_type, list):
+        acquisition_portal_type = tuple(acquisition_portal_type)
+
       self._acquisition_base_category = acquisition_base_category
       self._acquisition_portal_type = acquisition_portal_type
       self._acquisition_accessor_id = acquisition_accessor_id
@@ -139,6 +149,16 @@ class ListGetter(BaseGetter):
       self._property_type = property_type
       self._null = type_definition[property_type]['null']
       self._default = default
+
+      # These values are hashed by _get*AcquiredProperty: to be
+      # hashable, they need to be converted to tuples
+      if isinstance(acquisition_base_category, list):
+        acquisition_base_category = tuple(acquisition_base_category)
+      if isinstance(acquisition_object_id, list):
+        acquisition_object_id = tuple(acquisition_object_id)
+      if isinstance(acquisition_portal_type, list):
+        acquisition_portal_type = tuple(acquisition_portal_type)
+
       self._acquisition_base_category = acquisition_base_category
       self._acquisition_portal_type = acquisition_portal_type
       self._acquisition_accessor_id = acquisition_accessor_id
