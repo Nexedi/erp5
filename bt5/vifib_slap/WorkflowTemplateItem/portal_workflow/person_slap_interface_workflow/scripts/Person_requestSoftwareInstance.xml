@@ -133,7 +133,7 @@ if (request_software_instance is None):\n
     # Update Open Order\n
     # does this order have a client-specific Open Order\n
     open_order = portal.portal_catalog.getResultValue(\n
-      destination_section_uid=person.getUid(),\n
+      default_destination_section_uid=person.getUid(),\n
       portal_type="Open Sale Order",\t \t \n
       simulation_state="started")\n
     if open_order is None:\n
