@@ -38,16 +38,6 @@
             <value> <string></string> </value>
         </item>
         <item>
-            <key> <string>description</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>edit_order</string> </key>
-            <value>
-              <list/>
-            </value>
-        </item>
-        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -64,6 +54,7 @@
                 <string>center</string>
                 <string>bottom</string>
                 <string>hidden</string>
+                <string>not_assigned</string>
               </list>
             </value>
         </item>
@@ -93,12 +84,69 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>your_percentage</string>
                         <string>your_at_date</string>
+                        <string>your_captcha</string>
+                        <string>your_category</string>
+                        <string>your_category_list</string>
+                        <string>your_checkbox</string>
+                        <string>your_date</string>
+                        <string>your_deferred_style</string>
+                        <string>your_file_field</string>
+                        <string>your_float_field</string>
+                        <string>your_form_box_field</string>
+                        <string>your_format</string>
                         <string>your_from_date</string>
+                        <string>your_graph</string>
+                        <string>your_landscape</string>
+                        <string>your_list_field</string>
+                        <string>your_money_quantity</string>
+                        <string>your_percentage</string>
+                        <string>your_portal_skin</string>
+                        <string>your_print_mode</string>
+                        <string>your_quantity</string>
+                        <string>your_report_at_date</string>
+                        <string>your_report_from_date</string>
+                        <string>your_report_section_category</string>
+                        <string>your_reportbox</string>
                         <string>your_section_category</string>
                         <string>your_simulation_state</string>
+                        <string>your_string_field</string>
+                        <string>your_target_language</string>
+                        <string>your_title</string>
+                        <string>listbox_creation_date</string>
+                        <string>listbox_modification_date</string>
+                        <string>listbox_owner_title</string>
+                        <string>my_amount_generator_quantity</string>
+                        <string>my_base_unit_price</string>
+                        <string>my_category</string>
+                        <string>my_category_list</string>
+                        <string>my_comment</string>
+                        <string>my_content_type</string>
+                        <string>my_date</string>
+                        <string>my_description</string>
+                        <string>my_email</string>
+                        <string>my_int_index</string>
+                        <string>my_integer_value</string>
+                        <string>my_money_quantity</string>
+                        <string>my_password</string>
+                        <string>my_percent</string>
+                        <string>my_price</string>
+                        <string>my_quantity</string>
+                        <string>my_reference</string>
+                        <string>my_tales_expression</string>
+                        <string>my_text_content</string>
+                        <string>my_text_format</string>
+                        <string>my_thumbnail</string>
+                        <string>my_title</string>
+                        <string>my_translated_workflow_state_title</string>
+                        <string>planning_box</string>
                       </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>not_assigned</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -112,7 +160,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_viewReportFieldLibrary</string> </value>
+            <value> <string>Base_viewFieldLibrary</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -120,11 +168,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Base_viewReportFieldLibrary</string> </value>
-        </item>
-        <item>
-            <key> <string>pt</string> </key>
-            <value> <string>form_report</string> </value>
+            <value> <string>Base_viewFieldLibrary</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -136,19 +180,11 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Obsoleted by Base_viewFieldLibrary Default Field Library for Reports</string> </value>
+            <value> <string>Default Field Library</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
             <value> <int>0</int> </value>
-        </item>
-        <item>
-            <key> <string>update_action</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>update_action_title</string> </key>
-            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
