@@ -60,6 +60,11 @@ else:\n
   for action in dialog_actions:\n
     if current_url == action[\'url\'].split(\'?\')[0]:\n
       return action\n
+# still not found, return the first action with form_id matching\n
+form_id = current_url.split(\'/\')[-1]\n
+for action in dialog_actions:\n
+  if form_id == action[\'url\'].split(\'?\')[0].split(\'/\')[-1]:\n
+    return action\n
 return None\n
 </string> </value>
         </item>
