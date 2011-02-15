@@ -117,19 +117,6 @@ class CategoryProperty(XMLObject):
       'get%sTranslatedLogicalPath': Value.DefaultTranslatedLogicalPathGetter,
   }
   setter_definition_dict = {
-      # public 'reindexers'
-      'set%s': Alias.Reindex,
-      'set%sList': Alias.Reindex,
-      'setDefault%s': Alias.Reindex,
-      'set%sSet': Alias.Reindex,
-      'set%sValue': Alias.Reindex,
-      'set%sValueList': Alias.Reindex,
-      'set%sValueSet': Alias.Reindex,
-      'setDefault%sValue': Alias.Reindex,
-      'set%sUid': Alias.Reindex,
-      'set%sUidList': Alias.Reindex,
-      'set%sUidSet': Alias.Reindex,
-      'setDefault%sUid': Alias.Reindex,
       # setters
       '_set%s': Category.Setter,
       '_categorySet%s': Category.Setter,
@@ -231,6 +218,11 @@ class CategoryProperty(XMLObject):
 
       accessor = accessor_class(accessor_name, category_id)
       accessor_holder.registerAccessor(accessor, write_permission)
+
+      # TODO: merge with StandardProperty
+      if accessor_name.startswith('_set'):
+        accessor = Alias.Reindex(accessor_name[1:], accessor_name)
+        accessor_holder.registerAccessor(accessor, write_permission)
 
     accessor_holder._categories.append(category_id)
 
