@@ -118,6 +118,10 @@ class CategoryProperty(XMLObject):
   }
   setter_definition_dict = {
       # public 'reindexers'
+      'set%s': Alias.Reindex,
+      'set%sList': Alias.Reindex,
+      'setDefault%s': Alias.Reindex,
+      'set%sSet': Alias.Reindex,
       'set%sValue': Alias.Reindex,
       'set%sValueList': Alias.Reindex,
       'set%sValueSet': Alias.Reindex,
@@ -127,6 +131,14 @@ class CategoryProperty(XMLObject):
       'set%sUidSet': Alias.Reindex,
       'setDefault%sUid': Alias.Reindex,
       # setters
+      '_set%s': Category.Setter,
+      '_categorySet%s': Category.Setter,
+      '_set%sList': Category.ListSetter,
+      '_categorySet%sList': Category.ListSetter,
+      '_setDefault%s': Category.DefaultSetter,
+      '_categorySetDefault%s': Category.DefaultSetter,
+      '_set%sSet': Category.SetSetter,
+      '_categorySet%sSet': Category.SetSetter,
       '_set%sValue': Value.Setter,
       '_categorySet%sValue': Value.Setter,
       '_set%sValueList': Value.ListSetter,
@@ -172,7 +184,7 @@ class CategoryProperty(XMLObject):
 
     StandardProperty.applyPropertyOnAccessorHolder(
                       accessor_holder=accessor_holder,
-                      portal=category_tool,
+                      portal=category_tool.getPortalObject(),
                       reference='%s_free_text' % category_id,
                       elementary_type='text',
                       multivalued=False,
@@ -188,45 +200,45 @@ class CategoryProperty(XMLObject):
                                                 Permissions.ModifyPortalContent)
 
     # Actually create accessors
-    uppercase_reference = UpperCase(category_id)
+    uppercase_category_id = UpperCase(category_id)
 
     # three special cases
-    accessor = Category.Tester('has' + uppercase_reference, id)
+    accessor = Category.Tester('has' + uppercase_category_id, category_id)
     accessor_holder.registerAccessor(accessor, read_permission)
 
-    accessor_name = uppercase_reference[0].lower() + uppercase_reference[1:]
-    accessor = Value.ListGetter(accessor_name + 'Values', id)
+    accessor_name = uppercase_category_id[0].lower() + uppercase_category_id[1:]
+    accessor = Value.ListGetter(accessor_name + 'Values', category_id)
     accessor_holder.registerAccessor(accessor, read_permission)
-    accessor = Value.IdListGetter(accessor_name + 'Ids', id)
+    accessor = Value.IdListGetter(accessor_name + 'Ids', category_id)
     accessor_holder.registerAccessor(accessor, read_permission)
 
     # then getters
     for id_format, accessor_class in cls.getter_definition_dict.iteritems():
-      accessor_name = id_format % uppercase_reference
+      accessor_name = id_format % uppercase_category_id
 
-      public_accessor = accessor_class(accessor_name, id)
+      public_accessor = accessor_class(accessor_name, category_id)
       accessor_holder.registerAccessor(public_accessor, read_permission)
 
       # create the private getter on the fly instead of having a definition dict
       # that's twice the size for the same info
       accessor_name = '_category' + accessor_name[0].upper() + accessor_name[1:]
-      private_accessor = accessor_class(accessor_name, id)
+      private_accessor = accessor_class(accessor_name, category_id)
       accessor_holder.registerAccessor(private_accessor, read_permission)
 
     # and setters
     for id_format, accessor_class in cls.setter_definition_dict.iteritems():
-      accessor_name = id_format % uppercase_reference
+      accessor_name = id_format % uppercase_category_id
 
-      accessor = accessor_class(accessor_name, id)
+      accessor = accessor_class(accessor_name, category_id)
       accessor_holder.registerAccessor(accessor, write_permission)
+
+    accessor_holder._categories.append(category_id)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'applyOnAccessorHolder')
   def applyOnAccessorHolder(self, accessor_holder, expression_context, portal):
     reference = self.getReference()
     if reference is not None:
-      accessor_holder._categories.append(reference)
-      category_tool = getattr(portal, 'portal_categories', None)
       self.applyPropertyOnAccessorHolder(accessor_holder,
                                          reference,
-                                         category_tool)
+                                         getattr(portal, 'portal_categories', None))

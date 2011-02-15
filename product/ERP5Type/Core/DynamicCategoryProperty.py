@@ -86,4 +86,3 @@ class DynamicCategoryProperty(CategoryProperty):
         self.applyPropertyOnAccessorHolder(accessor_holder,
                                            category_id,
                                            category_tool)
-        accessor_holder._categories.append(category_id)
