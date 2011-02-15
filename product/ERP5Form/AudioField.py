@@ -13,10 +13,10 @@ class AudioWidget(Widget.TextWidget):
           ['audio_controls', 'audio_error_message', 'audio_loop', \
               'audio_preload', 'audio_autoplay', 'js_enabled', 'audio_player']
 
-  audio_controls = fields.StringField('audio_controls',
+  audio_controls = fields.CheckBoxField('audio_controls',
                          title='Audio Controls',
                          description=("Controls to be used in Audio Player."),
-                         default='controls',
+                         default=1,
                          required=0)
 
   audio_error_message = fields.StringField('audio_error_message',
@@ -26,25 +26,25 @@ class AudioWidget(Widget.TextWidget):
                          default='Your browser does not support audio tag.',
                          required=0)
 
-  audio_loop = fields.StringField('audio_loop',
+  audio_loop = fields.CheckBoxField('audio_loop',
                          title='Audio Loop',
                          description=("Specifies that the audio file \
           will start over again, every time it is finished."),
-                         default='none',
+                         default=0,
                          required=0)
 
-  audio_preload = fields.StringField('audio_preload',
+  audio_preload = fields.CheckBoxField('audio_preload',
                          title='Audio Preload',
                          description=("Configure that you would like to \
       start downloading the audio file as soon as possible."),
-                         default='preload',
+                         default=1,
                          required=0)
 
-  audio_autoplay = fields.StringField('audio_autoplay',
+  audio_autoplay = fields.CheckBoxField('audio_autoplay',
                          title='Audio Autoplay',
                          description=("Configure that you would like to \
       start downloading and playing the audio file as soon as possible."),
-                         default='',
+                         default=0,
                          required=0)
 
   js_enabled = fields.CheckBoxField('js_enabled',
@@ -71,14 +71,20 @@ class AudioWidget(Widget.TextWidget):
       return ''
     audio_player = field.get_value('audio_player')
     if audio_player == 'html5_audio':
+      extra_kw = {}
+      if field.get_value('audio_autoplay'):
+        extra_kw['autoplay']='autoplay'
+      if field.get_value('audio_controls'):
+        extra_kw['controls']='controls'
+      if field.get_value('audio_loop'):
+        extra_kw['loop']='loop'
+      if field.get_value('audio_preload'):
+        extra_kw['preload']='preload'
       return Widget.render_element("audio",
                               src=value,
                               extra=field.get_value('extra'),
-                              controls=field.get_value('audio_controls'),
-                              loop=field.get_value('audio_loop'),
-                              preload=field.get_value('audio_preload'),
-                              autoplay=field.get_value('audio_autoplay'),
-                              contents=field.get_value('audio_error_message'))
+                              contents=field.get_value('audio_error_message'),
+                              **extra_kw)
     elif audio_player == 'flowplayer':
       a_element = Widget.render_element("a",
                         href="%s" % value,

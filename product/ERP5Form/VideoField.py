@@ -14,10 +14,10 @@ class VideoWidget(Widget.TextWidget):
               'video_width', 'video_height', 'video_preload', \
               'video_autoplay', 'js_enabled', 'video_player']
 
-  video_controls = fields.StringField('video_controls',
+  video_controls = fields.CheckBoxField('video_controls',
                          title='Video Controls',
                          description=("Controls to be used in Video Player."),
-                         default='controls',
+                         default=1,
                          required=0)
 
   video_error_message = fields.StringField('video_error_message',
@@ -27,11 +27,11 @@ class VideoWidget(Widget.TextWidget):
                          default='Your browser does not support video tag.',
                          required=0)
 
-  video_loop = fields.StringField('video_loop',
+  video_loop = fields.CheckBoxField('video_loop',
                          title='Video Loop',
                          description=("Specifies that the video file \
           will start over again, every time it is finished."),
-                         default='none',
+                         default=0,
                          required=0)
 
   video_width = fields.IntegerField('video_width',
@@ -48,18 +48,18 @@ class VideoWidget(Widget.TextWidget):
                              default=85,
                              required=0)
 
-  video_preload = fields.StringField('video_preload',
+  video_preload = fields.CheckBoxField('video_preload',
                          title='Video Preload',
                          description=("Configure that you would like to \
       start downloading the video file as soon as possible."),
-                         default='preload',
+                         default=1,
                          required=0)
 
-  video_autoplay = fields.StringField('video_autoplay',
+  video_autoplay = fields.CheckBoxField('video_autoplay',
                          title='Video Autoplay',
                          description=("Configure that you would like to \
       start downloading and playing the video file as soon as possible."),
-                         default='',
+                         default=0,
                          required=0)
 
   js_enabled = fields.CheckBoxField('js_enabled',
@@ -86,16 +86,22 @@ class VideoWidget(Widget.TextWidget):
       return ''
     video_player = field.get_value('video_player')
     if video_player == 'html5_video':
+      extra_kw = {}
+      if field.get_value('video_autoplay'):
+        extra_kw['autoplay']='autoplay'
+      if field.get_value('video_controls'):
+        extra_kw['controls']='controls'
+      if field.get_value('video_loop'):
+        extra_kw['loop']='loop'
+      if field.get_value('video_preload'):
+        extra_kw['preload']='preload'
       return Widget.render_element("video",
                         src=value,
                         extra=field.get_value('extra'),
-                        controls=field.get_value('video_controls'),
-                        loop=field.get_value('video_loop'),
                         width=field.get_value('video_width'),
                         height=field.get_value('video_height'),
-                        preload=field.get_value('video_preload'),
-                        autoplay=field.get_value('video_autoplay'),
-                        contents=field.get_value('video_error_message'))
+                        contents=field.get_value('video_error_message'),
+                        **extra_kw)
     elif video_player == 'flowplayer':
       a_element = Widget.render_element("a",
                         href="%s" % value,
