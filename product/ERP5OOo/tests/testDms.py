@@ -1961,31 +1961,19 @@ return 1
     self.assertTrue('png' in presentation.getTargetFormatList())
   
   @expectedFailure
-  def test_convertWebPageToImageOnTraversal(self):
+  def test_convertWebPageWithEmbeddedZODBImageToImageOnTraversal(self):
     """
-    Test converting to image Web Page portal types on traversal i.e.:
-    - web_page_module/1?quality=100&display=xlarge&format=jpeg
-    
-    Test Web Page cusing embedded Images into ZODB case (in its HTML body)
-    
-    XXX: when fixed should become part of test_convertToImageOnTraversal (only traverse part)
+    Test Web Page using embedded Images into ZODB case (in its HTML body)
     """
-    display = 'thumbnail'
-    preffered_size_for_display = self.getPreferences(display)
-    convert_kw = {'display':display, 
+    convert_kw = {'display':'thumbnail', 
                   'format':'jpeg', 
                   'quality':100}
     web_page_document = self.portal.web_page_module.newContent(portal_type="Web Page")
-    web_page_document.setTextContent('<b> test </b>')
+    # use ERP5's favourite.png"
+    web_page_document.setTextContent('<b> test </b><img src="images/favourite.png"/>')
     self.stepTic()
     
     web_page_document_url = '%s/%s' %(self.portal.absolute_url(), web_page_document.getRelativeUrl())
-    web_page_image_size, web_page_file_size = self.getURLSizeList(web_page_document_url, **convert_kw)
-    self.assertTrue(max(preffered_size_for_display) - max(web_page_image_size) <= 1)
-    
-    # set embedded Image which exists in ERP5 and check we can produce a thuumbnail of a Web Page
-    web_page_document.setTextContent('<b> test </b><img src="images/favourite.png"/>')
-    self.stepTic()
     web_page_image_size, web_page_file_size = self.getURLSizeList(web_page_document_url, **convert_kw)
 
   def test_convertToImageOnTraversal(self):
@@ -1995,7 +1983,7 @@ return 1
      - document_module/1?quality=100&display=large&format=jpeg
      - document_module/1?quality=10&display=large&format=jpeg
      - document_module/1?display=large&format=jpeg
-     - etc ...
+     - web_page_module/1?quality=100&display=xlarge&format=jpeg
     """
     # Create OOo document
     ooo_document = self.portal.document_module.newContent(portal_type='Presentation')
@@ -2009,11 +1997,15 @@ return 1
     image_document = self.portal.image_module.newContent(portal_type='Image')
     upload_file = makeFileUpload('TEST-en-002.png')
     image_document.edit(file=upload_file)
+    
+    web_page_document = self.portal.web_page_module.newContent(portal_type="Web Page")
+    web_page_document.setTextContent('<b> test </b>')    
     self.stepTic()
 
     ooo_document_url = '%s/%s' %(self.portal.absolute_url(), ooo_document.getRelativeUrl())
     pdf_document_url = '%s/%s' %(self.portal.absolute_url(), pdf_document.getRelativeUrl())
     image_document_url = '%s/%s' %(self.portal.absolute_url(), image_document.getRelativeUrl())
+    web_page_document_url = '%s/%s' %(self.portal.absolute_url(), web_page_document.getRelativeUrl())
    
     for display in ('nano', 'micro', 'thumbnail', 'xsmall', 'small', 'medium', 'large', 'xlarge',):
       max_tollerance_px = 1
@@ -2036,9 +2028,14 @@ return 1
         # Image
         image_document_image_size, image_document_file_size = self.getURLSizeList(image_document_url, **convert_kw)
         self.assertTrue(max(preffered_size_for_display) - max(image_document_image_size) <= max_tollerance_px)
+        
+        # Web Page
+        web_page_image_size, web_page_file_size = self.getURLSizeList(web_page_document_url, **convert_kw)
+        self.assertTrue(max(preffered_size_for_display) - max(web_page_image_size) <= max_tollerance_px)
+        
 
     # test changing image quality will decrease its file size
-    for url in (image_document_url, pdf_document_url, ooo_document_url):
+    for url in (image_document_url, pdf_document_url, ooo_document_url, web_page_document_url):
       convert_kw = {'display':'xlarge', \
                     'format':'jpeg', \
                     'quality':100}
