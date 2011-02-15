@@ -217,5 +217,19 @@ class PropertySheet(Folder):
   security.declareProtected(Permissions.AccessContentsInformation,
                             'applyOnAccessorHolder')
   def applyOnAccessorHolder(self, accessor_holder, expression_context, portal):
-    for property in self.contentValues():
-      property.applyOnAccessorHolder(accessor_holder, expression_context, portal)
+    # Accessor generation used to first generate accessors for
+    # properties, *then* accessors for categories only if the latter
+    # accessors have not been defined by the former (by using
+    # 'hasattr'). As the 'hasattr'es have been removed, the reverse
+    # operation is performed to maintain backward-compatibility
+    property_definition_list = []
+    for property_definition in self.contentValues():
+      if property_definition.getPortalType().endswith('Category Property'):
+        property_definition_list.insert(0, property_definition)
+      else:
+        property_definition_list.append(property_definition)
+
+    for property_definition in property_definition_list:
+      property_definition.applyOnAccessorHolder(accessor_holder,
+                                                expression_context,
+                                                portal)
