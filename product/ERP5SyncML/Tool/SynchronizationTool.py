@@ -2243,7 +2243,8 @@ class SynchronizationTool(BaseTool):
           #if the object exist:
             conduit.deleteNode(xml=data_subnode, object=destination,
                                object_id=document.getId(),
-                               signature=signature,)
+                               signature=signature,
+                               domain=domain)
             subscriber._delObject(gid)
           xml_confirmation_list.append(self.SyncMLConfirmation(
                                                          cmd_id=cmd_id,
