@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts95876458.14</string> </value>
+            <value> <string>ts97860745.08</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -76,7 +76,7 @@ function createCookie(name, value, days, path) {\n
 }\n
 \n
 function updater(url, box_relative_url, dom_id, \n
-                 parent_web_section_url, editable_mode, additionnal_request_params){\n
+                 editable_mode, additionnal_request_params){\n
   /* Get content from server */\n
   request_params = {};\n
   additionnal_request_params = typeof(additionnal_request_params) != \'undefined\' ? additionnal_request_params : [];\n
@@ -110,7 +110,6 @@ function updater(url, box_relative_url, dom_id, \n
          function (key, value){request_params[key] = additionnal_request_params[key];});\n
          \n
   request_params["box_relative_url"] = box_relative_url;\n
-  request_params["parent_web_section_url"] = parent_web_section_url; \n
   request_params["is_gadget_mode:int"] = 1; \n
   request_params["editable_mode:int"] = editable_mode; \n
   \n
@@ -488,7 +487,7 @@ $(document).ready(initialize);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>18185</int> </value>
+            <value> <int>18091</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

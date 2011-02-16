@@ -50,22 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if not ignore_security_check:\n
-  pass\n
-  #if context.portal_membership.isAnonymousUser():\n
-  #  # anonymous user is not allowed to use AJAX gadgets\n
-  #  return """alert("%s");""" %context.Base_translateString(\n
-  #                              "This function is available only for logged in users!")\n
-\n
-# pass current_web_section (if available so we can send it to server in next\n
-# asynchronous request and server can set it in context.REQUEST\n
-from Products.ERP5Type.JSONEncoder import encodeInJson\n
-current_web_section_url = \'\'\n
-current_web_section = context.REQUEST.get(\'current_web_section\', context.getWebSiteValue())\n
-if current_web_section is not None:\n
-  current_web_section_url = current_web_section.getRelativeUrl()\n
-if params is None:\n
-  params = {}\n
+            <value> <string>from Products.ERP5Type.JSONEncoder import encodeInJson\n
 \n
 # sometime instead of real knowledge pad object we may get just its relative url \n
 # and actually that\'s what we care for\n
@@ -81,20 +66,20 @@ if editable_mode in (\'True\', True, 1):\n
   editable_mode = 1\n
 else:\n
   editable_mode = 0\n
-js_update_code = """updater(\'%s\', \'%s\', \'%s\', \'%s\', \'%s\', %s);""" %(url, box_relative_url, dom_id, \n
-                                                                 current_web_section_url, editable_mode, encodeInJson(params))\n
+js_update_code = """updater(\'%s\', \'%s\', \'%s\', \'%s\', %s);""" %(url, box_relative_url, dom_id, \n
+                                                              editable_mode, encodeInJson(params))\n
 if box.getValidationState()==\'invisible\':\n
   # we can generate \n
-  s = """invisible_gadgets["%s"]="%s";""" %(dom_id, js_update_code)\n
+  javascript_code = """invisible_gadgets["%s"]="%s";""" %(dom_id, js_update_code)\n
 else:\n
-  s = js_update_code\n
+  javascript_code = js_update_code\n
 \n
-return s\n
+return javascript_code\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>url, box, dom_id, params=None, ignore_security_check=0</string> </value>
+            <value> <string>url, box, dom_id, params={}, ignore_security_check=0</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
