@@ -65,7 +65,7 @@ class TestListBox(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     # Use the same framework as the functional testing for convenience.
     # This adds some specific portal types and skins.
-    return ('erp5_ui_test',)
+    return ('erp5_core_proxy_field_legacy', 'erp5_ui_test',)
 
   def getTitle(self):
     return "ListBox"

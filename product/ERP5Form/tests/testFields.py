@@ -460,6 +460,7 @@ class TestListField(ERP5TypeTestCase):
     Tuple of Business Templates we need to install
     """
     return (
+      'erp5_core_proxy_field_legacy',
       'erp5_base',
     )
 

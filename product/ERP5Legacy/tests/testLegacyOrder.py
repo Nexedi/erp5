@@ -60,7 +60,8 @@ class TestOrderMixin(object):
   def getBusinessTemplateList(self):
     """
     """
-    return ('erp5_base', 'erp5_simulation', 'erp5_simulation_legacy',
+    return ('erp5_core_proxy_field_legacy',
+            'erp5_base', 'erp5_simulation', 'erp5_simulation_legacy',
             'erp5_pdm', 'erp5_trade', 'erp5_apparel', 'erp5_project',
             'erp5_trade_simulation_legacy', 'erp5_project_simulation_legacy',
             'erp5_administration')

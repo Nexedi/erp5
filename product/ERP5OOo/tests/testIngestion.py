@@ -82,7 +82,7 @@ class TestIngestion(ERP5TypeTestCase):
     """
       Return the list of required business templates.
     """
-    return ('erp5_base',
+    return ('erp5_core_proxy_field_legacy', 'erp5_base',
             'erp5_ingestion', 'erp5_ingestion_mysql_innodb_catalog',
             'erp5_web', 'erp5_crm', 'erp5_dms')
 

@@ -47,7 +47,8 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
   content_type = None
 
   def getBusinessTemplateList(self):
-    return ('erp5_base', 'erp5_ods_style', 'erp5_odt_style',)
+    return ('erp5_core_proxy_field_legacy',
+            'erp5_base', 'erp5_ods_style', 'erp5_odt_style',)
 
   def afterSetUp(self):
     if not self.skin:
