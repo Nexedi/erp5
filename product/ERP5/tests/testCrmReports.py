@@ -245,7 +245,7 @@ class CrmTestCase(ERP5ReportTestCase):
 
   def getBusinessTemplateList(self):
     """Returns list of BT to be installed."""
-    return ('erp5_base', 'erp5_crm', )
+    return ('erp5_core_proxy_field_legacy', 'erp5_base', 'erp5_crm', )
 
 
 class TestCrmReports(CrmTestCase):
