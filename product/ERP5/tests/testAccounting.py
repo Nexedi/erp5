@@ -233,7 +233,8 @@ class AccountingTestCase(ERP5TypeTestCase):
     # a dependancy of erp5_accounting_ui_test, because it's used to test
     # standalone accounting and only installs erp5_accounting_ui_test to have
     # some default content created.
-    return ('erp5_base', 'erp5_pdm', 'erp5_simulation', 'erp5_trade',
+    return ('erp5_core_proxy_field_legacy',
+            'erp5_base', 'erp5_pdm', 'erp5_simulation', 'erp5_trade',
             'erp5_accounting', 'erp5_project', 'erp5_accounting_ui_test',
             'erp5_ods_style', 'erp5_simulation_test')
 
