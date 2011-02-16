@@ -60,12 +60,11 @@ else:\n
   box_relative_url = box\n
 \n
 editable_mode = context.REQUEST.get(\'editable_mode\', 0)\n
-# dirty hack to make sure that we catch all possible ways \n
-# of setting editable mode in REQUEST\n
-if editable_mode in (\'True\', True, 1):\n
+if editable_mode:\n
   editable_mode = 1\n
 else:\n
   editable_mode = 0\n
+\n
 js_update_code = """updater(\'%s\', \'%s\', \'%s\', \'%s\', %s);""" %(url, box_relative_url, dom_id, \n
                                                               editable_mode, encodeInJson(params))\n
 if box.getValidationState()==\'invisible\':\n
