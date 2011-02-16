@@ -250,7 +250,7 @@
                  class = "listbox_first_page"\n
                  tal:attributes="value string:|&lt;;\n
                                  onclick python:\n
-                                 real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params);\n
+                                 real_context.KnowledgePad_generateAjaxCall(context_url,box,dom_id,params);\n
                                  class python: test(is_default_listbox_field, \'listbox_first_page\', \'listbox_first_page %s_first_page\' %field_id)"\n
                  i18n:domain="ui" i18n:attributes="title">\n
             <span class="image"/>\n
@@ -261,7 +261,7 @@
                   type="button"\n
                   class="listbox_previous_page"\n
                   tal:attributes="value string:&lt;&lt;;\n
-                                  onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params);\n
+                                  onclick python: real_context.KnowledgePad_generateAjaxCall(context_url,box,dom_id,params);\n
                                   class python: test(is_default_listbox_field, \'listbox_previous_page\', \'listbox_previous_page %s_previous_page\' %field_id)"\n
                   i18n:domain="ui" i18n:attributes="title">\n
             <span class="image"/>\n
@@ -279,7 +279,7 @@
               name="nextPage"\n
               type="button"\n
               class="listbox_next_page"\n
-              tal:attributes="onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params);\n
+              tal:attributes="onclick python: real_context.KnowledgePad_generateAjaxCall(context_url,box,dom_id,params);\n
                               class python: test(is_default_listbox_field, \'listbox_next_page\', \'listbox_next_page %s_next_page\' %field_id)"\n
               i18n:domain="ui" i18n:attributes="title">\n
             <span class="image"/>\n
@@ -289,7 +289,7 @@
                name="lastPage"\n
                type="button"\n
                class="listbox_last_page"\n
-               tal:attributes="onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params);\n
+               tal:attributes="onclick python: real_context.KnowledgePad_generateAjaxCall(context_url,box,dom_id,params);\n
                                class python: test(is_default_listbox_field, \'listbox_last_page\', \'listbox_last_page %s_last_page\' %field_id)"\n
                i18n:domain="ui" i18n:attributes="title">\n
             <span class="image"/>\n
@@ -320,7 +320,7 @@
                            class python: test(is_default_listbox_field, "listbox_set_page", "listbox_set_page %s_set_page" %field_id);\n
                            value python:here.current_page + 1;\n
                            size python:len(str(here.total_pages));\n
-                           onkeypress python:"if(event.keyCode==13){" + real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box,dom_id,params).replace("\\"this.value\\"","this.value")+ "return false;;}"\'/>\n
+                           onkeypress python:"if(event.keyCode==13){" + real_context.KnowledgePad_generateAjaxCall(context_url,box,dom_id,params).replace("\\"this.value\\"","this.value")+ "return false;;}"\'/>\n
     / <tal:block content="here/total_pages" />\n
   </tal:block>\n
 \n
@@ -338,7 +338,7 @@
   <tal:block metal:define-macro="text_link_page_navigation_asynchronous">\n
     <tal:block tal:repeat="page_index page_index_list ">\n
       <a tal:define="params python: {field_id+\'_setPage:method\':\'\',field_id+\'_page_start\':page_index,\'list_style\':list_style, \'list_selection_name\':selection_name, \'listbox_uid\':[]}"\n
-         tal:attributes="onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params);\n
+         tal:attributes="onclick python: real_context.KnowledgePad_generateAjaxCall(context_url,box,dom_id,params);\n
                          class python: test(page_index==current_page, \'selected\', \'\');\n
                          title string:Page ${page_index}"\n
          tal:content="page_index"/>\n
@@ -349,12 +349,16 @@
 ]]></unicode> </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>ListBox_asHTMLLibrary</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
-            <value> <string>utf-8</string> </value>
+            <value> <string>iso-8859-15</string> </value>
         </item>
       </dictionary>
     </pickle>
