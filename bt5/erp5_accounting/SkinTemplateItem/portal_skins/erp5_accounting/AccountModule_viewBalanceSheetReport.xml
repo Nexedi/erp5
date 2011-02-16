@@ -78,7 +78,7 @@ dQEAAAAA</string> </value>
   tal:attributes=\'dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")\'\n
   tal:define=\'at_date request/at_date/latestTime;\n
               at_date_previous_period python:modules["DateTime"].DateTime(at_date.year() - 1, at_date.month(), at_date.day()).latestTime();\n
-              date_formatter nocall:here/Base_viewFieldLibrary/my_date/render_pdf;\n
+              date_formatter nocall:here/Base_viewAccountingReport/my_date/render_pdf;\n
               from_date python:context.Base_getAccountingPeriodStartDateForSectionCategory(section_category=request["section_category"], date=at_date);\n
               from_date_previous_period python:context.Base_getAccountingPeriodStartDateForSectionCategory(section_category=request["section_category"], date=at_date_previous_period);\n
               portal_type here/getPortalAccountingMovementTypeList;\n
@@ -975,8 +975,7 @@ dQEAAAAA</string> </value>
     </office:spreadsheet>\n
   </office:body>\n
 </office:document-content><!-- vim: filetype=xml tw=1000 foldmethod=marker\n
--->\n
-
+-->
 
 ]]></unicode> </value>
         </item>
@@ -1002,7 +1001,7 @@ dQEAAAAA</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <unicode></unicode> </value>
         </item>
       </dictionary>
     </pickle>
