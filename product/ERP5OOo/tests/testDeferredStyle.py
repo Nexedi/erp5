@@ -54,7 +54,8 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     return 'Test Deferred Style'
 
   def getBusinessTemplateList(self):
-    return ('erp5_base', 'erp5_ods_style',
+    return ('erp5_core_proxy_field_legacy',
+            'erp5_base', 'erp5_ods_style',
             'erp5_odt_style', 'erp5_deferred_style',)
 
   def afterSetUp(self):
