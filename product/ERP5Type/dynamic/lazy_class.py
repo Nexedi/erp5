@@ -208,10 +208,10 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
 
     raise AttributeError
 
-  def generatePortalTypeAccessors(cls, site):
+  def generatePortalTypeAccessors(cls, site, portal_type_category_list):
     createAllCategoryAccessors(site,
                                cls,
-                               cls._categories,
+                               portal_type_category_list,
                                createExpressionContext(site, site))
     # make sure that category accessors from the portal type definition
     # are generated, no matter what
@@ -305,10 +305,12 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
               "Could not access Portal Type Object for type %r"
               % portal_type, error=sys.exc_info())
           base_tuple = (ERP5BaseBroken, )
+          portal_type_category_list = []
           attribute_dict = dict(_categories=[], constraints=[])
           interface_list = []
         else:
-          base_tuple, interface_list, attribute_dict = class_definition
+          base_tuple, portal_type_category_list, \
+            interface_list, attribute_dict = class_definition
 
         klass.__isghost__ = False
         klass.__bases__ = base_tuple
@@ -325,7 +327,7 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
         # because they dont have accessors, and will mess up
         # workflow methods. We KNOW that we will re-load this type anyway
         if len(base_tuple) > 1:
-          klass.generatePortalTypeAccessors(site)
+          klass.generatePortalTypeAccessors(site, portal_type_category_list)
           # need to set %s__roles__ for generated methods
           cls.setupSecurity()
 

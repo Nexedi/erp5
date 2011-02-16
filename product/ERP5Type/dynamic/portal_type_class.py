@@ -163,6 +163,8 @@ def generatePortalTypeClass(site, portal_type_name):
 
   Returns tuple with 4 items:
     - base_tuple: a tuple of classes to be used as __bases__
+    - base_category_list: categories defined on the portal type
+        (and portal type only: this excludes property sheets)
     - interface_list: list of zope interfaces the portal type implements
     - attribute dictionary: any additional attributes to put on the class
   """
@@ -170,6 +172,7 @@ def generatePortalTypeClass(site, portal_type_name):
 
   global core_portal_type_class_dict
 
+  portal_type_category_list = []
   attribute_dict = dict(portal_type=portal_type_name,
                         _categories=[],
                         constraints=[])
@@ -189,7 +192,7 @@ def generatePortalTypeClass(site, portal_type_name):
 
       # Don't do anything else, just allow to load fully the outer
       # portal type class
-      return ((klass,), [], attribute_dict)
+      return ((klass,), [], [], attribute_dict)
 
   # Do not use __getitem__ (or _getOb) because portal_type may exist in a
   # type provider other than Types Tool.
@@ -212,7 +215,8 @@ def generatePortalTypeClass(site, portal_type_name):
 
     mixin_list = portal_type.getTypeMixinList()
     interface_list = portal_type.getTypeInterfaceList()
-    attribute_dict['_categories'] = portal_type.getTypeBaseCategoryList()
+    portal_type_category_list = portal_type.getTypeBaseCategoryList()
+    attribute_dict['_categories'] = portal_type_category_list[:]
   else:
     LOG("ERP5Type.dynamic", WARNING,
         "Cannot find a portal type definition for '%s', trying to guess..."
@@ -346,6 +350,7 @@ def generatePortalTypeClass(site, portal_type_name):
   #        % (portal_type_name, repr(baseclasses)))
 
   return (tuple(base_class_list),
+          portal_type_category_list,
           interface_class_list,
           attribute_dict)
 
