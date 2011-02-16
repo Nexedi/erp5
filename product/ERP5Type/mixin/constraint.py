@@ -124,7 +124,7 @@ class ConstraintMixin(Predicate):
 
     XXX: remove as soon as the code is stable
     """
-    return self.asContext()
+    return self.asContext().aq_base
 
   def _getExpressionValue(self, obj, expression_string):
     """
@@ -243,4 +243,4 @@ class ConstraintMixin(Predicate):
   security.declareProtected(Permissions.AccessContentsInformation,
                             'applyOnAccessorHolder')
   def applyOnAccessorHolder(self, accessor_holder, expression_context, portal):
-    accessor_holder.constraints.append(self)
+    accessor_holder.constraints.append(self.asContext().aq_base)
