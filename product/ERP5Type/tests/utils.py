@@ -97,6 +97,10 @@ class DummyMailHostMixin(object):
     cls._previous_message = ()
     cls._message_list = []
 
+  @classmethod
+  def getUid(cls):
+    return 0
+
 class DummyMailHost(DummyMailHostMixin, MailHost):
   pass
 
