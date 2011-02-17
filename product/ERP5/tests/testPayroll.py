@@ -227,7 +227,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
            )
 
   def getBusinessTemplateList(self):
-    return TestTradeModelLineMixin.getBusinessTemplateList(self) + ('erp5_payroll', )
+    return TestTradeModelLineMixin.getBusinessTemplateList(self) + ('erp5_payroll', 'erp5_core_proxy_field_legacy')
 
   def stepCreatePriceCurrency(self, sequence):
     sequence.edit(price_currency = self.createResource('Currency',
