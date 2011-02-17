@@ -555,7 +555,6 @@ class TestOOoImport(TestOOoImportMixin):
 
   def test_02_ImportFileBlankLine(self):
     #Simulate import of an OOo file with blank lines.
-    #self.logMessage('Simulate import of an OOo file with blank lines')
     sequence_list = SequenceList()
     step_list = [  'stepImportFileWithBlankLine'
                   ,'Tic'
@@ -574,7 +573,6 @@ class TestOOoImport(TestOOoImportMixin):
     sequence_list.play(self)
 
   def test_04_ImportFileWithCategory(self):
-    #self.logMessage('Simulate import of an OOo file with blank lines')
     sequence_list = SequenceList()
     step_list = [  'stepImportFileWithCategory'
                   ,'Tic'
@@ -585,7 +583,6 @@ class TestOOoImport(TestOOoImportMixin):
     sequence_list.play(self)
 
   def test_05_ImportOrganisation(self):
-   #self.logMessage('Simulate import of an OOo file with blank lines')
     sequence_list = SequenceList()
     step_list = [  'stepImportOrganisation'
                   ,'Tic'
@@ -596,7 +593,6 @@ class TestOOoImport(TestOOoImportMixin):
     sequence_list.play(self)
 
   def test_06_AuthorImportFile(self):
-    #self.logMessage('Simulate import of an OOo file with blank lines')
     sequence_list = SequenceList()
     step_list = [  'stepAuthorImportFile'
                   ,'Tic'
@@ -667,7 +663,6 @@ class TestOOoImport(TestOOoImportMixin):
     sequence_list.play(self)
 
 #  def test_12_ImportBigFile_2(self):
-#    #self.logMessage('Simulate import of an OOo file with blank lines')
 #    sequence_list = SequenceList()
 #    step_list = [  'stepImportBigFile_2'
 #                  ,'Tic'
