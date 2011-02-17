@@ -85,7 +85,7 @@
 <!-- Test listbox sub search -->\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>SearchableText</td>\n
+  <td>full_text</td>\n
   <td>Pouet</td>\n
 </tr>\n
 <tr>\n
@@ -95,7 +95,7 @@
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>SearchableText</td>\n
+  <td>full_text</td>\n
   <td>Pouet_NO_EXISTS</td>\n
 </tr>\n
 <tr>\n
@@ -110,12 +110,12 @@
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>SearchableText</td>\n
+  <td>full_text</td>\n
   <td>Pouet_NO_EXISTS</td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>SearchableText</td>\n
+  <td>full_text</td>\n
   <td>Pouet</td>\n
 </tr>\n
 <tr>\n
@@ -133,8 +133,7 @@
 \n
 </tbody></table>\n
 </body>\n
-</html>\n
-
+</html>
 
 ]]></unicode> </value>
         </item>
