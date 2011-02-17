@@ -74,6 +74,7 @@ from zLOG import LOG, DEBUG
 
 from Products.ERP5Type.tests.backportUnittest import SetupSiteError
 from Products.ERP5Type.tests.utils import DummyMailHostMixin, parseListeningAddress
+from Products.ERP5.Document.BusinessTemplate import BusinessTemplateMissingDependency
 
 # Quiet messages when installing products
 install_product_quiet = 1
@@ -894,6 +895,12 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
         bt = template_tool.download(url)
         if not quiet:
           ZopeTestCase._print('(imported in %.3fs) ' % (time.time() - start))
+          # For unit test, we accept installing business templates with
+          # missing a part of dependencies.
+          try:
+            bt.checkDependencies()
+          except BusinessTemplateMissingDependency:
+            ZopeTestCase._print('(some dependencies are missing) ')
         install_kw = None
         if get_install_kw:
           install_kw = {}
