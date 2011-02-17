@@ -64,7 +64,8 @@
               </div>\n
               <tal:block tal:condition="python: here.getPortalObject().restrictedTraverse(\'portal_gadgets\', None) is not None">\n
                   <tal:block tal:condition="exists:here/ERP5Site_viewHomeAreaRenderer"\n
-                            tal:replace="structure here/ERP5Site_viewHomeAreaRenderer" />\n
+                            tal:replace="structure python: here.ERP5Site_viewHomeAreaRenderer(create_default_pad=True, \n
+                                                                                              make_security_check=True)" />\n
             </tal:block>\n
             </div>\n
             </div>\n
@@ -73,8 +74,7 @@
       </tal:block>\n
     </tal:block>\n
   </metal:block>\n
-</tal:block>\n
-
+</tal:block>
 
 ]]></unicode> </value>
         </item>
@@ -92,7 +92,7 @@
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
-            <value> <string>utf-8</string> </value>
+            <value> <string>iso-8859-15</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
