@@ -106,17 +106,17 @@ class TestInvalidationBug(ERP5TypeTestCase):
 
     ### Prepare unit test, to minimize amount of work during critical section
     ## url to create some content using another zope
-    new_content_url = "http://ERP5TypeTestCase:@%s%s/newContent" % (
+    new_content_url = "http://ERP5TypeTestCase:@%s%s/Folder_create" % (
       node_list[0], self.portal.organisation_module.getPath())
     ## prepare freeze/unfreeze of ZEO storage
-    from asyncore import socket_map
     zeo_connection = storage._connection
+    socket_map = zeo_connection._map
     freeze_lock = threading.Lock()
     freeze_lock.acquire()
     def unfreezeStorage():
       socket_map[zeo_connection.fileno()] = zeo_connection
       # wake up asyncore loop to take the new socket into account
-      zeo_connection._pull_trigger()
+      zeo_connection.trigger.pull_trigger()
     # link to ZEO will be unfrozen 1 second after we read 'message' table
     unfreeze_timer = threading.Timer(1, unfreezeStorage)
     unfreeze_timer.setDaemon(True)
