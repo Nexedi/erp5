@@ -143,17 +143,12 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
     @see Products.ERP5Type.Base.Base._propertyMap
     """
     cls.loadClass()
-    property_id_set = set()
-    property_list = []
+    property_dict = {}
     for klass in cls.mro():
       if klass.__module__ == 'erp5.accessor_holder':
         for property in klass._properties:
-          if property['id'] in property_id_set:
-            continue
-          property_id_set.update([property['id']])
-          property_list.append(property)
-
-    return property_list
+          property_dict.setdefault(property['id'], property)
+    return property_dict.values()
 
   def resetAcquisition(cls):
     # First, fill the __get__ slot of the class
