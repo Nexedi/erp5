@@ -24,6 +24,7 @@ from cStringIO import StringIO
 from cPickle import dumps
 from glob import glob
 from warnings import warn
+from ExtensionClass import pmc_init_of
 from ZTUtils import make_query
 
 # XXX make sure that get_request works.
@@ -328,6 +329,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       cls = self.portal.MailHost.__class__
       assert not issubclass(cls, DummyMailHostMixin)
       cls.__bases__ = (DummyMailHostMixin,) + cls.__bases__
+      pmc_init_of(cls)
 
     def _restoreMailHost(self):
       """Restore original Mail Host
@@ -335,6 +337,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       cls = self.portal.MailHost.__class__
       assert cls.__bases__[0] is DummyMailHostMixin
       cls.__bases__ = cls.__bases__[1:]
+      pmc_init_of(cls)
 
     def getDefaultSitePreferenceId(self):
       """Default id, usefull method to override
