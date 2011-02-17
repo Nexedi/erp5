@@ -148,9 +148,6 @@ class TestDeferredConnection(ERP5TypeTestCase):
       except OperationalError, m:
         if m[0] not in hosed_connection:
           raise
-      except:
-        raise # Make sure the test is known to have failed, even if it's not
-              # the expected execution path.
       else:
         self.fail()
     finally:
@@ -168,14 +165,7 @@ class TestDeferredConnection(ERP5TypeTestCase):
     # Artificially cause a connection close.
     self.monkeypatchConnection(connection)
     try:
-      try:
-        transaction.commit()
-      except OperationalError, m:
-        LOG('TestDeferredConnection', 0, 'OperationalError exception raised: %s' % (m, ))
-        self.fail()
-      except:
-        raise # Make sure the test is known to have failed, even if it's not
-              # the expected execution path.
+      transaction.commit()
     finally:
       self.unmonkeypatchConnection(connection)
 
