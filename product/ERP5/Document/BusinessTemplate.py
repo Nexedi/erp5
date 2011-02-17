@@ -5230,9 +5230,17 @@ Business Template is a set of definitions, such as skins, portal types and categ
        are installed. Raise an exception with the list of
        missing dependencies if some are missing
       """
+      missing_dep_list = self.getMissingDependencyList()
+      if len(missing_dep_list) != 0:
+        raise BusinessTemplateMissingDependency, 'Impossible to install, please install the following dependencies before: %s'%repr(missing_dep_list)
+
+    def getMissingDependencyList(self):
+      """
+      Retuns a list of missing dependencies.
+      """
       missing_dep_list = []
       dependency_list = self.getDependencyList()
-      if len(dependency_list)!=0:
+      if len(dependency_list) > 0:
         for dependency_couple in dependency_list:
           dependency_couple_list = dependency_couple.strip().split(' ', 1)
           dependency = dependency_couple_list[0]
@@ -5250,8 +5258,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
                   or (version_restriction not in (None, '') and
                      (not self.portal_templates.compareVersionStrings(installed_bt.getVersion(), version_restriction)))):
             missing_dep_list.append((dependency, version_restriction or ''))
-      if len(missing_dep_list) != 0:
-        raise BusinessTemplateMissingDependency, 'Impossible to install, please install the following dependencies before: %s'%repr(missing_dep_list)
+      return [' '.join([y for y in x if y]) for x in missing_dep_list]
 
     def diffObjectAsHTML(self, REQUEST, **kw):
       """
