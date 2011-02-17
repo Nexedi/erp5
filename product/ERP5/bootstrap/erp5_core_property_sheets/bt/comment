@@ -1,2 +1,0 @@
-1) For now, Filesystem property sheets that instanciate constraints are not imported yet
-2) Over time, this BT will shrink, and Property sheets will move to BTs that strictly require them.
