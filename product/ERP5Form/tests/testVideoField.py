@@ -28,12 +28,6 @@
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Form.VideoField import VideoField
-from AccessControl.SecurityManagement import newSecurityManager
-from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.ERP5Type.Globals import get_request
-from StringIO import StringIO
-from DateTime import DateTime
-
 
 class TestVideoField(ERP5TypeTestCase):
   """Tests Video field
@@ -49,19 +43,19 @@ class TestVideoField(ERP5TypeTestCase):
   def test_render_view(self):
     self.field.values['default'] = 'Video content'
 
-    self.assertEquals('<video preload="preload" src="Video content" controls="controls" height="85" width="160" loop="none" autoplay="" >\nYour browser does not support video tag.</video>', \
-            self.field.render_view(value='Video content'))
+    self.assertEquals('<video preload="preload" src="Video content" controls="controls" height="85" width="160" >\nYour browser does not support video tag.</video>', \
+                      self.field.render_view(value='Video content'))
 
-    self.field.values['video_preload'] = 'none'
-    self.field.values['video_loop'] = 'True'
-    self.field.values['video_controls'] = 'none'
-    self.field.values['video_autoplay'] = 'autoplay'
+    self.field.values['video_preload'] = False
+    self.field.values['video_loop'] = True
+    self.field.values['video_controls'] = False
+    self.field.values['video_autoplay'] = True
     self.field.values['video_error_message'] = 'Another error message'
     self.field.values['video_height'] = 800
     self.field.values['video_width'] = 1280
 
-    self.assertEquals('<video preload="none" src="Another Video content" ' +
-        'controls="none" height="800" width="1280" loop="True" autoplay="autoplay" ' +
+    self.assertEquals('<video src="Another Video content" ' +
+        'height="800" width="1280" loop="loop" autoplay="autoplay" ' +
         '>\nAnother error message</video>', \
             self.field.render_view(value='Another Video content'))
 
