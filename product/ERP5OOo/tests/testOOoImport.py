@@ -127,9 +127,6 @@ class TestOOoImport(TestOOoImportMixin):
     ERP5  test import object list from OOo Document
   """
 
-  # pseudo constants
-  RUN_ALL_TEST = 1
-  QUIET = 0
   ##################################
   ##  ZopeTestCase Skeleton
   ##################################
