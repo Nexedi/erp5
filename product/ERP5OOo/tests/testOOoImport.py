@@ -577,9 +577,8 @@ class TestOOoImport(TestOOoImportMixin):
 
   ##  Tests
   ##################################
-  def test_01_ImportFileLine(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_01_ImportFileLine(self):
     # Simulate import of OOo file Base_importFile for Person Module.
-    if not run: return
     sequence_list = SequenceList()
     step_list = [ 'stepImportRawDataFile'
                  ,'stepCheckActivitiesCount'
@@ -588,12 +587,11 @@ class TestOOoImport(TestOOoImportMixin):
                 ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_02_ImportFileBlankLine(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_02_ImportFileBlankLine(self):
     #Simulate import of an OOo file with blank lines.
     #self.logMessage('Simulate import of an OOo file with blank lines')
-    if not run: return
     sequence_list = SequenceList()
     step_list = [  'stepImportFileWithBlankLine'
                   ,'Tic'
@@ -601,20 +599,18 @@ class TestOOoImport(TestOOoImportMixin):
                  ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_03_ImportNoMapping(self, quiet=QUIET, run=RUN_ALL_TEST):
-    if not run: return
+  def test_03_ImportNoMapping(self):
     sequence_list = SequenceList()
     step_list = [ 'stepImportFileNoMapping'
                 ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_04_ImportFileWithCategory(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_04_ImportFileWithCategory(self):
     #self.logMessage('Simulate import of an OOo file with blank lines')
-    if not run: return
     sequence_list = SequenceList()
     step_list = [  'stepImportFileWithCategory'
                   ,'Tic'
@@ -622,11 +618,10 @@ class TestOOoImport(TestOOoImportMixin):
                 ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_05_ImportOrganisation(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_05_ImportOrganisation(self):
    #self.logMessage('Simulate import of an OOo file with blank lines')
-    if not run: return
     sequence_list = SequenceList()
     step_list = [  'stepImportOrganisation'
                   ,'Tic'
@@ -634,11 +629,10 @@ class TestOOoImport(TestOOoImportMixin):
                 ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_06_AuthorImportFile(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_06_AuthorImportFile(self):
     #self.logMessage('Simulate import of an OOo file with blank lines')
-    if not run: return
     sequence_list = SequenceList()
     step_list = [  'stepAuthorImportFile'
                   ,'Tic'
@@ -646,10 +640,9 @@ class TestOOoImport(TestOOoImportMixin):
                 ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_07_ImportFileWithFreeText(self, quiet=QUIET, run=RUN_ALL_TEST):
-    if not run: return
+  def test_07_ImportFileWithFreeText(self):
     sequence_list = SequenceList()
     step_list = [  'stepImportFileWithFreeText'
                   ,'Tic'
@@ -657,10 +650,9 @@ class TestOOoImport(TestOOoImportMixin):
                 ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_08_ImportFileWithAccentuatedText(self, quiet=QUIET, run=RUN_ALL_TEST):
-    if not run: return
+  def test_08_ImportFileWithAccentuatedText(self):
     sequence_list = SequenceList()
     step_list = [  'stepImportFileWithAccentuatedText'
                   ,'Tic'
@@ -668,10 +660,9 @@ class TestOOoImport(TestOOoImportMixin):
                 ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_09_ImportXLSFile(self, quiet=QUIET, run=RUN_ALL_TEST):
-    if not run: return
+  def test_09_ImportXLSFile(self):
     sequence_list = SequenceList()
     step_list = [ 'stepImportXLSFile'
                  ,'Tic'
@@ -679,10 +670,9 @@ class TestOOoImport(TestOOoImportMixin):
                 ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_10_ImportFileWithDates(self, quiet=QUIET, run=RUN_ALL_TEST):
-    if not run: return
+  def test_10_ImportFileWithDates(self):
     sequence_list = SequenceList()
     step_list = [ 'stepImportFileWithDates'
                  ,'Tic'
@@ -690,10 +680,9 @@ class TestOOoImport(TestOOoImportMixin):
                 ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_11_ImportFloatAndPercentage(self, quiet=QUIET, run=RUN_ALL_TEST):
-    if not run: return
+  def test_11_ImportFloatAndPercentage(self):
     sequence_list = SequenceList()
     step_list = [ 'stepImportFloatsAndPercentage'
                  ,'Tic'
@@ -701,10 +690,9 @@ class TestOOoImport(TestOOoImportMixin):
                 ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_12_ImportBigFile_1(self, quiet=QUIET, run=RUN_ALL_TEST):
-    if not run: return
+  def test_12_ImportBigFile_1(self):
     sequence_list = SequenceList()
     step_list = [  'stepImportBigFile_1'
                   ,'Tic'
@@ -712,12 +700,11 @@ class TestOOoImport(TestOOoImportMixin):
                 ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   '''
-  def test_12_ImportBigFile_2(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_12_ImportBigFile_2(self):
     #self.logMessage('Simulate import of an OOo file with blank lines')
-    if not run: return
     sequence_list = SequenceList()
     step_list = [  'stepImportBigFile_2'
                   ,'Tic'
@@ -725,7 +712,7 @@ class TestOOoImport(TestOOoImportMixin):
                 ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
   '''
 
   # CategoryTool_importCategoryFile tests
