@@ -59,7 +59,7 @@ class CacheEntry(object):
       - None means allways expire
       - 0 means never expire
     """
-    return self.expires_at is None or self.expires_at != 0 and self.expires_at < time()
+    return self.expires_at is None or 0 < self.expires_at <= time()
 
   def getValue(self):
     """ return cached value """ 
