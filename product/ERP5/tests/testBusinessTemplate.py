@@ -6740,53 +6740,52 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ', 0, message)
     sequence_list = SequenceList()
+    sequence_list.addSequenceString("""
+      CreateSkinFolder
+      SetSkinFolderRegistredSelections
+      CreateNewBusinessTemplate
+      UseExportBusinessTemplate
+      AddSkinFolderToBusinessTemplate
+      AddRegistredSelectionToBusinessTemplate
+      BuildBusinessTemplate
+      SaveBusinessTemplate
+      RemoveSkinFolder
+      RemoveBusinessTemplate
+      RemoveAllTrashBins
 
-    sequence_string = '\
-                       CreateSkinFolder \
-                       SetSkinFolderRegistredSelections \
-                       CreateNewBusinessTemplate \
-                       UseExportBusinessTemplate \
-                       AddSkinFolderToBusinessTemplate \
-                       AddRegistredSelectionToBusinessTemplate \
-                       BuildBusinessTemplate \
-                       SaveBusinessTemplate \
-                       RemoveSkinFolder \
-                       RemoveBusinessTemplate \
-                       RemoveAllTrashBins \
-                       \
-                       ImportBusinessTemplate \
-                       UseImportBusinessTemplate \
-                       InstallBusinessTemplate \
-                       Tic \
-                       CheckSkinSelectionAdded \
-                       \
-                       ModifySkinFolder \
-                       \
-                       CopyBusinessTemplate \
-                       Tic \
-                       EditBusinessTemplate \
-                       BuildBusinessTemplate \
-                       CheckBuiltBuildingState \
-                       SaveBusinessTemplate \
-                       \
-                       UnmodifySkinFolder \
-                       \
-                       ImportBusinessTemplate \
-                       Tic \
-                       UseImportBusinessTemplate \
-                       InstallWithoutForceBusinessTemplate \
-                       Tic \
-                       \
-                       CheckModifiedSkinFolderExists \
-                       CheckSkinSelectionAdded \
-                       \
-                       SetSkinFolderRegistredSelections2 \
-                       CopyBusinessTemplate \
-                       EditRegistredSelectionToBusinessTemplate \
-                       BuildBusinessTemplate \
-                       InstallCurrentBusinessTemplate \
-                       '
-    sequence_list.addSequenceString(sequence_string)
+      ImportBusinessTemplate
+      UseImportBusinessTemplate
+      InstallBusinessTemplate
+      Tic
+      CheckSkinSelectionAdded
+
+      ModifySkinFolder
+
+      CopyBusinessTemplate
+      Tic
+      EditBusinessTemplate
+      BuildBusinessTemplate
+      CheckBuiltBuildingState
+      SaveBusinessTemplate
+
+      UnmodifySkinFolder
+
+      ImportBusinessTemplate
+      Tic
+      UseImportBusinessTemplate
+      InstallWithoutForceBusinessTemplate
+      Tic
+
+      CheckModifiedSkinFolderExists
+      CheckSkinSelectionAdded
+
+      SetSkinFolderRegistredSelections2
+      CopyBusinessTemplate
+      EditRegistredSelectionToBusinessTemplate
+      BuildBusinessTemplate
+      InstallCurrentBusinessTemplate
+      Tic
+    """)
     sequence_list.play(self, quiet=quiet)
 
   @expectedFailure
@@ -6797,13 +6796,13 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ', 0, message)
     sequence_list = SequenceList()
-    sequence_string = '\
-                       UseCoreBusinessTemplate \
-                       CopyCoreBusinessTemplate \
-                       BuildCopyCoreBusinessTemplate \
-                       CheckOriginalAndCopyBusinessTemplate \
-                       '
-    sequence_list.addSequenceString(sequence_string)
+    sequence_list.addSequenceString("""
+      UseCoreBusinessTemplate
+      CopyCoreBusinessTemplate
+      BuildCopyCoreBusinessTemplate
+      CheckOriginalAndCopyBusinessTemplate
+      Tic
+    """)
     sequence_list.play(self, quiet=quiet)
 
   def test_165_checkCopyBuildInstall(self, quiet=quiet, run=run_all_test):
@@ -6813,13 +6812,13 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ', 0, message)
     sequence_list = SequenceList()
-    sequence_string = '\
-                       UseCoreBusinessTemplate \
-                       CopyCoreBusinessTemplate \
-                       BuildCopyCoreBusinessTemplate \
-                       InstallCopyCoreBusinessTemplate \
-                       '
-    sequence_list.addSequenceString(sequence_string)
+    sequence_list.addSequenceString("""
+      UseCoreBusinessTemplate
+      CopyCoreBusinessTemplate
+      BuildCopyCoreBusinessTemplate
+      InstallCopyCoreBusinessTemplate
+      Tic
+    """)
     sequence_list.play(self, quiet=quiet)
 
   def test_167_InstanceAndRelatedClassDefinedInSameBT(self):
