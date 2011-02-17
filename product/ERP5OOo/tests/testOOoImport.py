@@ -31,7 +31,6 @@ import unittest
 import os
 
 import transaction
-from zLOG import LOG
 from Testing import ZopeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -39,10 +38,8 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import install_product_quiet
 from Products.ERP5Type.tests.ERP5TypeTestCase import _getConversionServerDict
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5OOo.OOoUtils import OOoParser
-from Products.ERP5.Document.Document import ConversionError
 from Products.ERP5Form.PreferenceTool import Priority
 from DateTime import DateTime
-import transaction
 
 ZopeTestCase.installProduct('Sessions', quiet=install_product_quiet)
 
@@ -737,7 +734,7 @@ class TestOOoImport(TestOOoImportMixin):
   def test_CategoryTool_importCategoryFileDeletionSupport(self):
     # tests simple use of CategoryTool_importCategoryFile script
     region = self.portal.portal_categories.region
-    dummy_region = region.newContent(id='dummy_region')
+    region.newContent(id='dummy_region')
     transaction.commit()
     self.tic()
     self.portal.portal_categories.CategoryTool_importCategoryFile(
@@ -759,7 +756,7 @@ class TestOOoImport(TestOOoImportMixin):
   def test_CategoryTool_importCategoryFileExpirationSupport(self):
     # tests simple use of CategoryTool_importCategoryFile script
     region = self.portal.portal_categories.region
-    dummy_region = region.newContent(id='dummy_region')
+    region.newContent(id='dummy_region')
     transaction.commit()
     self.tic()
     self.portal.portal_categories.CategoryTool_importCategoryFile(
@@ -1040,7 +1037,7 @@ class TestOOoImportWeb(TestOOoImportMixin):
     """Import category file with expiration request, and do it again to be
     sure that expired categories will not be expired again."""
     region = self.portal.portal_categories.region
-    dummy_region = region.newContent(id='dummy_region')
+    region.newContent(id='dummy_region')
     dummy_expired_region = region.newContent(id='dummy_expired_region')
     dummy_expired_region.expire()
     transaction.commit()
