@@ -1256,7 +1256,7 @@ class TestZodbImportFilesystemPropertySheet(ERP5TypeTestCase):
         property_sheets_tool, filesystem_property_sheet)
 
       self.assertTrue(filesystem_property_sheet.__name__ in \
-                      property_sheets_tool)
+                      property_sheets_tool.objectIds())
 
       zodb_property_tuple, zodb_category_tuple, zodb_constraint_class_tuple = \
           zodb_property_sheet.exportToFilesystemDefinition()
