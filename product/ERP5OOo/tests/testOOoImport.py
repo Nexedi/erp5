@@ -107,6 +107,7 @@ class TestOOoImportMixin(ERP5TypeTestCase):
     self.tic()
 
   def beforeTearDown(self):
+    transaction.abort()
     region = self.portal.portal_categories.region
     region.manage_delObjects(list(region.objectIds()))
     self.portal.portal_preferences.manage_delObjects([self.pref.getId()])
