@@ -999,10 +999,6 @@ class ObjectTemplateItem(BaseTemplateItem):
             action = update_dict[path]
             if action == 'nothing':
               continue
-          elif context.isKeepObject(path):
-            # do nothing if the object is specified in keep list in
-            # force mode.
-            continue
           # get subobjects in path
           path_list = path.split('/')
           container_path = path_list[:-1]
@@ -1034,6 +1030,10 @@ class ObjectTemplateItem(BaseTemplateItem):
           old_obj = container._getOb(object_id, None)
           object_existed = old_obj is not None
           if object_existed:
+            if context.isKeepObject(path):
+              # do nothing if the object is specified in keep list in
+              # force mode.
+              continue
             # Object already exists
             recurse(saveHook, old_obj)
             if getattr(aq_base(old_obj), 'groups', None) is not None:
