@@ -169,16 +169,16 @@ class CategoryProperty(XMLObject):
     elif category_id == 'site':
       storage_id = 'location'
 
-    StandardProperty.applyPropertyOnAccessorHolder(
-                      accessor_holder=accessor_holder,
-                      portal=category_tool.getPortalObject(),
-                      reference='%s_free_text' % category_id,
-                      elementary_type='text',
-                      multivalued=False,
-                      property_default='',
-                      storage_id=storage_id,
-                      read_permission=Permissions.AccessContentsInformation,
-                      write_permission=Permissions.ModifyPortalContent)
+    property_dict = {'reference': '%s_free_text' % category_id,
+                     'elementary_type': 'text',
+                     'property_default': '',
+                     'multivalued': False,
+                     'storage_id': storage_id,
+                     'read_permission': Permissions.AccessContentsInformation,
+                     'write_permission': Permissions.ModifyPortalContent}
+
+    StandardProperty._applyOnAccessorHolder(property_dict, accessor_holder,
+                                            category_tool.getPortalObject())
 
     # Get read and write permission
     read_permission = Permissions.__dict__.get(cat_object.getReadPermission(),
