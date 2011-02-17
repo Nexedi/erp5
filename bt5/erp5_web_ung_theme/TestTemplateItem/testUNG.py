@@ -102,5 +102,7 @@ class TestUNG(ERP5TypeTestCase):
     self.assertFalse("Ung" in title_list)
     web_page.setSubjectList("Ung")
     self.stepTic()
+    # The script uses cache (short) to store the results
+    self.portal.portal_caches.clearAllCache()
     title_list = self.getTitleListToBySubjectDomain()
     self.assertTrue("Ung" in title_list, title_list)
