@@ -151,6 +151,7 @@ class TestDeferredConnection(ERP5TypeTestCase):
       else:
         self.fail()
     finally:
+      transaction.abort()
       delattr(connection, '_query')
       self.unmonkeypatchConnection(connection)
 
