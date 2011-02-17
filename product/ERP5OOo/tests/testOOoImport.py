@@ -109,6 +109,9 @@ class TestOOoImportMixin(ERP5TypeTestCase):
   def beforeTearDown(self):
     transaction.abort()
     for parent in [
+        self.portal.currency_module,
+        self.portal.organisation_module,
+        self.portal.person_module,
         self.portal.portal_categories.function,
         self.portal.portal_categories.gender,
         self.portal.portal_categories.region,
@@ -149,9 +152,6 @@ class TestOOoImport(TestOOoImportMixin):
   def stepImportRawDataFile(self, sequence=None, sequence_list=None, **kw):
     f = makeFileUpload('import_data_list.ods')
     person_module = self.getPortal().person_module
-    #purge existing persons
-    person_module.manage_delObjects([id for id in person_module.getObjectIds()])
-    transaction.commit(); self.tic()
     listbox=(
     { 'listbox_key': '001',
       'portal_type_property_list':'Person.title'},
@@ -351,9 +351,6 @@ class TestOOoImport(TestOOoImportMixin):
   def stepImportFileWithBlankLine(self, sequence=None, sequence_list=None, **kw):
     f = makeFileUpload('import_data_list_blank_line.ods')
     person_module = self.getPortal().person_module
-    #purge existing persons
-    person_module.manage_delObjects([id for id in person_module.getObjectIds()])
-    transaction.commit(); self.tic()
     listbox=(
     { 'listbox_key': '001',
       'portal_type_property_list':'Person.title'},
@@ -378,9 +375,6 @@ class TestOOoImport(TestOOoImportMixin):
                       id='france')
 
     person_module = self.getPortal().person_module
-    #purge existing persons
-    person_module.manage_delObjects([id for id in person_module.getObjectIds()])
-    transaction.commit(); self.tic()
     listbox=(
     { 'listbox_key': '001',
       'portal_type_property_list':'Person.title'},
@@ -398,9 +392,6 @@ class TestOOoImport(TestOOoImportMixin):
   def stepImportFileWithDates(self, sequence=None, sequence_list=None, **kw):
     f = makeFileUpload('import_data_with_dates.ods')
     person_module = self.getPortal().person_module
-    #purge existing persons
-    person_module.manage_delObjects([id for id in person_module.getObjectIds()])
-    transaction.commit(); self.tic()
     listbox=(
     { 'listbox_key': '001',
       'portal_type_property_list':'Person.title'},
@@ -420,8 +411,6 @@ class TestOOoImport(TestOOoImportMixin):
     """
     f = makeFileUpload('import_float_and_percentage.ods')
     currency_module = self.getPortal().currency_module
-    currency_module.manage_delObjects([id for id in currency_module.getObjectIds()])
-    transaction.commit(); self.tic()
     listbox=(
     { 'listbox_key': '001',
       'portal_type_property_list':'Currency.title'},
@@ -433,9 +422,6 @@ class TestOOoImport(TestOOoImportMixin):
   def stepImportOrganisation(self, sequence=None, sequence_list=None, **kw):
     f = makeFileUpload('import_organisation_list.ods')
     organisation_module = self.getPortal().organisation_module
-    #purge existing persons
-    organisation_module.manage_delObjects([id for id in organisation_module.getObjectIds()])
-    transaction.commit(); self.tic()
     listbox=(
     { 'listbox_key': '001',
       'portal_type_property_list':'Organisation.title'},
@@ -466,9 +452,6 @@ class TestOOoImport(TestOOoImportMixin):
 
     f = makeFileUpload('import_data_with_categories.ods')
     person_module = self.getPortal().person_module
-    #purge existing persons
-    person_module.manage_delObjects([id for id in person_module.getObjectIds()])
-    transaction.commit(); self.tic()
     listbox=(
     { 'listbox_key': '001',
       'portal_type_property_list':'Person.title'},
@@ -486,8 +469,6 @@ class TestOOoImport(TestOOoImportMixin):
   def stepImportFileWithFreeText(self, sequence=None, sequence_list=None, **kw):
     f = makeFileUpload('import_data_with_categories.ods')
     person_module = self.getPortal().person_module
-    #purge existing persons
-    person_module.manage_delObjects([id for id in person_module.getObjectIds()])
     transaction.commit(); self.tic()
     listbox=(
     { 'listbox_key': '001',
@@ -504,9 +485,6 @@ class TestOOoImport(TestOOoImportMixin):
   def stepImportFileWithAccentuatedText(self, sequence=None, sequence_list=None, **kw):
     f = makeFileUpload('import_data_accentuated_text.ods')
     person_module = self.getPortal().person_module
-    #purge existing persons
-    person_module.manage_delObjects([id for id in person_module.getObjectIds()])
-    transaction.commit(); self.tic()
     listbox=(
     { 'listbox_key': '001',
       'portal_type_property_list':'Person.title'},
@@ -522,9 +500,6 @@ class TestOOoImport(TestOOoImportMixin):
   def stepImportXLSFile(self, sequence=None, sequence_list=None, **kw):
     f = makeFileUpload('import_data_list.xls')
     person_module = self.getPortal().person_module
-    #purge existing persons
-    person_module.manage_delObjects([id for id in person_module.getObjectIds()])
-    transaction.commit(); self.tic()
     listbox=(
     { 'listbox_key': '001',
       'portal_type_property_list':'Person.title'},
@@ -540,9 +515,6 @@ class TestOOoImport(TestOOoImportMixin):
   def stepImportBigFile_1(self, sequence=None, sequence_list=None, **kw):
     f = makeFileUpload('import_data_big_file_1.ods')
     person_module = self.getPortal().person_module
-    #purge existing persons
-    person_module.manage_delObjects([id for id in person_module.getObjectIds()])
-    transaction.commit(); self.tic()
     listbox=(
     { 'listbox_key': '001',
       'portal_type_property_list':'Person.title'},
@@ -558,9 +530,6 @@ class TestOOoImport(TestOOoImportMixin):
   def stepImportBigFile_2(self, sequence=None, sequence_list=None, **kw):
     f = makeFileUpload('import_data_big_file_2.ods')
     person_module = self.getPortal().person_module
-    #purge existing persons
-    person_module.manage_delObjects([id for id in person_module.getObjectIds()])
-    transaction.commit(); self.tic()
     listbox=(
      { 'listbox_key': '001',
       'portal_type_property_list':'Person.title'},
