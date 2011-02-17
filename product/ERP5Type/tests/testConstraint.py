@@ -1393,20 +1393,22 @@ class TestConstraint(PropertySheetTestCase):
     # constraint are registred in property sheets
     obj = self._makeOne()
     obj.setTitle('b')
-    self._addPropertySheet(obj.getPortalType(),
-      property_sheet_code=\
-      '''class TestPropertySheet:
-          _constraints = (
-            { 'id': 'testing_constraint',
-              'type': 'StringAttributeMatch',
-              'title': 'a.*', },)
-      ''')
+    property_sheet = self._addProperty(
+                        obj.getPortalType(), 
+                        "TestRegisterWithPropertySheet",
+                        commit=True,
+                        property_id="title_constraint",
+                        portal_type='Attribute Equality Constraint',
+                        constraint_attribute_name = 'title',
+                        constraint_attribute_value = 'string:a',
+    )  
+  
     consistency_message_list = obj.checkConsistency()
     self.assertEquals(1, len(consistency_message_list))
     message = consistency_message_list[0]
     from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
     self.assertTrue(isinstance(message, ConsistencyMessage))
-    self.assertEquals(message.class_name, 'StringAttributeMatch')
+    self.assertEquals(message.class_name, 'Temporary Attribute Equality Constraint')
     obj.setTitle('a')
     self.assertEquals(obj.checkConsistency(), [])
 
@@ -1414,16 +1416,17 @@ class TestConstraint(PropertySheetTestCase):
     # messages can be overriden in property sheet
     obj = self._makeOne()
     obj.setTitle('b')
-    self._addPropertySheet(obj.getPortalType(),
-      property_sheet_code=\
-      '''class TestPropertySheet:
-          _constraints = (
-            { 'id': 'testing_constraint',
-              'message_attribute_does_not_match':
-                  'Attribute ${attribute_name} does not match',
-              'type': 'StringAttributeMatch',
-              'title': 'a.*', },)
-      ''')
+    property_sheet = self._addProperty(
+                        obj.getPortalType(), 
+                        "TestOverrideMessage",
+                        commit=True,
+                        property_id="title_constraint",
+                        portal_type='Attribute Equality Constraint',
+                        constraint_attribute_name = 'title',
+                        constraint_attribute_value = 'string:a',
+                        message_invalid_attribute_value='Attribute ${attribute_name} does not match',
+
+    )   
     consistency_message_list = obj.checkConsistency()
     self.assertEquals(1, len(consistency_message_list))
     message = consistency_message_list[0]
