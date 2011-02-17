@@ -137,16 +137,21 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
 
   def getAccessorHolderPropertyList(cls):
     """
-    Get all the properties as defined in the accessor holders,
+    Get unique properties, by its id, as defined in the accessor holders,
     meaningful for _propertyMap for example
 
     @see Products.ERP5Type.Base.Base._propertyMap
     """
     cls.loadClass()
+    property_id_set = set()
     property_list = []
     for klass in cls.mro():
       if klass.__module__ == 'erp5.accessor_holder':
-        property_list.extend(klass._properties)
+        for property in klass._properties:
+          if property['id'] in property_id_set:
+            continue
+          property_id_set.update([property['id']])
+          property_list.append(property)
 
     return property_list
 
