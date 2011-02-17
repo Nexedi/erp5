@@ -48,7 +48,9 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
   manager_password = ''
   
   def getBusinessTemplateList(self):
-    return ('erp5_base',
+    return ('erp5_core_proxy_field_legacy',
+            'erp5_full_text_myisam_catalog',
+            'erp5_base',
             'erp5_knowledge_pad',
             'erp5_web',
             'erp5_ingestion',
