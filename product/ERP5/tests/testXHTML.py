@@ -89,6 +89,7 @@ class TestXHTML(ERP5TypeTestCase):
       'erp5_ingestion_mysql_innodb_catalog',
       'erp5_crm',
 
+      'erp5_jquery',
       'erp5_web',
       'erp5_dms',
 
