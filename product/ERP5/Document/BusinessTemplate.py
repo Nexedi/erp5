@@ -1062,6 +1062,14 @@ class ObjectTemplateItem(BaseTemplateItem):
 
           # install object
           obj = self._objects[path]
+          if isinstance(self, PortalTypeTemplateItem):
+            # if that's an old style class, use a portal type class instead
+            # XXX PortalTypeTemplateItem-specific
+            migrateme = getattr(obj, '_migrateToPortalTypeClass', None)
+            if migrateme is not None:
+              migrateme()
+              self._objects[path] = obj
+
           # XXX Following code make Python Scripts compile twice, because
           #     _getCopy returns a copy without the result of the compilation.
           #     A solution could be to add a specific _getCopy method to
@@ -1947,24 +1955,10 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
       PersistentMigrationMixin._no_migration -= 1
     return object_key_list
 
+  # XXX : this method is kept temporarily, but can be removed once all bt5 are
+  # re-exported with separated workflow-chain information
   def install(self, context, trashbin, **kw):
-    if context.getTemplateFormatVersion() == 1:
-      object_list = self._objects
-    else:
-      object_list = self._archive
-
-    for path, obj in object_list.iteritems():
-        # if that's an old style class, use a portal type class instead
-        # XXX PortalTypeTemplateItem-specific
-        migrateme = getattr(obj, '_migrateToPortalTypeClass', None)
-        if migrateme is not None:
-          migrateme()
-        object_list[path] = obj
-
     ObjectTemplateItem.install(self, context, trashbin, **kw)
-
-    # XXX : following be removed once all bt5 are
-    # re-exported with separated workflow-chain information
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
     # We now need to setup the list of workflows corresponding to
@@ -1974,6 +1968,10 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
     # best solution, by default it is 'default_workflow', which is
     # not very usefull
     default_chain = ''
+    if context.getTemplateFormatVersion() == 1:
+      object_list = self._objects
+    else:
+      object_list = self._archive
     for path in object_list.keys():
       if update_dict.has_key(path) or force:
         if not force:

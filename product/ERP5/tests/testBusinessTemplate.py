@@ -6872,14 +6872,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       SimpleItem._getCopy = SimpleItem_getCopy
     # check the previously existing instance now behaves as the overriden class
     self.assertTrue(getattr(portal.another_file, 'isClassOverriden', False))
-
-  def test_168_DocumentUninstallIsEffective(self):
-    portal = self.portal
-    # Test_167 above needs to have been run
-    if not getattr(getattr(portal, 'some_file', None),
-                   'isClassOverriden',
-                   False):
-      self.test_167_InstanceAndRelatedClassDefinedInSameBT()
+    # test uninstall is effective
     self.uninstallBusinessTemplate('test_bt')
     # check both File instances no longer behave like being overriden
     self.assertFalse(getattr(portal.another_file, 'isClassOverriden', False))
