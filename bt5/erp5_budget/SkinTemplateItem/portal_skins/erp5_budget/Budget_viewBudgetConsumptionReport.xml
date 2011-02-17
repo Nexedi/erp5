@@ -93,7 +93,7 @@ AQABAEMAAAB9AQAAAAA=</string> </value>
                          tal:define="line_list_line_count here/Budget_getBudgetConsumptionReportData;\n
                                      line_list python: line_list_line_count[0];\n
                                      line_count python: line_list_line_count[1];\n
-                                     date_renderer nocall:here/Base_viewFieldLibrary/my_date/render_pdf;\n
+                                     date_renderer nocall:here/Base_viewBudgetReport/my_date/render_pdf;\n
                                      start_date python:date_renderer(request.get(\'from_date\', here.getProperty(\'start_date_range_min\')));\n
                                      stop_date python:date_renderer(request.get(\'at_date\', here.getProperty(\'start_date_range_max\')));\n
                                      ">\n
@@ -454,8 +454,7 @@ AQABAEMAAAB9AQAAAAA=</string> </value>
    </table:table>\n
   </office:spreadsheet>\n
  </office:body>\n
-</office:document-content>\n
-
+</office:document-content>
 
 ]]></unicode> </value>
         </item>
@@ -489,7 +488,7 @@ AQABAEMAAAB9AQAAAAA=</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Budget Consumption</string> </value>
+            <value> <unicode>Budget Consumption</unicode> </value>
         </item>
       </dictionary>
     </pickle>
