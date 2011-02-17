@@ -39,6 +39,8 @@ class TestKM(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     return ('erp5_base',
+            'erp5_jquery',
+            'erp5_jquery_ui',
             'erp5_knowledge_pad',
             'erp5_web',
             'erp5_trade',

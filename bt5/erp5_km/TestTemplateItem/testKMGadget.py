@@ -51,6 +51,8 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
     return ('erp5_core_proxy_field_legacy',
             'erp5_full_text_myisam_catalog',
             'erp5_base',
+            'erp5_jquery',
+            'erp5_jquery_ui',
             'erp5_knowledge_pad',
             'erp5_web',
             'erp5_ingestion',
