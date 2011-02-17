@@ -28,11 +28,6 @@
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Form.AudioField import AudioField
-from AccessControl.SecurityManagement import newSecurityManager
-from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.ERP5Type.Globals import get_request
-from StringIO import StringIO
-from DateTime import DateTime
 
 
 class TestAudioField(ERP5TypeTestCase):
@@ -50,17 +45,17 @@ class TestAudioField(ERP5TypeTestCase):
     self.field.values['default'] = 'Audio content'
 
     self.assertEquals('<audio preload="preload" src="Audio content" ' +
-        'loop="none" controls="controls" autoplay="" >\nYour browser does not ' +
+        'controls="controls" >\nYour browser does not ' +
         'support audio tag.</audio>', self.field.render_view(value='Audio content'))
 
-    self.field.values['audio_preload'] = 'none'
-    self.field.values['audio_loop'] = 'True'
-    self.field.values['audio_controls'] = 'none'
-    self.field.values['audio_autoplay'] = 'autoplay'
+    self.field.values['audio_preload'] = False
+    self.field.values['audio_loop'] = True
+    self.field.values['audio_controls'] = False
+    self.field.values['audio_autoplay'] = True
     self.field.values['audio_error_message'] = 'Another error message'
 
-    self.assertEquals('<audio preload="none" src="Another Audio content" ' +
-        'loop="True" controls="none" autoplay="autoplay" >\nAnother error ' +
+    self.assertEquals('<audio src="Another Audio content" ' +
+        'loop="loop" autoplay="autoplay" >\nAnother error ' +
         'message</audio>', self.field.render_view(value='Another Audio content'))
 
 import unittest
