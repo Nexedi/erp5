@@ -64,7 +64,7 @@
 """\n
 portal_type = context.getPortalType()\n
 \n
-if portal_type in (\'Image\', \'Presentation\', \'Drawing\', \'Spreadsheet\', \'Text\', \'PDF\', ):\n
+if portal_type in (\'Drawing\', \'Image\', \'PDF\', \'Presentation\', \'Spreadsheet\', \'Text\', \'Web Page\'):\n
   return context.absolute_url()\n
 \n
 return None\n
