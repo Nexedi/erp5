@@ -1,2 +1,4 @@
 portal_categories/account_type/**
 portal_categories/financial_section/*
+portal_property_sheets/AccountTypeConstraint
+portal_property_sheets/AccountTypeConstraint/**
