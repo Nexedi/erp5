@@ -466,7 +466,6 @@ class TestOOoImport(TestOOoImportMixin):
   def stepImportFileWithFreeText(self, sequence=None, sequence_list=None, **kw):
     f = makeFileUpload('import_data_with_categories.ods')
     person_module = self.getPortal().person_module
-    transaction.commit(); self.tic()
     listbox=(
     { 'listbox_key': '001',
       'portal_type_property_list':'Person.title'},
