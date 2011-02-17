@@ -699,18 +699,16 @@ class TestOOoImport(TestOOoImportMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  '''
-  def test_12_ImportBigFile_2(self):
-    #self.logMessage('Simulate import of an OOo file with blank lines')
-    sequence_list = SequenceList()
-    step_list = [  'stepImportBigFile_2'
-                  ,'Tic'
-                  ,'stepCheckImportedPersonList_2'
-                ]
-    sequence_string = ' '.join(step_list)
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
-  '''
+#  def test_12_ImportBigFile_2(self):
+#    #self.logMessage('Simulate import of an OOo file with blank lines')
+#    sequence_list = SequenceList()
+#    step_list = [  'stepImportBigFile_2'
+#                  ,'Tic'
+#                  ,'stepCheckImportedPersonList_2'
+#                ]
+#    sequence_string = ' '.join(step_list)
+#    sequence_list.addSequenceString(sequence_string)
+#    sequence_list.play(self)
 
   # CategoryTool_importCategoryFile tests
   def test_CategoryTool_importCategoryFile(self):
