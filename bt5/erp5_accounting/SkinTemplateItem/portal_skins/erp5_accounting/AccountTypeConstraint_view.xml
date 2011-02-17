@@ -35,7 +35,17 @@
         </item>
         <item>
             <key> <string>action</string> </key>
+            <value> <string>Base_edit</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -64,13 +74,17 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_message_inconsistent_account_type</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -83,15 +97,8 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_report_mode_date</string>
-                        <string>my_view_mode_description</string>
-                        <string>my_view_mode_id</string>
-                        <string>my_view_mode_reference</string>
-                        <string>my_view_mode_gap</string>
-                        <string>my_view_mode_account_type_list</string>
-                        <string>my_view_mode_int_index</string>
-                        <string>my_view_mode_message_inconsistent_account_type</string>
-                        <string>my_view_mode_listbox</string>
+                        <string>my_id</string>
+                        <string>my_reference</string>
                       </list>
                     </value>
                 </item>
@@ -106,7 +113,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_viewAccountingFieldLibrary</string> </value>
+            <value> <string>AccountTypeConstraint_view</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -114,7 +121,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Base_viewAccountingFieldLibrary</string> </value>
+            <value> <string>AccountTypeConstraint_view</string> </value>
+        </item>
+        <item>
+            <key> <string>pt</string> </key>
+            <value> <string>form_view</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -131,6 +142,14 @@
         <item>
             <key> <string>unicode_mode</string> </key>
             <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -42,6 +42,7 @@ Preference | Accounting Transaction
 Preference | Payment Transaction
 Preference | Purchase Invoice Transaction
 Preference | Sale Invoice Transaction
+Property Sheet | Account Type Constraint
 Purchase Invoice Transaction | Embedded File
 Purchase Invoice Transaction | Purchase Invoice Transaction Line
 Rule Tool | Accounting Transaction Root Simulation Rule

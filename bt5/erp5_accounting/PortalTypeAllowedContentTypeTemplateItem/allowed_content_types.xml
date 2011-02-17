@@ -69,6 +69,9 @@
   <item>Purchase Invoice Transaction</item>
   <item>Sale Invoice Transaction</item>
  </portal_type>
+ <portal_type id="Property Sheet">
+  <item>Account Type Constraint</item>
+ </portal_type>
  <portal_type id="Purchase Invoice Transaction">
   <item>Embedded File</item>
   <item>Purchase Invoice Transaction Line</item>

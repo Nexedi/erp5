@@ -1,5 +1,7 @@
 Account Module | jump_active_accounting_pref
 Account Module | view
+Account Type Constraint Line | view
+Account Type Constraint | view
 Account | grouping_reference_fast_input
 Account | jump_active_accounting_pref
 Account | jump_to_accounting
