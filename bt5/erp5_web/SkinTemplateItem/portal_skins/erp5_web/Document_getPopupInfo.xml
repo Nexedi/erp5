@@ -108,6 +108,8 @@ try:\n
 except AttributeError:\n
   pass\n
 \n
+doc_info[\'thumbnail_url\'] = context.Base_getThumbnailAbsoluteUrl()\n
+\n
 # add web sections document belongs too\n
 if website is None:\n
   website = context.getWebSiteValue() or context.REQUEST.get(\'current_web_site\')\n
