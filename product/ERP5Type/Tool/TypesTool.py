@@ -104,6 +104,7 @@ class TypesTool(TypeProvider):
       'Business Template',
       'Standard Property',
       'Acquired Property',
+      'Dummy Class Tool',
     ))
 
   def listContentTypes(self, container=None):
