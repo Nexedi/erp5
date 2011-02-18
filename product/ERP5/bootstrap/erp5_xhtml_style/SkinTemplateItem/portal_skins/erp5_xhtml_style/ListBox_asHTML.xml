@@ -79,7 +79,8 @@
               show_list_action_link python: here.field.get_value(\'list_action\');\n
               page_navigation_template python: request.get(\'page_navigation_template\', here.getPageNavigationTemplate());\n
               is_slider_mode python:  \'Slider\' in page_navigation_template;\n
-              is_default_listbox_field python: field_id==\'listbox\';">\n
+              is_default_listbox_field python: field_id==\'listbox\';\n
+              field_prefix python: \'\';">\n
 \n
   <!-- Define hidden input.  -->\n
   <input type="hidden" \n
@@ -111,7 +112,8 @@
     <tal:block tal:define="global box_relative_url python: request.get(\'box_relative_url\', \'\');\n
                            global box python: real_context.restrictedTraverse(box_relative_url); \n
                            global box_id python: \'%s_content\' %box_relative_url.replace(\'/\', \'_\');\n
-                           global dom_id python: request.get(\'dom_id\',None) or box_id;">\n
+                           global dom_id python: request.get(\'dom_id\',None) or box_id;\n
+                           global field_prefix string:${box_id}_">\n
       <input tal:condition="python:form_id" \n
              type="hidden" \n
              name="gadget_form_id"\n
@@ -467,10 +469,10 @@
                   <tal:block tal:repeat="value render_result">\n
                     <td class="listbox-table-data-cell"\n
                         tal:define="html  python: value[0];">\n
-                      <input tal:condition="not: repeat/value/index"\n
-                             type="hidden" value="1" name="listbox_uid:list"\n
-                             tal:attributes="value python: line.getUid() or \'\';\n
-                                             name string:${field_id}_uid:list" />\n
+                        <input tal:condition="not: repeat/value/index"\n
+                               type="hidden" value="1" name="listbox_uid:list"\n
+                               tal:attributes="value python: line.getUid() or \'\';\n
+                                               name string:${field_prefix}${field_id}_uid:list" />\n
                       <tal:block tal:replace="structure html"/>\n
                     </td>\n
                   </tal:block>\n
@@ -533,9 +535,7 @@
   </div>\n
 </div>\n
 \n
-</tal:block>\n
-\n
-
+</tal:block>
 
 ]]></unicode> </value>
         </item>
@@ -553,7 +553,7 @@
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
-            <value> <string>utf-8</string> </value>
+            <value> <string>iso-8859-15</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
