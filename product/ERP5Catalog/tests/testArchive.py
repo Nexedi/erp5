@@ -61,7 +61,10 @@ class TestArchive(InventoryAPITestCase):
     return "ERP5Archive"
 
   def getBusinessTemplateList(self):
-    return InventoryAPITestCase.getBusinessTemplateList(self) + ('erp5_archive',)
+    return InventoryAPITestCase.getBusinessTemplateList(self) + (
+      'erp5_archive',
+      'erp5_full_text_myisam_catalog',
+    )
 
   # Different variables used for this test
   run_all_test = 0
