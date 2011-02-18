@@ -69,7 +69,6 @@ class AccountTypeConstraint(ConstraintMixin):
       if len(constraint_line_list) == 0:
         raise NotImplementedError(
            "AccountTypeConstraint does not define an account type mapping lines")
-      import pdb; pdb.set_trace()
       for constraint_line in constraint_line_list:
         gap = constraint_line.getGap()
         account_type_list = contraint_line.getAccountTypeList()
