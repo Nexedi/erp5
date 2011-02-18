@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Accounting Transaction Balance Constraint" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Total Debit must equal Total Credit</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>debit_credit_balance_constraint</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Accounting Transaction Balance Constraint</string> </value>
+        </item>
+        <item>
+            <key> <string>test_tales_expression</string> </key>
+            <value> <string>python: object.getSimulationState() not in ("cancelled", "deleted")</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

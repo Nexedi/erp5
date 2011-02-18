@@ -37,8 +37,9 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Utils import UpperCase, createExpressionContext
 from Products.CMFCore.Expression import Expression
+from Products.ERP5Type.mixin.id_as_reference import IdAsReferenceMixin
 
-class ConstraintMixin(Predicate):
+class ConstraintMixin(IdAsReferenceMixin('_constraint'), Predicate):
   """
   Mixin Constraint implementation (only relevant for ZODB Property
   sheets, use Products.ERP5Type.Constraint instead for filesystem
@@ -65,8 +66,7 @@ class ConstraintMixin(Predicate):
   implements( IConstraint, )
 
   property_sheets = (PropertySheet.SimpleItem,
-                     PropertySheet.Predicate,
-                     PropertySheet.Reference)
+                     PropertySheet.Predicate)
 
   def _getMessage(self, message_id):
     """

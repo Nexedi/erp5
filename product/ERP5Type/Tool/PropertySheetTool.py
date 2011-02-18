@@ -50,6 +50,15 @@ class PropertySheetTool(BaseTool):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
+  def _bootstrap(self):
+    super(PropertySheetTool, self)._bootstrap('erp5_property_sheets',
+                                              'PropertySheetTemplateItem', (
+      'BaseType',
+      'BusinessTemplate',
+      'Folder',
+      'SimpleItem',
+    ))
+
   security.declarePublic('getTranslationDomainNameList')
   def getTranslationDomainNameList(self):
     return (['']+

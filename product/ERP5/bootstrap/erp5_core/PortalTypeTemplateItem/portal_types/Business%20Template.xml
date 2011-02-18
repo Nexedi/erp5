@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Base Type" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_property_domain_dict</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>short_title</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>allow_discussion</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>content_icon</string> </key>
+            <value> <string>file_icon.gif</string> </value>
+        </item>
+        <item>
+            <key> <string>content_meta_type</string> </key>
+            <value> <string>ERP5 Business Template</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Business Template is a set of definitions, such as skins, portal types and categories. This is used to set up a new ERP5 site very efficiently.</string> </value>
+        </item>
+        <item>
+            <key> <string>factory</string> </key>
+            <value> <string>addBusinessTemplate</string> </value>
+        </item>
+        <item>
+            <key> <string>filter_content_types</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Business Template</string> </value>
+        </item>
+        <item>
+            <key> <string>immediate_view</string> </key>
+            <value> <string>BusinessTemplate_view</string> </value>
+        </item>
+        <item>
+            <key> <string>product</string> </key>
+            <value> <string>ERP5Type</string> </value>
+        </item>
+        <item>
+            <key> <string>type_class</string> </key>
+            <value> <string>BusinessTemplate</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>domain_name</string> </key>
+            <value> <string>erp5_content</string> </value>
+        </item>
+        <item>
+            <key> <string>property_name</string> </key>
+            <value> <string>short_title</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>domain_name</string> </key>
+            <value> <string>erp5_content</string> </value>
+        </item>
+        <item>
+            <key> <string>property_name</string> </key>
+            <value> <string>title</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

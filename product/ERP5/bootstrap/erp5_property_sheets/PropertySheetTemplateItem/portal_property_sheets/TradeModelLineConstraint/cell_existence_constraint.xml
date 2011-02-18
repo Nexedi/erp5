@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Trade Model Line Cell Consistency Constraint" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>base_id</string> </key>
+            <value> <string>movement</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>If variation categories are define on Trade Model Line                       cell corresponding to this categories should exist too</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>cell_existence_constraint</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Trade Model Line Cell Consistency Constraint</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

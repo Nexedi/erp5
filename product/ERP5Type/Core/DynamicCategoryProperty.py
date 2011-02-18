@@ -46,7 +46,6 @@ class DynamicCategoryProperty(CategoryProperty):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   property_sheets = (PropertySheet.SimpleItem,
-                     PropertySheet.Reference,
                      PropertySheet.DynamicCategoryProperty)
 
   security.declareProtected(Permissions.AccessContentsInformation,

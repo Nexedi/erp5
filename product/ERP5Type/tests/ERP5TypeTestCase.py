@@ -792,8 +792,8 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       erp5_load_data_fs = int(os.environ.get('erp5_load_data_fs', 0))
       if update_business_templates and erp5_load_data_fs:
         update_only = os.environ.get('update_only', None)
-        template_list = (erp5_catalog_storage, 'erp5_core',
-                         'erp5_xhtml_style') + tuple(template_list)
+        template_list = (erp5_catalog_storage, 'erp5_property_sheets',
+                         'erp5_core', 'erp5_xhtml_style') + tuple(template_list)
         # Update only specified business templates, regular expression
         # can be used.
         if update_only is not None:
@@ -1297,10 +1297,16 @@ def optimize():
   # We will probably disable reindexing for other types later
   full_indexing_set = set(os.environ.get('enable_full_indexing', '').split(','))
   if not 'portal_types' in full_indexing_set:
-    from Products.ERP5Type.Document.RoleInformation import RoleInformation
-    RoleInformation.isIndexable = ConstantGetter('isIndexable', value=False)
     from Products.ERP5Type.Document.ActionInformation import ActionInformation
-    ActionInformation.isIndexable = ConstantGetter('isIndexable', value=False)
+    from Products.ERP5Type.Document.RoleInformation import RoleInformation
+    ActionInformation.isIndexable = RoleInformation.isIndexable = \
+      ConstantGetter('isIndexable', value=False)
+  if not 'portal_property_sheets' in full_indexing_set:
+    from Products.ERP5Type.Core.StandardProperty import StandardProperty
+    from Products.ERP5Type.Core.CategoryProperty import CategoryProperty
+    from Products.ERP5Type.mixin.constraint import ConstraintMixin
+    StandardProperty.isIndexable = CategoryProperty.isIndexable = \
+      ConstraintMixin.isIndexable = ConstantGetter('isIndexable', value=False)
 
 optimize()
 

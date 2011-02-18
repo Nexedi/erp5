@@ -33,11 +33,11 @@ from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Accessor.Base import Getter as BaseGetter
 from Products.ERP5Type.Accessor import Category, Value, Alias
 from Products.ERP5Type.Utils import UpperCase
-
+from Products.ERP5Type.mixin.id_as_reference import IdAsReferenceMixin
 from Products.ERP5Type.Core.StandardProperty import StandardProperty
 from zLOG import LOG, WARNING
 
-class CategoryProperty(XMLObject):
+class CategoryProperty(IdAsReferenceMixin('_category'), XMLObject):
   """
   Define a Category Property Document for a ZODB Property Sheets
   """
@@ -48,11 +48,7 @@ class CategoryProperty(XMLObject):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  property_sheets = (PropertySheet.SimpleItem,
-                     PropertySheet.Reference)
-
-  getReference = BaseGetter('getReference', 'reference', 'string',
-                            storage_id='default_reference')
+  property_sheets = (PropertySheet.SimpleItem,)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'exportToFilesystemDefinition')

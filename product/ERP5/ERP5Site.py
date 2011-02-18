@@ -2052,7 +2052,8 @@ class ERP5Generator(PortalGenerator):
     if template_tool is None:
       return
     if template_tool.getInstalledBusinessTemplate('erp5_core') is None:
-      for bt in ('erp5_core', p.erp5_catalog_storage, 'erp5_xhtml_style'):
+      for bt in ('erp5_property_sheets', 'erp5_core', p.erp5_catalog_storage,
+                 'erp5_xhtml_style'):
         if not bt:
           continue
         url = getBootstrapBusinessTemplateUrl(bt)

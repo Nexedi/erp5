@@ -31,8 +31,9 @@ from Products.CMFCore.Expression import Expression
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Accessor.Base import Getter as BaseGetter
+from Products.ERP5Type.mixin.id_as_reference import IdAsReferenceMixin
 
-class StandardProperty(XMLObject):
+class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
   """
   Define an Acquired Property Document for a ZODB Property Sheet
   """
@@ -44,7 +45,6 @@ class StandardProperty(XMLObject):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   property_sheets = (PropertySheet.SimpleItem,
-                     PropertySheet.Reference,
                      PropertySheet.StandardProperty,
                      PropertySheet.TranslatableProperty)
 
@@ -64,9 +64,6 @@ class StandardProperty(XMLObject):
   # There is no need to define the setter as this static definition of
   # the getter is only meaningful for the Standard Properties defined
   # within an Standard Property.
-  getReference = BaseGetter('getReference', 'reference', 'string',
-                            storage_id='default_reference')
-
   getDescription = BaseGetter('getDescription', 'description', 'string',
                               default='')
 

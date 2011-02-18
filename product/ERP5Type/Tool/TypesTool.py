@@ -99,6 +99,13 @@ class TypesTool(TypeProvider):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
+  def _bootstrap(self):
+    super(TypesTool, self)._bootstrap('erp5_core', 'PortalTypeTemplateItem', (
+      'Business Template',
+      'Standard Property',
+      'Acquired Property',
+    ))
+
   def listContentTypes(self, container=None):
     """List content types from all providers
     """

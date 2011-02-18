@@ -41,6 +41,7 @@ from Products.ERP5Type.Base import Base, resetRegisteredWorkflowMethod
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Utils import setDefaultClassProperties
 from Products.ERP5Type import document_class_registry, mixin_class_registry
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 
 from zLOG import LOG, ERROR, INFO, WARNING
 
@@ -398,8 +399,8 @@ def initializeDynamicModules():
   erp5.temp_portal_type = registerDynamicModule('erp5.temp_portal_type',
                                                 loadTempPortalTypeClass)
 
-required_tool_list = [('portal_types', 'Base Type'),
-                      ('portal_property_sheets', 'BaseType')]
+required_tool_list = (('portal_types', 'Standard Property'),
+                      ('portal_property_sheets', 'BaseType'))
 last_sync = -1
 def synchronizeDynamicModules(context, force=False):
   """
@@ -458,23 +459,21 @@ def synchronizeDynamicModules(context, force=False):
           ' core items...' % tool_id)
 
       from Products.ERP5.ERP5Site import getBootstrapDirectory
-      bundle_path = os.path.join(getBootstrapDirectory(),
-                                 '%s.xml' % tool_id)
-      assert os.path.exists(bundle_path), 'Please update ERP5 product'
-
+      cwd = os.getcwd()
       try:
-        tool = portal._importObjectFromFile(
-            bundle_path,
-            id=tool_id,
-            verify=False,
-            set_owner=False,
-            suppress_events=True)
-        from Products.ERP5.Document.BusinessTemplate import _recursiveRemoveUid
-        _recursiveRemoveUid(tool)
-        portal._setOb(tool_id, tool)
-      except Exception:
-        import traceback; traceback.print_exc()
-        raise
+        os.chdir(getBootstrapDirectory())
+        tool_path = os.path.join('erp5_core', 'ToolTemplateItem',
+                                 tool_id + '.xml')
+        assert os.path.exists(tool_path), 'Please update ERP5 product'
+        try:
+          tool = portal._importObjectFromFile(tool_path, id=tool_id,
+            verify=False, set_owner=False, suppress_events=True)
+          tool._bootstrap()
+        except Exception:
+          import traceback; traceback.print_exc()
+          raise
+      finally:
+        os.chdir(cwd)
 
       if not getattr(portal, '_v_bootstrapping', False):
         LOG('ERP5Site', INFO, 'Transition successful, please update your'

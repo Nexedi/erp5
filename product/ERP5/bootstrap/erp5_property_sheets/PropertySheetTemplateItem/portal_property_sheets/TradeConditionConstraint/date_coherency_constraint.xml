@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="TALES Constraint" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Expiration Date must be after Effective Date</string> </value>
+        </item>
+        <item>
+            <key> <string>expression</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+python: object.getExpirationDate() >= object.getEffectiveDate()
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>date_coherency_constraint</string> </value>
+        </item>
+        <item>
+            <key> <string>message_expression_false</string> </key>
+            <value> <string>Expiration date must be after effective date</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>TALES Constraint</string> </value>
+        </item>
+        <item>
+            <key> <string>test_tales_expression</string> </key>
+            <value> <string>python: object.getExpirationDate() and object.getEffectiveDate()</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
