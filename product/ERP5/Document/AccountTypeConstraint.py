@@ -58,6 +58,9 @@ class AccountTypeConstraint(ConstraintMixin):
   def _checkConsistency(self, obj, fixit=0):
     """Implement here the consistency checker
     """
+    # self, the constraint is a temp object without acquisition wrappers, for
+    # now we need to add acquisition wrappers for category accessors
+    self_in_context = self.__of__(obj.getPortalObject())
     error_list = []
     errors = []
     if getattr(obj, 'getAccountType', _MARKER) is _MARKER:
@@ -65,20 +68,20 @@ class AccountTypeConstraint(ConstraintMixin):
         obj,
         translateString("Account does not have account_type category")))
     else:
-      constraint_line_list = self.objectValues(sort_on='int_index')
+      constraint_line_list = self_in_context.objectValues(sort_on='int_index')
       if len(constraint_line_list) == 0:
         raise NotImplementedError(
            "AccountTypeConstraint does not define an account type mapping lines")
       for constraint_line in constraint_line_list:
-        gap = constraint_line.getGap()
-        account_type_list = contraint_line.getAccountTypeList()
-        if obj.isMemberOf(category):
+        gap = constraint_line.getGap(base=1)
+        account_type_list = constraint_line.getAccountTypeList()
+        if obj.isMemberOf(gap):
           if obj.getAccountType() not in account_type_list:
             error_list.append(self._generateError(obj,
                 self._getMessage('message_inconsistent_account_type'),
                 # XXX we should probably print translated logical path of
                 # categories instead of category path.
-                    mapping=dict(category=category,
+                    mapping=dict(category=gap,
                                  account_type_list=
                                     ', '.join(account_type_list))))
             if fixit:
