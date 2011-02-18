@@ -494,7 +494,8 @@ return 'a' * 1024 * 1024 * 25
       self.assertTrue(calculation_time < 1.0)
 
       # Wait expiration period then check that value is computed
-      time_left_to_wait = (self.cache_duration - calculation_time)
+      # .1 is an additional epsilon delay to work around time precision issues
+      time_left_to_wait = .1 + self.cache_duration
       print "\n\tSleep %.2f seconds to wait expiration time" % time_left_to_wait
       time.sleep(time_left_to_wait)
 
