@@ -100,7 +100,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PropertySheetsTool_viewMigratePropertySheetsFromFileSystemDialog</string> </value>
+            <value> <string>PropertySheetTool_viewMigratePropertySheetsFromFileSystemDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -108,7 +108,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>PropertySheetsTool_viewMigratePropertySheetsFromFileSystemDialog</string> </value>
+            <value> <string>PropertySheetTool_viewMigratePropertySheetsFromFileSystemDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>

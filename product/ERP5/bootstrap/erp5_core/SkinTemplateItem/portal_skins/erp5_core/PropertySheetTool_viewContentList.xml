@@ -110,7 +110,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PropertySheetsTool_viewContentList</string> </value>
+            <value> <string>PropertySheetTool_viewContentList</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -118,7 +118,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>PropertySheetsTool_viewContentList</string> </value>
+            <value> <string>PropertySheetTool_viewContentList</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
