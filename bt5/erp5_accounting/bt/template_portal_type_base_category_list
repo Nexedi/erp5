@@ -1,3 +1,5 @@
 Account Module | business_application
+Account Type Constraint Line | account_type
+Account Type Constraint Line | gap
 Accounting Transaction Module | business_application
 Internal Invoice Transaction | specialise
