@@ -65,8 +65,8 @@ if editable_mode:\n
 else:\n
   editable_mode = 0\n
 \n
-js_update_code = """updater(\'%s\', \'%s\', \'%s\', \'%s\', %s);""" %(url, box_relative_url, dom_id, \n
-                                                              editable_mode, encodeInJson(params))\n
+js_update_code = """updater(\'%s\', \'%s\', \'%s\', \'%s\', %s, field_prefix=\'%s\');""" %(url, box_relative_url, dom_id, \n
+                                                              editable_mode, encodeInJson(params), field_prefix)\n
 if box.getValidationState()==\'invisible\':\n
   # we can generate \n
   javascript_code = """invisible_gadgets["%s"]="%s";""" %(dom_id, js_update_code)\n
@@ -78,7 +78,7 @@ return javascript_code\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>url, box, dom_id, params={}, ignore_security_check=0</string> </value>
+            <value> <string>url, box, dom_id, params={}, ignore_security_check=0, field_prefix=\'\'</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

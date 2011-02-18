@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts97860745.08</string> </value>
+            <value> <string>ts98018584.53</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -76,7 +76,7 @@ function createCookie(name, value, days, path) {\n
 }\n
 \n
 function updater(url, box_relative_url, dom_id, \n
-                 editable_mode, additionnal_request_params){\n
+                 editable_mode, additionnal_request_params, field_prefix){\n
   /* Get content from server */\n
   request_params = {};\n
   additionnal_request_params = typeof(additionnal_request_params) != \'undefined\' ? additionnal_request_params : [];\n
@@ -105,6 +105,16 @@ function updater(url, box_relative_url, dom_id, \n
   \n
   input_list.each(extractHiddenInputs);\n
 \n
+  // we can have a field_prefix which allows multiple gadgets within same HTML form\n
+  if (field_prefix){\n
+    $.each(request_params,  \n
+         function (key, value){\n
+           if (key.match("^"+field_prefix)){\n
+             delete request_params[key];\n
+             request_params[key.replace(field_prefix,\'\')] = value;\n
+           }});\n
+  }\n
+  \n
   // getting parameters for request from the parameter additionnal_request_params\n
   $.each(additionnal_request_params,  \n
          function (key, value){request_params[key] = additionnal_request_params[key];});\n
@@ -112,7 +122,7 @@ function updater(url, box_relative_url, dom_id, \n
   request_params["box_relative_url"] = box_relative_url;\n
   request_params["is_gadget_mode:int"] = 1; \n
   request_params["editable_mode:int"] = editable_mode; \n
-  \n
+\n
   // set transperancy to show an activity is going on\n
   $("#" + dom_id).css("opacity", 0.5);\n
   $.ajax({url:url,\n
@@ -487,7 +497,7 @@ $(document).ready(initialize);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>18091</int> </value>
+            <value> <int>18445</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
