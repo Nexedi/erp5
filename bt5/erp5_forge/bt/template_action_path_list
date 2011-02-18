@@ -29,7 +29,6 @@ Glossary Module | update_workflows_by_english_glossary
 Glossary Module | view
 Glossary Term | view
 Preference | subversion
-Python Script | repository_history_view
 Template Tool | bt_svn_history
 Template Tool | search_portal_type
 portal_actions | generate_pot_file
