@@ -793,6 +793,21 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.assertEquals(result, ['alpha', 'beta'])
       self.assertEquals(person.getSubjectList(), ['alpha', 'beta'])
 
+    def test_storage_id_accessor(self):
+      self._addProperty('Person',
+          self.id(),
+          'foo_bar',
+          elementary_type='string',
+          storage_id='foo_bar_storage',
+          portal_type='Standard Property')
+      obj = self.getPersonModule().newContent(portal_type='Person')
+      obj.setFooBar('foo')
+      self.assertEquals('foo', obj.getFooBar())
+      self.assertEquals('foo', getattr(obj, 'foo_bar_storage', 'unset'))
+      obj.edit(foo_bar='bar')
+      self.assertEquals('bar', obj.getFooBar())
+      self.assertEquals('bar', getattr(obj, 'foo_bar_storage', 'unset'))
+
     def test_13_acquiredAccessor(self):
       """
       The purpose of this test is to make sure that accessor for
