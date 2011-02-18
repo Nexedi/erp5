@@ -658,7 +658,7 @@ msgid "All"
 msgstr "Tous"
 
 msgid "All Accounting Transactions for this organisation during the period have to be closed first."
-msgstr "Toutes les écritures de l'organisation pendant cette période doivent être préalablement validées."
+msgstr "Toutes les écritures de l'organisation pendant cette période doivent être préalablement clôturées."
 
 msgid "All Documents"
 msgstr "Tous les documents"
