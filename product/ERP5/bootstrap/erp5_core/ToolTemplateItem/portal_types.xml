@@ -37,6 +37,7 @@
             <value>
               <tuple>
                 <string>portal_solvers</string>
+                <string>portal_types</string>
               </tuple>
             </value>
         </item>
