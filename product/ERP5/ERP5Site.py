@@ -26,7 +26,6 @@ from ZPublisher import BeforeTraverse
 from ZPublisher.BaseRequest import RequestContainer
 from AccessControl import ClassSecurityInfo
 from Products.CMFDefault.Portal import CMFSite
-from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Core.Folder import FolderMixIn
 from Acquisition import aq_base
@@ -302,11 +301,10 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     if getattr(aq_base(ob), '_updateInternalRelatedContent', None) is not None:
       # Make sure there is no activities pending on that object
       try:
-        portal_activities = getToolByName(self, 'portal_activities')
+        portal_activities = self.portal_activities
       except AttributeError:
-        # There is no activity tool
-        portal_activities = None
-      if portal_activities is not None:
+        pass
+      else:
         if portal_activities.countMessage(path=ob.getPath())>0:
           raise ActivityPendingError, 'Sorry, pending activities prevent ' \
                          +  'changing id at this current stage'
@@ -531,7 +529,7 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
 
     if enable_sort:
       # language should be cached in Transaction Cache if performance issue
-      localizer_tool = getToolByName(self, 'Localizer')
+      localizer_tool = self.Localizer
       language = localizer_tool.get_selected_language()
     else:
       localizer_tool = language = None
@@ -1664,11 +1662,11 @@ class ERP5Generator(PortalGenerator):
     # because the API is not the completely same as ERP5Catalog,
     # and ZCatalog is useless for ERP5 after all.
     update = kw.get('update', 0)
-    portal_catalog = getToolByName(p, 'portal_catalog', None)
-    if portal_catalog is not None and \
-       portal_catalog.meta_type != 'ZSQLCatalog' and \
-       not update:
-      p._delObject('portal_catalog')
+    try:
+      if p.portal_catalog.meta_type != 'ZSQLCatalog' and not update:
+        p._delObject('portal_catalog')
+    except AttributeError:
+      pass
 
     # Add CMF Report Tool
     if not p.hasObject('portal_report'):
@@ -1770,7 +1768,7 @@ class ERP5Generator(PortalGenerator):
     if not 'Localizer' in p.objectIds():
       addLocalizer = p.manage_addProduct['Localizer'].manage_addLocalizer
       addLocalizer('', ('en',))
-    localizer = getToolByName(p, 'Localizer')
+    localizer = p.Localizer
     addMessageCatalog = localizer.manage_addProduct['Localizer']\
                                       .manage_addMessageCatalog
     if 'erp5_ui' not in localizer.objectIds():
@@ -1852,7 +1850,7 @@ class ERP5Generator(PortalGenerator):
         return minimalpath(os.path.join(package_path, subdir))
     import Products.CMFDefault
 
-    ps = getToolByName(p, 'portal_skins')
+    ps = p.portal_skins
     # get the layer directories actually present
     for cmfdefault_skin_layer in self.CMFDEFAULT_FOLDER_LIST:
       reg_key = generateKey(Products.CMFDefault,
@@ -1862,7 +1860,7 @@ class ERP5Generator(PortalGenerator):
   def setupDefaultSkins(self, p):
     from Products.CMFCore.DirectoryView import addDirectoryViews
     from Products.CMFActivity import cmfactivity_globals
-    ps = getToolByName(p, 'portal_skins')
+    ps = p.portal_skins
     self.addCMFDefaultDirectoryViews(p)
     addDirectoryViews(ps, 'skins', cmfactivity_globals)
     ps.manage_addProduct['OFSP'].manage_addFolder(id='external_method')
@@ -1893,9 +1891,7 @@ class ERP5Generator(PortalGenerator):
     """
     Set up workflows for business templates
     """
-    tool = getToolByName(p, 'portal_workflow', None)
-    if tool is None:
-      return
+    tool = p.portal_workflow
     for wf_id in ('business_template_building_workflow',
                   'business_template_installation_workflow'):
       if wf_id in tool.objectIds():
@@ -1916,9 +1912,6 @@ class ERP5Generator(PortalGenerator):
   def setupIndex(self, p, **kw):
     # Make sure all tools and folders have been indexed
     if not kw.get('reindex', 1):
-      return
-    skins_tool = getToolByName(p, 'portal_skins', None)
-    if skins_tool is None:
       return
     # When no SQL connection was define on the site,
     # we don't want to make it crash
@@ -2048,9 +2041,7 @@ class ERP5Generator(PortalGenerator):
     """
     Install the core part of ERP5
     """
-    template_tool = getToolByName(p, 'portal_templates', None)
-    if template_tool is None:
-      return
+    template_tool = p.portal_templates
     if template_tool.getInstalledBusinessTemplate('erp5_core') is None:
       for bt in ('erp5_property_sheets', 'erp5_core', p.erp5_catalog_storage,
                  'erp5_xhtml_style'):
