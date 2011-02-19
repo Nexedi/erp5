@@ -360,7 +360,7 @@ class TypesTool(TypeProvider):
       trashbin._setOb(old_types_tool.id, old_types_tool)
 
   def _migrateToPortalTypeClass(self):
-    for type_definition in self.contentValues():
+    for type_definition in self.objectValues():
       type_definition._migrateToPortalTypeClass()
     return super(TypesTool, self)._migrateToPortalTypeClass()
 
