@@ -322,12 +322,15 @@ class ReportSection:
     selection_list = [self.selection_name]
     # when the Form which is specified by form_id, has a listbox, make prefixed_selection_name.
     # which is based on specified selection_name in the listbox.
-    if self.getFormId() and hasattr(context[self.getFormId()], 'listbox') :
-      selection_name = context[self.getFormId()].listbox.get_value('selection_name')
-      if render_prefix is not None:
-        selection_name = '%s_%s' % (render_prefix, selection_name)
-        REQUEST.other['prefixed_selection_name'] = selection_name
-      selection_list += [selection_name]
+    form_id = self.getFormId()
+    if form_id:
+      listbox = getattr(context[form_id], 'listbox', None)
+      if listbox is not None:
+        selection_name = listbox.get_value('selection_name')
+        if render_prefix is not None:
+          selection_name = '%s_%s' % (render_prefix, selection_name)
+          REQUEST.other['prefixed_selection_name'] = selection_name
+        selection_list.append(selection_name)
     # save report's selection and orignal form's selection,
     #as ListBox will overwrite it
     for selection_name in filter(lambda x: x is not None, selection_list):
@@ -387,10 +390,12 @@ class ReportSection:
 
     portal_selections = context.portal_selections
     selection_list = []
-    if self.getFormId() and hasattr(context[self.getFormId()], 'listbox') :
-      selection_name = context[self.getFormId()].listbox.get_value('selection_name')
-      selection_list += [selection_name]
-    selection_list += [self.selection_name]
+    form_id = self.getFormId()
+    if form_id:
+      listbox = getattr(context[form_id], 'listbox', None)
+      if listbox is not None:
+        selection_list.append(listbox.get_value('selection_name'))
+    selection_list.append(self.selection_name)
     if self.temporary_selection:
       for selection_name in selection_list:
         if selection_name is not None:
