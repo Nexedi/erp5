@@ -587,6 +587,8 @@ class BaseTemplateItem(Implicit, Persistent):
         attr_set.update(('_arg', 'template'))
       elif interfaces.IIdGenerator.providedBy(obj):
         attr_set.update(('last_max_id_dict', 'last_id_dict'))
+      elif classname == 'Types Tool' and klass.__module__ == 'erp5.portal_type':
+        attr_set.add('type_provider_list')
     else:
       obj = self.migrateToPortalTypeClass(obj)
 
@@ -1444,8 +1446,9 @@ class ToolTemplateItem(PathTemplateItem):
     portal = context.getPortalObject()
     types_tool = portal.portal_types
     for type_container_id, obj in self._objects.iteritems():
-      if interfaces.ITypeProvider.providedBy(obj) and \
-          type_container_id not in types_tool.type_provider_list:
+      if (interfaces.ITypeProvider.providedBy(obj) and
+          type_container_id != types_tool.id and
+          type_container_id not in types_tool.type_provider_list):
         types_tool.type_provider_list = tuple(types_tool.type_provider_list) + \
                                         (type_container_id,)
 

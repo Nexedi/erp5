@@ -32,15 +32,6 @@
             <key> <string>last_id</string> </key>
             <value> <string>2</string> </value>
         </item>
-        <item>
-            <key> <string>type_provider_list</string> </key>
-            <value>
-              <tuple>
-                <string>portal_solvers</string>
-                <string>portal_types</string>
-              </tuple>
-            </value>
-        </item>
       </dictionary>
     </pickle>
   </record>
