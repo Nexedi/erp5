@@ -1154,7 +1154,7 @@ class ERP5ReportTestCase(ERP5TypeTestCase):
     report_method = getattr(report, 'report_method', None)
     if report_method:
       return getattr(context, report_method)()
-    return sum([field.render()
+    return sum([list(field.render())
                 for field in report.get_fields()
                 if field.getRecursiveTemplateField().meta_type == 'ReportBox'],
                [])
