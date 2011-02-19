@@ -132,7 +132,8 @@ class CategoryMembershipArityConstraint(ConstraintMixin):
   def _convertFromFilesystemDefinition(min_arity,
                                        portal_type=(),
                                        max_arity=None,
-                                       base_category=()):
+                                       base_category=(),
+                                       **zodb_property_dict):
     """
     @see ERP5Type.mixin.constraint.ConstraintMixin._convertFromFilesystemDefinition
 
@@ -150,7 +151,7 @@ class CategoryMembershipArityConstraint(ConstraintMixin):
     constraint_portal_type_str = isinstance(portal_type, Expression) and \
         portal_type.text or 'python: ' + repr(portal_type)
 
-    zodb_property_dict = dict(
+    zodb_property_dict.update(
       min_arity=int(min_arity),
       constraint_portal_type=constraint_portal_type_str,
       constraint_base_category_list=base_category)
