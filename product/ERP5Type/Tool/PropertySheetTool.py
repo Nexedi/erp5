@@ -57,6 +57,8 @@ class PropertySheetTool(BaseTool):
       'BusinessTemplate',
       'Folder',
       'SimpleItem',
+      'Version',
+      'Comment',
     ))
 
   security.declarePublic('getTranslationDomainNameList')
