@@ -812,16 +812,19 @@ class ObjectTemplateItem(BaseTemplateItem):
       outfile.close()
       raise
 
+  def getConnection(self, obj):
+    while True:
+      connection = obj._p_jar
+      if connection is not None:
+        return connection
+      obj = obj.aq_parent
+
   def _importFile(self, file_name, file_obj):
     # import xml file
     if not file_name.endswith('.xml'):
       LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
       return
-    obj = self
-    connection = None
-    while connection is None:
-      obj=obj.aq_parent
-      connection=obj._p_jar
+    connection = self.getConnection(self.aq_parent)
     __traceback_info__ = 'Importing %s' % file_name
     if hasattr(cache_database, 'db') and isinstance(file_obj, file):
       obj = connection.importFile(self._compileXML(file_obj))
@@ -1126,11 +1129,7 @@ class ObjectTemplateItem(BaseTemplateItem):
           # import sub objects if there is
           if subobjects_dict:
             # get a jar
-            connection = obj._p_jar
-            o = obj
-            while connection is None:
-              o = o.aq_parent
-              connection = o._p_jar
+            connection = self.getConnection(obj)
             # import subobjects
             for subobject_id, subobject_data in subobjects_dict.iteritems():
               try:
@@ -2696,11 +2695,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
           self._method_properties.setdefault(id, PersistentMapping())[key] = 1
     elif file_name.endswith('.xml'):
       # just import xml object
-      obj = self
-      connection = None
-      while connection is None:
-        obj=obj.aq_parent
-        connection=obj._p_jar
+      connection = self.getConnection(self.aq_parent)
       obj = connection.importFile(file, customImporters=customImporters)
       self.removeProperties(obj, 0)
       self._objects[file_name[:-4]] = obj
