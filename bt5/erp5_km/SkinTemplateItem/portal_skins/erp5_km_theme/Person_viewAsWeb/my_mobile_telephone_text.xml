@@ -9,12 +9,15 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>title</string>
+                <string>description</string>
+              </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_last_name</string> </value>
+            <value> <string>my_mobile_telephone_text</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -71,15 +74,15 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The last name of the person.</string> </value>
+                    <value> <string>The mobile telephone number.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_last_name</string> </value>
+                    <value> <string>my_string_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Person_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -87,7 +90,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Last Name</string> </value>
+                    <value> <string>Mobile Telephone</string> </value>
                 </item>
               </dictionary>
             </value>
