@@ -128,6 +128,9 @@ class TypesTool(TypeProvider):
       'Standard Property',
       'Acquired Property',
       'Dummy Class Tool',
+      # the following ones are required by '_migrateToPortalTypeClass'
+      'Types Tool',
+      'Property Sheet Tool',
       # the following ones are required to upgrade an existing site
       'Category Property',
     ))

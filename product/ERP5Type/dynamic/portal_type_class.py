@@ -441,6 +441,10 @@ def synchronizeDynamicModules(context, force=False):
         tool_id = tool_class.id
         tool = getattr(portal, tool_id, None)
         if tool is None:
+          # Create a "non-migrated" (types) tool, so that
+          # ERP5Site.migrateToPortalTypeClass doesn't think there nothing to do.
+          # On the other hand, we must make sure TypesTool._bootstrap installs
+          # the needed portal types in order to migrate this bootstrap tool.
           tool = tool_class()
           try:
             portal._setObject(tool_id, tool, set_owner=False, suppress_events=True)
