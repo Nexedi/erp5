@@ -606,11 +606,11 @@ class ContributionTool(BaseTool):
         # If this is an index document, stop crawling if crawling_depth is 0
         document.activate().crawlContent()
     except urllib2.HTTPError, error:
-      if (repeat == 0 or not batch_mode) and (error.getcode() == 404):
+      if repeat == 0 or not batch_mode:
         # here we must call the extendBadURLList method,--NOT Implemented--
         # which had to add this url to bad URL list, so next time we avoid
         # crawling bad URL
-        return None
+        raise
       if repeat > 0:
         # Catch any HTTP error
         self.activate(at_date=DateTime() + repeat_interval,
