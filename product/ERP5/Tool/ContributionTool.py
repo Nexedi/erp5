@@ -583,8 +583,8 @@ class ContributionTool(BaseTool):
         content.activate().crawlContent()
 
   security.declareProtected(Permissions.AddPortalContent, 'newContentFromURL')
-  def newContentFromURL(self, container_path=None, id=None, repeat=MAX_REPEAT,
-                        repeat_interval=1, batch_mode=True, url=None, **kw):
+  def newContentFromURL(self, url, container_path=None, id=None, repeat=MAX_REPEAT,
+                        repeat_interval=1, batch_mode=True, **kw):
     """
       A wrapper method for newContent which provides extra safety
       in case or errors (ie. download, access, conflict, etc.).
@@ -597,8 +597,6 @@ class ContributionTool(BaseTool):
       id parameter is ignored
     """
     document = None
-    if not url:
-      raise TypeError, 'url parameter is mandatory'
     try:
       document = self.newContent(container_path=container_path, url=url, **kw)
       if document.isIndexContent() and document.getCrawlingDepth() >= 0:
@@ -608,11 +606,11 @@ class ContributionTool(BaseTool):
         # If this is an index document, stop crawling if crawling_depth is 0
         document.activate().crawlContent()
     except urllib2.HTTPError, error:
-      if repeat == 0 or not batch_mode:
+      if (repeat == 0 or not batch_mode) and (error.getcode() == 404):
         # here we must call the extendBadURLList method,--NOT Implemented--
         # which had to add this url to bad URL list, so next time we avoid
         # crawling bad URL
-        raise
+        return None
       if repeat > 0:
         # Catch any HTTP error
         self.activate(at_date=DateTime() + repeat_interval,
