@@ -29,6 +29,7 @@
 import transaction
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
+from zLOG import LOG, WARNING
 
 def IdAsReferenceMixin(suffix):
   suffix_index = - len(suffix)
@@ -43,7 +44,14 @@ def IdAsReferenceMixin(suffix):
 
     def __migrate(self):
       if self.id[suffix_index:] != suffix:
-        self.setId(self.__dict__.pop('default_reference') + suffix)
+        new_id = self.__dict__.get('default_reference') + suffix
+        parent = self.getParentValue()
+        if parent.has_key(new_id):
+          LOG("IdAsReferenceMixin", WARNING, "Skipping migration of %r in %r"
+              " property sheet, due to ID conflict" % (new_id, parent.getId()))
+        else:
+          del self.default_reference
+          self.setId(new_id)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getReference')
