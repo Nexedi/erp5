@@ -33,7 +33,7 @@ import transaction
 
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
+from Products.ERP5Type.tests.backportUnittest import expectedFailure, skip
 from Products.ERP5Type.Core.PropertySheet import PropertySheet as PropertySheetDocument
 
 from zope.interface import Interface, implementedBy
@@ -1276,6 +1276,10 @@ class TestZodbImportFilesystemPropertySheet(ERP5TypeTestCase):
                                      '_constraints', []),
         [ zodb_constraint_class.exportToFilesystemDefinitionDict() \
           for zodb_constraint_class in zodb_constraint_class_tuple ])
+
+TestZodbImportFilesystemPropertySheet = skip(
+  "ERP5PropertySheetLegacy is now obsolete")(
+  TestZodbImportFilesystemPropertySheet)
 
 def test_suite():
   suite = unittest.TestSuite()
