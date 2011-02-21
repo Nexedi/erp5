@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts97173866.97</string> </value>
+            <value> <string>ts98286735.58</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -96,7 +96,7 @@ function showPopik(dom_id, action, path){\n
       popup_request = popup_request_dict[dom_id]\n
       if (popup_html==undefined&&popup_request==undefined){\n
         popup_request_dict[dom_id] = path;\n
-        setTimeout(delayedDocumentDetailsPopupWindowLoad, 1000);\n
+        setTimeout(delayedDocumentDetailsPopupWindowLoad, 500);\n
       }\n
       else{popup.show();}\n
     }\n
@@ -114,7 +114,7 @@ function showPopik(dom_id, action, path){\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>2649</int> </value>
+            <value> <int>2648</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
