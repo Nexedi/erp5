@@ -62,6 +62,7 @@ div.web-toolbar h3 {\n
   padding:0px 10px;\n
   margin: 0em;\n
   cursor:pointer;\n
+  display:block;\n
 }\n
 div.web-toolbar h3:hover {\n
   background:#ccf;\n
