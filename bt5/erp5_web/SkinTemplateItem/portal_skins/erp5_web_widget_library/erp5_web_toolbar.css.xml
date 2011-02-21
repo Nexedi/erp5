@@ -84,7 +84,7 @@ li.toolboxSection > div {\n
   display:none;\n
   margin:0;\n
   bottom:20px;\n
-  position:fixed;\n
+  position:absolute;\n
   background-color:white;\n
   border:1px solid #ccc;\n
   padding:8px;\n
