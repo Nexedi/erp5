@@ -128,6 +128,8 @@ class TypesTool(TypeProvider):
       'Standard Property',
       'Acquired Property',
       'Dummy Class Tool',
+      # the following ones are required to upgrade an existing site
+      'Category Property',
     ))
 
   def listContentTypes(self, container=None):

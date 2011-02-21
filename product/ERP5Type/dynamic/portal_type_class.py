@@ -399,51 +399,8 @@ def initializeDynamicModules():
   erp5.temp_portal_type = registerDynamicModule('erp5.temp_portal_type',
                                                 loadTempPortalTypeClass)
 
-def _maybe_bootstrap(portal):
-  global _maybe_bootstrap
-  bootstrap = None
-  from Products.ERP5Type.Tool.PropertySheetTool import PropertySheetTool
-  from Products.ERP5Type.Tool.TypesTool import TypesTool
-  for tool_class in TypesTool, PropertySheetTool:
-    # if the instance has no property sheet tool, or incomplete
-    # property sheets, we need to import some data to bootstrap
-    # (only likely to happen on the first run ever)
-    tool_id = tool_class.id
-    tool = getattr(portal, tool_id, None)
-    if tool is None:
-      tool = tool_class()
-      try:
-        portal._setObject(tool_id, tool, set_owner=False, suppress_events=True)
-      except TypeError:
-        portal._setObject(tool_id, tool, set_owner=False)
-      tool = getattr(portal, tool_id)
-    elif not tool._isBootstrapRequired():
-      continue
-
-    if not bootstrap:
-      LOG('ERP5Site', INFO, 'bootstrap %s...' % tool_id)
-      from Products.ERP5.ERP5Site import getBootstrapDirectory
-      bootstrap = getBootstrapDirectory()
-      cwd = os.getcwd()
-    try:
-      os.chdir(bootstrap)
-      tool._bootstrap()
-    finally:
-      os.chdir(cwd)
-
-  if bootstrap:
-    if not getattr(portal, '_v_bootstrapping', False):
-      LOG('ERP5Site', INFO, 'Transition successful, please update your'
-          ' business templates')
-    # XXX: if some portal types are missing, for instance
-    # if some Tools have no portal types, this is likely to fail with an
-    # error. On the other hand, we can't proceed without this change,
-    # and if we dont import the xml, the instance wont start.
-    portal.migrateToPortalTypeClass()
-
-  _maybe_bootstrap = lambda portal: None
-
 last_sync = -1
+_bootstrapped = set()
 def synchronizeDynamicModules(context, force=False):
   """
   Allow resetting all classes to ghost state, most likely done after
@@ -473,7 +430,49 @@ def synchronizeDynamicModules(context, force=False):
 
   Base.aq_method_lock.acquire()
   try:
-    _maybe_bootstrap(portal)
+    if portal.id not in _bootstrapped:
+      bootstrap = None
+      from Products.ERP5Type.Tool.PropertySheetTool import PropertySheetTool
+      from Products.ERP5Type.Tool.TypesTool import TypesTool
+      for tool_class in TypesTool, PropertySheetTool:
+        # if the instance has no property sheet tool, or incomplete
+        # property sheets, we need to import some data to bootstrap
+        # (only likely to happen on the first run ever)
+        tool_id = tool_class.id
+        tool = getattr(portal, tool_id, None)
+        if tool is None:
+          tool = tool_class()
+          try:
+            portal._setObject(tool_id, tool, set_owner=False, suppress_events=True)
+          except TypeError:
+            portal._setObject(tool_id, tool, set_owner=False)
+          tool = getattr(portal, tool_id)
+        elif not tool._isBootstrapRequired():
+          continue
+
+        if not bootstrap:
+          LOG('ERP5Site', INFO, 'bootstrap %s...' % tool_id)
+          from Products.ERP5.ERP5Site import getBootstrapDirectory
+          bootstrap = getBootstrapDirectory()
+          cwd = os.getcwd()
+        try:
+          os.chdir(bootstrap)
+          tool._bootstrap()
+        finally:
+          os.chdir(cwd)
+
+      if bootstrap:
+        if not getattr(portal, '_v_bootstrapping', False):
+          LOG('ERP5Site', INFO, 'Transition successful, please update your'
+              ' business templates')
+        # XXX: if some portal types are missing, for instance
+        # if some Tools have no portal types, this is likely to fail with an
+        # error. On the other hand, we can't proceed without this change,
+        # and if we dont import the xml, the instance wont start.
+        portal.migrateToPortalTypeClass()
+
+      _bootstrapped.add(portal.id)
+
     LOG("ERP5Type.dynamic", 0, "Resetting dynamic classes")
     for class_name, klass in inspect.getmembers(erp5.portal_type,
                                                 inspect.isclass):
