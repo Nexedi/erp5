@@ -67,6 +67,9 @@ portal_type = context.getPortalType()\n
 if portal_type in (\'Drawing\', \'Image\', \'PDF\', \'Presentation\', \'Spreadsheet\', \'Text\', \'Web Page\'):\n
   return context.absolute_url()\n
 \n
+if portal_type in (\'Person\',) and context.getDefaultImageAbsoluteUrl() is not None:\n
+  return context.getDefaultImageAbsoluteUrl()\n
+\n
 return None\n
 </string> </value>
         </item>
