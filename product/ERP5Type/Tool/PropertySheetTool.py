@@ -50,8 +50,12 @@ class PropertySheetTool(BaseTool):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
+  def _isBootstrapRequired(self):
+    return not self.has_key('BaseType')
+
   def _bootstrap(self):
-    super(PropertySheetTool, self)._bootstrap('erp5_property_sheets',
+    bt_name = 'erp5_property_sheets'
+    super(PropertySheetTool, self)._bootstrap(bt_name,
                                               'PropertySheetTemplateItem', (
       'BaseType',
       'BusinessTemplate',
@@ -59,7 +63,18 @@ class PropertySheetTool(BaseTool):
       'SimpleItem',
       'Version',
       'Comment',
+      # the following ones are required to upgrade an existing site
+      'Reference',
+      'BaseCategory',
+      'SQLIdGenerator',
     ))
+    def install():
+      template_tool = self.getPortalObject().portal_templates
+      if template_tool.getInstalledBusinessTemplate(bt_name) is None:
+        from Products.ERP5.ERP5Site import getBootstrapBusinessTemplateUrl
+        url = getBootstrapBusinessTemplateUrl(bt_name)
+        template_tool.download(url).activate().install()
+    transaction.get().addBeforeCommitHook(install)
 
   security.declarePublic('getTranslationDomainNameList')
   def getTranslationDomainNameList(self):

@@ -99,6 +99,29 @@ class TypesTool(TypeProvider):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
+  def _isBootstrapRequired(self):
+    if not self.has_key('Standard Property'):
+      return True
+    # bootstrap is not required, but we may have a few bugfixes to apply
+    # so that the user can upgrade Business Templates
+    property_sheet_type = self.get('Property Sheet')
+    try:
+      if property_sheet_type.aq_base.type_class != 'PropertySheet':
+        property_sheet_type.type_class = 'PropertySheet'
+    except AttributeError:
+      pass
+    try:
+      script = self.getPortalObject().portal_workflow \
+        .dynamic_class_generation_interaction_workflow.scripts \
+        .DynamicClassGeneration_resetDynamicDocuments
+      new = '.resetDynamicDocumentsOnceAtTransactionBoundary('
+      if new not in script._body:
+        script._body = script._body.replace('.resetDynamicDocuments(', new)
+        script._makeFunction()
+    except AttributeError:
+      pass
+    return False
+
   def _bootstrap(self):
     super(TypesTool, self)._bootstrap('erp5_core', 'PortalTypeTemplateItem', (
       'Business Template',

@@ -77,6 +77,7 @@ class BaseTool (UniqueObject, Folder):
           id_set = set(x[:-4] for x in files if x[-4:] == '.xml')
         else:
           id_set = set(quote(x) for x in content_id_list)
+          id_set.difference_update(self.objectIds())
         dirs[:] = id_set.intersection(dirs)
         for file in id_set:
           load(os.path.join(root, file + '.xml'),

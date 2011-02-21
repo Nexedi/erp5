@@ -10,3 +10,4 @@ portal_contribution_registry/text_extension.xml
 portal_contribution_registry/web_page_by_content.xml
 portal_contribution_registry/webpage_extension.xml
 portal_contribution_registry/webpage_mimetype.xml
+portal_property_sheets
