@@ -411,14 +411,16 @@ def _maybe_bootstrap(portal):
     tool_id = tool_class.id
     tool = getattr(portal, tool_id, None)
     if tool is None:
-      portal._setObject(tool_id, tool_class(),
-                        set_owner=False, suppress_events=True)
+      tool = tool_class()
+      try:
+        portal._setObject(tool_id, tool, set_owner=False, suppress_events=True)
+      except TypeError:
+        portal._setObject(tool_id, tool, set_owner=False)
       tool = getattr(portal, tool_id)
     elif not tool._isBootstrapRequired():
       continue
 
     if not bootstrap:
-      migrate = True
       LOG('ERP5Site', INFO, 'bootstrap %s...' % tool_id)
       from Products.ERP5.ERP5Site import getBootstrapDirectory
       bootstrap = getBootstrapDirectory()
