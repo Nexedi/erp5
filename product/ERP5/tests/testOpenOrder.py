@@ -251,17 +251,13 @@ class TestOpenOrder(ERP5TypeTestCase):
     open_sale_order_line = open_sale_order.newContent(
       portal_type='Open Sale Order Line',
       resource=self.portal.service_module.training.getRelativeUrl(),
+      price=100,
       quantity=1)
 
     open_sale_order.Order_applyTradeCondition(open_sale_order.getSpecialiseValue())
 
     transaction.commit()
     self.tic()
-
-    self.assertEqual(open_sale_order_line.getPrice(), 100)
-    self.assertEqual(open_sale_order.getTotalPrice(), 100)
-    # TODO: test equivalent feature with trade model line
-    # self.assertEqual(open_sale_order.getTotalNetPrice(), 105)
 
     open_sale_order.setForecastingTermDayCount(5)
     open_sale_order.order()
