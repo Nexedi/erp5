@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="TALES Constraint" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Resource must be defined on all lines</string> </value>
+        </item>
+        <item>
+            <key> <string>expression</string> </key>
+            <value> <string>python: None not in [x.getResourceValue() for x in object.getMovementList()]</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>resource_on_line_constraint</string> </value>
+        </item>
+        <item>
+            <key> <string>message_expression_false</string> </key>
+            <value> <string>You must define a resource on all lines</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>TALES Constraint</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
