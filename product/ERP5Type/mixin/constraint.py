@@ -37,7 +37,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Utils import UpperCase, createExpressionContext
 from Products.CMFCore.Expression import Expression
-from Products.ERP5Type.mixin.id_as_reference import IdAsReferenceMixin
+from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 
 class ConstraintMixin(IdAsReferenceMixin('_constraint'), Predicate):
   """

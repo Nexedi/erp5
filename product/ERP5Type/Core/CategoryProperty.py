@@ -33,7 +33,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Accessor.Base import Getter as BaseGetter
 from Products.ERP5Type.Accessor import Category, Value, Alias
 from Products.ERP5Type.Utils import UpperCase
-from Products.ERP5Type.mixin.id_as_reference import IdAsReferenceMixin
+from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 from Products.ERP5Type.Core.StandardProperty import StandardProperty
 from zLOG import LOG, WARNING
 
