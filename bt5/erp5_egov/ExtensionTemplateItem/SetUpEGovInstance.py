@@ -32,6 +32,8 @@ from Testing import ZopeTestCase
 from Products import ERP5Security
 from Products import PluggableAuthService
 from zLOG import LOG, WARNING, INFO
+from Products.ERP5eGovSecurity.EGOVUserManager import addEGOVUserManager
+from Products.ERP5eGovSecurity.EGOVGroupManager import addEGOVGroupManager
 
 def allowAccessOnContributionRegistryPortalTypes(self):
   ''' Set Type Acquire Local Role '''
@@ -97,7 +99,7 @@ def enableEgovProcedureLogin(self, portal_type):
 
 def setUpEGovSecurityManager(self):
   '''use safi PAS to be able to login organisation'''
-
+  
   portal = self.getPortalObject()
   acl_users = portal.acl_users
 
@@ -107,10 +109,12 @@ def setUpEGovSecurityManager(self):
   # don't add it if it's already here
   if {'meta_type': 'EGOV User Manager', 'id': 'egov_users'} not in \
       erp5security_dispatcher._d._objects:
-    erp5security_dispatcher.addEGOVUserManager('egov_users')
+    addEGOVUserManager(erp5security_dispatcher, 'egov_users')
+
   if {'meta_type': 'EGOV Group Manager', 'id': 'egov_groups'} not in \
       erp5security_dispatcher._d._objects :
-    erp5security_dispatcher.addEGOVGroupManager('egov_groups')
+    addEGOVGroupManager(erp5security_dispatcher, 'egov_groups')
+    
   # Register ERP5UserManager Interface
   acl_users.egov_users.manage_activateInterfaces(('IAuthenticationPlugin',
                                                   'IUserEnumerationPlugin',))
