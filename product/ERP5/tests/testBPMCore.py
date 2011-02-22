@@ -56,8 +56,8 @@ class TestBPMMixin(ERP5TypeTestCase):
   def createCategoriesInCategory(self, category, category_id_list):
     for category_id in category_id_list:
       if not category.hasObject(category_id):
-        category.newContent(portal_type='Category', id = category_id,
-            title = category_id)
+        category.newContent(category_id,
+          title=category_id.replace('_', ' ').title())
 
   @reindex
   def createCategories(self):
@@ -73,6 +73,10 @@ class TestBPMMixin(ERP5TypeTestCase):
     self.createCategoriesInCategory(category_tool.trade_state,
         ['ordered', 'invoiced', 'delivered', 'taxed',
          'state_a', 'state_b', 'state_c', 'state_d', 'state_e'])
+    self.createCategoriesInCategory(category_tool, ('tax_range', 'tax_share'))
+    self.createCategoriesInCategory(category_tool.tax_range,
+                                    ('0_200', '200_inf'))
+    self.createCategoriesInCategory(category_tool.tax_share, 'AB')
 
   @reindex
   def createBusinessProcess(self, **kw):

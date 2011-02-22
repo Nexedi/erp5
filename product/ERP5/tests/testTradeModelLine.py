@@ -37,7 +37,7 @@ from Products.ERP5.tests.testBPMCore import TestBPMMixin
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Utils import simple_decorator
 from DateTime import DateTime
-from Products.ERP5Type.tests.utils import createZODBPythonScript
+from Products.ERP5Type.tests.utils import createZODBPythonScript, updateCellList
 
 
 def save_result_as(name):
@@ -773,6 +773,66 @@ class TestTradeModelLine(TestTradeModelLineMixin):
         "Trade Model Line": 5})
 
     self.checkAggregatedAmountList(order)
+
+  def test_03_VariatedModelLine(self):
+    base_amount = self.setBaseAmountQuantityMethod('tax', """\
+def getBaseAmountQuantity(delivery_amount, base_application,
+                          variation_category_list=(), **kw):
+  if variation_category_list:
+    quantity = delivery_amount.getGeneratedAmountQuantity(base_application)
+    tax_range, = variation_category_list
+    if tax_range == 'tax_range/0_200':
+      return min(quantity, 200)
+    else:
+      assert tax_range == 'tax_range/200_inf'
+      return max(0, quantity - 200)
+  return context.getBaseAmountQuantity(delivery_amount, base_application, **kw)
+return getBaseAmountQuantity""")
+    business_process = self.createBusinessProcess()
+    trade_condition = self.createTradeCondition(business_process, (
+      dict(price=0.3,
+           base_application=base_amount,
+           reference='tax1',
+           int_index=10),
+      dict(base_application=base_amount,
+           base_contribution='base_amount/total_tax',
+           reference='tax2',
+           int_index=20),
+      dict(base_application='base_amount/total_tax',
+           base_contribution='base_amount/total',
+           reference='tax3',
+           int_index=30),
+      ))
+    def createCells(line, matrix, base_application=(), base_contribution=()):
+      range_list = [set() for x in iter(matrix).next()]
+      for index in matrix:
+        for x, y in zip(range_list, index):
+          x.add(y)
+      line.setCellRange(*range_list)
+      for index, price in matrix.iteritems():
+        line.newCell(mapped_value_property='price', price=price,
+          base_application_list=[index[i] for i in base_application],
+          base_contribution_list=[index[i] for i in base_contribution],
+          *index)
+    createCells(self['trade_model_line/tax2'], {
+      ('tax_range/0_200', 'tax_share/A'): .1,
+      ('tax_range/0_200', 'tax_share/B'): .2,
+      ('tax_range/200_inf', 'tax_share/A'): .3,
+      ('tax_range/200_inf', 'tax_share/B'): .4,
+      }, base_application=(0,), base_contribution=(1,))
+    createCells(self['trade_model_line/tax3'], {
+      ('tax_share/A',): .5,
+      ('tax_share/B',): .6,
+      }, base_application=(0,))
+    from Products.ERP5Type.Document import newTempAmount
+    for x in ((100, 30, 10, 20, 5, 12),
+              (500, 150, 20, 90, 40, 120, 55, 96)):
+      amount = newTempAmount(self.portal, '_',
+                            quantity=x[0], price=1,
+                            base_contribution=base_amount)
+      amount_list = trade_condition.getGeneratedAmountList((amount,))
+      self.assertEqual(sorted(x[1:]),
+                       sorted(y.getTotalPrice() for y in amount_list))
 
   def test_tradeModelLineWithFixedPrice(self):
     """

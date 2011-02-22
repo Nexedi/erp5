@@ -70,24 +70,29 @@ class BaseAmountDict(Implicit):
         yield amount
     yield self
 
-  def contribute(self, base_amount, value):
-    if base_amount in self._frozen:
+  def contribute(self, base_amount, variation_category_list, value):
+    variated_base_amount = base_amount, variation_category_list
+    if variated_base_amount in self._frozen:
+      if variation_category_list:
+        base_amount = (base_amount,) + variation_category_list
       raise ValueError("Can not contribute to %r because this base_amount is"
                        " already applied. Order of Amount Generator Lines is"
-                       " wrong." % base_amount)
-    self._dict[base_amount] = self._getQuantity(base_amount) + value
+                       " wrong." % (base_amount,))
+    self._dict[variated_base_amount] = \
+      self._getQuantity(variated_base_amount) + value
 
-  def _getQuantity(self, base_amount):
+  def _getQuantity(self, variated_base_amount):
     """Get intermediate computed quantity for given base_application"""
     try:
-      return self._dict[base_amount]
+      return self._dict[variated_base_amount]
     except KeyError:
       value = 0
       amount_generator_line = self._amount_generator_line
       for base_amount_dict in self._amount_list:
         base_amount_dict._amount_generator_line = amount_generator_line
-        value += base_amount_dict.getGeneratedAmountQuantity(base_amount)
-      self._dict[base_amount] = value
+        value += base_amount_dict.getGeneratedAmountQuantity(
+          *variated_base_amount)
+      self._dict[variated_base_amount] = value
       return value
 
   getBaseAmountList__roles__ = None # public
@@ -100,7 +105,7 @@ class BaseAmountDict(Implicit):
     return list(self._amount_list)
 
   getGeneratedAmountQuantity__roles__ = None # public
-  def getGeneratedAmountQuantity(self, base_amount):
+  def getGeneratedAmountQuantity(self, base_amount, variation_category_list=()):
     """Get final computed quantity for given base_amount
 
     Note: During a call to getQuantity, this method may be called again by
@@ -108,9 +113,10 @@ class BaseAmountDict(Implicit):
           In this case, the returned value is the last intermediate value just
           before finalization.
     """
-    if base_amount in self._frozen:
-      return self._getQuantity(base_amount)
-    self._frozen.add(base_amount)
+    variated_base_amount = base_amount, variation_category_list
+    if variated_base_amount in self._frozen:
+      return self._getQuantity(variated_base_amount)
+    self._frozen.add(variated_base_amount)
     try:
       method = self._cache[base_amount]
     except KeyError:
@@ -121,8 +127,13 @@ class BaseAmountDict(Implicit):
       if method is None:
         method = self._amount_generator_line.getBaseAmountQuantity
       self._cache[base_amount] = method
-    value = method(self, base_amount, **self._method_kw)
-    self._dict[base_amount] = value
+    if variation_category_list:
+      kw = dict(self._method_kw,
+                variation_category_list=variation_category_list)
+    else:
+      kw = self._method_kw
+    value = method(self, base_amount, **kw)
+    self._dict[variated_base_amount] = value
     return value
 
 
@@ -218,6 +229,8 @@ class AmountGeneratorMixin:
         portal_type=amount_generator_cell_type_list)
       cell_aggregate = {} # aggregates final line information
 
+      base_application_list = self.getBaseApplicationList()
+      base_contribution_list = self.getBaseContributionList()
       for cell in amount_generator_cell_list:
         if not cell.test(delivery_amount):
           if cell is self:
@@ -228,8 +241,8 @@ class AmountGeneratorMixin:
           property_dict = cell_aggregate[key]
         except KeyError:
           cell_aggregate[key] = property_dict = {
-            'base_application_set': set(),
-            'base_contribution_set': set(),
+            'base_application_set': set(base_application_list),
+            'base_contribution_set': set(base_contribution_list),
             'category_list': [],
             'causality_value_list': [],
             'efficiency': self.getEfficiency(),
@@ -250,11 +263,11 @@ class AmountGeneratorMixin:
           cell.getMappedValueBaseCategoryList(), base=1)
         property_dict['category_list'] += category_list
         property_dict['resource'] = cell.getResource()
-        # For final amounts, base_application and id MUST be defined
-        property_dict['base_application_set'].update(
+        if cell is not self:
+          # cells inherit base_application and base_contribution from line
+          property_dict['base_application_set'].update(
             cell.getBaseApplicationList())
-        # For intermediate calculations, base_contribution_list MUST be defined
-        property_dict['base_contribution_set'].update(
+          property_dict['base_contribution_set'].update(
             cell.getBaseContributionList())
         property_dict['causality_value_list'].append(cell)
 
@@ -271,6 +284,12 @@ class AmountGeneratorMixin:
         if causality_value is self and len(cell_aggregate) > 1:
           continue
         base_application_set = property_dict['base_application_set']
+        # allow a single base_application to be variated
+        variation_category_list = tuple(sorted([x for x in base_application_set
+                                                  if x[:12] != 'base_amount/']))
+        if variation_category_list:
+          base_application_set.difference_update(variation_category_list)
+          assert len(base_application_set) == 1
         # property_dict may include
         #   resource - VAT service or a Component in MRP
         #              (if unset, the amount will only be used for reporting)
@@ -286,8 +305,9 @@ class AmountGeneratorMixin:
         # for future simulation of efficiencies.
         # If no quantity is provided, we consider that the value is 1.0
         # (XXX is it OK ?) XXX-JPS Need careful review with taxes
-        quantity = float(sum(map(base_amount.getGeneratedAmountQuantity,
-                                 base_application_set)))
+        quantity = float(sum(base_amount.getGeneratedAmountQuantity(
+                               base_application, variation_category_list)
+                             for base_application in base_application_set))
         for key in 'quantity', 'price', 'efficiency':
           if property_dict.get(key, 0) in (None, ''):
             del property_dict[key]
@@ -324,8 +344,16 @@ class AmountGeneratorMixin:
           quantity /= property_dict.get('efficiency', 1)
         except ZeroDivisionError:
           quantity *= float('inf')
-        for base_contribution in property_dict['base_contribution_set']:
-          base_amount.contribute(base_contribution, quantity)
+        base_contribution_set = property_dict['base_contribution_set']
+        # allow a single base_contribution to be variated
+        variation_category_list = tuple(sorted([x for x in base_contribution_set
+                                                  if x[:12] != 'base_amount/']))
+        if variation_category_list:
+          base_contribution_set.difference_update(variation_category_list)
+          assert len(base_contribution_set) == 1
+        for base_contribution in base_contribution_set:
+          base_amount.contribute(base_contribution, variation_category_list,
+                                 quantity)
 
     is_mapped_value = isinstance(self, MappedValue)
 
