@@ -128,18 +128,20 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
     """
     property_default_value = self._getExpressionFromString(self.getPropertyDefault())
 
-    return {'id': self.getReference(),
-            'description': self.getDescription(),
-            'type': self.getElementaryType(),
-            'storage_id': self.getStorageId(),
-            'multivalued': self.getMultivalued(),
-            'default': property_default_value,
-            'range': self.getRange(),
-            'preference': self.getPreference(),
-            'read_permission': self.getReadPermission(),
-            'write_permission': self.getWritePermission(),
-            'translatable': self.getTranslatable(),
-            'translation_domain': self.getTranslationDomain()}
+    reference = self.getReference()
+    if reference:
+      return {'id': reference,
+              'description': self.getDescription(),
+              'type': self.getElementaryType(),
+              'storage_id': self.getStorageId(),
+              'multivalued': self.getMultivalued(),
+              'default': property_default_value,
+              'range': self.getRange(),
+              'preference': self.getPreference(),
+              'read_permission': self.getReadPermission(),
+              'write_permission': self.getWritePermission(),
+              'translatable': self.getTranslatable(),
+              'translation_domain': self.getTranslationDomain()}
 
   @classmethod
   def _convertFromFilesystemPropertyDict(cls, filesystem_property_dict):
