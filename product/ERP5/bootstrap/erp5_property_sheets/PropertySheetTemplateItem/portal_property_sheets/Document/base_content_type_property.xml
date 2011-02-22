@@ -47,10 +47,6 @@
             <key> <string>portal_type</string> </key>
             <value> <string>Standard Property</string> </value>
         </item>
-        <item>
-            <key> <string>read_permission</string> </key>
-            <value> <string>Manage properties</string> </value>
-        </item>
       </dictionary>
     </pickle>
   </record>

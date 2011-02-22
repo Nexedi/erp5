@@ -51,10 +51,6 @@
             <key> <string>property_default</string> </key>
             <value> <string>python: \'\'</string> </value>
         </item>
-        <item>
-            <key> <string>read_permission</string> </key>
-            <value> <string>Manage properties</string> </value>
-        </item>
       </dictionary>
     </pickle>
   </record>
