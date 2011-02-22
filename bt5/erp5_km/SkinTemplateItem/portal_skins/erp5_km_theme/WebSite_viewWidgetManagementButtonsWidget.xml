@@ -66,15 +66,15 @@
                 editable_mode python: context.REQUEST.get(\'editable_mode\', False);\n
                 cancel_url string:${current_web_section_url}/view">\n
 \n
-    <ul class="widget_management_box">\n
+    <ul tal:condition="active_knowledge_pad"\n
+        class="widget_management_box">\n
       <li>\n
         <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/add_new_gadget"> Add Gadgets</span>\n
         <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/stick"> Stick/Unstick</span>\n
       </li>\n
     </ul>\n
   </tal:block>\n
-</tal:block>\n
-
+</tal:block>
 
 ]]></unicode> </value>
         </item>
@@ -92,7 +92,7 @@
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
-            <value> <string>utf-8</string> </value>
+            <value> <string>iso-8859-15</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
