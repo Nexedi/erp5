@@ -9,6 +9,7 @@ Container | view
 Delivery Cell | view
 Delivery Root Simulation Rule | view
 Delivery Simulation Rule | view
+Duplicate Inventory Constraint | view
 First Causality Movement Group | view
 Internal Order Cell | view
 Internal Order Line | price_view

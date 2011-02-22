@@ -25,10 +25,10 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.Constraint import Constraint
+from Products.ERP5Type.mixin.constraint import ConstraintMixin
 from zLOG import LOG
 
-class DuplicateInventory(Constraint):
+class DuplicateInventoryConstraint(ConstraintMixin):
   """
     We want to check here that there is not 2 or more inventories with:
     - the same resource
@@ -36,7 +36,7 @@ class DuplicateInventory(Constraint):
     - the same node
   """
 
-  def generateDuplicateError(self, portal, obj, resource, variation_text):
+  def _generateDuplicateError(self, portal, obj, resource, variation_text):
     """
       Use a single method in order to generate the message
     """
@@ -59,7 +59,7 @@ class DuplicateInventory(Constraint):
         mapping={'variation_title' : variation_title,
                  'resource_title' : resource_title})
 
-  def checkConsistency(self, obj, fixit = 0):
+  def _checkConsistency(self, obj, fixit = 0):
     """
       Implement here the consistency checker
       whenever fixit is not 0, object data should be updated to 
@@ -98,7 +98,7 @@ class DuplicateInventory(Constraint):
             resource_and_variation_list.append((resource,variation_text))
             tag = '%s_%s_%s' % (date_string, resource, variation_text)
             if countMessageWithTag(tag) > 0 :
-              errors.append(self.generateDuplicateError(portal, obj, resource,
+              errors.append(self._generateDuplicateError(portal, obj, resource,
                                     variation_text))
             # Call sql request in order to see if there is another inventory
             # for this node, resource, variation_text and date
@@ -110,7 +110,7 @@ class DuplicateInventory(Constraint):
             for inventory in inventory_list:
               movement = getObjectFromUid(inventory.stock_uid)
               if movement.getPortalType().find('Inventory') >= 0:
-                errors.append(self.generateDuplicateError(portal, obj, resource,
+                errors.append(self._generateDuplicateError(portal, obj, resource,
                                     variation_text))
           # Now we must reindex with some particular tags
           activate_kw = {'tag': tag}
