@@ -175,6 +175,7 @@ def generatePortalTypeClass(site, portal_type_name):
 
   portal_type_category_list = []
   attribute_dict = dict(portal_type=portal_type_name,
+                        _properties=[],
                         _categories=[],
                         constraints=[])
 
@@ -286,6 +287,20 @@ def generatePortalTypeClass(site, portal_type_name):
       for property_sheet in portal_type.getTypePropertySheetList():
         if property_sheet in zodb_property_sheet_name_set:
           property_sheet_name_set.add(property_sheet)
+
+      # PDFTypeInformation document class, for example, defines a
+      # method which generates dynamically properties and this is
+      # heavily used by egov
+      update_definition_dict = getattr(portal_type,
+                                       'updatePropertySheetDefinitionDict',
+                                       None)
+
+      if update_definition_dict is not None and not \
+         update_definition_dict.__module__.startswith('Products.ERP5Type.ERP5Type'):
+        try:
+          update_definition_dict(attribute_dict)
+        except AttributeError:
+          pass
 
     # XXX maybe this should be a generic hook, adding property sheets
     # dynamically for a given portal type name? If done well, this

@@ -7,7 +7,8 @@ from Products.ERP5Type.Accessor.Constant import Getter as ConstantGetter
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Base import Base as ERP5Base
 from Products.ERP5Type.Base import PropertyHolder, initializePortalTypeDynamicWorkflowMethods
-from Products.ERP5Type.Utils import createAllCategoryAccessors, createExpressionContext, UpperCase
+from Products.ERP5Type.Utils import createAllCategoryAccessors, \
+    createExpressionContext, UpperCase, setDefaultProperties
 from ExtensionClass import ExtensionClass, pmc_init_of
 
 from zope.interface import classImplements
@@ -213,6 +214,14 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
                                cls,
                                portal_type_category_list,
                                createExpressionContext(site, site))
+
+    # Properties defined on the portal type itself are generated in
+    # erp5.portal_type directly, but this is unusual case (only
+    # PDFTypeInformation seems to use it)
+    portal_type_property_list = getattr(cls, '_properties', None)
+    if portal_type_property_list:
+      setDefaultProperties(cls)
+
     # make sure that category accessors from the portal type definition
     # are generated, no matter what
     # XXX this code is duplicated here, in PropertySheetTool, and in Base
