@@ -422,6 +422,7 @@ class MultiRelationEditor:
 
     def edit(self, o):
       if self.relation_editor_list is not None:
+        portal = o.getPortalObject()
 
         relation_object_list = []
         for value, uid, display_text, relation_key, item_key in \
@@ -434,11 +435,9 @@ class MultiRelationEditor:
               portal_module = None
               for p_item in self.portal_type_item:
                 if p_item[0] == portal_type:
-                  portal_module = o.getPortalObject().getDefaultModuleId(
-                                                            p_item[0])
+                  portal_module = portal.getDefaultModuleId(p_item[0])
               if portal_module is not None:
-                portal_module_object = getattr(o.getPortalObject(), 
-                                               portal_module)
+                portal_module_object = getattr(portal, portal_module)
                 kw ={}
                 kw[self.key] = value.replace('%', '')
                 kw['portal_type'] = portal_type
@@ -447,7 +446,7 @@ class MultiRelationEditor:
               else:
                 raise 
             else:
-              relation_object_list.append(o.portal_catalog.getObject(uid))
+              relation_object_list.append(portal.portal_catalog.getObject(uid))
 
         # Edit relation
         if self.relation_setter_id:
