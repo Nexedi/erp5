@@ -1961,7 +1961,6 @@ return 1
     self.assertTrue('jpg' in presentation.getTargetFormatList())
     self.assertTrue('png' in presentation.getTargetFormatList())
   
-  @expectedFailure
   def test_convertWebPageWithEmbeddedZODBImageToImageOnTraversal(self):
     """
     Test Web Page using embedded Images into ZODB case (in its HTML body)
