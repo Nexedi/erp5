@@ -52,7 +52,8 @@
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Type.Utils import isValidTALESExpression\n
 from Products.Formulator.Errors import ValidationError\n
-\n
+if not value:\n
+  return True\n
 valid, message = isValidTALESExpression(value)\n
 if valid:\n
   return True\n
