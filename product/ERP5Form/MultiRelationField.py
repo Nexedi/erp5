@@ -421,7 +421,7 @@ class MultiRelationEditor:
       return self.__dict__
 
     def edit(self, o):
-      if self.relation_editor_list != None:
+      if self.relation_editor_list is not None:
 
         relation_object_list = []
         for value, uid, display_text, relation_key, item_key in \
