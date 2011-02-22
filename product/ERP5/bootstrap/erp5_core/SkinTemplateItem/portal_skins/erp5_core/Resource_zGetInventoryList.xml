@@ -128,6 +128,7 @@ SELECT\n
   <dtml-var stock_table_id>.sub_variation_text AS sub_variation_text,\n
   <dtml-var stock_table_id>.uid AS stock_uid,\n
   <dtml-var stock_table_id>.date as date,\n
+  <dtml-var stock_table_id>.mirror_date as mirror_date,\n
   <dtml-var stock_table_id>.simulation_state as simulation_state,\n
   <dtml-var stock_table_id>.mirror_section_uid as mirror_section_uid,\n
   <dtml-var stock_table_id>.payment_uid as payment_uid,\n
