@@ -65,16 +65,15 @@ def _createAccessorHolderList(site,
   """
   Create the accessor holder list with the given ZODB Property Sheets
   """
-  import erp5.accessor_holder
+  from erp5 import accessor_holder
 
-  property_sheet_tool = site.portal_property_sheets
+  getPropertySheet = site.portal_property_sheets._getOb
   accessor_holder_list = []
 
   if "Base" in property_sheet_name_set:
     # useless if Base Category is not yet here or if we're currently
     # generating accessors for Base Categories
-    accessor_holder_class = _generateBaseAccessorHolder(site,
-                                                        erp5.accessor_holder)
+    accessor_holder_class = _generateBaseAccessorHolder(site, accessor_holder)
 
     if accessor_holder_class is not None:
       accessor_holder_list.append(accessor_holder_class)
@@ -85,25 +84,22 @@ def _createAccessorHolderList(site,
 
     try:
       # Get the already generated accessor holder
-      accessor_holder_list.append(getattr(erp5.accessor_holder,
-                                          property_sheet_name))
+      accessor_holder_list.append(getattr(accessor_holder, property_sheet_name))
 
     except AttributeError:
       # Generate the accessor holder as it has not been done yet
       try:
-        property_sheet = getattr(property_sheet_tool, property_sheet_name)
+        property_sheet = getPropertySheet(property_sheet_name)
         accessor_holder_class = property_sheet.createAccessorHolder()
 
       except Exception:
         LOG("ERP5Type.dynamic", ERROR,
             "Ignoring missing or Invalid Property Sheet " + property_sheet_name)
-
         raise
 
       accessor_holder_list.append(accessor_holder_class)
 
-      setattr(erp5.accessor_holder, property_sheet_name,
-              accessor_holder_class)
+      setattr(accessor_holder, property_sheet_name, accessor_holder_class)
 
       # LOG("ERP5Type.dynamic", INFO,
       #     "Created accessor holder for %s" % property_sheet_name)
@@ -113,7 +109,7 @@ def _createAccessorHolderList(site,
     accessor_holder_class = \
         _generatePreferenceToolAccessorHolder(site,
                                               accessor_holder_list,
-                                              erp5.accessor_holder)
+                                              accessor_holder)
 
     accessor_holder_list.insert(0, accessor_holder_class)
 
