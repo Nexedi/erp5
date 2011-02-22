@@ -119,10 +119,6 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>thumbnail</string>
-                          <string>Thumbnail</string>
-                        </tuple>
-                        <tuple>
                           <string>creation_date</string>
                           <string>Creation Date</string>
                         </tuple>
