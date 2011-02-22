@@ -29,6 +29,7 @@
 import transaction
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
+from Products.CMFActivity.Errors import ActivityPendingError
 from zLOG import LOG, WARNING
 
 def IdAsReferenceMixin(suffix):
@@ -50,8 +51,14 @@ def IdAsReferenceMixin(suffix):
           LOG("IdAsReferenceMixin", WARNING, "Skipping migration of %r in %r"
               " property sheet, due to ID conflict" % (new_id, parent.getId()))
         else:
-          del self.default_reference
-          self.setId(new_id)
+          try:
+            self.setId(new_id)
+            del self.default_reference
+          except ActivityPendingError:
+            LOG("IdAsReferenceMixin", WARNING, "Skipping migration of %r in %r"
+              " property sheet, due to pending activities" % 
+               (new_id, parent.getId()))
+            
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getReference')
