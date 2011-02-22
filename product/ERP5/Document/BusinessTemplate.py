@@ -4405,9 +4405,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
     #    ( and more )
     _item_name_list = [
       '_product_item',
+      '_document_item',
       '_property_sheet_item',
       '_constraint_item',
-      '_document_item',
       '_extension_item',
       '_test_item',
       '_role_item',
