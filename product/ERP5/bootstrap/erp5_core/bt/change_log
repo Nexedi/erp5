@@ -1,3 +1,6 @@
+2011-02-22 Kazuhiko
+* Improve and proxify ERP5Site_viewCreateModuleDialog.
+
 2011-02-02 arnaud.fontaine
 * Remove Category Acquired Membership Arity Constraint portal type in favor of Category Membership Arity Constraint and add a boolean in the view to handle both.
 * Add a boolean in Category Existence Constraint view to handle Category Acquired Existence Constraint.
