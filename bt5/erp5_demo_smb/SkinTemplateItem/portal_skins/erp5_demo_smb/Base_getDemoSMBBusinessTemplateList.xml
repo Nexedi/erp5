@@ -50,7 +50,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return (\'erp5_base\',\n
+            <value> <string>return (\'erp5_core_proxy_field_legacy\',\n
+        \'erp5_base\',\n
         \'erp5_simulation\',\n
         \'erp5_dhtml_style\',\n
         \'erp5_jquery\',\n
