@@ -31,7 +31,6 @@
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Field import ZMIField
 from Products.ERP5Type.Utils import convertToUpperCase
-from Products.CMFCore.utils import getToolByName
 from Products.PythonScripts.Utility import allow_class
 from Products.ERP5Type.Message import translateString
 from AccessControl import ClassSecurityInfo
@@ -324,7 +323,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
     """
     html_string = ''
     here = self._getContextValue(field, REQUEST)
-    portal_url = getToolByName(here, 'portal_url')
+    portal_url = here.getPortalObject().portal_url
     portal_url_string = portal_url()
     if (value not in ((), [], None, '')) and \
         field.get_value('allow_jump'):
@@ -357,7 +356,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
     Render wheel used to display a listbox
     """
     here = self._getContextValue(field, REQUEST)
-    portal_url = getToolByName(here, 'portal_url')
+    portal_url = here.getPortalObject().portal_url
     portal_url_string = portal_url()
     portal_selections_url_string = here.portal_url.getRelativeContentURL(here.portal_selections)
     if sub_index is None:
@@ -377,7 +376,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
     """
     html_string = ''
     here = self._getContextValue(field, REQUEST)
-    portal_url = getToolByName(here, 'portal_url')
+    portal_url = here.getPortalObject().portal_url
     portal_url_string = portal_url()
     if (value not in ((), [], None, '')) and \
         field.get_value('allow_jump'):
@@ -560,7 +559,7 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
     # Get some tool
     catalog_index = field.get_value('catalog_index')
     portal_type_list = [x[0] for x in field.get_value('portal_type')]
-    portal_catalog = getToolByName(field, 'portal_catalog')
+    portal_catalog = field.getPortalObject().portal_catalog
 
     ####################################
     # Check list input
