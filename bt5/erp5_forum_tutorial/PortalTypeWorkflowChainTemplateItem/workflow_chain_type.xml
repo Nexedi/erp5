@@ -1,0 +1,10 @@
+<workflow_chain>
+ <chain>
+  <type>Discussion Post</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Discussion Thread</type>
+  <workflow>discussion_thread_workflow, edit_workflow</workflow>
+ </chain>
+</workflow_chain>

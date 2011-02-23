@@ -1,0 +1,8 @@
+<property_sheet_list>
+ <portal_type id="Discussion Post">
+  <item>TextDocument</item>
+ </portal_type>
+ <portal_type id="Discussion Thread">
+  <item>DiscussionThread</item>
+ </portal_type>
+</property_sheet_list>
