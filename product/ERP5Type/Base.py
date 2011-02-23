@@ -827,14 +827,15 @@ class Base( CopyContainer,
   def _aq_key(self):
     return (self.portal_type, self.__class__)
 
-  def _propertyMap(self):
+  def _propertyMap(self, local_properties=False):
     """ Method overload - properties are now defined on the ptype """
     klass = self.__class__
     property_list = []
     # Get all the accessor holders for this portal type
-    if hasattr(klass, 'getAccessorHolderPropertyList'):
-      property_list += \
-          self.__class__.getAccessorHolderPropertyList()
+    if not local_properties:
+      if hasattr(klass, 'getAccessorHolderPropertyList'):
+        property_list += \
+            self.__class__.getAccessorHolderPropertyList()
 
     property_list += getattr(self, '_local_properties', [])
     return tuple(property_list)
@@ -1273,8 +1274,10 @@ class Base( CopyContainer,
           result = [result]
         return result
     if d is not _MARKER:
-      return ERP5PropertyManager.getProperty(self, key, d=d, **kw)
-    return ERP5PropertyManager.getProperty(self, key, **kw)
+      return ERP5PropertyManager.getProperty(self, key, d=d,
+                local_properties=True, **kw)
+    return ERP5PropertyManager.getProperty(self, key,
+                local_properties=True, **kw)
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getPropertyList' )
   def getPropertyList(self, key, d=None):
@@ -1349,8 +1352,9 @@ class Base( CopyContainer,
     # If we are here, this means we do not use a property that
     # comes from an ERP5 PropertySheet, we should use the
     # PropertyManager
-    if ERP5PropertyManager.hasProperty(self,key):
-      ERP5PropertyManager._updateProperty(self, key, value)
+    if ERP5PropertyManager.hasProperty(self,key, local_properties=True):
+      ERP5PropertyManager._updateProperty(self, key, value,
+                          local_properties=True)
     else:
       ERP5PropertyManager._setProperty(self, key, value, type=type)
     # This should not be there, because this ignore all checks made by
