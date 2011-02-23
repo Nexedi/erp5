@@ -154,10 +154,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Add ERP5Subversion Tools</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Add ERP5SyncML Tools</name>
    <role>Manager</role>
   </permission>
