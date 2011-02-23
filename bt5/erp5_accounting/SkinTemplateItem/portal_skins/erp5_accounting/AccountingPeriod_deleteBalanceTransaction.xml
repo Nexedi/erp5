@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>assert context.getSimulationState() == \'started\'\n
+            <value> <string>assert context.getSimulationState() == \'started\' and context.getPortalType() == \'Accounting Period\'\n
 id_list = []\n
 for balance_transaction in context.getCausalityRelatedValueList(\n
                      portal_type=\'Balance Transaction\'):\n
@@ -64,6 +64,14 @@ if id_list:\n
         <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
