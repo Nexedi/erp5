@@ -106,9 +106,10 @@
                         <string>my_view_mode_filename</string>
                         <string>my_view_mode_thumbnail</string>
                         <string>my_list_mode_listbox</string>
-                        <string>my_list_mode_listbox_modification_date</string>
-                        <string>my_list_mode_listbox_creation_date</string>
-                        <string>my_list_mode_listbox_thumbnail</string>
+                        <string>my_view_mode_listbox_read_only_modification_date</string>
+                        <string>my_view_mode_listbox_read_only_creation_date</string>
+                        <string>my_view_mode_listbox_thumbnail</string>
+                        <string>my_view_mode_module_listbox</string>
                       </list>
                     </value>
                 </item>

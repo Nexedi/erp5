@@ -10,16 +10,16 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>domain_root_list</string>
                 <string>all_columns</string>
+                <string>columns</string>
+                <string>domain_root_list</string>
+                <string>domain_tree</string>
                 <string>editable_columns</string>
-                <string>title</string>
+                <string>portal_types</string>
                 <string>search_columns</string>
                 <string>selection_name</string>
                 <string>sort_columns</string>
-                <string>columns</string>
-                <string>domain_tree</string>
-                <string>portal_types</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -282,7 +282,7 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_list_mode_listbox</string> </value>
+                    <value> <string>my_view_mode_module_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>

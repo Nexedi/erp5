@@ -11,14 +11,13 @@
             <value>
               <list>
                 <string>date_only</string>
-                <string>editable</string>
                 <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_list_mode_listbox_modification_date</string> </value>
+            <value> <string>my_view_mode_listbox_read_only_creation_date</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -78,10 +77,6 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>editable</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_date_time_field</string> </value>
                 </item>
@@ -95,7 +90,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Modification Date</string> </value>
+                    <value> <string>Creation Date</string> </value>
                 </item>
               </dictionary>
             </value>
