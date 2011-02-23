@@ -71,7 +71,6 @@ else:\n
     for k,v in returned_object.items():\n
       if object_domain.test(v, strict_membership=1):\n
         result_list.append(v)\n
-\n
 return result_list\n
 </string> </value>
         </item>

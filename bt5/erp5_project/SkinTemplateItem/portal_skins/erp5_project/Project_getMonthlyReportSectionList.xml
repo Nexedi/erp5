@@ -55,14 +55,23 @@
 from Products.ZSQLCatalog.SQLCatalog import Query\n
 request = context.REQUEST\n
 \n
-object_dict = {}\n
+object_dict = {} # it contains required temp object to display the report\n
+total_object_dict = {}\n
 \n
 column_list= []\n
 worker_column_list = []\n
+portal = context.getPortalObject()\n
+temp_object_container = portal.project_module.newContent(temp_object=1)\n
 \n
 # find all Tasks\n
-source_project_uid_list = [x.uid for x in context.portal_catalog(\n
+inventory_kw = {}\n
+if context.getPortalType() == \'Project\':\n
+  inventory_kw[\'project_uid\'] = [x.uid for x in portal.portal_catalog(\n
      relative_url=\'%s/%%\' % context.getRelativeUrl())] + [context.getUid()]\n
+worker_title_list = request.get(\'worker_title_list\')\n
+if worker_title_list is not None and len(worker_title_list):\n
+  inventory_kw[\'node_uid\'] = [x.uid for x in portal.portal_catalog(\n
+                              portal_type=\'Person\',title=worker_title_list)]\n
 \n
 from_date = request.get(\'from_date\', None)\n
 if from_date is None:\n
@@ -75,36 +84,57 @@ if at_date is None:\n
 simulation_state = request.get(\'simulation_state\', None)\n
 \n
 \n
+\n
 # We will use inventory API in order to find all quantities\n
-result_list = context.portal_simulation.getInventoryList(\n
+result_list = portal.portal_simulation.getInventoryList(\n
                   simulation_state = simulation_state,\n
-                  project_uid = source_project_uid_list,\n
+                  portal_type=\'Task Report Line\',\n
                   from_date=from_date,\n
-                  at_date=at_date)\n
+                  at_date=at_date, **inventory_kw)\n
 \n
 monthly_worker_quantity_dict = {} # Used to get quantity per month and per worker\n
+monthly_project_to_display_dict = {} # Used to get project urls to display per month\n
+                                     # in the report tree\n
+\n
+source_uid_dict = {}\n
+project_uid_dict = {}\n
+project_relative_url_dict = {}\n
 \n
 for task_line in result_list:\n
   # initialize some variables\n
-  source = task_line.getSource()\n
-  if source is None:\n
+  source_uid = task_line.node_uid\n
+  if source_uid is None:\n
     # This should not happens, so display an error message\n
     raise ValueError, context.Base_translateString(\\\n
         "This task should have a source : ${task_relative_url}",\n
         mapping = {\'task_relative_url\': task_line.getRelativeUrl()})\n
-  source_title = task_line.getSourceTitle()\n
-  start_date_task = task_line.getStartDate()\n
-  stop_date_task = task_line.getStopDate()\n
+  source_dict = source_uid_dict.get(source_uid, None)\n
+  if source_dict is None:\n
+    source_value = task_line.getSourceValue()\n
+    source_dict = {\'title\': source_value.getTitle(),\n
+                   \'relative_url\': source_value.getRelativeUrl()}\n
+    source_uid_dict[source_uid] = source_dict\n
+  source_title = source_dict[\'title\']\n
+  source_relative_url = source_dict[\'relative_url\']\n
+  start_date_task = task_line.date\n
+  stop_date_task = task_line.mirror_date\n
   year_start_date = start_date_task.year()\n
   month_start_date = start_date_task.month()\n
 \n
   # create a list with people who works on the task\n
-  current_column = (source, task_line.getSourceTitle())\n
+  current_column = (source_relative_url, source_title)\n
   if current_column not in worker_column_list:\n
     worker_column_list.append(current_column)\n
-  project = task_line.getSourceProjectValue()\n
-  quantity = task_line.getQuantity()\n
-  project_relative_url = project.getRelativeUrl()\n
+  project_uid = task_line.project_uid\n
+  project_dict = project_uid_dict.get(project_uid, None)\n
+  if project_dict is None:\n
+    project_value = task_line.getSourceProjectValue()\n
+    project_dict = {\'relative_url\': project_value.getRelativeUrl(),\n
+                    \'title\': project_value.getTitle()}\n
+    project_uid_dict[project_uid] = project_dict\n
+    project_relative_url_dict[\'/\'.join(project_value.getRelativeUrl().split(\'/\')[0:2])] = 1\n
+  quantity = - task_line.inventory\n
+  project_relative_url = project_dict[\'relative_url\']\n
   # diff in day between the begin and the end of the task\n
   diff_day = stop_date_task - start_date_task + 1\n
 \n
@@ -124,41 +154,50 @@ for task_line in result_list:\n
     quantity_dict = object_dict.setdefault(string_index, {})\n
     \n
     worker_quantity_dict = monthly_worker_quantity_dict.setdefault(string_index, {})\n
+    project_to_display_dict = monthly_project_to_display_dict.setdefault(string_index, {})\n
+    if project_to_display_dict.get(project_relative_url, None) is None:\n
+      splitted_project_url = project_relative_url.split(\'/\')\n
+      for x in xrange(0, len(splitted_project_url)):\n
+        project_to_display_dict[\'/\'.join(splitted_project_url[0:x+1])] = 1\n
     \n
     if not quantity_dict.has_key(project_relative_url):\n
-      temp_object = context.newContent(portal_type = \'Project Line\',\n
+      temp_object = temp_object_container.newContent(portal_type = \'Project Line\',\n
                   temp_object=1,\n
                   string_index = string_index,\n
                   category_list = [\'source_project/%s\' % project_relative_url])\n
       quantity_dict[project_relative_url] = temp_object\n
     current_temp_object = quantity_dict[project_relative_url]\n
     current_month_quantity = (min(next_timekeeper,stop_date_task+1) - timekeeper )/ diff_day * quantity\n
-    object_quantity = current_month_quantity + current_temp_object.getProperty(source, 0)\n
-    worker_quantity_dict[source] = worker_quantity_dict.get(source, 0) + current_month_quantity\n
-    current_temp_object.setProperty(source, object_quantity)\n
+    object_quantity = current_month_quantity + current_temp_object.getProperty(source_relative_url, 0)\n
+    worker_quantity_dict[source_relative_url] = worker_quantity_dict.get(source_relative_url, 0) + current_month_quantity\n
+    current_temp_object.setProperty(source_relative_url, object_quantity)\n
     timekeeper = next_timekeeper\n
 \n
 # Now build temp objects for quantity per month and per worker\n
 summary_dict = {}\n
 for string_index, worker_quantity_dict in monthly_worker_quantity_dict.items():\n
-  temp_object = context.newContent(portal_type = \'Project Line\',\n
+  temp_object = temp_object_container.newContent(portal_type = \'Project Line\',\n
               temp_object=1,\n
               string_index = string_index)\n
   summary_dict[string_index] = temp_object\n
-  for source, quantity in worker_quantity_dict.items():\n
-    temp_object.setProperty(source, quantity)\n
+  for source_relative_url, quantity in worker_quantity_dict.items():\n
+    temp_object.setProperty(source_relative_url, quantity)\n
 \n
 column_list.extend(worker_column_list)\n
 \n
 selection_name = \'project_monthly_report_selection\'\n
-context.portal_selections.setListboxDisplayMode(request, \'ReportTreeMode\',\n
+portal.portal_selections.setListboxDisplayMode(request, \'ReportTreeMode\',\n
                                               selection_name=selection_name)\n
 \n
 result = []\n
 from Products.ERP5Form.Report import ReportSection\n
 param_dict = {}\n
 \n
-param_list = [object_dict, summary_dict, column_list]\n
+project_list = []\n
+for project_relative_url in project_relative_url_dict.keys():\n
+  project_list.append(portal.restrictedTraverse(project_relative_url))\n
+param_list = [object_dict, summary_dict, column_list, project_list,\n
+              monthly_project_to_display_dict]\n
 \n
 result.append(ReportSection(\n
               path=context.getPhysicalPath(),\n
