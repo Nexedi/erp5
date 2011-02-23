@@ -26,17 +26,6 @@
 #
 ##############################################################################
 
-import collections
-try:
-  from collections import OrderedDict
-except ImportError:
-  try:
-    from ordereddict import OrderedDict
-    collections.OrderedDict = OrderedDict
-  except ImportError:
-    OrderedDict = None
+# XXX deprecated; use 'collections' instead, even on Python < 2.7
 
-if OrderedDict is not None and \
-    getattr(OrderedDict, '__allow_access_to_unprotected_subobjects__',
-            None) is None:
-  OrderedDict.__allow_access_to_unprotected_subobjects__ = 1
+from collections import OrderedDict

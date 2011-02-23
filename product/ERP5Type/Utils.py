@@ -216,14 +216,19 @@ def _showwarning(message, category, filename, lineno, file=None, line=None):
     file.write(warnings.formatwarning(message, category, filename, lineno))
 warnings.showwarning = _showwarning
 
-@simple_decorator
-def deprecated(wrapped):
-  message = "Use of '%s' function (%s, line %s) is deprecated." % (
-    wrapped.__name__, wrapped.__module__, wrapped.func_code.co_firstlineno)
-  def wrapper(*args, **kw):
-    warnings.warn(message, DeprecationWarning, 2)
-    return wrapped(*args, **kw)
-  return wrapper
+def deprecated(message=''):
+  @simple_decorator
+  def _deprecated(wrapped):
+    m = message or "Use of '%s' function (%s, line %s) is deprecated." % (
+      wrapped.__name__, wrapped.__module__, wrapped.func_code.co_firstlineno)
+    def deprecated(*args, **kw):
+      warnings.warn(m, DeprecationWarning, 2)
+      return wrapped(*args, **kw)
+    return deprecated
+  if callable(message):
+    m, message = message, ''
+    return _deprecated(m)
+  return _deprecated
 
 #####################################################
 # Useful methods
