@@ -685,7 +685,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
                                    categories=new_category_list,
                                    REQUEST=REQUEST, **kw)
       # XXX When called for a generated amount, base_application may point
-      #     to nonexistant base_amount (e.g. "produced_quantity" for
+      #     to nonexistant base_amount (e.g. "base_amount/produced_quantity" for
       #     transformations), which would make domain tool return nothing.
       #     Following hack cleans up a category we don't want to test anyway.
       #     Also, do not use '_setBaseApplication' to bypass interactions.

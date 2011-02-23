@@ -97,7 +97,7 @@ class TransformedResource(AmountGeneratorLine):
     @classmethod
     def getBaseAmountQuantity(cls, delivery_amount, base_application, rounding):
       value = delivery_amount.getGeneratedAmountQuantity(base_application)
-      if base_application == 'produced_quantity':
+      if base_application == 'base_amount/produced_quantity':
         value += delivery_amount.getConvertedQuantity()
       return value
 
@@ -110,7 +110,8 @@ class TransformedResource(AmountGeneratorLine):
       """
       """
       # It is OK to try to acquire
-      return self._categoryGetBaseApplicationList() or ['produced_quantity']
+      return self._categoryGetBaseApplicationList() \
+          or ['base_amount/produced_quantity']
 
     ### Variation matrix definition
     # XXX-JPS Some explanation needed
