@@ -107,4 +107,4 @@ if sys.version_info < (2, 7):
     def OrderedDict(*args, **kw):
       raise missing_ordereddict
   import collections
-  collections.OrderedDict = ordereddict.OrderedDict
+  collections.OrderedDict = OrderedDict
