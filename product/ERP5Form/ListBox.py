@@ -2629,8 +2629,8 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
     request = self.request
     field_id = self.getId()
     form = self.getForm()
-    request.set('listbox_form_id', form.getId())
-    request.set('listbox_field_id', field_id)
+    request.set('%s_form_id', %(field_id, form.getId()))
+    request.set('%s_field_id', %(field_id, field_id))
     pt = self.getPageTemplate()
     return pt()
 
