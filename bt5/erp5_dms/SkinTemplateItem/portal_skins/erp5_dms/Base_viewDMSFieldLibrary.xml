@@ -105,6 +105,10 @@
                         <string>my_view_mode_translated_external_processing_state_title</string>
                         <string>my_view_mode_filename</string>
                         <string>my_view_mode_thumbnail</string>
+                        <string>my_list_mode_listbox</string>
+                        <string>my_list_mode_listbox_modification_date</string>
+                        <string>my_list_mode_listbox_creation_date</string>
+                        <string>my_list_mode_listbox_thumbnail</string>
                       </list>
                     </value>
                 </item>
