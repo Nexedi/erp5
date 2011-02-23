@@ -3818,6 +3818,7 @@ class TempBase(Base):
     return getattr(aq_base(self), 'title', None)
 
   security.declarePublic('setProperty')
+  security.declarePublic('getProperty')
 
   security.declarePublic('edit')
 
