@@ -27,7 +27,7 @@
 #
 ##############################################################################
 
-import fnmatch, gc, imp, os, re, shutil, sys
+import fnmatch, gc, imp, os, re, shutil, sys, time
 from Shared.DC.ZRDB import Aqueduct
 from Shared.DC.ZRDB.Connection import Connection as RDBConnection
 from Products.ERP5Type.DiffUtils import DiffFile
@@ -312,14 +312,8 @@ class BusinessTemplateArchive:
   """
     This is the base class for all Business Template archives
   """
-  def _initCreation(self, path):
+  def _initCreation(self, path, **kw):
     self.path = path
-    try:
-      os.makedirs(self.path)
-    except OSError:
-      # folder already exists, remove it
-      shutil.rmtree(self.path)
-      os.makedirs(self.path)
 
   def __init__(self, creation=0, importing=0, file=None, path=None, **kw):
     if creation:
@@ -327,46 +321,44 @@ class BusinessTemplateArchive:
     elif importing:
       self._initImport(file=file, path=path, **kw)
 
-  def addFolder(self, **kw):
-    pass
-
   def addObject(self, obj, name, path=None, ext='.xml'):
-    name = name.replace('\\', '/')
-    name = quote(name)
-    name = os.path.normpath(name)
-    if path is None:
-      object_path = os.path.join(self.path, name)
-    else:
-      if '%' not in path:
-        tail, path = os.path.splitdrive(path)
-        path = path.replace('\\', '/')
-        path = tail + quote(path)
-      path = os.path.normpath(path)
-      object_path = os.path.join(path, name)
-    f = open(object_path+ext, 'wb')
+    if path:
+      name = posixpath.join(path, name)
+    # XXX required due to overuse of os.path
+    name = name.replace('\\', '/').replace(':', '/')
+    name = quote(name + ext)
+    path = name.replace('/', os.sep)
     try:
-      f.write(str(obj))
-    finally:
-      f.close()
+      write = self._writeFile
+    except AttributeError:
+      if not isinstance(obj, str):
+        obj.seek(0)
+        obj = obj.read()
+      self._writeString(obj, path)
+    else:
+      if isinstance(obj, str):
+        obj = StringIO(obj)
+      write(obj, path)
 
-  def finishCreation(self, name=None, **kw):
+  def finishCreation(self):
     pass
 
 class BusinessTemplateFolder(BusinessTemplateArchive):
   """
     Class archiving business template into a folder tree
   """
-  def addFolder(self, name=''):
-    if name != '':
-      name = os.path.normpath(name)
-      path = os.path.join(self.path, name)
-      if not os.path.exists(path):
-        os.makedirs(path)
-      return path
+  def _writeString(self, obj, path):
+    object_path = os.path.join(self.path, path)
+    path = os.path.dirname(object_path)
+    os.path.exists(path) or os.makedirs(path)
+    f = open(object_path, 'wb')
+    try:
+      f.write(obj)
+    finally:
+      f.close()
 
-  def _initImport(self, file=None, path=None, **kw):
-    # Normalize the paths to eliminate the effect of double-slashes.
-    root_path_len = len(os.path.normpath(path)) + len(os.sep)
+  def _initImport(self, file, path, **kw):
+    root_path_len = len(os.path.normpath(os.path.join(path, '_'))) - 1
     self.root_path_len = root_path_len
     d = {}
     for f in file:
@@ -408,26 +400,28 @@ class BusinessTemplateTarball(BusinessTemplateArchive):
     Class archiving businnes template into a tarball file
   """
 
-  def _initCreation(self, path):
-    BusinessTemplateArchive._initCreation(self, path)
-
-    # make tmp dir, must use stringIO instead
+  def _initCreation(self, **kw):
+    BusinessTemplateArchive._initCreation(self, **kw)
     # init tarfile obj
     self.fobj = StringIO()
     self.tar = tarfile.open('', 'w:gz', self.fobj)
+    self.time = time.time()
 
-  def addFolder(self, name=''):
-    name = os.path.normpath(name)
-    if not os.path.exists(name):
-      os.makedirs(name)
+  def _writeFile(self, obj, path):
+    if self.path:
+      path = posixpath.join(self.path, path)
+    info = tarfile.TarInfo(path)
+    info.mtime = self.time
+    obj.seek(0, 2)
+    info.size = obj.tell()
+    obj.seek(0)
+    self.tar.addfile(info, obj)
 
-  def finishCreation(self, name):
-    self.tar.add(name)
+  def finishCreation(self):
     self.tar.close()
-    shutil.rmtree(name)
     return self.fobj
 
-  def _initImport(self, file=None, **kw):
+  def _initImport(self, file, **kw):
     self.tar = tarfile.TarFile(fileobj=StringIO(GzipFile(fileobj=file).read()))
     self.item_dict = {}
     setdefault = self.item_dict.setdefault
@@ -688,22 +682,12 @@ class ObjectTemplateItem(BaseTemplateItem):
     """
     if len(self._objects.keys()) == 0:
       return
-    root_path = os.path.join(bta.path, self.__class__.__name__)
+    path = self.__class__.__name__
     for key, obj in self._objects.iteritems():
-      # create folder and subfolders
-      folders, id = posixpath.split(key)
-      encode_folders = []
-      for folder in folders.split('/'):
-        if '%' not in folder:
-          encode_folders.append(quote(folder))
-        else:
-          encode_folders.append(folder)
-      path = os.path.join(root_path, (os.sep).join(encode_folders))
-      bta.addFolder(name=path)
       # export object in xml
       f = StringIO()
       XMLExportImport.exportXML(obj._p_jar, obj._p_oid, f)
-      bta.addObject(obj=f.getvalue(), name=id, path=path)
+      bta.addObject(f, key, path=path)
 
   def build_sub_objects(self, context, id_list, url, **kw):
     # XXX duplicates code from build
@@ -1669,12 +1653,10 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
   def export(self, context, bta, **kw):
     if not self._objects:
       return
-    root_path = os.path.join(bta.path, self.__class__.__name__)
-    bta.addFolder(name=root_path)
     # export workflow chain
-    bta.addObject(obj=self.generateXml(), 
-                  name='registered_skin_selection',  
-                  path=root_path)
+    bta.addObject(self.generateXml(),
+                  name='registered_skin_selection',
+                  path=self.__class__.__name__)
 
   def install(self, context, trashbin, **kw):
     update_dict = kw.get('object_to_update')
@@ -2061,11 +2043,10 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
   def export(self, context, bta, **kw):
     if not self._objects:
       return
-    root_path = os.path.join(bta.path, self.__class__.__name__)
-    bta.addFolder(name=root_path)
     # export workflow chain
     xml_data = self.generateXml()
-    bta.addObject(obj=xml_data, name='workflow_chain_type',  path=root_path)
+    bta.addObject(xml_data, name='workflow_chain_type',
+                  path=self.__class__.__name__)
 
   def install(self, context, trashbin, **kw):
     update_dict = kw.get('object_to_update')
@@ -2268,11 +2249,9 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
   def export(self, context, bta, **kw):
     if not self._objects:
       return
-    path = os.path.join(bta.path, self.__class__.__name__)
-    bta.addFolder(name=path)
-    path = os.sep.join((self.__class__.__name__, self.class_property,))
     xml_data = self.generateXml(path=None)
-    bta.addObject(obj=xml_data, name=path, path=None)
+    bta.addObject(xml_data, name=self.class_property,
+                  path=self.__class__.__name__)
 
   def preinstall(self, context, installed_item, **kw):
     modified_object_list = {}
@@ -2505,21 +2484,16 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
 
     if len(self._objects.keys()) == 0:
       return
-    root_path = os.path.join(bta.path, self.__class__.__name__)
+    path = self.__class__.__name__
     for key in self._objects.keys():
       obj = self._objects[key]
-      # create folder and subfolders
-      folders, id = posixpath.split(key)
-      path = os.path.join(root_path, folders)
-      bta.addFolder(name=path)
       # export object in xml
       f=StringIO()
       XMLExportImport.exportXML(obj._p_jar, obj._p_oid, f)
-      bta.addObject(obj=f.getvalue(), name=id, path=path)
+      bta.addObject(f, key, path=path)
       # add all datas specific to catalog inside one file
-      key_name = os.path.join(obj.id+'.catalog_keys')
       xml_data = self.generateXml(key)
-      bta.addObject(obj=xml_data, name=key_name, path=path)
+      bta.addObject(xml_data, key + '.catalog_keys', path=path)
 
   def install(self, context, trashbin, **kw):
     ObjectTemplateItem.install(self, context, trashbin, **kw)
@@ -3016,14 +2990,13 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
   def export(self, context, bta, **kw):
     if len(self._objects.keys()) == 0:
       return
-    root_path = os.path.join(bta.path, self.__class__.__name__)
-    bta.addFolder(name=root_path)
+    path = self.__class__.__name__
     for key in self._objects.keys():
       xml_data = self.generateXml(key)
       if isinstance(xml_data, unicode):
         xml_data = xml_data.encode('utf-8')
       name = key.split('/', 1)[1]
-      bta.addObject(obj=xml_data, name=name, path=root_path)
+      bta.addObject(xml_data, name=name, path=path)
 
   def _importFile(self, file_name, file):
     if not file_name.endswith('.xml'):
@@ -3196,15 +3169,13 @@ class SitePropertyTemplateItem(BaseTemplateItem):
   def export(self, context, bta, **kw):
     if len(self._objects.keys()) == 0:
       return
-    root_path = os.path.join(bta.path, self.__class__.__name__)
-    bta.addFolder(name=root_path)
     xml_data = '<site_property>'
     keys = self._objects.keys()
     keys.sort()
     for path in keys:
       xml_data += self.generateXml(path)
     xml_data += '\n</site_property>'
-    bta.addObject(obj=xml_data, name='properties', path=root_path)
+    bta.addObject(xml_data, name='properties', path=self.__class__.__name__)
 
 class ModuleTemplateItem(BaseTemplateItem):
 
@@ -3268,14 +3239,13 @@ class ModuleTemplateItem(BaseTemplateItem):
   def export(self, context, bta, **kw):
     if len(self._objects) == 0:
       return
-    path = os.path.join(bta.path, self.__class__.__name__)
-    bta.addFolder(path)
+    path = self.__class__.__name__
     keys = self._objects.keys()
     keys.sort()
     for key in keys:
       # export modules one by one
       xml_data = self.generateXml(path=key)
-      bta.addObject(obj=xml_data, name=key, path=path)
+      bta.addObject(xml_data, name=key, path=path)
 
   def install(self, context, trashbin, **kw):
     portal = context.getPortalObject()
@@ -3479,15 +3449,13 @@ class DocumentTemplateItem(BaseTemplateItem):
   def export(self, context, bta, **kw):
     if len(self._objects.keys()) == 0:
       return
-    path = os.path.join(bta.path, self.__class__.__name__)
-    bta.addFolder(name=path)
     extra_prefix = self.__class__.__name__ + '/'
     for key in self._objects.keys():
       obj = self._objects[key]
       # BBB the prefix was put into each key in the previous implementation.
       if not key.startswith(extra_prefix):
         key = extra_prefix + key
-      bta.addObject(obj=obj, name=key, ext='.py')
+      bta.addObject(obj, name=key, ext='.py')
 
   def _importFile(self, file_name, file):
     if not file_name.endswith('.py'):
@@ -3847,8 +3815,6 @@ class RoleTemplateItem(BaseTemplateItem):
   def export(self, context, bta, **kw):
     if len(self._objects) == 0:
       return
-    path = os.path.join(bta.path, self.__class__.__name__)
-    bta.addFolder(name=path)
     # BBB it might be necessary to change the data structure.
     obsolete_key = self.__class__.__name__ + '/role_list'
     if obsolete_key in self._objects:
@@ -3857,7 +3823,7 @@ class RoleTemplateItem(BaseTemplateItem):
       del self._objects[obsolete_key]
     xml_data = self.generateXml()
     path = obsolete_key
-    bta.addObject(obj=xml_data, name=path)
+    bta.addObject(xml_data, name=path)
 
 class CatalogSearchKeyTemplateItem(BaseTemplateItem):
   key_list_attr = 'sql_catalog_search_keys'
@@ -3945,11 +3911,9 @@ class CatalogSearchKeyTemplateItem(BaseTemplateItem):
   def export(self, context, bta, **kw):
     if len(self._objects.keys()) == 0:
       return
-    path = os.path.join(bta.path, self.__class__.__name__)
-    bta.addFolder(name=path)
     for path in self._objects.keys():
       xml_data = self.generateXml(path=path)
-      bta.addObject(obj=xml_data, name=path, path=None)
+      bta.addObject(xml_data, name=path)
 
 class CatalogResultKeyTemplateItem(CatalogSearchKeyTemplateItem):
   key_list_attr = 'sql_search_result_keys'
@@ -4186,19 +4150,17 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
   def export(self, context, bta, **kw):
     if len(self._objects) == 0:
       return
-    root_path = os.path.join(bta.path, self.__class__.__name__)
-    bta.addFolder(name=root_path)
+    root_path = self.__class__.__name__
     for key, obj in self._objects.iteritems():
       path = os.path.join(root_path, key)
-      bta.addFolder(name=path)
       if '/' in key:
-        bta.addObject(obj, os.path.join(path, 'translation'), ext='.po')
+        bta.addObject(obj, 'translation', ext='.po', path=path)
       else:
         xml_data = ['<language>']
         xml_data.append(' <code>%s</code>' % (escape(key), ))
         xml_data.append(' <name>%s</name>' % (escape(obj), ))
         xml_data.append('</language>')
-        bta.addObject('\n'.join(xml_data), os.path.join(path, 'language'))
+        bta.addObject('\n'.join(xml_data), 'language', path=path)
 
   def _importFile(self, file_name, file):
     name = posixpath.split(file_name)[1]
@@ -4242,23 +4204,11 @@ class LocalRolesTemplateItem(BaseTemplateItem):
     return xml_data
 
   def export(self, context, bta, **kw):
-    if len(self._objects.keys()) == 0:
-      return
-    root_path = os.path.join(bta.path, self.__class__.__name__)
-    bta.addFolder(name=root_path)
-    for key in self._objects.keys():
+    path = self.__class__.__name__
+    for key in self._objects:
       xml_data = self.generateXml(key)
-
-      folders, id = posixpath.split(key)
-      encode_folders = []
-      for folder in folders.split('/')[1:]:
-        if '%' not in folder:
-          encode_folders.append(quote(folder))
-        else:
-          encode_folders.append(folder)
-      path = os.path.join(root_path, (os.sep).join(encode_folders))
-      bta.addFolder(name=path)
-      bta.addObject(obj=xml_data, name=id, path=path)
+      assert key[:12] == 'local_roles/'
+      bta.addObject(xml_data, key[12:], path=path)
 
   def _importFile(self, file_name, file):
     if not file_name.endswith('.xml'):
@@ -5139,7 +5089,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       return False
 
     security.declareProtected(Permissions.ManagePortal, 'export')
-    def export(self, path=None, local=0, **kw):
+    def export(self, path=None, local=0, bta=None, **kw):
       """
         Export this Business Template
       """
@@ -5147,15 +5097,17 @@ Business Template is a set of definitions, such as skins, portal types and categ
         raise TemplateConditionError, \
               'Business Template must be built before export'
 
-      if local:
-        # we export into a folder tree
-        bta = BusinessTemplateFolder(creation=1, path=path)
-      else:
-        # We export BT into a tarball file
-        bta = BusinessTemplateTarball(creation=1, path=path)
+      if bta is None:
+        if local:
+          # we export into a folder tree
+          bta = BusinessTemplateFolder(creation=1, path=path)
+        else:
+          # We export BT into a tarball file
+          if path is None:
+            path = self.getTitle()
+          bta = BusinessTemplateTarball(creation=1, path=path)
 
       # export bt
-      bta.addFolder(path+os.sep+'bt')
       for prop in self.propertyMap():
         prop_type = prop['type']
         id = prop['id']
@@ -5166,16 +5118,15 @@ Business Template is a set of definitions, such as skins, portal types and categ
         if not value:
           continue
         if prop_type in ('text', 'string', 'int', 'boolean'):
-          bta.addObject(obj=value, name=id, path=path+os.sep+'bt', ext='')
+          bta.addObject(str(value), name=id, path='bt', ext='')
         elif prop_type in ('lines', 'tokens'):
-          bta.addObject(obj=str('\n').join(value), name=id,
-                        path=path+os.sep+'bt', ext='')
+          bta.addObject('\n'.join(value), name=id, path='bt', ext='')
 
       # Export each part
       for item_name in self._item_name_list:
         getattr(self, item_name).export(context=self, bta=bta)
 
-      return bta.finishCreation(self.getTitle())
+      return bta.finishCreation()
 
     security.declareProtected(Permissions.ManagePortal, 'importFile')
     def importFile(self, dir = 0, file=None, root_path=None):
