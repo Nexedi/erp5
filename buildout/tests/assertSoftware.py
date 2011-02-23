@@ -463,10 +463,15 @@ class AssertSqlite3(AssertSoftwareMixin):
   """Tests for built memcached"""
 
   def test_ld_bin_sqlite3(self):
-    self.assertLibraryList('parts/sqlite3/bin/sqlite3', ['libpthread', 'libc', 'libdl', 'libsqlite3'], ['sqlite3'])
+    self.assertLibraryList('parts/sqlite3/bin/sqlite3', ['libpthread', 'libc', 'libdl', 'libsqlite3', 'libreadline', 'libncurses'],
+                           ['sqlite3'],
+       [ os.path.join(os.path.abspath(os.curdir), 'parts', 'readline', 'lib'),
+         os.path.join(os.path.abspath(os.curdir), 'parts', 'ncurses', 'lib')])
 
   def test_ld_libsqlite3(self):
-    self.assertLibraryList('parts/sqlite3/lib/libsqlite3.so', ['libpthread', 'libc', 'libdl'], [])
+    self.assertLibraryList('parts/sqlite3/lib/libsqlite3.so', ['libpthread', 'libc', 'libdl'], [],
+       [ os.path.join(os.path.abspath(os.curdir), 'parts', 'readline', 'lib'),
+         os.path.join(os.path.abspath(os.curdir), 'parts', 'ncurses', 'lib')])
 
 class AssertMemcached(AssertSoftwareMixin):
   """Tests for built memcached"""
