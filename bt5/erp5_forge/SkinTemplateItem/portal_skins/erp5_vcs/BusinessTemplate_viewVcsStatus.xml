@@ -1,0 +1,194 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<tal:block tal:replace="nothing"\n
+           xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
+<!--\n
+Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.\n
+                   Christophe Dumez <christophe@nexedi.com>\n
+\n
+This program is Free Software; you can redistribute it and/or\n
+modify it under the terms of the GNU General Public License\n
+as published by the Free Software Foundation; either version 2\n
+of the License, or (at your option) any later version.\n
+\n
+This program is distributed in the hope that it will be useful,\n
+but WITHOUT ANY WARRANTY; without even the implied warranty of\n
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n
+GNU General Public License for more details.\n
+\n
+You should have received a copy of the GNU General Public License\n
+along with this program; if not, write to the Free Software\n
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
+-->\n
+</tal:block>\n
+<tal:block tal:define="do_extract request/do_extract | python: 1;\n
+                       portal_path here/portal_url;\n
+                       css_list python: [\'%s/ERP5Vcs_dhtmlXTree.css\' % portal_path,\n
+                                         \'%s/ERP5Vcs_movableMenu.css\' % portal_path,\n
+                                         \'%s/erp5.css\' % portal_path];\n
+                       js_list python: [\'%s/erp5.js\' % portal_path,\n
+                                        \'%s/ERP5Vcs_dhtmlXCommon.js\' % portal_path,\n
+                                        \'%s/ERP5Vcs_dhtmlXTree.js\' % portal_path,\n
+                                        \'%s/ERP5Vcs_menuico.js\' % portal_path,\n
+                                        \'%s/ERP5Vcs_movableMenu.js\' % portal_path,\n
+                                        \'%s/ERP5Vcs_doCreateJavaScriptStatus.js\' % portal_path]">\n
+  <tal:block metal:use-macro="here/view_main/macros/master">\n
+    <tal:block metal:fill-slot="main">\n
+      <script type="text/javascript" tal:content="string:var do_extract = ${do_extract};"/>\n
+      <noscript>\n
+        <h3 class="error">Please activate javascript in your web browser or this module won\'t work.</h3>\n
+      </noscript>\n
+      <!-- Form Hidden : Selected files -->\n
+      <input type="hidden" name="removed" value="" />\n
+      <input type="hidden" name="added" value="" />\n
+      <input type="hidden" name="modified" value="" />\n
+      <input type="hidden" name="files" value="" />\n
+      <!-- End Hidden -->\n
+      \n
+      <div id="menudiv" style="opacity: 0.85; position:absolute; display:none; top:0px; left:0px;z-index:10000;" onmouseover="javascript:overpopupmenu=true;" onmouseout="javascript:overpopupmenu=false;">\n
+        <table cellspacing="1" cellpadding="0" style="width:82px;background-color:#ffffff; border-style: solid; border-width: 1px;">\n
+        <tr><td>\n
+          <table style="width: 80px;" cellspacing="0" cellpadding="0">\n
+            <tr>\n
+              <td id="item2" style="text-align: center;" onMouseOver="this.style.backgroundColor=\'#dae6e6\'" onMouseOut="this.style.backgroundColor=\'#ffffff\'" onClick="viewDiff(1,document.getElementById(\'main_form\'))">Diff</td>\n
+            </tr>\n
+            <tr>\n
+              <td id="item3" style="text-align: center;" onMouseOver="this.style.backgroundColor=\'#dae6e6\'" onMouseOut="this.style.backgroundColor=\'#ffffff\'" onClick="log()">  History</td>\n
+            </tr>\n
+            <tr>\n
+              <td id="item4" style="text-align: center;" onMouseOver="this.style.backgroundColor=\'#dae6e6\'" onMouseOut="this.style.backgroundColor=\'#ffffff\'" onClick="commit(1,document.getElementById(\'main_form\'))">Commit</td>\n
+            </tr>\n
+            <tr>\n
+              <td id="item5" style="text-align: center;" onMouseOver="this.style.backgroundColor=\'#dae6e6\'" onMouseOut="this.style.backgroundColor=\'#ffffff\'" onClick="revert(1,document.getElementById(\'main_form\'))">Revert</td>\n
+            </tr>\n
+          </table>\n
+        </td></tr>\n
+      </table>\n
+      </div>\n
+      \n
+      <br/>\n
+      <div style="color: black; font-weight: bold;"\n
+           tal:define="vcs_tool context/getVcsTool; repos_url vcs_tool/getRemoteUrl; comment vcs_tool/getRemoteComment">\n
+        Repository: <a tal:attributes="href repos_url" tal:content="repos_url"></a>\n
+        <tal:block condition="comment" replace="string: (${comment})"/>\n
+      </div><br/>\n
+      <button type="button" onclick="treeTaller()">Taller</button>\n
+      <button type="button" onclick="treeShorter()">Shorter</button>\n
+      <div id="splashScreen" style="position:absolute;z-index:5;top:40%;left:35%; width: 300px; background-color: #cccccc; opacity: 0.6; border-style: solid; vertical-align: middle; text-align: center; color: #000066; font-weight: bold; border-width: 1px;">\n
+            <br/><br/><br/>\n
+            Checking for changes.<br/><br/>\n
+            <img src="ERP5Vcs_imgs/wait.gif" alt="Please wait..."/><br/><br/><br/><br/>\n
+      </div>\n
+      <div \n
+        id="treebox1" \n
+        style="width:98%; height: 300px;background-color:#f5f5f5;border :1px solid Silver;overflow:auto;">\n
+      </div>\n
+      <div id="captionWindow" class="window" style="right:20px;left:auto;top:140px;width:120px;background-color:#dae6e6;border-color:#ebf8f8 #c0caca #c0caca #c0caca;">\n
+        <div class="titleBar" style="background-color:#dae6e6;color:black;">\n
+          <span class="titleBarText">Legend -- SVN</span>\n
+          <img class="titleBarButtons" alt="" src="ERP5Vcs_imgs/altbuttons.gif" longdesc="ERP5Vcs_imgs/altbuttonslow.gif" usemap="#sampleMap3" />\n
+          <map id="sampleMap3" name="sampleMap3">\n
+            <area shape="rect" coords="0,0,15,13"  href="" alt="" title="Minimize" onclick="this.parentWindow.minimize();return false;" />\n
+            <area shape="rect" coords="16,0,31,13" href="" alt="" title="Restore"  onclick="this.parentWindow.restore();return false;" />\n
+            <area shape="rect" coords="34,0,49,13" href="" alt="" title="Close"    onclick="this.parentWindow.close();return false;" />\n
+          </map>\n
+        </div>\n
+        <div class="clientArea" style="background-color:#fffdfd;color:#806040;border-color:#c0caca #c0caca #c0caca #c0caca;text-align:center;">\n
+          <div style="font-weight: bold; color: black; text-align: center;">Legend</div><hr/>\n
+            <div style="color: green">Added files</div>\n
+            <div style="color: orange">Modified files</div>\n
+            <div style="color: red">Removed files</div>\n
+            <!-- <div style="color: purple" title="You must update local working copy">Outdated files</div> -->\n
+            <div style="color: grey" title="Please resolve conflicts manually">Conflicted files</div>\n
+            <div style="color: black">Unmodified files</div>\n
+        </div>\n
+      </div>\n
+      \n
+      <script type="text/javascript">\n
+        winInit();\n
+        if (winList[\'captionWindow\']){\n
+          winList[\'captionWindow\'].open();\n
+          winList[\'captionWindow\'].close();\n
+        }\n
+      </script>\n
+      <input name="showUnmodified" value="showUnmodified" type="checkbox" onclick="showNormalFiles()"/> <span style="color: black;">Show unmodified files</span>\n
+      <script type="text/javascript">\n
+        // Menu Customization\n
+        var MenuToolBar=new CreateToolBarMenu("#dae6e6", "#ffffff", "#b1bbbb", "#6699ff", "font-family:verdana;font-size:11px;color:black;font-weight:bold", 16, 16)\n
+        MenuToolBar.Add("ERP5Vcs_imgs/captionoff.png", "ERP5Vcs_imgs/captionon.png", "Show Legend", "#", "winList[\'captionWindow\'].open();");\n
+        MenuToolBar.Add("ERP5Vcs_imgs/expandoff.png", "ERP5Vcs_imgs/expandon.png", "Expand / Collapse", "#", "expandCollapse();");\n
+        MenuToolBar.Add("ERP5Vcs_imgs/diffoff.png", "ERP5Vcs_imgs/diffon.png", "View Diff", "#", "viewDiff(0,document.getElementById(\'main_form\'));");\n
+        MenuToolBar.Add("ERP5Vcs_imgs/execoff.png", "ERP5Vcs_imgs/execon.png", "Commit Changes", "#", "commit(0,document.getElementById(\'main_form\'));");\n
+        MenuToolBar.Add("ERP5Vcs_imgs/revertoff.png", "ERP5Vcs_imgs/reverton.png", "Revert Changes", "#", "revert(0,document.getElementById(\'main_form\'));");\n
+        // Menu Display\n
+        MenuToolBar.Display();\n
+        doOnLoad();\n
+      </script>\n
+    </tal:block>\n
+  </tal:block>\n
+</tal:block>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>BusinessTemplate_viewVcsStatus</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -33,11 +33,13 @@ from Acquisition import Implicit
 import time
 import os
 import sys
+from DateTime import DateTime
 from Products.ERP5Type.Utils import convertToUpperCase
 from MethodObject import Method
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from AccessControl import ClassSecurityInfo
+from AccessControl.SecurityInfo import ModuleSecurityInfo
 from Products.PythonScripts.Utility import allow_class
 from tempfile import mkdtemp
 import shutil
@@ -88,9 +90,8 @@ class SubversionLoginError(SubversionError):
     return self._realm
 
 InitializeClass(SubversionLoginError)
-allow_class(SubversionLoginError)
-  
-    
+ModuleSecurityInfo(__name__).declarePublic('SubversionLoginError')
+
 class SubversionSSLTrustError(SubversionError):
   """Raised when a SSL certificate is not trusted.
   """
@@ -105,8 +106,8 @@ class SubversionSSLTrustError(SubversionError):
     return self._trust_dict
   
 InitializeClass(SubversionSSLTrustError)
-allow_class(SubversionSSLTrustError)
-    
+ModuleSecurityInfo(__name__).declarePublic('SubversionSSLTrustError')
+
 try:
   import pysvn
   
@@ -149,13 +150,12 @@ try:
   
   class SSLServerTrustPromptCallback(Callback):
     def __call__(self, trust_dict):
-      trust, permanent = self.client.trustSSLServer(trust_dict)
-      if not trust:
+      if not self.client.trustSSLServer(trust_dict):
         self.client.setException(SubversionSSLTrustError(trust_dict))
         return False, 0, False
       # XXX SSL server certificate failure bits are not defined in pysvn.
       # 0x8 means that the CA is unknown.
-      return True, 0x8, permanent
+      return True, 0x8, False
     
   class SSLServerPromptCallback(Callback):
     def __call__(self):
@@ -303,7 +303,7 @@ try:
       status_list.reverse()
       return status_list
     
-    def diff(self, path, revision1, revision2):
+    def diff(self, path, revision1=None, revision2=None):
       tmp_path = getTransactionalDirectory('SubversionClient.diff:tmp_dir')
       if revision1 and revision2:
         return self.client.diff(tmp_path, url_or_path=path, recurse=False,
@@ -339,7 +339,7 @@ try:
         rev_log_dict['message'] = rev_dict.message
         rev_log_dict['author'] = rev_dict.author
         rev_log_dict['revision'] = rev_dict['revision'].number
-        rev_log_dict['date'] = time.ctime(rev_dict['date'])
+        rev_log_dict['date'] = DateTime(rev_dict['date'])
         revision_log_list.append(rev_log_dict)
       return revision_log_list
         
@@ -372,7 +372,7 @@ try:
       for member in members_tuple])
       entry_dict['revision'] = entry_dict['revision'].number
       entry_dict['commit_revision'] = entry_dict['commit_revision'].number
-      entry_dict['commit_time'] = time.ctime(entry_dict['commit_time'])
+      entry_dict['commit_time'] = DateTime(entry_dict['commit_time'])
       return entry_dict
       
     def ls(self, path):
@@ -389,7 +389,7 @@ try:
        #Modify the list to make it more usable in zope
       for dictionary in dict_list:
         dictionary['created_rev'] = dictionary['created_rev'].number
-        dictionary['time'] = time.ctime(dictionary['time'])
+        dictionary['time'] = DateTime(dictionary['time'])
       return dict_list
 
     def cleanup(self, path):
@@ -398,12 +398,15 @@ try:
     def remove(self, path):
       self.client.remove(url_or_path=path, force=True)
 
+    def cat(self, *args, **kw):
+      return self.client.cat(*args, **kw)
+
   def newSubversionClient(container, **kw):
     return SubversionClient(container, **kw).__of__(container)
     
 except ImportError:
   from zLOG import LOG, WARNING
-  LOG('SubversionTool', WARNING,
+  LOG('Subversion', WARNING,
       'could not import pysvn; until pysvn is installed properly,'
       ' this tool will not work.', error=sys.exc_info())
   def newSubversionClient(container, **kw):

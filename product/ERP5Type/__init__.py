@@ -177,6 +177,7 @@ allow_module('Products.ERP5Type.Log')
 ModuleSecurityInfo('Products.ERP5Type.JSON').declarePublic('dumps', 'loads')
 ModuleSecurityInfo('Products.ERP5Type.Constraint').declarePublic('PropertyTypeValidity')
 ModuleSecurityInfo('Products.ERP5Type.collections').declarePublic('OrderedDict')
+ModuleSecurityInfo('Products.ERP5Type.DiffUtils').declarePublic('DiffFile')
 ModuleSecurityInfo('pprint').declarePublic('pformat', 'pprint')
 
 if sys.version_info[0:2] == (2, 4):

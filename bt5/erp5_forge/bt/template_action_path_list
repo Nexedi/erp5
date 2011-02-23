@@ -7,16 +7,17 @@ Bug | bug_line_send
 Bug | document_list
 Bug | new_file
 Bug | view
-Business Template | commit
+Business Template | conflicted_files
 Business Template | create_report
+Business Template | create_working_copy
+Business Template | git_commit
 Business Template | manage_field_library
 Business Template | rename_proxy_field
 Business Template | svn_cleanup_locks
-Business Template | svn_conflicted_files
-Business Template | svn_unversioned_files
+Business Template | svn_commit
 Business Template | update_svn_bt
 Business Template | update_svn_bt_norevert
-Business Template | view_svn_repos_infos
+Business Template | view_svn_repos_info
 Glossary Module | create_term_for_translation
 Glossary Module | export_po_file
 Glossary Module | find_duplicate_terms
@@ -28,7 +29,7 @@ Glossary Module | update_portal_types_by_english_glossary
 Glossary Module | update_workflows_by_english_glossary
 Glossary Module | view
 Glossary Term | view
-Preference | subversion
-Template Tool | bt_svn_history
+Preference | vcs
+Template Tool | bt_vcs_history
 Template Tool | search_portal_type
 portal_actions | generate_pot_file

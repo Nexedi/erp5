@@ -1692,11 +1692,6 @@ class ERP5Generator(PortalGenerator):
     addERP5Tool(p, 'portal_caches', 'Cache Tool')
     addERP5Tool(p, 'portal_memcached', 'Memcached Tool')
 
-    try:
-      addERP5Tool(p, 'portal_subversion', 'Subversion Tool')
-    except AttributeError:
-      pass
-
     # Add ERP5Type Tools
     if allowClassTool():
       addERP5Tool(p, 'portal_classes', 'Class Tool')

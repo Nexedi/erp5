@@ -159,7 +159,6 @@ StandardBT5ConfiguratorItem
 StandardProperty
 State
 StockCapacity
-SubversionPreference
 SupplyLine
 SupplyLink
 TALESConstraint
@@ -189,6 +188,7 @@ Variable
 Variation
 VariationRange
 Version
+VcsPreference
 WebSection
 WebSite
 Workflow

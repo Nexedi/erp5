@@ -54,7 +54,7 @@
 
 from Products.ERP5Type.Document import newTempBase\n
 from Products.ERP5Type.Cache import CachingMethod\n
-# from Products.ERP5.Document.BusinessTemplate import TemplateConditionError\n
+from Products.ERP5.Document.BusinessTemplate import TemplateConditionError\n
 \n
 # get selected business templates\n
 p = context.getPortalObject()\n
@@ -63,21 +63,21 @@ selection_name = \'business_template_selection\' # harcoded because we can also 
 uids = portal_selections.getSelectionCheckedUidsFor(selection_name)\n
 \n
 if len(uids) > 2:\n
-  raise \'TemplateConditionError\', \'Too many Business Templates selected\'\n
+  raise TemplateConditionError(\'Too many Business Templates selected\')\n
 \n
 bt1 = context.portal_catalog.getObject(uids[0])\n
 if bt1.getBuildingState() != \'built\':\n
-  raise \'TemplateConditionError\', \'Business Template must be built to make diff\'\n
+  raise TemplateConditionError(\'Business Template must be built to make diff\')\n
 if (getattr(bt1, \'template_format_version\', 0)) != 1:\n
-  raise \'TemplateConditionError\', \'Business Template must be in new format\'\n
+  raise TemplateConditionError(\'Business Template must be in new format\')\n
 \n
 # check if there is a second bt or if we compare to installed one\n
 if len(uids) == 2:\n
   bt2 = context.portal_catalog.getObject(uids[1])\n
   if bt2.getBuildingState() != \'built\':\n
-    raise \'TemplateConditionError\', \'Business Template must be built to make diff\'\n
+    raise TemplateConditionError(\'Business Template must be built to make diff\')\n
   if (getattr(bt2, \'template_format_version\', 0)) != 1:\n
-    raise \'TemplateConditionError\', \'Business Template must be in new format\'\n
+    raise TemplateConditionError(\'Business Template must be in new format\')\n
 else:\n
   # compare to objects in ZODB\n
   bt2 = bt1\n

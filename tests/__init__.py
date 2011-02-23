@@ -6,11 +6,11 @@ class _ERP5(ERP5TypeTestSuite):
   realtime_output = False
   enabled_product_list = ('CMFActivity', 'CMFCategory', 'ERP5', 'ERP5Catalog',
                           'ERP5eGovSecurity', 'ERP5Form', 'ERP5Legacy',
-                          'ERP5OOo', 'ERP5Security', 'ERP5Subversion', 'ERP5SyncML',
-                          'ERP5Type', 'ERP5Wizard', 'Formulator', 'HBTreeFolder2',
-                          'MailTemplates', 'PortalTransforms', 'TimerService',
-                          'ZLDAPConnection', 'ZLDAPMethods', 'ZMySQLDA',
-                          'ZMySQLDDA', 'ZSQLCatalog')
+                          'ERP5OOo', 'ERP5Security', 'ERP5SyncML', 'ERP5Type',
+                          'ERP5Vcs', 'ERP5Wizard', 'Formulator',
+                          'HBTreeFolder2', 'MailTemplates', 'PortalTransforms',
+                          'TimerService', 'ZLDAPConnection', 'ZLDAPMethods',
+                          'ZMySQLDA', 'ZMySQLDDA', 'ZSQLCatalog')
 
   def enableProducts(self):
     product_set = set(self.enabled_product_list)

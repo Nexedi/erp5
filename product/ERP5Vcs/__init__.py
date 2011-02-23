@@ -35,11 +35,9 @@ import sys, Permissions
 this_module = sys.modules[ __name__ ]
 document_classes = updateGlobals( this_module, globals(), permissions_module = Permissions)
 
-from Tool import SubversionTool
-
 # Define object classes and tools
 object_classes = ()
-portal_tools = (SubversionTool.SubversionTool,)
+portal_tools = ()
 content_classes = ()
 content_constructors = ()
 
@@ -54,10 +52,6 @@ def initialize( context ):
                          content_constructors = content_constructors,
                          content_classes = content_classes)
 
-from AccessControl.SecurityInfo import allow_module
-from AccessControl.SecurityInfo import ModuleSecurityInfo
-
-allow_module('Products.ERP5Subversion.SubversionClient')
-ModuleSecurityInfo('Products.ERP5Subversion.Tool.SubversionTool').declarePublic('SubversionUnknownBusinessTemplateError')
-
-
+# Register Subversion before Git
+from Products.ERP5Vcs.Subversion import Subversion
+from Products.ERP5Vcs.Git import Git

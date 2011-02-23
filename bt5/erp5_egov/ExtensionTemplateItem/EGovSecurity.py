@@ -70,7 +70,7 @@ def setPermissionsOnEGovModule(self, portal_type_object):
                           'Add ERP5 Publications','Add ERP5 Reports',
                           'Add ERP5 Sites','Add ERP5 Subscriptions',
                           'Add ERP5 Tools','Add ERP5Catalog Tools',
-                          'Add ERP5Form Tools','Add ERP5Subversion Tools',
+                          'Add ERP5Form Tools',
                           'Add ERP5SyncML Tools','Add ERP5Type Tools',
                           'Add ExtFiles','Add ExtImages',
                           'Add External Methods','Add Filesystem Directory Views',

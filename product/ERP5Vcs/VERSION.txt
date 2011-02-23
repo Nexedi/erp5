@@ -1,1 +1,1 @@
-ERP5Subversion 5.4.7
+ERP5Vcs 5.4.7

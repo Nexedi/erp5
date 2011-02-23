@@ -52,11 +52,10 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-from Products.ERP5Subversion.SubversionClient import SubversionSSLTrustError\n
+from Products.ERP5Vcs.SubversionClient import SubversionSSLTrustError\n
 from Products.ERP5Type.Document import newTempBase\n
 \n
 portal = context.getPortalObject()\n
-portal_subversion = portal.portal_subversion\n
 \n
 # For now we will work only under portal_skins\n
 folder_id = context.getParentValue().getId() # replace aq_parent by getParentValue\n
@@ -75,7 +74,8 @@ if business_template is not None:\n
   repository_path = \'%s/SkinTemplateItem/portal_skins/%s/%s.xml\' % (\n
     business_template.getTitle(), folder_id, context.getId())\n
 \n
-  log_list = portal_subversion.log(repository_path, business_template)\n
+  vcs_tool = business_template.getVcsTool()\n
+  log_list = vcs_tool.log(repository_path, business_template)\n
   for log_dict in log_list:\n
     log_dict[\'message\'] = log_dict[\'message\'].replace(\'\\n\', \'<br/>\')\n
     temp_object = newTempBase(folder=context, id=\'1\', **log_dict)\n

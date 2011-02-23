@@ -27,17 +27,19 @@
 #
 ##############################################################################
 
-import fnmatch, gc, imp, os, re, shutil, sys, time
+import fnmatch, gc, glob, imp, os, re, shutil, sys, time
 from Shared.DC.ZRDB import Aqueduct
 from Shared.DC.ZRDB.Connection import Connection as RDBConnection
 from Products.ERP5Type.DiffUtils import DiffFile
 from Products.ERP5Type.Globals import Persistent, PersistentMapping
 from Acquisition import Implicit, aq_base, aq_inner, aq_parent
 from AccessControl import ClassSecurityInfo, Unauthorized, getSecurityManager
+from AccessControl.SecurityInfo import ModuleSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from Products.PythonScripts.PythonScript import PythonScript
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Base import WorkflowMethod
+from Products.ERP5Type.Cache import transactional_cached
 from Products.ERP5Type.Utils import readLocalDocument, \
                                     writeLocalDocument, \
                                     importLocalDocument, \
@@ -446,6 +448,9 @@ class BusinessTemplateTarball(BusinessTemplateArchive):
 class TemplateConditionError(Exception): pass
 class TemplateConflictError(Exception): pass
 class BusinessTemplateMissingDependency(Exception): pass
+
+ModuleSecurityInfo(__name__).declarePublic('BusinessTemplateMissingDependency',
+  'TemplateConditionError', 'TemplateConflictError')
 
 class BaseTemplateItem(Implicit, Persistent):
   """
@@ -5088,6 +5093,37 @@ Business Template is a set of definitions, such as skins, portal types and categ
           return True
       return False
 
+    def getExportPath(self):
+      preferences = self.getPortalObject().portal_preferences
+      bt_name = self.getTitle()
+      from App.config import getConfiguration
+      instance_home = getConfiguration().instancehome
+      for path in (preferences.getPreferredWorkingCopyList() or # BBB
+                   preferences.getPreferredSubversionWorkingCopyList()):
+        if not os.path.isabs(path):
+          path = os.path.join(instance_home, path)
+        bt_path = os.path.join(path, bt_name)
+        if os.path.isdir(bt_path):
+          return bt_path
+        for bt_path in glob.glob(os.path.join(path, '*', bt_name)):
+          if os.path.isdir(bt_path):
+            return bt_path
+
+    @transactional_cached(lambda self, vcs=None, path=None: (self, vcs, path))
+    def getVcsTool(self, vcs=None, path=None):
+      from Products.ERP5Vcs.WorkingCopy import getVcsTool
+      if not (path or vcs):
+        path = self.getExportPath()
+      return getVcsTool(vcs=vcs, path=path).__of__(self)
+
+    def isVcsType(self, *vcs):
+      # could be moved to Products.ERP5.Base.Base
+      from Products.ERP5Vcs.WorkingCopy import NotAWorkingCopyError
+      try:
+        return self.getVcsTool().reference in vcs
+      except NotAWorkingCopyError:
+        return None in vcs
+
     security.declareProtected(Permissions.ManagePortal, 'export')
     def export(self, path=None, local=0, bta=None, **kw):
       """
@@ -5210,7 +5246,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
     def diffObjectAsHTML(self, REQUEST, **kw):
       """
         Convert diff into a HTML format before reply
-        This is compatible with ERP5Subversion look and feel but
+        This is compatible with ERP5Vcs look and feel but
         it is preferred in future we use more difflib python library.
       """
       return DiffFile(self.diffObject(REQUEST, **kw)).toHTML()

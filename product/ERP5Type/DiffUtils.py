@@ -31,7 +31,7 @@
  Provide a feature not present into difflib, which is generate a colored diff
  from a diff file/string.
 
- This code is original form ERP5Subversion and was moved to here for be used in
+ This code is original form ERP5Vcs and was moved to here for be used in
  general ERP5. 
 
  XXX The organisation of DiffUtils should be reviewed and reorganised in a tool
@@ -47,7 +47,7 @@ MODIFIED_DIFF_COLOR = 'rgb(253, 228, 6);'#light orange
 DELETED_DIFF_COLOR = 'rgb(253, 117, 74);'#light red
 ADDITION_DIFF_COLOR = 'rgb(83, 253, 74);'#light green
 
-class DiffFile:
+class DiffFile(object):
   """
   # Members :
    - path : path of the modified file
@@ -100,6 +100,7 @@ class DiffFile:
   def __len__(self):
     return len(self.children)
 
+  toHTML__roles__ = None # public
   def toHTML(self):
     """ return HTML diff
     """
@@ -140,7 +141,7 @@ class DiffFile:
         new_line = new_line_tuple[0] or ' '
         old_line = old_line_tuple[0] or ' '
         i += 1
-        html_list.append( '''<tr>
+        html_list.append( '''<tr style="font-family: monospace">
         <td style="background-color: %s">%s</td>
         <td style="background-color: black; width: 2px;"></td>
         <td style="background-color: %s">%s</td>
