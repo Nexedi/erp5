@@ -59,20 +59,20 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
   - one search button which updates the field and sets a relation
   - creates object if not there
   """
-  local_property_names = ['update_method', 'jump_method', 'allow_jump', 
-                          'base_category', 'portal_type', 'allow_creation', 
+  local_property_names = ['update_method', 'jump_method', 'allow_jump',
+                          'base_category', 'portal_type', 'allow_creation',
                           'container_getter_id', 'context_getter_id',
                           'catalog_index',
-                          'relation_setter_id', 'relation_form_id', 'columns', 
-                          'sort', 'parameter_list','list_method', 
-                          'first_item', 'items', 'proxy_listbox_ids', 
+                          'relation_setter_id', 'relation_form_id', 'columns',
+                          'sort', 'parameter_list','list_method',
+                          'first_item', 'items', 'proxy_listbox_ids',
                           'size', 'extra_item',
                           ]
 
   property_names = Widget.LinesTextAreaWidget.property_names + \
                    Widget.TextWidget.property_names + \
                    local_property_names
-    
+
   # XXX Field to remove...
   update_method = fields.StringField('update_method',
                              title='Update Method',
@@ -251,13 +251,13 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
         need_validation = 1
       # If we get a empty string, display nothing !
       if value != '':
-        result_list.append((Widget.TextWidgetInstance, relation_field_id, 
+        result_list.append((Widget.TextWidgetInstance, relation_field_id,
                             relation_item_list, value, i))
     if not need_validation:
       ###################################
       # Main field
       ###################################
-      result_list = [(Widget.LinesTextAreaWidgetInstance, None, [], 
+      result_list = [(Widget.LinesTextAreaWidgetInstance, None, [],
                       value_list, None)]
     return result_list
 
@@ -308,7 +308,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
     ####################################
     if (value == field.get_value('default')):
       # XXX Default rendering with value...
-      relation_html_string = self.render_relation_link(field, value, 
+      relation_html_string = self.render_relation_link(field, value,
                                                        REQUEST)
       if relation_html_string != '':
         html_string += '&nbsp;&nbsp;%s' % relation_html_string
@@ -393,8 +393,8 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
       html_string += '<a href="%s/%s?field_id=%s&amp;form_id=%s%s">' \
                        '<img src="%s/images/jump.png" alt="jump" />' \
                      '</a>' % \
-                (here.absolute_url(), 
-                 field.get_value('jump_method'), 
+                (here.absolute_url(),
+                 field.get_value('jump_method'),
                  field.id, field.aq_parent.id,
                  selection_name_html,
                  portal_url_string)
@@ -404,9 +404,9 @@ class MultiRelationEditor:
     """
       A class holding all values required to update a relation
     """
-    def __init__(self, field_id, base_category, 
-                 portal_type_list, 
-                 portal_type_item, key, relation_setter_id, 
+    def __init__(self, field_id, base_category,
+                 portal_type_list,
+                 portal_type_item, key, relation_setter_id,
                  relation_editor_list,
                  context_getter_id):
       self.field_id = field_id
