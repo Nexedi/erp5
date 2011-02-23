@@ -11,9 +11,9 @@
             <value>
               <list>
                 <string>description</string>
-                <string>title</string>
                 <string>display_maxwidth</string>
                 <string>display_width</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -76,7 +76,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Language of the web page, it uses code like en, fr, ja...</string> </value>
+                    <value> <string>Language of the document, it uses code like en, fr, ja...</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>
