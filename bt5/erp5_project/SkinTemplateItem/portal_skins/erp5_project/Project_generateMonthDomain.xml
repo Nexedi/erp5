@@ -76,32 +76,38 @@ if depth == 0:\n
   current_month = None\n
   # We must initialize from_date at the beginning of the month\n
   current_date = from_date\n
-  month_dict = request.form.get(\'month_dict\', None)\n
-  if month_dict is None:\n
-    month_dict = {}\n
-    current_date_year = current_date.year()\n
-    current_date_month = current_date.month()\n
-    at_date_year = at_date.year()\n
-    at_date_month = at_date.month()\n
-    while True:\n
-      month_dict[(current_date_year, current_date_month)] = 1\n
-      if current_date_year == at_date_year and current_date_month == at_date_month:\n
-        break\n
-      current_date_month += 1\n
-      if current_date_month == 13:\n
-        current_date_month = 0\n
-        current_date_year += 1\n
-    request.form[\'month_dict\'] = month_dict\n
-\n
-  category_list = []\n
-  i = 1\n
-  month_dict_list = month_dict.keys()\n
-  month_dict_list.sort()\n
-  for year, month in month_dict_list:\n
-    category_list.append(here.getObject().asContext(title="%s - %s" % (year, month),\n
-                                                    string_index="%s-%s" % (year, month),\n
+  is_total = here.is_total\n
+  if is_total:\n
+    category_list.append(here.getObject().asContext(title=here.full_date_string,\n
+                                                    string_index=here.full_date_string,\n
                                                     ))\n
-    i += 1\n
+  else:\n
+    month_dict = request.form.get(\'month_dict\', None)\n
+    if month_dict is None:\n
+      month_dict = {}\n
+      current_date_year = current_date.year()\n
+      current_date_month = current_date.month()\n
+      at_date_year = at_date.year()\n
+      at_date_month = at_date.month()\n
+      while True:\n
+        month_dict[(current_date_year, current_date_month)] = 1\n
+        if current_date_year == at_date_year and current_date_month == at_date_month:\n
+          break\n
+        current_date_month += 1\n
+        if current_date_month == 13:\n
+          current_date_month = 0\n
+          current_date_year += 1\n
+      request.form[\'month_dict\'] = month_dict\n
+\n
+    category_list = []\n
+    #i = 1\n
+    month_dict_list = month_dict.keys()\n
+    month_dict_list.sort()\n
+    for year, month in month_dict_list:\n
+      category_list.append(here.getObject().asContext(title="%s - %s" % (year, month),\n
+                                                      string_index="%s-%s" % (year, month),\n
+                                                      ))\n
+      #i += 1\n
 \n
 else:\n
   object_dict = here.object_dict\n
@@ -110,8 +116,8 @@ else:\n
   object_url_dict = {}\n
   project_to_display_dict = here.monthly_project_to_display_dict.get(string_index, {})\n
   if depth == 1:\n
-    category_list = [x for x in here.project_list \n
-                     if project_to_display_dict.has_key(x.getRelativeUrl())]\n
+    category_list = [here.project_dict[x] for x in project_to_display_dict.keys() if\n
+                        here.project_dict.has_key(x)]\n
   else:\n
     parent_category_list = parent.getMembershipCriterionCategoryList()\n
     category_list = []\n
