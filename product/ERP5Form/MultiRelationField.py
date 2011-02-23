@@ -61,7 +61,8 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
   """
   local_property_names = ['update_method', 'jump_method', 'allow_jump', 
                           'base_category', 'portal_type', 'allow_creation', 
-                          'container_getter_id', 'catalog_index',
+                          'container_getter_id', 'context_getter_id',
+                          'catalog_index',
                           'relation_setter_id', 'relation_form_id', 'columns', 
                           'sort', 'parameter_list','list_method', 
                           'first_item', 'items', 'proxy_listbox_ids', 
@@ -119,6 +120,13 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
                              title='Container Getter Method',
                              description=(
       "The method to call to get a container object."),
+                             default="",
+                             required=0)
+
+  context_getter_id = fields.StringField('context_getter_id',
+                             title='Context Getter Method',
+                             description=(
+      "The method to call to get the context."),
                              default="",
                              required=0)
 
@@ -199,6 +207,16 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
   property_names = _v_property_name_list
 
   default_widget_rendering_instance = Widget.LinesTextAreaWidgetInstance
+
+  def _getContextValue(self, field, REQUEST):
+    """Return result of evaluated method
+    defined by context_getter_id or here.
+    """
+    context_getter_id =  field.get_value('context_getter_id')
+    here = REQUEST['here']
+    if context_getter_id:
+      return getattr(here, context_getter_id)()
+    return here
 
   def _generateRenderValueList(self, field, key, value_list, REQUEST):
     result_list = []
@@ -305,7 +323,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
     Render read only field.
     """
     html_string = ''
-    here = REQUEST['here']
+    here = self._getContextValue(field, REQUEST)
     portal_url = getToolByName(here, 'portal_url')
     portal_url_string = portal_url()
     if (value not in ((), [], None, '')) and \
@@ -338,7 +356,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
     """
     Render wheel used to display a listbox
     """
-    here = REQUEST['here']
+    here = self._getContextValue(field, REQUEST)
     portal_url = getToolByName(here, 'portal_url')
     portal_url_string = portal_url()
     portal_selections_url_string = here.portal_url.getRelativeContentURL(here.portal_selections)
@@ -358,7 +376,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
     Render link to the related object.
     """
     html_string = ''
-    here = REQUEST['here']
+    here = self._getContextValue(field, REQUEST)
     portal_url = getToolByName(here, 'portal_url')
     portal_url_string = portal_url()
     if (value not in ((), [], None, '')) and \
@@ -389,7 +407,8 @@ class MultiRelationEditor:
     def __init__(self, field_id, base_category, 
                  portal_type_list, 
                  portal_type_item, key, relation_setter_id, 
-                 relation_editor_list):
+                 relation_editor_list,
+                 context_getter_id):
       self.field_id = field_id
       self.base_category = base_category
       self.portal_type_list = portal_type_list
@@ -397,6 +416,7 @@ class MultiRelationEditor:
       self.key = key
       self.relation_setter_id = relation_setter_id
       self.relation_editor_list = relation_editor_list
+      self.context_getter_id = context_getter_id
 
     def __call__(self, REQUEST):
       if self.relation_editor_list != None:
@@ -422,6 +442,8 @@ class MultiRelationEditor:
 
     def edit(self, o):
       if self.relation_editor_list is not None:
+        if self.context_getter_id:
+          o = getattr(o, self.context_getter_id)()
         portal = o.getPortalObject()
 
         relation_object_list = []
@@ -779,11 +801,13 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
       base_category = field.get_value('base_category')
       portal_type_item = field.get_value('portal_type')
       relation_setter_id = field.get_value('relation_setter_id')
+      context_getter_id = field.get_value('context_getter_id')
       return self.editor(field.id, 
                          base_category,
                          portal_type_list, 
                          portal_type_item, catalog_index, 
-                         relation_setter_id, relation_editor_list)
+                         relation_setter_id, relation_editor_list,
+                         context_getter_id)
 
 MultiRelationStringFieldWidgetInstance = MultiRelationStringFieldWidget()
 MultiRelationStringFieldValidatorInstance = MultiRelationStringFieldValidator()
