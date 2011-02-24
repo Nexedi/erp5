@@ -20,8 +20,12 @@ Id Tool | Conceptual Id Generator
 Id Tool | SQL Non Continuous Increasing Id Generator
 Id Tool | ZODB Continuous Increasing Id Generator
 Memcached Tool | Memcached Plugin
+Preference Tool Type | Action Information
+Preference Tool Type | Role Information
 Preference Tool | Preference
 Preference Tool | System Preference
+Preference Type | Action Information
+Preference Type | Role Information
 Property Sheet Tool | Property Sheet
 Property Sheet | Accounting Transaction Balance Constraint
 Property Sheet | Acquired Property

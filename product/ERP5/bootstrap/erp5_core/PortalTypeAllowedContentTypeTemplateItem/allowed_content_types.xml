@@ -55,6 +55,14 @@
   <item>Preference</item>
   <item>System Preference</item>
  </portal_type>
+ <portal_type id="Preference Tool Type">
+  <item>Action Information</item>
+  <item>Role Information</item>
+ </portal_type>
+ <portal_type id="Preference Type">
+  <item>Action Information</item>
+  <item>Role Information</item>
+ </portal_type>
  <portal_type id="Property Sheet">
   <item>Accounting Transaction Balance Constraint</item>
   <item>Acquired Property</item>
