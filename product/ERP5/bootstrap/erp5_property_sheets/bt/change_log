@@ -1,0 +1,2 @@
+2011-02-24 Kazuhiko
+* make the default of 'language' property an empty string instead of None, so that we can make a query like language in ('en', '').
