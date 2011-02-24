@@ -70,6 +70,8 @@ class DefaultGetter(BaseGetter):
         acquisition_object_id = tuple(acquisition_object_id)
       if isinstance(acquisition_portal_type, list):
         acquisition_portal_type = tuple(acquisition_portal_type)
+      if isinstance(alt_accessor_id, list):
+        alt_accessor_id = tuple(alt_accessor_id)
 
       self._acquisition_base_category = acquisition_base_category
       self._acquisition_portal_type = acquisition_portal_type
@@ -158,6 +160,8 @@ class ListGetter(BaseGetter):
         acquisition_object_id = tuple(acquisition_object_id)
       if isinstance(acquisition_portal_type, list):
         acquisition_portal_type = tuple(acquisition_portal_type)
+      if isinstance(alt_accessor_id, list):
+        alt_accessor_id = tuple(alt_accessor_id)
 
       self._acquisition_base_category = acquisition_base_category
       self._acquisition_portal_type = acquisition_portal_type
