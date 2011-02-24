@@ -9,11 +9,6 @@
  <portal_type id="Open Internal Order Module">
   <item>Open Internal Order</item>
  </portal_type>
- <portal_type id="Open Order Rule">
-  <item>Category Divergence Tester</item>
-  <item>Property Divergence Tester</item>
-  <item>Quantity Divergence Tester</item>
- </portal_type>
  <portal_type id="Open Purchase Order">
   <item>Open Purchase Order Line</item>
   <item>Payment Condition</item>
@@ -36,9 +31,6 @@
  </portal_type>
  <portal_type id="Periodicity Line">
   <item>Predicate</item>
- </portal_type>
- <portal_type id="Rule Tool">
-  <item>Open Order Rule</item>
  </portal_type>
  <portal_type id="Sale Trade Condition">
   <item>Periodicity Line</item>

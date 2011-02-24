@@ -20,7 +20,6 @@ Open Internal Order | profile_view
 Open Internal Order | reference_generate
 Open Internal Order | view
 Open Internal Order | view_stock
-Open Order Rule | view
 Open Purchase Order Cell | view
 Open Purchase Order Line | price_view
 Open Purchase Order Line | quantity_view
