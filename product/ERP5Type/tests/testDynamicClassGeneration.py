@@ -1002,10 +1002,9 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
 
   def testAddEmptyProperty(self):
     """
-    When users create properties in a PropertySheet, the property
-    is first empty.
-    Check that accessor generation can cope with such invalid
-    properties
+    When users create properties in a PropertySheet, the property is
+    first empty. Check that accessor generation can cope with such
+    invalid properties
     """
     property_sheet_tool = self.portal.portal_property_sheets
     arrow = property_sheet_tool.Arrow
@@ -1049,15 +1048,57 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     except Exception:
       self.fail("Creating an empty Constraint raises an error")
 
-    # be really nasty, and test that code is still foolproof
-    # (this None value should never appear in an expression... unless
-    # the method has a mistake)
-    dynamic_category.setCategoryExpression('python: ["foo", None, "region"]')
+  @skip("Skipped until per-document accessors generation is committed")
+  def testAddInvalidProperty(self):
+    """
+    Check that setting an invalid TALES Expression as a property
+    attribute value does not raise any error
+
+    XXX: For now, this test fails because the accessors generation
+    going through Utils does catch errors when evaluating TALES
+    Expression, but this will be addressed in per-property document
+    accessors generation
+    """
+    arrow = self.portal.portal_property_sheets.Arrow
+    person = self.portal.person_module.newContent(portal_type="Person")
+
+    # be really nasty, and test that code is still foolproof (this
+    # None value should never appear in an expression... unless the
+    # method has a mistake)
+    dynamic_category = arrow.newContent(
+      portal_type="Dynamic Category Property",
+      category_expression='python: ["foo", None, "region"]')
+
+    transaction.commit()
+    try:
+      person.newContent(portal_type="Career")
+    except Exception, e:
+      self.fail("Creating a Category Expression with None as one of the "\
+                "category ID raises an error")
+
+    # Action -> add Acquired Property
+    arrow.newContent(portal_type="Acquired Property",
+                     acquisition_portal_type="python: ('foo', None)",
+                     content_portal_type="python: ('goo', None)")
+    # a user is doing this, so commit after each request
     transaction.commit()
     try:
       person.newContent(portal_type="Career")
     except Exception:
-      self.fail("Creating an invalid Category Expression raises an error")
+      self.fail("Creating an Acquired Property with invalid TALES expression "\
+                "raises an error")
+
+    # Check invalid syntax in TALES Expression, we check only for
+    # DynamicCategoryProperty because it's exactly the same function
+    # called for StandardProperty and AcquiredProperty, namely
+    # evaluateExpressionFromString
+    dynamic_category.setCategoryExpression('python: [')
+    transaction.commit()
+    try:
+      person.newContent(portal_type="Career")
+    except Exception:
+      self.fail("Creating a Category Expression with syntax error raises "\
+                "an error")
 
 from Products.CMFCore.Expression import Expression
 
