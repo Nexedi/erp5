@@ -1072,7 +1072,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     transaction.commit()
     try:
       person.newContent(portal_type="Career")
-    except Exception, e:
+    except Exception:
       self.fail("Creating a Category Expression with None as one of the "\
                 "category ID raises an error")
 
