@@ -535,7 +535,7 @@ class MatrixBoxValidator(Validator.Validator):
         error_list = []
         cell_getter_method_id = field.get_value('cell_getter_method')
         if cell_getter_method_id not in (None, ''):
-          cell_getter_method = getattr(here, cell_getter_method_id)
+          cell_getter_method = getattr(context, cell_getter_method_id)
         else:
           cell_getter_method = context.getCell
 
