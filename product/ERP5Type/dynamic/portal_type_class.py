@@ -87,14 +87,20 @@ def _createAccessorHolderList(site,
       accessor_holder_list.append(getattr(accessor_holder, property_sheet_name))
 
     except AttributeError:
-      # Generate the accessor holder as it has not been done yet
       try:
         property_sheet = getPropertySheet(property_sheet_name)
-        accessor_holder_class = property_sheet.createAccessorHolder()
+      except KeyError:
+        LOG("ERP5Type.dynamic", WARNING,
+            "Ignoring missing Property Sheet " + property_sheet_name)
 
+        continue
+
+      # Generate the accessor holder as it has not been done yet
+      try:
+        accessor_holder_class = property_sheet.createAccessorHolder()
       except Exception:
         LOG("ERP5Type.dynamic", ERROR,
-            "Ignoring missing or Invalid Property Sheet " + property_sheet_name)
+            "Invalid Property Sheet " + property_sheet_name)
         raise
 
       accessor_holder_list.append(accessor_holder_class)
