@@ -165,7 +165,7 @@
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>reference</td>\n
+  <td>listbox_reference</td>\n
   <td>%tiolive-ERP5.DMS.TioLive%</td>\n
 </tr>\n
 <tr>\n

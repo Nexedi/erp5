@@ -80,7 +80,7 @@
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>title</td>\n
+  <td>listbox_title</td>\n
   <td>%test_km%</td>\n
 </tr>\n
 <tr>\n
@@ -169,9 +169,7 @@
 \n
 </tbody></table>\n
 </body>\n
-</html>\n
-\n
-
+</html>
 
 ]]></unicode> </value>
         </item>
