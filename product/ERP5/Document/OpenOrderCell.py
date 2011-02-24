@@ -29,16 +29,11 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.SupplyCell import SupplyCell
-from Products.ERP5.Document.OrderCell import OrderCell
 
-class OpenOrderCell(SupplyCell, OrderCell):
+class OpenOrderCell(SupplyCell):
     """
-      A OpenOrderCell allows to define specific quantities
+      An Open Order Cell allows to define specific properties
       for each variation of a resource in an Open Order Line.
-
-      TODO:
-      - make sure that this should be (or not) a subclass
-        of OrderCell
     """
     meta_type = 'ERP5 Open Order Cell'
     portal_type = 'Open Order Cell'
@@ -63,4 +58,11 @@ class OpenOrderCell(SupplyCell, OrderCell):
                       , PropertySheet.MappedValue
                       , PropertySheet.Reference
                       )
+
+    def getTotalPrice(self):
+      """Returns the total price for this open order cell.
+      Unlike Amount, we do not calculate a price implicitly if not defined.
+      Actually, I (jerome) think amount behaviour itself if wrong.
+      """
+      return (self.getQuantity() or 0) * (self.getPrice() or 0)
 

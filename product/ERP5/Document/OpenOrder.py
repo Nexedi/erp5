@@ -31,21 +31,15 @@ import zope.interface
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
-from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5.Document.Supply import Supply
-from Products.ERP5.Document.Order import Order
 
-class OpenOrder(Supply, Order):
+class OpenOrder(Supply):
   """
     An OpenOrder is a collection of Open Order Lines
 
-    TODO:
-    - make sure that this should be (or not) a subclass
-      of Order
   """
   meta_type = 'ERP5 Open Order'
   portal_type = 'Open Order'
-  isPredicate = ConstantGetter('isPredicate', value=True) # XXX - Why ?
 
   # Declarative security
   security = ClassSecurityInfo()
