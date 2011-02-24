@@ -142,7 +142,6 @@ class TestCMFCategory(ERP5TypeTestCase):
       portal_categories[bc].setAcquisitionMaskValue(0)
       portal_categories[bc].setAcquisitionCopyValue(0)
       portal_categories[bc].setAcquisitionAppendValue(0)
-      portal_categories[bc].setAcquisitionSyncValue(1)
       portal_categories[bc].setAcquisitionObjectIdList(['default_career'])
     for bc in ('gender', ):
       if not hasattr(portal_categories, bc):
@@ -151,7 +150,6 @@ class TestCMFCategory(ERP5TypeTestCase):
       portal_categories[bc].setAcquisitionMaskValue(0)
       portal_categories[bc].setAcquisitionCopyValue(0)
       portal_categories[bc].setAcquisitionAppendValue(0)
-      portal_categories[bc].setAcquisitionSyncValue(1)
       portal_categories[bc].setFallbackBaseCategoryList(['subordination'])
 
   def beforeTearDown(self):

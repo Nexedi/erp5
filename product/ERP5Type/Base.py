@@ -911,7 +911,7 @@ class Base( CopyContainer,
   # Generic accessor
   def _getDefaultAcquiredProperty(self, key, default_value, null_value,
         acquisition_object_id=None, base_category=None, portal_type=None,
-        copy_value=0, mask_value=0, sync_value=0, accessor_id=None, depends=None,
+        copy_value=0, mask_value=0, accessor_id=None, depends=None,
         storage_id=None, alt_accessor_id=None, is_list_type=0, is_tales_type=0,
         checked_permission=None):
     """
@@ -935,15 +935,13 @@ class Base( CopyContainer,
       mask_value    --    if set to 1, the value of the attribute of self
                           has priority on the looked up value
 
-      sync_value    --    if set to 1, keep self and looked up value in sync
-
       accessor_id   --    the id of the accessor to call on the related filtered objects
 
       depends       --    a list of parameters to propagate in the look up process
 
       acquisition_object_id -- List of object Ids where look up properties
                                before looking up on acquired objects
-      The purpose of copy_value / mask_value / sync_value is to solve issues
+      The purpose of copy_value / mask_value is to solve issues
       related to relations and synchronisation of data. copy_value determines
       if a value should be copied as an attribute of self. Copying a value is
       useful for example when we do invoices and want to remember the price at
@@ -976,7 +974,7 @@ class Base( CopyContainer,
       portal_type = ()
     acquisition_key = ('_getDefaultAcquiredProperty', self.getPath(), key,
                        acquisition_object_id, base_category, portal_type,
-                       copy_value, mask_value, sync_value, accessor_id, depends,
+                       copy_value, mask_value, accessor_id, depends,
                        storage_id, alt_accessor_id, is_list_type, is_tales_type,
                        checked_permission)
     if acquisition_key in tv:
@@ -1142,7 +1140,7 @@ class Base( CopyContainer,
         pass
 
   def _getAcquiredPropertyList(self, key, default_value, null_value,
-     base_category, portal_type=None, copy_value=0, mask_value=0, sync_value=0, append_value=0,
+     base_category, portal_type=None, copy_value=0, mask_value=0, append_value=0,
      accessor_id=None, depends=None, storage_id=None, alt_accessor_id=None,
      acquisition_object_id=None,
      is_list_type=0, is_tales_type=0, checked_permission=None):
@@ -1162,8 +1160,8 @@ class Base( CopyContainer,
     elif portal_type is None:
       portal_type = ()
     acquisition_key = ('_getAcquiredPropertyList', self.getPath(), key, base_category,
-                       portal_type, copy_value, mask_value, sync_value,
-                       accessor_id, depends, storage_id, alt_accessor_id,
+                       portal_type, copy_value, mask_value, accessor_id,
+                       depends, storage_id, alt_accessor_id,
                        acquisition_object_id, is_list_type, is_tales_type,
                        checked_permission)
     if acquisition_key in tv:

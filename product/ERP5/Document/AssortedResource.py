@@ -125,7 +125,6 @@ class AssortedResource(TransformedResource):
         'acquisition_portal_type'   : Expression('python: portal.getPortalResourceTypeList()'),
         'acquisition_copy_value'    : 0,
         'acquisition_mask_value'    : 0,
-        'acquisition_sync_value'    : 0,
         'acquisition_accessor_id'   : 'getVariationBaseCategoryList', ### XXX BUG
         'acquisition_depends'       : None,
         'mode'        : 'w' },

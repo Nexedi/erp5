@@ -51,7 +51,6 @@ class Getter(BaseGetter):
                         acquisition_accessor_id,
                         acquisition_copy_value,
                         acquisition_mask_value,
-                        acquisition_sync_value,
                         storage_id=None,
                         alt_accessor_id = None,
                         acquisition_object_id=None,
@@ -82,7 +81,6 @@ class Getter(BaseGetter):
       self._acquisition_accessor_id = acquisition_accessor_id
       self._acquisition_copy_value = acquisition_copy_value
       self._acquisition_mask_value = acquisition_mask_value
-      self._acquisition_sync_value = acquisition_sync_value
       self._acquired_property = acquired_property
       if storage_id is None:
         storage_id = "%s%s" % (ATTRIBUTE_PREFIX, key)
@@ -103,7 +101,6 @@ class Getter(BaseGetter):
             accessor_id=self._acquisition_accessor_id,
             copy_value=self._acquisition_copy_value,
             mask_value=self._acquisition_mask_value,
-            sync_value=self._acquisition_sync_value,
             storage_id=self._storage_id,
             alt_accessor_id=self._alt_accessor_id,
             acquisition_object_id=self._acquisition_object_id,
@@ -140,7 +137,6 @@ class Setter(BaseSetter):
                         acquisition_accessor_id,
                         acquisition_copy_value,
                         acquisition_mask_value,
-                        acquisition_sync_value,
                         storage_id=None,
                         alt_accessor_id = None,
                         acquisition_object_id = None,
@@ -171,7 +167,6 @@ class Setter(BaseSetter):
       self._acquisition_accessor_id = acquisition_accessor_id
       self._acquisition_copy_value = acquisition_copy_value
       self._acquisition_mask_value = acquisition_mask_value
-      self._acquisition_sync_value = acquisition_sync_value
       self._acquired_property = acquired_property
       if storage_id is None:
         storage_id = "%s%s" % (ATTRIBUTE_PREFIX, key)

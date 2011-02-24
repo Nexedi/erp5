@@ -108,7 +108,6 @@
                         <string>my_acquisition_copy_value</string>
                         <string>my_acquisition_mask_value</string>
                         <string>my_acquisition_append_value</string>
-                        <string>my_acquisition_sync_value</string>
                         <string>my_category_type_list</string>
                         <string>my_translated_validation_state_title</string>
                       </list>

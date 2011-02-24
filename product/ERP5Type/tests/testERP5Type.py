@@ -1206,8 +1206,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
             'acquisition_portal_type'  : "python: ( 'Person', )",
             'acquisition_accessor_id'  : 'getDefaultOrganisationValue',
             'acquisition_copy_value'   : 0,
-            'acquisition_mask_value'   : 1,
-            'acquisition_sync_value'   : 0,
+            'acquisition_mask_value'   : 1
     }
 
     def test_19_AcquiredContentAccessor(self):

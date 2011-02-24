@@ -923,8 +923,6 @@ class CategoryTool( UniqueObject, Folder, Base ):
         acquisition_mask_value    --    if set to 1, the value of the category of self
                             has priority on the looked up value
 
-        acquisition_sync_value    --    if set to 1, keep self and looked up value in sync
-
         _acquired_object_set is a special, internal parameter to deal with
         recursive calls on the same object.
 
@@ -1064,9 +1062,8 @@ class CategoryTool( UniqueObject, Folder, Base ):
                     result.extend(new_result)
                   elif len(new_result) > 0:
                     #LOG("new_result ",0,str(new_result))
-                    if (len(original_result) == 0 \
-                            and base_category_value.getAcquisitionCopyValue()) \
-                            or base_category_value.getAcquisitionSyncValue():
+                    if len(original_result) == 0 \
+                            and base_category_value.getAcquisitionCopyValue():
                       # If copy is set and result was empty, then copy it once
                       # If sync is set, then copy it again
                       self.setCategoryMembership( context, base_category, new_result,
@@ -1076,8 +1073,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
 
           if len(result) > 0 \
-                  and (base_category_value.getAcquisitionCopyValue() \
-                       or base_category_value.getAcquisitionSyncValue()):
+                  and base_category_value.getAcquisitionCopyValue():
             # If copy is set and result was empty, then copy it once
             # If sync is set, then copy it again
             self.setCategoryMembership( context, base_category, result,
