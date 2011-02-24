@@ -388,9 +388,10 @@
 \n
                 <tal:block tal:condition="python: search_field is None">\n
                   <input tal:condition="python: not is_gadget_mode" \n
-                         name="id" size="5" value=""\n
+                         size="5"\n
                          type="text" \n
-                         tal:attributes="name alias; value param"\n
+                         tal:attributes="name string:${field_id}_${alias}; \n
+                                         value param"\n
                          onkeypress="submitFormOnEnter(event, this.form, \'Base_doSelect\');"/>\n
                   <!-- Search for gadget mode -->\n
                   <input tal:condition="python: is_gadget_mode" \n
