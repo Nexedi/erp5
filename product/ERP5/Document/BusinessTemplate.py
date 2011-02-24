@@ -887,18 +887,18 @@ class ObjectTemplateItem(BaseTemplateItem):
         subobjects_dict[subobject_id] = subobject_copy
       return subobjects_dict
     # XXX btsave is for backward compatibility
-    if action == 'backup' or action == 'btsave' or action == 'save_and_remove':
+    if action in ('backup', 'btsave', 'save_and_remove',):
       subobjects_dict = self.portal_trash.backupObject(trashbin, 
                                                 container_path, object_id, 
                                                 save=1, **kw)
-    elif action == 'install':
+    elif action in ('install', 'remove'):
       subobjects_dict = self.portal_trash.backupObject(trashbin, 
                                                 container_path, object_id, 
                                                 save=0, **kw)
     else:
       # As the list of available actions is not strictly defined,
       # prevent mistake if an action is not handled
-      raise ValueError, 'Unknown action "%s"' % action
+      raise NotImplementedError, 'Unknown action "%s"' % action
     return subobjects_dict
 
   def beforeInstall(self):
