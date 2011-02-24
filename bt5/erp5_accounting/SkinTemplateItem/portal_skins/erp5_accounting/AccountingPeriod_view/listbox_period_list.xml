@@ -11,6 +11,7 @@
             <value>
               <list>
                 <string>selection_name</string>
+                <string>sort</string>
               </list>
             </value>
         </item>
@@ -92,6 +93,17 @@
                 <item>
                     <key> <string>selection_name</string> </key>
                     <value> <string>accounting_period_accounting_period_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>start_date</string>
+                          <string>ASC</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
