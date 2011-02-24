@@ -36,9 +36,9 @@ class IExpandable(Interface):
   """
     An Expandable class provides methods which trigger
     the generation of the root applied rule of a simulation tree
-    and its expansion. Classes which implement IExpand include
+    and its expansion. Classes which implement IExpandable include
     Deliveries (whenever can be the cause of an Applied Rule),
-    Items (whenever they  are the cause of a movement sequence)
+    Items (whenever they are the cause of a movement sequence)
     such as Subscription Items or Immobilisation Items, Movements
     (which have been previously built).
   """
