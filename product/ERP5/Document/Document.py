@@ -290,6 +290,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore
                     , PropertySheet.Version
+                    , PropertySheet.Reference
                     , PropertySheet.Document
                     , PropertySheet.ExternalDocument
                     , PropertySheet.Url
