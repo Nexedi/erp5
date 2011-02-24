@@ -298,15 +298,18 @@ def generatePortalTypeClass(site, portal_type_name):
         except AttributeError:
           pass
 
-    # XXX maybe this should be a generic hook, adding property sheets
-    # dynamically for a given portal type name? If done well, this
-    # system could perhaps help erp5_egov to get rid of aq_dynamic
+    # Only kept for backward-compatibility as Preference and System
+    # Preference have Preference Type as portal type, which define
+    # getTypePropertySheetList properly and, likewise, Preference Tool
+    # has Preference Tool Type as its portal type
     if portal_type_name in ("Preference Tool",
                             "Preference",
                             "System Preference"):
-      for property_sheet in zodb_property_sheet_name_set:
-        if property_sheet.endswith('Preference'):
-          property_sheet_name_set.add(property_sheet)
+       if portal_type is None or \
+          not portal_type.getPortalType().startswith(portal_type_name):
+         for property_sheet in zodb_property_sheet_name_set:
+           if property_sheet.endswith('Preference'):
+             property_sheet_name_set.add(property_sheet)
 
     # Get the Property Sheets defined on the document and its bases
     # recursively
