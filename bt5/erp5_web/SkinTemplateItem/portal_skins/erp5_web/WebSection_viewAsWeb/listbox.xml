@@ -16,7 +16,6 @@
                 <string>hide_rows_on_no_search_criterion</string>
                 <string>lines</string>
                 <string>list_method</string>
-                <string>portal_types</string>
                 <string>search</string>
                 <string>select</string>
                 <string>selection_name</string>
@@ -139,17 +138,6 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>portal_types</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>Web Page</string>
-                          <string>Web Page</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>search</string> </key>
                     <value> <int>0</int> </value>
                 </item>
@@ -188,10 +176,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
+      <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
     <pickle>
       <dictionary>

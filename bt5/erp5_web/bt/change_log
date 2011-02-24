@@ -1,3 +1,6 @@
+2011-02-22 Kazuhiko
+* remove portal_type configuration from listbox of WebSection_viewAsWeb and WebSection_viewContent.
+
 2010-10-08 kazuhiko
 * no longer allow Access contents information and View for Anonymous, because there is no reason to allow anonymous users to access web_site_module itself. we should publish Web Site document if we want to publish it.
 
