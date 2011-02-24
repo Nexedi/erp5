@@ -130,6 +130,9 @@ class AcquiredProperty(StandardProperty):
     filesystem_property_dict = \
         StandardProperty.exportToFilesystemDefinition(self)
 
+    if filesystem_property_dict is None:
+      return None
+
     acquisition_portal_type_value = self._getExpressionFromString(
       self.getAcquisitionPortalType())
 
