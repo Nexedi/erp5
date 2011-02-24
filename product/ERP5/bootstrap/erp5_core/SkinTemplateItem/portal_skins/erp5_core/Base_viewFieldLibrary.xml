@@ -133,6 +133,7 @@
                         <string>my_planning_box</string>
                         <string>my_dialog_mode_reference</string>
                         <string>my_dialog_mode_category</string>
+                        <string>my_view_mode_tales_expression</string>
                       </list>
                     </value>
                 </item>
