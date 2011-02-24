@@ -88,7 +88,7 @@ class PropertySheetTool(BaseTool):
   security.declareProtected(Permissions.ManagePortal,
                             'createAllPropertySheetsFromFilesystem')
   def createAllPropertySheetsFromFilesystem(self, erase_existing=False,
-      REQUEST=None):
+                                            REQUEST=None):
     """
     Create Property Sheets in portal_property_sheets from _all_
     filesystem Property Sheets
@@ -97,23 +97,22 @@ class PropertySheetTool(BaseTool):
 
     # Get all the filesystem Property Sheets
     for name, klass in PropertySheet.__dict__.iteritems():
-      if name[0] == '_':
-        continue
-      elif isinstance(klass, str): # Property Sheet is not available
+      # If the Property Sheet is a string, it means that the Property
+      # Sheets has either been already migrated or it is not available
+      # (perhaps defined in a bt5 not installed yet?)
+      if name[0] == '_' or isinstance(klass, basestring):
         continue
 
       if name in self.objectIds():
-        if erase_existing:
-          self.portal_property_sheets.deleteContent(name)
-          transaction.commit()
-        else:
+        if not erase_existing:
           continue
+
+        self.portal_property_sheets.deleteContent(name)
 
       LOG("Tool.PropertySheetTool", INFO,
           "Creating %s in portal_property_sheets" % repr(name))
 
       PropertySheetDocument.importFromFilesystemDefinition(self, klass)
-      transaction.commit()
 
     if REQUEST is not None:
       portal = self.getPortalObject()
