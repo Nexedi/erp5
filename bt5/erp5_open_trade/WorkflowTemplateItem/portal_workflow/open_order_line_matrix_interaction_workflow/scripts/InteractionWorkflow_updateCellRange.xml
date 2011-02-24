@@ -50,28 +50,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>order = state_change[\'object\']\n
-transition_kw = state_change[\'kwargs\']\n
+            <value> <string>open_order_line = state_change[\'object\']\n
 \n
-# XXX for now, all this is disabled\n
-return \n
-\n
-\n
-path = order.getPath()\n
-tag = \'%s_updateAppliedRule\' % path\n
-expand_tag = \'%s_expand\' % path\n
-activate_kw = {\'tag\':expand_tag, \'priority\':3}\n
-kw = {}\n
-if transition_kw.get(\'calculation_base_date\') is not None:\n
-  kw[\'calculation_base_date\'] = transition_kw[\'calculation_base_date\']\n
-order.activate(tag=tag, after_tag=expand_tag).updateAppliedRule(\n
-             rule_reference=\'default_open_order_rule\', activate_kw=activate_kw, **kw)\n
-\n
-\n
-order_portal_type = order.getPortalType()\n
-if order_portal_type == \'Open Sale Order\':\n
-  delivery_builder = order.portal_deliveries.sale_order_builder\n
-  delivery_builder.activate(activity=\'SQLQueue\', after_tag=(expand_tag, tag)).build(explanation_uid=order.getUid())\n
+open_order_line.updateCellRange(base_id=\'path\')\n
 </string> </value>
         </item>
         <item>
@@ -80,7 +61,7 @@ if order_portal_type == \'Open Sale Order\':\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>OpenOrder_buildSaleOrder</string> </value>
+            <value> <string>InteractionWorkflow_updateCellRange</string> </value>
         </item>
       </dictionary>
     </pickle>

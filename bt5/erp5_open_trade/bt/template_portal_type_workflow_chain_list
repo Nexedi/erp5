@@ -1,19 +1,10 @@
-Open Internal Order Line | delivery_movement_causality_interaction_workflow
-Open Internal Order Line | delivery_movement_simulation_interaction_workflow
 Open Internal Order Line | edit_workflow
-Open Internal Order Line | pricing_interaction_workflow
-Open Internal Order Line | trade_matrix_workflow
-Open Purchase Order Line | delivery_movement_causality_interaction_workflow
-Open Purchase Order Line | delivery_movement_simulation_interaction_workflow
+Open Internal Order Line | open_order_line_matrix_interaction_workflow
 Open Purchase Order Line | edit_workflow
-Open Purchase Order Line | pricing_interaction_workflow
-Open Purchase Order Line | trade_matrix_workflow
+Open Purchase Order Line | open_order_line_matrix_interaction_workflow
 Open Purchase Order | edit_workflow
 Open Purchase Order | open_order_workflow
-Open Sale Order Line | delivery_movement_causality_interaction_workflow
-Open Sale Order Line | delivery_movement_simulation_interaction_workflow
 Open Sale Order Line | edit_workflow
-Open Sale Order Line | pricing_interaction_workflow
-Open Sale Order Line | trade_matrix_workflow
+Open Sale Order Line | open_order_line_matrix_interaction_workflow
 Open Sale Order | edit_workflow
 Open Sale Order | open_order_workflow
