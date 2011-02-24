@@ -1084,11 +1084,8 @@ class ObjectTemplateItem(BaseTemplateItem):
             obj._initBTrees()
           obj = obj._getCopy(container)
           self.removeProperties(obj, 0)
-          try:
-            container._setObject(object_id, obj)
-          except AttributeError:
-            LOG("BT, install", 0, object_id)
-            raise
+          __traceback_info__ = (container, object_id, obj)
+          container._setObject(object_id, obj)
           obj = container._getOb(object_id)
 
           if not object_existed:
