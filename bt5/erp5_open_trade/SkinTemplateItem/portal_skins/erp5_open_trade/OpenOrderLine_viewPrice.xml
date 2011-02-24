@@ -44,10 +44,7 @@
         <item>
             <key> <string>edit_order</string> </key>
             <value>
-              <list>
-                <string>title</string>
-                <string>reference</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
@@ -77,21 +74,26 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>matrixbox</string>
+                        <string>mapped_value_property_list</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>my_description</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>matrixbox_price</string>
+                        <string>matrixbox_predicate_category_list</string>
+                        <string>matrixbox_variation_category_list</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -99,13 +101,7 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_reference</string>
-                        <string>my_int_index</string>
                         <string>my_resource_title</string>
-                        <string>my_aggregate_title_list</string>
-                        <string>my_variation_category_list</string>
-                        <string>my_source_trade_title_list</string>
-                        <string>my_base_contribution_list</string>
                       </list>
                     </value>
                 </item>
@@ -113,14 +109,8 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_quantity</string>
-                        <string>my_quantity_unit</string>
-                        <string>my_price</string>
-                        <string>my_price_currency</string>
-                        <string>my_source_title</string>
-                        <string>my_destination_title</string>
-                        <string>my_total_quantity</string>
                         <string>my_total_price</string>
+                        <string>my_total_quantity</string>
                       </list>
                     </value>
                 </item>
@@ -129,7 +119,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>OpenOrderLine_view</string> </value>
+            <value> <string>OpenOrderLine_viewPrice</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -137,7 +127,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>OpenOrderLine_view</string> </value>
+            <value> <string>OpenOrderLine_viewPrice</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -148,22 +138,12 @@
             <value> <int>4</int> </value>
         </item>
         <item>
-            <key> <string>store_order</string> </key>
-            <value>
-              <list>
-                <string>title</string>
-                <string>reference</string>
-                <string>int_index</string>
-              </list>
-            </value>
-        </item>
-        <item>
             <key> <string>stored_encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Open Order Line</string> </value>
+            <value> <string>Price</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
@@ -171,6 +151,10 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
             <value> <string></string> </value>
         </item>
       </dictionary>
