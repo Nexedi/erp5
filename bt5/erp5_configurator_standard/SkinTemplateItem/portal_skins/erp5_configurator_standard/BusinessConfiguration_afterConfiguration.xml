@@ -84,6 +84,12 @@ if business_template is not None:\n
       module.updateLocalRolesOnSecurityGroups()\n
       print "Updated Role Mappings for: %s(%s) " %(module.getTitle(), module.getPortalType())\n
 \n
+  for preference_to_enable in business_template.getTemplatePreferenceList():\n
+    preference = getattr(portal_preferences, preference_to_enable, None)\n
+    if preference is not None:\n
+      if isTransitionPossible(preference, \'enable\'):\n
+        preference.enable()\n
+\n
   # update path items. FIXME: local roles should be exported by business template instead\n
   for path in business_template.getTemplatePathList():\n
     obj = portal.restrictedTraverse(path, None)\n

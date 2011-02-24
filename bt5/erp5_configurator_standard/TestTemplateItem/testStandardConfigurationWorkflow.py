@@ -31,14 +31,15 @@
 import os
 from DateTime import DateTime
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.ERP5Type.tests.ERP5TypeLiveTestCase import ERP5TypeLiveTestCase
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from Products.ERP5Type.tests.utils import FileUpload
 from AccessControl import Unauthorized
 import transaction
+from AccessControl.SecurityManagement import newSecurityManager
 
-class TestLiveConfiguratorWorkflowMixin(ERP5TypeLiveTestCase, SecurityTestCase):
+class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
   """
     Configurator Mixin Class
   """
@@ -46,7 +47,41 @@ class TestLiveConfiguratorWorkflowMixin(ERP5TypeLiveTestCase, SecurityTestCase):
   # to install
   standard_bt5_list = ('erp5_configurator_standard_categories',)
 
+  def getBusinessTemplateList(self):
+    return ('erp5_core_proxy_field_legacy',
+        'erp5_base',
+        'erp5_simulation',
+        'erp5_dhtml_style',
+        'erp5_jquery',
+        'erp5_jquery_ui',
+        'erp5_xhtml_jquery_style',
+        'erp5_web',
+        'erp5_ingestion',
+        'erp5_ingestion_mysql_innodb_catalog',
+        'erp5_accounting',
+        'erp5_dms',
+        'erp5_knowledge_pad',
+        'erp5_pdm',
+        'erp5_crm',
+        'erp5_trade',
+        'erp5_tax_resource',
+        'erp5_discount_resource',
+        'erp5_invoicing',
+        'erp5_workflow',
+        'erp5_configurator',
+        'erp5_configurator_standard_categories',
+        'erp5_configurator_standard',)
+
+  def stepLogin(self, quiet=0, run=1, **kw):
+    uf = self.getPortal().acl_users
+    uf._doAddUser('test_configurator_user', '', 
+                              ['Manager', 'Assignee', 'Assignor',
+                               'Associate', 'Auditor', 'Author'], [])
+    user = uf.getUserById('test_configurator_user').__of__(uf)
+    newSecurityManager(None, user)
+
   def afterSetUp(self):
+    self.stepLogin()
     self.login(user_name='test_configurator_user')
     # XXX (lucas): The request is not clean between tests.
     # So, we need to force the test to use a clean REQUEST
@@ -71,7 +106,7 @@ class TestLiveConfiguratorWorkflowMixin(ERP5TypeLiveTestCase, SecurityTestCase):
 
   def beforeTearDown(self):
     self.portal.portal_activities.subscribe()
-    ERP5TypeLiveTestCase.beforeTearDown(self)
+    ERP5TypeTestCase.beforeTearDown(self)
 
   def setBusinessConfigurationWorkflow(self, business_configuration, workflow):
     """ Set configurator workflow """
@@ -451,20 +486,34 @@ class TestLiveConfiguratorWorkflowMixin(ERP5TypeLiveTestCase, SecurityTestCase):
     expected_list = self.standard_bt5_list + bt5_tuple
     self.assertEquals([i for i in expected_list if i not in bt5_title_list], [])
 
-    self.assertTrue(bc_id in bt5_title_list)
+    
+    self.assertFalse(bc_id in bt5_title_list)
+
+    bt = business_configuration.getSpecialiseValue(portal_type="Business Template")
+    self.assertEquals(bc_id, bt.getTitle())
+    self.assertEquals(bt.getInstallationState(), 'not_installed')
+    self.assertEquals(bt.getBuildingState(), 'built')
 
     # check for links
     link_list = business_configuration.searchFolder(portal_type="Link")
-    # XXX FIXME Too poor check, it should verify if links are correnct.
     self.assertEquals(3, len(link_list))
+    expected_link_title_list = list(bt5_tuple) +\
+             ['erp5_configurator_standard_categories']
+
+    self.assertSameSet(["%s.bt5" % i for i in expected_link_title_list], 
+                        [i.getTitle() for i in link_list])
 
     # check for links
     file_list = business_configuration.searchFolder(portal_type="File")
-    # XXX FIXME Too poor check, it should verify if file are correnct.
     self.assertEquals(1, len(file_list))
+    self.assertEquals(business_configuration.getSpecialiseTitle(), 
+                      file_list[0].getTitle())
 
     file_title_list = ('%s' % bc_id,)
     self.assertSameSet(file_title_list, [f.getTitle() for f in file_list])
+
+  def stepCheckConfiguredInstancePreference(sequence=None,  sequence_list=None, **kw):
+    """ Check if the configured instance  has appropriate configuration"""
 
   def stepCheckInstanceIsConfiguredFrance(self, sequence=None,  sequence_list=None, **kw):
     """ Check if the instance is configured with French business templates """
@@ -485,7 +534,7 @@ class TestLiveConfiguratorWorkflowMixin(ERP5TypeLiveTestCase, SecurityTestCase):
          business_configuration, REQUEST=self.portal.REQUEST)
 
 
-class TestLiveConsultingConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
+class TestConsultingConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
   """
     Test Live Consulting Configuration Workflow
   """
@@ -777,7 +826,7 @@ class TestLiveConsultingConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     sequence_list.play(self)
 
 
-class TestLiveStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
+class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
   """
     Test Live Standard Configuration Workflow.
   """
@@ -1154,48 +1203,53 @@ class TestLiveStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     """
       Assert all the Peference properties.
     """
-    pref = self.portal.portal_preferences
+    preference_tool = self.portal.portal_preferences
     business_configuration = sequence.get("business_configuration")
     bt5_object = business_configuration.getSpecialiseValue()
     preference_list = bt5_object.getTemplatePreferenceList()
     self.assertEquals(len(preference_list), 2)
 
-    organisation_list = self.getBusinessConfigurationObjectList(business_configuration, 'Organisation')
+    for preference in preference_list:
+      self.assertEquals(preference_tool[preference].getPreferenceState(), 
+                        'global')
+
+    organisation_list = self.getBusinessConfigurationObjectList(business_configuration,
+                                                                'Organisation')
     self.assertNotEquals(len(organisation_list), 0)
     organisation_id = organisation_list[0].getId()
 
     # ui
-    self.assertEquals('dmy', pref.getPreferredDateOrder())
-    self.assertEquals('ODT', pref.getPreferredReportStyle())
-    self.assertEquals('pdf', pref.getPreferredReportFormat())
-    self.assertEquals(10, pref.getPreferredMoneyQuantityFieldWidth())
-    # XXX FIXME (lucas): oood and oood port should be defined
+    self.assertEquals('dmy', preference_tool.getPreferredDateOrder())
+    self.assertEquals('ODT', preference_tool.getPreferredReportStyle())
+    self.assertEquals('pdf', preference_tool.getPreferredReportFormat())
+    self.assertEquals(10, preference_tool.getPreferredMoneyQuantityFieldWidth())
+    self.assertTrue(preference_tool.getPreferredHtmlStyleAccessTab())
     # on Business Configuration
-    self.assertEquals('oood', pref.getPreferredOoodocServerAddress())
-    self.assertEquals(8008, pref.getPreferredOoodocServerPortNumber())
+    self.assertEquals('localhost', preference_tool.getPreferredOoodocServerAddress())
+    self.assertEquals(8011, preference_tool.getPreferredOoodocServerPortNumber())
 
     # accounting
     self.assertEquals('currency_module/EUR',
-                      pref.getPreferredAccountingTransactionCurrency())
+                      preference_tool.getPreferredAccountingTransactionCurrency())
     self.assertEquals('gap/fr/pcg',
-                      pref.getPreferredAccountingTransactionGap())
+                      preference_tool.getPreferredAccountingTransactionGap())
     self.assertEquals('group/my_group', 
-                  pref.getPreferredAccountingTransactionSectionCategory())
+                  preference_tool.getPreferredAccountingTransactionSectionCategory())
     self.assertEquals('organisation_module/%s' % organisation_id,
-                      pref.getPreferredAccountingTransactionSourceSection())
-    self.assertEquals(pref.getPreferredSectionCategory(),
+                      preference_tool.getPreferredAccountingTransactionSourceSection())
+    self.assertEquals(preference_tool.getPreferredSectionCategory(),
                       'group/my_group')
     self.assertEquals('organisation_module/%s' % organisation_id,
-                      pref.getPreferredSection())
+                      preference_tool.getPreferredSection())
     self.assertEquals(['delivered', 'stopped'],
-                  pref.getPreferredAccountingTransactionSimulationStateList())
+                  preference_tool.getPreferredAccountingTransactionSimulationStateList())
 
     # trade
-    self.assertEquals(['supplier'], pref.getPreferredSupplierRoleList())
-    self.assertEquals(['client'], pref.getPreferredClientRoleList())
-    self.assertEquals(['trade/sale'], pref.getPreferredSaleUseList())
-    self.assertEquals(['trade/purchase'], pref.getPreferredPurchaseUseList())
-    self.assertEquals(['trade/container'], pref.getPreferredPackingUseList())
+    self.assertEquals(['supplier'], preference_tool.getPreferredSupplierRoleList())
+    self.assertEquals(['client'], preference_tool.getPreferredClientRoleList())
+    self.assertEquals(['trade/sale'], preference_tool.getPreferredSaleUseList())
+    self.assertEquals(['trade/purchase'], preference_tool.getPreferredPurchaseUseList())
+    self.assertEquals(['trade/container'], preference_tool.getPreferredPackingUseList())
 
   def stepCheckModulesBusinessApplication(self, sequence=None, sequence_list=None, **kw):
     """
@@ -2050,7 +2104,7 @@ class TestLiveStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
       self.failUnlessUserCanAddDocument(username, transaction)
     if self.restricted_security:
       for username in (self.all_username_list - self.accountant_username_list -
-                       sales_and_purchase_username_list):
+                       self.sales_and_purchase_username_list):
         self.failIfUserCanPassWorkflowTransition(username,
                                                  'cancel_action',
                                                  transaction)
@@ -2191,7 +2245,7 @@ class TestLiveStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
       self.failUnlessUserCanAddDocument(username, transaction)
     if self.restricted_security:
       for username in (self.all_username_list - self.accountant_username_list -
-                       sales_and_purchase_username_list):
+                       self.sales_and_purchase_username_list):
         self.failIfUserCanPassWorkflowTransition(username,
                                                  'cancel_action',
                                                  transaction)
@@ -2934,6 +2988,6 @@ class TestLiveStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
 import unittest
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestLiveConsultingConfiguratorWorkflow))
-  suite.addTest(unittest.makeSuite(TestLiveStandardConfiguratorWorkflow))
+  suite.addTest(unittest.makeSuite(TestConsultingConfiguratorWorkflow))
+  suite.addTest(unittest.makeSuite(TestStandardConfiguratorWorkflow))
   return suite

@@ -197,8 +197,8 @@ system_prefs = dict(\n
   # oood\n
   # XXX-Luke: (critical) Use Conversion Server parameters related with\n
   #           Business Configartion\n
-  preferred_ooodoc_server_address=\'oood\',\n
-  preferred_ooodoc_server_port_number=8008,\n
+  preferred_ooodoc_server_address=\'localhost\',\n
+  preferred_ooodoc_server_port_number=8011,\n
   # dms\n
   # XXX-Luke: (proposal) Allow to define, maybe use some magic of\n
   #           representation\n
