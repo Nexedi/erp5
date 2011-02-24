@@ -1,13 +1,7 @@
 Open Internal Order Cell | view
-Open Internal Order Line | create_task
-Open Internal Order Line | item_creation
 Open Internal Order Line | price_view
-Open Internal Order Line | profile_view
-Open Internal Order Line | project
 Open Internal Order Line | quantity_view
-Open Internal Order Line | select_item_fast_input
 Open Internal Order Line | view
-Open Internal Order Line | view_trade_model
 Open Internal Order Module | view
 Open Internal Order | aggregate_item
 Open Internal Order | apply_trade_condition
