@@ -86,12 +86,12 @@
 \n
 <tr>\n
   <td>verifyElementPresent</td>\n
-  <td>//table/thead/tr[2]/th[2]/input[@type = \'text\'][@name = \'id\']</td>\n
+  <td>//table/thead/tr[2]/th[2]/input[@type = \'text\'][@name = \'listbox_id\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementPresent</td>\n
-  <td>//table/thead/tr[2]/th[3]/input[@type = \'text\'][@name = \'bar_category_title\']</td>\n
+  <td>//table/thead/tr[2]/th[3]/input[@type = \'text\'][@name = \'listbox_bar_category_title\']</td>\n
   <td></td>\n
 </tr>\n
 \n

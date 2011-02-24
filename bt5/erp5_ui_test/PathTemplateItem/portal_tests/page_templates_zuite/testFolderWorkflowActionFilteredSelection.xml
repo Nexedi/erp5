@@ -85,7 +85,7 @@
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>title</td>\n
+  <td>listbox_title</td>\n
   <td>%3</td>\n
 </tr>\n
 <tr>\n
@@ -187,8 +187,7 @@ script. -->\n
 \n
 \n
 </body>\n
-</html>\n
-
+</html>
 
 ]]></unicode> </value>
         </item>

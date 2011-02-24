@@ -113,7 +113,7 @@
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>title</td>\n
+  <td>listbox_title</td>\n
   <td>Title</td>\n
 </tr>\n
 <tr>\n
@@ -156,7 +156,7 @@ commands from selenium 0.8\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>title</td>\n
+  <td>listbox_title</td>\n
   <td>Title</td>\n
 </tr>\n
 <!-- only \'Foo\' portal type have a simulation state, so we only have 1 document\n
@@ -191,8 +191,7 @@ commands from selenium 0.8\n
 </tr>\n
 \n
 </body>\n
-</html>\n
-
+</html>
 
 ]]></unicode> </value>
         </item>

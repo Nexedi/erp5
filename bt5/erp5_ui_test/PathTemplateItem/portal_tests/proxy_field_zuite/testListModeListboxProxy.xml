@@ -122,12 +122,12 @@
 \n
 <tr>\n
   <td>verifyElementPresent</td>\n
-  <td>title</td>\n
+  <td>listbox_title</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>title</td>\n
+  <td>listbox_title</td>\n
   <td>Title 0</td>\n
 </tr>\n
 <tr>\n
@@ -142,7 +142,7 @@
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>title</td>\n
+  <td>listbox_title</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -152,7 +152,7 @@
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>start_date</td>\n
+  <td>listbox_start_date</td>\n
   <td>2009/01/01</td>\n
 </tr>\n
 <tr>\n
@@ -169,8 +169,7 @@
 \n
 </tbody></table>\n
 </body>\n
-</html>\n
-
+</html>
 
 ]]></unicode> </value>
         </item>

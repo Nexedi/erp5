@@ -96,12 +96,12 @@
 \n
 <tr>\n
   <td>assertValue</td>\n
-  <td>title</td>\n
+  <td>listbox_title</td>\n
   <td>%a%</td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>title</td>\n
+  <td>listbox_title</td>\n
   <td>a1</td>\n
 </tr>\n
 <tr>\n
@@ -118,7 +118,7 @@
 </tr>\n
 <tr>\n
   <td>assertValue</td>\n
-  <td>title</td>\n
+  <td>listbox_title</td>\n
   <td>a1</td>\n
 </tr>\n
 \n
@@ -140,8 +140,7 @@
 \n
 </tbody></table>\n
 </body>\n
-</html>\n
-
+</html>
 
 ]]></unicode> </value>
         </item>

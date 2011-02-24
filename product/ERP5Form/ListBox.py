@@ -2613,6 +2613,9 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
   def render(self, **kw):
     """Render the data in HTML.
     """
+    request = self.request
+    field_id = self.getId()
+    
     # Make it sure to store the current selection, only if a list method is defined.
     list_method = self.getListMethod()
     selection = self.getSelection()
@@ -2623,11 +2626,25 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
       if selection_index is not None:
         list_url += '&selection_index=%s' % selection_index
       selection.edit(method_path = method_path, list_url = list_url)
-      self.getSelectionTool().setSelectionFor(self.getSelectionName(), selection, REQUEST = self.request)
+      
+      # listbox search columnd are passed in format: <listbox_field_id>_<search_column>
+      # this is done to allow multiple listboxes in one page with same search column names
+      update_selection = False
+      form_dict = request.form
+      listbox_kw = selection.getParams()
+      listbox_arguments_list = [x for x in form_dict.keys() if x.startswith(field_id)]
+      for original_listbox_argument in listbox_arguments_list:
+        listbox_argument = original_listbox_argument.replace('%s_' %field_id, '', 1)
+        listbox_argument_value = form_dict.get(original_listbox_argument, None)
+        if listbox_argument in list(self.getSearchColumnIdSet()) and \
+           listbox_argument_value not in (None,):
+          update_selection = True
+          listbox_kw[listbox_argument] = listbox_argument_value
+      if update_selection:
+        selection.edit(listbox_kw)
+      self.getSelectionTool().setSelectionFor(self.getSelectionName(), selection, REQUEST = request)
 
     # do pass current form and respective field through request
-    request = self.request
-    field_id = self.getId()
     form = self.getForm()
     request.set('%s_form_id' %field_id, form.getId())
     request.set('%s_field_id' %field_id, field_id)

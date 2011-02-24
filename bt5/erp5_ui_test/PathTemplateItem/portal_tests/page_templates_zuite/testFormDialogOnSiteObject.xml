@@ -77,12 +77,12 @@
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>id</td>\n
+  <td>listbox_id</td>\n
   <td tal:content="value_a"></td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>title</td>\n
+  <td>listbox_title</td>\n
   <td tal:content="value_b"></td>\n
 </tr>\n
 <tr>\n
@@ -107,12 +107,12 @@
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>id</td>\n
+  <td>listbox_id</td>\n
   <td tal:content="other_value_a"></td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>title</td>\n
+  <td>listbox_title</td>\n
   <td tal:content="other_value_b"></td>\n
 </tr>\n
 </body>\n

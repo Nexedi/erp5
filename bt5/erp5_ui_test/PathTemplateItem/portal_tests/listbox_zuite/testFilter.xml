@@ -478,7 +478,7 @@
 and search parameters are remembered -->\n
 <tr>\n
   <td>type</td>\n
-  <td>title</td>\n
+  <td>listbox_title</td>\n
   <td>%Title%</td>\n
 </tr>\n
 <tr>\n
@@ -544,14 +544,13 @@ and search parameters are remembered -->\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>title</td>\n
+  <td>listbox_title</td>\n
   <td>%Title%</td>\n
 </tr>\n
 \n
 </tbody></table>\n
 </body>\n
-</html>\n
-
+</html>
 
 ]]></unicode> </value>
         </item>

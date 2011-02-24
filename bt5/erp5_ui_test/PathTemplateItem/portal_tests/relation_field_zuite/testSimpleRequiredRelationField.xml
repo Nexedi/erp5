@@ -125,7 +125,7 @@ metal:use-macro="here/RelationFieldZuite_CommonTemplate/macros/init"\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>title</td>\n
+  <td>listbox_title</td>\n
   <td>a</td>\n
 </tr>\n
 <tr>\n
@@ -186,8 +186,7 @@ metal:use-macro="here/RelationFieldZuite_CommonTemplate/macros/init"\n
 </tr>\n
 </tbody></table>\n
 </body>\n
-</html>\n
-
+</html>
 
 ]]></unicode> </value>
         </item>
