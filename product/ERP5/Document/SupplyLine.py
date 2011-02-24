@@ -73,6 +73,7 @@ class SupplyLine(Path, Amount, XMLMatrix):
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getPrice')
     def getPrice(self):
+      # FIXME: this have to be done in an interaction wf
       if getattr(self, 'price', None) is None:
         self.price = 0.0
       # Return the price
