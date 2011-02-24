@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Preference Tool Type" module="erp5.portal_type"/>
+      <global name="Base Type" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -26,56 +26,44 @@
             </value>
         </item>
         <item>
-            <key> <string>acquire_local_roles</string> </key>
-            <value> <int>1</int> </value>
-        </item>
-        <item>
             <key> <string>content_icon</string> </key>
-            <value> <string>folder_icon.gif</string> </value>
-        </item>
-        <item>
-            <key> <string>content_meta_type</string> </key>
-            <value> <string>ERP5 Folder</string> </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
-            <value> <string>Preference Tool contains user preferences and system preferences.</string> </value>
-        </item>
-        <item>
-            <key> <string>factory</string> </key>
-            <value> <string>addFolder</string> </value>
-        </item>
-        <item>
-            <key> <string>filter_content_types</string> </key>
-            <value> <int>1</int> </value>
-        </item>
-        <item>
-            <key> <string>group_list</string> </key>
             <value>
-              <tuple>
-                <string>module</string>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string>Define a Preference Type used by Preference and System Preference portal types, meaningful as the latter get all Property Sheets ending by \'Preference\' automatically applied</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
-            <value> <string>Preference Tool</string> </value>
+            <value> <string>Preference Type</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>permission</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
-            <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Base Type</string> </value>
         </item>
         <item>
             <key> <string>type_class</string> </key>
-            <value> <string>PreferenceTool</string> </value>
+            <value> <string>PreferenceType</string> </value>
+        </item>
+        <item>
+            <key> <string>type_mixin</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
       </dictionary>
     </pickle>
@@ -88,7 +76,7 @@
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value> <string>erp5_ui</string> </value>
+            <value> <string>erp5_content</string> </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>
@@ -105,7 +93,7 @@
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value> <string>erp5_ui</string> </value>
+            <value> <string>erp5_content</string> </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>

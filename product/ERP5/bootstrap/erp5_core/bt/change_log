@@ -1,3 +1,8 @@
+2011-02-24 arnaud.fontaine
+* Add Preference Tool Type and Preference Type portal types and their views.
+* Set Preference and System Preference portal type class to Preference Type.
+* Set Preference Tool portal type class to Preference Tool Type.
+
 2011-02-22 Kazuhiko
 * Improve and proxify ERP5Site_viewCreateModuleDialog.
 
