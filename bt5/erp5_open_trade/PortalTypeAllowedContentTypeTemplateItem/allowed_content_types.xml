@@ -29,10 +29,4 @@
  <portal_type id="Open Sale Order Module">
   <item>Open Sale Order</item>
  </portal_type>
- <portal_type id="Periodicity Line">
-  <item>Predicate</item>
- </portal_type>
- <portal_type id="Sale Trade Condition">
-  <item>Periodicity Line</item>
- </portal_type>
 </allowed_content_type_list>
