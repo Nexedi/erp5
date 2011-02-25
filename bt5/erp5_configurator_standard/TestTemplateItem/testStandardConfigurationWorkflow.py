@@ -681,7 +681,7 @@ class TestConsultingConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
       self.assertEquals('show', response_dict['command'])
     self.assertEquals(None, response_dict['previous'])
     self.assertEquals('Configure Categories', response_dict['next'])
-    self.assertCurrentStep('Your categories', response_dict)
+    self.assertCurrentStep('Your Categories', response_dict)
 
   def stepSetupCategoriesConfiguratorItem(self, sequence=None, sequence_list=None, **kw):
     """ Load the categories """
