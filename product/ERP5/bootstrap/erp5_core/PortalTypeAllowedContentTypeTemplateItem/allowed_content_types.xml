@@ -74,7 +74,6 @@
   <item>Dynamic Category Property</item>
   <item>Property Existence Constraint</item>
   <item>Property Type Validity Constraint</item>
-  <item>Resource Measures Consistency Constraint</item>
   <item>Standard Property</item>
   <item>TALES Constraint</item>
  </portal_type>
