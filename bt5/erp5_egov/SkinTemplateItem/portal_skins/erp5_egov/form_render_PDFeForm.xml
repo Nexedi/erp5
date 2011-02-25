@@ -118,7 +118,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                                 struct_test python:struct_selec_test and struct_input_test">\n
                 <div tal:replace="nothing">\n
                   - rendering final output string through \'field.render\'.\n
-                  - replacing all \'&amps;nbsp\' with \'\' to prevent error in rendering\n
+                  - replacing all \'&nbsp\' with \'\' to prevent error in rendering\n
                   - making two tests : first one (struct_input_test) is used to test if\n
                   rendering is single field (StringField, ) or multi-field\n
                   (DateTimeField, RelationStringField, ).\n
