@@ -84,11 +84,11 @@
                         </tuple>
                         <tuple>
                           <string>source_reference</string>
-                          <string>Source Reference</string>
+                          <string>Software Type</string>
                         </tuple>
                         <tuple>
                           <string>destination_reference</string>
-                          <string>Destination Reference</string>
+                          <string>Authorisation Identity</string>
                         </tuple>
                         <tuple>
                           <string>creation_date</string>
