@@ -155,31 +155,6 @@ class Order(Delivery):
                                       portal_type='Applied Rule')
       getattr(my_applied_rule.getObject(), method_id)(**kw)
 
-
-    security.declareProtected(Permissions.AccessContentsInformation, \
-                              'getOrderRelatedMovementList')
-    def getOrderRelatedMovementList(self):
-      """
-        Returns simulation movements related to a cell or line 
-        of this order
-      """
-      # XXX The name should be getDeliveryRelatedMovementList, but this
-      # method seems to be not used at all.
-      result = self.getOrderRelatedValueList(
-          portal_type='Simulation Movement') or \
-          self.getDeliveryRelatedValueList(portal_type='Simulation Movement')
-      for m in self.contentValues(filter={'portal_type': \
-                                          self.getPortalMovementTypeList()}):
-        # Find related in simulation
-        result += m.getOrderRelatedValueList(
-            portal_type='Simulation Movement') or \
-            m.getDeliveryRelatedValueList(portal_type='Simulation Movement')
-        for c in m.contentValues(filter={'portal_type': 'Delivery Cell'}):
-          result += c.getOrderRelatedValueList(
-              portal_type='Simulation Movement') or \
-              c.getDeliveryRelatedValueList(portal_type='Simulation Movement')
-      return result
-
     def manage_beforeDelete(self, item, container):
       """
           Delete related Applied Rule
