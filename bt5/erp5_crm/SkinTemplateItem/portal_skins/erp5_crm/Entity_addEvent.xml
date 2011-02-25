@@ -55,13 +55,12 @@ from AccessControl import getSecurityManager\n
 portal = context.getPortalObject()\n
 \n
 # Search current user ID\n
-user_id = getSecurityManager().getUser().getId()\n
+logged_in_user_value = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
 source = None\n
 person_subordination = None\n
-for person in portal.portal_catalog(reference=user_id, portal_type=\'Person\'):\n
-  source = person.getRelativeUrl()\n
-  person_subordination = person.getSubordination()\n
-  break\n
+if logged_in_user_value is not None:\n
+  source = logged_in_user_value.getRelativeUrl()\n
+  person_subordination = logged_in_user_value.getSubordination()\n
 \n
 start_date = DateTime()\n
 destination = context.getRelativeUrl()\n
