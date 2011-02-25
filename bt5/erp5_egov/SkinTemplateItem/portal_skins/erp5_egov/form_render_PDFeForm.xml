@@ -163,7 +163,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                           tal:repeat="struct_ind python:struct_range[1:]">\n
                       <div tal:condition="python:(not field_errors.has_key(field.id))"><!-- field has no error 1-->\n
                         <div tal:define="struct_content python:struct_input_div[struct_ind];\n
-                          struct_content python:\'/>\'in struct_content and struct_content[:struct_content.rfind(\'/&gt;\')+2] or struct_content;\n
+                          struct_content python:\'/>\'in struct_content and struct_content[:struct_content.rfind(\'/>\')+2] or struct_content;\n
                                                         struct_final python:\'%s %s\' %\n
                                                         (\'<input \', struct_content);\n
                                                         class_final python:\'%s%s%s\' %\n
