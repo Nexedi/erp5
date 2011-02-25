@@ -690,8 +690,7 @@ class Delivery(XMLObject, ImmobilisationDelivery,
     ##########################################################################
     # Applied Rule stuff
     @UnrestrictedMethod # XXX-JPS What is this ?
-    def updateAppliedRule(self, rule_reference=None, rule_id=None, force=0,
-                          **kw):
+    def updateAppliedRule(self, rule_reference=None, rule_id=None, **kw):
       """
       Create a new Applied Rule if none is related, or call expand
       on the existing one.
@@ -723,9 +722,9 @@ class Delivery(XMLObject, ImmobilisationDelivery,
       else:
         raise ValueError, 'No such rule as %r is found' % rule_reference
 
-      self._createAppliedRule(rule_id, force=force, **kw)
+      self._createAppliedRule(rule_id, **kw)
 
-    def _createAppliedRule(self, rule_id, force=0, activate_kw=None, **kw):
+    def _createAppliedRule(self, rule_id, activate_kw=None, **kw):
       """
         Create a new Applied Rule is none is related, or call expand
         on the existing one.
@@ -768,12 +767,12 @@ class Delivery(XMLObject, ImmobilisationDelivery,
       # We are now certain we have a single applied rule
       # It is time to expand it
       self.activate(activate_kw=activate_kw, **expand_activate_kw).expand(
-          applied_rule_id=my_applied_rule_id, force=force,
+          applied_rule_id=my_applied_rule_id,
           activate_kw=activate_kw, **kw)
 
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
     @UnrestrictedMethod
-    def expand(self, applied_rule_id=None, force=0, activate_kw=None,**kw):
+    def expand(self, applied_rule_id=None, activate_kw=None,**kw):
       """
         Reexpand applied rule
 
@@ -786,7 +785,7 @@ class Delivery(XMLObject, ImmobilisationDelivery,
         my_applied_rule = self.portal_simulation.get(applied_rule_id, None)
         if my_applied_rule is not None:
           excluded_rule_path_list.append(my_applied_rule.getPath())
-          my_applied_rule.expand(force=force, activate_kw=activate_kw,**kw)
+          my_applied_rule.expand(activate_kw=activate_kw,**kw)
           # once expanded, the applied_rule must be reindexed
           # because some simulation_movement may change even
           # if there are not edited (acquisition)
@@ -806,7 +805,6 @@ class Delivery(XMLObject, ImmobilisationDelivery,
                   (applied_rule_id, self.getId()))
       self.expandRuleRelatedToMovement(
                   excluded_rule_path_list=excluded_rule_path_list,
-                  force=force,
                   activate_kw=activate_kw,
                   **kw)
 
