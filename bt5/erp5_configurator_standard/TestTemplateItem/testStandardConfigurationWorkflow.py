@@ -2968,7 +2968,7 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
       stepTic
       stepStartConfigurationInstallation
       stepTic
-      stepCheckInstanceIsConfiguredFrance
+      stepCheckInstanceIsConfiguredBrazil
     """
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
