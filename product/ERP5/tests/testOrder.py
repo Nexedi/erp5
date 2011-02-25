@@ -797,8 +797,6 @@ class TestOrderMixin(SubcontentReindexingWrapper):
       applied_rule = related_applied_rule_list[0].getObject()
       sequence.edit(applied_rule=applied_rule)
       self.failUnless(applied_rule is not None)
-      self.failUnless(order_state, \
-                      applied_rule.getLastExpandSimulationState())
 
       # Test if applied rule has a specialise value with passed rule_reference
       portal_rules = getToolByName(order, 'portal_rules')
