@@ -103,6 +103,7 @@ class TestOOoImportMixin(ERP5TypeTestCase):
     if not portal_categories[function_bc].has_key('manager'):
       portal_categories[function_bc].newContent(id='manager', portal_type='Category', title='Manager')
 
+    self.portal.portal_caches.clearCache()
     transaction.commit()
     self.tic()
 
@@ -174,6 +175,7 @@ class TestOOoImport(TestOOoImportMixin):
     person_module = self.getPortal().person_module
     person_list = [person_module[str(i + person_current_id)] \
                    for i in range(num)]
+    person_current_id = person_current_id + num
     self.assertEqual(
       sorted(['John Doe %s' % (i) for i in range(num)]),
       sorted([person_list[i].getTitle() for i in range(num)]))
@@ -186,7 +188,6 @@ class TestOOoImport(TestOOoImportMixin):
     self.assertEqual(
       sorted(['john.doe%s@foo.com' % (i) for i in range(num)]),
       sorted([person_list[i].getDefaultEmailText() for i in range(num)]))
-    person_current_id = person_current_id+num
 
   def stepCheckImportedPersonListBlank(self, sequence=None, sequence_list=None, **kw):
     return self.stepCheckImportedPersonList(sequence=sequence,
@@ -198,6 +199,7 @@ class TestOOoImport(TestOOoImportMixin):
     person_module = self.getPortal().person_module
     person_list = [person_module[str(i + person_current_id)] \
                    for i in range(num)]
+    person_current_id = person_current_id+num
     self.assertEqual(
       sorted(['John Doe %s' % (i) for i in range(num)]),
       sorted([person_list[i].getTitle() for i in range(num)]))
@@ -216,7 +218,6 @@ class TestOOoImport(TestOOoImportMixin):
     self.assertEqual(
       sorted(['France' for i in range(num)]),
       sorted([person_list[i].getRegionTitle() for i in range(num)]))
-    person_current_id = person_current_id+num
 
   def stepCheckAuthorImportedPersonList(self, sequence=None, sequence_list=None, **kw):
     return self.stepCheckImportedPersonListCategory(sequence=sequence,
@@ -229,6 +230,7 @@ class TestOOoImport(TestOOoImportMixin):
     person_module = self.getPortal().person_module
     person_list = [person_module[str(i + person_current_id)] \
                    for i in range(num)]
+    person_current_id = person_current_id+num
     self.assertEqual(
       sorted(['John Doe %s' % (i) for i in range(num)]),
       sorted([person_list[i].getTitle() for i in range(num)]))
@@ -241,7 +243,6 @@ class TestOOoImport(TestOOoImportMixin):
     self.assertEqual(
       sorted(['Director' for i in range(num)]),
       sorted([person_list[i].getFunctionFreeText() for i in range(num)]))
-    person_current_id = person_current_id+num
 
   def stepCheckImportedPersonListAccentuated(self, sequence=None, sequence_list=None, **kw):
     global person_current_id
@@ -249,6 +250,7 @@ class TestOOoImport(TestOOoImportMixin):
     person_module = self.getPortal().person_module
     person_list = [person_module[str(i + person_current_id)] \
                    for i in range(num)]
+    person_current_id = person_current_id+num
     self.assertEqual(
       sorted(['John Doe é %s' % (i) for i in range(num)]),
       sorted([person_list[i].getTitle() for i in range(num)]))
@@ -261,7 +263,6 @@ class TestOOoImport(TestOOoImportMixin):
     self.assertEqual(
       sorted(['director' for i in range(num)]),
       sorted([person_list[i].getFunction() for i in range(num)]))
-    person_current_id = person_current_id+num
 
   def stepCheckXLSImportedPersonList(self, sequence=None, sequence_list=None, **kw):
     return self.stepCheckImportedPersonList(sequence=sequence,
@@ -274,6 +275,7 @@ class TestOOoImport(TestOOoImportMixin):
     person_module = self.getPortal().person_module
     person_list = [person_module[str(i + person_current_id)] \
                    for i in range(num)]
+    person_current_id = person_current_id+num
     self.assertEqual(
       sorted(['John Doe %s' % (i) for i in range(num)]),
       sorted([person_list[i].getTitle() for i in range(num)]))
@@ -286,7 +288,6 @@ class TestOOoImport(TestOOoImportMixin):
     self.assertEqual(
       sorted([DateTime('2008/02/%02d %s' % (i+1, 'GMT')) for i in range(num)]),
       sorted([person_list[i].getStartDate() for i in range(num)]))
-    person_current_id = person_current_id+num
 
   def stepCheckImportFloatsAndPercentage(self, sequence=None, sequence_list=None, **kw):
     num = 10
