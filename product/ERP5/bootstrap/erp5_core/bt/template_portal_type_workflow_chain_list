@@ -29,5 +29,3 @@ Standard Property | dynamic_class_generation_interaction_workflow
 System Preference | preference_workflow
 TALES Constraint | dynamic_class_generation_interaction_workflow
 Trade Model Line Cell Consistency Constraint | dynamic_class_generation_interaction_workflow
-Transaction Quantity Value Feasability Constraint | dynamic_class_generation_interaction_workflow
-Transaction Quantity Value Validity Constraint | dynamic_class_generation_interaction_workflow

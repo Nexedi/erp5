@@ -105,10 +105,6 @@ Template Tool | upgrade_from_repository
 Template Tool | view
 Trade Model Line Cell Consistency Constraint | predicate
 Trade Model Line Cell Consistency Constraint | view
-Transaction Quantity Value Feasability Constraint | predicate
-Transaction Quantity Value Feasability Constraint | view
-Transaction Quantity Value Validity Constraint | predicate
-Transaction Quantity Value Validity Constraint | view
 Trash Bin | jump_bt5
 Trash Bin | view
 Trash Folder | view

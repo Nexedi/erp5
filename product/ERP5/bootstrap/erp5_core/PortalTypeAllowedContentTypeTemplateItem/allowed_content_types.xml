@@ -78,8 +78,6 @@
   <item>Standard Property</item>
   <item>TALES Constraint</item>
   <item>Trade Model Line Cell Consistency Constraint</item>
-  <item>Transaction Quantity Value Feasability Constraint</item>
-  <item>Transaction Quantity Value Validity Constraint</item>
  </portal_type>
  <portal_type id="Property Sheet Tool">
   <item>Property Sheet</item>

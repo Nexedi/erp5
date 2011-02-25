@@ -41,8 +41,6 @@ Property Sheet | Resource Measures Consistency Constraint
 Property Sheet | Standard Property
 Property Sheet | TALES Constraint
 Property Sheet | Trade Model Line Cell Consistency Constraint
-Property Sheet | Transaction Quantity Value Feasability Constraint
-Property Sheet | Transaction Quantity Value Validity Constraint
 Simulation Movement | Applied Rule
 Simulation Tool | Applied Rule
 Template Tool | Business Template
