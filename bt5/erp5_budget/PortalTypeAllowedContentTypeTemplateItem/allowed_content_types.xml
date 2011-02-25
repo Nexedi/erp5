@@ -22,4 +22,8 @@
  <portal_type id="Budget Transfer">
   <item>Budget Transfer Line</item>
  </portal_type>
+ <portal_type id="Property Sheet">
+  <item>Transaction Quantity Value Feasability Constraint</item>
+  <item>Transaction Quantity Value Validity Constraint</item>
+ </portal_type>
 </allowed_content_type_list>
