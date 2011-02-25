@@ -1,3 +1,7 @@
+2011-02-25 arnaud.fontaine
+* Proxify all the fields in BaseType_view and PreferenceType_view.
+* Fix type_interface_list which was not displayed properly in BaseType_view and PreferenceType_view.
+
 2011-02-24 arnaud.fontaine
 * Add Preference Tool Type and Preference Type portal types and their views.
 * Set Preference and System Preference portal type class to Preference Type.
