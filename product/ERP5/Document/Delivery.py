@@ -687,17 +687,6 @@ class Delivery(XMLObject, ImmobilisationDelivery,
 #       kw['category'] = self._getMovementResourceList()
 #       return self.portal_simulation.getAvailableInventoryAssetPrice(**kw)
 
-    security.declarePrivate( '_edit' )
-    def _edit(self, REQUEST=None, force_update = 0, **kw):
-      """
-      call propagateArrowToSimulation
-      """
-      XMLObject._edit(self,REQUEST=REQUEST,force_update=force_update,**kw)
-      #self.propagateArrowToSimulation()
-      # We must expand our applied rule only if not confirmed
-      #if self.getSimulationState() in planned_order_state:
-      #  self.updateAppliedRule() # This should be implemented with the interaction tool rather than with this hard coding
-
     ##########################################################################
     # Applied Rule stuff
     @UnrestrictedMethod # XXX-JPS What is this ?
