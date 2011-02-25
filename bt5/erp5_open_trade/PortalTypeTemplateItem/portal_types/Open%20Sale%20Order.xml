@@ -54,7 +54,9 @@ It defines what will be sold and how often and how many.</string> </value>
             <key> <string>group_list</string> </key>
             <value>
               <tuple>
-                <string>order</string>
+                <string>open_order</string>
+                <string>path</string>
+                <string>sale</string>
               </tuple>
             </value>
         </item>
@@ -101,10 +103,7 @@ It defines what will be sold and how often and how many.</string> </value>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
-        <tuple/>
-      </tuple>
+      <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -121,10 +120,7 @@ It defines what will be sold and how often and how many.</string> </value>
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <tuple>
-        <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
-        <tuple/>
-      </tuple>
+      <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
     </pickle>
     <pickle>
       <dictionary>
