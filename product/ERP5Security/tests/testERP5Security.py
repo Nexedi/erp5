@@ -51,7 +51,7 @@ class TestUserManagement(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     """List of BT to install. """
-    return ('erp5_base',)
+    return ('erp5_base', 'erp5_web',)
 
   def beforeTearDown(self):
     """Clears person module and invalidate caches when tests are finished."""
@@ -717,6 +717,28 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     self.assertTrue(response.headers['location'].endswith('login_form'))
 
     # view front page we should be logged in if we use authentication key
+    response = self.publish('%s?__ac_key=%s' %(base_url, key))
+    self.assertEqual(response.getStatus(), 200)
+    self.assertTrue(reference in response.getBody())
+
+    # check if key authentication works other page than front page
+    person_module = portal.person_module
+    base_url = person_module.absolute_url(relative=1)
+    response = self.publish(base_url)
+    self.assertEqual(response.getStatus(), 302)
+    self.assertTrue('location' in response.headers.keys())
+    self.assertTrue('%s/login_form?came_from=' % portal.getId(), response.headers['location'])
+    response = self.publish('%s?__ac_key=%s' %(base_url, key))
+    self.assertEqual(response.getStatus(), 200)
+    self.assertTrue(reference in response.getBody())
+
+    # check if key authentication works with web_mode too
+    web_site = portal.web_site_module.newContent(portal_type='Web Site')
+    base_url = web_site.absolute_url(relative=1)
+    response = self.publish(base_url)
+    self.assertEqual(response.getStatus(), 302)
+    self.assertTrue('location' in response.headers.keys())
+    self.assertTrue('%s/login_form?came_from=' % portal.getId(), response.headers['location'])
     response = self.publish('%s?__ac_key=%s' %(base_url, key))
     self.assertEqual(response.getStatus(), 200)
     self.assertTrue(reference in response.getBody())
