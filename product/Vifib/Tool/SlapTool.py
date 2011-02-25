@@ -584,9 +584,12 @@ class SlapTool(BaseTool):
     requested_software_instance = software_instance_document.portal_catalog.\
         getResultValue(
               portal_type="Software Instance",
-              source_reference=partition_reference,
-              title=software_type,
-              predecessor_related_uid=software_instance_document.getUid(),)
+              source_reference=software_type,
+              # predecessor_related_uid is inconsistent with
+              # SoftwareInstancae.requestSoftwareInstance but in this case it
+              # is assumed, that data are correct
+              predecessor_related_uid=software_instance_document.getUid(),
+        )
 
     if requested_software_instance is None:
       raise SoftwareInstanceNotReady
