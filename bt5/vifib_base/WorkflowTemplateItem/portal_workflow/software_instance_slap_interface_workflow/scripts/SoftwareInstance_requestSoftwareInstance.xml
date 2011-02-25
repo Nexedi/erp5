@@ -76,6 +76,8 @@ tag = "%s_%s_%s_inProgress" % (root_software_instance.getUid(), software_type,\n
 # Check if it already exists\n
 request_software_instance = software_instance.portal_catalog.getResultValue(\n
   portal_type=\'Software Instance\',\n
+  # XXX: User based property is used in non manual operation\n
+  # XXX-2: Do we really need to use root_uid?\n
   title=requested_partition_reference,\n
   source_reference=software_type,\n
   root_uid=root_software_instance.getUid(),\n
