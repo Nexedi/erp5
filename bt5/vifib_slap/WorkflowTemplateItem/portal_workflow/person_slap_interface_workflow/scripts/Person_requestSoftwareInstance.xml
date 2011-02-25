@@ -52,6 +52,7 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+from DateTime import DateTime\n
 person = state_change[\'object\']\n
 portal = person.getPortalObject()\n
 # Get required arguments\n
@@ -80,6 +81,8 @@ request_software_instance = portal.portal_catalog.getResultValue(\n
   title=software_title,\n
 )\n
 if (request_software_instance is None):\n
+  hosting_subscription_reference = "HOSTSUBS-%s" % context.getPortalObject().portal_ids\\\n
+      .generateNewId(id_group=\'slap_hosting_subscription_reference\', id_generator=\'uid\')\n
   if (portal.portal_activities.countMessageWithTag(tag) > 0):\n
     # The software instance is already under creation but can not be fetched from catalog\n
     # As it is not possible to fetch informations, it is better to raise an error\n
@@ -99,6 +102,7 @@ if (request_software_instance is None):\n
     software_instance.portal_workflow.doActionFor(software_instance, \'validate_action\')\n
     subscription = portal.getDefaultModule(portal_type=hosting_subscription_portal_type).newContent(\n
       portal_type=hosting_subscription_portal_type,\n
+      reference=hosting_subscription_reference,\n
       title=software_title,\n
       activate_kw={\'tag\': tag},\n
     )\n
@@ -211,6 +215,7 @@ else:\n
                         <value>
                           <tuple>
                             <string>state_change</string>
+                            <string>DateTime</string>
                             <string>_getitem_</string>
                             <string>person</string>
                             <string>_getattr_</string>
@@ -229,14 +234,14 @@ else:\n
                             <string>tag</string>
                             <string>request_software_instance</string>
                             <string>None</string>
+                            <string>context</string>
+                            <string>hosting_subscription_reference</string>
                             <string>NotImplementedError</string>
                             <string>setup_service_relative_url</string>
                             <string>_apply_</string>
                             <string>software_instance</string>
                             <string>subscription</string>
-                            <string>context</string>
                             <string>software_release_document</string>
-                            <string>DateTime</string>
                             <string>sale_order</string>
                             <string>sale_order_line</string>
                             <string>open_order</string>
