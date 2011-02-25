@@ -76,7 +76,7 @@ software_release = portal.portal_catalog.getResultValue(uid=instance_software_re
 \n
 person.requestSoftwareInstance(\n
   software_release=software_release.getUrlString(),\n
-  partition_reference=software_release.getTitle(),\n
+  software_title=software_release.getTitle(), # XXX: This shall be provided by user to allow him have more then one Software Instance of given Software Release\n
   instance_xml="""<?xml version="1.0" encoding="utf-8"?>\n
 <instance>\n
   <parameter id="nbd_ip">2a01:e35:2e27:460:e2cb:4eff:fed9:48dc</parameter>\n
