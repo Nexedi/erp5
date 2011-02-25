@@ -106,7 +106,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
             <div tal:omit-tag=""\n
               tal:define="struct python:field.render(value,request)">\n
               <div tal:omit-tag=""\n
-                    tal:define="struct python:struct.replace(\'&nbsp;;\',\'\');\n
+                    tal:define="struct python:struct.replace(\'&nbsp;\',\'\');\n
                                 struct_input_div python:struct.split(\'<input\');\n
                                 struct_input_len python:len(struct_input_div);\n
                                 struct_input_range python:range(struct_input_len);\n
@@ -118,7 +118,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                                 struct_test python:struct_selec_test and struct_input_test">\n
                 <div tal:replace="nothing">\n
                   - rendering final output string through \'field.render\'.\n
-                  - replacing all \'&nbsp\' with \'\' to prevent error in rendering\n
+                  - replacing all \'&amps;nbsp\' with \'\' to prevent error in rendering\n
                   - making two tests : first one (struct_input_test) is used to test if\n
                   rendering is single field (StringField, ) or multi-field\n
                   (DateTimeField, RelationStringField, ).\n
@@ -135,13 +135,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                     output rendering as a single field.\n
                     UPDATE : with xhtml_style, this \n
                   </div>\n
-                  <div class="input" tal:attributes="class python: (\'<\' not in struct) and \'%s_class\' % name or \'\'" tal:condition="python:(not field_errors.has_key(field.id))"><!-- field has no error -->\n
-                    <div tal:replace="structure struct"\n
+-                  <div class="input" tal:attributes="class python: (\'<\' not in struct) and \'%s_class\' % name or \'\'" tal:condition="python:(not field_errors.has_key(field.id))"><!-- field has no error -->\n
+                    <div tal:content="structure struct"\n
                           tal:attributes="class string:${name}_class;\n
                           title field/title"/>\n
                   </div>\n
                   <div class="input" tal:attributes="class python: (\'<\' not in struct) and \'%s_class\' % name or \'\'" tal:condition="python: field_errors.has_key(field.id)"><!-- field has errors-->\n
-                    <div tal:replace="structure struct"\n
+                    <div tal:content="structure struct"\n
                     i18n:attributes="title"\n
                     tal:attributes="class string:${name}_class_error;\n
                     title string:${field/title}"/>\n
@@ -163,12 +163,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                           tal:repeat="struct_ind python:struct_range[1:]">\n
                       <div tal:condition="python:(not field_errors.has_key(field.id))"><!-- field has no error 1-->\n
                         <div tal:define="struct_content python:struct_input_div[struct_ind];\n
-                          struct_content python:\'/>\'in struct_content and struct_content[:struct_content.rfind(\'/>\')+2] or struct_content;\n
+                          struct_content python:\'/>\'in struct_content and struct_content[:struct_content.rfind(\'/&gt;\')+2] or struct_content;\n
                                                         struct_final python:\'%s %s\' %\n
                                                         (\'<input \', struct_content);\n
                                                         class_final python:\'%s%s%s\' %\n
                                                         (class_base,\'_class_\', struct_ind)"\n
-                              tal:replace="structure struct_final"\n
+                              tal:content="structure struct_final"\n
                               tal:attributes="class class_final;\n
                                               title field/title">\n
                         </div>\n
@@ -179,7 +179,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                                           (\'<input \', struct_content);\n
                                           class_final python:\'%s%s%s%s\' %\n
                                           (class_base,\'_class_\', struct_ind, \'_error\')"\n
-                              tal:replace="structure struct_final"\n
+                              tal:content="structure struct_final"\n
                               i18n:attributes="title"\n
                               tal:attributes="class class_final;\n
                               title field/title"/>\n
@@ -197,7 +197,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                                           (\'<input \', struct_content);\n
                                           class_final python:\'%s%s\' %\n
                                           (class_base,\'_class\')"\n
-                                          tal:replace="structure struct_final"\n
+                                          tal:content="structure struct_final"\n
                                           tal:attributes="class class_final;\n
                                           title field/title"/>\n
                       </tal:block>\n
@@ -208,7 +208,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                                           (\'<input \', struct_content);\n
                                           class_final python:\'%s%s\' %\n
                                           (class_base,\'_class_error\')"\n
-                              tal:replace="structure struct_final"\n
+                              tal:content="structure struct_final"\n
                               tal:attributes="class class_final;\n
                               title field/title"/>\n
                       </tal:block>\n
@@ -235,14 +235,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                       <div tal:condition="python:(not field_errors.has_key(field.id))"\n
                             tal:define="class_final python:\'%s%s%s\' %\n
                                         (class_base,\'_class_\', struct_ind)"\n
-                            tal:replace="structure python:struct_selec_div[struct_ind]"\n
+                            tal:content="structure python:struct_selec_div[struct_ind]"\n
                             tal:attributes="class class_final;\n
                             title field/title"/>\n
                             <!-- field has errors -->\n
                       <div tal:condition="python:field_errors.has_key(field.id)"\n
                             tal:define="class_final python:\'%s%s%s%s\' %\n
                                         (class_base,\'_class_\', struct_ind, \'_error\')"\n
-                            tal:replace="structure python:struct_selec_div[struct_ind]"\n
+                            tal:content="structure python:struct_selec_div[struct_ind]"\n
                             tal:attributes="class class_final;\n
                             title field/title"/>\n
                     </div>\n
@@ -288,8 +288,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
   </tal:block>\n
 </tal:block>\n
 </tal:block>\n
-</tal:block>\n
-
+</tal:block>
 
 ]]></unicode> </value>
         </item>
@@ -307,7 +306,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
-            <value> <string>utf-8</string> </value>
+            <value> <string>iso-8859-15</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
