@@ -93,7 +93,6 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_last_expand_simulation_state</string>
                         <string>my_portal_type</string>
                       </list>
                     </value>

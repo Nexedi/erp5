@@ -86,7 +86,6 @@
                         <string>applied_rule_listbox</string>
                         <string>my_categories_list</string>
                         <string>my_causality_title</string>
-                        <string>my_last_expand_simulation_state</string>
                         <string>my_portal_type</string>
                         <string>my_specialise_title</string>
                         <string>my_list_mode_listbox</string>
@@ -109,6 +108,7 @@
                         <string>my_start_date</string>
                         <string>my_stop_date</string>
                         <string>my_recorded_property_list</string>
+                        <string>my_simulation_state</string>
                       </list>
                     </value>
                 </item>
