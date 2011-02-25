@@ -56,6 +56,7 @@
         \'erp5_dhtml_style\',\n
         \'erp5_jquery\',\n
         \'erp5_jquery_ui\',\n
+        \'erp5_xhtml_jquery_style\',\n
         \'erp5_web\',\n
         \'erp5_ingestion\',\n
         \'erp5_ingestion_mysql_innodb_catalog\',        \n
