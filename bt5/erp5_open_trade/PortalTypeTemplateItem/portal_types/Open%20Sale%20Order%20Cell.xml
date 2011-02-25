@@ -39,7 +39,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A DeliveryCell allows to define specific quantities for each variation of a resource in a delivery line.</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
@@ -53,8 +55,8 @@
             <key> <string>group_list</string> </key>
             <value>
               <tuple>
-                <string>order_movement</string>
-                <string>sale</string>
+                <string>path</string>
+                <string>supply_path</string>
               </tuple>
             </value>
         </item>
@@ -99,16 +101,15 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
-        <tuple/>
-      </tuple>
+      <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value> <string>erp5_content</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>
@@ -119,16 +120,15 @@
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <tuple>
-        <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
-        <tuple/>
-      </tuple>
+      <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value> <string>erp5_content</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>
