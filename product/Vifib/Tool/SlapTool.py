@@ -556,10 +556,20 @@ class SlapTool(BaseTool):
 
     In any other case returns not important data and HTTP code is 403 Forbidden
     """
-    shared = xml_marshaller.xml_marshaller.loads(shared_xml)
-    partition_parameter_kw = xml_marshaller.xml_marshaller.loads(
+    if shared_xml:
+      shared = xml_marshaller.xml_marshaller.loads(shared_xml)
+    else:
+      shared = False
+    if partition_parameter_xml:
+      partition_parameter_kw = xml_marshaller.xml_marshaller.loads(
                                               partition_parameter_xml)
-    filter_kw = xml_marshaller.xml_marshaller.loads(filter_xml)
+    else:
+      partition_parameter_kw = dict()
+    if filter_xml:
+      filter_kw = xml_marshaller.xml_marshaller.loads(filter_xml)
+    else:
+      filter_kw = dict()
+      
     instance = etree.Element('instance')
     for parameter_id, parameter_value in partition_parameter_kw.iteritems():
       # cast everything to string
