@@ -55,6 +55,7 @@ organisation_module
 person_module
 sale_opportunity_module
 portal_categories/resource
+portal_categories/function
 """.strip().splitlines()
 
 class BaseTestCRM(ERP5TypeTestCase):
@@ -1457,6 +1458,147 @@ class TestCRMMailSend(BaseTestCRM):
     self.assertEquals(new_event.getTitle(), real_title)
     self.assertEquals(new_event.getTextContent(), real_content)
 
+  def test_Base_addEvent(self):
+    """Check Base_addEvent script with a logged in user.
+    """
+    # create categories.
+    resource = self.portal.portal_categories.resource
+    for i in range(3):
+      resource.newContent(portal_type='Category',
+                          title='Title%s' % i,
+                          id=i)
+    self.portal.portal_categories.function.newContent(portal_type='Category',
+                                                      id='crm_agent')
+    # create user and configure security settings
+    portal_type_list = self.portal.getPortalEventTypeList()\
+                       + self.portal.getPortalEntityTypeList()\
+                       + ('Event Module',)
+    for portal_type in portal_type_list:
+      portal_type_object = getattr(self.portal.portal_types, portal_type)
+      portal_type_object.newContent(id='manager_role',
+                                    portal_type='Role Information',
+                                    role_name_list=('Manager',),
+                                    role_category_list='function/crm_agent')
+      portal_type_object.updateRoleMapping()
+    user = self.createSimpleUser('Agent', 'crm_agent', 'crm_agent')
+    transaction.commit()
+    self.tic()
+    try:
+      # create entites
+      organisation_portal_type = 'Organisation'
+      person_portal_type = 'Person'
+      my_company = self.portal.getDefaultModule(organisation_portal_type)\
+                              .newContent(portal_type=organisation_portal_type,
+                                          title='Software provider')
+      organisation = self.portal.getDefaultModule(organisation_portal_type)\
+                              .newContent(portal_type=organisation_portal_type,
+                                          title='Soap Service Express')
+      person = self.portal.getDefaultModule(person_portal_type).newContent(
+                              portal_type=person_portal_type,
+                              first_name='John',
+                              last_name='Doe',
+                              default_email_text='john.doe@example.com',
+                              default_career_subordination_value=organisation)
+      another_person = self.portal.getDefaultModule(person_portal_type)\
+                  .newContent(portal_type=person_portal_type,
+                              first_name='Jane',
+                              last_name='Doe',
+                              default_email_text='jane.doe@example.com',
+                              default_career_subordination_value=organisation)
+      user.setDefaultCareerSubordinationValue(my_company)
+      # log in user
+      self.login('crm_agent')
+
+      ### Incoming on Person ###
+      # Submit the dialog on person
+      title = 'Incoming email'
+      direction = 'in'
+      portal_type = 'Note'
+      resource = resource['1'].getRelativeUrl()
+      person.Base_addEvent(title, direction, portal_type, resource)
+
+      # Index Event
+      transaction.commit()
+      self.tic()
+
+      # check created Event
+      event = person.getSourceRelatedValue()
+      self.assertEquals(event.getTitle(), title)
+      self.assertEquals(event.getResource(), resource)
+      self.assertTrue(event.hasStartDate())
+      self.assertEquals(event.getSource(), person.getRelativeUrl())
+      self.assertEquals(event.getSourceSection(),
+                        organisation.getRelativeUrl())
+      self.assertEquals(event.getDestination(), user.getRelativeUrl())
+      self.assertEquals(event.getDestinationSection(), user.getSubordination())
+
+      ### Outgoing on Person ###
+      # Check another direction
+      title = 'Outgoing email'
+      direction = 'out'
+      another_person.Base_addEvent(title, direction, portal_type, resource)
+
+      # Index Event
+      transaction.commit()
+      self.tic()
+
+      # check created Event
+      event = another_person.getDestinationRelatedValue()
+      self.assertEquals(event.getTitle(), title)
+      self.assertEquals(event.getResource(), resource)
+      self.assertTrue(event.hasStartDate())
+      self.assertEquals(event.getDestination(),
+                        another_person.getRelativeUrl())
+      self.assertEquals(event.getDestinationSection(),
+                        organisation.getRelativeUrl())
+      self.assertEquals(event.getSource(), user.getRelativeUrl())
+      self.assertEquals(event.getSourceSection(), user.getSubordination())
+
+      ### Outgoing on Organisation ###
+      # check on Organisation
+      event = organisation.Base_addEvent(title, direction,
+                                         portal_type, resource)
+
+      # Index Event
+      transaction.commit()
+      self.tic()
+
+      # check created Event
+      event = organisation.getDestinationSectionRelatedValue()
+      self.assertEquals(event.getTitle(), title)
+      self.assertEquals(event.getResource(), resource)
+      self.assertTrue(event.hasStartDate())
+      self.assertEquals(event.getDestination(),
+                        organisation.getRelativeUrl())
+      self.assertEquals(event.getDestinationSection(),
+                        organisation.getRelativeUrl())
+      self.assertEquals(event.getSource(), user.getRelativeUrl())
+      self.assertEquals(event.getSourceSection(), user.getSubordination())
+
+      ### Outgoing on Career ###
+      # Now check Base_addEvent on any document (follow_up)
+      career = person.default_career
+      career.Base_addEvent(title, direction, portal_type, resource)
+
+      # Index Event
+      transaction.commit()
+      self.tic()
+
+      # check created Event
+      event = career.getFollowUpRelatedValue()
+      self.assertEquals(event.getTitle(), title)
+      self.assertEquals(event.getResource(), resource)
+      self.assertTrue(event.hasStartDate())
+      self.assertEquals(event.getSource(), user.getRelativeUrl())
+      self.assertEquals(event.getSourceSection(), user.getSubordination())
+    finally:
+      # clean up created roles on portal_types
+      for portal_type in portal_type_list:
+        portal_type_object = getattr(self.portal.portal_types, portal_type)
+        portal_type_object._delObject('manager_role')
+        portal_type_object.updateRoleMapping()
+      transaction.commit()
+      self.tic()
 
 def test_suite():
   suite = unittest.TestSuite()
