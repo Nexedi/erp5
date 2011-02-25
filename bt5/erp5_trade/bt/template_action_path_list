@@ -185,6 +185,8 @@ Sale Trade Condition | view_payment
 Sale Trade Condition | view_profile
 Sale Trade Condition | view_trade_model_line_list
 System Preference | trade_preference
+Trade Model Line Cell Consistency Constraint | predicate
+Trade Model Line Cell Consistency Constraint | view
 Trade Model Line | predicate_view
 Trade Model Line | view
 Trade Model Path | predicate_view
