@@ -57,7 +57,7 @@ portal = person.getPortalObject()\n
 # Get required arguments\n
 kwargs = state_change.kwargs\n
 software_release_url_string = state_change.kwargs[\'software_release\']\n
-requested_partition_reference = kwargs["partition_reference"]\n
+software_title = kwargs["software_title"]\n
 software_type = "RootSoftwareInstance"\n
 instance_xml = kwargs["instance_xml"]\n
 \n
@@ -71,13 +71,13 @@ seller = portal.restrictedTraverse("organisation_module/vifib_internet")\n
 currency = portal.restrictedTraverse("currency_module/EUR")\n
 \n
 tag = "%s_%s_%s_inProgress" % (person.getUid(), software_type, \n
-                               requested_partition_reference)\n
+                               software_title)\n
 \n
 # Check if it already exists\n
 request_software_instance = portal.portal_catalog.getResultValue(\n
   portal_type=software_instance_portal_type,\n
   source_reference=software_type,\n
-  title=requested_partition_reference,\n
+  title=software_title,\n
 )\n
 if (request_software_instance is None):\n
   if (portal.portal_activities.countMessageWithTag(tag) > 0):\n
@@ -91,7 +91,7 @@ if (request_software_instance is None):\n
     software_instance = portal.getDefaultModule(portal_type=software_instance_portal_type).newContent(\n
             portal_type=software_instance_portal_type,\n
             source_reference=software_type,\n
-            title=requested_partition_reference,\n
+            title=software_title,\n
             text_content=instance_xml,\n
             activate_kw={\'tag\': tag},\n
             **portal.Base_getNewSoftwareInstanceCoordinate()\n
@@ -99,7 +99,7 @@ if (request_software_instance is None):\n
     software_instance.portal_workflow.doActionFor(software_instance, \'validate_action\')\n
     subscription = portal.getDefaultModule(portal_type=hosting_subscription_portal_type).newContent(\n
       portal_type=hosting_subscription_portal_type,\n
-      title=requested_partition_reference,\n
+      title=software_title,\n
       activate_kw={\'tag\': tag},\n
     )\n
 \n
@@ -153,7 +153,7 @@ if (request_software_instance is None):\n
 \n
     open_order.newContent(\n
       portal_type="Open Sale Order Line",\n
-      title=requested_partition_reference,\n
+      title=software_title,\n
       aggregate_value=subscription,\n
       activate_kw={\'tag\': tag},\n
     )\n
@@ -217,7 +217,7 @@ else:\n
                             <string>portal</string>
                             <string>kwargs</string>
                             <string>software_release_url_string</string>
-                            <string>requested_partition_reference</string>
+                            <string>software_title</string>
                             <string>software_type</string>
                             <string>instance_xml</string>
                             <string>sale_order_portal_type</string>
