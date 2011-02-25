@@ -64,7 +64,6 @@
   <item>Role Information</item>
  </portal_type>
  <portal_type id="Property Sheet">
-  <item>Accounting Transaction Balance Constraint</item>
   <item>Acquired Property</item>
   <item>Attribute Equality Constraint</item>
   <item>Category Existence Constraint</item>

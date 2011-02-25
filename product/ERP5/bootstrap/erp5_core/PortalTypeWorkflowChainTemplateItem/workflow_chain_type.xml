@@ -1,9 +1,5 @@
 <workflow_chain>
  <chain>
-  <type>Accounting Transaction Balance Constraint</type>
-  <workflow>dynamic_class_generation_interaction_workflow</workflow>
- </chain>
- <chain>
   <type>Acquired Property</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
