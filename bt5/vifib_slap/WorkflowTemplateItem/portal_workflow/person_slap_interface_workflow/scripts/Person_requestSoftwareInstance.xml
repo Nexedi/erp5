@@ -58,8 +58,7 @@ portal = person.getPortalObject()\n
 kwargs = state_change.kwargs\n
 software_release_url_string = state_change.kwargs[\'software_release\']\n
 requested_partition_reference = kwargs["partition_reference"]\n
-# software_type = kwargs["software_type"]\n
-software_type = "RootInstance"\n
+software_type = kwargs["software_type"]\n
 instance_xml = kwargs["instance_xml"]\n
 \n
 sale_order_portal_type = "Sale Order"\n
