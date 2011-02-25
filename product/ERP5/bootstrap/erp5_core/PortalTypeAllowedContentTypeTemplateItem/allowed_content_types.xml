@@ -77,7 +77,6 @@
   <item>Resource Measures Consistency Constraint</item>
   <item>Standard Property</item>
   <item>TALES Constraint</item>
-  <item>Trade Model Line Cell Consistency Constraint</item>
  </portal_type>
  <portal_type id="Property Sheet Tool">
   <item>Property Sheet</item>

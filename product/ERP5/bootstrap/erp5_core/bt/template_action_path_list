@@ -103,8 +103,6 @@ Template Tool | jump_trash_bins
 Template Tool | update
 Template Tool | upgrade_from_repository
 Template Tool | view
-Trade Model Line Cell Consistency Constraint | predicate
-Trade Model Line Cell Consistency Constraint | view
 Trash Bin | jump_bt5
 Trash Bin | view
 Trash Folder | view

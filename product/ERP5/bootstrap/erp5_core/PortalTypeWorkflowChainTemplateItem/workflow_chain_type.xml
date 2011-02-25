@@ -111,8 +111,4 @@
   <type>TALES Constraint</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
- <chain>
-  <type>Trade Model Line Cell Consistency Constraint</type>
-  <workflow>dynamic_class_generation_interaction_workflow</workflow>
- </chain>
 </workflow_chain>
