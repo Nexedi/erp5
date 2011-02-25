@@ -52,6 +52,8 @@ Purchase Supply | view_profile
 Quantity Unit Conversion Definition | view
 Quantity Unit Conversion Group | view
 Quantity Unit Conversion Module | view
+Resource Measures Consistency Constraint | predicate
+Resource Measures Consistency Constraint | view
 Sale Supply Line | additional_price
 Sale Supply Line | base_price
 Sale Supply Line | discount_ratio

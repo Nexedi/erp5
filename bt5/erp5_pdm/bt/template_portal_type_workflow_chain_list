@@ -20,6 +20,7 @@ Quantity Unit Conversion Definition | validation_workflow
 Quantity Unit Conversion Group | conversion_interaction_workflow
 Quantity Unit Conversion Group | edit_workflow
 Quantity Unit Conversion Group | validation_workflow
+Resource Measures Consistency Constraint | dynamic_class_generation_interaction_workflow
 Sale Supply Line | edit_workflow
 Sale Supply Line | reindex_object_interaction_workflow
 Sale Supply Line | supply_line_interaction_workflow

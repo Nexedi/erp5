@@ -21,6 +21,7 @@ Product | Purchase Supply Line
 Product | Quantity Unit Conversion Group
 Product | Sale Supply Line
 Product | Supply Line
+Property Sheet | Resource Measures Consistency Constraint
 Purchase Supply Line | Predicate
 Purchase Supply Line | Purchase Supply Cell
 Purchase Supply Module | Purchase Supply

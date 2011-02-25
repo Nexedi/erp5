@@ -36,6 +36,10 @@
   <workflow>conversion_interaction_workflow, edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
+  <type>Resource Measures Consistency Constraint</type>
+  <workflow>dynamic_class_generation_interaction_workflow</workflow>
+ </chain>
+ <chain>
   <type>Sale Supply</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
