@@ -1284,6 +1284,15 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     return self._getPortalGroupedTypeList('movement_group')
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalEntityTypeList')
+  def getPortalEntityTypeList(self):
+    """
+    Returns Entity types.
+    """
+    return self._getPortalGroupedTypeList('entity') or\
+           self._getPortalConfiguration('portal_entity_type_list')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getDefaultModuleId')
   def getDefaultModuleId(self, portal_type, default=MARKER):
     """

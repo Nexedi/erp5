@@ -281,6 +281,8 @@ class ERP5TypeInformation(XMLObject,
       'budget_variation',
       # Module
       'module',
+      # Base
+      'entity',
       # LEGACY - needs a warning - XXX-JPS
       'tax_movement',
     )
