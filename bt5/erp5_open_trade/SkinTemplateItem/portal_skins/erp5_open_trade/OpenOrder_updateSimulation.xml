@@ -55,7 +55,8 @@
 for open_order_line in context.contentValues():\n
   for path in [open_order_line] + open_order_line.getCellValueList():\n
     for item in path.getAggregateValueList():\n
-       subscription_item_dict[item] = 1\n
+       if item.providesIExpendable():\n
+         subscription_item_dict[item] = 1\n
 \n
 # XXX tag / after tag !\n
 for item in subscription_item_dict:\n
