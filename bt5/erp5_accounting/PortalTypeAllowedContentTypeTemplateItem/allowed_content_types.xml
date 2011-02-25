@@ -71,6 +71,7 @@
  </portal_type>
  <portal_type id="Property Sheet">
   <item>Account Type Constraint</item>
+  <item>Accounting Transaction Balance Constraint</item>
  </portal_type>
  <portal_type id="Purchase Invoice Transaction">
   <item>Embedded File</item>

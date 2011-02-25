@@ -13,6 +13,8 @@ Accounting Period | view
 Accounting Rule Cell Line | view
 Accounting Rule Cell | view
 Accounting Rule Cell | view_destination
+Accounting Transaction Balance Constraint | predicate
+Accounting Transaction Balance Constraint | view
 Accounting Transaction Line | destination_view
 Accounting Transaction Line | view
 Accounting Transaction Module | account_statement_export

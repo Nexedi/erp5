@@ -2,6 +2,7 @@ Account | account_workflow
 Account | edit_workflow
 Accounting Period | accounting_period_workflow
 Accounting Period | edit_workflow
+Accounting Transaction Balance Constraint | dynamic_class_generation_interaction_workflow
 Accounting Transaction Line | delivery_movement_causality_interaction_workflow
 Accounting Transaction Line | delivery_movement_simulation_interaction_workflow
 Accounting Transaction Line | edit_workflow
