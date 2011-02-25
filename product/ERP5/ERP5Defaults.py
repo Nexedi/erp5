@@ -55,6 +55,10 @@ portal_order_type_list = ('Order', 'Project', 'Samples Order',
                    'Packing Order','Production Order', 'Purchase Order', 'Sale Order',
                    'Sales Order', )
 
+portal_open_order_type_list = ('Open Sale Order',
+                               'Open Purchase Order',
+                               'Open Internal Order',)
+
 portal_delivery_type_list = ('Delivery',
                       'Transaction',
                       'Packing List',

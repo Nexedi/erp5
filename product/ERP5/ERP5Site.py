@@ -675,6 +675,15 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
            self._getPortalConfiguration('portal_order_type_list')
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalOpenOrderTypeList')
+  def getPortalOpenOrderTypeList(self):
+    """
+      Return open order types.
+    """
+    return self._getPortalGroupedTypeList('open_order') or \
+           self._getPortalConfiguration('portal_open_order_type_list')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalDeliveryTypeList')
   def getPortalDeliveryTypeList(self):
     """

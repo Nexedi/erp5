@@ -247,9 +247,10 @@ class ERP5TypeInformation(XMLObject,
       'abstract',
       # Trade
       'discount', 'payment_condition', 'payment_node',
-      'supply', 'supply_path', 'inventory_movement', 
+      'supply', 'supply_path', 'inventory_movement',
       'delivery', 'delivery_movement',
       'order', 'order_movement',
+      'open_order',
       'container', 'container_line',
       'inventory',
       # Different Aspects of Supplier-Customer relation
