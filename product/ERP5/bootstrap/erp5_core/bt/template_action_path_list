@@ -10,7 +10,6 @@ Alarm | solve
 Alarm | standard_report
 Alarm | view
 Application Id Generator | view
-Applied Rule | view
 Attribute Equality Constraint | predicate
 Attribute Equality Constraint | view
 Base Category | view
@@ -87,8 +86,6 @@ Resource Measures Consistency Constraint | view
 Role Information | view
 Rule Tool | view
 SQL Non Continuous Increasing Id Generator | view
-Simulation Movement | view
-Simulation Tool | view
 Standard Property | view
 System Preference | view
 TALES Constraint | predicate
