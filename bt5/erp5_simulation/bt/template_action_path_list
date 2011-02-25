@@ -1,3 +1,4 @@
+Applied Rule | view
 Category Membership Divergence Tester | configuration
 Category Membership Divergence Tester | predicate
 Category Membership Divergence Tester | view
@@ -10,6 +11,8 @@ Float Divergence Tester | view
 Net Converted Quantity Divergence Tester | configuration
 Net Converted Quantity Divergence Tester | predicate
 Net Converted Quantity Divergence Tester | view
+Simulation Movement | view
+Simulation Tool | view
 Solver Decision | configuration
 Solver Decision | view
 Solver Process Tool | view
