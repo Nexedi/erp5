@@ -72,8 +72,10 @@ if context.getPortalType() == \'Project\':\n
      relative_url=\'%s/%%\' % context.getRelativeUrl())] + [context.getUid()]\n
 worker_title_list = request.get(\'worker_title_list\')\n
 if worker_title_list is not None and len(worker_title_list):\n
-  inventory_kw[\'node_uid\'] = [x.uid for x in portal.portal_catalog(\n
+  worker_uid_list = [x.uid for x in portal.portal_catalog(\n
                               portal_type=\'Person\',title=worker_title_list)]\n
+  if len(worker_uid_list):\n
+    inventory_kw[\'node_uid\'] = worker_uid_list\n
 \n
 from_date = request.get(\'from_date\', None)\n
 if from_date is None:\n
@@ -90,7 +92,12 @@ full_date_string = "%s-%s -> %s-%s" % (from_date.year(), from_date.month(),\n
 \n
 \n
 # We will use inventory API in order to find all quantities\n
-result_list = portal.portal_simulation.getInventoryList(\n
+result_list = []\n
+# Launch report only if we have restrictive parameters in inventory_kw,\n
+# otherwise getInventoryList will take all task reports and this will\n
+# kill the current node\n
+if len(inventory_kw):\n
+  result_list = portal.portal_simulation.getInventoryList(\n
                   simulation_state = simulation_state,\n
                   portal_type=\'Task Report Line\',\n
                   from_date=from_date,\n
