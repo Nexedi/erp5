@@ -58,7 +58,7 @@ portal = person.getPortalObject()\n
 kwargs = state_change.kwargs\n
 software_release_url_string = state_change.kwargs[\'software_release\']\n
 requested_partition_reference = kwargs["partition_reference"]\n
-software_type = kwargs["software_type"]\n
+software_type = "RootSoftwareInstance"\n
 instance_xml = kwargs["instance_xml"]\n
 \n
 sale_order_portal_type = "Sale Order"\n
@@ -77,7 +77,7 @@ tag = "%s_%s_%s_inProgress" % (person.getUid(), software_type, \n
 request_software_instance = portal.portal_catalog.getResultValue(\n
   portal_type=software_instance_portal_type,\n
   source_reference=software_type,\n
-  reference=requested_partition_reference,\n
+  title=requested_partition_reference,\n
 )\n
 if (request_software_instance is None):\n
   if (portal.portal_activities.countMessageWithTag(tag) > 0):\n
