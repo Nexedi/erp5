@@ -34,6 +34,7 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
+from Products.ERP5Type.tests.ERP5TypeTestCase import  _getConversionServerDict
 from Products.ERP5Type.tests.utils import FileUpload
 from AccessControl import Unauthorized
 import transaction
@@ -93,7 +94,6 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
       self.stepCleanUpRequest()
 
     self.restricted_security = 0
-
     # information to know if a business template is a standard business
     # template or a custom one
     self.portal.portal_templates.updateRepositoryBusinessTemplateList(
@@ -101,8 +101,17 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
 
     # it is required by SecurityTestCase
     self.workflow_tool = self.portal.portal_workflow
-
+    self.setDefaultSitePreference()
     self.portal.portal_activities.unsubscribe()
+
+  def setDefaultSitePreference(self):
+    default_pref = self.portal.portal_preferences.default_site_preference
+    conversion_dict = _getConversionServerDict()
+    default_pref.setPreferredOoodocServerAddress(conversion_dict['hostname'])
+    default_pref.setPreferredOoodocServerPortNumber(conversion_dict['port'])
+    if self.portal.portal_workflow.isTransitionPossible(default_pref, 'enable'):
+      default_pref.enable()
+    return default_pref
 
   def beforeTearDown(self):
     self.portal.portal_activities.subscribe()
