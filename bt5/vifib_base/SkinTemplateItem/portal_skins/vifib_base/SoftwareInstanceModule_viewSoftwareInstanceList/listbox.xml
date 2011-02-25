@@ -87,6 +87,10 @@
                           <string>Source Reference</string>
                         </tuple>
                         <tuple>
+                          <string>destination_reference</string>
+                          <string>Destination Reference</string>
+                        </tuple>
+                        <tuple>
                           <string>creation_date</string>
                           <string>Creation Date</string>
                         </tuple>
