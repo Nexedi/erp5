@@ -762,6 +762,12 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     response = self.publish('%s/%s?__ac_key=%s' %(base_url, web_page.getReference(),
                                                   key))
     self.assertEqual(response.getStatus(), 200)
+    response = self.publish('%s/%s?__ac_name=%s&__ac_password=%s' % (
+      base_url, web_page.getReference(), reference, 'guest'))
+    self.assertEqual(response.getStatus(), 200)
+    response = self.publish('%s/%s?__ac_name=%s&__ac_password=%s' % (
+      base_url, web_page.getReference(), 'ERP5TypeTestCase', ''))
+    self.assertEqual(response.getStatus(), 200)
 
   def testERP5ExternalAuthenticationPlugin(self):
     """
