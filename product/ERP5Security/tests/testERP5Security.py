@@ -51,7 +51,7 @@ class TestUserManagement(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     """List of BT to install. """
-    return ('erp5_base', 'erp5_web',)
+    return ('erp5_base', 'erp5_web', 'erp5_ingestion', 'erp5_dms',)
 
   def beforeTearDown(self):
     """Clears person module and invalidate caches when tests are finished."""
@@ -701,6 +701,15 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     assignment = loginable_person.newContent(portal_type='Assignment',
                                              function='another_subcat')
     assignment.open()
+    portal_types = portal.portal_types
+    for portal_type in ('Person Module', 'Person', 'Web Site Module', 'Web Site',
+                        'Web Page'):
+      type_information = portal_types[portal_type]
+      type_information.newContent(
+        portal_type='Role Information',
+        role_name=('Auditor', 'Assignee'),
+        role_category='function/another_subcat')
+      type_information.updateRoleMapping()
     self.stepTic()
 
     # encrypt & decrypt works
@@ -734,14 +743,25 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
 
     # check if key authentication works with web_mode too
     web_site = portal.web_site_module.newContent(portal_type='Web Site')
+    web_page = portal.web_page_module.newContent(portal_type='Web Page', reference='ref')
+    web_page.release()
+    self.stepTic()
     base_url = web_site.absolute_url(relative=1)
     response = self.publish(base_url)
     self.assertEqual(response.getStatus(), 302)
     self.assertTrue('location' in response.headers.keys())
     self.assertTrue('%s/login_form?came_from=' % portal.getId(), response.headers['location'])
+    # web site access
     response = self.publish('%s?__ac_key=%s' %(base_url, key))
     self.assertEqual(response.getStatus(), 200)
-    self.assertTrue(reference in response.getBody())
+    # web page access by path
+    response = self.publish('%s/%s?__ac_key=%s' %(base_url, web_page.getRelativeUrl(),
+                                                  key))
+    self.assertEqual(response.getStatus(), 200)
+    # web page access by reference
+    response = self.publish('%s/%s?__ac_key=%s' %(base_url, web_page.getReference(),
+                                                  key))
+    self.assertEqual(response.getStatus(), 200)
 
   def testERP5ExternalAuthenticationPlugin(self):
     """
