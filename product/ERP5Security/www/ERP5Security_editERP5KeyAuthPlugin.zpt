@@ -8,6 +8,7 @@
 <form action="manage_editKeyAuthPlugin" method="POST">
 
 <table tal:define="encryption_key request/encryption_key|context/encryption_key|string:;
+                   cipher request/cipher|context/cipher|string:Cesar;
                    default_cookie_name request/default_cookie_name|context/default_cookie_name|string:;
                    cookie_name request/cookie_name|context/cookie_name|string:;">
 
@@ -17,6 +18,20 @@
      <input type="text" name="encryption_key" value=""
             tal:attributes="value encryption_key;" />
    </td>
+</tr>
+<tr>
+  <td align="left" valign="top">
+  <div class="form-label">
+  Cipher
+  </div>
+  </td>
+  <td align="left" valign="top">
+  <select name="cipher">
+  <tal:block tal:repeat="c python:[('AES', 'AES'), ('Cesar', 'Cesar (DO NOT USE)')]">
+    <option value="value" tal:attributes="value python:c[0]; selected python:c[0]==cipher" tal:content="python:c[1]" />
+  </tal:block>
+  </select>
+  </td>
 </tr>
 <tr>
    <td> Cookie Name </td>
