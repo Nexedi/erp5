@@ -27,6 +27,8 @@
 ##############################################################################
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+import re
+
 
 class TestUNG(ERP5TypeTestCase):
   """
@@ -76,26 +78,21 @@ class TestUNG(ERP5TypeTestCase):
     return [domain.getTitle() for domain in self.portal.WebPageModule_generateDomain(0, parent)]
 
   def testERP5Site_createNewWebDocument(self):
-    """
-      Test if the script creates the objects using Templates correctly
-      XXX - Refactor tests to better validate the creation of objects
-    """
+    """Test if the script creates the objects using Templates correctly"""
     web_page_module = self.portal.web_page_module
-    self.assertCreateDocumentUsingTemplate("web_page_template", 
+    self.assertCreateDocumentUsingTemplate("web_page_template",
                                            portal_type="Web Page",
                                            reference="default-Web.Page.Reference")
-    self.assertCreateDocumentUsingTemplate("web_table_template", 
+    self.assertCreateDocumentUsingTemplate("web_table_template",
                                            portal_type="Web Table",
                                            reference="default-Web.Table.Reference")
-    self.assertCreateDocumentUsingTemplate("web_illustration_template", 
+    self.assertCreateDocumentUsingTemplate("web_illustration_template",
                                            portal_type="Web Illustration",
                                            reference="default-Web.Illustration.Reference")
 
   def testWebPageModule_generateDomain(self):
-    """
-      Test if script WebPageModule_generateDomain generates the list of domains 
-      correctly
-    """
+    """Test if script WebPageModule_generateDomain generates the list of
+    domains correctly"""
     web_page = self.portal.web_page_module.newContent(portal_type="Web Page")
     self.stepTic()
     title_list = self.getTitleListToBySubjectDomain()
@@ -106,7 +103,6 @@ class TestUNG(ERP5TypeTestCase):
     self.portal.portal_caches.clearAllCache()
     title_list = self.getTitleListToBySubjectDomain()
     self.assertTrue("Ung" in title_list, title_list)
-
 
   def testBase_changeWorkflowState(self):
     """Test if script change the state of object correctly"""
@@ -183,7 +179,7 @@ class TestUNG(ERP5TypeTestCase):
       self.assertEquals(catalog_result[0].getTitle(), gadget.get('title'))
 
   def testEventModule_createNewEvent(self):
-    """ """
+    """Test if script creates correctly a new event"""
     portal = self.portal
     event_dict = dict(portal_type="Note",
                       title="Buy Phone",
@@ -206,3 +202,31 @@ class TestUNG(ERP5TypeTestCase):
     start_date = event.getStartDate()
     self.assertEquals(start_date.month(), 2)
     self.assertEquals(start_date.minute(), 12)
+
+  def testWebPage_setSubjectList(self):
+    """Test if string is inserted as subjects in object correctly"""
+    web_table = self.portal.web_page_module.newContent(portal_type="Web Table")
+    self.stepTic()
+    web_table.WebPage_setSubjectList("VPN")
+    self.stepTic()
+    subject_list = web_table.getSubjectList()
+    self.assertEquals(["VPN"], subject_list)
+    web_table.WebPage_setSubjectList("VPN,ERP5")
+    self.stepTic()
+    subject_list = web_table.getSubjectList()
+    self.assertEquals(["ERP5", "VPN"], sorted(subject_list))
+
+  def testWebSection_getDocumentUrl(self):
+    """Test if script used to generated custom url to listbox works
+    correctly"""
+    web_illustration = self.portal.web_page_module.newContent(portal_type="Web Illustration")
+    web_page = self.portal.web_page_module.newContent(portal_type="Web Page")
+    self.stepTic()
+    kw = dict(brain=web_illustration)
+    url = self.portal.WebSection_getDocumentUrl(**kw)
+    pattern = "^http.*\/web_page_module\/[0-9]+\/WebIllustration_viewEditor\?editable_mode\:int\=1"
+    self.assertNotEquals(re.search(pattern, url), None)
+    kw = dict(brain=web_page)
+    url = self.portal.WebSection_getDocumentUrl(**kw)
+    pattern = "^http.*\/web_page_module\/[0-9]+\/WebPage_viewEditor\?editable_mode\:int\=1"
+    self.assertNotEquals(re.search(pattern, url), None, url)
