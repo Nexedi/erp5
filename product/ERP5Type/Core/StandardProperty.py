@@ -46,12 +46,12 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
 
   property_sheets = (PropertySheet.SimpleItem,
                      PropertySheet.StandardProperty,
+                     PropertySheet.Reference,
                      PropertySheet.TranslatableProperty)
 
   # Names mapping between filesystem to ZODB property, only meaningful
   # when importing a property from its filesystem definition
-  _name_mapping_filesystem_to_zodb_dict = {'id': 'reference',
-                                           'type': 'elementary_type',
+  _name_mapping_filesystem_to_zodb_dict = {'type': 'elementary_type',
                                            'default': 'property_default'}
 
   # ZODB name of attributes whose value is a TALES Expression string
@@ -164,6 +164,10 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
       if zodb_property_name in cls._expression_attribute_tuple:
         value = isinstance(value, Expression) and \
             value.text or 'python: ' + repr(value)
+
+      # set correctly the id by following naming conventions
+      if zodb_property_name == 'id':
+        value += cls.getIdAsReferenceSuffix()
 
       zodb_property_dict[zodb_property_name] = value
 

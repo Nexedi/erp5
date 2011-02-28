@@ -66,6 +66,7 @@ class ConstraintMixin(IdAsReferenceMixin('_constraint'), Predicate):
   implements( IConstraint, )
 
   property_sheets = (PropertySheet.SimpleItem,
+                     PropertySheet.Reference,
                      PropertySheet.Predicate)
 
   def _getMessage(self, message_id):
@@ -186,8 +187,9 @@ class ConstraintMixin(IdAsReferenceMixin('_constraint'), Predicate):
 
     base_constraint_definition_dict['portal_type'] = cls.portal_type
 
-    base_constraint_definition_dict['reference'] = \
-        filesystem_definition_copy_dict.pop('id')
+    base_constraint_definition_dict['id'] = \
+        filesystem_definition_copy_dict.pop('id') + \
+          cls.getIdAsReferenceSuffix()
 
     base_constraint_definition_dict['description'] = \
         filesystem_definition_copy_dict.pop('description', '')

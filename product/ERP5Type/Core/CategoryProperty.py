@@ -48,7 +48,8 @@ class CategoryProperty(IdAsReferenceMixin('_category'), XMLObject):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  property_sheets = (PropertySheet.SimpleItem,)
+  property_sheets = (PropertySheet.SimpleItem,
+                     PropertySheet.Reference)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'exportToFilesystemDefinition')
@@ -66,7 +67,7 @@ class CategoryProperty(IdAsReferenceMixin('_category'), XMLObject):
     Set the Reference from a filesystem definition of a property
     """
     return context.newContent(portal_type=cls.portal_type,
-                              reference=category_name)
+                              id=category_name + cls.getIdAsReferenceSuffix())
 
   getter_definition_dict = {
       # normal accessors

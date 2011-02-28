@@ -61,7 +61,8 @@ def IdAsReferenceMixin(suffix):
             
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getIdAsReferenceSuffix')
-    def getIdAsReferenceSuffix(self):
+    @staticmethod
+    def getIdAsReferenceSuffix():
       return suffix
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -70,18 +71,6 @@ def IdAsReferenceMixin(suffix):
       id = self.id
       if id[suffix_index:] == suffix:
         return id[:suffix_index]
-      # BBB
-      reference = self.__dict__.get('default_reference')
-      if reference:
-        transaction.get().addBeforeCommitHook(self.__migrate)
-        return reference
-      return default
-
-    def _setReference(self, value):
-      self.__dict__.pop('default_reference', None) # BBB
-      self.setId(value + suffix)
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'setReference')
-    setReference = _setReference
+      return self._baseGetReference(default=default)
 
   return IdAsReferenceMixin
