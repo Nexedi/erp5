@@ -97,7 +97,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSite_viewAdvancedSearchResultList</string> </value>
+            <value> <string>WebSite_viewSearchResultList</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>

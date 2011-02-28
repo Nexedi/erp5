@@ -269,7 +269,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>string:WebSite_viewAdvancedSearchResultList</string> </value>
+            <value> <string>string:WebSite_viewSearchResultList</string> </value>
         </item>
       </dictionary>
     </pickle>

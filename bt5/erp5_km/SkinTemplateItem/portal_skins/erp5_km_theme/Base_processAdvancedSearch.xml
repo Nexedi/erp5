@@ -52,16 +52,14 @@
             <key> <string>_body</string> </key>
             <value> <string>"""\n
   Puts all the arguments from advanced search dialog form together as \n
-  a parseable search string. \n
+  a parse-able search string. \n
 """\n
-request = context.REQUEST\n
-portal = context.getPortalObject()\n
-searchable_text = context.Base_assembleSearchString()\n
-kw[\'list_style\'] = \'search\'\n
-kw[\'full_text\'] = searchable_text\n
-kw[\'language\'] = \'\'\n
 kw[\'reset\'] = 1\n
-return context.Base_redirect(\'WebSite_viewAdvancedSearchResultList\', keep_items=kw)\n
+kw[\'language\'] = \'\'\n
+kw[\'list_style\'] = \'search\'\n
+kw[\'search_text\'] = context.Base_assembleSearchString()\n
+\n
+return context.Base_redirect(\'WebSite_viewSearchResultList\', keep_items=kw)\n
 </string> </value>
         </item>
         <item>

@@ -18,7 +18,6 @@
                 <string>global_search_column</string>
                 <string>list_method</string>
                 <string>select</string>
-                <string>selection_name</string>
                 <string>style_columns</string>
                 <string>title</string>
               </list>
@@ -147,7 +146,7 @@
                 </item>
                 <item>
                     <key> <string>global_search_column</string> </key>
-                    <value> <string>full_text</string> </value>
+                    <value> <string>search_text</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
@@ -158,10 +157,6 @@
                 <item>
                     <key> <string>select</string> </key>
                     <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>web_search_result_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>style_columns</string> </key>
@@ -200,7 +195,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>WebSite_countAdvancedSearchResultList</string> </value>
+            <value> <string>WebSite_countFullTextSearchResultList</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -213,7 +208,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>WebSite_getAdvancedSearchResultList</string> </value>
+            <value> <string>WebSite_getFullTextSearchResultList</string> </value>
         </item>
       </dictionary>
     </pickle>

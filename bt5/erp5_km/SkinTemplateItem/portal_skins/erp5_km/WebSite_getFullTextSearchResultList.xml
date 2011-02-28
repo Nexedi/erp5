@@ -50,26 +50,21 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if search_section_path is not None:\n
-  section_value = context.getPortalObject().restrictedTraverse(search_section_path)\n
-  if kw[\'portal_type\'] == [\'Assignment\'] and \\\n
-     section_value.getMembershipCriterionBaseCategoryList() == [\'follow_up\']:\n
-     # This is a hack to make sure project members are displayed whenever follow_up base\n
-     # category is used\n
-     section_value = section_value.asContext(membership_criterion_base_category = [\'destination_project\'],\n
-                        membership_criterion_category = [section_value.getMembershipCriterionCategory().replace(\'follow_up/\', \'destination_project/\')])\n
-  return section_value.countResults(**kw)\n
+            <value> <string>"""\n
+  Return the result list of all documents found by specified keyword arguments.\n
+"""\n
 \n
-return context.portal_catalog.countResults(**kw)\n
+context.log(context.portal_catalog(src__=1, **kw))\n
+return context.portal_catalog(**kw)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>search_section_path=None, **kw</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSite_countAdvancedSearchResultList</string> </value>
+            <value> <string>WebSite_getFullTextSearchResultList</string> </value>
         </item>
       </dictionary>
     </pickle>
