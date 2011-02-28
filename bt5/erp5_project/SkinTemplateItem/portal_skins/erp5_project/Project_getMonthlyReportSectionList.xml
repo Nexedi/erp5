@@ -94,22 +94,18 @@ result_list = []\n
 # Launch report only if we have restrictive parameters in inventory_kw,\n
 # otherwise getInventoryList will take all task reports and this will\n
 # kill the current node\n
-from Products.ERP5Type.Log import log\n
-log(\'simulation_state_set\', simulation_state_set)\n
 if len(inventory_kw):\n
   before_confirmed_task_state_set = set(portal.getPortalPlannedOrderStateList() + \\\n
            portal.getPortalDraftOrderStateList())\n
   task_state_set = simulation_state_set.intersection(before_confirmed_task_state_set)\n
-  log(\'task_state_set\', task_state_set)\n
   if len(task_state_set):\n
     result_list.extend(portal.portal_simulation.getInventoryList(\n
                   simulation_state = [x for x in task_state_set],\n
-                  portal_type=\'Task Line\',\n
+                  portal_type=[\'Task Line\', \'Simulation Movement\'],\n
                   from_date=from_date,\n
                   at_date=at_date, **inventory_kw))\n
 \n
   task_report_state_set = simulation_state_set.difference(before_confirmed_task_state_set)\n
-  log(\'task_report_state_set\',task_report_state_set)\n
   if len(task_report_state_set):\n
     result_list.extend(portal.portal_simulation.getInventoryList(\n
                   simulation_state = [x for x in task_report_state_set],\n
