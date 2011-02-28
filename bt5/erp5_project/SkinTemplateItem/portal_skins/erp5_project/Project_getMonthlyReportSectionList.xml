@@ -85,23 +85,37 @@ at_date = request.get(\'at_date\', None)\n
 if at_date is None:\n
   at_date = context.getStopDate()\n
   request.set(\'at_date\',at_date)\n
-simulation_state = request.get(\'simulation_state\', None)\n
+simulation_state_set = set(request.get(\'simulation_state\', []))\n
 full_date_string = "%s-%s -> %s-%s" % (from_date.year(), from_date.month(),\n
                                     at_date.year(), at_date.month())\n
 \n
-\n
-\n
-# We will use inventory API in order to find all quantities\n
 result_list = []\n
+# We will use inventory API in order to find all quantities\n
 # Launch report only if we have restrictive parameters in inventory_kw,\n
 # otherwise getInventoryList will take all task reports and this will\n
 # kill the current node\n
+from Products.ERP5Type.Log import log\n
+log(\'simulation_state_set\', simulation_state_set)\n
 if len(inventory_kw):\n
-  result_list = portal.portal_simulation.getInventoryList(\n
-                  simulation_state = simulation_state,\n
+  before_confirmed_task_state_set = set(portal.getPortalPlannedOrderStateList() + \\\n
+           portal.getPortalDraftOrderStateList())\n
+  task_state_set = simulation_state_set.intersection(before_confirmed_task_state_set)\n
+  log(\'task_state_set\', task_state_set)\n
+  if len(task_state_set):\n
+    result_list.extend(portal.portal_simulation.getInventoryList(\n
+                  simulation_state = [x for x in task_state_set],\n
+                  portal_type=\'Task Line\',\n
+                  from_date=from_date,\n
+                  at_date=at_date, **inventory_kw))\n
+\n
+  task_report_state_set = simulation_state_set.difference(before_confirmed_task_state_set)\n
+  log(\'task_report_state_set\',task_report_state_set)\n
+  if len(task_report_state_set):\n
+    result_list.extend(portal.portal_simulation.getInventoryList(\n
+                  simulation_state = [x for x in task_report_state_set],\n
                   portal_type=\'Task Report Line\',\n
                   from_date=from_date,\n
-                  at_date=at_date, **inventory_kw)\n
+                  at_date=at_date, **inventory_kw))\n
 \n
 monthly_worker_quantity_dict = {} # Used to get quantity per month and per worker\n
                                   # and per project line\n
