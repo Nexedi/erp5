@@ -50,21 +50,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ZSQLCatalog.SQLCatalog import Query\n
-from Products.ZSQLCatalog.SQLCatalog import ComplexQuery\n
+            <value> <string>from Products.ERP5Type.Log import log\n
+from Products.ZSQLCatalog.SQLCatalog import Query\n
 \n
-if container.isAdvancedSearchText(value):\n
-  # the text which was provided is not a simple value\n
-  # and contains predicates such as portal_type:\n
-  query = Query(SearchableText=value)\n
-else:\n
-  query = ComplexQuery(Query(title=value),\n
-                       Query(reference=value),\n
-                       Query(source_reference=value),\n
-                       Query(destination_reference=value),\n
-                       Query(SearchableText=value),\n
-                       operator="OR")\n
-return query\n
+# warn by logging (not possible use python\'s warn module in restricted environment)\n
+log("\'quick_search_text\' and \'advanced_search_text\' scriptable keys are deprecated. Use \'search_text\' instead.")\n
+return Query(search_text=value)\n
 </string> </value>
         </item>
         <item>

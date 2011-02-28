@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
+  Search text query generator. Accepts a string and returns a ComplexQuery.\n
+  For example:\n
+\n
+  search_text = DMS reference:bt5-dms version:001 language:bg mine:yes (portal_type:Presentation OR portal_type:File) created:12m contributor_title:%tyagov%\n
+  \n
+  will parse search_text and generate a complexQuery which will return all documents which:\n
+  - have full_text searchable text containing "DMS"\n
+  - have reference equal to bt5-dms\n
+  - have portal_type "Presentation" OR "File"\n
+  - are created within last 12 months\n
+  - are owned by current logged in user\n
+  - are contributed by given Person\'s title\n
+  - etc ..\n
+"""\n
+from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery, SimpleQuery\n
+\n
+parsed_dict = context.Base_parseSearchString(value)\n
+full_text = parsed_dict.pop(\'searchabletext\')\n
+\n
+#context.log(parsed_dict)\n
+\n
+# use full_text scriptable key!\n
+query_list = [Query(**{\'full_text\': full_text})]\n
+\n
+# XXX: "newest" ?\n
+# XXX: get known columns rather than hard-code \n
+for key in (\'reference\', \'version\', \'language\', \'portal_type\', \'contributor_title\'):\n
+  value = parsed_dict.get(key, None)\n
+  if value is not None:\n
+    query_list.append(Query(**{key: value}))\n
+\n
+# user wants only his documents\n
+if parsed_dict.get(\'mine\', None) is not None:\n
+  query_list.append(Query(**{\'owner\': str(context.portal_membership.getAuthenticatedMember())}))\n
+\n
+creation_from = parsed_dict.get(\'creation_from\', None)\n
+creation_to = parsed_dict.get(\'creation_to\', None)\n
+modification_from = parsed_dict.get(\'modification_from\', None)\n
+modification_to = parsed_dict.get(\'modification_to\', None)\n
+\n
+if creation_from is not None:\n
+  query_list.append(SimpleQuery(**{\'catalog.creation_date\': creation_from, \n
+                                   \'comparison_operator\': \'>=\'}))\n
+if creation_to is not None:\n
+  query_list.append(SimpleQuery(**{\'catalog.creation_date\': creation_to, \n
+                                   \'comparison_operator\': \'=<\'}))\n
+if modification_from is not None:\n
+  query_list.append(SimpleQuery(**{\'catalog.modification_date\': modification_from, \n
+                                   \'comparison_operator\': \'>=\'}))\n
+if modification_to is not None:\n
+  query_list.append(SimpleQuery(**{\'catalog.modification_date\': modification_to, \n
+                                   \'comparison_operator\': \'<=\'}))\n
+return ComplexQuery(query_list, operator="AND")\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>value</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>SQLCatalog_makeSearchTextQuery</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

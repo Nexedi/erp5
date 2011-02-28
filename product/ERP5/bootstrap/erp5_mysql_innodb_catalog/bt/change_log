@@ -1,3 +1,7 @@
+2011-02-28 Ivan
+* Deprecate 'advanced_search_text' &'quick_search_text' scriptable key
+* Add 'search_text' scriptable key
+
 2011-02-04 Nicolas
 * add children_reference related column
 
