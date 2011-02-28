@@ -144,3 +144,40 @@ class TestUNG(ERP5TypeTestCase):
     self.portal.WebSection_deleteObjectList()
     self.stepTic()
     self.assertEquals(len(self.portal.portal_catalog(relative_url=relative_url)), 0)
+
+  def testWebSection_userFollowUpWebPage(self):
+    """ """
+    web_page = self.portal.web_page_module.newContent(portal_type="Web Page")
+    web_page.setReference("new.Web-Page")
+    self.stepTic()
+    portal = self.portal
+    person = portal.person_module.newContent(portal_type='Person',
+                                             reference="ung_new_user")
+    assignment = person.newContent(portal_type='Assignment')
+    assignment.open()
+    person = portal.person_module.newContent(portal_type='Person',
+                                             reference="ung_new_user2")
+    assignment = person.newContent(portal_type='Assignment')
+    assignment.open()
+    self.stepTic()
+    self.login("ung_new_user")
+    self.portal.WebSection_userFollowUpWebPage("new.Web-Page")
+    self.stepTic()
+    self.assertEquals(["person_module/1"], web_page.getFollowUpList())
+    self.stepTic()
+    self.login("ung_new_user2")
+    self.portal.WebSection_userFollowUpWebPage("new.Web-Page")
+    self.stepTic()
+    followup_list = web_page.getFollowUpList()
+    self.assertEquals(["person_module/1", "person_module/2"],
+                      sorted(followup_list))
+
+  def testWebSection_getGadgetPathList(self):
+    """ """
+    gadget_list = eval(self.portal.WebSection_getGadgetPathList())
+    for gadget in gadget_list:
+      url = gadget.get("image_url").split("?")[0]
+      url = url.replace("/default_image", "")
+      catalog_result = self.portal.portal_catalog(relative_url=url)
+      self.assertEquals(len(catalog_result), 1)
+      self.assertEquals(catalog_result[0].getTitle(), gadget.get('title'))  

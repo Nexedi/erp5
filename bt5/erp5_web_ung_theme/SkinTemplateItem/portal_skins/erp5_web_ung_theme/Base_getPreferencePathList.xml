@@ -53,12 +53,10 @@
             <value> <string>from Products.ERP5Type.JSONEncoder import encodeInJson as dumps\n
 \n
 if context.portal_membership.isAnonymousUser():\n
-  print None\n
+  return dumps(None)\n
 portal_preferences = context.portal_preferences\n
-print dumps(dict(preference=portal_preferences.getActivePreference().getRelativeUrl(), \n
+return dumps(dict(preference=portal_preferences.getActivePreference().getRelativeUrl(), \n
              system_preference=portal_preferences.getActiveSystemPreference().getRelativeUrl()))\n
-\n
-return printed\n
 </string> </value>
         </item>
         <item>
