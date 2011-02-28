@@ -34,6 +34,7 @@ import unittest
 import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import createZODBPythonScript
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import getSecurityManager
 from zLOG import LOG
@@ -420,6 +421,16 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     """Called after setup completed.
     """
     self.portal = self.getPortal()
+    # create a security configuration script
+    skin_folder = self.portal.portal_skins.custom
+    if 'ERP5Type_getSecurityCategoryMapping' not in skin_folder.objectIds():
+      createZODBPythonScript(
+        skin_folder, 'ERP5Type_getSecurityCategoryMapping', '',
+        """return ((
+          'ERP5Type_getSecurityCategoryFromAssignment',
+          context.getPortalObject().getPortalAssignmentBaseCategoryList()
+          ),)
+        """)
     # configure group, site, function categories
     for bc in ['group', 'site', 'function']:
       base_cat = self.getCategoryTool()[bc]
