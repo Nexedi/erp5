@@ -51,9 +51,8 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string># Return the list of items aggregated by this packing list\n
-\n
 aggregate_value_list = []\n
-for movement in context.getMovementList():\n
+for movement in context.getIndexableChildValueList():\n
   aggregate_value_list.extend(movement.getAggregateValueList())\n
 return aggregate_value_list\n
 </string> </value>
