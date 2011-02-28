@@ -106,3 +106,26 @@ class TestUNG(ERP5TypeTestCase):
     self.portal.portal_caches.clearAllCache()
     title_list = self.getTitleListToBySubjectDomain()
     self.assertTrue("Ung" in title_list, title_list)
+
+
+  def testBase_changeWorkflowState(self):
+    """Test if script change the state of object correctly"""
+    web_table = self.portal.web_page_module.newContent(portal_type="Web Table")
+    web_table.Base_changeWorkflowState("publish_action")
+    self.stepTic()
+    self.assertEquals(web_table.getValidationState(), "published")
+    web_table.Base_changeWorkflowState("reject_action")
+    self.assertEquals(web_table.getValidationState(), "draft")
+
+  def testWebPage_getUNGIcon(self):
+    """Test if the paths are returned correctly"""
+    web_page = self.portal.web_page_module.newContent(portal_type="Web Page")
+    web_table = self.portal.web_page_module.newContent(portal_type="Web Table")
+    web_illustration = self.portal.web_page_module.newContent(portal_type="Web Illustration")
+    self.stepTic()
+    self.assertEquals(web_page.WebPage_getUNGIcon(),
+                      "<img src='ung_images/document.gif'/>")
+    self.assertEquals(web_table.WebPage_getUNGIcon(),
+                      "<img src='ung_images/table.jpg'/>")
+    self.assertEquals(web_illustration.WebPage_getUNGIcon(),
+                      "<img src='ung_images/svg.png'/>")
