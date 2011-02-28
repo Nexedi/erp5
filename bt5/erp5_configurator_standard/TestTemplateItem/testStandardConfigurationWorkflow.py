@@ -1736,7 +1736,9 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
 
   def stepValidatedAccountingPeriods(self, sequence=None, sequence_list=None, **kw):
     organisation = self.portal.organisation_module.newContent(
-                          portal_type='Organisation')
+                          portal_type='Organisation',
+                          price_currency_value=self.portal.currency_module.EUR,
+                          group='my_group')
     accounting_period = organisation.newContent(
                           portal_type='Accounting Period',
                           start_date=DateTime(2001, 01, 01),
