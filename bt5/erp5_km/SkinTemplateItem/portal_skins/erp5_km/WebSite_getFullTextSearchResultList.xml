@@ -53,8 +53,6 @@
             <value> <string>"""\n
   Return the result list of all documents found by specified keyword arguments.\n
 """\n
-\n
-context.log(context.portal_catalog(src__=1, **kw))\n
 return context.portal_catalog(**kw)\n
 </string> </value>
         </item>
