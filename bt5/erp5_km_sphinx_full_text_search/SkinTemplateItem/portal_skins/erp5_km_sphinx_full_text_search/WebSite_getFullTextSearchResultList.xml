@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+  Return the result list of all documents found by specified agruments.\n
+  Include an optimisation for \'search\' mode which returns all documents info like \n
+  (reference, state, web sections ...) without getting a ZODB object (i.e. get everything from \n
+  MySQL - "No ZODB" approach).\n
+"""\n
+from Products.ERP5Type.Document import newTempBase\n
+\n
+request = context.REQUEST\n
+portal = context.getPortalObject()\n
+web_site = context.getWebSiteValue()\n
+\n
+selection = kw.get(\'selection\', {})\n
+list_style = kw.get(\'list_style\', \\\n
+                    selection.get(\'list_style\', request.get(\'list_style\', \'table\')))\n
+\n
+search_text = kw[\'search_text\']\n
+parsed_dict = context.Base_parseSearchString(search_text)\n
+search_string = parsed_dict[\'searchabletext\']\n
+\n
+if list_style != \'search\':\n
+  return context.portal_catalog(**kw)\n
+else:\n
+  # search mode requires optimization, use catalog to get more data from it\n
+  result_list = []\n
+  result_set_dict_list = [] \n
+  repeating_uid_category_map = {}\n
+  portal_types = portal.portal_types\n
+\n
+  # get Web Site predicate info\n
+  category_section_map, base_category_uid_list = web_site.WebSite_getWebSectionPredicateMapAndUidList()\n
+\n
+  # XXX: using catalog API instead of script should be researched as a more maintainable alternative\n
+  found_result_list = web_site.WebSite_zGetAdvancedSearchResultList(\n
+                          base_category_uid_list = base_category_uid_list,\n
+                          search_string = search_string,\n
+                          is_full_text_search_on = 1,\n
+                          use_text_excerpts = 1,\n
+                          kw = kw)\n
+  for line in found_result_list:\n
+    uid = line[\'uid\']\n
+    if uid not in repeating_uid_category_map.keys():\n
+      # first time \n
+      repeating_uid_category_map[uid] = []\n
+    category_relative_url = line[\'category_relative_url\']\n
+    if category_relative_url is not None:\n
+      # exactly matches, document("group/nexedi") belongs to section("group/nexedi")\n
+      sections = category_section_map.get(category_relative_url, []) \n
+      if not len(sections):\n
+        # try to find by similarity if no exact match so if document belongs to \'group/nexedi/hq\'\n
+        # and we have a section \'group/nexedi\' it will belong to this section\n
+        for key,value in category_section_map.items():\n
+          if category_relative_url.startswith(key):\n
+            sections.extend(value)\n
+      repeating_uid_category_map[uid].extend(sections)\n
+    # turn into a relative URL\n
+    path = line[\'path\'].replace(\'/%s/\' %portal.getId(), \'\')\n
+    result_set_dict_list.append({\'uid\': uid,\n
+                                \'object_portal_type\': line[\'portal_type\'],\n
+                                \'object_icon\': portal_types[line[\'portal_type\']].getIcon(),\n
+                                \'path\': path,\n
+                                \'title\': line[\'title\'],\n
+                                \'text\': getattr(line, \'text\', \'\'),\n
+                                \'modification_date\': line[\'modification_date\'],\n
+                                \'reference\': line[\'reference\'],\n
+                                \'category_relative_url\': line[\'category_relative_url\'],\n
+                                \'owner\': line[\'owner\'],\n
+                                \'web_site\': web_site.getRelativeUrl()})\n
+  \n
+  # one document can belong to n categories, we need show only one doc\n
+  # and all sections it belongs to\n
+  found_uids = []\n
+  for line in result_set_dict_list:\n
+    uid = line[\'uid\']\n
+    if uid not in found_uids:\n
+      found_uids.append(uid)\n
+      # show only unique sections\n
+      unique_sections = {}\n
+      sections = repeating_uid_category_map[uid]\n
+      for section in sections:\n
+        unique_sections[section[\'uid\']] = section[\'relative_url\']\n
+      line[\'section_list\'] = unique_sections.values()\n
+      result_list.append(line)\n
+  return [newTempBase(portal, x[\'title\'], **x) for x in result_list]\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSite_getFullTextSearchResultList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

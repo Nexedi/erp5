@@ -1,0 +1,3 @@
+KM full text search using sphinx.
+Use "NO ZODB" approach -i.e. search results are delivered entirely by MySQL backend together with text excerpts from Sphinx search engine.
+See http://www.erp5.org/HowToUseSphinxSE
