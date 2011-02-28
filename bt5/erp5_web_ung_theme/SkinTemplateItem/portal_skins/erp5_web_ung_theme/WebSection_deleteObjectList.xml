@@ -50,10 +50,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal_type_list = ["Web Page", "Web Table", "Web Illustration"]\n
+            <value> <string>portal_type_list = ["Web Page", "Web Table", "Web Illustration", "Email Thread"]\n
 \n
 portal = context.getPortalObject()\n
-website_url = context.absolute_url()\n
 uid_list = context.REQUEST.get("uids")\n
 \n
 if uid_list is not None:\n
@@ -61,8 +60,8 @@ if uid_list is not None:\n
                                       uid=uid_list):\n
     object = context.restrictedTraverse(catalog_object.getPath())\n
     if object.getValidationState() == "deleted":\n
-      portal.web_page_module.deleteContent(object.getId())\n
-      continue\n
+      parent_folder = object.getParent()\n
+      parent_folder.deleteContent(object.getId())\n
     else:\n
       object.delete()\n
 \n

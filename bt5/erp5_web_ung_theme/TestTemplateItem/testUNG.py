@@ -133,8 +133,14 @@ class TestUNG(ERP5TypeTestCase):
   def testWebSection_deleteObjectList(self):
     """Test if objects are deleted correctly"""
     web_page = self.portal.web_page_module.newContent(portal_type="Web Page")
+    relative_url = web_page.getRelativeUrl()
     self.portal.REQUEST.set("uids", [web_page.getUid(),])
     self.stepTic()
     self.portal.WebSection_deleteObjectList()
     self.stepTic()
     self.assertEquals(web_page.getValidationState(), "deleted")
+    self.portal.REQUEST.set("uids", [web_page.getUid(),])
+    self.stepTic()
+    self.portal.WebSection_deleteObjectList()
+    self.stepTic()
+    self.assertEquals(len(self.portal.portal_catalog(relative_url=relative_url)), 0)
