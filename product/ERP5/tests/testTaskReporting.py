@@ -208,7 +208,7 @@ class TestTaskReporting(ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
         self.portal.project_module.Project_1,
         'Project_viewMonthlyReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEquals(2, len(report_section_list))
 
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
