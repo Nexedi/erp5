@@ -59,6 +59,10 @@ def IdAsReferenceMixin(suffix):
               " property sheet, due to pending activities" % 
                (new_id, parent.getId()))
             
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getIdAsReferenceSuffix')
+    def getIdAsReferenceSuffix(self):
+      return suffix
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getReference')
