@@ -99,6 +99,7 @@
                     <value>
                       <list>
                         <string>my_description</string>
+                        <string>your_service_title</string>
                       </list>
                     </value>
                 </item>

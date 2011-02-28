@@ -50,24 +50,44 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Add selected product to the cart and continue"""\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""Add selected product to the cart and continue"""\n
 portal = context.getPortalObject()\n
 \n
 if len(uids) != 1:\n
   return context.Base_redirect(dialog_id,\n
                         keep_items={\'portal_status_message\':context.Base_translateString("Please select one service.")})\n
-else:\n
-  session = context.WebSection_getVifibSession()\n
-  params = portal.portal_selections.getSelectionParamsFor(\'vifib_session_id\')\n
-  params["instance_software_product_uid"] = uids[0]\n
-  portal.portal_selections.setSelectionParamsFor(\'vifib_session_id\', params)\n
+\n
+if not service_title:\n
+  return context.Base_redirect(dialog_id,\n
+                        keep_items={\'portal_status_message\':context.Base_translateString("You have to provide Service Title.")})\n
+\n
+software_instance_list = context.portal_catalog(\n
+  portal_type=\'Software Instance\',\n
+  select_expression=\'title\',\n
+  title={\'query\': service_title, \'key\': \'ExactMatch\'}\n
+)\n
+\n
+if len(software_instance_list) > 0:\n
+  return context.Base_redirect(dialog_id,\n
+                        keep_items={\'portal_status_message\':context.Base_translateString(\n
+                          "You already have service named ${service_title}. Please choose different unique name.", mapping={\'service_title\': service_title})})\n
+\n
+session = context.WebSection_getVifibSession()\n
+params = portal.portal_selections.getSelectionParamsFor(\'vifib_session_id\')\n
+params["instance_software_product_uid"] = uids[0]\n
+params["service_title"] = service_title\n
+portal.portal_selections.setSelectionParamsFor(\'vifib_session_id\', params)\n
 \n
 if kw.has_key(\'came_from\'):\n
   #we override the context to redirect the user to the next web section\n
   context = portal.restrictedTraverse(kw[\'came_from\'])\n
   \n
 context.WebSection_viewNextStep()\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -77,7 +97,7 @@ context.WebSection_viewNextStep()\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>dialog_id, uids=[], quantity = 1, reset_shopping_cart=True, **kw</string> </value>
+            <value> <string>dialog_id, service_title, uids=[], quantity = 1, reset_shopping_cart=True, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -97,13 +117,14 @@ context.WebSection_viewNextStep()\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>5</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>dialog_id</string>
+                            <string>service_title</string>
                             <string>uids</string>
                             <string>quantity</string>
                             <string>reset_shopping_cart</string>
@@ -112,6 +133,7 @@ context.WebSection_viewNextStep()\n
                             <string>context</string>
                             <string>portal</string>
                             <string>len</string>
+                            <string>software_instance_list</string>
                             <string>session</string>
                             <string>params</string>
                             <string>_getitem_</string>

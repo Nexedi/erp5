@@ -71,12 +71,12 @@ person.edit(\n
 session = context.WebSection_getVifibSession()\n
 params = portal.portal_selections.getSelectionParamsFor(\'vifib_session_id\')\n
 instance_software_release_uid = params[\'instance_software_release_uid\']\n
-\n
+service_title = params[\'service_title\']\n
 software_release = portal.portal_catalog.getResultValue(uid=instance_software_release_uid)\n
 \n
 person.requestSoftwareInstance(\n
   software_release=software_release.getUrlString(),\n
-  software_title=software_release.getTitle(), # XXX: This shall be provided by user to allow him have more then one Software Instance of given Software Release\n
+  software_title=service_title,\n
   instance_xml="""<?xml version="1.0" encoding="utf-8"?>\n
 <instance>\n
   <parameter id="nbd_ip">2a01:e35:2e27:460:e2cb:4eff:fed9:48dc</parameter>\n
@@ -142,6 +142,7 @@ return context.getWebSiteValue().Base_redirect(keep_items={\'portal_status_messa
                             <string>params</string>
                             <string>_getitem_</string>
                             <string>instance_software_release_uid</string>
+                            <string>service_title</string>
                             <string>software_release</string>
                             <string>message</string>
                           </tuple>
