@@ -148,7 +148,7 @@ $().ready(function(){\n
       $(this).css("padding-right", "24px")\n
     }\n
   });\n
-  if ($("div.gadget-column").length == 1) {\n
+  if ($("div.listbox-domain-tree-container").length >= 1) {\n
     $("a.domain_selected").text($("a.tree-open:last").text());\n
     var listboxTreeHeight = $("div.listbox-tree").css("height").replace("px", "");\n
     var domainTreeHeight = $("div.listbox-domain-tree-container").css("height").replace("px", "");\n

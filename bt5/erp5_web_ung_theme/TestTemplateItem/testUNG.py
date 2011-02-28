@@ -129,3 +129,12 @@ class TestUNG(ERP5TypeTestCase):
                       "<img src='ung_images/table.jpg'/>")
     self.assertEquals(web_illustration.WebPage_getUNGIcon(),
                       "<img src='ung_images/svg.png'/>")
+
+  def testWebSection_deleteObjectList(self):
+    """Test if objects are deleted correctly"""
+    web_page = self.portal.web_page_module.newContent(portal_type="Web Page")
+    self.portal.REQUEST.set("uids", [web_page.getUid(),])
+    self.stepTic()
+    self.portal.WebSection_deleteObjectList()
+    self.stepTic()
+    self.assertEquals(web_page.getValidationState(), "deleted")
