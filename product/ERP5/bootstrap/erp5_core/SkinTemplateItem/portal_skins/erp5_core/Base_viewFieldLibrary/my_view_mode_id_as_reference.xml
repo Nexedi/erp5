@@ -9,7 +9,10 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>external_validator</string>
+                <string>title</string>
+              </list>
             </value>
         </item>
         <item>
@@ -20,7 +23,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_id</string> </value>
+            <value> <string>my_view_mode_id_as_reference</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -71,8 +74,14 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>external_validator</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_id_as_reference</string> </value>
+                    <value> <string>my_string_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -82,8 +91,25 @@
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>ID</string> </value>
+                </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Method" module="Products.Formulator.MethodField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>PropertySheetChild_validateIDField</string> </value>
         </item>
       </dictionary>
     </pickle>

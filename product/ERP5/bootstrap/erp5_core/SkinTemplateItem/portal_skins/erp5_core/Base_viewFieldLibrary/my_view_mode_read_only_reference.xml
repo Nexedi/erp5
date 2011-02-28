@@ -9,23 +9,24 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
-            </value>
-        </item>
-        <item>
-            <key> <string>delegated_message_list</string> </key>
-            <value>
-              <list/>
+              <list>
+                <string>editable</string>
+              </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_id</string> </value>
+            <value> <string>my_view_mode_read_only_reference</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
             <value>
-              <dictionary/>
+              <dictionary>
+                <item>
+                    <key> <string>external_validator_failed</string> </key>
+                    <value> <string>The input failed the external validator.</string> </value>
+                </item>
+              </dictionary>
             </value>
         </item>
         <item>
@@ -71,8 +72,12 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>editable</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_id_as_reference</string> </value>
+                    <value> <string>my_view_mode_reference</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>

@@ -134,6 +134,8 @@
                         <string>my_dialog_mode_reference</string>
                         <string>my_dialog_mode_category</string>
                         <string>my_view_mode_tales_expression</string>
+                        <string>my_view_mode_id_as_reference</string>
+                        <string>my_view_mode_read_only_reference</string>
                       </list>
                     </value>
                 </item>

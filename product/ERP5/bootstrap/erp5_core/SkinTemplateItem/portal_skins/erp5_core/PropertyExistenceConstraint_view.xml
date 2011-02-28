@@ -95,6 +95,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
+                        <string>my_id</string>
                         <string>my_reference</string>
                         <string>my_constraint_property_list</string>
                       </list>
