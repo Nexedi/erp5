@@ -14,7 +14,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>erp5_km_sphinx_full_text_search</string> </value>
+            <value> <string>erp5_km_sphinxse_full_text_search</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
