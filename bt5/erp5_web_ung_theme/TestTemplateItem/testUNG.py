@@ -146,7 +146,7 @@ class TestUNG(ERP5TypeTestCase):
     self.assertEquals(len(self.portal.portal_catalog(relative_url=relative_url)), 0)
 
   def testWebSection_userFollowUpWebPage(self):
-    """ """
+    """Test if user is added in field Follow Up of Web Page"""
     web_page = self.portal.web_page_module.newContent(portal_type="Web Page")
     web_page.setReference("new.Web-Page")
     self.stepTic()
@@ -173,11 +173,36 @@ class TestUNG(ERP5TypeTestCase):
                       sorted(followup_list))
 
   def testWebSection_getGadgetPathList(self):
-    """ """
+    """Validate the gadget list"""
     gadget_list = eval(self.portal.WebSection_getGadgetPathList())
     for gadget in gadget_list:
       url = gadget.get("image_url").split("?")[0]
       url = url.replace("/default_image", "")
       catalog_result = self.portal.portal_catalog(relative_url=url)
       self.assertEquals(len(catalog_result), 1)
-      self.assertEquals(catalog_result[0].getTitle(), gadget.get('title'))  
+      self.assertEquals(catalog_result[0].getTitle(), gadget.get('title'))
+
+  def testEventModule_createNewEvent(self):
+    """ """
+    portal = self.portal
+    event_dict = dict(portal_type="Note",
+                      title="Buy Phone",
+                      event_text_content="testUNG Sample",
+                      start_date_hour=11,
+                      start_date_minute=12,
+                      start_date_day=12,
+                      start_date_month=02,
+                      start_date_year=2011,
+                      stop_date_hour=12,
+                      stop_date_minute=12,
+                      stop_date_day=13,
+                      stop_date_month=02,
+                      stop_date_year=2011)
+    portal.REQUEST.form.update(event_dict)
+    portal.event_module.EventModule_createNewEvent()
+    self.stepTic()
+    event = portal.portal_catalog.getResultValue(portal_type="Note")
+    self.assertEquals(event.getDescription(), "testUNG Sample")
+    start_date = event.getStartDate()
+    self.assertEquals(start_date.month(), 2)
+    self.assertEquals(start_date.minute(), 12)
