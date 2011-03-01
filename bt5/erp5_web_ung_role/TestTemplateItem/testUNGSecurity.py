@@ -64,9 +64,28 @@ class TestUNGSecurity(ERP5TypeTestCase):
             'erp5_web_ung_theme',
             'erp5_web_ung_role')
   
-  def testERP5Site_createNewWebDocumentAsAnnonymous(self):
-    """ """
+  def testERP5Site_createNewWebDocumentAsAnonymous(self):
+    """Test use script ERP5Site_createNewWebDocument as Anonymous User"""
     self.logout()
     self.assertRaises(Unauthorized,
                       self.portal.ERP5Site_createNewWebDocument,
                       ("web_page_template"))
+
+  def testERP5Site_createNewWebDocumentWithUNGRole(self):
+    """Test use script ERP5Site_createNewWebDocument when a erp5 user have role
+    to create and edit document in UNG"""
+    self.portal.portal_preferences.ung_preference.enable()
+    person = self.portal.person_module.newContent(portal_type='Person',
+                                                  reference="ung_user")
+    assignment = person.newContent(portal_type='Assignment')
+    assignment.setFunction("function/ung_user")
+    assignment.open()
+    self.stepTic()
+    self.login("ung_user")
+    web_page = self.portal.portal_catalog.getResultValue(portal_type="Web Page")
+    self.assertEquals(web_page, None)
+    web_page = self.portal.ERP5Site_createNewWebDocument("web_page_template")
+    self.stepTic()
+    web_page = self.portal.portal_catalog.getResultValue(portal_type="Web Page")
+    self.assertEquals(web_page.getReference(), "default-Web.Page.Reference")
+    self.assertEquals(len(self.portal.web_page_module.searchFolder()), 1)
