@@ -109,10 +109,14 @@ event_kw[\'destination\'] = destination_url\n
 event_kw[\'destination_section\'] = destination_section_url\n
 event_kw[\'start_date\'] = start_date\n
 event_kw[\'follow_up\'] = follow_up\n
+event_kw[\'text_content\'] = text_content\n
 \n
 # Create event\n
 module = portal.getDefaultModule(portal_type=portal_type)\n
 event = module.newContent(**event_kw)\n
+\n
+if batch_mode:\n
+  return event\n
 \n
 message = portal.Base_translateString(\'New event created.\')\n
 \n
@@ -121,7 +125,7 @@ event.Base_redirect(keep_items={\'portal_status_message\': message})\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>title, direction, portal_type, resource, **kw</string> </value>
+            <value> <string>title, direction, portal_type, resource, text_content=None, batch_mode=False, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
