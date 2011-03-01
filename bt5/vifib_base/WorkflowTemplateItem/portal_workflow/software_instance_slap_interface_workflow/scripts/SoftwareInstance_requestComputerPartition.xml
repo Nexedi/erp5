@@ -135,6 +135,7 @@ software_release_document = context.portal_catalog.getResultValue(\n
 # protect computer partition from being selected again\n
 portal = context.getPortalObject()\n
 \n
+# XXX: SoftwareInstance_createSalePackingList shall be used to create new Sale Packing List\n
 sale_packing_list_module = portal.getDefaultModule(portal_type=\'Sale Packing List\')\n
 sale_packing_list = sale_packing_list_module.newContent(portal_type=\'Sale Packing List\', \n
                                                         start_date=DateTime())\n
