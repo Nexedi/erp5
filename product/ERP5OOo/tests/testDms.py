@@ -2511,7 +2511,7 @@ class TestDocumentWithSecurity(TestDocumentMixin):
     image_module = self.portal.getDefaultModule(image_portal_type)
     image = image_module.newContent(portal_type=image_portal_type)
     self.assertEqual('thumbnail',
-       image.Image_view._getOb("image_view", None).get_value('image_display'))
+       image.Image_view._getOb('my_thumbnail', None).get_value('image_display'))
     self.assertEqual((user_pref.getPreferredThumbnailImageWidth(),
                     user_pref.getPreferredThumbnailImageHeight()),
                      image.getSizeFromImageDisplay('thumbnail'))
