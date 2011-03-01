@@ -301,7 +301,8 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
                  'portal_alarms',):
       response = self.publish('%s/%s' % (self.portal_id, tool), self.auth)
       self.assertEquals(HTTP_OK, response.getStatus(),
-                        "%s: %s" % (tool, response.getStatus()))
+                        "%s: %s (%s)" % (tool, response.getStatus(),
+                                         str(response)))
 
   def test_allowed_content_types_translated(self):
     """Tests allowed content types from the action menu are translated"""
