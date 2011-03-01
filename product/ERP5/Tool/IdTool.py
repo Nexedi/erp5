@@ -350,7 +350,7 @@ class IdTool(BaseTool):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                            'generateNewLengthId')
-  def generateNewLengthId(self, id_group=None, default=None, store=1):
+  def generateNewLengthId(self, id_group=None, default=None, store=_marker):
      """
        Generates an Id.
        See generateNewLengthIdList documentation for details.
@@ -358,9 +358,11 @@ class IdTool(BaseTool):
      warnings.warn('generateNewLengthId is deprecated.\n'
                    'Use generateNewIdList with a sql id_generator',
                    DeprecationWarning)
-     new_id = self.generateNewIdList(id_group=id_group,
-                      id_count=1, default=default, store=store)[0]
-     return new_id
+     if store is not _marker:
+       return self.generateNewIdList(id_group=id_group,
+                        id_count=1, default=default, store=store)[0]
+     return self.generateNewIdList(id_group=id_group,
+                        id_count=1, default=default)[0]
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getDictLengthIdsItems')
