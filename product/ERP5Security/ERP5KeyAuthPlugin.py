@@ -157,13 +157,11 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
 
     <ERP5_Root>/web_page_module/1?__ac_key=207221200213146153166
 
-    where value of __ac_key contains (encrypted):
-    - proxied (i.e. granting user) username
-    - PAS plugin encryption key
+    where value of __ac_key contains an encrypted reference of a user
 
-  XXX: improve encrypt & decrypt part to use PAS encryption_key with a true
-  python encryption library (reuse of public / private key architecture)!
-
+  TODO: We should use a real PKI (Public Key Infrastructure) so that we
+  can revoke a part of already provided keys without changing the
+  encryption key or a user's reference.
   """
 
   meta_type = "ERP5 Key Authentication"
