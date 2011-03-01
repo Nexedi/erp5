@@ -61,12 +61,12 @@ portal = context.getPortalObject()\n
 sale_packing_list_module = portal.getDefaultModule(portal_type=\'Sale Packing List\')\n
 sale_packing_list = sale_packing_list_module.newContent(\n
   portal_type=\'Sale Packing List\',\n
-  destination_value=instance_setup_sale_packing_list.getDestinationValue(),\n
-  destination_section_value=instance_setup_sale_packing_list.getDestinationSectionValue(),\n
-  destination_decision_value=instance_setup_sale_packing_list.getDestinationDecisionValue(),\n
-  source_value=instance_setup_sale_packing_list.getSourceValue(),\n
-  source_section_value=instance_setup_sale_packing_list.getSourceSectionValue(),\n
-  price_currency_value=instance_setup_sale_packing_list.getPriceCurrencyValue(),\n
+  destination=instance_setup_sale_packing_list.getDestination(),\n
+  destination_section=instance_setup_sale_packing_list.getDestinationSection(),\n
+  destination_decision_=instance_setup_sale_packing_list.getDestinationDecision(),\n
+  source=instance_setup_sale_packing_list.getSource(),\n
+  source_section=instance_setup_sale_packing_list.getSourceSection(),\n
+  price_currency=instance_setup_sale_packing_list.getPriceCurrency(),\n
   start_date=DateTime())\n
 \n
 instance_hosting_sale_packing_list_line = sale_packing_list.newContent(\n
@@ -90,7 +90,7 @@ return sale_packing_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change, service_relative_url</string> </value>
+            <value> <string>state_change, service_relative_urlg</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -117,7 +117,7 @@ return sale_packing_list\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>service_relative_url</string>
+                            <string>service_relative_urlg</string>
                             <string>_getitem_</string>
                             <string>software_instance</string>
                             <string>_getattr_</string>
@@ -128,6 +128,7 @@ return sale_packing_list\n
                             <string>sale_packing_list_module</string>
                             <string>DateTime</string>
                             <string>sale_packing_list</string>
+                            <string>service_relative_url</string>
                             <string>instance_hosting_sale_packing_list_line</string>
                           </tuple>
                         </value>
