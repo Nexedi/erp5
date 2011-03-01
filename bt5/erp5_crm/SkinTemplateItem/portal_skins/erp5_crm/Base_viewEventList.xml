@@ -39,8 +39,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>DEPRECATED.\n
-Use Base_viewEventList instead</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>edit_order</string> </key>
@@ -77,7 +76,7 @@ Use Base_viewEventList instead</string> </value>
                     <value>
                       <list>
                         <string>listbox</string>
-                        <string>support_request_listbox</string>
+                        <string>ticket_listbox</string>
                       </list>
                     </value>
                 </item>
@@ -94,8 +93,8 @@ Use Base_viewEventList instead</string> </value>
                     <value>
                       <list>
                         <string>listbox_delivery_start_date</string>
-                        <string>support_request_listbox_start_date</string>
-                        <string>support_request_listbox_stop_date</string>
+                        <string>ticket_listbox_start_date</string>
+                        <string>ticket_listbox_stop_date</string>
                       </list>
                     </value>
                 </item>
@@ -116,7 +115,7 @@ Use Base_viewEventList instead</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Entity_viewEventList</string> </value>
+            <value> <string>Base_viewEventList</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -148,10 +147,6 @@ Use Base_viewEventList instead</string> </value>
         </item>
         <item>
             <key> <string>update_action</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>update_action_title</string> </key>
             <value> <string></string> </value>
         </item>
       </dictionary>
