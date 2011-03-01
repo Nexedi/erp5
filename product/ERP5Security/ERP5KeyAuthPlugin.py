@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2011 Nexedi SA and Contributors. All Rights Reserved.
 #                    Francois-Xavier Algrain <fxalgrain@tiolive.com>
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly adviced to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -81,7 +81,7 @@ class CesarCipher:
     self.encryption_key = encryption_key
     self.encrypted_key = self.transformKey(self.encryption_key);
 
-  def transformKey(self,key):
+  def transformKey(self, key):
     """Transform the key to number for encryption"""
     encrypt_key = []
     for letter in key:
@@ -91,7 +91,7 @@ class CesarCipher:
   def encrypt(self, login):
     crypted_login = ''
     key_length = len(self.encrypted_key)
-    for i in range(0,len(login)):
+    for i in range(0, len(login)):
       delta = i % key_length
       crypted_letter = str(ord(login[i]) + self.encrypted_key[delta])
       #ord is the inverse of chr() for 8-bit (1111 1111 = 256)
@@ -122,10 +122,10 @@ class CesarCipher:
 class ILoginEncryptionPlugin(Interface):
   """Contract for possible ERP5 Key Auth Plugin"""
 
-  def encrypt(self,login):
+  def encrypt(self, login):
     """Encrypt the login"""
 
-  def decrypt(self,crypted_login):
+  def decrypt(self, crypted_login):
     """Decrypt string and return the login"""
 
 
@@ -216,7 +216,7 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
   #    ILoginEncryptionPlugin    #
   ################################
   security.declarePublic('encrypt')
-  def encrypt(self,login):
+  def encrypt(self, login):
     """Encrypt the login"""
     cipher = globals()['%sCipher' % self._getCipher()](self.encryption_key)
     return cipher.encrypt(login)
@@ -240,7 +240,7 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
       if key is not None:
         creds['key'] = key
         #Save this in cookie
-        self.updateCredentials(request,request["RESPONSE"],None,None)
+        self.updateCredentials(request, request["RESPONSE"], None, None)
       else:
         # Look in the request for the names coming from the login form
         #It's default method
@@ -251,7 +251,7 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
           creds[ 'login' ] = name
           creds[ 'password' ] = password
           #Save this in cookie
-          self.updateCredentials(request,request["RESPONSE"],name,password)
+          self.updateCredentials(request, request["RESPONSE"], name, password)
 
         else:
           #search in cookies
@@ -278,7 +278,7 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
             creds['remote_address'] = request.getClientAddr()
         except AttributeError:
             creds['remote_address'] = request.get('REMOTE_ADDR', '')
-    except StandardError,e:
+    except StandardError, e:
       #Log standard error to check error
       LOG('ERP5KeyAuthPlugin.extractCredentials', PROBLEM, str(e))
 
@@ -293,11 +293,11 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
 
     #Update credential for key auth or standard of.
     #Remove conflict between both systems
-    cookie_val = request.get("__ac_key",None)
+    cookie_val = request.get("__ac_key", None)
     if cookie_val is not None:
       #expires = (DateTime() + 365).toZone('GMT').rfc822()
       cookie_val = cookie_val.rstrip()
-      response.setCookie(self.cookie_name, quote(cookie_val), path='/')#,expires=expires)
+      response.setCookie(self.cookie_name, quote(cookie_val), path='/')#, expires=expires)
       response.expireCookie(self.default_cookie_name, path='/')
     elif login is not None and new_password is not None:
       cookie_val = encodestring('%s:%s' % (login, new_password))
@@ -363,7 +363,7 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
 
             # validate
             if len(valid_assignment_list) > 0:
-              return (login,login)
+              return (login, login)
           finally:
             setSecurityManager(sm)
 
@@ -378,7 +378,7 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
                           login=login)
       except _AuthenticationFailure:
             return None
-      except StandardError,e:
+      except StandardError, e:
           #Log standard error
           LOG('ERP5KeyAuthPlugin.authenticateCredentials', PROBLEM, str(e))
           return None
