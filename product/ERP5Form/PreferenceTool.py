@@ -220,15 +220,14 @@ class PreferenceTool(BaseTool):
     # We must set the user_id as a parameter to make sure each
     # user can get a different cache
     def _getDocumentTemplateList(user_id, portal_type=None):
-      acceptable_templates = []
+      acceptable_template_list = []
       for pref in self._getSortedPreferenceList() :
-        for doc in pref.contentValues() :
-          if doc.getPortalType() == portal_type:
-            acceptable_templates.append(doc.getRelativeUrl())
-      return acceptable_templates
+        for doc in pref.contentValues(portal_type=portal_type) :
+          acceptable_template_list.append(doc.getRelativeUrl())
+      return acceptable_template_list
     _getDocumentTemplateList = CachingMethod(_getDocumentTemplateList,
                           'portal_preferences.getDocumentTemplateList',
-                                             cache_factory='erp5_ui_medium')
+                                             cache_factory='erp5_ui_short')
 
     allowed_content_types = map(lambda pti: pti.id,
                                 folder.allowedContentTypes())
