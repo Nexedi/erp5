@@ -52,7 +52,8 @@
             <key> <string>_body</string> </key>
             <value> <string>"""\n
   Script to load all events and organize all data to be loaded on calendar.\n
-  XXX - Initial Script to serialize all events\n
+  XXX - This script should be splitted, because have many different\n
+  features(i.e add, remove and update events)\n
 """\n
 from Products.ERP5Type.JSONEncoder import encodeInJson as dumps\n
 from DateTime import DateTime\n
@@ -91,6 +92,8 @@ if request_type == "list":\n
   event_dict["end"] = (now+30).strftime("%m/%d/%Y %H:%M")\n
   event_dict["error"] = None\n
   for event in event_list:\n
+    if event.getStartDate() is None or event.getStopDate() is None:\n
+      continue\n
     start = event.getStartDate().strftime("%m/%d/%Y %H:%M")\n
     end = event.getStopDate().strftime("%m/%d/%Y %H:%M")\n
     if event.getStartDate().Date() == event.getStopDate().Date():\n
@@ -123,7 +126,8 @@ elif request_type == "update":\n
   text_content = form.get("event_text_content")\n
   end_date = convertToERP5DateTime(form.get("CalendarEndTime"))\n
   start_date = convertToERP5DateTime(form.get("CalendarStartTime"))\n
-  catalog_object = portal.portal_catalog.getResultValue(portal_type=portal_type_list, id=event_id)\n
+  catalog_object = portal.portal_catalog.getResultValue(portal_type=portal_type_list,\n
+                                                        id=event_id)\n
   event = context.restrictedTraverse(catalog_object.getPath())\n
   if title and event.getTitle() != title:\n
     event.setTitle(title)\n
