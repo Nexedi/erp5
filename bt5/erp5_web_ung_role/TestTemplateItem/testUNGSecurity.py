@@ -27,6 +27,8 @@
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zExceptions import Unauthorized
+from DateTime import DateTime
+import json
 
 class TestUNGSecurity(ERP5TypeTestCase):
   """"""
@@ -125,7 +127,7 @@ class TestUNGSecurity(ERP5TypeTestCase):
     self.assertEquals(web_table.getFollowUpValue().getFirstName(), "Gabriel")
 
   def testBase_updateCalendarEventListWithERP5User(self):
-    """ """
+    """ Test script Base_updateCalendarEventList with erp5 user"""
     person = self.portal.person_module.newContent(portal_type='Person',
                                                   reference="ung_user")
     assignment = person.newContent(portal_type='Assignment')
@@ -137,6 +139,39 @@ class TestUNGSecurity(ERP5TypeTestCase):
                       self.portal.Base_updateCalendarEventList,
                       ("list"))
     self.login("ung_user")
-    event_list = self.portal.Base_updateCalendarEventList("list")
-    self.assertEquals(event_list, [])
+    event_list = json.loads(self.portal.Base_updateCalendarEventList("list"))
+    self.assertEquals(event_list.get("events"), [])
+    event = self.portal.event_module.newContent(portal_type="Note")
+    event.setStartDate(DateTime())
+    event.setStopDate(DateTime()+1)
+    self.stepTic()
+    event_dict = json.loads(self.portal.Base_updateCalendarEventList("list"))
+    event_list = event_dict.get("events")
+    self.assertEquals(event_list[0][-2], "Note")
+    form_dict = dict(CalendarStartTime=DateTime().strftime("%m/%d/%Y %H:%M"),
+                     CalendarEndTime=DateTime().strftime("%m/%d/%Y %H:%M"),
+                     CalendarTitle="One Sample",
+                     portal_type="Web Message")
+    self.portal.REQUEST.form.update(form_dict)
+    self.portal.Base_updateCalendarEventList("add")
+    self.stepTic()
+    web_message = self.portal.portal_catalog.getResultValue(portal_type="Web Message")
+    self.assertEquals(web_message.getTitle(), "One Sample")
+    self.portal.REQUEST.form.clear()
+    form_dict = dict(CalendarStartTime=DateTime().strftime("%m/%d/%Y %H:%M"),
+                     CalendarEndTime=DateTime().strftime("%m/%d/%Y %H:%M"),
+                     title="Buy Coffee",
+                     event_id=web_message.getId())
+    self.portal.REQUEST.form.update(form_dict)
+    self.portal.Base_updateCalendarEventList("update")
+    self.stepTic()
+    self.assertEquals(web_message.getTitle(), "Buy Coffee")
+    self.portal.REQUEST.form.clear()
+    form_dict = dict(title=web_message.getTitle(),
+                     id=web_message.getId())
+    self.portal.REQUEST.form.update(form_dict)
+    self.portal.Base_updateCalendarEventList("remove")
+    self.stepTic()
+    web_message = self.portal.portal_catalog.getResultValue(portal_type="Web Message")
+    self.assertEquals(web_message, None)
     
