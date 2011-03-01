@@ -1,0 +1,7 @@
+<type_roles>
+  <role id='Auditor'>
+   <property id='title'>UNG User</property>
+   <multi_property id='category'>function/ung_user</multi_property>
+   <multi_property id='base_category'>function</multi_property>
+  </role>
+</type_roles>

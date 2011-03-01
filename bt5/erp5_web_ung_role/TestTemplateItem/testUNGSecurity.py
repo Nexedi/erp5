@@ -64,6 +64,12 @@ class TestUNGSecurity(ERP5TypeTestCase):
             'erp5_web_ung_theme',
             'erp5_web_ung_role')
   
+  def beforeTearDown(self):
+    """ """
+    person_module = self.getPersonModule()
+    person_module.manage_delObjects(list(person_module.objectIds()))
+    self.stepTic()
+
   def testERP5Site_createNewWebDocumentAsAnonymous(self):
     """Test use script ERP5Site_createNewWebDocument as Anonymous User"""
     self.logout()
@@ -84,8 +90,53 @@ class TestUNGSecurity(ERP5TypeTestCase):
     self.login("ung_user")
     web_page = self.portal.portal_catalog.getResultValue(portal_type="Web Page")
     self.assertEquals(web_page, None)
-    web_page = self.portal.ERP5Site_createNewWebDocument("web_page_template")
+    self.portal.ERP5Site_createNewWebDocument("web_page_template")
     self.stepTic()
     web_page = self.portal.portal_catalog.getResultValue(portal_type="Web Page")
     self.assertEquals(web_page.getReference(), "default-Web.Page.Reference")
     self.assertEquals(len(self.portal.web_page_module.searchFolder()), 1)
+
+  def testShareDocument(self):
+    """Test the document sharing between erp5 users"""
+    person = self.portal.person_module.newContent(portal_type='Person',
+                                                  reference="ung_user")
+    assignment = person.newContent(portal_type='Assignment')
+    assignment.setFunction("function/ung_user")
+    assignment.open()
+    person = self.portal.person_module.newContent(portal_type='Person',
+                                                  reference="ung_user2",
+                                                  first_name="Gabriel")
+    assignment = person.newContent(portal_type='Assignment')
+    assignment.setFunction("function/ung_user")
+    assignment.open()
+    self.stepTic()
+    self.login("ung_user")
+    self.portal.ERP5Site_createNewWebDocument("web_table_template")
+    self.stepTic()
+    web_table = self.portal.portal_catalog.getResultValue(portal_type="Web Table")
+    web_table.setReference("share-Web.Table")
+    self.stepTic()
+    self.login("ung_user2")
+    self.assertEquals(len(self.portal.web_page_module.searchFolder()), 0)
+    ung_web_site = self.portal.web_site_module.ung
+    web_table = ung_web_site.WebSection_userFollowUpWebPage("share-Web.Table")
+    self.assertNotEquals(web_table.getFollowUpList(), [])
+    self.login("ERP5TypeTestCase")
+    self.assertEquals(web_table.getFollowUpValue().getFirstName(), "Gabriel")
+
+  def testBase_updateCalendarEventListWithERP5User(self):
+    """ """
+    person = self.portal.person_module.newContent(portal_type='Person',
+                                                  reference="ung_user")
+    assignment = person.newContent(portal_type='Assignment')
+    assignment.setFunction("function/ung_user")
+    assignment.open()
+    self.stepTic()
+    self.logout()
+    self.assertRaises(Unauthorized,
+                      self.portal.Base_updateCalendarEventList,
+                      ("list"))
+    self.login("ung_user")
+    event_list = self.portal.Base_updateCalendarEventList("list")
+    self.assertEquals(event_list, [])
+    
