@@ -1,3 +1,8 @@
 KM full text search using sphinx.
-Use "NO ZODB" approach -i.e. search results are delivered entirely by MySQL backend together with text excerpts from Sphinx search engine.
+
+Use "NO ZODB" approach - i.e. search results are delivered entirely by MySQL backend together with text excerpts from Sphinx search engine.
+
 See http://www.erp5.org/HowToUseSphinxSE
+
+In order to make Sphinx return snippets one needs to manually do in a MySQL shell:
+> CREATE FUNCTION sphinx_snippets RETURNS STRING SONAME 'sphinx.so';
