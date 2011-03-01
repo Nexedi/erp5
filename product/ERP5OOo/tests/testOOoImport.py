@@ -43,9 +43,6 @@ from DateTime import DateTime
 
 ZopeTestCase.installProduct('Sessions', quiet=install_product_quiet)
 
-person_current_id = 1
-
-
 class FileUploadTest(file):
 
   __allow_access_to_unprotected_subobjects__=1
@@ -108,7 +105,8 @@ class TestOOoImportMixin(ERP5TypeTestCase):
     self.tic()
 
   def beforeTearDown(self):
-    transaction.abort()
+    transaction.commit()
+    self.tic()
     for parent in [
         self.portal.currency_module,
         self.portal.organisation_module,
@@ -171,11 +169,7 @@ class TestOOoImport(TestOOoImportMixin):
 
   def stepCheckImportedPersonList(self, sequence=None, sequence_list=None,
                                   num=101, **kw):
-    global person_current_id
-    person_module = self.getPortal().person_module
-    person_list = [person_module[str(i + person_current_id)] \
-                   for i in range(num)]
-    person_current_id = person_current_id + num
+    person_list = self.getPortal().person_module.objectValues()
     self.assertEqual(
       sorted(['John Doe %s' % (i) for i in range(num)]),
       sorted([person_list[i].getTitle() for i in range(num)]))
@@ -194,12 +188,8 @@ class TestOOoImport(TestOOoImportMixin):
                                             sequence_list=sequence_list, **kw)
 
   def stepCheckImportedPersonListCategory(self, sequence=None, sequence_list=None, **kw):
-    global person_current_id
     num = 10
-    person_module = self.getPortal().person_module
-    person_list = [person_module[str(i + person_current_id)] \
-                   for i in range(num)]
-    person_current_id = person_current_id+num
+    person_list = self.getPortal().person_module.objectValues()
     self.assertEqual(
       sorted(['John Doe %s' % (i) for i in range(num)]),
       sorted([person_list[i].getTitle() for i in range(num)]))
@@ -225,12 +215,8 @@ class TestOOoImport(TestOOoImportMixin):
                                                     **kw)
 
   def stepCheckImportedPersonListFreeText(self, sequence=None, sequence_list=None, **kw):
-    global person_current_id
     num = 10
-    person_module = self.getPortal().person_module
-    person_list = [person_module[str(i + person_current_id)] \
-                   for i in range(num)]
-    person_current_id = person_current_id+num
+    person_list = self.getPortal().person_module.objectValues() 
     self.assertEqual(
       sorted(['John Doe %s' % (i) for i in range(num)]),
       sorted([person_list[i].getTitle() for i in range(num)]))
@@ -245,12 +231,8 @@ class TestOOoImport(TestOOoImportMixin):
       sorted([person_list[i].getFunctionFreeText() for i in range(num)]))
 
   def stepCheckImportedPersonListAccentuated(self, sequence=None, sequence_list=None, **kw):
-    global person_current_id
     num = 10
-    person_module = self.getPortal().person_module
-    person_list = [person_module[str(i + person_current_id)] \
-                   for i in range(num)]
-    person_current_id = person_current_id+num
+    person_list = self.getPortal().person_module.objectValues() 
     self.assertEqual(
       sorted(['John Doe é %s' % (i) for i in range(num)]),
       sorted([person_list[i].getTitle() for i in range(num)]))
@@ -270,12 +252,8 @@ class TestOOoImport(TestOOoImportMixin):
                                             num=10, **kw)
 
   def stepCheckImportedPersonListWithDates(self, sequence=None, sequence_list=None, **kw):
-    global person_current_id
     num = 10
-    person_module = self.getPortal().person_module
-    person_list = [person_module[str(i + person_current_id)] \
-                   for i in range(num)]
-    person_current_id = person_current_id+num
+    person_list = self.getPortal().person_module.objectValues() 
     self.assertEqual(
       sorted(['John Doe %s' % (i) for i in range(num)]),
       sorted([person_list[i].getTitle() for i in range(num)]))
