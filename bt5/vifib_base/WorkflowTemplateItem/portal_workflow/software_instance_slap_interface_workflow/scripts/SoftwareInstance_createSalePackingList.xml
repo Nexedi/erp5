@@ -90,7 +90,7 @@ return sale_packing_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change, service_relative_urlg</string> </value>
+            <value> <string>state_change, service_relative_url</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -117,7 +117,7 @@ return sale_packing_list\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>service_relative_urlg</string>
+                            <string>service_relative_url</string>
                             <string>_getitem_</string>
                             <string>software_instance</string>
                             <string>_getattr_</string>
@@ -128,7 +128,6 @@ return sale_packing_list\n
                             <string>sale_packing_list_module</string>
                             <string>DateTime</string>
                             <string>sale_packing_list</string>
-                            <string>service_relative_url</string>
                             <string>instance_hosting_sale_packing_list_line</string>
                           </tuple>
                         </value>
