@@ -351,9 +351,7 @@ class IdTool(BaseTool):
   security.declareProtected(Permissions.AccessContentsInformation,
                            'generateNewLengthId')
   def generateNewLengthId(self, id_group=None, default=None, store=_marker):
-     """
-       Generates an Id.
-       See generateNewLengthIdList documentation for details.
+     """Generates an Id using a conflict free id generator. Deprecated.
      """
      warnings.warn('generateNewLengthId is deprecated.\n'
                    'Use generateNewIdList with a sql id_generator',
