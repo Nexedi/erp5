@@ -38,8 +38,6 @@ from OFS.Image import Pdata
 import cStringIO
 from Products.ERP5Type.Utils import deprecated
 
-import md5
-
 def _unpackData(data):
   """
   Unpack Pdata into string
@@ -141,10 +139,7 @@ class File(Document, CMFFile):
 
   def _setFile(self, data, precondition=None):
     if data is not None and self.hasData() and \
-      md5.md5(str(data.read())).digest() ==\
-      md5.md5(str(self.getData())).digest():
-      # Compute md5 hash only if there is something to hash on both sides.
-      #
+      str(data.read()) == str(self.getData()):
       # Same data as previous, no need to change it's content
       return
     CMFFile._edit(self, precondition=precondition, file=data)
