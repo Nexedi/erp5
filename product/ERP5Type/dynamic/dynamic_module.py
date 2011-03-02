@@ -21,6 +21,11 @@ class DynamicModule(ModuleType):
     if isinstance(obj, type):
       # if it's a class we want to set __module__
       obj.__module__ = self.__name__
+    elif isinstance(obj, ModuleType):
+      # if it's a module we want to set the name according to the
+      # module it's being added to
+      obj.__name__ = "%s.%s" % (self.__name__, name)
+
     setattr(self, name, obj)
     return obj
 
