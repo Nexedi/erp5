@@ -399,11 +399,11 @@
                       <list>
                         <tuple>
                           <string>id</string>
-                          <string>id</string>
+                          <string>Id</string>
                         </tuple>
                         <tuple>
                           <string>title</string>
-                          <string>title</string>
+                          <string>Title</string>
                         </tuple>
                       </list>
                     </value>
@@ -455,7 +455,12 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
