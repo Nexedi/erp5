@@ -238,10 +238,7 @@ class RuleMixin(Predicate):
     delivery = movement.getDeliveryValue()
     if delivery is None:
       return False
-    if len(self.getDivergenceList(movement)) == 0:
-      return False
-    else:
-      return True
+    return len(self.getDivergenceList(movement)) != 0
 
   security.declareProtected(Permissions.View, 'getDivergenceList')
   def getDivergenceList(self, movement):
