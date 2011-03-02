@@ -55,7 +55,7 @@
   XXX - This script should be splitted, because have many different\n
   features(i.e add, remove and update events)\n
 """\n
-from Products.ERP5Type.JSONEncoder import encodeInJson as dumps\n
+from json import dumps\n
 from DateTime import DateTime\n
 import random\n
 \n
@@ -63,6 +63,9 @@ def convertToERP5DateTime(date):\n
   date, hour = date.split()\n
   month, day, year = date.split("/")\n
   return DateTime("%s/%s/%s %s" % (month, day, year, hour))\n
+\n
+if context.portal_membership.isAnonymousUser():\n
+  return dumps(dict(events=[]))\n
 \n
 portal = context.getPortalObject()\n
 form = context.REQUEST.form\n

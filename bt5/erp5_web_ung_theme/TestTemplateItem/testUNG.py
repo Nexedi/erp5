@@ -161,14 +161,15 @@ class TestUNG(ERP5TypeTestCase):
     self.login("ung_new_user")
     self.portal.WebSection_userFollowUpWebPage("new.Web-Page")
     self.stepTic()
-    self.assertEquals(["person_module/1"], web_page.getFollowUpList())
-    self.stepTic()
+    self.login("ERP5TypeTestCase")
+    self.assertEquals("ung_new_user", web_page.getFollowUpValue().getReference())
     self.login("ung_new_user2")
     self.portal.WebSection_userFollowUpWebPage("new.Web-Page")
     self.stepTic()
-    followup_list = web_page.getFollowUpList()
-    self.assertEquals(["person_module/1", "person_module/2"],
-                      sorted(followup_list))
+    self.login("ERP5TypeTestCase")
+    reference_list = [user.getReference() for user in web_page.getFollowUpValueList()]
+    self.assertEquals(["ung_new_user", "ung_new_user2"],
+                      sorted(reference_list))
 
   def testWebSection_getGadgetPathList(self):
     """Validate the gadget list"""
@@ -270,3 +271,16 @@ class TestUNG(ERP5TypeTestCase):
     self.stepTic()
     web_message = self.portal.portal_catalog.getResultValue(portal_type="Web Message")
     self.assertEquals(web_message, None)
+  
+  def testERPSite_createUNGUser(self):
+    """Test if script creates an user correctly"""
+    form_dict = dict(firstname="UNG",
+                     lastname="User",
+                     password="ung_password")
+    self.portal.REQUEST.form.update(form_dict)
+    self.portal.ERPSite_createUNGUser()
+    self.stepTic()
+    person = self.portal.portal_catalog.getResultValue(portal_type="Person",
+                                                       first_name="UNG")
+    self.assertEquals(person.getLastName(), "User")
+    self.assertEquals(person.getValidationState(), "validated")

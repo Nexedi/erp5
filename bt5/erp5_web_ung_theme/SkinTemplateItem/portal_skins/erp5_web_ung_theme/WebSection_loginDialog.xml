@@ -78,14 +78,17 @@
     <tbody>\n
       <tr>\n
         <td>\n
-          <table width="100%">\n
-            <tr><td>First name:</td><td><input type="text" name="firstname"/></td></tr>\n
-            <tr><td>Last name:</td><td><input type="text" name="lastname"/></td></tr>\n
-            <tr><td>Login name:</td><td><input type="text" name="login"/></td></tr>\n
-            <tr><td>Password:</td><td><input type="password" name="password"/></td></tr>\n
-            <tr><td>Confirm Password:</td><td><input type="password" name="confirm"/></td></tr>\n
-            <td align="center" colspan="2"><input type="submit" name="logged_in:method" class="submit" value="Create Account"></td>\n
-          </table>\n
+          <form id="create-user" method="post">\n
+            <table width="100%">\n
+              <tr><td>First name:</td><td><input type="text" name="firstname"/></td></tr>\n
+              <tr><td>Last name:</td><td><input type="text" name="lastname"/></td></tr>\n
+              <tr><td>Email:</td><td><input type="text" name="email"/></td></tr>\n
+              <tr><td>Login name:</td><td><input type="text" name="login"/></td></tr>\n
+              <tr><td>Password:</td><td><input type="password" name="password"/></td></tr>\n
+              <tr><td>Confirm Password:</td><td><input type="password" name="confirm"/></td></tr>\n
+              <td align="center" colspan="2"><input type="submit" name="logged_in:method" class="submit" value="Create Account"></td>\n
+            </table>\n
+          </form>\n
         </td>\n
       </tr>\n
     </tbody>\n
