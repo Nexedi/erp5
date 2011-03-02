@@ -342,6 +342,7 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
 
       except Exception:
         import traceback; traceback.print_exc()
+        raise
     finally:
       ERP5Base.aq_method_lock.release()
 
