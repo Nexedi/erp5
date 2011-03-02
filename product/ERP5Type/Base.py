@@ -325,92 +325,21 @@ class PropertyHolder(object):
     return [x for x in self.__dict__.items() if x[0] not in
         PropertyHolder.RESERVED_PROPERTY_SET]
 
-  # Accessor generation
-  def createAccessor(self, id):
-    """
-    Invokes appropriate factory and create an accessor
-    """
-    fake_accessor = getattr(self, id)
-    ptype = getattr(self, 'portal_type', None)
-    if ptype is None:
-      ptype = self._portal_type
-    if fake_accessor is PropertyHolder.WORKFLOW_METHOD_MARKER:
-      # Case 1 : a workflow method only
-      accessor = Base._doNothing
-    else:
-      # Case 2 : a workflow method over an accessor
-      (accessor_class, accessor_args, key) = fake_accessor
-      accessor = accessor_class(id, key, *accessor_args)
-    for wf_id, tr_id, once in self.workflow_method_registry.get(id, ()):
-      if not isinstance(accessor, WorkflowMethod):
-        accessor = WorkflowMethod(accessor)
-        if once:
-          accessor.registerTransitionOncePerTransaction(ptype, wf_id, tr_id)
-        else:
-          accessor.registerTransitionAlways(ptype, wf_id, tr_id)
-      else:
-        if once:
-          accessor.registerTransitionOncePerTransaction(ptype, wf_id, tr_id)
-        else:
-          accessor.registerTransitionAlways(ptype, wf_id, tr_id)
-    setattr(self, id, accessor)
-    return accessor
-
-  def registerAccessor(self, id, key, accessor_class, accessor_args):
-    """
-    Saves in a dictionary all parameters required to create an accessor
-    The goal here is to minimize memory occupation. We have found the following:
-
-    - the size of a tuple with simple types and the size
-      of None are the same (a pointer)
-
-    - the size of a pointer to a class is the same as the
-      size of None
-
-    - the python caching system for tuples is efficient for tuples
-      which contain simple types (string, int, etc.) but innefficient
-      for tuples which contain a pointer
-
-    - as a result, it is better to create separate dicts if
-      values contain pointers and single dict if value is
-      a tuple of simple types
-
-    Parameters:
-
-    id  --  The id the accessor (ex. getFirstName)
-
-    key --  The id of the property (ex. first_name) or the id of the
-            method for Alias accessors
-    """
-    #LOG('registerAccessor', 0, "%s %s %s" % (id , self._portal_type, accessor_args))
-    # First we try to compress the information required
-    # to build a new accessor in such way that
-    # if the same information is provided twice, we
-    # shall keep it once only
-    new_accessor_args = []
-    for arg in accessor_args:
-      if type(arg) is types.ListType:
-        new_accessor_args.append(tuple(arg))
-      else:
-        new_accessor_args.append(arg)
-    accessor_args = tuple(new_accessor_args)
-    original_registration_tuple = (accessor_class, accessor_args, key)
-    registration_tuple = method_registration_cache.get(original_registration_tuple)
-    if registration_tuple is None:
-      registration_tuple = original_registration_tuple
-      method_registration_cache[registration_tuple] = registration_tuple
-    # Use the cached tuple (same value, different pointer)
-    setattr(self, id, registration_tuple)
-
   def registerWorkflowMethod(self, id, wf_id, tr_id, once_per_transaction=0):
-    #LOG('registerWorkflowMethod', 0, "%s %s %s %s %s" % (self._portal_type, id, wf_id, tr_id, once_per_transaction))
-    signature = (wf_id, tr_id, once_per_transaction)
-    signature_list = self.workflow_method_registry.get(id, ())
-    if signature not in signature_list:
-      self.workflow_method_registry[id] = signature_list + (signature,)
-    if getattr(self, id, None) is None:
-      setattr(self, id, PropertyHolder.WORKFLOW_METHOD_MARKER)
-      self.createAccessor(id)
+    portal_type = self.portal_type
+
+    workflow_method = getattr(self, id, None)
+    if workflow_method is None:
+      workflow_method = WorkflowMethod(Base._doNothing)
+      setattr(self, id, workflow_method)
+    if once_per_transaction:
+      workflow_method.registerTransitionOncePerTransaction(portal_type,
+                                                           wf_id,
+                                                           tr_id)
+    else:
+      workflow_method.registerTransitionAlways(portal_type,
+                                               wf_id,
+                                               tr_id)
 
   def declareProtected(self, permission, accessor_name):
     """
@@ -520,23 +449,6 @@ def getClassPropertyList(klass):
         if p not in ps_list])
   return ps_list
 
-def initializeClassDynamicProperties(self, klass):
-  if klass not in Base.aq_method_generated:
-    # Recurse to superclasses
-    for super_klass in klass.__bases__:
-      if getattr(super_klass, 'isRADContent', 0):
-        initializeClassDynamicProperties(self, super_klass)
-    # Initialize default properties
-    from Utils import setDefaultClassProperties
-    if not getattr(klass, 'isPortalContent', None):
-      if getattr(klass, 'isRADContent', 0):
-        setDefaultClassProperties(klass)
-      # Mark as generated
-      Base.aq_method_generated.add(klass)
-
-def initializePortalTypeDynamicProperties(self, klass, ptype, aq_key, portal):
-  raise ValueError("No reason to go through this no more with portal type classes")
-
 def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
   """We should now make sure workflow methods are defined
   and also make sure simulation state is defined."""
@@ -567,10 +479,8 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
         if not hasattr(ptype_klass, method_id):
           method = getter(method_id, wf_id)
           # Attach to portal_type
-          setattr(ptype_klass, method_id, method)
-          ptype_klass.security.declareProtected(
-                                 Permissions.AccessContentsInformation,
-                                 method_id )
+          ptype_klass.registerAccessor(method,
+                                       Permissions.AccessContentsInformation)
 
       storage = dc_workflow_dict
       transitions = wf.transitions
@@ -806,12 +716,6 @@ class Base( CopyContainer,
     self._setDescription(value)
     self.reindexObject()
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'test_dyn' )
-  def test_dyn(self):
-    """
-    """
-    initializeClassDynamicProperties(self, self.__class__)
-
   security.declarePublic('provides')
   def provides(cls, interface_name):
     """
@@ -847,18 +751,6 @@ class Base( CopyContainer,
           historyComparisonResults=OFS.History.html_diff(
               pformat(rev1.__dict__),
               pformat(rev2.__dict__)))
-
-  def initializePortalTypeDynamicProperties(self):
-    """
-      Test purpose
-    """
-    ptype = self.portal_type
-    klass = self.__class__
-    aq_key = self._aq_key()
-    initializePortalTypeDynamicProperties(self, klass, ptype, aq_key, \
-        self.getPortalObject())
-    from Products.ERP5Form.PreferenceTool import createPreferenceToolAccessorList
-    createPreferenceToolAccessorList(self.getPortalObject())
 
   def _aq_dynamic(self, id):
     # ahah! disabled, thanks to portal type classes

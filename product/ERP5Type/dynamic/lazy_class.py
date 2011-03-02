@@ -7,8 +7,8 @@ from Products.ERP5Type.Accessor.Constant import Getter as ConstantGetter
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Base import Base as ERP5Base
 from Products.ERP5Type.Base import PropertyHolder, initializePortalTypeDynamicWorkflowMethods
-from Products.ERP5Type.Utils import createAllCategoryAccessors, \
-    createExpressionContext, UpperCase, setDefaultProperties
+from Products.ERP5Type.Utils import UpperCase
+from Products.ERP5Type.Core.CategoryProperty import CategoryProperty
 from ExtensionClass import ExtensionClass, pmc_init_of
 
 from zope.interface import classImplements
@@ -130,11 +130,11 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
     cls.security = ClassSecurityInfo()
 
   @classmethod
-  def getSubclassList(metacls, cls):
+  def getSubclassList(meta_class, cls):
     """
     Returns classes deriving from cls
     """
-    return metacls.subclass_register.get(cls, [])
+    return meta_class.subclass_register.get(cls, [])
 
   def getAccessorHolderPropertyList(cls):
     """
@@ -145,10 +145,12 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
     """
     cls.loadClass()
     property_dict = {}
+
     for klass in cls.mro():
-      if klass.__module__ == 'erp5.accessor_holder':
+      if klass.__module__.startswith('erp5.accessor_holder'):
         for property in klass._properties:
           property_dict.setdefault(property['id'], property)
+
     return property_dict.values()
 
   def resetAcquisition(cls):
@@ -210,36 +212,12 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
     raise AttributeError
 
   def generatePortalTypeAccessors(cls, site, portal_type_category_list):
-    createAllCategoryAccessors(site,
-                               cls,
-                               portal_type_category_list,
-                               createExpressionContext(site, site))
-
-    # Properties defined on the portal type itself are generated in
-    # erp5.portal_type directly, but this is unusual case (only
-    # PDFTypeInformation seems to use it)
-    portal_type_property_list = getattr(cls, '_properties', None)
-    if portal_type_property_list:
-      setDefaultProperties(cls)
-
-    # make sure that category accessors from the portal type definition
-    # are generated, no matter what
-    # XXX this code is duplicated here, in PropertySheetTool, and in Base
-    # and anyway is ugly, as tuple-like registration does not help
-    for id, fake_accessor in cls._getPropertyHolderItemList():
-      if not isinstance(fake_accessor, tuple):
-        continue
-
-      if fake_accessor is PropertyHolder.WORKFLOW_METHOD_MARKER:
-        # Case 1 : a workflow method only
-        accessor = ERP5Base._doNothing
-      else:
-        # Case 2 : a workflow method over an accessor
-        (accessor_class, accessor_args, key) = fake_accessor
-        accessor = accessor_class(id, key, *accessor_args)
-
-      # Add the accessor to the accessor holder
-      setattr(cls, id, accessor)
+    category_tool = getattr(site, 'portal_categories', None)
+    for category_id in portal_type_category_list:
+      # we need to generate only categories defined on portal type
+      CategoryProperty.applyDefinitionOnAccessorHolder(cls,
+                                                       category_id,
+                                                       category_tool)
 
     portal_workflow = getattr(site, 'portal_workflow', None)
     if portal_workflow is None:
@@ -259,9 +237,8 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
     for group in ERP5TypeInformation.defined_group_list:
       value = cls.__name__ in site._getPortalGroupedTypeSet(group)
       accessor_name = 'is' + UpperCase(group) + 'Type'
-      setattr(cls, accessor_name, ConstantGetter(accessor_name, group, value))
-      cls.declareProtected(Permissions.AccessContentsInformation,
-                           accessor_name)
+      method = ConstantGetter(accessor_name, group, value)
+      cls.registerAccessor(method, Permissions.AccessContentsInformation)
 
     from Products.ERP5Type.Cache import initializePortalCachingProperties
     initializePortalCachingProperties(site)
@@ -274,7 +251,7 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
     cls.loadClass()
     result = PropertyHolder._getPropertyHolderItemList(cls)
     for parent in cls.mro():
-      if parent.__module__ == 'erp5.accessor_holder':
+      if parent.__module__.startswith('erp5.accessor_holder'):
         for x in parent.__dict__.items():
           if x[0] not in PropertyHolder.RESERVED_PROPERTY_SET:
             result.append(x)

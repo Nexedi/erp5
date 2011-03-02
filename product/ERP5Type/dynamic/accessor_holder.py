@@ -33,102 +33,74 @@ Accessor Holders, that is, generation of methods for ERP5
 * Utils, Property Sheet Tool can be probably be cleaned up as well by
 moving specialized code here.
 """
-import sys
+from types import ModuleType
 
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.Base import PropertyHolder, Base
-from Products.ERP5Type.Utils import createRelatedAccessors, createExpressionContext
-from Products.ERP5Type.Utils import setDefaultClassProperties, setDefaultProperties
+from Products.ERP5Type.Utils import createExpressionContext
 from Products.ERP5Type.Globals import InitializeClass
 
 from Products.ERP5Type.Utils import UpperCase
 from Products.ERP5Type.Accessor import Related, RelatedValue
+from AccessControl import ClassSecurityInfo
 
-from zLOG import LOG, ERROR, INFO
+from zLOG import LOG, ERROR, INFO, WARNING
 
 class AccessorHolderType(type):
   _skip_permission_tuple = (Permissions.AccessContentsInformation,
                             Permissions.ModifyPortalContent)
-  def _next_registerAccessor(cls,
+  def registerAccessor(cls,
                        accessor,
-                       permission):
+                       permission=None):
     accessor_name = accessor.__name__
     setattr(cls, accessor_name, accessor)
+    if permission is None:
+      return
     # private accessors do not need declarative security
     if accessor_name[0] != '_' and \
         permission not in AccessorHolderType._skip_permission_tuple:
       cls.security.declareProtected(permission, accessor_name)
 
-  @classmethod
-  def fromPropertyHolder(meta_type,
-                         property_holder,
-                         portal=None,
-                         accessor_holder_module_name=None,
-                         initialize=True):
+  def __new__(meta_class, class_name, base_tuple=(object,), attribute_dict={}):
+    # we dont want to add several times to the same list, so make sure
+    # that duplicate attributes just point to the same list object
+    constraint_list = []
+    attribute_dict.update(_categories=[],
+                          _constraints=constraint_list,
+                          constraints=constraint_list,
+                          security=ClassSecurityInfo(),
+                          _properties=[])
+
+    return super(AccessorHolderType, meta_class).__new__(meta_class,
+                                                         class_name,
+                                                         base_tuple,
+                                                         attribute_dict)
+
+  def _finalize(cls):
+    cls.security.apply(cls)
+    InitializeClass(cls)
+
+class AccessorHolderModuleType(ModuleType):
+  def registerAccessorHolder(self, accessor_holder):
     """
-    Create a new accessor holder class from the given Property Holder
-    within the given accessor holder module
+    Add an accessor holder to the module
     """
-    property_sheet_id = property_holder.__name__
-    context = portal.portal_property_sheets
-    if initialize:
-      setDefaultClassProperties(property_holder)
+    # Set the module of the given accessor holder properly
+    accessor_holder.__module__ = self.__name__
 
-      try:
-        setDefaultProperties(property_holder,
-                             object=context,
-                             portal=portal)
-      except:
-        LOG("Tool.PropertySheetTool", ERROR,
-            "Could not generate accessor holder class for %s (module=%s)" % \
-            (property_sheet_id, accessor_holder_module_name),
-            error=sys.exc_info())
+    # Finalize the class as no accessors is added from now on
+    accessor_holder._finalize()
 
-        raise
+    self.__setattr__(accessor_holder.__name__, accessor_holder)
 
-    # Create the new accessor holder class and set its module properly
-    accessor_holder_class = meta_type(property_sheet_id, (object,), dict(
-      __module__ = accessor_holder_module_name,
-      constraints = property_holder.constraints,
-      # The following attributes have been defined only because they
-      # are being used in ERP5Type.Utils when getting all the
-      # property_sheets of the property_holder (then, they are added
-      # to the local properties, categories and constraints lists)
-      _properties = property_holder._properties,
-      # Necessary for getBaseCategoryList
-      _categories = property_holder._categories,
-      _constraints = property_holder._constraints,
-      security = property_holder.security
-      ))
+  def clear(self):
+    """
+    Clear the content of the module
+    """
+    for klass in self.__dict__.values():
+      if isinstance(klass, AccessorHolderType):
+        delattr(self, klass.__name__)
 
-    # Set all the accessors (defined by a tuple) from the Property
-    # Holder to the new accessor holder class (code coming from
-    # createAccessor in Base.PropertyHolder)
-    for id, fake_accessor in property_holder._getPropertyHolderItemList():
-      if callable(fake_accessor):
-        # not so fake ;)
-        setattr(accessor_holder_class, id, fake_accessor)
-        continue
-      if not isinstance(fake_accessor, tuple):
-        continue
-
-      if fake_accessor is PropertyHolder.WORKFLOW_METHOD_MARKER:
-        # Case 1 : a workflow method only
-        accessor = Base._doNothing
-      else:
-        # Case 2 : a workflow method over an accessor
-        (accessor_class, accessor_args, key) = fake_accessor
-        accessor = accessor_class(id, key, *accessor_args)
-
-      # Add the accessor to the accessor holder
-      setattr(accessor_holder_class, id, accessor)
-
-    property_holder.security.apply(accessor_holder_class)
-    InitializeClass(accessor_holder_class)
-    return accessor_holder_class
-
-def _generateBaseAccessorHolder(portal,
-                                accessor_holder_module):
+def _generateBaseAccessorHolder(portal):
   """
   Create once an accessor holder that contains all accessors common to
   all portal types: erp5.accessor_holder.BaseAccessorHolder
@@ -142,83 +114,31 @@ def _generateBaseAccessorHolder(portal,
   class added to a portal type class, and that it will always be added,
   to all living ERP5 objects.
   """
+  import erp5.accessor_holder
+
   base_accessor_holder_id = 'BaseAccessorHolder'
 
-  accessor_holder = getattr(accessor_holder_module,
-                            base_accessor_holder_id,
-                            None)
-  if accessor_holder is not None:
-    return accessor_holder
+  try:
+    return getattr(erp5.accessor_holder, base_accessor_holder_id)
+  except AttributeError:
+    # The accessor holder does not already exist
+    pass
 
   # When setting up the site, there will be no portal_categories
-  portal_categories = getattr(portal, 'portal_categories', None)
-  if portal_categories is None:
+  category_tool = getattr(portal, 'portal_categories', None)
+  if category_tool is None:
     return None
 
-  base_category_list = portal_categories.objectIds()
+  base_category_id_list = category_tool.objectIds()
 
-  property_holder = PropertyHolder(base_accessor_holder_id)
+  accessor_holder = AccessorHolderType(base_accessor_holder_id)
 
-  econtext = createExpressionContext(portal_categories, portal)
-  createRelatedAccessors(portal_categories,
-                         property_holder,
-                         econtext,
-                         base_category_list)
+  for base_category_id in base_category_id_list:
+    applyCategoryAsRelatedValueAccessor(accessor_holder,
+                                        base_category_id,
+                                        category_tool)
 
-  accessor_holder = AccessorHolderType.fromPropertyHolder(
-                      property_holder,
-                      portal,
-                      'erp5.accessor_holder',
-                      initialize=False)
-  setattr(accessor_holder_module, base_accessor_holder_id, accessor_holder)
-  return accessor_holder
-
-def _generatePreferenceToolAccessorHolder(portal, accessor_holder_list,
-    accessor_holder_module):
-  """
-  Generate a specific Accessor Holder that will be put on the Preference Tool.
-  (This used to happen in ERP5Form.PreferenceTool._aq_dynamic)
-
-  We iterate over all properties that do exist on the system, select the
-  preferences out of those, and generate the getPreferred.* accessors.
-  """
-  property_holder = PropertyHolder('PreferenceTool')
-
-  from Products.ERP5Type.Accessor.TypeDefinition import list_types
-  from Products.ERP5Type.Utils import convertToUpperCase
-  from Products.ERP5Form.PreferenceTool import PreferenceMethod
-
-  for accessor_holder in accessor_holder_list:
-    for prop in accessor_holder._properties:
-      if not prop.get('preference'):
-        continue
-      # XXX read_permission and write_permissions defined at
-      # property sheet are not respected by this.
-      # only properties marked as preference are used
-
-      # properties have already been 'converted' and _list is appended
-      # to list_types properties
-      attribute = prop['id']
-      if attribute.endswith('_list'):
-        attribute = prop['base_id']
-      attr_list = [ 'get%s' % convertToUpperCase(attribute)]
-      if prop['type'] == 'boolean':
-        attr_list.append('is%s' % convertToUpperCase(attribute))
-      if prop['type'] in list_types :
-        attr_list.append('get%sList' % convertToUpperCase(attribute))
-      read_permission = prop.get('read_permission')
-      for attribute_name in attr_list:
-        method = PreferenceMethod(attribute_name, prop.get('default'))
-        setattr(property_holder, attribute_name, method)
-        if read_permission:
-          property_holder.declareProtected(read_permission, attribute_name)
-
-  accessor_holder = AccessorHolderType.fromPropertyHolder(
-                      property_holder,
-                      portal,
-                      'erp5.accessor_holder',
-                      initialize=False)
-  setattr(accessor_holder_module, 'PreferenceTool', accessor_holder)
+  erp5.accessor_holder.registerAccessorHolder(accessor_holder)
   return accessor_holder
 
 related_accessor_definition_dict = {
@@ -415,5 +335,96 @@ def getAccessorHolderList(site, portal_type_name, property_sheet_value_list):
 
       # LOG("ERP5Type.dynamic", INFO,
       #     "Created accessor holder for %s" % property_sheet_name)
+
+  return accessor_holder_list
+
+from Products.ERP5Type.Base import getClassPropertyList
+
+def createAllAccessorHolderList(site,
+                                portal_type_name,
+                                portal_type,
+                                type_class):
+  """
+  Create the accessor holder list with the given ZODB Property Sheets
+  """
+  from erp5 import accessor_holder as accessor_holder_module
+
+  property_sheet_name_set = set()
+  accessor_holder_list = []
+
+  # Get the accessor holders of the Portal Type
+  if portal_type is not None:
+    accessor_holder_list.extend(portal_type.getAccessorHolderList())
+
+    portal_type_property_sheet_name_set = set(
+      [ accessor_holder.__name__ for accessor_holder in accessor_holder_list ])
+
+  else:
+    portal_type_property_sheet_name_set = set()
+
+  # XXX: Only kept for backward-compatibility as Preference and System
+  # Preference have Preference Type as portal type, which define
+  # getTypePropertySheetList properly and, likewise, Preference Tool
+  # has Preference Tool Type as its portal type
+  if portal_type_name in ("Preference Tool",
+                          "Preference",
+                          "System Preference"):
+    if portal_type is None or \
+       not portal_type.getPortalType().startswith(portal_type_name):
+      # The Property Sheet Tool may be None if the code is updated but
+      # the BT has not been upgraded yet with portal_property_sheets
+      try:
+        zodb_property_sheet_name_set = set(site.portal_property_sheets.objectIds())
+
+      except AttributeError:
+        if not getattr(site, '_v_bootstrapping', False):
+          LOG("ERP5Type.dynamic", WARNING,
+              "Property Sheet Tool was not found. Please update erp5_core "
+              "Business Template")
+
+      else:
+        for property_sheet in zodb_property_sheet_name_set:
+          if property_sheet.endswith('Preference'):
+            property_sheet_name_set.add(property_sheet)
+
+      # XXX a hook to add per-portal type accessor holders maybe?
+      if portal_type_name == "Preference Tool":
+        from Products.ERP5Form.Document.PreferenceToolType import \
+            _generatePreferenceToolAccessorHolder
+
+        accessor_holder_class = _generatePreferenceToolAccessorHolder(
+          portal_type_name, accessor_holder_list)
+
+        accessor_holder_list.insert(0, accessor_holder_class)
+
+  # Get the Property Sheets defined on the document and its bases
+  # recursively
+  for property_sheet in getClassPropertyList(type_class):
+    # If the Property Sheet is a string, then this is a ZODB
+    # Property Sheet
+    #
+    # NOTE: The Property Sheets of a document should be given as a
+    #       string from now on
+    if not isinstance(property_sheet, basestring):
+      property_sheet = property_sheet.__name__
+
+    property_sheet_name_set.add(property_sheet)
+
+  property_sheet_name_set = property_sheet_name_set - \
+      portal_type_property_sheet_name_set
+
+  document_accessor_holder_list = \
+      getAccessorHolderList(site, portal_type_name,
+                            getPropertySheetValueList(site,
+                                                      property_sheet_name_set))
+
+  accessor_holder_list.extend(document_accessor_holder_list)
+
+  # useless if Base Category is not yet here or if we're
+  # currently generating accessors for Base Categories
+  accessor_holder_class = _generateBaseAccessorHolder(site)
+
+  if accessor_holder_class is not None:
+    accessor_holder_list.append(accessor_holder_class)
 
   return accessor_holder_list

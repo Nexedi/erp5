@@ -48,6 +48,7 @@ class PropertySheet(Folder):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
+  # TODO: REMOVE
   security.declareProtected(Permissions.AccessContentsInformation,
                             'exportToFilesystemDefinition')
   def exportToFilesystemDefinition(self):
@@ -86,22 +87,15 @@ class PropertySheet(Folder):
     return (properties, categories, constraints)
 
   security.declarePrivate('createAccessorHolder')
-  def createAccessorHolder(self):
+  def createAccessorHolder(self, expression_context, portal):
     """
-    Create a new accessor holder from the Property Sheet (the
-    accessors are created through a Property Holder)
+    Create a new accessor holder from the Property Sheet
     """
-    property_holder = PropertyHolder(self.getId())
+    accessor_holder = AccessorHolderType(self.getId())
 
-    # Prepare the Property Holder
-    property_holder._properties, \
-      property_holder._categories, \
-      property_holder._constraints = self.exportToFilesystemDefinition()
+    self.applyOnAccessorHolder(accessor_holder, expression_context, portal)
 
-    return AccessorHolderType.fromPropertyHolder(
-      property_holder,
-      self.getPortalObject(),
-      'erp5.accessor_holder')
+    return accessor_holder
 
   @staticmethod
   def _guessFilesystemPropertyPortalType(attribute_dict):
