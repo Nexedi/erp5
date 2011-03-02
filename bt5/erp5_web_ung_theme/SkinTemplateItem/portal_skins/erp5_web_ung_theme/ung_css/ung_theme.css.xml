@@ -1037,25 +1037,26 @@ a.your_listbox_title {\n
   display: none;\n
 }\n
 \n
-div#login-box table#field_table,\n
- div#login-box table#new-account-table {\n
+table#field_table,\n
+ table#new-account-table,\n
+ table#create-new-user {\n
   border: 1px solid #C3D9FF;\n
+  width: 100%;\n
 }\n
 \n
-div#login-box table#field_table tbody,\n
- div#login-box table#new-account-table tbody {\n
+table#field_table tbody,\n
+ table#new-account-table tbody,\n
+ table#create-new-user tbody {\n
   background: #E8EEFA;\n
 }\n
 \n
 div#login-box table#field_table tbody label {\n
   font-size: 10pt;\n
+  float: right;\n
 }\n
 \n
-div#login-box table#new-account-table {\n
-  width: 100%;\n
-}\n
-\n
-div#login-box table#new-account-table table td {\n
+div#login-box table#new-account-table table td,\n
+ table#create-new-user td {\n
   font-size: 10pt;\n
 }\n
 \n
@@ -1063,6 +1064,11 @@ td#new-account-form {\n
   text-decoration: underline;\n
   color: #00C;\n
   font-weight: bold;\n
+  cursor: pointer;\n
+}\n
+\n
+table#create-new-user {\n
+  display:none;\n
 }
 
 ]]></string> </value>
