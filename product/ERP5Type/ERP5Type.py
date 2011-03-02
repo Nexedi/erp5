@@ -36,6 +36,8 @@ from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Type.Utils import deprecated, createExpressionContext
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Cache import CachingMethod
+from Products.ERP5Type.dynamic.accessor_holder import getPropertySheetValueList, \
+    getAccessorHolderList
 
 ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT = 'ERP5Type_asSecurityGroupId'
 
@@ -428,6 +430,23 @@ class ERP5TypeInformation(XMLObject,
       """Getter for 'type_base_category' property"""
       return list(self.base_category_list)
 
+    def getTypePropertySheetValueList(self):
+      type_property_sheet_list = self.getTypePropertySheetList()
+      if not type_property_sheet_list:
+        return []
+
+      return getPropertySheetValueList(self.getPortalObject(),
+                                       type_property_sheet_list)
+
+    def getAccessorHolderList(self):
+      type_property_sheet_value_list = self.getTypePropertySheetValueList()
+      if not type_property_sheet_value_list:
+        return []
+
+      return getAccessorHolderList(self.getPortalObject(),
+                                   self.getPortalType(),
+                                   type_property_sheet_value_list)
+
     # XXX these methods, _baseGetTypeClass, getTypeMixinList, and
     # getTypeInterfaceList, are required for a bootstrap issue that
     # the portal type class Base Type is required for _aq_dynamic on
@@ -719,6 +738,5 @@ class ERP5TypeInformation(XMLObject,
           continue
         setattr(old_action, k, v)
       return old_action
-
 
 InitializeClass( ERP5TypeInformation )

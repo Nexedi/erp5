@@ -350,3 +350,71 @@ def applyCategoryAsRelatedValueAccessor(accessor_holder,
     for accessor_name in accessor_name_list:
       accessor = accessor_class(accessor_name % uppercase_id, id)
       accessor_holder.registerAccessor(accessor, read_permission)
+
+
+def getPropertySheetValueList(site, property_sheet_name_set):
+  try:
+    property_sheet_tool = site.portal_property_sheets
+
+  except AttributeError:
+    if not getattr(site, '_v_bootstrapping', False):
+      LOG("ERP5Type.dynamic", WARNING,
+              "Property Sheet Tool was not found. Please update erp5_core "
+              "Business Template")
+
+    return []
+
+  property_sheet_value_list = []
+
+  for property_sheet_name in property_sheet_name_set:
+    try:
+      property_sheet = getattr(property_sheet_tool, property_sheet_name)
+    except AttributeError:
+      LOG("ERP5Type.dynamic", WARNING,
+          "Ignoring missing Property Sheet " + property_sheet_name)
+
+      continue
+    else:
+      property_sheet_value_list.append(property_sheet)
+
+  return property_sheet_value_list
+
+expression_context = None
+
+def getAccessorHolderList(site, portal_type_name, property_sheet_value_list):
+  import erp5.accessor_holder
+
+  global expression_context
+  accessor_holder_list = []
+
+  for property_sheet in property_sheet_value_list:
+    # LOG("ERP5Type.dynamic", INFO,
+    #     "Getting accessor holder for " + property_sheet_name)
+
+    property_sheet_name = property_sheet.getId()
+
+    if property_sheet.isTempObject():
+      accessor_holder_module = getattr(erp5.accessor_holder.portal_type,
+                                       portal_type_name)
+    else:
+      accessor_holder_module = erp5.accessor_holder.property_sheet
+
+    try:
+      accessor_holder_list.append(getattr(accessor_holder_module,
+                                          property_sheet_name))
+    except AttributeError:
+      # lazily create the context, only if needed.
+      if expression_context is None:
+        expression_context = createExpressionContext(site)
+
+      # Generate the accessor holder as it has not been done yet
+      accessor_holder_class = property_sheet.createAccessorHolder(
+        expression_context, site)
+
+      accessor_holder_module.registerAccessorHolder(accessor_holder_class)
+      accessor_holder_list.append(accessor_holder_class)
+
+      # LOG("ERP5Type.dynamic", INFO,
+      #     "Created accessor holder for %s" % property_sheet_name)
+
+  return accessor_holder_list
