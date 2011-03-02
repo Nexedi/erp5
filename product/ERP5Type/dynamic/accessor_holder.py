@@ -38,6 +38,7 @@ from types import ModuleType
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Utils import createExpressionContext
 from Products.ERP5Type.Globals import InitializeClass
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
 from Products.ERP5Type.Utils import UpperCase
 from Products.ERP5Type.Accessor import Related, RelatedValue
@@ -298,13 +299,11 @@ def getPropertySheetValueList(site, property_sheet_name_set):
 
   return property_sheet_value_list
 
-expression_context = None
-
 def getAccessorHolderList(site, portal_type_name, property_sheet_value_list):
   import erp5.accessor_holder
 
-  global expression_context
   accessor_holder_list = []
+  tv = getTransactionalVariable()
 
   for property_sheet in property_sheet_value_list:
     # LOG("ERP5Type.dynamic", INFO,
@@ -323,8 +322,11 @@ def getAccessorHolderList(site, portal_type_name, property_sheet_value_list):
                                           property_sheet_name))
     except AttributeError:
       # lazily create the context, only if needed.
-      if expression_context is None:
+      try:
+        expression_context = tv['accessor_holder_expression_context']
+      except KeyError:
         expression_context = createExpressionContext(site)
+        tv['accessor_holder_expression_context'] = expression_context
 
       # Generate the accessor holder as it has not been done yet
       accessor_holder_class = property_sheet.createAccessorHolder(
