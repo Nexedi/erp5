@@ -1056,7 +1056,6 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     except Exception:
       self.fail("Creating an empty Constraint raises an error")
 
-  @skip("Skipped until per-document accessors generation is committed")
   def testAddInvalidProperty(self):
     """
     Check that setting an invalid TALES Expression as a property
