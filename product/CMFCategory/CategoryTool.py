@@ -574,13 +574,13 @@ class CategoryTool( UniqueObject, Folder, Base ):
                 membership.append(path[len(category)+1:])
             else:
               try:
-               o = self.unrestrictedTraverse(path)
-               # LOG('getCategoryMembershipList',0,str(o.portal_type))
-               if o.portal_type in spec:
-                if base:
-                  membership.append(path)
-                else:
-                  membership.append(path[len(category)+1:])
+                o = self.unrestrictedTraverse(path)
+                # LOG('getCategoryMembershipList',0,str(o.portal_type))
+                if o.portal_type in spec:
+                  if base:
+                    membership.append(path)
+                  else:
+                    membership.append(path[len(category)+1:])
               except KeyError:
                 LOG('WARNING: CategoriesTool',0, 'Unable to find object for path %s' % path)
       # We must include parent if specified explicitely
