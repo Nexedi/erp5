@@ -1965,9 +1965,11 @@ return 1
     """
     Test Web Page using embedded Images into ZODB case (in its HTML body)
     """
-    convert_kw = {'display':'thumbnail', 
+    display= 'thumbnail'
+    convert_kw = {'display':display, 
                   'format':'jpeg', 
                   'quality':100}
+    preffered_size_for_display = self.getPreferences(display)    
     web_page_document = self.portal.web_page_module.newContent(portal_type="Web Page")
     # use ERP5's favourite.png"
     web_page_document.setTextContent('<b> test </b><img src="images/favourite.png"/>')
@@ -1975,6 +1977,7 @@ return 1
     
     web_page_document_url = '%s/%s' %(self.portal.absolute_url(), web_page_document.getRelativeUrl())
     web_page_image_size, web_page_file_size = self.getURLSizeList(web_page_document_url, **convert_kw)
+    self.assertTrue(max(preffered_size_for_display) - max(web_page_image_size) <= 1)
 
   def test_convertToImageOnTraversal(self):
     """
