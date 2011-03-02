@@ -1,4 +1,6 @@
 # Author: Guillaume BOTTEX
+# Feature added: support for IPv6
+# Bug fixed: https://github.com/etolabo/kumofs/issues#issue/8
 diff --git a/src/logic/boot.cc b/src/logic/boot.cc
 index d0a4c32..c197a30 100644
 --- a/src/logic/boot.cc
