@@ -1,0 +1,2 @@
+#!/bin/sh
+exec %(kumo_gateway_binary)s -F -E -m %(kumo_manager_ip)s:%(kumo_manager_port)s -t %(kumo_gateway_ip)s:%(kumo_gateway_port)s -o %(kumo_gateway_log)s

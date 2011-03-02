@@ -1,0 +1,9 @@
+defaults
+  mode  tcp
+  option redispatch
+  timeout server 3000s
+  timeout queue 5s
+  timeout connect 10s
+  timeout client 3600s
+
+%(listen_list)s

@@ -1,0 +1,55 @@
+# Apache configuration file for Zope
+# Automatically generated
+
+# Basic server configuration
+PidFile "%(pid_file)s"
+LockFile "%(lock_file)s"
+Listen %(ip)s:%(port)s
+ServerAdmin %(server_admin)s
+DefaultType text/plain
+TypesConfig conf/mime.types
+AddType application/x-compress .Z
+AddType application/x-gzip .gz .tgz
+
+# As backend is trusting REMOTE_USER header unset it always
+RequestHeader unset REMOTE_USER
+
+# SSL Configuration
+%(ssl_snippet)s
+
+# Log configuration
+ErrorLog "%(error_log)s"
+LogLevel warn
+LogFormat "%%h %%{REMOTE_USER}i %%l %%u %%t \"%%r\" %%>s %%b \"%%{Referer}i\" \"%%{User-Agent}i\"" combined
+LogFormat "%%h %%{REMOTE_USER}i %%l %%u %%t \"%%r\" %%>s %%b" common
+CustomLog "%(access_log)s" common
+
+# Directory protection
+<Directory />
+    Options FollowSymLinks
+    AllowOverride None
+    Order deny,allow
+    Deny from all
+</Directory>
+
+%(path_enable)s
+
+# Magic of Zope related rewrite
+RewriteEngine On
+%(rewrite_rule)s
+
+# List of modules
+LoadModule authz_host_module modules/mod_authz_host.so
+LoadModule log_config_module modules/mod_log_config.so
+LoadModule setenvif_module modules/mod_setenvif.so
+LoadModule version_module modules/mod_version.so
+LoadModule proxy_module modules/mod_proxy.so
+LoadModule proxy_http_module modules/mod_proxy_http.so
+LoadModule ssl_module modules/mod_ssl.so
+LoadModule mime_module modules/mod_mime.so
+LoadModule dav_module modules/mod_dav.so
+LoadModule dav_fs_module modules/mod_dav_fs.so
+LoadModule negotiation_module modules/mod_negotiation.so
+LoadModule rewrite_module modules/mod_rewrite.so
+LoadModule headers_module modules/mod_headers.so
+LoadModule antiloris_module modules/mod_antiloris.so
