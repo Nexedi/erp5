@@ -854,7 +854,7 @@ div#login-box {\n
   font-family: Arial,Helvetica,sans-serif;\n
   font-size: 12px;\n
   margin: 0;\n
-  padding: 0 23px 0 0;\n
+  padding: 23px 23px 0 0;\n
   float:right;\n
 }\n
 \n
@@ -1037,16 +1037,32 @@ a.your_listbox_title {\n
   display: none;\n
 }\n
 \n
-div#login-box table#field_table {\n
+div#login-box table#field_table,\n
+ div#login-box table#new-account-table {\n
   border: 1px solid #C3D9FF;\n
 }\n
 \n
-div#login-box table#field_table tbody {\n
+div#login-box table#field_table tbody,\n
+ div#login-box table#new-account-table tbody {\n
   background: #E8EEFA;\n
 }\n
 \n
 div#login-box table#field_table tbody label {\n
   font-size: 10pt;\n
+}\n
+\n
+div#login-box table#new-account-table {\n
+  width: 100%;\n
+}\n
+\n
+div#login-box table#new-account-table table td {\n
+  font-size: 10pt;\n
+}\n
+\n
+td#new-account-form {\n
+  text-decoration: underline;\n
+  color: #00C;\n
+  font-weight: bold;\n
 }
 
 ]]></string> </value>

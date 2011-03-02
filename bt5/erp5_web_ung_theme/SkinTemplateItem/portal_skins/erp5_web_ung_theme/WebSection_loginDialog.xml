@@ -37,39 +37,42 @@
             <value> <unicode encoding="cdata"><![CDATA[
 
 <div id="login-box">\n
-<table id="field_table">\n
-  <tbody>\n
-    <tr>\n
-     <td>\n
-      <table>\n
-       <tr>\n
-       <td align="center" colspan="2">\n
-        <font size="-1">Login in</font>\n
-       </td>\n
-       </tr>\n
-       <tr></tr>\n
-    <tr>\n
-      <td>\n
-        <label for="name">Name:</label>\n
-      </td>\n
-      <td>\n
-        <input type="text" name="__ac_name" id="name" tal:attributes="value python: request.get(\'__ac_name\') or \'\'" />\n
-      </td>\n
-    </tr>\n
-    <tr>\n
-      <td>\n
-        <label for="password">Password:</label>\n
-      </td>\n
-      <td>\n
-        <input type="password" name="__ac_password" id="password" />\n
-      </td>\n
-    </tr>\n
-    <td align="center" colspan="2">\n
-      <input type="submit" name="logged_in:method" class="submit" value="Sign In">\n
-    </td>\n
-    </tr>\n
-</tbody>\n
-</table>\n
+  <table id="field_table">\n
+    <tbody>\n
+      <tr>\n
+       <td>\n
+        <table>\n
+          <tr>\n
+            <td align="center" colspan="2"><font size="-1">Login in</font></td>\n
+          </tr>\n
+          <tr></tr>\n
+          <tr>\n
+            <td><label for="name">Name:</label></td>\n
+            <td><input type="text" name="__ac_name" id="name" tal:attributes="value python: request.get(\'__ac_name\') or \'\'" /></td>\n
+          </tr>\n
+          <tr>\n
+            <td><label for="password">Password:</label></td>\n
+            <td><input type="password" name="__ac_password" id="password" /></td>\n
+          </tr>\n
+          <td align="center" colspan="2"><input type="submit" name="logged_in:method" class="submit" value="Sign In"></td>\n
+      </tr>\n
+    </tbody>\n
+  </table>\n
+  <p>\n
+  <table id="new-account-table">\n
+    <tbody>\n
+      <tr>\n
+       <td>\n
+        <table width="100%">\n
+          <tr>\n
+            <td align="center" colspan="2"><b>Don\'t have an UNG Account?</b></td>\n
+          </tr>\n
+          <tr>\n
+            <td id="new-account-form" align="center" colspan="2">Create an account now</td>\n
+          </tr>\n
+      </tr>\n
+    </tbody>\n
+  </table>\n
 </div>
 
 ]]></unicode> </value>

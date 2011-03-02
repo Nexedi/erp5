@@ -105,6 +105,7 @@ function changeCheckBoxValue(value){\n
 }\n
 \n
 function displayLoginForm(){\n
+  $("a.ung_docs, img[alt=\'calendar_logo_box\']").hide();\n
   $("div.header-left div.field input, div.main-right, div.main-left").hide();\n
   if ($("div#login_form").html() == null){\n
     $.get("WebSection_loginDialog", function(data){\n
