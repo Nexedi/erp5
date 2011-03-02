@@ -47,9 +47,9 @@
  <tal:block tal:condition="python:not here.portal_membership.isAnonymousUser()">\n
    <a tal:content="here/portal_membership/getAuthenticatedMember"/>\n
  </tal:block>\n
- | <a id="settings" href="#">Settings</a> | <a id="help" href="#">Help</a>\n
  <tal:block tal:condition="python: not here.portal_membership.isAnonymousUser()">\n
-   | <a tal:attributes="href string:${portal_path}/WebSite_logout">Sign out</a>\n
+   | <a id="settings" href="#">Settings</a> | <a id="help" href="#">Help</a> |\n
+   <a tal:attributes="href string:${portal_path}/WebSite_logout">Sign out</a>\n
  </tal:block>\n
 </tal:block>
 
