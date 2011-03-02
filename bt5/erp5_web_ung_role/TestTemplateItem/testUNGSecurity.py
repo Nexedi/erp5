@@ -135,9 +135,8 @@ class TestUNGSecurity(ERP5TypeTestCase):
     assignment.open()
     self.stepTic()
     self.logout()
-    self.assertRaises(Unauthorized,
-                      self.portal.Base_updateCalendarEventList,
-                      ("list"))
+    self.assertEquals('{"events": []}',
+                      self.portal.Base_updateCalendarEventList("list"))
     self.login("ung_user")
     event_list = json.loads(self.portal.Base_updateCalendarEventList("list"))
     self.assertEquals(event_list.get("events"), [])
@@ -174,4 +173,17 @@ class TestUNGSecurity(ERP5TypeTestCase):
     self.stepTic()
     web_message = self.portal.portal_catalog.getResultValue(portal_type="Web Message")
     self.assertEquals(web_message, None)
-    
+  
+  def testERPSite_createUNGUser(self):
+    """Test if is possible create one user as Anonymous user"""
+    self.logout()
+    form_dict = dict(firstname="My First Name",
+                     lastname="My Last Name",
+                     password="ung_password")
+    self.portal.REQUEST.form.update(form_dict)
+    self.portal.ERPSite_createUNGUser()
+    self.stepTic()
+    self.login("ERP5TypeTestCase")
+    person = self.portal.portal_catalog.getResultValue(portal_type="Person")
+    self.assertEquals(person.getLastName(), "My Last Name")
+    self.assertEquals(person.getValidationState(), "validated")
