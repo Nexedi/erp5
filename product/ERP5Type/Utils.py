@@ -2948,6 +2948,33 @@ def createTranslationLanguageAccessors(property_holder, property,
       property_holder.declareProtected(accessor_dict['permission'],
                                        accessor_name)
 
+from zope.tales.tales import CompilerError
+
+def evaluateExpressionFromString(expression_context, expression_string):
+  """
+  Evaluate a TALES Expression from the given string with the given
+  Expression context (as returned by createExpressionContext for
+  instance).
+
+  Any exception normally raised when parsing and evaluating a TALES
+  Expression is re-raised as a ValueError.
+
+  @param expression_context: Expression context
+  @type expression_context: Products.PageTemplates.Expressions.ZopeContext
+  @param expression_string: TALES Expression string to evaluate
+  @type expression_string: str
+  """
+  if expression_string is None:
+    return None
+
+  try:
+    return Expression(expression_string)(expression_context)
+  # An AttributeError is raised when instanciating an Expression
+  # class, and CompilerError and ValueError are raised in case of
+  # error when evaluation the expression
+  except (AttributeError, CompilerError, ValueError), e:
+    raise ValueError("Error in TALES expression: '%s': %s" % (expression_string,
+                                                              str(e)))
 
 #####################################################
 # More Useful methods which require Base
