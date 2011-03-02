@@ -106,7 +106,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
             <div tal:omit-tag=""\n
               tal:define="struct python:field.render(value,request)">\n
               <div tal:omit-tag=""\n
-                    tal:define="struct python:struct.replace(\'&nbsp;\',\'\');\n
+                    tal:define="struct python:struct.replace(\'&nbsp\'+chr(59),\'\');\n
                                 struct_input_div python:struct.split(\'<input\');\n
                                 struct_input_len python:len(struct_input_div);\n
                                 struct_input_range python:range(struct_input_len);\n
