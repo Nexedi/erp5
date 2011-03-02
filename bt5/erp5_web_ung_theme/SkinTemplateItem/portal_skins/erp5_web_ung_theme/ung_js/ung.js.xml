@@ -104,8 +104,20 @@ function changeCheckBoxValue(value){\n
   });\n
 }\n
 \n
+function displayLoginForm(){\n
+  $("div.header-left div.field input, div.main-right, div.main-left").hide();\n
+  if ($("div#login_form").html() == null){\n
+    $.get("WebSection_loginDialog", function(data){\n
+      $("div.header-left fieldset.widget").append("<p>" + data + "</p>")\n
+    });\n
+  }\n
+}\n
+\n
 $().ready(function(){\n
   $("p.clear").remove();\n
+  if ($("a#login").html() != null){\n
+    displayLoginForm();\n
+  }\n
   if ($("div.gadget-column").length == 0 && window.location.href.split("?").length > 1) {\n
     parameterList = getUrlParameterList();\n
     if (parameterList.hasOwnProperty("upload_document") == true){\n
@@ -412,12 +424,7 @@ $().ready(function(){\n
   });\n
   $("a#login").click(function(event){\n
     event.preventDefault();\n
-    $("div.header-left div.field input, div.main-right, div.main-left").hide();\n
-    if ($("div#login_form").html() == null){\n
-      $.get("WebSection_loginDialog", function(data){\n
-        $("div.header-left fieldset.widget").append("<p>" + data + "</p>")\n
-      });\n
-    }\n
+    displayLoginForm();\n
   });\n
   $("input.listbox-check-all").click(function(event){\n
     event.preventDefault();\n
