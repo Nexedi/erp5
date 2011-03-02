@@ -28,9 +28,11 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.Expression import Expression
-
+from zLOG import LOG, INFO
+from Products.ERP5Type.Utils import evaluateExpressionFromString
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Core.CategoryProperty import CategoryProperty
+from Products.ERP5Type.Core.StandardProperty import StandardProperty
 
 class DynamicCategoryProperty(CategoryProperty):
   """
@@ -48,6 +50,7 @@ class DynamicCategoryProperty(CategoryProperty):
   property_sheets = (PropertySheet.SimpleItem,
                      PropertySheet.DynamicCategoryProperty)
 
+  # TODO: REMOVE
   security.declareProtected(Permissions.AccessContentsInformation,
                             'exportToFilesystemDefinition')
   def exportToFilesystemDefinition(self):
@@ -73,15 +76,19 @@ class DynamicCategoryProperty(CategoryProperty):
   security.declareProtected(Permissions.AccessContentsInformation,
                             'applyOnAccessorHolder')
   def applyOnAccessorHolder(self, accessor_holder, expression_context, portal):
-    expression_string = self.getCategoryExpression()
-    if expression_string is not None:
-      expression = Expression(expression_string)
-      value = expression(expression_context)
+    category_id_list = evaluateExpressionFromString(expression_context,
+                                                    self.getCategoryExpression())
 
-      category_tool = getattr(portal, 'portal_categories', None)
-      if not isinstance(value, (tuple, list)):
-        value = [value]
-      for category_id in value:
-        self.applyPropertyOnAccessorHolder(accessor_holder,
-                                           category_id,
-                                           category_tool)
+    if not isinstance(category_id_list, (tuple, list)):
+      category_id_list = [category_id_list]
+
+    for category_id in category_id_list:
+      try:
+        self.applyDefinitionOnAccessorHolder(accessor_holder,
+                                             category_id,
+                                             portal)
+      except ValueError, e:
+        # If one of the category defined is invalid, don't give up as
+        # the other ones may be fine
+        LOG("ERP5Type.Core.DynamicCategoryProperty", INFO,
+            "Invalid category: %s" % str(e))
