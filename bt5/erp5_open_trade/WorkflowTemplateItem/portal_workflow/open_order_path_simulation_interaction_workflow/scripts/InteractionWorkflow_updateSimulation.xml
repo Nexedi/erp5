@@ -56,7 +56,7 @@ open_order_type_list = state_change.getPortal().getPortalOpenOrderTypeList()\n
 def getOpenOrder(path):\n
   if path.getPortalType() in open_order_type_list:\n
      return path\n
-  return path.getParentValue()\n
+  return getOpenOrder(path.getParentValue())\n
 \n
 getOpenOrder(path).OpenOrder_updateSimulation()\n
 </string> </value>
