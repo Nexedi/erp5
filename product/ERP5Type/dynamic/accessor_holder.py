@@ -337,20 +337,19 @@ def applyCategoryAsRelatedValueAccessor(accessor_holder,
   else:
     read_permission = Permissions.AccessContentsInformation
 
-  uppercase_id = UpperCase(category_id)
+  uppercase_category_id = UpperCase(category_id)
 
   # two special cases
-  accessor_name = uppercase_id[0].lower() + uppercase_id[1:]
-  accessor = RelatedValue.ListGetter(accessor_name + 'RelatedValues', id)
+  accessor_name = uppercase_category_id[0].lower() + uppercase_category_id[1:]
+  accessor = RelatedValue.ListGetter(accessor_name + 'RelatedValues', category_id)
   accessor_holder.registerAccessor(accessor, read_permission)
-  accessor = RelatedValue.IdListGetter(accessor_name + 'RelatedIds', id)
+  accessor = RelatedValue.IdListGetter(accessor_name + 'RelatedIds', category_id)
   accessor_holder.registerAccessor(accessor, read_permission)
 
   for accessor_class, accessor_name_list in related_accessor_definition_dict.items():
     for accessor_name in accessor_name_list:
-      accessor = accessor_class(accessor_name % uppercase_id, id)
+      accessor = accessor_class(accessor_name % uppercase_category_id, category_id)
       accessor_holder.registerAccessor(accessor, read_permission)
-
 
 def getPropertySheetValueList(site, property_sheet_name_set):
   try:
