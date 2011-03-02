@@ -51,6 +51,7 @@ class CategoryProperty(IdAsReferenceMixin('_category'), XMLObject):
   property_sheets = (PropertySheet.SimpleItem,
                      PropertySheet.Reference)
 
+  # TODO: REMOVE
   security.declareProtected(Permissions.AccessContentsInformation,
                             'exportToFilesystemDefinition')
   def exportToFilesystemDefinition(self):
@@ -143,20 +144,22 @@ class CategoryProperty(IdAsReferenceMixin('_category'), XMLObject):
   }
 
   @classmethod
-  def applyPropertyOnAccessorHolder(cls,
-                                    accessor_holder,
-                                    category_id,
-                                    category_tool):
-    if category_tool is None:
-      return
+  def applyDefinitionOnAccessorHolder(cls,
+                                      accessor_holder,
+                                      category_id,
+                                      portal):
+    try:
+      cat_object = portal.portal_categories._getOb(category_id)
+    except AttributeError:
+      if portal.hasObject('portal_categories'):
+        LOG("ERP5Type.Core.CategoryProperty", WARNING,
+            "Base Category %r is missing. Accessors can not be generated." % \
+              category_id)
 
-    cat_object = category_tool.get(category_id, None)
-    if cat_object is None:
-      LOG("ERP5Type.Core.CategoryProperty", WARNING,
-          "Base Category %r is missing. Accessors can not be generated." % \
-          category_id)
-
       return
+    except TypeError:
+      # category_id is None
+      raise ValueError("Invalid category reference")
 
     # Create free text accessors.
     # XXX These are only for backward compatibility.
@@ -171,11 +174,16 @@ class CategoryProperty(IdAsReferenceMixin('_category'), XMLObject):
                      'property_default': '',
                      'multivalued': False,
                      'storage_id': storage_id,
+                     'range': False,
+                     'translatable': False,
+                     'description': 'free text to specify %s' % category_id,
                      'read_permission': Permissions.AccessContentsInformation,
                      'write_permission': Permissions.ModifyPortalContent}
 
-    StandardProperty._applyOnAccessorHolder(property_dict, accessor_holder,
-                                            category_tool.getPortalObject())
+    StandardProperty.applyDefinitionOnAccessorHolder(property_dict,
+                                                     accessor_holder,
+                                                     portal,
+                                                     do_register=False)
 
     # Get read and write permission
     read_permission = Permissions.__dict__.get(cat_object.getReadPermission(),
@@ -226,8 +234,6 @@ class CategoryProperty(IdAsReferenceMixin('_category'), XMLObject):
   security.declareProtected(Permissions.AccessContentsInformation,
                             'applyOnAccessorHolder')
   def applyOnAccessorHolder(self, accessor_holder, expression_context, portal):
-    reference = self.getReference()
-    if reference is not None:
-      self.applyPropertyOnAccessorHolder(accessor_holder,
-                                         reference,
-                                         getattr(portal, 'portal_categories', None))
+    self.applyDefinitionOnAccessorHolder(accessor_holder,
+                                         self.getReference(),
+                                         portal)
