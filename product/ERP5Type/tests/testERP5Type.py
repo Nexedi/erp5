@@ -3076,6 +3076,9 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.assertEqual([], non_unique_property_id_list)
 
 class TestInstanceBaseCategoryList(ERP5TypeTestCase):
+  def getBusinessTemplateList(self):
+    return 'erp5_base',
+
   def test_getInstanceBaseCategoryList(self):
     portal = self.getPortalObject()
     person_portal_type = self.portal.portal_types['Person']
