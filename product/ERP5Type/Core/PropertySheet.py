@@ -227,6 +227,11 @@ class PropertySheet(Folder):
         property_definition_list.append(property_definition)
 
     for property_definition in property_definition_list:
-      property_definition.applyOnAccessorHolder(accessor_holder,
-                                                expression_context,
-                                                portal)
+      try:
+        property_definition.applyOnAccessorHolder(accessor_holder,
+                                                  expression_context,
+                                                  portal)
+      except ValueError, e:
+        LOG("ERP5Type.Core.PropertySheet", INFO,
+            "Invalid property '%s' for Property Sheet '%s': %s" % \
+            (property_definition.getId(), self.getId(), str(e)))
