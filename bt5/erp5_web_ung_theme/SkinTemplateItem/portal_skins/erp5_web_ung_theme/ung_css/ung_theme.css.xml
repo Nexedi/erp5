@@ -850,15 +850,20 @@ iframe#field_my_text_content___Frame {\n
   height: 489px !important;\n
 }\n
 \n
-div#login_form {\n
+div#login-box {\n
   font-family: Arial,Helvetica,sans-serif;\n
   font-size: 12px;\n
   margin: 0;\n
-  padding: 0;\n
+  padding: 0 23px 0 0;\n
+  float:right;\n
 }\n
 \n
-div#login_form input {\n
+div#login-box input {\n
   vertical-align: middle; \n
+}\n
+\n
+div#login-box input.submit {\n
+  margin-top: 6px;\n
 }\n
 \n
 div#preference_dialog {\n
@@ -1029,7 +1034,19 @@ div#preference_dialog select{\n
 }\n
 \n
 a.your_listbox_title {\n
-  display: none\n
+  display: none;\n
+}\n
+\n
+div#login-box table#field_table {\n
+  border: 1px solid #C3D9FF;\n
+}\n
+\n
+div#login-box table#field_table tbody {\n
+  background: #E8EEFA;\n
+}\n
+\n
+div#login-box table#field_table tbody label {\n
+  font-size: 10pt;\n
 }
 
 ]]></string> </value>
