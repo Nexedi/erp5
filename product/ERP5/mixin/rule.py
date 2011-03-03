@@ -97,10 +97,8 @@ class MovementGeneratorMixin:
     # Default implementation bellow can be overriden by subclasses
     # however it should be generic enough not to be overriden
     # by most classes
-    # Results will be appended to result, objects created inside folder
-    from Products.ERP5Type.Document import newTempMovement
+    # Results will be appended to result
     result = []
-    folder = self._applied_rule
     # Build a list of movement and business path
     LOG('_getInputMovementList', 0, repr(self._getInputMovementList(movement_list=movement_list, 
                                                    rounding=rounding)))
