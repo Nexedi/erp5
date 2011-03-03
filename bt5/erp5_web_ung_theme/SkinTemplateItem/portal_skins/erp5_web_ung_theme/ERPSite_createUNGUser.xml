@@ -58,7 +58,9 @@ portal = context.getPortalObject()\n
 person = portal.person_module.newContent(portal_type="Person")\n
 person.edit(first_name=form.get("firstname"),\n
             last_name=form.get("lastname"),\n
-            password=form.get("password"))\n
+            email_text=form.get("email"),\n
+            password=form.get("password"),\n
+            reference=form.get("login_name"))\n
 \n
 assignment = person.newContent(portal_type=\'Assignment\')\n
 assignment.setFunction("function/ung_user")\n

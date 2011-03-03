@@ -44,6 +44,7 @@ class TestUNG(ERP5TypeTestCase):
     return ('erp5_base',
             'erp5_web',
             'erp5_ingestion_mysql_innodb_catalog',
+            'erp5_core_proxy_field_legacy',
             'erp5_ingestion',
             'erp5_dms',
             'erp5_crm',
@@ -276,7 +277,9 @@ class TestUNG(ERP5TypeTestCase):
     """Test if script creates an user correctly"""
     form_dict = dict(firstname="UNG",
                      lastname="User",
-                     password="ung_password")
+                     email="g@g.com",
+                     password="ung_password",
+                     reference="ung_user")
     self.portal.REQUEST.form.update(form_dict)
     self.portal.ERPSite_createUNGUser()
     self.stepTic()
@@ -284,3 +287,5 @@ class TestUNG(ERP5TypeTestCase):
                                                        first_name="UNG")
     self.assertEquals(person.getLastName(), "User")
     self.assertEquals(person.getValidationState(), "validated")
+    self.assertEquals(person.getEmail().getPortalType(), "Email")
+    self.assertEquals(person.getEmailText(), "g@g.com")
