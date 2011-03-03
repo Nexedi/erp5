@@ -238,7 +238,7 @@ def generatePortalTypeClass(site, portal_type_name):
 
   #LOG("ERP5Type.dynamic", INFO,
   #    "Portal type %s loaded with bases %s" \
-  #        % (portal_type_name, repr(baseclasses)))
+  #        % (portal_type_name, repr(base_class_list)))
 
   return (tuple(base_class_list),
           portal_type_category_list,
@@ -393,6 +393,12 @@ def synchronizeDynamicModules(context, force=False):
     for name in erp5.accessor_holder.portal_type.__dict__.keys():
       if name[0] != '_':
         delattr(erp5.accessor_holder.portal_type, name)
+
+  except Exception:
+    # Allow easier debugging when the code is wrong as this exception
+    # is catched later and re-raised as a BadRequest
+    import traceback; traceback.print_exc()
+    raise
 
   finally:
     Base.aq_method_lock.release()
