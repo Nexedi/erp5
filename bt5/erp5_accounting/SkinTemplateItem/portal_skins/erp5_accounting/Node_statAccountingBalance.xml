@@ -153,7 +153,7 @@ if params.get(\'period_start_date\', 0) and params.get(\'node_uid\'):\n
     return getInventoryAssetPrice(\n
            from_date=period_start_date,\n
            at_date=at_date,\n
-           **params) - max(-period_openning_balance, 0)\n
+           **params) + period_openning_balance\n
 \n
 return getInventoryAssetPrice(\n
               omit_asset_increase=omit_asset_increase,\n
