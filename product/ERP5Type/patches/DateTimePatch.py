@@ -34,6 +34,8 @@ SyntaxError, DateError, TimeError, localtime, time
 
 STATE_KEY = 'str'
 
+original_DateTime__setstate__ = DateTimeKlass.__setstate__
+
 def DateTime__setstate__(self, state):
   self.__dict__.clear()
   if isinstance(state, tuple):
@@ -45,7 +47,7 @@ def DateTime__setstate__(self, state):
     self._parse_args(yr, mo, dy, hr, mn, sc, tz, t, d, s)
   elif len(state) != 1 or STATE_KEY not in state:
     # For original pickle representation
-    self.__dict__.update(state)
+    original_DateTime__setstate__(self, state)
   else:
     # For r15569 implementation
     self._parse_args(state[STATE_KEY])
