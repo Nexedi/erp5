@@ -35,6 +35,7 @@ SyntaxError, DateError, TimeError, localtime, time
 STATE_KEY = 'str'
 
 def DateTime__setstate__(self, state):
+  self.__dict__.clear()
   if isinstance(state, tuple):
     t, tz = state
     ms = (t - math.floor(t))
