@@ -159,6 +159,15 @@ div.main-right span#add-cc-field,\n
   color: #20C;\n
   text-decoration: underline;\n
   cursor: pointer;\n
+}\n
+\n
+a.email {\n
+  color: #000;\n
+  text-decoration: none;\n
+}\n
+\n
+div.header-left {\n
+    margin-top: -9px !important;\n
 }</string> </value>
         </item>
         <item>

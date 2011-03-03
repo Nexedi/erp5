@@ -1069,7 +1069,16 @@ td#new-account-form {\n
 \n
 table#create-new-user {\n
   display:none;\n
-  margin-top: -14px;\n
+  margin-top: -22px;\n
+}\n
+\n
+td#form-message {\n
+  color: #EC1D1D;\n
+  display: none;\n
+}\n
+\n
+div#advertisement h2 {\n
+  font-size: 15pt;\n
 }
 
 ]]></string> </value>

@@ -286,6 +286,11 @@ td.cb-value select {\n
 .ui-datepicker .ui-datepicker-prev:hover, .ui-datepicker .ui-datepicker-next:hover {\n
   background: transparent;\n
   border: 1px solid #FFF;\n
+}\n
+\n
+a.calendar {\n
+  color: #000;\n
+  text-decoration: none;\n
 }</string> </value>
         </item>
         <item>
