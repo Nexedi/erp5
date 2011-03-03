@@ -73,11 +73,7 @@ instance_hosting_sale_packing_list_line = sale_packing_list.newContent(\n
   portal_type=\'Sale Packing List Line\',\n
   resource=service_relative_url,\n
   quantity=instance_setup_sale_packing_list_line.getQuantity(),\n
-  aggregate_value_list=[\n
-    software_instance,\n
-    instance_setup_sale_packing_list_line.getAggregateValue(portal_type=\'Software Release\'),\n
-    instance_setup_sale_packing_list_line.getAggregateValue(portal_type=[\'Computer Partition\', \'Slave Partition\']),\n
-    instance_setup_sale_packing_list_line.getAggregateValue(portal_type=\'Hosting Subscription\'),]\n
+  aggregate_list=instance_setup_sale_packing_list_line.getAggregateList(),\n
 )\n
 return sale_packing_list\n
 </string> </value>
