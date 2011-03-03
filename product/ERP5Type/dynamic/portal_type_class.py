@@ -382,23 +382,24 @@ def synchronizeDynamicModules(context, force=False):
       _bootstrapped.add(portal.id)
 
     LOG("ERP5Type.dynamic", 0, "Resetting dynamic classes")
-    for class_name, klass in inspect.getmembers(erp5.portal_type,
-                                                inspect.isclass):
-      klass.restoreGhostState()
+    try:
+      for class_name, klass in inspect.getmembers(erp5.portal_type,
+                                                  inspect.isclass):
+        klass.restoreGhostState()
 
-    # Clear accessor holders of ZODB Property Sheets and Portal Types
-    erp5.accessor_holder.clear()
-    erp5.accessor_holder.property_sheet.clear()
+      # Clear accessor holders of ZODB Property Sheets and Portal Types
+      erp5.accessor_holder.clear()
+      erp5.accessor_holder.property_sheet.clear()
 
-    for name in erp5.accessor_holder.portal_type.__dict__.keys():
-      if name[0] != '_':
-        delattr(erp5.accessor_holder.portal_type, name)
+      for name in erp5.accessor_holder.portal_type.__dict__.keys():
+        if name[0] != '_':
+          delattr(erp5.accessor_holder.portal_type, name)
 
-  except Exception:
-    # Allow easier debugging when the code is wrong as this exception
-    # is catched later and re-raised as a BadRequest
-    import traceback; traceback.print_exc()
-    raise
+    except Exception:
+      # Allow easier debugging when the code is wrong as this
+      # exception is catched later and re-raised as a BadRequest
+      import traceback; traceback.print_exc()
+      raise
 
   finally:
     Base.aq_method_lock.release()
