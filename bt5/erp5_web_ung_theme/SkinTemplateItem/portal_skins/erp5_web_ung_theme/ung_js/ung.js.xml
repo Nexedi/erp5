@@ -104,22 +104,51 @@ function changeCheckBoxValue(value){\n
   });\n
 }\n
 \n
+function waitCreateUNGUser(paramStr){\n
+  $.get("ERP5Site_getUserValidationState?" + paramStr, {}, function(data, textStatus, XMLHttpRequest){\n
+     data = jQuery.parseJSON(data);\n
+     if (data.response == true){\n
+       clearTimeout();\n
+       setTimeout(window.location.reload(), 2000);\n
+     }\n
+     else {\n
+       setTimeout(waitCreateUNGUser(paramStr), 2000);\n
+     }\n
+  });\n
+}\n
+\n
 function displayLoginForm(){\n
-  $("a.ung_docs, img[alt=\'calendar_logo_box\'], table#create-new-user").hide();\n
+  $("a.ung_docs, img[alt=\'calendar_logo_box\'], table#create-new-user, img[alt=\'mail_logo_box\']").hide();\n
   $("div.header-left div.field input, div.main-right, div.main-left").hide();\n
   $.get("WebSection_loginDialog", function(data){\n
     $("div.header-left fieldset.widget").append("<p>" + data + "</p>");\n
     $("td#new-account-form").click(function(event){\n
       $("table#field_table, table#new-account-table").hide();\n
+      $("table#create-new-user input[type=\'text\'], table#create-new-user input[type=\'password\']").each(function(){\n
+        $(this).attr("value", "");\n
+      });\n
       $("table#create-new-user").show();\n
       $("form#create-user").submit(function(event){\n
         event.preventDefault();\n
+        var formHash = {};\n
+        var paramList = $("form#create-user").serializeArray();\n
+        for (var i=0; i < paramList.length; i++){\n
+          formHash[paramList[i].name] = paramList[i].value;\n
+        }\n
+        if (formHash.password != formHash.confirm){\n
+          $("td#form-message").text("Please confirm your password correctly..");\n
+          $("td#form-message").fadeIn(300).delay(800).fadeOut(1000);\n
+          return false;\n
+        }\n
         $.ajax({\n
           type: \'post\',\n
           url: \'ERPSite_createUNGUser\',\n
           data: $("form#create-user").serializeArray(),\n
           dataType: "json",\n
         });\n
+        var paramStr = "first_name=" + formHash.firstname +\n
+                       "&" + "last_name=" + formHash.lastname;\n
+        setTimeout(waitCreateUNGUser(paramStr), 2000);\n
       });\n
     });\n
   });\n
@@ -469,6 +498,10 @@ $().ready(function(){\n
     $("div.header-right").css("width", "52.3%");\n
   };\n
   $("a.tree-open").parent().parent().css("background-color", "#BBCCFF");\n
+  if (window.location.href.match("^http.*\\/unfoldDomain") != null){\n
+    $("a.document").css("text-decoration", "none")\n
+                   .css("color", "#000");\n
+  }\n
   return false;\n
 });
 
