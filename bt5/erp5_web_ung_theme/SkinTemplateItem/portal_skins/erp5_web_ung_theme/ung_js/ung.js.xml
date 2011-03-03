@@ -117,12 +117,13 @@ function waitCreateUNGUser(paramStr){\n
   });\n
 }\n
 \n
-function displayLoginForm(){\n
+function displayLoginForm(){  \n
   $("a.ung_docs, img[alt=\'calendar_logo_box\'], table#create-new-user, img[alt=\'mail_logo_box\']").hide();\n
   $("div.header-left div.field input, div.main-right, div.main-left").hide();\n
   $.get("WebSection_loginDialog", function(data){\n
     $("div.header-left fieldset.widget").append("<p>" + data + "</p>");\n
     $("td#new-account-form").click(function(event){\n
+      $("div#login-box").css("width", "30%");\n
       $("table#field_table, table#new-account-table").hide();\n
       $("table#create-new-user input[type=\'text\'], table#create-new-user input[type=\'password\']").each(function(){\n
         $(this).attr("value", "");\n
@@ -469,6 +470,7 @@ $().ready(function(){\n
       displayLoginForm();\n
     }\n
     if ($("table#create-new-user").css("display") != "none"){\n
+      $("div#login-box").css("width", "23%");\n
       $("table#create-new-user").hide();\n
       $("table#field_table, table#new-account-table").show();\n
     }\n

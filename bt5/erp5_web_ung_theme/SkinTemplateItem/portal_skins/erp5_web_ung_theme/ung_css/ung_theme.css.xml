@@ -856,6 +856,7 @@ div#login-box {\n
   margin: 0;\n
   padding: 23px 23px 0 0;\n
   float:right;\n
+  width: 23%;\n
 }\n
 \n
 div#login-box input {\n

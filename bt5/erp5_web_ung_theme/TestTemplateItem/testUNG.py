@@ -283,7 +283,7 @@ class TestUNG(ERP5TypeTestCase):
                      lastname="User",
                      email="g@g.com",
                      password="ung_password",
-                     reference="ung_user")
+                     login_name="ung_user")
     self.portal.REQUEST.form.update(form_dict)
     self.portal.ERPSite_createUNGUser()
     self.stepTic()
@@ -293,6 +293,7 @@ class TestUNG(ERP5TypeTestCase):
     self.assertEquals(person.getValidationState(), "validated")
     self.assertEquals(person.getEmail().getPortalType(), "Email")
     self.assertEquals(person.getEmailText(), "g@g.com")
+    self.assertEquals(person.getReference(), "ung_user")
 
   def testERP5Site_getUserValidationState(self):
     """Test script ERP5Site_getUserValidationState"""
@@ -300,11 +301,12 @@ class TestUNG(ERP5TypeTestCase):
     form_dict = dict(firstname="UNG",
                      lastname="User",
                      email="g@g.com",
-                     reference="ung_reference")
+                     login_name="ung_reference")
     portal.REQUEST.form.update(form_dict)
     portal.ERPSite_createUNGUser()
     kw = dict(first_name=form_dict["firstname"],
               last_name=form_dict["lastname"],
+              reference=form_dict["login_name"],
              )
     response = json.loads(portal.ERP5Site_getUserValidationState(**kw))
     self.assertEquals(response.get("response"), False)
@@ -316,3 +318,6 @@ class TestUNG(ERP5TypeTestCase):
              )
     response = json.loads(portal.ERP5Site_getUserValidationState(**kw))
     self.assertEquals(response.get("response"), False)
+    self.login("ung_reference")
+    user = portal.ERP5Site_getAuthenticatedMemberPersonValue()
+    self.assertEquals(user.getFirstName(), "UNG")
