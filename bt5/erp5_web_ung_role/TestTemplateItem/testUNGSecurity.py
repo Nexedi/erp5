@@ -41,6 +41,7 @@ class TestUNGSecurity(ERP5TypeTestCase):
     return ('erp5_base',
             'erp5_web',
             'erp5_ingestion_mysql_innodb_catalog',
+            'erp5_core_proxy_field_legacy',
             'erp5_ingestion',
             'erp5_dms',
             'erp5_crm',
