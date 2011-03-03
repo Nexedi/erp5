@@ -38,7 +38,7 @@ class SpecialiseEquivalenceTester(CategoryMembershipEquivalenceTester):
   meta_type = 'ERP5 Specialise Equivalence Tester'
   portal_type = 'Specialise Equivalence Tester'
 
-  tested_property = 'specialise'
+  tested_property = ('specialise',)
 
   @staticmethod
   def _getTestedPropertyValue(movement, property):
