@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>acquisition_portal_type</string> </key>
-            <value> <string>python: list( portal.getPortalAcquisitionMovementTypeList() + portal.getPortalItemTypeList() + portal.getPortalDeliveryTypeList() + portal.getPortalOrderTypeList() + portal.getPortalInvoiceTypeList() + portal.getPortalSupplyTypeList() + portal.getPortalSupplyPathTypeList() + portal.getPortalProjectTypeList())</string> </value>
+            <value> <string>python: list( portal.getPortalAcquisitionMovementTypeList() + portal.getPortalItemTypeList() + portal.getPortalDeliveryTypeList() + portal.getPortalOrderTypeList() + portal.getPortalInvoiceTypeList() + portal.getPortalSupplyTypeList() + portal.getPortalSupplyPathTypeList() + portal.getPortalProjectTypeList() + portal.getPortalOpenOrderTypeList())</string> </value>
         </item>
         <item>
             <key> <string>acquisition_sync_value</string> </key>
