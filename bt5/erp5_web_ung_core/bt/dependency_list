@@ -1,4 +1,5 @@
 erp5_ingestion_mysql_innodb_catalog
+erp5_core_proxy_field_legacy
 erp5_web
 erp5_dms
 erp5_jquery_sheet_editor
