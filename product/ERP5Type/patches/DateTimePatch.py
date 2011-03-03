@@ -34,7 +34,14 @@ SyntaxError, DateError, TimeError, localtime, time
 
 STATE_KEY = 'str'
 
-original_DateTime__setstate__ = DateTimeKlass.__setstate__
+try:
+  original_DateTime__setstate__ = DateTimeKlass.__setstate__
+except AttributeError:
+  # BBB: Running on Zope < 2.11
+  def original_DateTime__setstate__(self, state):
+    dikt = self.__dict__
+    dikt.clear()
+    dikt.update(state)
 
 def DateTime__setstate__(self, state):
   self.__dict__.clear()
