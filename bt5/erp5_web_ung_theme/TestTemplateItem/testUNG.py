@@ -69,6 +69,10 @@ class TestUNG(ERP5TypeTestCase):
             'erp5_web_ung_core',
             'erp5_web_ung_theme',)
 
+  def afterSetUp(self):
+    """Clean up form"""
+    self.portal.REQUEST.form.clear()
+
   def assertCreateDocumentUsingTemplate(self, template, **kw):
     web_page_module = self.portal.web_page_module
     self.portal.ERP5Site_createNewWebDocument(template)
@@ -289,3 +293,26 @@ class TestUNG(ERP5TypeTestCase):
     self.assertEquals(person.getValidationState(), "validated")
     self.assertEquals(person.getEmail().getPortalType(), "Email")
     self.assertEquals(person.getEmailText(), "g@g.com")
+
+  def testERP5Site_getUserValidationState(self):
+    """Test script ERP5Site_getUserValidationState"""
+    portal = self.portal
+    form_dict = dict(firstname="UNG",
+                     lastname="User",
+                     email="g@g.com",
+                     reference="ung_reference")
+    portal.REQUEST.form.update(form_dict)
+    portal.ERPSite_createUNGUser()
+    kw = dict(first_name=form_dict["firstname"],
+              last_name=form_dict["lastname"],
+             )
+    response = json.loads(portal.ERP5Site_getUserValidationState(**kw))
+    self.assertEquals(response.get("response"), False)
+    self.stepTic()
+    response = json.loads(portal.ERP5Site_getUserValidationState(**kw))
+    self.assertEquals(response.get("response"), True)
+    kw = dict(first_name="Not Exist",
+              reference="no_reference",
+             )
+    response = json.loads(portal.ERP5Site_getUserValidationState(**kw))
+    self.assertEquals(response.get("response"), False)
