@@ -36,6 +36,9 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
+<div id="advertisement">\n
+<h2>Welcome to UNG Web Office</h2>\n
+</div>\n
 <div id="login-box">\n
   <table id="field_table">\n
     <tbody>\n
@@ -80,6 +83,8 @@
         <td>\n
           <form id="create-user" method="post">\n
             <table width="100%">\n
+              <tr><td align="center" colspan="2"><b>Create an account</b></td></tr>\n
+              <tr><td id="form-message" align="center" colspan="2"></td></tr>\n
               <tr><td>First name:</td><td><input type="text" name="firstname"/></td></tr>\n
               <tr><td>Last name:</td><td><input type="text" name="lastname"/></td></tr>\n
               <tr><td>Email:</td><td><input type="text" name="email"/></td></tr>\n

@@ -55,6 +55,10 @@
 form = context.REQUEST.form\n
 portal = context.getPortalObject()\n
 \n
+if len(portal.portal_catalog(portal_type="Person",\n
+                             reference=form.get("login_name"))):\n
+  return json.dumps(None)\n
+\n
 person = portal.person_module.newContent(portal_type="Person")\n
 person.edit(first_name=form.get("firstname"),\n
             last_name=form.get("lastname"),\n

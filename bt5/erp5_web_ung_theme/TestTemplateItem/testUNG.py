@@ -285,7 +285,8 @@ class TestUNG(ERP5TypeTestCase):
                      password="ung_password",
                      login_name="ung_user")
     self.portal.REQUEST.form.update(form_dict)
-    self.portal.ERPSite_createUNGUser()
+    response = json.loads(self.portal.ERPSite_createUNGUser())
+    self.assertTrue(response)
     self.stepTic()
     person = self.portal.portal_catalog.getResultValue(portal_type="Person",
                                                        first_name="UNG")
@@ -294,6 +295,8 @@ class TestUNG(ERP5TypeTestCase):
     self.assertEquals(person.getEmail().getPortalType(), "Email")
     self.assertEquals(person.getEmailText(), "g@g.com")
     self.assertEquals(person.getReference(), "ung_user")
+    response = json.loads(self.portal.ERPSite_createUNGUser())
+    self.assertEquals(response, None)
 
   def testERP5Site_getUserValidationState(self):
     """Test script ERP5Site_getUserValidationState"""

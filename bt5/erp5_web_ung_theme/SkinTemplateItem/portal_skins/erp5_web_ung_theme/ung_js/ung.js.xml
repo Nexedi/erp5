@@ -109,12 +109,17 @@ function waitCreateUNGUser(paramStr){\n
      data = jQuery.parseJSON(data);\n
      if (data.response == true){\n
        clearTimeout();\n
-       setTimeout(window.location.reload(), 2000);\n
+       window.location.reload();\n
      }\n
      else {\n
        setTimeout(waitCreateUNGUser(paramStr), 2000);\n
      }\n
   });\n
+}\n
+\n
+function displayFormMessage(message){\n
+  $("td#form-message").text(message);\n
+  $("td#form-message").fadeIn(300).delay(800).fadeOut(3000);\n
 }\n
 \n
 function displayLoginForm(){  \n
@@ -137,8 +142,7 @@ function displayLoginForm(){  \n
           formHash[paramList[i].name] = paramList[i].value;\n
         }\n
         if (formHash.password != formHash.confirm){\n
-          $("td#form-message").text("Please confirm your password correctly..");\n
-          $("td#form-message").fadeIn(300).delay(800).fadeOut(1000);\n
+          displayFormMessage("Please confirm your password correctly..");\n
           return false;\n
         }\n
         $.ajax({\n
@@ -146,10 +150,18 @@ function displayLoginForm(){  \n
           url: \'ERPSite_createUNGUser\',\n
           data: $("form#create-user").serializeArray(),\n
           dataType: "json",\n
-        });\n
-        var paramStr = "first_name=" + formHash.firstname +\n
+          success: function(data){\n
+            if (jQuery.parseJSON(data) == null){\n
+              displayFormMessage(formHash.login_name + " is not available, please try another...");\n
+              return false;\n
+            }\n
+            else {\n
+              var paramStr = "first_name=" + formHash.firstname +\n
                        "&" + "last_name=" + formHash.lastname;\n
-        setTimeout(waitCreateUNGUser(paramStr), 2000);\n
+              setTimeout(waitCreateUNGUser(paramStr), 2000);      \n
+            }\n
+          },\n
+        });\n
       });\n
     });\n
   });\n
