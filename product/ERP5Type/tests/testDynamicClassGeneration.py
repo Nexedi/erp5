@@ -1111,5 +1111,4 @@ def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestPortalTypeClass))
   suite.addTest(unittest.makeSuite(TestZodbPropertySheet))
-  suite.addTest(unittest.makeSuite(TestZodbImportFilesystemPropertySheet))
   return suite
