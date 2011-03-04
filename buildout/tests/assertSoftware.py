@@ -2247,7 +2247,7 @@ class AssertStunnel(AssertSoftwareMixin):
 if python_version >= '2.6':
   class AssertPython26(AssertSoftwareMixin):
     # .1 could be read from current buildout
-    parts_name = 'rebootstrap.1.parts'
+    parts_name = 'parts'
     python_path = parts_name + '/python%s' % python_version
     rpath_list = [
         'bzip2',
