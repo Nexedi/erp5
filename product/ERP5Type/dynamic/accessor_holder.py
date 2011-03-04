@@ -303,7 +303,7 @@ def getAccessorHolderList(site, portal_type_name, property_sheet_value_list):
   import erp5.accessor_holder
 
   accessor_holder_list = []
-  tv = getTransactionalVariable()
+  expression_context = None
 
   for property_sheet in property_sheet_value_list:
     # LOG("ERP5Type.dynamic", INFO,
@@ -322,11 +322,8 @@ def getAccessorHolderList(site, portal_type_name, property_sheet_value_list):
                                           property_sheet_name))
     except AttributeError:
       # lazily create the context, only if needed.
-      try:
-        expression_context = tv['accessor_holder_expression_context']
-      except KeyError:
+      if expression_context is None:
         expression_context = createExpressionContext(site)
-        tv['accessor_holder_expression_context'] = expression_context
 
       # Generate the accessor holder as it has not been done yet
       accessor_holder_class = property_sheet.createAccessorHolder(
