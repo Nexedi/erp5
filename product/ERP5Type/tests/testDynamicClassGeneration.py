@@ -270,6 +270,32 @@ class TestPortalTypeClass(ERP5TypeTestCase):
     module_class.loadClass()
     self.assertFalse(issubclass(module_class, Folder))
 
+  def testAttributeValueComputedFromAccessorHolderList(self):
+    """
+    Check that attributes such as constraints and _categories,
+    containing respectively all the constraints and categories define
+    on their Property Sheets, loads the portal type class as some
+    static getters (for example getInstanceBaseCategoryList() use
+    _categories directly)
+    """
+    import erp5.portal_type
+
+    synchronizeDynamicModules(self.portal, force=True)
+    self.assertTrue(erp5.portal_type.Person.__isghost__)
+    self.assertTrue('constraints' not in erp5.portal_type.Person.__dict__)
+
+    getattr(erp5.portal_type.Person, 'constraints')
+    self.assertTrue(not erp5.portal_type.Person.__isghost__)
+    self.assertTrue('constraints' in erp5.portal_type.Person.__dict__)
+
+    synchronizeDynamicModules(self.portal, force=True)
+    self.assertTrue(erp5.portal_type.Person.__isghost__)
+    self.assertTrue('_categories' not in erp5.portal_type.Person.__dict__)
+
+    getattr(erp5.portal_type.Person, '_categories')
+    self.assertTrue(not erp5.portal_type.Person.__isghost__)
+    self.assertTrue('_categories' in erp5.portal_type.Person.__dict__)
+
 class TestZodbPropertySheet(ERP5TypeTestCase):
   """
   XXX: WORK IN PROGRESS

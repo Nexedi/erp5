@@ -99,6 +99,18 @@ class AccessorHolderModuleType(ModuleType):
     """
     for klass in self.__dict__.values():
       if isinstance(klass, AccessorHolderType):
+        # Delete these attributes (computed on the portal type class
+        # from its accessor holder) before deleting the class itself
+        # because a reference on the class will still be kept as bases
+        # of erp5.portal_type, thus this ensures that
+        # erp5.portal_type.Foo will be 'unghost' thanks to
+        # PortalTypeMetaClass.__getattr__
+        for attribute in ('constraints', '_categories'):
+          try:
+            delattr(klass, attribute)
+          except AttributeError:
+            pass
+
         delattr(self, klass.__name__)
 
 def _generateBaseAccessorHolder(portal):

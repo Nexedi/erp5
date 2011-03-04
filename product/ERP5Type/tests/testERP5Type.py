@@ -3075,24 +3075,6 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
         property_id_dict[property_id] = 1
       self.assertEqual([], non_unique_property_id_list)
 
-class TestInstanceBaseCategoryList(ERP5TypeTestCase):
-  def getBusinessTemplateList(self):
-    return 'erp5_base',
-
-  def test_getInstanceBaseCategoryList(self):
-    portal = self.getPortalObject()
-    person_portal_type = self.portal.portal_types['Person']
-    person_category_list = person_portal_type.getInstanceBaseCategoryList()
-    self.assertNotEqual([], list(person_category_list))
-
-  def test_getInstanceBaseCategoryList_afterReset(self):
-    self.getTypesTool().resetDynamicDocumentsOnceAtTransactionBoundary()
-    transaction.commit()
-    portal = self.getPortalObject()
-    person_portal_type = self.portal.portal_types['Person']
-    person_category_list = person_portal_type.getInstanceBaseCategoryList()
-    self.assertNotEqual([], list(person_category_list))
-
 class TestAccessControl(ERP5TypeTestCase):
   # Isolate test in a dedicaced class in order not to break other tests
   # when this one fails.
