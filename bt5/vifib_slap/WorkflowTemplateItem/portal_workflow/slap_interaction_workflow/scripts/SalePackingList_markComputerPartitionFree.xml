@@ -52,52 +52,54 @@
             <key> <string>_body</string> </key>
             <value> <string>from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery, NegatedQuery\n
 \n
-sale_packing_list = state_change[\'object\']\n
-portal = sale_packing_list.getPortalObject()\n
+current_delivery = state_change[\'object\']\n
+portal = current_delivery.getPortalObject()\n
 \n
-destroy_service_relative_url = sale_packing_list.portal_preferences.getPreferredInstanceCleanupResource()\n
+destroy_service_relative_url = portal.portal_preferences.getPreferredInstanceCleanupResource()\n
 \n
-for sale_packing_list_line in sale_packing_list.contentValues(\n
-                                portal_type="Sale Packing List Line"):\n
-  if sale_packing_list_line.getResource() == destroy_service_relative_url:\n
-    computer_partition = sale_packing_list_line.getAggregateValue(portal_type=["Computer Partition", "Slave Partition"])\n
-    if computer_partition is None:\n
-      raise ValueError("Sale Packing List Line \'%s\' should have a computer partition aggregated" % sale_packing_list_line.getRelativeUrl())\n
-    else:\n
-      # Mark computer partition as free\n
-      # This method should be always callable in this step to prevent having 2 packing list related to the same computer partition\n
-      computer_partition.markFree()\n
+sale_packing_list_line_list = current_delivery.contentValues(portal_type="Sale Packing List Line")\n
+assert len(sale_packing_list_line_list) == 1\n
+current_delivery_line = sale_packing_list_line_list[0]\n
+assert current_delivery_line == destroy_service_relative_url\n
 \n
-    # Deliver all SPL related to this software instance\n
-    software_instance = sale_packing_list_line.getAggregateValue(portal_type="Software Instance")\n
-    for sale_packing_list_line in portal.portal_catalog(\n
-      portal_type="Sale Packing List Line", \n
-      default_aggregate_uid=software_instance.getUid(),\n
-      simulation_state=NegatedQuery(Query(simulation_state="delivered")),\n
-      ):\n
-      if sale_packing_list.getPortalObject().portal_workflow.isTransitionPossible(sale_packing_list, \'start\'):\n
-        sale_packing_list.start()\n
-      if sale_packing_list.getPortalObject().portal_workflow.isTransitionPossible(sale_packing_list, \'stop\'):\n
-        sale_packing_list.stop()\n
-      if sale_packing_list.getPortalObject().portal_workflow.isTransitionPossible(sale_packing_list, \'deliver\'):\n
-        sale_packing_list.deliver()\n
-      if sale_packing_list.getSimulationState() != \'delivered\':\n
-        raise ValueError(\'It was not possible to deliver %r during destruction of %r\' (sale_packing_list.getRelativeUrl(), software_instance.getRelativeUrl()))\n
-    # Remove unused open sale order line\n
-    subscription_item = sale_packing_list_line.getAggregateValue(portal_type="Hosting Subscription")\n
-    all_delivered = True\n
-    for sale_packing_list_line in portal.portal_catalog(\n
-      portal_type="Sale Packing List Line", \n
-      default_aggregate_uid=subscription_item.getUid(),\n
-      simulation_state=NegatedQuery(Query(simulation_state="delivered")),\n
-      ):\n
-      if sale_packing_list_line.getSimulationState() != \'delivered\':\n
-        all_delivered = False\n
-    if all_delivered:\n
-      open_order_line = subscription_item.getAggregateRelatedValue(portal_type="Open Sale Order Line")\n
-      if open_order_line is not None:\n
-        # XXX: Mahybe system shall *NOT* work without Open Sale Orders\n
-        open_order_line.getParentValue().manage_delObjects(open_order_line.getId())\n
+computer_partition = current_delivery_line.getAggregateValue(portal_type=["Computer Partition", "Slave Partition"])\n
+if computer_partition is None:\n
+  raise ValueError("Sale Packing List Line \'%s\' should have a computer partition aggregated" % current_delivery_line.getRelativeUrl())\n
+else:\n
+  # Mark computer partition as free\n
+  # This method should be always callable in this step to prevent having 2 packing list related to the same computer partition\n
+  computer_partition.markFree()\n
+\n
+# Deliver all SPL related to this software instance\n
+software_instance = current_delivery_line.getAggregateValue(portal_type="Software Instance")\n
+for sale_packing_list_line in portal.portal_catalog(\n
+  portal_type="Sale Packing List Line", \n
+  default_aggregate_uid=software_instance.getUid(),\n
+  simulation_state=NegatedQuery(Query(simulation_state="delivered")),\n
+  ):\n
+  if sale_packing_list.getPortalObject().portal_workflow.isTransitionPossible(sale_packing_list, \'start\'):\n
+    sale_packing_list.start()\n
+  if sale_packing_list.getPortalObject().portal_workflow.isTransitionPossible(sale_packing_list, \'stop\'):\n
+    sale_packing_list.stop()\n
+  if sale_packing_list.getPortalObject().portal_workflow.isTransitionPossible(sale_packing_list, \'deliver\'):\n
+    sale_packing_list.deliver()\n
+  if sale_packing_list.getSimulationState() != \'delivered\':\n
+    raise ValueError(\'It was not possible to deliver %r during destruction of %r\' (sale_packing_list.getRelativeUrl(), software_instance.getRelativeUrl()))\n
+# Remove unused open sale order line\n
+subscription_item = sale_packing_list_line.getAggregateValue(portal_type="Hosting Subscription")\n
+all_delivered = True\n
+for sale_packing_list_line in portal.portal_catalog(\n
+  portal_type="Sale Packing List Line", \n
+  default_aggregate_uid=subscription_item.getUid(),\n
+  simulation_state=NegatedQuery(Query(simulation_state="delivered")),\n
+  ):\n
+  if sale_packing_list_line.getSimulationState() != \'delivered\':\n
+    all_delivered = False\n
+if all_delivered:\n
+  open_order_line = subscription_item.getAggregateRelatedValue(portal_type="Open Sale Order Line")\n
+  if open_order_line is not None:\n
+    # XXX: Mahybe system shall *NOT* work without Open Sale Orders\n
+    open_order_line.getParentValue().manage_delObjects(open_order_line.getId())\n
 </string> </value>
         </item>
         <item>
@@ -140,16 +142,21 @@ for sale_packing_list_line in sale_packing_list.contentValues(\n
                             <string>ComplexQuery</string>
                             <string>NegatedQuery</string>
                             <string>_getitem_</string>
-                            <string>sale_packing_list</string>
+                            <string>current_delivery</string>
                             <string>_getattr_</string>
                             <string>portal</string>
                             <string>destroy_service_relative_url</string>
-                            <string>_getiter_</string>
-                            <string>sale_packing_list_line</string>
+                            <string>sale_packing_list_line_list</string>
+                            <string>len</string>
+                            <string>AssertionError</string>
+                            <string>current_delivery_line</string>
                             <string>computer_partition</string>
                             <string>None</string>
                             <string>ValueError</string>
                             <string>software_instance</string>
+                            <string>_getiter_</string>
+                            <string>sale_packing_list_line</string>
+                            <string>sale_packing_list</string>
                             <string>subscription_item</string>
                             <string>True</string>
                             <string>all_delivered</string>
