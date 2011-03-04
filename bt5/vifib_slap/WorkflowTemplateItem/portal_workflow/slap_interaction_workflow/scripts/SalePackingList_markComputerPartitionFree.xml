@@ -77,6 +77,7 @@ for sale_packing_list_line in portal.portal_catalog(\n
   default_aggregate_uid=software_instance.getUid(),\n
   simulation_state=NegatedQuery(Query(simulation_state="delivered")),\n
   ):\n
+  sale_packing_list = sale_packing_list_line.getParentValue()\n
   if sale_packing_list.getPortalObject().portal_workflow.isTransitionPossible(sale_packing_list, \'start\'):\n
     sale_packing_list.start()\n
   if sale_packing_list.getPortalObject().portal_workflow.isTransitionPossible(sale_packing_list, \'stop\'):\n
