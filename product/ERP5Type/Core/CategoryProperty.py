@@ -229,7 +229,10 @@ class CategoryProperty(IdAsReferenceMixin('_category'), XMLObject):
         accessor = Alias.Reindex(accessor_name[1:], accessor_name)
         accessor_holder.registerAccessor(accessor, write_permission)
 
-    accessor_holder._categories.append(category_id)
+    # Only add the category ID if it is not already in _categories,
+    # which may happen when getting the categories with acquisition
+    if category_id not in accessor_holder._categories:
+      accessor_holder._categories.append(category_id)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'applyOnAccessorHolder')
