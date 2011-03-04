@@ -54,8 +54,6 @@ class CategoryMembershipArityConstraint(ConstraintMixin):
   meta_type = 'ERP5 Category Membership Arity Constraint'
   portal_type = 'Category Membership Arity Constraint'
 
-  __compatibility_class_name__ = 'CategoryMembershipArity'
-
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -160,25 +158,3 @@ class CategoryMembershipArityConstraint(ConstraintMixin):
       zodb_property_dict['max_arity'] = int(max_arity)
 
     yield zodb_property_dict
-
-  def exportToFilesystemDefinitionDict(self):
-    filesystem_definition_dict = super(CategoryMembershipArityConstraint,
-                                       self).exportToFilesystemDefinitionDict()
-
-    # There is only one ZODB Constraint class for filesystem
-    # Constraints CategoryMembershipArity and
-    # CategoryAcquiredMembershipArity constraints
-    if self.getUseAcquisition():
-      filesystem_definition_dict['type'] = 'CategoryAcquiredMembershipArity'
-
-    filesystem_definition_dict['min_arity'] = str(self.getMinArity())
-
-    if self.hasMaxArity():
-      filesystem_definition_dict['max_arity'] = str(self.getMaxArity())
-
-    filesystem_definition_dict['portal_type'] = \
-        Expression(self.getConstraintPortalType())
-
-    filesystem_definition_dict['base_category'] = self.getConstraintBaseCategoryList()
-
-    return filesystem_definition_dict

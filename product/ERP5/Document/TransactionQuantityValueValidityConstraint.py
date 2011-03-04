@@ -38,8 +38,6 @@ class TransactionQuantityValueValidityConstraint(ConstraintMixin):
     meta_type = 'ERP5 Transaction Quantity Value Validity Constraint'
     portal_type = 'Transaction Quantity Value Validity Constraint'
 
-    __compatibility_class_name__ = 'TransactionQuantityValueValidity'
-
     def _checkConsistency(self, object, fixit=0):
       """
       Check if the quantity of the transaction is greater than the

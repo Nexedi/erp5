@@ -59,8 +59,6 @@ class AttributeEqualityConstraint(PropertyExistenceConstraint):
   meta_type = 'ERP5 Attribute Equality Constraint'
   portal_type = 'Attribute Equality Constraint'
 
-  __compatibility_class_name__ = 'AttributeEquality'
-
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -136,12 +134,3 @@ class AttributeEqualityConstraint(PropertyExistenceConstraint):
     """
     for name, value in property_dict.iteritems():
       yield dict(name=value)
-
-  def exportToFilesystemDefinitionDict(self):
-    filesystem_definition_dict = super(AttributeEqualityConstraint,
-                                       self).exportToFilesystemDefinitionDict()
-
-    filesystem_definition_dict[self.getConstraintAttributeName()] = \
-        Expression(self.getConstraintAttributeValue())
-
-    return filesystem_definition_dict

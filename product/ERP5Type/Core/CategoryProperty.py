@@ -51,15 +51,6 @@ class CategoryProperty(IdAsReferenceMixin('_category'), XMLObject):
   property_sheets = (PropertySheet.SimpleItem,
                      PropertySheet.Reference)
 
-  # TODO: REMOVE
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'exportToFilesystemDefinition')
-  def exportToFilesystemDefinition(self):
-    """
-    Return the filesystem definition of the property
-    """
-    return self.getReference()
-
   security.declareProtected(Permissions.AccessContentsInformation,
                             'importFromFilesystemDefinition')
   @classmethod

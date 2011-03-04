@@ -61,8 +61,6 @@ class TALESConstraint(ConstraintMixin):
   meta_type = 'ERP5 TALES Constraint'
   portal_type = 'TALES Constraint'
 
-  __compatibility_class_name__ = 'TALESConstraint'
-
   property_sheets = ConstraintMixin.property_sheets + \
                     (PropertySheet.TALESConstraint,)
 
@@ -95,11 +93,3 @@ class TALESConstraint(ConstraintMixin):
   @staticmethod
   def _convertFromFilesystemDefinition(expression):
     yield dict(expression=expression)
-
-  def exportToFilesystemDefinitionDict(self):
-    filesystem_definition_dict = super(TALESConstraint,
-                                       self).exportToFilesystemDefinitionDict()
-
-    filesystem_definition_dict['expression'] = self.getExpression()
-
-    return filesystem_definition_dict

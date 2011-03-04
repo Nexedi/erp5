@@ -42,8 +42,6 @@ class TradeModelLineCellConsistencyConstraint(ConstraintMixin):
   meta_type = 'ERP5 Trade Model Line Cell Consistency Constraint'
   portal_type = 'Trade Model Line Cell Consistency Constraint'
 
-  __compatibility_class_name__ = 'TradeModelLineCellConsistency'
-
   property_sheets = ConstraintMixin.property_sheets + \
                     (PropertySheet.TradeModelLineCellConsistencyConstraint,)
 
@@ -68,11 +66,3 @@ class TradeModelLineCellConsistencyConstraint(ConstraintMixin):
     @see ERP5Type.mixin.constraint.ConstraintMixin._convertFromFilesystemDefinition
     """
     yield dict(base_id=base_id)
-
-  def exportToFilesystemDefinitionDict(self):
-    filesystem_definition_dict = super(TradeModelLineCellConsistencyConstraint,
-                                       self).exportToFilesystemDefinitionDict()
-
-    filesystem_definition_dict['base_id'] = self.getBaseId()
-
-    return filesystem_definition_dict

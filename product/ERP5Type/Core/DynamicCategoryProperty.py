@@ -50,19 +50,6 @@ class DynamicCategoryProperty(CategoryProperty):
   property_sheets = (PropertySheet.SimpleItem,
                      PropertySheet.DynamicCategoryProperty)
 
-  # TODO: REMOVE
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'exportToFilesystemDefinition')
-  def exportToFilesystemDefinition(self):
-    """
-    Return the filesystem definition of the property
-    """
-    expression_string = self.getCategoryExpression()
-    if expression_string is None:
-      return None
-
-    return Expression(expression_string)
-
   security.declareProtected(Permissions.AccessContentsInformation,
                             'importFromFilesystemDefinition')
   @classmethod

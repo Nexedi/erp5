@@ -43,8 +43,6 @@ class ResourceMeasuresConsistencyConstraint(ConstraintMixin):
   meta_type = 'ERP5 Resource Measures Consistency Constraint'
   portal_type = 'Resource Measures Consistency Constraint'
 
-  __compatibility_class_name__ = 'ResourceMeasuresConsistency'
-
   property_sheets = ConstraintMixin.property_sheets + \
                     (PropertySheet.ResourceMeasuresConsistencyConstraint,)
 

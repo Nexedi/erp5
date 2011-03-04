@@ -44,8 +44,6 @@ class PropertyTypeValidityConstraint(ConstraintMixin):
   meta_type = 'ERP5 Property Type Validity Constraint'
   portal_type = 'Property Type Validity Constraint'
 
-  __compatibility_class_name__ = 'PropertyTypeValidity'
-
   property_sheets = ConstraintMixin.property_sheets + \
                     (PropertySheet.PropertyTypeValidityConstraint,)
 

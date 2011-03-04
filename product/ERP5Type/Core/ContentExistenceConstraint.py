@@ -54,8 +54,6 @@ class ContentExistenceConstraint(ConstraintMixin):
   meta_type = 'ERP5 Content Existence Constraint'
   portal_type = 'Content Existence Constraint'
 
-  __compatibility_class_name__ = 'ContentExistence'
-
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -110,12 +108,3 @@ class ContentExistenceConstraint(ConstraintMixin):
         portal_type.text or 'python: ' + repr(portal_type)
 
     yield dict(constraint_portal_type=constraint_portal_type_str)
-
-  def exportToFilesystemDefinitionDict(self):
-    filesystem_definition_dict = super(ContentExistenceConstraint,
-                                       self).exportToFilesystemDefinitionDict()
-
-    filesystem_definition_dict['portal_type'] = \
-        Expression(self.getConstraintPortalType())
-
-    return filesystem_definition_dict

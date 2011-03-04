@@ -48,44 +48,6 @@ class PropertySheet(Folder):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  # TODO: REMOVE
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'exportToFilesystemDefinition')
-  def exportToFilesystemDefinition(self):
-    """
-    Export the ZODB Property Sheet to its filesystem definition as a
-    tuple (properties, categories, constraints)
-    """
-    properties = []
-    constraints = []
-    categories = []
-
-    for item in self.contentValues():
-      definition = item.exportToFilesystemDefinition()
-
-      # If a category doesn't have a name yet or the constraint class
-      # returned is None, then just skip it
-      if definition is None:
-        LOG("ERP5Type.Core.PropertySheet", INFO,
-            "Skipping property with ID '%s' in Property Sheet '%s'" % \
-            (item.getId(), self.getId()))
-
-        continue
-
-      portal_type = item.getPortalType()
-
-      if portal_type == "Category Property" or \
-         portal_type == "Dynamic Category Property":
-        categories.append(definition)
-
-      elif portal_type.endswith('Constraint'):
-        constraints.append(definition)
-
-      else:
-        properties.append(definition)
-
-    return (properties, categories, constraints)
-
   security.declarePrivate('createAccessorHolder')
   def createAccessorHolder(self, expression_context, portal):
     """

@@ -140,42 +140,6 @@ class AcquiredProperty(StandardProperty):
     'content_translation_acquired_property_id',
     'lines')
 
-  # TODO: remove
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'exportToFilesystemDefinition')
-  def exportToFilesystemDefinition(self):
-    """
-    Return the filesystem definition of this ZODB property
-
-    NOTE: Only meaningful for testing export of filesystem Property
-    Sheet to the ZODB
-    """
-    filesystem_property_dict = \
-        StandardProperty.exportToFilesystemDefinition(self)
-
-    if filesystem_property_dict is None:
-      return None
-
-    acquisition_portal_type_expression = self._getExpressionFromString(
-      self.getAcquisitionPortalType())
-
-    portal_type_expression = self._getExpressionFromString(
-      self.getContentPortalType())
-
-    filesystem_property_dict.update({
-      'acquisition_base_category': self.getAcquisitionBaseCategoryList(),
-      'acquisition_object_id': self.getAcquisitionObjectIdList(),
-      'acquisition_portal_type': acquisition_portal_type_expression,
-      'acquisition_accessor_id': self.getAcquisitionAccessorId(),
-      'alt_accessor_id': self.getAltAccessorIdList(),
-      'acquisition_copy_value': self.getAcquisitionCopyValue(),
-      'acquisition_mask_value': self.getAcquisitionMaskValue(),
-      'portal_type': portal_type_expression,
-      'acquired_property_id': self.getContentAcquiredPropertyIdList(),
-      'translation_acquired_property_id': self.getContentTranslationAcquiredPropertyIdList()})
-
-    return filesystem_property_dict
-
   @classmethod
   def _asPropertyMap(cls, property_dict):
     """

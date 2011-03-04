@@ -46,8 +46,6 @@ class CategoryExistenceConstraint(ConstraintMixin):
   meta_type = 'ERP5 Category Existence Constraint'
   portal_type = 'Category Existence Constraint'
 
-  __compatibility_class_name__ = 'CategoryExistence'
-
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -125,21 +123,3 @@ class CategoryExistenceConstraint(ConstraintMixin):
 
     yield dict(constraint_base_category_list=base_category_dict.keys(),
                constraint_portal_type=constraint_portal_type_str)
-
-  def exportToFilesystemDefinitionDict(self):
-    filesystem_definition_dict = super(CategoryExistenceConstraint,
-                                       self).exportToFilesystemDefinitionDict()
-
-    # There is only one ZODB Constraint class for filesystem
-    # Constraints CategoryExistence and CategoryAcquiredExistence
-    # constraints
-    if self.getUseAcquisition():
-      filesystem_definition_dict['type'] = 'CategoryAcquiredExistence'
-
-    filesystem_definition_dict['portal_type'] = \
-        Expression(self.getConstraintPortalType())
-
-    for category in self.getConstraintBaseCategoryList():
-      filesystem_definition_dict[category] = 1
-
-    return filesystem_definition_dict

@@ -50,8 +50,6 @@ class PropertyExistenceConstraint(ConstraintMixin):
   meta_type = 'ERP5 Property Existence Constraint'
   portal_type = 'Property Existence Constraint'
 
-  __compatibility_class_name__ = 'PropertyExistence'
-
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -113,12 +111,3 @@ class PropertyExistenceConstraint(ConstraintMixin):
     }
     """
     yield dict(constraint_property_list=property_dict.keys())
-
-  def exportToFilesystemDefinitionDict(self):
-    filesystem_definition_dict = super(PropertyExistenceConstraint,
-                                       self).exportToFilesystemDefinitionDict()
-
-    for constraint_property in self.getConstraintPropertyList():
-      filesystem_definition_dict[constraint_property] = None
-
-    return filesystem_definition_dict

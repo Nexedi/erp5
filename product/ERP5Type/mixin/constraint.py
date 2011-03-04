@@ -57,11 +57,6 @@ class ConstraintMixin(IdAsReferenceMixin('_constraint'), Predicate):
   # importing or exporting from/to filesystem Constraint
   _message_id_tuple = ()
 
-  # Store the filesystem name of the ZODB Constraint as there are
-  # several different naming for filesystem constraints (*only* useful
-  # for exportToFilesystemDefinitionDict)
-  __compatibility_class_name__ = None
-
   __allow_access_to_unprotected_subobjects__ = 1
   implements( IConstraint, )
 
@@ -105,27 +100,6 @@ class ConstraintMixin(IdAsReferenceMixin('_constraint'), Predicate):
     Default method is to call checkConsistency with fixit set to 1
     """
     return self.checkConsistency(obj, fixit=1, **kw)
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'exportToFilesystemDefinition')
-  def exportToFilesystemDefinition(self):
-    """
-    Return a temporary copy of the constraint object (with acquisition
-    wrapping removed) in order to maintain compatibility and be able
-    to use setDefaultProperties
-
-    NOTE: A filesystem constraint is defined by a dict, then depending
-    on the 'type' of the constraint, the appropriate class in
-    ERP5Type.Constraint is instanciated with the dict. This is no
-    longer needed for ZODB Constraints because they are already
-    Documents.
-
-    @see exportToFilesystemDefinitionDict() to export a ZODB
-         Constraint as a dict.
-
-    XXX: remove as soon as the code is stable
-    """
-    return self.asContext().aq_base
 
   def _getExpressionValue(self, obj, expression_string):
     """
@@ -218,29 +192,6 @@ class ConstraintMixin(IdAsReferenceMixin('_constraint'), Predicate):
     for constraint_definition_dict in constraint_definition_generator:
       constraint_definition_dict.update(base_constraint_definition_dict)
       context.newContent(**constraint_definition_dict)
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'exportToFilesystemDefinitionDict')
-  def exportToFilesystemDefinitionDict(self):
-    """
-    Export the ZODB Constraint as a filesystem definition dict,
-    meaningful *only* for testing that a filesystem Constraint has
-    been properly converted
-
-    @see exportToFilesystemDefinition()
-    """
-    filesystem_definition_dict = dict(
-      id=self.getReference(),
-      description=self.getDescription(),
-      type=self.__compatibility_class_name__)
-
-    if self.hasTestTalesExpression():
-      filesystem_definition_dict['condition'] = self.getTestTalesExpression()
-
-    for message_id in self._message_id_tuple:
-      filesystem_definition_dict[message_id] = self._getMessage(message_id)
-
-    return filesystem_definition_dict
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'applyOnAccessorHolder')

@@ -41,8 +41,6 @@ class AccountingTransactionBalanceConstraint(ConstraintMixin):
   meta_type = 'ERP5 Accounting Transaction Balance Constraint'
   portal_type = 'Accounting Transaction Balance Constraint'
 
-  __compatibility_class_name__ = 'AccountingTransactionBalance'
-
   property_sheets = ConstraintMixin.property_sheets + \
                     (PropertySheet.AccountingTransactionBalanceConstraint,)
 
