@@ -81,7 +81,8 @@ for sale_packing_list_line in sale_packing_list.contentValues(\n
         sale_packing_list.stop()\n
       if sale_packing_list.getPortalObject().portal_workflow.isTransitionPossible(sale_packing_list, \'deliver\'):\n
         sale_packing_list.deliver()\n
-\n
+      if sale_packing_list.getSimulationState() != \'delivered\':\n
+        raise ValueError(\'It was not possible to deliver %r during destruction of %r\' (sale_packing_list.getRelativeUrl(), software_instance.getRelativeUrl()))\n
     # Remove unused open sale order line\n
     subscription_item = sale_packing_list_line.getAggregateValue(portal_type="Hosting Subscription")\n
     all_delivered = True\n
