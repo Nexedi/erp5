@@ -61,7 +61,7 @@ portal = context.getPortalObject()\n
 sale_packing_list_module = portal.getDefaultModule(portal_type=\'Sale Packing List\')\n
 sale_packing_list = sale_packing_list_module.newContent(\n
   portal_type=\'Sale Packing List\',\n
-  specialise=instance_setup_sale_packing_list.getSpecialise(),\n
+  specialise=instance_setup_sale_packing_list.getCausalityValue().getSpecialise(),\n
   destination=instance_setup_sale_packing_list.getDestination(),\n
   destination_section=instance_setup_sale_packing_list.getDestinationSection(),\n
   destination_decision_=instance_setup_sale_packing_list.getDestinationDecision(),\n
