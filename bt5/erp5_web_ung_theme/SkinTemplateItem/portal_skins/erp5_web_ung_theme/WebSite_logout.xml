@@ -50,86 +50,22 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>website = context.getWebSiteValue()\n
-REQUEST = context.REQUEST\n
+            <value> <string>REQUEST = context.REQUEST\n
 if REQUEST.has_key(\'portal_skin\'):\n
    context.portal_skins.clearSkinCookie()\n
 \n
-#XXX get cookie name from key authentication plugin\n
-REQUEST.RESPONSE.expireCookie(\'__ac\', path=\'/\')\n
-REQUEST.RESPONSE.expireCookie(\'__key\', path=\'/\')\n
-\n
-return website.Base_redirect("", **kw)\n
+# XXX get cookie name from key authentication plugin\n
+REQUEST.RESPONSE.expireCookie(\'__ac\', path="/")\n
+REQUEST.RESPONSE.expireCookie(\'__key\', path="/")\n
 </string> </value>
-        </item>
-        <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
             <value> <string>dialog_id=None, form_id=\'\', **kw</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>dialog_id</string>
-                            <string>form_id</string>
-                            <string>kw</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>website</string>
-                            <string>REQUEST</string>
-                            <string>_apply_</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <none/>
-                <string></string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>WebSite_logout</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

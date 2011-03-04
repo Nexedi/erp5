@@ -38,7 +38,7 @@
 
 <tal:block tal:define="portal_path python: here.getWebSiteValue().absolute_url();">\n
  <a class="email" tal:attributes="href string:${portal_path}/mail">Email</a>\n
- <a class="documents" tal:attributes="href string:${portal_path}">Documents</a>\n
+ <a class="document" tal:attributes="href string:${portal_path}">Documents</a>\n
  <a class="calendar" tal:attributes="href string:${portal_path}/calendar">Calendar</a>\n
 </tal:block>\n
 <a id="left_message">Not Implemented yet</a>
