@@ -171,10 +171,6 @@ div.header-left fieldset.widget div.field input[type="submit"] {\n
   -moz-border-radius: 4px 4px 4px 4px;\n
 }\n
 \n
-input[type="text"], textarea {\n
-  border: 1px solid #B0C2C8;\n
-}\n
-\n
 div.header-left fieldset.widget div.field {\n
   display: inline-block;\n
 }\n
