@@ -316,9 +316,9 @@ class Recipe(BaseSlapRecipe):
           conversion_server_dict))
     self.path_list.append(config_file)
     self.path_list.extend(zc.buildout.easy_install.scripts([(name,
-      __name__ + '.execute', 'execute')], self.ws, sys.executable,
-      self.wrapper_directory, arguments=[self.options['ooo_paster'].strip(),
-        'serve', config_file]))
+      __name__ + '.execute', 'execute_with_signal_translation')], self.ws,
+      sys.executable, self.wrapper_directory,
+      arguments=[self.options['ooo_paster'].strip(), 'serve', config_file]))
     self.connection_dict.update(**{
       name + '_port': conversion_server_dict['port'],
       name + '_ip': conversion_server_dict['ip']
