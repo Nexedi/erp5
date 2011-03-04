@@ -1280,7 +1280,12 @@ def createExpressionContext(object, portal=None):
   tv[cache_key] = ec
   return ec
 
-from zope.tales.tales import CompilerError
+# CompilerError used to be defined in Products.PageTemplates.TALES in
+# Zope 2.8
+try:
+  from Products.PageTemplates.TALES import CompilerError
+except ImportError:
+  from zope.tales.tales import CompilerError
 
 def evaluateExpressionFromString(expression_context, expression_string):
   """
