@@ -75,8 +75,12 @@ for sale_packing_list_line in sale_packing_list.contentValues(\n
       default_aggregate_uid=software_instance.getUid(),\n
       simulation_state=NegatedQuery(Query(simulation_state="delivered")),\n
       ):\n
-      if sale_packing_list_line.getSimulationState() != \'delivered\':\n
-        sale_packing_list_line.getParentValue().deliver()\n
+      if sale_packing_list.getPortalObject().portal_workflow.isTransitionPossible(sale_packing_list, \'start\'):\n
+        sale_packing_list.start()\n
+      if sale_packing_list.getPortalObject().portal_workflow.isTransitionPossible(sale_packing_list, \'stop\'):\n
+        sale_packing_list.stop()\n
+      if sale_packing_list.getPortalObject().portal_workflow.isTransitionPossible(sale_packing_list, \'deliver\'):\n
+        sale_packing_list.deliver()\n
 \n
     # Remove unused open sale order line\n
     subscription_item = sale_packing_list_line.getAggregateValue(portal_type="Hosting Subscription")\n
