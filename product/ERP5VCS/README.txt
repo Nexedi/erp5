@@ -1,6 +1,6 @@
-ERP5Vcs
+ERP5VCS
 
-  ERP5Vcs provides a Subversion interface. This product
+  ERP5VCS provides a Subversion interface. This product
   depends on "pysvn":http://pysvn.tigris.org/.
 
   To use this product, you must make a directory named 'svn' under

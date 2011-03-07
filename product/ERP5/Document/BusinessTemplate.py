@@ -5108,14 +5108,14 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
     @transactional_cached(lambda self, vcs=None, path=None: (self, vcs, path))
     def getVcsTool(self, vcs=None, path=None):
-      from Products.ERP5Vcs.WorkingCopy import getVcsTool
+      from Products.ERP5VCS.WorkingCopy import getVcsTool
       if not (path or vcs):
         path = self.getExportPath()
       return getVcsTool(vcs=vcs, path=path).__of__(self)
 
     def isVcsType(self, *vcs):
       # could be moved to Products.ERP5.Base.Base
-      from Products.ERP5Vcs.WorkingCopy import NotAWorkingCopyError
+      from Products.ERP5VCS.WorkingCopy import NotAWorkingCopyError
       try:
         return self.getVcsTool().reference in vcs
       except NotAWorkingCopyError:
@@ -5243,7 +5243,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
     def diffObjectAsHTML(self, REQUEST, **kw):
       """
         Convert diff into a HTML format before reply
-        This is compatible with ERP5Vcs look and feel but
+        This is compatible with ERP5VCS look and feel but
         it is preferred in future we use more difflib python library.
       """
       return DiffFile(self.diffObject(REQUEST, **kw)).toHTML()

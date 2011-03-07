@@ -32,7 +32,7 @@ from Acquisition import aq_base
 from DateTime import DateTime
 from Products.ERP5Type.Message import translateString
 from ZTUtils import make_query
-from Products.ERP5Vcs.WorkingCopy import \
+from Products.ERP5VCS.WorkingCopy import \
   WorkingCopy, NotAWorkingCopyError, Dir, File, selfcached
 
 class GitError(EnvironmentError):

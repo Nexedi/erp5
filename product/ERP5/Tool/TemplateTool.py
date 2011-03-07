@@ -674,7 +674,7 @@ class TemplateTool (BaseTool):
     def diffObjectAsHTML(self, REQUEST, **kw):
       """
         Convert diff into a HTML format before reply
-        This is compatible with ERP5Vcs look and feel but
+        This is compatible with ERP5VCS look and feel but
         it is preferred in future we use more difflib python library.
       """
       return DiffFile(self.diffObject(REQUEST, **kw)).toHTML()

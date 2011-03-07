@@ -51,7 +51,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string># try to get the repository URL, else redirect to the dialog for creating a working copy in one of the configured repositories\n
-from Products.ERP5Vcs.WorkingCopy import NotAWorkingCopyError\n
+from Products.ERP5VCS.WorkingCopy import NotAWorkingCopyError\n
 try:\n
   return context.getVcsTool().getRemoteUrl()\n
 except NotAWorkingCopyError:\n

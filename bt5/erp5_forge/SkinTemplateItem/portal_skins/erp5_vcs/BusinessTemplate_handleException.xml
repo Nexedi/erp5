@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Vcs.SubversionClient import SubversionSSLTrustError, SubversionLoginError\n
+            <value> <string>from Products.ERP5VCS.SubversionClient import SubversionSSLTrustError, SubversionLoginError\n
 \n
 try:\n
   raise exception\n

@@ -173,7 +173,7 @@ Add external Method to see Security for arbitrary user
 * Now possible to filter files to commit from diff view
 
 2006-07-05 chris
-* ERP5Vcs now detects outdated files so that user know if he needs to update his working copy or not.
+* ERP5Subversion now detects outdated files so that user know if he needs to update his working copy or not.
 
 2006-06-26 chris
 * Update according to last XHTML style update

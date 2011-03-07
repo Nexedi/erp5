@@ -52,7 +52,7 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-from Products.ERP5Vcs.SubversionClient import SubversionSSLTrustError\n
+from Products.ERP5VCS.SubversionClient import SubversionSSLTrustError\n
 from Products.ERP5Type.Document import newTempBase\n
 \n
 portal = context.getPortalObject()\n

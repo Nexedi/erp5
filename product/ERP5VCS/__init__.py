@@ -53,5 +53,5 @@ def initialize( context ):
                          content_classes = content_classes)
 
 # Register Subversion before Git
-from Products.ERP5Vcs.Subversion import Subversion
-from Products.ERP5Vcs.Git import Git
+from Products.ERP5VCS.Subversion import Subversion
+from Products.ERP5VCS.Git import Git

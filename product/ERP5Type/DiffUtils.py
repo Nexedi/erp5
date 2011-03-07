@@ -31,7 +31,7 @@
  Provide a feature not present into difflib, which is generate a colored diff
  from a diff file/string.
 
- This code is original form ERP5Vcs and was moved to here for be used in
+ This code is original form ERP5VCS and was moved to here for be used in
  general ERP5. 
 
  XXX The organisation of DiffUtils should be reviewed and reorganised in a tool

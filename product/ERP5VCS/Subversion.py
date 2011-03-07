@@ -35,10 +35,10 @@ from DateTime import DateTime
 from ZTUtils import make_query
 from Products.ERP5Type.Message import translateString
 from Products.ERP5.Document.BusinessTemplate import BusinessTemplateFolder
-from Products.ERP5Vcs.WorkingCopy import \
+from Products.ERP5VCS.WorkingCopy import \
   WorkingCopy, Dir, File, chdir_working_copy, selfcached, \
   NotAWorkingCopyError, VcsConflictError
-from Products.ERP5Vcs.SubversionClient import \
+from Products.ERP5VCS.SubversionClient import \
   newSubversionClient, SubversionLoginError, SubversionSSLTrustError
 
 
