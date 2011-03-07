@@ -56,7 +56,7 @@ service_relative_url = software_instance.portal_preferences.\\\n
 need_to_create_packing_list = False\n
 \n
 try:\n
-  sale_packing_list_line = software_instance.SoftwareInstance_getInstanceHostingPackingListLine()\n
+  sale_packing_list_line = context.SoftwareInstance_getInstanceHostingPackingListLine(state_change)\n
 except ValueError:\n
   need_to_create_packing_list = True\n
 else:\n
@@ -109,10 +109,10 @@ if need_to_create_packing_list:\n
                             <string>service_relative_url</string>
                             <string>False</string>
                             <string>need_to_create_packing_list</string>
+                            <string>context</string>
                             <string>sale_packing_list_line</string>
                             <string>ValueError</string>
                             <string>True</string>
-                            <string>context</string>
                             <string>sale_packing_list</string>
                           </tuple>
                         </value>
