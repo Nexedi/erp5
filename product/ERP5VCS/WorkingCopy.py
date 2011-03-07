@@ -158,7 +158,7 @@ class WorkingCopy(Implicit):
           path = '/'.join(path)
           if html:
             return '&nbsp;&nbsp;<a href="%s"><img style="border:0" alt="Edit"' \
-                   ' src="%s/ERP5Vcs_imgs/edit.png" /></a>' % (path, portal)
+                   ' src="%s/ERP5VCS_imgs/edit.png" /></a>' % (path, portal)
           return path
     return ''
 

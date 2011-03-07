@@ -61,7 +61,7 @@ else:\n
 \n
 print \'<div style="color: black">\'\n
 \n
-# XXX: ERP5Vcs_doCreateJavaScriptStatus should send lists\n
+# XXX: ERP5VCS_doCreateJavaScriptStatus should send lists\n
 if isinstance(added, basestring):\n
   added = added != \'none\' and filter(None, added.split(\',\')) or ()\n
 if isinstance(modified, basestring):\n

@@ -118,7 +118,7 @@ return \'\'\'\n
       var imAr = new Array(0);\n
       for(var i=0;i<imSrcAr.length;i++){\n
               imAr[imAr.length] = new Image();\n
-              imAr[imAr.length-1].src = \'ERP5Vcs_imgs/\'+imSrcAr[i]\n
+              imAr[imAr.length-1].src = \'ERP5VCS_imgs/\'+imSrcAr[i]\n
       }\n
     }\n
 \n
@@ -126,7 +126,7 @@ return \'\'\'\n
       preLoadImages();\n
 \n
       tree=new dhtmlXTreeObject(document.getElementById(\'treebox1\'),\'100%%\',\'100%%\',0);\n
-      tree.setImagePath(\'ERP5Vcs_imgs/\');\n
+      tree.setImagePath(\'ERP5VCS_imgs/\');\n
       tree.setDragHandler();\n
       tree.enableCheckBoxes(true)\n
       tree.enableThreeStateCheckboxes(true);\n
@@ -417,7 +417,7 @@ return \'\'\'\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Vcs_doCreateJavaScriptStatus.js</string> </value>
+            <value> <string>ERP5VCS_doCreateJavaScriptStatus.js</string> </value>
         </item>
       </dictionary>
     </pickle>

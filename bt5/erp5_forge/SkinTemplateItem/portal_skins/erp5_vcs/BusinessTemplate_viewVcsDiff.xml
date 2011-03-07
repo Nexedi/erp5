@@ -60,12 +60,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 -->\n
 </tal:block>\n
 <tal:block tal:define="portal_path here/portal_url;\n
-                       css_list python: [\'%s/ERP5Vcs_movableMenu.css\' % portal_path,\n
+                       css_list python: [\'%s/ERP5VCS_movableMenu.css\' % portal_path,\n
                                          \'%s/erp5.css\' % portal_path,];\n
                        js_list python: [\'%s/erp5.js\' % portal_path,\n
-                                        \'%s/ERP5Vcs_menuico.js\' % portal_path,\n
-                                        \'%s/ERP5Vcs_movableMenu.js\' % portal_path,\n
-                                        \'%s/ERP5Vcs_doCreateJavaScriptDiff.js\' % portal_path]">\n
+                                        \'%s/ERP5VCS_menuico.js\' % portal_path,\n
+                                        \'%s/ERP5VCS_movableMenu.js\' % portal_path,\n
+                                        \'%s/ERP5VCS_doCreateJavaScriptDiff.js\' % portal_path]">\n
   <tal:block metal:use-macro="here/view_main/macros/master">\n
     <tal:block metal:fill-slot="main">\n
 <tal:py replace="structure \n
@@ -74,9 +74,9 @@ python: here.BusinessTemplate_doVcsDiff(request[\'added\'], request[\'modified\'
 <script type="text/javascript">\n
   // Menu Customization\n
   var MenuToolBar=new CreateToolBarMenu("#dae6e6", "#ffffff", "#b1bbbb", "#6699ff", "font-family:verdana;font-size:11px;color:black;font-weight:bold", 16, 16)\n
-  MenuToolBar.Add("ERP5Vcs_imgs/revertoff.png", "ERP5Vcs_imgs/reverton.png", "Back", "#", "goBack()");\n
-  MenuToolBar.Add("ERP5Vcs_imgs/captionoff.png", "ERP5Vcs_imgs/captionon.png", "Show Legend", "#", "winList[\'captionWindow\'].open();");\n
-  MenuToolBar.Add("ERP5Vcs_imgs/execoff.png", "ERP5Vcs_imgs/execon.png", "Commit Changes", "#", "doCommit(document.getElementById(\'main_form\'));");\n
+  MenuToolBar.Add("ERP5VCS_imgs/revertoff.png", "ERP5VCS_imgs/reverton.png", "Back", "#", "goBack()");\n
+  MenuToolBar.Add("ERP5VCS_imgs/captionoff.png", "ERP5VCS_imgs/captionon.png", "Show Legend", "#", "winList[\'captionWindow\'].open();");\n
+  MenuToolBar.Add("ERP5VCS_imgs/execoff.png", "ERP5VCS_imgs/execon.png", "Commit Changes", "#", "doCommit(document.getElementById(\'main_form\'));");\n
   // Menu Display\n
   MenuToolBar.Display();\n
 </script>\n
@@ -84,7 +84,7 @@ python: here.BusinessTemplate_doVcsDiff(request[\'added\'], request[\'modified\'
 <div id="captionWindow" class="window" style="right:20px;left:auto;top:180px;width:120px;background-color:#dae6e6;border-color:#ebf8f8 #c0caca #c0caca #c0caca;">\n
   <div class="titleBar" style="background-color:#dae6e6;color:black;">\n
     <span class="titleBarText">Legend -- SVN</span>\n
-    <img class="titleBarButtons" alt="" src="ERP5Vcs_imgs/altbuttons.gif" longdesc="ERP5Vcs_imgs/altbuttonslow.gif" usemap="#sampleMap3" />\n
+    <img class="titleBarButtons" alt="" src="ERP5VCS_imgs/altbuttons.gif" longdesc="ERP5VCS_imgs/altbuttonslow.gif" usemap="#sampleMap3" />\n
     <map id="sampleMap3" name="sampleMap3">\n
       <area shape="rect" coords="0,0,15,13"  href="" alt="" title="Minimize" onclick="this.parentWindow.minimize();return false;" />\n
       <area shape="rect" coords="16,0,31,13" href="" alt="" title="Restore"  onclick="this.parentWindow.restore();return false;" />\n

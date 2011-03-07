@@ -52,7 +52,7 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-# XXX: ERP5Vcs_doCreateJavaScriptStatus should send lists\n
+# XXX: ERP5VCS_doCreateJavaScriptStatus should send lists\n
 if isinstance(added, basestring):\n
   added = added != \'none\' and filter(None, added.split(\',\')) or ()\n
 if isinstance(modified, basestring):\n
