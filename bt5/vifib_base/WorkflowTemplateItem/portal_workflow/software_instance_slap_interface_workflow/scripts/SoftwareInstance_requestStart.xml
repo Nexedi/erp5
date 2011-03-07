@@ -53,8 +53,19 @@
             <value> <string>software_instance = state_change[\'object\']\n
 service_relative_url = software_instance.portal_preferences.\\\n
                             getPreferredInstanceHostingResource()\n
-sale_packing_list = context.SoftwareInstance_createSalePackingList(state_change, service_relative_url)\n
-sale_packing_list.confirm()\n
+need_to_create_packing_list = False\n
+\n
+try:\n
+  sale_packing_list_line = software_instance.SoftwareInstance_getInstanceHostingPackingListLine()\n
+except ValueError:\n
+  need_to_create_packing_list = True\n
+else:\n
+  if sale_packing_list_line.getSimulationState() == \'delivered\':\n
+    need_to_create_packing_list = True\n
+\n
+if need_to_create_packing_list:\n
+  sale_packing_list = context.SoftwareInstance_createSalePackingList(state_change, service_relative_url)\n
+  sale_packing_list.confirm()\n
 </string> </value>
         </item>
         <item>
@@ -96,6 +107,11 @@ sale_packing_list.confirm()\n
                             <string>software_instance</string>
                             <string>_getattr_</string>
                             <string>service_relative_url</string>
+                            <string>False</string>
+                            <string>need_to_create_packing_list</string>
+                            <string>sale_packing_list_line</string>
+                            <string>ValueError</string>
+                            <string>True</string>
                             <string>context</string>
                             <string>sale_packing_list</string>
                           </tuple>
