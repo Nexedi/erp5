@@ -379,7 +379,9 @@ class BusinessTemplateWorkingCopy(BusinessTemplateFolder):
       try:
         file = open(path, 'r+b')
       except IOError, e:
-        if e.errno != errno.ENOENT:
+        if e.errno == errno.EISDIR:
+          shutil.rmtree(path, ignore_errors=True)
+        elif e.errno != errno.ENOENT:
           raise
         file = open(path, 'wb')
       else:

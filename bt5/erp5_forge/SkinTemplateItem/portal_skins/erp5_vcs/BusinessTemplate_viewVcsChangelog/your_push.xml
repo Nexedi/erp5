@@ -151,7 +151,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: not (lambda vcs: vcs.getAheadCount() or vcs.getBehindCount())(here.getVcsTool())</string> </value>
+            <value> <string>python: not here.getVcsTool().getAheadCount()</string> </value>
         </item>
       </dictionary>
     </pickle>
