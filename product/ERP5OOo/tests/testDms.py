@@ -91,6 +91,12 @@ def makeFileUpload(name, as_name=None):
   return FileUpload(path, as_name)
 
 class TestDocumentMixin(ERP5TypeTestCase):
+  
+  bussiness_template_list = ['erp5_core_proxy_field_legacy',
+                             'erp5_full_text_myisam_catalog','erp5_base',
+                             'erp5_ingestion', 'erp5_ingestion_mysql_innodb_catalog',
+                             'erp5_web', 'erp5_dms']
+
   def setUpOnce(self):
     # set a dummy localizer (because normally it is cookie based)
     self.portal.Localizer = DummyLocalizer()
@@ -137,10 +143,7 @@ class TestDocumentMixin(ERP5TypeTestCase):
     return getattr(self.getPortal(),'document_module')
 
   def getBusinessTemplateList(self):
-    return ('erp5_core_proxy_field_legacy',
-            'erp5_full_text_myisam_catalog','erp5_base',
-            'erp5_ingestion', 'erp5_ingestion_mysql_innodb_catalog',
-            'erp5_web', 'erp5_dms')
+    return self.bussiness_template_list
 
   def getNeededCategoryList(self):
     return ()
@@ -2539,7 +2542,7 @@ class TestDocumentPerformance(TestDocumentMixin):
     req_time = (after - before)
     # we should have image converted in less than 20s
     self.assertTrue(req_time < 30.0)
-    
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestDocument))
