@@ -104,45 +104,6 @@ class TestKM(TestKMMixIn):
     Test Knowledge Management  system.
   """
 
-  def test_01_AssignedMembersToProject(self):
-    """ Test assigned members to a project. Project is defined in a Web Section  """
-    portal = self.getPortal()
-    websection = self.websection
-
-    # change to KM skins which is defined in erp5_km
-    self.changeSkin('KM')
-
-    assigned_member_list = websection.WebSection_searchAssignmentList(portal_type='Assignment')
-    self.assertEquals(0, len(websection.WebSection_searchAssignmentList(portal_type='Assignment')))
-    project = portal.project_module.newContent(portal_type='Project', \
-                                               id='test_project')
-    another_project = portal.project_module.newContent(portal_type='Project', \
-                                                       id='another_project')
-    # set websection to this project
-    websection.edit(membership_criterion_base_category = ['destination_project'],
-                    membership_criterion_category=['destination_project/%s' \
-                      %project.getRelativeUrl()])
-    # create person and assigned it to this project
-    person = portal.person_module.newContent(portal_type='Person')
-    assignment = person.newContent(portal_type= 'Assignment',
-                                   destination_project = project.getRelativeUrl())
-    another_assignment = person.newContent(portal_type= 'Assignment',
-                                   destination_project = another_project.getRelativeUrl())
-    assignment.open()
-    self.stepTic()
-
-    self.changeSkin('KM')
-    self.assertEquals(1,\
-      len( websection.WebSection_searchAssignmentList(portal_type='Assignment')))
-    self.assertEquals(1,\
-      len( websection.WebSection_countAssignmentList(portal_type='Assignment')))
-
-
-class TestGadgets(TestKMMixIn, ZopeTestCase.Functional):
-  """
-    Test KM Gadgets.
-  """
-
   def afterSetUp(self):
     self.login()
     portal = self.getPortal()
@@ -730,6 +691,9 @@ class TestGadgets(TestKMMixIn, ZopeTestCase.Functional):
               assigned_members_subsection.getRelativeUrl(),
               km_assigned_member_gadget_box_url)
             , self.auth).getBody())
+    # clean up
+    person.manage_delObjects([assignment.getId()])
+    self.stepTic()
     
   def test_11WebSectionContentGadget(self):
     """ Check  Web Section Content Gadgets """
@@ -906,17 +870,45 @@ class TestGadgets(TestKMMixIn, ZopeTestCase.Functional):
     # in listbox selection as well
     self.assertSameSet([km_my_documents_gadget, km_my_contacts_gadget],
                         [x.getSpecialiseValue() for x in self.web_front_knowledge_pad.objectValues()])
+                        
+  def test_18_AssignedMembersToProject(self):
+    """ Test assigned members to a project. Project is defined in a Web Section  """
+    portal = self.getPortal()
+    websection = self.websection
+
+    # change to KM skins which is defined in erp5_km
+    self.changeSkin('KM')
+
+    assigned_member_list = websection.WebSection_searchAssignmentList(portal_type='Assignment')
+    self.assertEquals(0, len(websection.WebSection_searchAssignmentList(portal_type='Assignment')))
+    project = portal.project_module.newContent(portal_type='Project', \
+                                               id='test_project')
+    another_project = portal.project_module.newContent(portal_type='Project', \
+                                                       id='another_project')
+    # set websection to this project
+    websection.edit(membership_criterion_base_category = ['destination_project'],
+                    membership_criterion_category=['destination_project/%s' \
+                      %project.getRelativeUrl()])
+    # create person and assigned it to this project
+    person = portal.person_module.newContent(portal_type='Person')
+    assignment = person.newContent(portal_type= 'Assignment',
+                                   destination_project = project.getRelativeUrl())
+    another_assignment = person.newContent(portal_type= 'Assignment',
+                                   destination_project = another_project.getRelativeUrl())
+    assignment.open()
+    self.stepTic()
+
+    self.changeSkin('KM')
+    self.assertEquals(1,\
+      len( websection.WebSection_searchAssignmentList(portal_type='Assignment')))
+    self.assertEquals(1,\
+      len( websection.WebSection_countAssignmentList(portal_type='Assignment')))                        
 
 class TestKMNoZODBSearch(TestKMMixIn):
   
-  business_template_list = ['erp5_core_proxy_field_legacy',
-                            'erp5_full_text_sphinxse_catalog','erp5_base',
-                            'erp5_jquery', 'erp5_jquery_ui', 'erp5_knowledge_pad',
-                            'erp5_ingestion_mysql_innodb_catalog', 'erp5_ingestion',
-                            'erp5_web', 'erp5_dms',           
-                            'erp5_pdm', 'erp5_simulation',
-                            'erp5_trade', 'erp5_project',
-                            'erp5_credential', 'erp5_km', 'erp5_km_sphinxse_full_text_search']  
+  business_template_list = TestKMMixIn.business_template_list + \
+                           ['erp5_full_text_sphinxse_catalog', \
+                            'erp5_km_sphinxse_full_text_search']  
                              
   def test_01_NoZODBSearch(self):
     """
@@ -929,6 +921,5 @@ class TestKMNoZODBSearch(TestKMMixIn):
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestKM))
-  suite.addTest(unittest.makeSuite(TestGadgets))
   #suite.addTest(unittest.makeSuite(TestKMNoZODBSearch))
   return suite
