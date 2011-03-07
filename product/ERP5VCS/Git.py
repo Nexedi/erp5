@@ -174,8 +174,9 @@ class Git(WorkingCopy):
         if parent:
           path_list.append(parent)
       else:
-        if path_dict[parent] != status:
-          path_dict[parent] = '*'
+        while path_dict.get(parent, status) != status:
+          path_dict[parent] = status = '*'
+          parent = os.path.dirname(parent)
     status_dict = {'*': 'normal', '': 'normal', 'A': 'added', 'D': 'deleted',
                    'M': 'modified', 'U': 'conflicted'}
     def dir_status(status):
@@ -183,6 +184,7 @@ class Git(WorkingCopy):
     root = Dir(os.path.normpath(self.prefix), dir_status(path_dict['']))
     path_list = [(node_dict.pop(''), root)]
     for content, node in path_list:
+      content.sort()
       for path in content:
         status = path_dict[path]
         if show_unmodified or status:
