@@ -15,8 +15,8 @@ Business Template | manage_field_library
 Business Template | rename_proxy_field
 Business Template | svn_cleanup_locks
 Business Template | svn_commit
-Business Template | update_svn_bt
-Business Template | update_svn_bt_norevert
+Business Template | update_vcs_bt
+Business Template | update_vcs_bt_norevert
 Business Template | view_svn_repos_info
 Glossary Module | create_term_for_translation
 Glossary Module | export_po_file

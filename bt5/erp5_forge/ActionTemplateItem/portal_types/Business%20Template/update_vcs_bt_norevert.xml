@@ -30,7 +30,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>icon</string> </key>
@@ -38,7 +40,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>update_svn_bt</string> </value>
+            <value> <string>update_vcs_bt_norevert</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -50,15 +52,11 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <float>12.0</float> </value>
+            <value> <float>12.5</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-Revert & Update Business Template from SVN
-
-]]></string> </value>
+            <value> <string>Update Business Template from VCS</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -75,7 +73,7 @@ Revert & Update Business Template from SVN
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/BusinessTemplate_doSvnUpdate</string> </value>
+            <value> <string>string:${object_url}/BusinessTemplate_doVcsUpdate?keep:int=1</string> </value>
         </item>
       </dictionary>
     </pickle>

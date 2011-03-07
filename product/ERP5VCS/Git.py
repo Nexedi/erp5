@@ -201,6 +201,27 @@ class Git(WorkingCopy):
             path_list.append((content, child))
     return (root.sub_dirs or root.sub_files) and root
 
+  def update(self, keep=False):
+    if self.getAheadCount():
+      raise NotImplementedError
+    if not keep:
+      self.clean()
+      self.git('pull', '--ff-only')
+    elif 1: # elif local_changes:
+      raise NotImplementedError
+      # addremove
+      # write-tree | commit-tree -> A
+      # symbolic-ref HEAD -> B
+      # try:
+      #   checkout -f @{u}
+      #   cherry-pick -n A || :
+      #   update-ref B HEAD
+      # finally:
+      #   symbolic-ref HEAD B
+    else:
+      self.git('pull', '--ff-only')
+    return self.aq_parent.download(self.working_copy)
+
   def showOld(self, path):
     return self.git('show', 'HEAD:' + self.prefix + path,
                     strip=False, cwd=self.toplevel)

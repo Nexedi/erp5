@@ -73,7 +73,7 @@ return request.RESPONSE.redirect(\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BusinessTemplate_doSvnUpdate</string> </value>
+            <value> <string>BusinessTemplate_doVcsUpdate</string> </value>
         </item>
       </dictionary>
     </pickle>
