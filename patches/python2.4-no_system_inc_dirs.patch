@@ -1,0 +1,50 @@
+From: Arnaud Fontaine <arnaud.fontaine@nexedi.com>
+Date: Mon, 7 Mar 2011 14:10:31 +0900
+Subject: [PATCH] Do not use system include directory
+
+Backport python-2.6.6-no_system_inc_dirs.patch to Python 2.4.
+
+--- setup.py	2006-10-09 02:41:25.000000000 +0900
++++ setup.py	2011-03-07 15:15:00.724000778 +0900
+@@ -270,7 +270,7 @@
+             '/lib64', '/usr/lib64',
+             '/lib', '/usr/lib',
+             ]
+-        inc_dirs = self.compiler.include_dirs + ['/usr/include']
++        inc_dirs = self.compiler.include_dirs
+         exts = []
+ 
+         platform = self.get_platform()
+@@ -528,31 +528,7 @@
+ 
+         # construct a list of paths to look for the header file in on
+         # top of the normal inc_dirs.
+-        db_inc_paths = [
+-            '/usr/include/db4',
+-            '/usr/local/include/db4',
+-            '/opt/sfw/include/db4',
+-            '/sw/include/db4',
+-            '/usr/include/db3',
+-            '/usr/local/include/db3',
+-            '/opt/sfw/include/db3',
+-            '/sw/include/db3',
+-        ]
+-        # 4.x minor number specific paths
+-        for x in (0,1,2,3,4):
+-            db_inc_paths.append('/usr/include/db4%d' % x)
+-            db_inc_paths.append('/usr/include/db4.%d' % x)
+-            db_inc_paths.append('/usr/local/BerkeleyDB.4.%d/include' % x)
+-            db_inc_paths.append('/usr/local/include/db4%d' % x)
+-            db_inc_paths.append('/pkg/db-4.%d/include' % x)
+-            db_inc_paths.append('/opt/db-4.%d/include' % x)
+-        # 3.x minor number specific paths
+-        for x in (2,3):
+-            db_inc_paths.append('/usr/include/db3%d' % x)
+-            db_inc_paths.append('/usr/local/BerkeleyDB.3.%d/include' % x)
+-            db_inc_paths.append('/usr/local/include/db3%d' % x)
+-            db_inc_paths.append('/pkg/db-3.%d/include' % x)
+-            db_inc_paths.append('/opt/db-3.%d/include' % x)
++        db_inc_paths = []
+ 
+         # Add some common subdirectories for Sleepycat DB to the list,
+         # based on the standard include directories. This way DB3/4 gets
