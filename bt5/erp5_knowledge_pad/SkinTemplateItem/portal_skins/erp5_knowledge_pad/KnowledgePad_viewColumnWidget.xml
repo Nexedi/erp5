@@ -55,6 +55,7 @@
                     gadget_state python: gadget.getValidationState();\n
                     dummy python: request.set(\'is_gadget_mode\', \'1\');\n
                     dummy python: request.set(\'box_relative_url\', box.getRelativeUrl());\n
+                    dummy python: request.form.update(dict(box_relative_url=box.getRelativeUrl()));\n
                     edit_form_id gadget/getEditFormId;\n
                     view_form_id gadget/getViewFormId;\n
                     render_type gadget/getRenderType;\n
