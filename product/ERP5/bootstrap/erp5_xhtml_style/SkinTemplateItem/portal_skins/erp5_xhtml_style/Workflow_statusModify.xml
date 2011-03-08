@@ -50,9 +50,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.Formulator.Errors import FormValidationError\n
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.Formulator.Errors import FormValidationError\n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import translateString\n
+from Products.ERP5Type.Log import log\n
 portal = context.getPortalObject()\n
 request=context.REQUEST\n
 \n
@@ -116,6 +119,10 @@ except ValidationFailed, error_message:\n
       message = str(message)\n
   else:\n
     message = str(error_message)\n
+  if len(message) > 2000: # too long message will generate a too long URI\n
+                          # that would become an error.\n
+    log("Status message has been truncated")\n
+    message = "%s ..." % message[:(2000 - 4)]\n
   return context.Base_redirect(form_id,\n
                   keep_items={\'portal_status_message\': message}, **kw)\n
 \n
@@ -131,7 +138,9 @@ else:\n
 \n
 return redirect_document.Base_redirect(form_id,\n
                 keep_items={\'portal_status_message\': portal_status_message})\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
