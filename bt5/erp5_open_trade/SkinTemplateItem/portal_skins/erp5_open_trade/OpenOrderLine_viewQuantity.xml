@@ -109,8 +109,8 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_total_price</string>
                         <string>my_total_quantity</string>
+                        <string>my_total_price</string>
                       </list>
                     </value>
                 </item>
