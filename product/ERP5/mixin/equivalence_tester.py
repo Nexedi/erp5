@@ -176,7 +176,7 @@ class EquivalenceTesterMixin:
     message = '<a href="${decision_url}">${property_name} of ${decision_value} of ${decision_type} ${decision_title}</a> of <a href="${delivery_url}">${delivery_title}</a> is different from <a href="${prevision_url}">planned ${property_name} of ${prevision_value}</a>.'
     decision_movement = self.getPortalObject().unrestrictedTraverse(
       divergence_message.getProperty('object_relative_url'))
-    decision_delivery = decision_movement.getDeliveryValue()
+    decision_delivery = decision_movement.getRootDeliveryValue()
     mapping = {
       'decision_url':decision_movement.absolute_url(),
       # TODO we need a way to map the property name to the business word,
