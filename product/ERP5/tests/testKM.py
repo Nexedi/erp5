@@ -910,7 +910,7 @@ class TestKMSearch(TestKMMixIn):
   
   business_template_list = TestKMMixIn.business_template_list + ["erp5_km_ui_test", "erp5_km_sphinxse_full_text_search"]
   
-  #@expectedFailure
+  @expectedFailure
   def test_01_NoZODBSphinxSeSearch(self):
     """
       Test that with 'No ZODB' search we do not access a ZODB object.
