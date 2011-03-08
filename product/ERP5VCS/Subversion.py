@@ -160,6 +160,11 @@ class Subversion(WorkingCopy):
     """
     return self._getClient().log(os.path.join(self.working_copy, path))
 
+  @chdir_working_copy
+  def clean(self):
+    self.revert('.', True)
+    self._clean('.')
+
   def _clean(self, path):
     client = self._getClient()
     for status_obj in client.status(path):

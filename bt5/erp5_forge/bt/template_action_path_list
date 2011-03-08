@@ -7,6 +7,7 @@ Bug | bug_line_send
 Bug | document_list
 Bug | new_file
 Bug | view
+Business Template | clean_vcs_bt
 Business Template | conflicted_files
 Business Template | create_report
 Business Template | create_working_copy
