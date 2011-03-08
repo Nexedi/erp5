@@ -2352,7 +2352,7 @@ if python_version >= '2.6':
 elif python_version == '2.4':
   class AssertPython24(AssertSoftwareMixin):
     # .1 could be read from current buildout
-    parts_name = 'rebootstrap.1.parts'
+    parts_name = 'parts'
     python_path = parts_name + '/python%s' % python_version
     rpath_list = [
         'bzip2',
@@ -2380,7 +2380,7 @@ elif python_version == '2.4':
     def test_ld_dyn_readline(self):
       self.assertLibraryList(self.python_path+'/lib/python%s/lib-dynload/readline.so' % python_version, [
         'libc',
-        'libncurses',
+        'libncursesw',
         'libreadline',
         'libpthread',
         ], self.rpath_list)
