@@ -57,6 +57,7 @@ It defines what will be sold and how often and how many.</string> </value>
                 <string>open_order</string>
                 <string>path</string>
                 <string>purchase</string>
+                <string>supply</string>
               </tuple>
             </value>
         </item>
