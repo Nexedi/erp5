@@ -363,6 +363,20 @@ class TestSQLCatalog(unittest.TestCase):
         
   def test_DateTimeKey(self):
     self._testDateTimeKey('date')
+    # XXX: It is unknown what these tests should produce when used with a
+    # related key: should the join happen or not ?
+    self.catalog(
+      ReferenceQuery(ReferenceQuery([], operator='or'), operator='and'),
+      {'date': ' '})
+    self.catalog(
+      ReferenceQuery(ReferenceQuery([], operator='or'), operator='and'),
+      {'date': '<>2008/01/01'})
+    self.catalog(
+      ReferenceQuery(ReferenceQuery([], operator='or'), operator='and'),
+      {'date': '<'})
+    self.catalog(
+      ReferenceQuery(ReferenceQuery([], operator='or'), operator='and'),
+      {'date': '00:00:00'})
 
   def test_relatedDateTimeKey(self):
     self._testDateTimeKey('related_date')
