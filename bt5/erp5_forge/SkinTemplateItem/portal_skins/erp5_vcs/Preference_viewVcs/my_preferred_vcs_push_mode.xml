@@ -10,15 +10,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>default</string>
-                <string>enabled</string>
                 <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_push</string> </value>
+            <value> <string>my_preferred_vcs_push_mode</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -55,18 +53,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>enabled</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -78,10 +64,6 @@
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string></string> </value>
-                </item>
               </dictionary>
             </value>
         </item>
@@ -90,16 +72,8 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
-                    <key> <string>enabled</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>your_checkbox</string> </value>
+                    <value> <string>my_checkbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -111,36 +85,10 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Push</string> </value>
+                    <value> <string>Push Local Commits</string> </value>
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>preferences/getPreferredVcsPushMode</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: here.getVcsTool().reference != \'svn\'</string> </value>
         </item>
       </dictionary>
     </pickle>
