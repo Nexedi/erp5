@@ -200,6 +200,7 @@ class WorkingCopy(Implicit):
       file.write(str(revision))
     finally:
       file.close()
+    return revision
 
   def getLastChangelog(self):
     """Return last changelog of a business template

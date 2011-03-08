@@ -4567,7 +4567,10 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # Make sure that everything is sane.
       self.clean()
 
-      self.updateRevisionNumber()
+      try:
+        self.setRevision(self.getVcsTool().newRevision())
+      except NotAWorkingCopyError:
+        self.updateRevisionNumber()
       self._setTemplateFormatVersion(1)
       self.storeTemplateItemData()
 
