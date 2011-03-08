@@ -908,7 +908,7 @@ class TestKM(TestKMMixIn):
 
 class TestKMSearch(TestKMMixIn):
   
-  business_template_list = TestKMMixIn.business_template_list + ["erp5_km_ui_test", "erp5_km_sphinxse_full_text_search"]
+  business_template_list = TestKMMixIn.business_template_list + ["erp5_km_ui_test_data", "erp5_km_sphinxse_full_text_search"]
   
   @expectedFailure
   def test_01_NoZODBSphinxSeSearch(self):
