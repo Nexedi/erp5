@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="XMLObject" module="Products.ERP5Type.XMLObject"/>
+      <global name="Knowledge Box" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -66,6 +66,16 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>web_section_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -73,13 +83,13 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>specialise/portal_gadgets/km_latest_documents</string>
+                <string>specialise/portal_gadgets/erp5_documentation</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>2</string> </value>
+            <value> <string>6</string> </value>
         </item>
         <item>
             <key> <string>listbox_selection_list_lines</string> </key>
@@ -91,23 +101,23 @@
         </item>
         <item>
             <key> <string>preferred_password</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>preferred_rss_feed</string> </key>
-            <value> <string>https://www.tiolive.com/nexedi/web_site_module/erp5_community/documentation_section/WebSection_viewContentListAsRSS</string> </value>
+            <value> <string>http://www.ft.com/rss/home/europe</string> </value>
         </item>
         <item>
             <key> <string>preferred_username</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Documentation</string> </value>
+            <value> <string>My Documents</string> </value>
+        </item>
+        <item>
+            <key> <string>web_section_url</string> </key>
+            <value> <string>ad/gadget</string> </value>
         </item>
       </dictionary>
     </pickle>

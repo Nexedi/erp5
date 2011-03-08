@@ -357,7 +357,7 @@
         </item>
         <item>
             <key> <string>layout_display_language_icons</string> </key>
-            <value> <int>0</int> </value>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>layout_display_search_widget</string> </key>
@@ -377,7 +377,7 @@
         </item>
         <item>
             <key> <string>layout_force_anonymous_gadget</string> </key>
-            <value> <int>0</int> </value>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>layout_max_breadcrumb_length</string> </key>
