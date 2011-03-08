@@ -1207,8 +1207,14 @@ def initializeProduct( context,
                           icon = icon)
 
 #####################################################
-# Constructor initialization
+# TALES Expression
 #####################################################
+
+# This gets the Engine and CompilerError classes for TALES Expression
+# wherever it is defined (which is different depending on the Zope
+# version)
+ExpressionEngine = getEngine()
+CompilerError = ExpressionEngine.getCompilerError()
 
 def createExpressionContext(object, portal=None):
   """
@@ -1276,13 +1282,9 @@ def createExpressionContext(object, portal=None):
       # the proper name these days
       'context':         object,
       }
-  ec = getEngine().getContext(data)
+  ec = ExpressionEngine.getContext(data)
   tv[cache_key] = ec
   return ec
-
-# This gets the CompilerError class wherever it is defined (which is
-# different depending on the Zope version)
-CompilerError = getEngine().getCompilerError()
 
 def evaluateExpressionFromString(expression_context, expression_string):
   """
@@ -1309,6 +1311,22 @@ def evaluateExpressionFromString(expression_context, expression_string):
   except (AttributeError, CompilerError, ValueError), e:
     raise ValueError("Error in TALES expression: '%s': %s" % (expression_string,
                                                               str(e)))
+
+def isValidTALESExpression(value):
+  """return if given value is valid TALES Expression.
+  This validator only validates Syntax of TALES Expression,
+  it does not tell that Expression is callable on given context
+
+  - value: string we try to compile
+
+  return tuple: (boolean result, error_message or None)
+  """
+  try:
+    ExpressionEngine.compile(value)
+  except CompilerError, message:
+    return False, message
+  else:
+    return True, None
 
 #####################################################
 # More Useful methods which require Base
@@ -1724,22 +1742,3 @@ def reencodeUrlEscapes(url):
       url += [_reencodeUrlEscapes_map[c] for c in part]
   except StopIteration:
     return ''.join(url)
-
-from zope.tales.engine import Engine
-from zope.tales.tales import CompilerError
-
-def isValidTALESExpression(value):
-  """return if given value is valid TALES Expression.
-  This validator only validates Syntax of TALES Expression,
-  it does not tell that Expression is callable on given context
-
-  - value: string we try to compile
-
-  return tuple: (boolean result, error_message or None)
-  """
-  try:
-    Engine.compile(value)
-  except CompilerError, message:
-    return False, message
-  else:
-    return True, None
