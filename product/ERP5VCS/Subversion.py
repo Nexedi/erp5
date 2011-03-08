@@ -357,6 +357,7 @@ class BusinessTemplateWorkingCopy(BusinessTemplateFolder):
     self.versioned_dict = dict((x.getPath(), x) for x in self.client.status('.')
       if str(x.getTextStatus()) not in ('ignored', 'unversioned'))
     del self.versioned_dict['.']
+    self.versioned_dict[''] = None
     self.added_set = set()
 
     # Walk current tree
