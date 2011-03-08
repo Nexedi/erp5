@@ -2243,6 +2243,55 @@ class AssertStunnel(AssertSoftwareMixin):
       'zlib',
       ])
 
+class AssertPython27(AssertSoftwareMixin):
+  # .2 could be read from current buildout
+  parts_name = 'rebootstrap.2.parts'
+  python_path = parts_name + '/python2.7'
+  rpath_list = [
+      'bzip2',
+      'gdbm',
+      'ncurses',
+      'openssl',
+      'readline',
+      'sqlite3',
+      'zlib',
+      ]
+  def test_ld_dyn_dbm(self):
+    self.assertLibraryList(self.python_path+'/lib/python2.7/lib-dynload/dbm.so', [
+      'libc',
+      'libgdbm',
+      'libgdbm_compat',
+      'libpthread',
+      ], self.rpath_list)
+  def test_ld_dyn_locale(self):
+    self.assertLibraryList(self.python_path+'/lib/python2.7/lib-dynload/_locale.so', [
+      'libc',
+      'libpthread',
+      ], self.rpath_list)
+  def test_ld_dyn_readline(self):
+    self.assertLibraryList(self.python_path+'/lib/python2.7/lib-dynload/readline.so', [
+      'libc',
+      'libncursesw',
+      'libreadline',
+      'libpthread',
+      ], self.rpath_list)
+  def test_ld_dyn_sqlite3(self):
+    self.assertLibraryList(self.python_path+'/lib/python2.7/lib-dynload/_sqlite3.so', [
+      'libc',
+      'libsqlite3',
+      'libpthread',
+      ], self.rpath_list)
+  def test_ld_dyn_ssl(self):
+    self.assertLibraryList(self.python_path+'/lib/python2.7/lib-dynload/_ssl.so', [
+      'libc',
+      'libssl',
+      'libcrypto',
+      'libpthread',
+      ], self.rpath_list)
+  def test_no_failed_ext_lib(self):
+    self.assertEquals([],
+                      glob(self.python_path+'/lib/python2.7/lib-dynload/*_failed.so'))
+
 # tests for Zope-2.12 buildout only
 if python_version >= '2.6':
   class AssertPython26(AssertSoftwareMixin):
