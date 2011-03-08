@@ -72,8 +72,6 @@ CONFIG = dict(
   # Conversion Server
   conversion_server_port=23000,
   conversion_server_ooo_port=23060,
-  test_conversion_server_port=24000,
-  test_conversion_server_ooo_port=24060,
 )
 
 
@@ -107,7 +105,6 @@ class Recipe(BaseSlapRecipe):
       self.parameter_dict.setdefault(k, v)
     self.installMemcached()
     self.installKumo()
-    self.installTestConversionServer()
     self.installConversionServer()
     self.installTestCertificateAuthority()
     self.installCertificateAuthority()
@@ -225,8 +222,8 @@ class Recipe(BaseSlapRecipe):
           '--erp5_sql_connection_string', '%(mysql_test_database)s@%'
           '(mysql_ip)s:%(mysql_port)s %(mysql_test_user)s '
           '%(mysql_test_password)s' % self.connection_dict,
-          '--conversion_server_hostname=%(test_conversion_server_ip)s' % self.connection_dict,
-          '--conversion_server_port=%(test_conversion_server_port)s' % self.connection_dict
+          '--conversion_server_hostname=%(conversion_server_ip)s' % self.connection_dict,
+          '--conversion_server_port=%(conversion_server_port)s' % self.connection_dict
       ]
         )])[0]
     self.path_list.append(runUnitTest)
@@ -326,9 +323,6 @@ class Recipe(BaseSlapRecipe):
 
   def installConversionServer(self):
     self._installConversionServer()
-
-  def installTestConversionServer(self):
-    self._installConversionServer('test_')
 
   def installCertificateAuthority(self):
     self._installCertificateAuthority()
