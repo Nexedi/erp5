@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.JSONEncoder import encodeInJson as dumps\n
+            <value> <string>from json import dumps\n
 \n
 if context.portal_membership.isAnonymousUser():\n
   return dumps(None)\n

@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.JSONEncoder import encodeInJson as dumps\n
+            <value> <string>from json import dumps\n
 \n
 catalog_object = context.portal_catalog.getResultValue(path=document_path)\n
 document = context.restrictedTraverse(catalog_object.getPath())\n
