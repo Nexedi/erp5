@@ -40,6 +40,7 @@ class TestWorklist(ERP5TypeTestCase):
   login = PortalTestCase.login
 
   checked_portal_type = 'Organisation'
+  module_selection_name = 'organisation_module_selection'
   checked_validation_state = 'draft'
   not_checked_validation_state = 'not_draft'
   checked_workflow = 'validation_workflow'
@@ -70,6 +71,8 @@ class TestWorklist(ERP5TypeTestCase):
   def beforeTearDown(self):
     self.clearModule(self.portal.person_module)
     self.clearModule(self.portal.organisation_module)
+    self.clearModule(self.portal.portal_categories.region)
+    self.clearModule(self.portal.portal_categories.role)
 
   def getBusinessTemplateList(self):
     """
@@ -157,13 +160,14 @@ class TestWorklist(ERP5TypeTestCase):
     variables.addVariable(variable_id)
     assert variables[variable_id].for_catalog == 1
 
-  def createWorklist(self, workflow_id, worklist_id, actbox_name, **kw):
+  def createWorklist(self, workflow_id, worklist_id, actbox_name,
+                     actbox_url=None, **kw):
     worklists = self.getWorkflowTool()[workflow_id].worklists
     worklists.addWorklist(worklist_id)
     worklists._getOb(worklist_id).setProperties('',
-        actbox_name='%s (%%(count)s)' % actbox_name, props=dict(
-          (k.startswith('guard_') and k or 'var_match_'+k, v)
-          for k, v in kw.iteritems()))
+        actbox_name='%s (%%(count)s)' % actbox_name, actbox_url=actbox_url,
+        props=dict((k.startswith('guard_') and k or 'var_match_'+k, v)
+                    for k, v in kw.iteritems()))
 
   def removeWorklist(self, workflow_id, worklist_id_list):
     worklists = self.getWorkflowTool()[workflow_id].worklists
@@ -203,12 +207,25 @@ class TestWorklist(ERP5TypeTestCase):
   def clearCache(self):
     self.portal.portal_caches.clearAllCache()
 
-  def checkWorklist(self, result, name, count):
+  def checkWorklist(self, result, name, count, url_parameter_dict=None):
     entry_list = [x for x in result if x['name'].startswith(name)]
     self.assertEquals(len(entry_list), count and 1)
     if count:
       self.assertEquals(count,
         self.getWorklistDocumentCountFromActionName(entry_list[0]['name']))
+    if not entry_list:
+      return
+    url = entry_list[0].get('url')
+    if url_parameter_dict:
+      self.assertTrue(url, 'Can not check url parameters without url')
+      url = '%s%s' % (self.portal.getId(), url[len(self.portal.absolute_url()):])
+      # Touch URL to save worklist parameters in listbox selection
+      self.publish(url, 'manager:') # XXX which user ?
+      selection_parameter_dict = self.portal.portal_selections.getSelectionParamsFor(
+                                                    self.module_selection_name)
+      for parameter, value in url_parameter_dict.iteritems():
+        self.assertTrue(parameter in selection_parameter_dict)
+        self.assertEquals(value, selection_parameter_dict[parameter])
 
   def test_01_permission(self, quiet=0, run=run_all_test):
     """
@@ -449,6 +466,67 @@ class TestWorklist(ERP5TypeTestCase):
     finally:
       self.removeWorklist(self.checked_workflow, 
                           ['guard_expression_worklist'])
+
+  def test_04_dynamic_variables(self):
+    """
+    Test related keys and TALES Expression
+    """
+
+    workflow_tool = self.getWorkflowTool()
+    self.createManagerAndLogin()
+
+    self.logMessage("Create categories")
+    for base_category, category_list in (
+        ('region', ('somewhere', 'elsewhere')),
+        ('role',   ('client',    'supplier'))):
+      newContent = self.getCategoryTool()[base_category].newContent
+      for category in category_list:
+        newContent(portal_type='Category', id=category)
+
+    self.logMessage("Create worklists using 'region_uid' related key"\
+                    " and TALES Expression")
+    self.addWorkflowCataloguedVariable(self.checked_workflow,
+                                       'region_uid')
+    self.createWorklist(self.checked_workflow, 'region_worklist',
+                        'has_semewhere_region',
+                        portal_type=self.checked_portal_type,
+                        actbox_url='organisation_module?'\
+                        'region_uid:list=%(region_uid)s&'\
+                        'portal_type:list=%(portal_type)s&reset:int=1',
+                        region_uid='python:object.getPortalObject().'\
+                        'portal_categories.getCategoryUid("somewhere",'\
+                        ' base_category="region")')
+
+    try:
+      document = self.createDocument()
+      transaction.commit()
+      self.tic()
+      self.clearCache()
+      self.logMessage("  Check no document has region categories defined")
+      result = workflow_tool.listActions(object=document)
+      self.checkWorklist(result, 'has_semewhere_region', 0)
+
+      self.logMessage("  Creates documents with region categories defined")
+
+      self.createDocument(region='somewhere')
+      self.createDocument(region='somewhere')
+      self.createDocument(region='elsewhere')
+
+      transaction.commit()
+      self.tic()
+      self.clearCache()
+      self.logMessage(
+               "  Check there are documents with region categories defined")
+      result = workflow_tool.listActions(object=document)
+      url_parameter_dict = {'region_uid': [str(self.portal.portal_categories.\
+                                          getCategoryUid("region/somewhere"))],
+                            'portal_type': [self.checked_portal_type]}
+      self.checkWorklist(result, 'has_semewhere_region', 2,
+                         url_parameter_dict=url_parameter_dict)
+
+    finally:
+      self.removeWorklist(self.checked_workflow, ['region_worklist'])
+
 
 def test_suite():
   suite = unittest.TestSuite()
