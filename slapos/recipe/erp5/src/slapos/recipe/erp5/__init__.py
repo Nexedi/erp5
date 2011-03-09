@@ -105,8 +105,6 @@ class Recipe(BaseSlapRecipe):
     self.installMemcached()
     self.installKumo()
     self.installConversionServer()
-    self.installTestCertificateAuthority()
-    self.installCertificateAuthority()
     self.installMysqlServer()
     self.installERP5()
     zodb_dir = os.path.join(self.data_root_directory,
@@ -469,7 +467,6 @@ class Recipe(BaseSlapRecipe):
     self.path_list.append(wrapper)
 
     self.installLoginApache(index)
-    self.installKeyAuthorisationApache(index)
 
   def _getApacheConfigurationDict(self, prefix, ip, port):
     apache_conf = dict()
