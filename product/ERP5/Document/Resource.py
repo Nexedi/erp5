@@ -113,7 +113,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
         elif isinstance(base_category_list, str):
           base_category_list = (base_category_list,)
 
-        individual_variation_list = self.searchFolder(
+        individual_variation_list = self.contentValues(
             portal_type=self.getPortalVariationTypeList(),
             sort_on=[('title','ascending')])
         individual_variation_list = [x.getObject() for x in
@@ -185,7 +185,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
                             display_id=display_id, base=base, **kw)
 
       if not omit_individual_variation:
-        individual_variation_list = self.searchFolder(
+        individual_variation_list = self.contentValues(
             portal_type=self.getPortalVariationTypeList())
         individual_variation_list = [x.getObject() for x in
             individual_variation_list]
