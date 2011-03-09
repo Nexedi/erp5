@@ -4,10 +4,12 @@ import signal
 import subprocess
 import time
 
-def execute(args):
+def execute(args, env=None):
   """Portable execution with process replacement"""
+  if env is None:
+    env = {}
   # Note: Candidate for slapos.lib.recipe
-  os.execv(args[0], args)
+  os.execve(args[0], args, env)
 
 child_pg = None
 def sig_handler(signal, frame):
