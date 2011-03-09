@@ -2266,6 +2266,7 @@ class AssertPython27(AssertSoftwareMixin):
   def test_ld_dyn_locale(self):
     self.assertLibraryList(self.python_path+'/lib/python2.7/lib-dynload/_locale.so', [
       'libc',
+      'libintl',
       'libpthread',
       ], self.rpath_list)
   def test_ld_dyn_readline(self):
