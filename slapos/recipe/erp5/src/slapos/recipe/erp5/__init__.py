@@ -123,6 +123,7 @@ class Recipe(BaseSlapRecipe):
     for zope_number in xrange(1, CONFIG['zope_amount'] + 1):
       self.installZope(zope_number, simple_zope)
 
+    self.installERP5Site()
     self.installHaproxy()
     self.installTestRunner()
     self.linkBinary()
