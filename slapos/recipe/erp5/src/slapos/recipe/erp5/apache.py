@@ -7,7 +7,7 @@ def runApache(args):
   conf = args[0]
   while True:
     ready = True
-    for f in conf['required_path_list']:
+    for f in conf.get('required_path_list', []):
       if not os.path.exists(f):
         print 'File %r does not exists, sleeping for %s' % (f, sleep)
         ready = False
