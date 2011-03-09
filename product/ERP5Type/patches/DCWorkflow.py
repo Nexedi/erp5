@@ -152,10 +152,14 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
               var_match_keys = qdef.getVarMatchKeys()
               if var_match_keys:
                   # Check the catalog for items in the worklist.
-                  catalog = getToolByName(self, 'portal_catalog')
+                  catalog = portal.portal_catalog
                   for k in var_match_keys:
                     v = qdef.getVarMatch(k)
-                    v_fmt = map(lambda x, info=info: x%info, v)
+                    if instance(v, Expression):
+                      v_fmt = v(createExprContext(StateChangeInfo(portal,
+                                self, kwargs=info.__dict__.copy())))
+                    else:
+                      v_fmt = map(lambda x, info=info: x%info, v)
                     dict[k] = v_fmt
                   # Patch to automatically filter workflists per portal type
                   # so that the same state can be used for different
@@ -205,6 +209,8 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
 
 DCWorkflowDefinition.listGlobalActions = DCWorkflowDefinition_listGlobalActions
 
+from Products.DCWorkflow.Expression import Expression
+
 from Products.ERP5Type.patches.WorkflowTool import SECURITY_PARAMETER_ID, WORKLIST_METADATA_KEY
 def DCWorkflowDefinition_getWorklistVariableMatchDict(self, info,
                                                       check_guard=True):
@@ -241,7 +247,17 @@ def DCWorkflowDefinition_getWorklistVariableMatchDict(self, info,
     action_box_name = worklist_definition.actbox_name
     guard = worklist_definition.guard
     if action_box_name:
-      variable_match = dict(((x, [y % info for y in worklist_definition.getVarMatch(x)]) for x in worklist_definition.getVarMatchKeys()))
+      variable_match = {}
+      for key in worklist_definition.getVarMatchKeys():
+        var = worklist_definition.getVarMatch(key)
+        if isinstance(var, Expression):
+          evaluated_value = var(createExprContext(StateChangeInfo(portal,
+                                self, kwargs=info.__dict__.copy())))
+          if isinstance(evaluated_value, (str, int, long)):
+            evaluated_value = [str(evaluated_value)]
+        else:
+          evaluated_value = [x % info for x in var]
+        variable_match[key] = evaluated_value
       if 'portal_type' in variable_match and len(variable_match['portal_type']):
         portal_type_intersection = set(variable_match['portal_type'])\
             .intersection(portal_type_list)
@@ -264,8 +280,9 @@ def DCWorkflowDefinition_getWorklistVariableMatchDict(self, info,
       if is_permitted_worklist:
         format_data = TemplateDict()
         format_data._push(info)
-        format_data._push({'portal_type': '&portal_type='.join(variable_match['portal_type']),
-                           'local_roles': '&local_roles='.join(variable_match.get(SECURITY_PARAMETER_ID, []))})
+        variable_match.setdefault(SECURITY_PARAMETER_ID, ())
+        format_data._push(dict((k, ('&%s:list=' % k).join(v)) for\
+                                           k, v in variable_match.iteritems()))
         variable_match[WORKLIST_METADATA_KEY] = {'format_data': format_data,
                                                  'worklist_title': action_box_name,
                                                  'worklist_id': worklist_id,

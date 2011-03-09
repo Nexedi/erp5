@@ -119,6 +119,8 @@ def getValidCriterionDict(worklist_match_dict, sql_catalog,
     if isValidColumn(criterion_id):
       if isinstance(criterion_value, tuple):
         criterion_value = list(criterion_value)
+      elif isinstance(criterion_value, (str, int, long)):
+        criterion_value = [criterion_value]
       assert criterion_id not in valid_criterion_dict
       valid_criterion_dict[criterion_id] = criterion_value
     elif criterion_id == WORKLIST_METADATA_KEY:
