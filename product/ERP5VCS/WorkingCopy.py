@@ -192,6 +192,9 @@ class WorkingCopy(Implicit):
     bta = BusinessTemplateWorkingCopy(creation=1)
     self.addremove(*bta.export(business_template))
 
+  def showOld(self, path):
+    raise NotAWorkingCopyError
+
   def newRevision(self):
     path = os.path.join('bt', 'revision')
     revision = int(self.showOld(path)) + 1
