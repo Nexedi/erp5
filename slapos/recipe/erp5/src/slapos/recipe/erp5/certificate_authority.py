@@ -2,6 +2,7 @@ import os
 import subprocess
 import time
 
+
 def popenCommunicate(command_list, input=None):
   subprocess_kw = dict(stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
   if input is not None:
@@ -14,6 +15,7 @@ def popenCommunicate(command_list, input=None):
     raise ValueError('Issue during calling %r, result was:\n%s' % (command_list,
       result))
   return result
+
 
 def checkCertificateAuthority(ca_conf):
   file_list = [
@@ -47,8 +49,9 @@ def checkCertificateAuthority(ca_conf):
       pass
     raise
 
+
 def checkCertificate(common_name, key, certificate, ca_conf):
-  file_list = [ key, certificate ]
+  file_list = [key, certificate]
   ready = True
   for f in file_list:
     if not os.path.exists(f):
@@ -87,9 +90,11 @@ def checkLoginCertificate(ca_conf):
   checkCertificate('Login Based Access', ca_conf['login_key'],
       ca_conf['login_certificate'], ca_conf)
 
+
 def checkKeyAuthCertificate(ca_conf):
   checkCertificate('Key Based Access', ca_conf['key_auth_key'],
       ca_conf['key_auth_certificate'], ca_conf)
+
 
 def runCertificateAuthority(args):
   ca_conf = args[0]

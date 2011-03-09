@@ -476,14 +476,14 @@ class Recipe(BaseSlapRecipe):
     apache_conf['pid_file'] = os.path.join(self.run_directory,
         prefix + '.pid')
     apache_conf['lock_file'] = os.path.join(self.run_directory,
-        prefix+'.lock')
+        prefix + '.lock')
     apache_conf['ip'] = ip
     apache_conf['port'] = port
     apache_conf['server_admin'] = 'admin@'
     apache_conf['error_log'] = os.path.join(self.log_directory,
-        prefix+'-error.log')
+        prefix + '-error.log')
     apache_conf['access_log'] = os.path.join(self.log_directory,
-        prefix+'-access.log')
+        prefix + '-access.log')
     return apache_conf
 
   def _writeApacheConfiguration(self, prefix, apache_conf):
@@ -498,14 +498,14 @@ class Recipe(BaseSlapRecipe):
           backend_port=self.backend_port,
           backend_path='/',
           port=apache_conf['port'],
-          vhname=path.replace('/',''),
+          vhname=path.replace('/', ''),
     )
     rewrite_rule = rewrite_rule_template % d
     apache_conf.update(**dict(
       path_enable=path,
       rewrite_rule=rewrite_rule
     ))
-    return self.createConfigurationFile(prefix+'.conf',
+    return self.createConfigurationFile(prefix + '.conf',
         pkg_resources.resource_string(__name__,
           'template/apache.zope.conf.in') % apache_conf)
 
@@ -520,21 +520,21 @@ SSLRandomSeed connect builtin
         self.getLocalIPv4Address(), CONFIG['login_apache_port_base'] + index)
     apache_conf['server_name'] = '%s' % apache_conf['ip']
     apache_conf['ssl_snippet'] = ssl_template % CONFIG
-    apache_config_file = self._writeApacheConfiguration('login_apache_%s'% index,
+    apache_config_file = self._writeApacheConfiguration('login_apache_%s' % index,
         apache_conf)
     self.path_list.append(apache_config_file)
     self.path_list.extend(zc.buildout.easy_install.scripts([(
-      'login_apache_%s'% index,
-        __name__+'.apache', 'runApache')], self.ws,
+      'login_apache_%s' % index,
+        __name__ + '.apache', 'runApache')], self.ws,
           sys.executable, self.wrapper_directory, arguments=[
             dict(
-              required_path_list = [CONFIG['login_certificate'],
+              required_path_list=[CONFIG['login_certificate'],
                 CONFIG['login_key']],
               binary=self.options['httpd_binary'],
               config=apache_config_file
             )
           ]))
-    self.connection_dict['login_%s'% index] = '%(ip)s:%(port)s'% apache_conf
+    self.connection_dict['login_%s' % index] = '%(ip)s:%(port)s' % apache_conf
 
   def installKeyAuthorisationApache(self, index):
     ssl_template = """SSLEngine on
@@ -548,7 +548,7 @@ SSLCARevocationPath %(ca_crl)s"""
         self.getLocalIPv4Address(),
         CONFIG['key_auth_apache_port_base'] + index)
     apache_conf['ssl_snippet'] = ssl_template % CONFIG
-    prefix = 'ssl_key_auth_apache_%s'% index
+    prefix = 'ssl_key_auth_apache_%s' % index
     rewrite_rule_template = \
         "RewriteRule (.*) http://%(backend_ip)s:%(backend_port)s%(key_auth_path)s$1 [L,P]"
     path_template = pkg_resources.resource_string(__name__,
@@ -560,7 +560,7 @@ SSLCARevocationPath %(ca_crl)s"""
           backend_port=self.backend_port,
           backend_path='/',
           port=apache_conf['port'],
-          vhname=path.replace('/',''),
+          vhname=path.replace('/', ''),
           key_auth_path=self.parameter_dict['key_auth_path'],
     )
     rewrite_rule = rewrite_rule_template % d
@@ -568,24 +568,24 @@ SSLCARevocationPath %(ca_crl)s"""
       path_enable=path,
       rewrite_rule=rewrite_rule
     ))
-    apache_config_file = self.createConfigurationFile(prefix+'.conf',
+    apache_config_file = self.createConfigurationFile(prefix + '.conf',
         pkg_resources.resource_string(__name__,
           'template/apache.zope.conf.in') % apache_conf)
     self.path_list.append(apache_config_file)
     self.path_list.extend(zc.buildout.easy_install.scripts([(
-      'key_auth_apache_%s'% index,
-        __name__+'.apache', 'runApache')], self.ws,
+      'key_auth_apache_%s' % index,
+        __name__ + '.apache', 'runApache')], self.ws,
           sys.executable, self.wrapper_directory, arguments=[
             dict(
-              required_path_list = [CONFIG['key_auth_certificate'],
+              required_path_list=[CONFIG['key_auth_certificate'],
                 CONFIG['key_auth_key'], CONFIG['ca_certificate'],
                 CONFIG['ca_crl']],
               binary=self.options['httpd_binary'],
               config=apache_config_file
             )
           ]))
-    self.connection_dict['key_auth_%s'% index] = \
-        '%(ip)s:%(port)s'% apache_conf
+    self.connection_dict['key_auth_%s' % index] = \
+        '%(ip)s:%(port)s' % apache_conf
 
   def installMysqlServer(self):
     mysql_conf = dict(
@@ -631,11 +631,11 @@ SSLCARevocationPath %(ca_crl)s"""
     mysql_script = pkg_resources.resource_string(__name__,
         'template/initmysql.sql.in') % mysql_conf
     self.path_list.extend(zc.buildout.easy_install.scripts([('mysql_update',
-      __name__+'.mysql', 'updateMysql')], self.ws,
+      __name__ + '.mysql', 'updateMysql')], self.ws,
       sys.executable, self.wrapper_directory, arguments=[mysql_command_list,
         mysql_script]))
     self.path_list.extend(zc.buildout.easy_install.scripts([('mysqld',
-      __name__+'.mysql', 'runMysql')], self.ws,
+      __name__ + '.mysql', 'runMysql')], self.ws,
         sys.executable, self.wrapper_directory, arguments=[
           initialise_command_list, {
         'mysqld_binary':self.options['mysqld_binary'],

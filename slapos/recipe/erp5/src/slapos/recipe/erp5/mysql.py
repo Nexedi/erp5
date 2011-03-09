@@ -3,12 +3,13 @@ import subprocess
 import sys
 import time
 
+
 def runMysql(args):
   sleep = 60
   initialise_command_list = args[0]
   mysql_conf = args[1]
   mysql_wrapper_list = [mysql_conf['mysqld_binary'],
-      '--defaults-file=%s'%mysql_conf['configuration_file']]
+      '--defaults-file=%s' % mysql_conf['configuration_file']]
   while True:
     # XXX: Protect with proper root password
     popen = subprocess.Popen(initialise_command_list,
@@ -24,6 +25,7 @@ def runMysql(args):
   sys.stdout.flush()
   sys.stderr.flush()
   os.execl(mysql_wrapper_list[0], *mysql_wrapper_list)
+
 
 def updateMysql(args):
   mysql_command_list = args[0]
