@@ -185,7 +185,7 @@ def groupWorklistListByCondition(worklist_dict, sql_catalog,
       if getSecurityUidListAndRoleColumnDict is None:
         valid_criterion_dict, metadata = getValidCriterionDict(
           worklist_match_dict=worklist_match_dict,
-          acceptable_key_dict=acceptable_key_dict,
+          sql_catalog=sql_catalog,
           workflow_worklist_key=workflow_worklist_key)
         if metadata is not None:
           metadata_dict[workflow_worklist_key] = metadata
