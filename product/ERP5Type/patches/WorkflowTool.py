@@ -110,12 +110,13 @@ class ExclusionTuple(tuple):
   """
   pass
 
-def getValidCriterionDict(worklist_match_dict, acceptable_key_dict,
+def getValidCriterionDict(worklist_match_dict, sql_catalog,
                           workflow_worklist_key):
   valid_criterion_dict = {}
   metadata = None
+  isValidColumn = sql_catalog.isValidColumn
   for criterion_id, criterion_value in worklist_match_dict.iteritems():
-    if criterion_id in acceptable_key_dict:
+    if isValidColumn(criterion_id):
       if isinstance(criterion_value, tuple):
         criterion_value = list(criterion_value)
       assert criterion_id not in valid_criterion_dict
@@ -141,7 +142,7 @@ def updateWorklistSetDict(worklist_set_dict, workflow_worklist_key, valid_criter
     worklist_set_dict[worklist_set_dict_key]\
       [workflow_worklist_key] = valid_criterion_dict
 
-def groupWorklistListByCondition(worklist_dict, acceptable_key_dict,
+def groupWorklistListByCondition(worklist_dict, sql_catalog,
                                  getSecurityUidListAndRoleColumnDict=None):
   """
     Get a list of dict of WorklistVariableMatchDict grouped by compatible
@@ -216,7 +217,7 @@ def groupWorklistListByCondition(worklist_dict, acceptable_key_dict,
             role_column_dict.iteritems():
           valid_criterion_dict, metadata = getValidCriterionDict(
             worklist_match_dict=worklist_match_dict,
-            acceptable_key_dict=acceptable_key_dict,
+            sql_catalog=sql_catalog,
             workflow_worklist_key=workflow_worklist_key)
           if metadata is not None:
             metadata_dict[workflow_worklist_key] = metadata
@@ -467,16 +468,12 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
     def _getWorklistActionList():
       worklist_result_dict = {}
       sql_catalog = portal_catalog.getSQLCatalog()
-      acceptable_key_dict = sql_catalog.getColumnMap().copy()
-      for related_key in sql_catalog.getSQLCatalogRelatedKeyList():
-        related_key = related_key.split('|')
-        acceptable_key_dict[related_key[0].strip()] = related_key[1].strip()
       # Get a list of dict of WorklistVariableMatchDict grouped by compatible
       # conditions
       (worklist_list_grouped_by_condition, worklist_metadata) = \
         groupWorklistListByCondition(
           worklist_dict=worklist_dict,
-          acceptable_key_dict=acceptable_key_dict,
+          sql_catalog=sql_catalog,
           getSecurityUidListAndRoleColumnDict=\
             getSecurityUidListAndRoleColumnDict)
       if src__:
@@ -609,9 +606,6 @@ def WorkflowTool_refreshWorklistCache(self):
       portal_catalog = getToolByName(self, 'portal_catalog')
       search_result = portal_catalog.unrestrictedSearchResults
       sql_catalog = portal_catalog.getSQLCatalog()
-      acceptable_key_dict = sql_catalog.getColumnMap()
-      # XXX: those hardcoded lists should be grabbed from the table dynamicaly
-      # (and cached).
       table_column_id_set = ImmutableSet(
           [COUNT_COLUMN_TITLE] + self.Base_getWorklistTableColumnIDList())
       security_column_id_list = ['security_uid'] + \
@@ -620,7 +614,7 @@ def WorkflowTool_refreshWorklistCache(self):
       (worklist_list_grouped_by_condition, worklist_metadata) = \
         groupWorklistListByCondition(
           worklist_dict=worklist_dict,
-          acceptable_key_dict=acceptable_key_dict)
+          sql_catalog=sql_catalog)
       assert COUNT_COLUMN_TITLE in table_column_id_set
       for grouped_worklist_dict in worklist_list_grouped_by_condition:
         # Generate the query for this worklist_list
