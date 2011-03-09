@@ -60,7 +60,7 @@ catalog_filter_dict = {}\n
 for key in filter_dict:\n
   catalog_filter_dict[key] = filter_dict[key][\'expression\']\n
 \n
-expect_expression_dict = context.ERP5Site_getUpgraderSignature.get(\'catalog_filter_dict\', {})\n
+expect_expression_dict = context.ERP5Site_getUpgraderSignature().get(\'catalog_filter_dict\', {})\n
 \n
 if len(catalog_filter_dict.keys()) != len(expect_expression_dict.keys()):\n
   message_list.append("Catalog filter have diferent key lenght (%s != %s): %s != %s" % \\\n

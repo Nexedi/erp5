@@ -58,7 +58,7 @@
 # Setup skins\n
 context.ERP5Site_setupUpgraderSkinSelection()\n
 \n
-alarm_dict = context.ERP5Site_getUpgraderSignature.get(\'alarm_dict\', {})\n
+alarm_dict = context.ERP5Site_getUpgraderSignature().get(\'alarm_dict\', {})\n
 if not alarm_dict.get(context.getId(), True):\n
   return False\n
 \n
