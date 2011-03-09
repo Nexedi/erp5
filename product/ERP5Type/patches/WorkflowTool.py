@@ -161,9 +161,12 @@ def groupWorklistListByCondition(worklist_dict, sql_catalog,
          'workflow_B': {'worklist_BA': {'baz': (6, )}
                        }
         }
-        acceptable_key_dict:
-        {'foo': None,
-         'baz': None}
+
+      Allowed columns are:
+      sql_catalog.isValidColumn('foo') is True
+      sql_catalog.isValidColumn('baz') is True
+      sql_catalog.isValidColumn('bar') is False
+
       Output a 2-tuple:
         (
           [{'workflow_A/worklist_AA': {'foo': (1, 2)}
