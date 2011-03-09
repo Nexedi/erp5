@@ -32,7 +32,6 @@ import hashlib
 import sys
 import zc.buildout
 import zc.recipe.egg
-import time
 
 # global staic configuration parameters
 CONFIG = dict(
