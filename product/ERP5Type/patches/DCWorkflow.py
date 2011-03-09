@@ -127,10 +127,10 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
       return None
 
     def _listGlobalActions(user=None, id=None, portal_path=None):
-      portal_url = getToolByName(self, 'portal_url')
+      portal = self._getPortalRoot()
+      portal_url = portal.portal_url
       portal_url = portal_url()
       sm = getSecurityManager()
-      portal = self._getPortalRoot()
       res = []
       fmt_data = None
       # We want to display some actions depending on the current date
@@ -216,8 +216,9 @@ def DCWorkflowDefinition_getWorklistVariableMatchDict(self, info,
   if not self.worklists:
     return None
 
+  portal = self.getPortalObject()
   def getPortalTypeListForWorkflow(workflow_id):
-      workflow_tool = getToolByName(self, 'portal_workflow')
+      workflow_tool = portal.portal_workflow
       result = []
       append = result.append
       for type_info in workflow_tool._listTypeInfo():
@@ -233,7 +234,7 @@ def DCWorkflowDefinition_getWorklistVariableMatchDict(self, info,
     return None
   variable_match_dict = {}
   security_manager = getSecurityManager()
-  portal = self.getPortalObject()
+  workflow_tool = portal.portal_workflow
   workflow_id = self.id
   workflow_title = self.title
   for worklist_id, worklist_definition in self.worklists.items():
