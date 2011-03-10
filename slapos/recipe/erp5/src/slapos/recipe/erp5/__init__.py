@@ -101,6 +101,7 @@ class Recipe(BaseSlapRecipe):
       )
     for k, v in default_parameter_dict.iteritems():
       self.parameter_dict.setdefault(k, v)
+    self.installCertificateAuthority()
     self.installMemcached()
     self.installKumo()
     self.installConversionServer()
