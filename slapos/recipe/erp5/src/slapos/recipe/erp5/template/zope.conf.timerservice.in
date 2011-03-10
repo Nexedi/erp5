@@ -2,5 +2,5 @@
 # ERP5 Timer Service
 %%import timerserver
 <timer-server>
-  interval %(timeserver_interval)s
+  interval 5
 </timer-server>
