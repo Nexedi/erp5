@@ -353,11 +353,11 @@ class Recipe(BaseSlapRecipe):
         address=url))
       i += 1
     config['server_text'] = '\n'.join(server_list)
-    haproxy_conf_path = self.createConfigurationFile('haproxy.cfg',
+    haproxy_conf_path = self.createConfigurationFile('haproxy_%s.cfg' % name,
       self.substituteTemplate(self.getTemplateFilename('haproxy.cfg.in'),
         config))
     self.path_list.append(haproxy_conf_path)
-    wrapper = zc.buildout.easy_install.scripts([('haproxy',
+    wrapper = zc.buildout.easy_install.scripts([('haproxy_%s' % name,
       __name__ + '.execute', 'execute')], self.ws, sys.executable,
       self.wrapper_directory, arguments=[
         self.options['haproxy_binary'].strip(), '-f', haproxy_conf_path]
