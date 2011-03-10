@@ -43,7 +43,6 @@ def write_inituser(fn, user, password):
 
 
 class Recipe(BaseSlapRecipe):
-  connection_dict = {}
   def getTemplateFilename(self, template_name):
     return pkg_resources.resource_filename(__name__,
         'template/%s' % template_name)
