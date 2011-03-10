@@ -111,8 +111,8 @@ class Recipe(BaseSlapRecipe):
        'login_node_amount' in self.parameter_dict:
       self.installZeo()
       common_kw = dict(
-          zeo_address='%s:%s' % (CONFIG['zeo_ip'], CONFIG['zeo_port']),
-          zeo_storagename=CONFIG['zeo_storagename'],
+          zeo_address=self.connection_dict['zeo_address'],
+          zeo_storagename=self.connection_dict['zeo_storagename'],
           ip=self.getLocalIPv4Address())
       port = 12001
       distribution_list = [self.installZope(port=port, name='zope_distribution', **common_kw)] 
@@ -435,6 +435,9 @@ class Recipe(BaseSlapRecipe):
       'execute')], self.ws, sys.executable, self.wrapper_directory, arguments=[
         self.options['runzeo_binary'].strip(), '-C', zeo_conf_path]
       )[0]
+    self.connection_dict['zeo_address'] = '%s:%s' % (CONFIG['zeo_ip'], CONFIG['zeo_port'])
+    self.connection_dict['zeo_storagename'] = CONFIG['zeo_storagename']
+ 
     self.path_list.append(wrapper)
 
   def installZope(self, ip, port, name, zeo_address=None, zeo_storagename=None,
