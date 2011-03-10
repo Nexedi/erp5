@@ -269,8 +269,12 @@ class TestOrderMixin(SubcontentReindexingWrapper):
     portal = self.getPortal()
     order_module = portal.getDefaultModule(portal_type=self.order_portal_type)
     order = order_module.newContent(portal_type=self.order_portal_type)
+    test_name = "%s.%s.%s" % (self.__class__.__module__,
+                              self.__class__.__name__,
+                              self._testMethodName)
+      
     order.edit(
-      title = "Order%s" % order.getId(),
+      title = "Order%s (%s)" % (order.getId(), test_name),
       start_date = self.datetime + 10,
       stop_date = self.datetime + 20,
       specialise = self.business_process,
