@@ -57,9 +57,6 @@ CONFIG = dict(
   zodb_root_filename='root.fs',
   zeo_port=22001,
   zeo_storagename='root',
-  # HaProxy
-  haproxy_login_port=15000,
-  haproxy_key_auth_port=16000,
   # Memcached
   memcached_port=11000,
   # Kumofs
