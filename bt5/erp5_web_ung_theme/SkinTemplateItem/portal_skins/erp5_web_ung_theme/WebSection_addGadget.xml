@@ -53,7 +53,7 @@
             <value> <string>portal_catalog = context.portal_catalog\n
 \n
 knowledge_pad = portal_catalog.getResultValue(portal_type="Knowledge Pad",\n
-#                                              publication_section_uid=context.getUid(),\n
+                                              publication_section_uid=context.getUid(),\n
                                               validation_state=["visible", "public"])\n
 \n
 knowledge_box = knowledge_pad.newContent(portal_type="Knowledge Box")\n

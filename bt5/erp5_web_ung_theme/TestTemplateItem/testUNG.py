@@ -328,6 +328,7 @@ class TestUNG(ERP5TypeTestCase):
   def testWebSection_addGadget(self):
     """Test if gadgets are added correctly"""
     obj = self.portal.knowledge_pad_module.newContent(portal_type="Knowledge Pad")
+    obj.edit(publication_section_value=self.portal.web_site_module.ung)
     obj.visible()
     self.stepTic()
     gadget = self.portal.portal_gadgets.searchFolder()[0]
