@@ -555,7 +555,7 @@ SSLRandomSeed connect builtin
           ]))
     return 'https://%(ip)s:%(port)s' % apache_conf
 
-  def installKeyAuthorisationApache(self, index):
+  def installKeyAuthorisationApache(self, ip, port, backend):
     ssl_template = """SSLEngine on
 SSLVerifyClient require
 RequestHeader set REMOTE_USER %%{SSL_CLIENT_S_DN_CN}s
@@ -563,21 +563,17 @@ SSLCertificateFile %(key_auth_certificate)s
 SSLCertificateKeyFile %(key_auth_key)s
 SSLCACertificateFile %(ca_certificate)s
 SSLCARevocationPath %(ca_crl)s"""
-    apache_conf = self._getApacheConfigurationDict('key_auth_apache_%s' % \
-        index,
-        self.getLocalIPv4Address(),
-        CONFIG['key_auth_apache_port_base'] + index)
+    apache_conf = self._getApacheConfigurationDict('key_auth_apache', ip, port)
     apache_conf['ssl_snippet'] = ssl_template % CONFIG
-    prefix = 'ssl_key_auth_apache_%s' % index
+    prefix = 'ssl_key_auth_apache'
     rewrite_rule_template = \
-      "RewriteRule (.*) http://%(backend_ip)s:%(backend_port)s%(key_auth_path)s$1 [L,P]"
+      "RewriteRule (.*) http://%(backend)s%(key_auth_path)s$1 [L,P]"
     path_template = pkg_resources.resource_string(__name__,
       'template/apache.zope.conf.path.in')
     path = path_template % dict(path='/')
     d = dict(
           path=path,
-          backend_ip=self.backend_ip,
-          backend_port=self.backend_port,
+          backend=backend,
           backend_path='/',
           port=apache_conf['port'],
           vhname=path.replace('/', ''),
@@ -593,7 +589,7 @@ SSLCARevocationPath %(ca_crl)s"""
           'template/apache.zope.conf.in') % apache_conf)
     self.path_list.append(apache_config_file)
     self.path_list.extend(zc.buildout.easy_install.scripts([(
-      'key_auth_apache_%s' % index,
+      'key_auth_apache',
         __name__ + '.apache', 'runApache')], self.ws,
           sys.executable, self.wrapper_directory, arguments=[
             dict(
@@ -604,8 +600,7 @@ SSLCARevocationPath %(ca_crl)s"""
               config=apache_config_file
             )
           ]))
-    self.connection_dict['key_auth_%s' % index] = \
-        '%(ip)s:%(port)s' % apache_conf
+    return 'https://%(ip)s:%(port)s' % apache_conf
 
   def installMysqlServer(self):
     mysql_conf = dict(
