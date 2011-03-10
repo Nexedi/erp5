@@ -440,10 +440,11 @@ class Recipe(BaseSlapRecipe):
     self.path_list.append(wrapper)
 
   def installZope(self, ip, port, name, zeo_address=None, zeo_storagename=None,
-      zodb_root_path=None, with_timerservice=False):
+      zodb_root_path=None, with_timerservice=False, timeserver_interval=5):
     # Create zope configuration file
     zope_config = dict(
         products=self.options['products'],
+        timeserver_interval=timeserver_interval,
     )
     if zeo_address is not None and zeo_storagename is not None:
       zope_config.update(zeo_address=zeo_address, zeo_storagename=zeo_storagename)
