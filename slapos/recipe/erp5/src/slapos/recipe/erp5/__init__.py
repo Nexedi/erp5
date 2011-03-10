@@ -47,11 +47,6 @@ CONFIG = dict(
   mysql_user='user',
   mysql_test_database='test_erp5',
   mysql_test_user='test_user',
-  # Kumofs
-  kumo_manager_port=13101,
-  kumo_server_port=13201,
-  kumo_server_listen_port=13202,
-  kumo_gateway_port=13301,
 )
 
 
@@ -75,7 +70,7 @@ class Recipe(BaseSlapRecipe):
     self.installTestCertificateAuthority()
     self.installCertificateAuthority()
     self.installMemcached(ip=self.getLocalIPv4Address(), port=11000)
-    self.installKumo()
+    self.installKumo(self.getLocalIPv4Address())
     self.installConversionServer(self.getLocalIPv4Address(), 23000, 23060)
     self.installMysqlServer()
     self.installERP5()
@@ -114,9 +109,9 @@ class Recipe(BaseSlapRecipe):
       self.logger.debug('Created link %r -> %r' % (link, target))
       self.path_list.append(link)
 
-  def installKumo(self):
-    ip = self.getLocalIPv4Address()
-    CONFIG.update(
+  def installKumo(self, ip, kumo_manager_port=13101, kumo_server_port=13201,
+      kumo_server_listen_port=13202, kumo_gateway_port=13301):
+    config = dict(
       kumo_gateway_binary=self.options['kumo_gateway_binary'],
       kumo_gateway_ip=ip,
       kumo_gateway_log=os.path.join(self.log_directory, "kumo-gateway.log"),
@@ -127,23 +122,27 @@ class Recipe(BaseSlapRecipe):
       kumo_server_ip=ip,
       kumo_server_log=os.path.join(self.log_directory, "kumo-server.log"),
       kumo_server_storage=os.path.join(self.data_root_directory, "kumodb.tch"),
+      kumo_manager_port=kumo_manager_port,
+      kumo_server_port=kumo_server_port,
+      kumo_server_listen_port=kumo_server_listen_port,
+      kumo_gateway_port=kumo_gateway_port
     )
 
     self.path_list.append(self.createRunningWrapper('kumo_gateway',
       self.substituteTemplate(self.getTemplateFilename('kumo_gateway.in'),
-        CONFIG)))
+        config)))
 
     self.path_list.append(self.createRunningWrapper('kumo_manager',
       self.substituteTemplate(self.getTemplateFilename('kumo_manager.in'),
-        CONFIG)))
+        config)))
 
     self.path_list.append(self.createRunningWrapper('kumo_server',
       self.substituteTemplate(self.getTemplateFilename('kumo_server.in'),
-        CONFIG)))
+        config)))
 
     self.connection_dict.update(
-      kumo_address = '%s:%s' % (CONFIG['kumo_gateway_ip'],
-        CONFIG['kumo_gateway_port'])
+      kumo_address = '%s:%s' % (config['kumo_gateway_ip'],
+        config['kumo_gateway_port'])
     )
 
   def installMemcached(self, ip, port):
