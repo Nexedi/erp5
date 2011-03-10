@@ -117,14 +117,17 @@ class Recipe(BaseSlapRecipe):
           ip=self.getLocalIPv4Address())
       port = 12001
       distribution_list = [self.installZope(port=port, name='zope_distribution', **common_kw)] 
+      self.connection_dict.update(zope_distribution_node=' '.join(distribution_list))
       activity_list = []
       for i in xrange(1, int(self.parameter_dict.get('activity_node_amount', 0)) + 1):
         port += 1
         activity_list.append(self.installZope(port=port, name='zope_activity_%s' % i, **common_kw))
+      self.connection_dict.update(zope_activity_node=' '.join(activity_list))
       login_list = []
       for i in xrange(1, int(self.parameter_dict.get('login_node_amount', 0)) + 1):
         port += 1
         login_list.append(self.installZope(port=port, name='zope_login_%s' % i, **common_kw))
+      self.connection_dict.update(zope_login_node=' '.join(login_list))
       url_list = activity_list + login_list + distribution_list
     else:
       login_list = url_list
