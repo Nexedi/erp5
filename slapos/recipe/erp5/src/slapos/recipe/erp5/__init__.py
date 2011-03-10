@@ -116,7 +116,7 @@ class Recipe(BaseSlapRecipe):
           ip=self.getLocalIPv4Address())
       port = 12001
       distribution_list = [self.installZope(port=port, name='zope_distribution',
-        with_timerservice=True, **common_kw)] 
+        with_timerservice=True, **common_kw)]
       activity_list = []
       for i in xrange(1, int(self.parameter_dict.get('activity_node_amount', 0)) + 1):
         port += 1
@@ -125,20 +125,22 @@ class Recipe(BaseSlapRecipe):
       login_list = []
       for i in xrange(1, int(self.parameter_dict.get('login_node_amount', 0)) + 1):
         port += 1
-        login_list.append(self.installZope(port=port, name='zope_login_%s' % i, **common_kw))
+        login_list.append(self.installZope(port=port, name='zope_login_%s' % i,
+          **common_kw))
       url_list = activity_list + login_list + distribution_list
     else:
       login_list = url_list
       url_list.append(self.installZope(ip=self.getLocalIPv4Address(),
-          port=12000 + 1, name='zope_%s' % 1, zodb_root_path=CONFIG['zodb_root_path']))
+          port=12000 + 1, name='zope_%s' % 1,
+          zodb_root_path=CONFIG['zodb_root_path']))
 
     haproxy_login = self.installHaproxy(
           ip=self.getLocalIPv4Address(), port='15000', name='login',
           url_list=login_list, server_check_path=
           self.parameter_dict.get('server_check_path', '/erp5/getId'))
     self.connection_dict.update(
-        apache_login=self.installLoginApache(ip=self.getGlobalIPv6Address(), port=13000,
-        backend=haproxy_login))
+        apache_login=self.installLoginApache(ip=self.getGlobalIPv6Address(),
+          port=13000, backend=haproxy_login))
     self.installTestRunner()
     self.linkBinary()
     return self.path_list
