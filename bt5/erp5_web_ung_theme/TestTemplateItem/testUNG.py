@@ -298,6 +298,14 @@ class TestUNG(ERP5TypeTestCase):
     response = json.loads(self.portal.ERPSite_createUNGUser())
     self.assertEquals(response, None)
 
+  def testERP5Site_checkIfUserExistUsingHttpRequest(self):
+    """Test script ERP5Site_checkIfUserExist to simulate the browser request"""
+    script_path = self.portal.web_site_module.ung.getPath() + "/ERP5Site_checkIfUserExist"
+    response = json.loads(self.publish(script_path).getBody())
+    self.assertEquals(response, {'response': False})
+    response = json.loads(self.publish(script_path + "?reference=ung_reference").getBody())
+    self.assertEquals(response, {'response': True})
+
   def testERP5Site_checkIfUserExist(self):
     """Test script ERP5Site_checkIfUserExist"""
     portal = self.portal
@@ -307,13 +315,11 @@ class TestUNG(ERP5TypeTestCase):
                      login_name="ung_reference")
     portal.REQUEST.form.update(form_dict)
     portal.ERPSite_createUNGUser()
-    kw = dict(first_name=form_dict["firstname"],
-              last_name=form_dict["lastname"],
-              reference=form_dict["login_name"],
-             )
+    kw = dict(reference=form_dict["login_name"],)
     response = json.loads(portal.ERP5Site_checkIfUserExist(**kw))
     self.assertEquals(response.get("response"), False)
     self.stepTic()
+    param_list = ["%s=%s" % (key,value) for key, value in kw.iteritems()]
     response = json.loads(portal.ERP5Site_checkIfUserExist(**kw))
     self.assertEquals(response.get("response"), True)
     kw = dict(first_name="Not Exist",
