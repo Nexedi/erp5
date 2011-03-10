@@ -125,8 +125,9 @@ class Recipe(BaseSlapRecipe):
 
     haproxy_login = self.installHaproxy(
           ip=self.getLocalIPv4Address(), port='15000', name='login',
-          url_list=login_list, server_check_path=
-          self.parameter_dict.get('server_check_path', '/erp5/getId'))
+          url_list=login_list,
+          server_check_path=self.parameter_dict.get('server_check_path', \
+                                   '/%s/getId' % CONFIG['erp5_site_id']))
     self.connection_dict.update(
         apache_login=self.installLoginApache(ip=self.getGlobalIPv6Address(),
           port=13000, backend=haproxy_login))
