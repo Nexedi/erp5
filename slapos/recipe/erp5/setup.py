@@ -28,7 +28,7 @@ setup(
     install_requires = [
       'zc.recipe.egg',
       'setuptools',
-      'slapos.lib.recipe >= 1.0.dev-r4575',
+      'slapos.lib.recipe',
       ],
     namespace_packages = ['slapos', 'slapos.recipe'],
     entry_points = {'zc.buildout': ['default = %s:Recipe' % name]},
