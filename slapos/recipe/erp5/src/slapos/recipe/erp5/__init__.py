@@ -136,7 +136,9 @@ class Recipe(BaseSlapRecipe):
 
     self.connection_dict.update(
         haproxy_login=self.installHaproxy(
-          ip=self.getGlobalIPv6Address(), port='15000', name='login', url_list=login_list))
+          ip=self.getGlobalIPv6Address(), port='15000', name='login',
+          url_list=login_list, server_check_path=
+          self.parameter_dict.get('server_check_path', '/erp5/getId')))
     self.connection_dict.update(
         apache_login=self.installLoginApache(ip=self.getGlobalIPv6Address(), port=13000,
         backend=self.connection_dict['haproxy_login']))
@@ -348,9 +350,10 @@ class Recipe(BaseSlapRecipe):
         test_ca_path=CONFIG['ca_dir']
     )
 
-  def installHaproxy(self, ip, port, name, url_list):
-    server_template = """  server %(name)s %(address)s check"""
-    config = dict(name=name, ip=ip, port=port)
+  def installHaproxy(self, ip, port, name, server_check_path, url_list):
+    server_template = """  server %(name)s %(address)s cookie %(name)s check inter 20s rise 2 fall 4"""
+    config = dict(name=name, ip=ip, port=port,
+        server_check_path=server_check_path,)
     i = 1
     server_list = []
     for url in url_list:
