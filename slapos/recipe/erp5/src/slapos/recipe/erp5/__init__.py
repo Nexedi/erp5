@@ -194,12 +194,8 @@ class Recipe(BaseSlapRecipe):
         CONFIG)))
 
     self.connection_dict.update(
-      kumo_manager_ip=CONFIG['kumo_manager_ip'],
-      kumo_manager_port=CONFIG['kumo_manager_port'],
-      kumo_server_ip=CONFIG['kumo_server_ip'],
-      kumo_server_port=CONFIG['kumo_server_port'],
-      kumo_gateway_ip=CONFIG['kumo_gateway_ip'],
-      kumo_gateway_port=CONFIG['kumo_gateway_port'],
+      kumo_address = '%s:%s' % (CONFIG['kumo_gateway_ip'],
+        CONFIG['kumo_gateway_port'])
     )
 
   def installMemcached(self, ip, port):
