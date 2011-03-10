@@ -33,16 +33,6 @@ import sys
 import zc.buildout
 import zc.recipe.egg
 
-# global staic configuration parameters
-CONFIG = dict(
-  # Certificate Authority
-  ca_prefix='ca',
-  test_ca_prefix='test_ca',
-  # Zope
-  zope_user='zope',
-)
-
-
 # Taken from Zope2 egg
 def write_inituser(fn, user, password):
   fp = open(fn, "w")
@@ -60,7 +50,8 @@ class Recipe(BaseSlapRecipe):
   def _install(self):
     self.path_list = []
     self.requirements, self.ws = self.egg.working_set([__name__])
-    self.installCertificateAuthority()
+    login_key, login_certificate, key_auth_key, key_auth_certificate = \
+        self.installCertificateAuthority()
     self.installMemcached(ip=self.getLocalIPv4Address(), port=11000)
     self.installKumo(self.getLocalIPv4Address())
     self.installConversionServer(self.getLocalIPv4Address(), 23000, 23060)
@@ -74,7 +65,8 @@ class Recipe(BaseSlapRecipe):
           zodb_root_path=zodb_root_path)
     self.connection_dict.update(
         apache_login=self.installLoginApache(ip=self.getGlobalIPv6Address(),
-          port=13000, backend=zope_access))
+          port=13000, backend=zope_access, key=login_key,
+          certificate=login_certificate))
     self.installTestRunner()
     self.linkBinary()
     return self.path_list
@@ -180,66 +172,67 @@ class Recipe(BaseSlapRecipe):
         )])[0]
     self.path_list.append(runUnitTest)
 
-  def _installCertificateAuthority(self, prefix='', ca_country_code='XX',
+  def installCertificateAuthority(self, ca_country_code='XX',
       ca_email='xx@example.com', ca_state='State', ca_city='City',
       ca_company='Company'):
-    CONFIG.update(
-      ca_dir=os.path.join(self.data_root_directory,
-                          CONFIG['%sca_prefix' % prefix]))
-    CONFIG.update(
-      ca_certificate=os.path.join(CONFIG['ca_dir'], 'cacert.pem'),
-      ca_key=os.path.join(CONFIG['ca_dir'], 'private', 'cakey.pem'),
-      ca_crl=os.path.join(CONFIG['ca_dir'], 'crl'),
-      login_key=os.path.join(CONFIG['ca_dir'], 'private', 'login.key'),
-      login_certificate=os.path.join(CONFIG['ca_dir'], 'certs',
-        'login.crt'),
-      key_auth_key=os.path.join(CONFIG['ca_dir'], 'private', 'keyauth.key'),
-      key_auth_certificate=os.path.join(CONFIG['ca_dir'], 'certs',
+    config = dict(
+      ca_dir=os.path.join(self.data_root_directory, 'ca'))
+    login_key = os.path.join(config['ca_dir'], 'private', 'login.key')
+    login_certificate = os.path.join(config['ca_dir'], 'certs', 'login.crt')
+    key_auth_key = os.path.join(config['ca_dir'], 'private', 'keyauth.key'),
+    key_auth_certificate = os.path.join(config['ca_dir'], 'certs',
         'keyauth.crt'),
+
+    config.update(
+      ca_certificate=os.path.join(config['ca_dir'], 'cacert.pem'),
+      ca_key=os.path.join(config['ca_dir'], 'private', 'cakey.pem'),
+      ca_crl=os.path.join(config['ca_dir'], 'crl'),
+      login_key=login_key,
+      login_certificate=login_certificate,
+      key_auth_key=key_auth_key,
+      key_auth_certificate=key_auth_certificate,
     )
-    self._createDirectory(CONFIG['ca_dir'])
+    self._createDirectory(config['ca_dir'])
     for d in ['certs', 'crl', 'newcerts', 'private']:
-      self._createDirectory(os.path.join(CONFIG['ca_dir'], d))
+      self._createDirectory(os.path.join(config['ca_dir'], d))
     for f in ['crlnumber', 'serial']:
-      if not os.path.exists(os.path.join(CONFIG['ca_dir'], f)):
-        open(os.path.join(CONFIG['ca_dir'], f), 'w').write('01')
-    if not os.path.exists(os.path.join(CONFIG['ca_dir'], 'index.txt')):
-      open(os.path.join(CONFIG['ca_dir'], 'index.txt'), 'w').write('')
-    ca_conf = CONFIG.copy()
-    ca_conf['openssl_configuration'] = os.path.join(ca_conf['ca_dir'],
+      if not os.path.exists(os.path.join(config['ca_dir'], f)):
+        open(os.path.join(config['ca_dir'], f), 'w').write('01')
+    if not os.path.exists(os.path.join(config['ca_dir'], 'index.txt')):
+      open(os.path.join(config['ca_dir'], 'index.txt'), 'w').write('')
+    config['openssl_configuration'] = os.path.join(config['ca_dir'],
         'openssl.cnf')
-    ca_conf.update(
-        working_directory=CONFIG['ca_dir'],
+    config.update(
+        working_directory=config['ca_dir'],
         country_code=ca_country_code,
         state=ca_state,
         city=ca_city,
         company=ca_company,
         email_address=ca_email,
     )
-    self._writeFile(ca_conf['openssl_configuration'],
+    self._writeFile(config['openssl_configuration'],
         pkg_resources.resource_string(__name__,
-          'template/openssl.cnf.ca.in') % ca_conf)
+          'template/openssl.cnf.ca.in') % config)
     self.path_list.extend(zc.buildout.easy_install.scripts([
-      (prefix + 'certificate_authority',
+      ('certificate_authority',
         __name__ + '.certificate_authority', 'runCertificateAuthority')],
         self.ws, sys.executable, self.wrapper_directory, arguments=[dict(
-          openssl_configuration=ca_conf['openssl_configuration'],
+          openssl_configuration=config['openssl_configuration'],
           openssl_binary=self.options['openssl_binary'],
-          ca_certificate=os.path.join(CONFIG['ca_dir'], 'cacert.pem'),
-          ca_key=os.path.join(CONFIG['ca_dir'], 'private', 'cakey.pem'),
-          ca_crl=os.path.join(CONFIG['ca_dir'], 'crl'),
-          login_key=os.path.join(CONFIG['ca_dir'], 'private', 'login.key'),
-          login_certificate=os.path.join(CONFIG['ca_dir'], 'certs',
-            'login.crt'),
-          key_auth_key=os.path.join(CONFIG['ca_dir'], 'private',
-            'keyauth.key'),
-          key_auth_certificate=os.path.join(CONFIG['ca_dir'], 'certs',
-            'keyauth.crt'),
+          ca_certificate=os.path.join(config['ca_dir'], 'cacert.pem'),
+          ca_key=os.path.join(config['ca_dir'], 'private', 'cakey.pem'),
+          ca_crl=os.path.join(config['ca_dir'], 'crl'),
+          login_key=os.path.join(config['ca_dir'], 'private', 'login.key'),
+          login_certificate=login_certificate,
+          key_auth_key=key_auth_key,
+          key_auth_certificate=key_auth_certificate,
           )]))
     self.connection_dict.update(
         openssl_binary=self.options['openssl_binary'],
-        certificate_authority_path=CONFIG['ca_dir']
+        certificate_authority_path=config['ca_dir']
     )
+
+    return login_key, login_certificate, key_auth_key, key_auth_certificate
 
   def installConversionServer(self, ip, port, openoffice_port):
     name = 'conversion_server'
@@ -274,9 +267,6 @@ class Recipe(BaseSlapRecipe):
       name + '_port': conversion_server_dict['port'],
       name + '_ip': conversion_server_dict['ip']
       })
-
-  def installCertificateAuthority(self):
-    self._installCertificateAuthority()
 
   def installHaproxy(self, ip, port, name, server_check_path, url_list):
     server_template = """  server %(name)s %(address)s cookie %(name)s check inter 20s rise 2 fall 4"""
@@ -459,7 +449,7 @@ class Recipe(BaseSlapRecipe):
         pkg_resources.resource_string(__name__,
           'template/apache.zope.conf.in') % apache_conf)
 
-  def installLoginApache(self, ip, port, backend):
+  def installLoginApache(self, ip, port, backend, key, certificate):
     ssl_template = """SSLEngine on
 SSLCertificateFile %(login_certificate)s
 SSLCertificateKeyFile %(login_key)s
@@ -468,7 +458,8 @@ SSLRandomSeed connect builtin
 """
     apache_conf = self._getApacheConfigurationDict('login_apache', ip, port)
     apache_conf['server_name'] = '%s' % apache_conf['ip']
-    apache_conf['ssl_snippet'] = ssl_template % CONFIG
+    apache_conf['ssl_snippet'] = ssl_template % dict(
+        login_certificate=certificate, login_key=key)
     apache_config_file = self._writeApacheConfiguration('login_apache',
         apache_conf, backend)
     self.path_list.append(apache_config_file)
@@ -477,8 +468,7 @@ SSLRandomSeed connect builtin
         __name__ + '.apache', 'runApache')], self.ws,
           sys.executable, self.wrapper_directory, arguments=[
             dict(
-              required_path_list=[CONFIG['login_certificate'],
-                CONFIG['login_key']],
+              required_path_list=[key, certificate],
               binary=self.options['httpd_binary'],
               config=apache_config_file
             )
