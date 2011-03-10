@@ -599,6 +599,7 @@ class SlapTool(BaseTool):
               # SoftwareInstancae.requestSoftwareInstance but in this case it
               # is assumed, that data are correct
               predecessor_related_uid=software_instance_document.getUid(),
+              title=partition_reference,
         )
 
     if requested_software_instance is None:
