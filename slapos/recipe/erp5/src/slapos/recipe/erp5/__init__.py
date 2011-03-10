@@ -115,12 +115,14 @@ class Recipe(BaseSlapRecipe):
           zeo_storagename=self.connection_dict['zeo_storagename'],
           ip=self.getLocalIPv4Address())
       port = 12001
-      distribution_list = [self.installZope(port=port, name='zope_distribution', **common_kw)] 
+      distribution_list = [self.installZope(port=port, name='zope_distribution',
+        with_timerservice=True, **common_kw)] 
       self.connection_dict.update(zope_distribution_node=' '.join(distribution_list))
       activity_list = []
       for i in xrange(1, int(self.parameter_dict.get('activity_node_amount', 0)) + 1):
         port += 1
-        activity_list.append(self.installZope(port=port, name='zope_activity_%s' % i, **common_kw))
+        activity_list.append(self.installZope(port=port, name='zope_activity_%s' % i,
+          with_timerservice=True, **common_kw))
       self.connection_dict.update(zope_activity_node=' '.join(activity_list))
       login_list = []
       for i in xrange(1, int(self.parameter_dict.get('login_node_amount', 0)) + 1):
@@ -441,7 +443,7 @@ class Recipe(BaseSlapRecipe):
     self.path_list.append(wrapper)
 
   def installZope(self, ip, port, name, zeo_address=None, zeo_storagename=None,
-      zodb_root_path=None):
+      zodb_root_path=None, with_timerservice=False):
     # Create zope configuration file
     zope_config = dict(
         products=self.options['products'],
@@ -476,12 +478,17 @@ class Recipe(BaseSlapRecipe):
     if zeo_address is None:
       zope_wrapper_template_location = self.getTemplateFilename(
           'zope.conf.simple.in')
+      with_timerservice = True
     else:
       zope_wrapper_template_location = self.getTemplateFilename('zope.conf.in')
 
-    zope_conf_path = self.createConfigurationFile("%s.conf" %
-        name, self.substituteTemplate(
-          zope_wrapper_template_location, zope_config))
+    zope_conf_content = self.substituteTemplate(
+        zope_wrapper_template_location, zope_config)
+    if with_timerservice:
+      zope_conf_content += self.substituteTemplate(
+          self.getTemplateFilename('zope.conf.timerservice.in'), zope_config)
+    zope_conf_path = self.createConfigurationFile("%s.conf" % name,
+        zope_conf_content)
     self.path_list.append(zope_conf_path)
     # Create init script
     wrapper = zc.buildout.easy_install.scripts([(name,

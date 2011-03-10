@@ -55,9 +55,3 @@ lock-filename %(lock-filename)s
 <zoperunner>
     program $INSTANCE/bin/runzope
 </zoperunner>
-
-# ERP5 Timer Service
-%%import timerserver
-<timer-server>
-  interval 5
-</timer-server>
