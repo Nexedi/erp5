@@ -57,8 +57,6 @@ CONFIG = dict(
   zodb_root_filename='root.fs',
   zeo_port=22001,
   zeo_storagename='root',
-  # Memcached
-  memcached_port=11000,
   # Kumofs
   kumo_manager_port=13101,
   kumo_server_port=13201,
@@ -100,7 +98,7 @@ class Recipe(BaseSlapRecipe):
       self.parameter_dict.setdefault(k, v)
     self.installTestCertificateAuthority()
     self.installCertificateAuthority()
-    self.installMemcached()
+    self.installMemcached(ip=self.getLocalIPv4Address(), port=11000)
     self.installKumo()
     self.installConversionServer()
     self.installMysqlServer()
@@ -189,17 +187,17 @@ class Recipe(BaseSlapRecipe):
       kumo_gateway_port=CONFIG['kumo_gateway_port'],
     )
 
-  def installMemcached(self):
-    CONFIG.update(
+  def installMemcached(self, ip, port):
+    config = dict(
         memcached_binary=self.options['memcached_binary'],
-        memcached_ip=self.getLocalIPv4Address())
+        memcached_ip=ip,
+        memcached_port=port,
+    )
     self.path_list.append(self.createRunningWrapper('memcached',
       self.substituteTemplate(self.getTemplateFilename('memcached.in'),
-        CONFIG)))
-    self.connection_dict.update(
-      memcached_ip=CONFIG['memcached_ip'],
-      memcached_port=CONFIG['memcached_port']
-    )
+        config)))
+    self.connection_dict.update(memcached_url='%s:%s' %
+        (config['memcached_ip'], config['memcached_port']))
 
   def installTestRunner(self):
     """Installs bin/runTestSuite executable to run all tests using
