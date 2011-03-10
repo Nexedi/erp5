@@ -144,6 +144,9 @@
                         <string>my_preferred_header_title</string>
                         <string>listbox_modification_date</string>
                         <string>listbox_getSummaryAsHTML</string>
+                        <string>my_editor_field</string>
+                        <string>my_date</string>
+                        <string>my_input_button_field</string>
                       </list>
                     </value>
                 </item>
