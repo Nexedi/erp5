@@ -40,6 +40,8 @@ CONFIG = dict(
   test_ca_prefix='test_ca',
   # Zope
   zope_user='zope',
+  # ERP5
+  erp5_site_id='erp5',
   # MySQL
   mysql_database='erp5',
   mysql_port=45678,
@@ -386,21 +388,23 @@ class Recipe(BaseSlapRecipe):
   def installERP5Site(self):
     """ Create a script controlled by supervisor, which creates a erp5
     site on current available zope and mysql environment"""
+    erp5_site_id = CONFIG['erp5_site_id']
     mysql_connection_string = "%s@%s:%s %s %s" % (CONFIG['mysql_database'],
                                                   CONFIG['mysql_ip'],
                                                   CONFIG['mysql_port'],
                                                   CONFIG['mysql_user'],
                                                   CONFIG['mysql_password'])
 
-    https_connection_url = "https://%s:%s@%s:%s/" % (CONFIG['zope_user'],
-                                                     CONFIG['zope_password'],
+    https_connection_url = "https://%s:%s@%s:%s/" % (self.connection_dict['zope_user'],
+                                                     self.connection_dict['zope_password'],
                                                      self.backend_ip,
                                                      self.backend_port)
 
     self.path_list.extend(zc.buildout.easy_install.scripts([('erp5_update',
             __name__ + '.erp5', 'updateERP5')], self.ws,
                   sys.executable, self.wrapper_directory,
-                  arguments=[mysql_connection_string, https_connection_url]))
+                  arguments=[erp5_site_id, mysql_connection_string, 
+                             https_connection_url]))
 
     return []
 

@@ -28,26 +28,26 @@ import time
 import urllib
 
 def updateERP5(args):
-  base_url = args[1]
-  mysql_string = args[0]
+  base_url = args[2]
+  mysql_string = args[1]
+  site_id = args[0]
   sleep = 30
   while True:
     try:
-      url = '%s/erp5/getId' % base_url
-      result = urllib.urlopen(url).read()
+      test_url = '%s/%s/getId' % (base_url, site_id)
+      result = urllib.urlopen(test_url).read()
       # XXX This result should be more assertive
-      if result != 'erp5':
+      if result != site_id:
         url = '%s/manage_addProduct/ERP5/manage_addERP5Site' % base_url
         result = urllib.urlopen(url, urllib.urlencode({
-          "id": "erp5",
+          "id": site_id,
           "erp5_sql_connection_string": mysql_string,
           "cmf_activity_sql_connection_string": mysql_string, }))
         print result.read()
 
-        url = '%s/erp5/getId' % base_url
-        result = urllib.urlopen(url).read()
+        result = urllib.urlopen(test_url).read()
 
-      if result == 'erp5':
+      if result == site_id:
         print "Ready for install one business."
         # XXX Suggestion for future
         # POST '%s/erp5/portal_templates/updateRepositoryBusinessTemplateList <
