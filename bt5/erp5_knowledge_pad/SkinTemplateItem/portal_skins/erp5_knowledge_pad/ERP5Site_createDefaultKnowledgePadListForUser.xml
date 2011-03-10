@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.JSON import dumps\n
+            <value> <string>from json import dumps\n
 \n
 knowledge_pad = None\n
 portal = context.getPortalObject()\n

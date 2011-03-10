@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.JSONEncoder import encodeInJson\n
+            <value> <string>from json import dumps\n
 \n
 # sometime instead of real knowledge pad object we may get just its relative url \n
 # and actually that\'s what we care for\n
@@ -66,7 +66,7 @@ else:\n
   editable_mode = 0\n
 \n
 js_update_code = """updater(\'%s\', \'%s\', \'%s\', \'%s\', %s, field_prefix=\'%s\');""" %(url, box_relative_url, dom_id, \n
-                                                              editable_mode, encodeInJson(params), field_prefix)\n
+                                                              editable_mode, dumps(params), field_prefix)\n
 if box.getValidationState()==\'invisible\':\n
   # we can generate \n
   javascript_code = """invisible_gadgets["%s"]="%s";""" %(dom_id, js_update_code)\n

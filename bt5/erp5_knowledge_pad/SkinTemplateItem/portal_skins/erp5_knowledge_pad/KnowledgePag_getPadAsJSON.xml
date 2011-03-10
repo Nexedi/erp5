@@ -54,7 +54,7 @@
   Render an entire Pad and needed JavaScript code.\n
   Used to make instant Pad switching.\n
 """\n
-from Products.ERP5Type.JSON import dumps\n
+from json import dumps\n
 \n
 pad = context.restrictedTraverse(pad_relative_url)\n
 \n
