@@ -40,10 +40,6 @@ CONFIG = dict(
   test_ca_prefix='test_ca',
   # Zope
   zope_user='zope',
-  # Apache (login)
-  login_apache_port_base=13000,
-  # Apache (key login)
-  key_auth_apache_port_base=14000,
   # MySQL
   mysql_database='erp5',
   mysql_port=45678,
@@ -56,9 +52,6 @@ CONFIG = dict(
   kumo_server_port=13201,
   kumo_server_listen_port=13202,
   kumo_gateway_port=13301,
-  # Conversion Server
-  conversion_server_port=23000,
-  conversion_server_ooo_port=23060,
 )
 
 
@@ -93,7 +86,7 @@ class Recipe(BaseSlapRecipe):
     self.installCertificateAuthority()
     self.installMemcached(ip=self.getLocalIPv4Address(), port=11000)
     self.installKumo()
-    self.installConversionServer()
+    self.installConversionServer(self.getLocalIPv4Address(), 23000, 23060)
     self.installMysqlServer()
     self.installERP5()
     zodb_dir = os.path.join(self.data_root_directory, 'zodb')
@@ -295,16 +288,16 @@ class Recipe(BaseSlapRecipe):
         certificate_authority_path=CONFIG['ca_dir']
     )
 
-  def installConversionServer(self):
+  def installConversionServer(self, ip, port, openoffice_port):
     name = 'conversion_server'
     working_directory = self.createDataDirectory(name)
     conversion_server_dict = dict(
       working_path=working_directory,
       uno_path=self.options['ooo_uno_path'],
       office_binary_path=self.options['ooo_binary_path'],
-      ip=self.getLocalIPv4Address(),
-      port=CONFIG[name + '_port'],
-      openoffice_port=CONFIG[name + '_ooo_port'],
+      ip=ip,
+      port=port,
+      openoffice_port=openoffice_port,
     )
     for env_line in self.options['environment'].splitlines():
       env_line = env_line.strip()
