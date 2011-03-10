@@ -109,9 +109,8 @@ class Recipe(BaseSlapRecipe):
                                             CONFIG['zodb_root_filename'])
     url_list = []
     if 'zope_amount' in self.parameter_dict:
-      CONFIG['zope_amount'] = int(self.parameter_dict.get('zope_amount'))
       self.installZeo()
-      for i in xrange(1, CONFIG['zope_amount'] + 1):
+      for i in xrange(1, int(self.parameter_dict.get('zope_amount')) + 1):
         url_list.append(self.installZope(ip=self.getLocalIPv4Address(),
           port=12000 + i, name='zope_%s' % i, simple_zope=False))
     else:
