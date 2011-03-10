@@ -163,7 +163,7 @@ class Recipe(BaseSlapRecipe):
               'Target link already %r exists but it is not link' % link)
         os.unlink(link)
       os.symlink(target, link)
-      self.logger.debug('Link %r -> %r created' % (link, target))
+      self.logger.debug('Created link %r -> %r' % (link, target))
       self.path_list.append(link)
 
   def installKumo(self):
