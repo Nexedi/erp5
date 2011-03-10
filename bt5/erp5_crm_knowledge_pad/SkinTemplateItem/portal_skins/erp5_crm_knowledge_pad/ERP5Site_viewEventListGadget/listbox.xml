@@ -169,7 +169,7 @@
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
-                    <value> <string>event_module/view</string> </value>
+                    <value> <string>event_module/view?reset:int=1</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
