@@ -51,11 +51,6 @@ CONFIG = dict(
   mysql_user='user',
   mysql_test_database='test_erp5',
   mysql_test_user='test_user',
-  # Zeo
-  zodb_data_prefix='zodb',
-  zodb_root_filename='root.fs',
-  zeo_port=22001,
-  zeo_storagename='root',
   # Kumofs
   kumo_manager_port=13101,
   kumo_server_port=13201,
@@ -101,15 +96,14 @@ class Recipe(BaseSlapRecipe):
     self.installConversionServer()
     self.installMysqlServer()
     self.installERP5()
-    zodb_dir = os.path.join(self.data_root_directory,
-        CONFIG['zodb_data_prefix'])
+    zodb_dir = os.path.join(self.data_root_directory, 'zodb')
     self._createDirectory(zodb_dir)
-    CONFIG['zodb_root_path'] = os.path.join(zodb_dir,
-                                            CONFIG['zodb_root_filename'])
+    zodb_root_path = os.path.join(zodb_dir, 'root.fs')
     url_list = []
     if 'activity_node_amount' in self.parameter_dict or \
        'login_node_amount' in self.parameter_dict:
-      self.zeo_address, self.zeo_storagename = self.installZeo()
+      self.zeo_address, self.zeo_storagename = self.installZeo(
+          self.getLocalIPv4Address(), 22001, 'root', zodb_root_path)
       common_kw = dict(
           zeo_address=self.zeo_address,
           zeo_storagename=self.zeo_storagename,
@@ -417,22 +411,24 @@ class Recipe(BaseSlapRecipe):
 
     return []
 
-  def installZeo(self):
-    CONFIG.update(
+  def installZeo(self, ip, port, name, path):
+    config = dict(
+      zeo_ip=ip,
+      zeo_port=port,
+      zeo_storagename=name,
       zeo_event_log=os.path.join(self.log_directory, 'zeo.log'),
-      zeo_ip=self.getLocalIPv4Address(),
-      zeo_zodb=CONFIG['zodb_root_path'],
-      zeo_pid=os.path.join(self.run_directory, 'zeo.pid')
+      zeo_pid=os.path.join(self.run_directory, 'zeo.pid'),
+      zeo_zodb=path
     )
     zeo_conf_path = self.createConfigurationFile('zeo.conf',
-      self.substituteTemplate(self.getTemplateFilename('zeo.conf.in'), CONFIG))
+      self.substituteTemplate(self.getTemplateFilename('zeo.conf.in'), config))
     self.path_list.append(zeo_conf_path)
     wrapper = zc.buildout.easy_install.scripts([('zeo', __name__ + '.execute',
       'execute')], self.ws, sys.executable, self.wrapper_directory, arguments=[
         self.options['runzeo_binary'].strip(), '-C', zeo_conf_path]
       )[0]
     self.path_list.append(wrapper)
-    return '%s:%s' % (CONFIG['zeo_ip'], CONFIG['zeo_port']), CONFIG['zeo_storagename']
+    return '%s:%s' % (config['zeo_ip'], config['zeo_port']), config['zeo_storagename']
 
   def installZope(self, ip, port, name, zeo_address=None, zeo_storagename=None,
       zodb_root_path=None, with_timerservice=False, timeserver_interval=5):
