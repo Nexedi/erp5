@@ -6,4 +6,7 @@ defaults
   timeout connect 10s
   timeout client 3600s
 
-%(listen_list)s
+listen %(name)s %(ip)s:%(port)s
+  option ssl-hello-chk
+  balance roundrobin
+%(server_text)s

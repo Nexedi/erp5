@@ -124,7 +124,11 @@ class Recipe(BaseSlapRecipe):
     for zope_number in xrange(1, CONFIG['zope_amount'] + 1):
       self.installZope(zope_number, simple_zope)
 
-    self.installHaproxy()
+    url_list = []
+    for i in xrange(1, CONFIG['zope_amount'] + 1):
+      url_list.append(self.connection_dict['login_%s' % i])
+    self.installHaproxy(ip=self.getGlobalIPv6Address(), port='15000',
+        name='login', url_list=url_list)
     self.installTestRunner()
     self.linkBinary()
     self.computer_partition.setConnectionDict(self.connection_dict)
@@ -333,39 +337,19 @@ class Recipe(BaseSlapRecipe):
         test_ca_path=CONFIG['ca_dir']
     )
 
-  def installHaproxy(self):
-    listen_template = """listen %(name)s %(ip)s:%(port)s
-  option ssl-hello-chk
-  balance roundrobin
-  %(server_list)s"""
-    server_template = """server %(name)s %(address)s check"""
-
-    ip_dict = dict(
-        key_auth=self.getLocalIPv4Address(),
-        login=self.getGlobalIPv6Address()
-    )
-    listen_list = []
-    for key in ['key_auth', 'login']:
-      conf = dict(
-        name=key,
-        ip=ip_dict[key],
-        port=CONFIG['haproxy_%s_port' % key]
-      )
-      server_list = []
-      for index in xrange(1, CONFIG['zope_amount'] + 1):
-        k = '_'.join([key, str(index)])
-        server_list.append(server_template % dict(name='_'.join([conf['name'],
-          str(index)]),
-          address=self.connection_dict[k]))
-      conf['server_list'] = '\n  '.join(server_list)
-      listen_list.append(listen_template % conf)
-      key = 'haproxy_' + key + '_url'
-      d = {key: '%(ip)s:%(port)s' % conf}
-      CONFIG.update(**d)
-      self.connection_dict.update(**d)
+  def installHaproxy(self, ip, port, name, url_list):
+    server_template = """  server %(name)s %(address)s check"""
+    config = dict(name=name, ip=ip, port=port)
+    i = 1
+    server_list = []
+    for url in url_list:
+      server_list.append(server_template % dict(name='%s_%s' % (name, i),
+        address=url))
+      i += 1
+    config['server_text'] = '\n'.join(server_list)
     haproxy_conf_path = self.createConfigurationFile('haproxy.cfg',
       self.substituteTemplate(self.getTemplateFilename('haproxy.cfg.in'),
-        dict(listen_list='\n'.join(listen_list))))
+        config))
     self.path_list.append(haproxy_conf_path)
     wrapper = zc.buildout.easy_install.scripts([('haproxy',
       __name__ + '.execute', 'execute')], self.ws, sys.executable,
