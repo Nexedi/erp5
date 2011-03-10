@@ -109,16 +109,14 @@ class Recipe(BaseSlapRecipe):
                                             CONFIG['zodb_root_filename'])
     url_list = []
     if 'zope_amount' in self.parameter_dict:
-      simple_zope = False
       CONFIG['zope_amount'] = int(self.parameter_dict.get('zope_amount'))
-    else:
-      simple_zope = True
-      CONFIG['zope_amount'] = 1
-    if not simple_zope:
       self.installZeo()
-    for i in xrange(1, CONFIG['zope_amount'] + 1):
+      for i in xrange(1, CONFIG['zope_amount'] + 1):
+        url_list.append(self.installZope(ip=self.getLocalIPv4Address(),
+          port=12000 + i, name='zope_%s' % i, simple_zope=False))
+    else:
       url_list.append(self.installZope(ip=self.getLocalIPv4Address(),
-        port=12000 + i, name='zope_%s' % i, simple_zope=simple_zope))
+          port=12000 + 1, name='zope_%s' % 1, simple_zope=True))
 
     self.installHaproxy(ip=self.getGlobalIPv6Address(), port='15000',
         name='login', url_list=url_list)
