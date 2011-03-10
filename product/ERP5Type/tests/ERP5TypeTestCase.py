@@ -539,6 +539,10 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
         from pdb import set_trace as tracer
       tracer()
 
+    def stepIPython(self, sequence=None, sequence_list=None):
+      import IPython.Shell
+      IPython.Shell.IPShellEmbed(())()
+
     def stepTic(self, **kw):
       """
       The is used to simulate the zope_tic_loop script
