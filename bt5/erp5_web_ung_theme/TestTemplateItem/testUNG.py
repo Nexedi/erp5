@@ -324,3 +324,16 @@ class TestUNG(ERP5TypeTestCase):
     self.login("ung_reference")
     user = portal.ERP5Site_getAuthenticatedMemberPersonValue()
     self.assertEquals(user.getFirstName(), "UNG")
+
+  def testWebSection_addGadget(self):
+    """Test if gadgets are added correctly"""
+    obj = self.portal.knowledge_pad_module.newContent(portal_type="Knowledge Pad")
+    obj.visible()
+    self.stepTic()
+    gadget = self.portal.portal_gadgets.searchFolder()[0]
+    gadget_id = gadget.getId()
+    self.portal.web_site_module.ung.WebSection_addGadget(gadget_id)
+    self.stepTic()
+    gadget = self.portal.portal_catalog.getResultValue(portal_type="Gadget",
+                                                       validation_state="visible")
+    self.assertEquals(gadget_id, gadget.getId())

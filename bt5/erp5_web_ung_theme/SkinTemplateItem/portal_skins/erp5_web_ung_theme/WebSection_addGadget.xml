@@ -57,8 +57,11 @@ knowledge_pad = portal_catalog.getResultValue(portal_type="Knowledge Pad",\n
                                               validation_state=["visible", "public"])\n
 \n
 knowledge_box = knowledge_pad.newContent(portal_type="Knowledge Box")\n
-\n
-knowledge_box.setSpecialise("portal_gadgets/%s" % gadget_id)\n
+gadget_relative_url = "portal_gadgets/%s" % gadget_id\n
+gadget = portal_catalog.getResultValue(portal_type="Gadget", id=gadget_id)\n
+if gadget.getValidationState() == "invisible":\n
+  gadget.visible()\n
+knowledge_box.setSpecialise(gadget_relative_url)\n
 knowledge_box.visible()\n
 </string> </value>
         </item>
