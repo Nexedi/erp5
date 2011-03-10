@@ -475,7 +475,6 @@ class Recipe(BaseSlapRecipe):
     self.path_list.append(wrapper)
 
     self.installLoginApache(index)
-    self.installKeyAuthorisationApache(index)
 
   def _getApacheConfigurationDict(self, prefix, ip, port):
     apache_conf = dict()
