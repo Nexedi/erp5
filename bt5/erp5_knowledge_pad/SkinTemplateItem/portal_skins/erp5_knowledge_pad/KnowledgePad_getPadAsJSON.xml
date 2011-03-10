@@ -92,7 +92,7 @@ return dumps(result)\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>KnowledgePag_getPadAsJSON</string> </value>
+            <value> <string>KnowledgePad_getPadAsJSON</string> </value>
         </item>
       </dictionary>
     </pickle>

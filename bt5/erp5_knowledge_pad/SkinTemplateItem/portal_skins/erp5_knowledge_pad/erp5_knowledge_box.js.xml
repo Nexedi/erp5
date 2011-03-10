@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts98018584.53</string> </value>
+            <value> <string>ts99770782.61</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -48,7 +48,7 @@ var knowledge_box_toggle_script_id = "KnowledgeBox_toggleVisibility";\n
 var knowledge_pad_rename_script_id = "ERP5Site_renameKnowledgePad";\n
 var knowledge_pad_delete_script_id = "ERP5Site_deleteKnowledgePad";\n
 var add_new_knowledge_pad_script_id = "ERP5Site_addNewKnowledgePad";\n
-var knowledge_pad_as_json_script_id = "KnowledgePag_getPadAsJSON";\n
+var knowledge_pad_as_json_script_id = "KnowledgePad_getPadAsJSON";\n
 var add_new_gadget_form_id = "Base_viewGadgetListDialog";\n
 \n
 function createCustomKnowledgePadOnServer(){\n
