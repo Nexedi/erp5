@@ -82,7 +82,6 @@ class Recipe(BaseSlapRecipe):
         'template/%s' % template_name)
 
   def _install(self):
-    self.connection_dict = dict()
     self.path_list = []
     self.requirements, self.ws = self.egg.working_set([__name__])
     default_parameter_dict = dict(
@@ -144,7 +143,6 @@ class Recipe(BaseSlapRecipe):
         backend=self.connection_dict['haproxy_login']))
     self.installTestRunner()
     self.linkBinary()
-    self.computer_partition.setConnectionDict(self.connection_dict)
     return self.path_list
 
   def linkBinary(self):
