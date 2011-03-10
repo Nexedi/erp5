@@ -319,9 +319,8 @@ class Recipe(BaseSlapRecipe):
     # Create init user
     password = self.generatePassword()
     write_inituser(os.path.join(self.erp5_directory, "inituser"),
-        CONFIG['zope_user'], password)
-    self.connection_dict.update(zope_user=CONFIG['zope_user'],
-        zope_password=password)
+        'zope', password)
+    self.connection_dict.update(zope_user='zope', zope_password=password)
 
     self._createDirectory(self.erp5_directory)
     for directory in (
@@ -337,7 +336,7 @@ class Recipe(BaseSlapRecipe):
       self._createDirectory(os.path.join(self.erp5_directory, directory))
     return []
 
-  def installERP5Site(self, mysql_connection_string, erp5_site_id='erp5',):
+  def installERP5Site(self, mysql_connection_string, erp5_site_id='erp5'):
     """ Create a script controlled by supervisor, which creates a erp5
     site on current available zope and mysql environment"""
 
