@@ -52,19 +52,19 @@
             <key> <string>_body</string> </key>
             <value> <string>portal_catalog = context.portal_catalog\n
 \n
-website_uid = context.getUid()\n
 knowledge_pad = portal_catalog.getResultValue(portal_type="Knowledge Pad",\n
-                                              publication_section_uid=website_uid,\n
-                                              validation_state="visible")\n
+#                                              publication_section_uid=context.getUid(),\n
+                                              validation_state=["visible", "public"])\n
 \n
 knowledge_box = knowledge_pad.newContent(portal_type="Knowledge Box")\n
 \n
 knowledge_box.setSpecialise("portal_gadgets/%s" % gadget_id)\n
+knowledge_box.visible()\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>tab_title, gadget_id</string> </value>
+            <value> <string>gadget_id</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
