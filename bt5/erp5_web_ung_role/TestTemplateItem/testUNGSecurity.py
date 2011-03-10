@@ -68,9 +68,16 @@ class TestUNGSecurity(ERP5TypeTestCase):
             'erp5_web_ung_role')
   
   def beforeTearDown(self):
-    """ """
     person_module = self.getPersonModule()
     person_module.manage_delObjects(list(person_module.objectIds()))
+    self.stepTic()
+
+  def afterSetUp(self):
+    person = self.portal.person_module.newContent(portal_type='Person',
+                                                  reference="ung_user")
+    assignment = person.newContent(portal_type='Assignment')
+    assignment.setFunction("function/ung_user")
+    assignment.open()
     self.stepTic()
 
   def testERP5Site_createNewWebDocumentAsAnonymous(self):
@@ -84,12 +91,6 @@ class TestUNGSecurity(ERP5TypeTestCase):
     """Test use script ERP5Site_createNewWebDocument when a erp5 user have role
     to create and edit document in UNG"""
     self.portal.portal_preferences.ung_preference.enable()
-    person = self.portal.person_module.newContent(portal_type='Person',
-                                                  reference="ung_user")
-    assignment = person.newContent(portal_type='Assignment')
-    assignment.setFunction("function/ung_user")
-    assignment.open()
-    self.stepTic()
     self.login("ung_user")
     web_page = self.portal.portal_catalog.getResultValue(portal_type="Web Page")
     self.assertEquals(web_page, None)
@@ -101,11 +102,6 @@ class TestUNGSecurity(ERP5TypeTestCase):
 
   def testShareDocument(self):
     """Test the document sharing between erp5 users"""
-    person = self.portal.person_module.newContent(portal_type='Person',
-                                                  reference="ung_user")
-    assignment = person.newContent(portal_type='Assignment')
-    assignment.setFunction("function/ung_user")
-    assignment.open()
     person = self.portal.person_module.newContent(portal_type='Person',
                                                   reference="ung_user2",
                                                   first_name="Gabriel")
@@ -129,12 +125,6 @@ class TestUNGSecurity(ERP5TypeTestCase):
 
   def testBase_updateCalendarEventListWithERP5User(self):
     """ Test script Base_updateCalendarEventList with erp5 user"""
-    person = self.portal.person_module.newContent(portal_type='Person',
-                                                  reference="ung_user")
-    assignment = person.newContent(portal_type='Assignment')
-    assignment.setFunction("function/ung_user")
-    assignment.open()
-    self.stepTic()
     self.logout()
     self.assertEquals('{"events": []}',
                       self.portal.Base_updateCalendarEventList("list"))
