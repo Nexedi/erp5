@@ -60,7 +60,6 @@ class Recipe(BaseSlapRecipe):
   def _install(self):
     self.path_list = []
     self.requirements, self.ws = self.egg.working_set([__name__])
-    self.installTestCertificateAuthority()
     self.installCertificateAuthority()
     self.installMemcached(ip=self.getLocalIPv4Address(), port=11000)
     self.installKumo(self.getLocalIPv4Address())
@@ -168,7 +167,7 @@ class Recipe(BaseSlapRecipe):
         instance_home=testinstance,
         prepend_path=self.bin_directory,
         openssl_binary=self.options['openssl_binary'],
-        test_ca_path=CONFIG['test_ca_path'],
+        test_ca_path=self.connection_dict['certificate_authority_path'],
         call_list=[self.options['runUnitTest_binary'],
           '--erp5_sql_connection_string', '%(mysql_test_database)s@%'
           '(mysql_ip)s:%(mysql_port)s %(mysql_test_user)s '
@@ -278,12 +277,6 @@ class Recipe(BaseSlapRecipe):
 
   def installCertificateAuthority(self):
     self._installCertificateAuthority()
-
-  def installTestCertificateAuthority(self):
-    self._installCertificateAuthority('test_')
-    CONFIG.update(
-        test_ca_path=CONFIG['ca_dir']
-    )
 
   def installHaproxy(self, ip, port, name, server_check_path, url_list):
     server_template = """  server %(name)s %(address)s cookie %(name)s check inter 20s rise 2 fall 4"""
