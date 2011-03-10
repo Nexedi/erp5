@@ -119,7 +119,7 @@ class Recipe(BaseSlapRecipe):
       login_list = url_list
       url_list.append(self.installZope(ip=self.getLocalIPv4Address(),
           port=12000 + 1, name='zope_%s' % 1,
-          zodb_root_path=CONFIG['zodb_root_path']))
+          zodb_root_path=zodb_root_path))
 
     haproxy_login = self.installHaproxy(
           ip=self.getLocalIPv4Address(), port='15000', name='login',
