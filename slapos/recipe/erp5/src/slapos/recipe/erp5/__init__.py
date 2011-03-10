@@ -40,7 +40,6 @@ CONFIG = dict(
   test_ca_prefix='test_ca',
   # Zope
   zope_user='zope',
-  zope_port_base=12000,
   # Apache (login)
   login_apache_port_base=13000,
   # Apache (key login)
@@ -117,8 +116,9 @@ class Recipe(BaseSlapRecipe):
       CONFIG['zope_amount'] = 1
     if not simple_zope:
       self.installZeo()
-    for zope_number in xrange(1, CONFIG['zope_amount'] + 1):
-      url_list.append(self.installZope(zope_number, simple_zope))
+    for i in xrange(1, CONFIG['zope_amount'] + 1):
+      url_list.append(self.installZope(ip=self.getLocalIPv4Address(),
+        port=12000 + i, name='zope_%s' % i, simple_zope=simple_zope))
 
     self.installHaproxy(ip=self.getGlobalIPv6Address(), port='15000',
         name='login', url_list=url_list)
@@ -417,24 +417,23 @@ class Recipe(BaseSlapRecipe):
       )[0]
     self.path_list.append(wrapper)
 
-  def installZope(self, index, simple_zope):
-    backend_ip = self.getLocalIPv4Address()
-    backend_port = str(CONFIG['zope_port_base'] + index)
-    # Create instance directories
-
+  def installZope(self, ip, port, name, simple_zope):
     # Create zope configuration file
-    zope_config = {}
-    zope_config.update(self.options)
-    zope_config.update(CONFIG)
+    zope_config = dict(
+        products=self.options['products'],
+        zeo_ip=CONFIG['zeo_ip'],
+        zeo_port=CONFIG['zeo_port'],
+        zeo_storagename=CONFIG['zeo_storagename'],
+    )
     zope_config['instance'] = self.erp5_directory
     zope_config['event_log'] = os.path.join(self.log_directory,
-        'zope_%s-event.log' % index)
+        '%s-event.log' % name)
     zope_config['z2_log'] = os.path.join(self.log_directory,
-        'zope_%s-Z2.log' % index)
+        '%s-Z2.log' % name)
     zope_config['pid-filename'] = os.path.join(self.run_directory,
-        'zope_%s.pid' % index)
+        '%s.pid' % name)
     zope_config['lock-filename'] = os.path.join(self.run_directory,
-        'zope_%s.lock' % index)
+        '%s.lock' % name)
 
     prefixed_products = []
     for product in reversed(zope_config['products'].split()):
@@ -444,7 +443,7 @@ class Recipe(BaseSlapRecipe):
     prefixed_products.insert(0, 'products %s' % os.path.join(
                              self.erp5_directory, 'Products'))
     zope_config['products'] = '\n'.join(prefixed_products)
-    zope_config['address'] = '%s:%s' % (backend_ip, backend_port)
+    zope_config['address'] = '%s:%s' % (ip, port)
     zope_config['tmp_directory'] = self.tmp_directory
     zope_config['path'] = ':'.join([self.bin_directory] +
         os.environ['PATH'].split(':'))
@@ -455,12 +454,12 @@ class Recipe(BaseSlapRecipe):
     else:
       zope_wrapper_template_location = self.getTemplateFilename('zope.conf.in')
 
-    zope_conf_path = self.createConfigurationFile("zope_%s.conf" %
-        index, self.substituteTemplate(
+    zope_conf_path = self.createConfigurationFile("%s.conf" %
+        name, self.substituteTemplate(
           zope_wrapper_template_location, zope_config))
     self.path_list.append(zope_conf_path)
     # Create init script
-    wrapper = zc.buildout.easy_install.scripts([('zope_%s' % index,
+    wrapper = zc.buildout.easy_install.scripts([(name,
       __name__ + '.execute', 'execute')], self.ws, sys.executable,
       self.wrapper_directory, arguments=[
         self.options['runzope_binary'].strip(), '-C', zope_conf_path]
