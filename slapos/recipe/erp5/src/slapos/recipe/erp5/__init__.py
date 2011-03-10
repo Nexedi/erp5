@@ -108,6 +108,7 @@ class Recipe(BaseSlapRecipe):
     self._createDirectory(zodb_dir)
     CONFIG['zodb_root_path'] = os.path.join(zodb_dir,
                                             CONFIG['zodb_root_filename'])
+    url_list = []
     if 'zope_amount' in self.parameter_dict:
       simple_zope = False
       CONFIG['zope_amount'] = int(self.parameter_dict.get('zope_amount'))
@@ -117,11 +118,8 @@ class Recipe(BaseSlapRecipe):
     if not simple_zope:
       self.installZeo()
     for zope_number in xrange(1, CONFIG['zope_amount'] + 1):
-      self.installZope(zope_number, simple_zope)
+      url_list.append(self.installZope(zope_number, simple_zope))
 
-    url_list = []
-    for i in xrange(1, CONFIG['zope_amount'] + 1):
-      url_list.append(self.connection_dict['login_%s' % i])
     self.installHaproxy(ip=self.getGlobalIPv6Address(), port='15000',
         name='login', url_list=url_list)
     self.installTestRunner()
@@ -420,8 +418,8 @@ class Recipe(BaseSlapRecipe):
     self.path_list.append(wrapper)
 
   def installZope(self, index, simple_zope):
-    self.backend_ip = self.getLocalIPv4Address()
-    self.backend_port = str(CONFIG['zope_port_base'] + index)
+    backend_ip = self.getLocalIPv4Address()
+    backend_port = str(CONFIG['zope_port_base'] + index)
     # Create instance directories
 
     # Create zope configuration file
@@ -446,7 +444,7 @@ class Recipe(BaseSlapRecipe):
     prefixed_products.insert(0, 'products %s' % os.path.join(
                              self.erp5_directory, 'Products'))
     zope_config['products'] = '\n'.join(prefixed_products)
-    zope_config['address'] = '%s:%s' % (self.backend_ip, self.backend_port)
+    zope_config['address'] = '%s:%s' % (backend_ip, backend_port)
     zope_config['tmp_directory'] = self.tmp_directory
     zope_config['path'] = ':'.join([self.bin_directory] +
         os.environ['PATH'].split(':'))
@@ -468,8 +466,7 @@ class Recipe(BaseSlapRecipe):
         self.options['runzope_binary'].strip(), '-C', zope_conf_path]
       )[0]
     self.path_list.append(wrapper)
-
-    self.installLoginApache(index)
+    return zope_config['address']
 
   def _getApacheConfigurationDict(self, prefix, ip, port):
     apache_conf = dict()
