@@ -62,7 +62,6 @@ CONFIG = dict(
   haproxy_key_auth_port=16000,
   # Memcached
   memcached_port=11000,
-  memcached_mem_limit=256, # in MB
   # Kumofs
   kumo_manager_port=13101,
   kumo_server_port=13201,
