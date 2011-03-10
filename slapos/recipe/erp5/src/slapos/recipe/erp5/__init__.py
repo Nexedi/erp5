@@ -101,6 +101,7 @@ class Recipe(BaseSlapRecipe):
       )
     for k, v in default_parameter_dict.iteritems():
       self.parameter_dict.setdefault(k, v)
+    self.installTestCertificateAuthority()
     self.installCertificateAuthority()
     self.installMemcached()
     self.installKumo()
@@ -490,6 +491,7 @@ class Recipe(BaseSlapRecipe):
     self.path_list.append(wrapper)
 
     self.installLoginApache(index)
+    self.installKeyAuthorisationApache(index)
 
   def _getApacheConfigurationDict(self, prefix, ip, port):
     apache_conf = dict()
