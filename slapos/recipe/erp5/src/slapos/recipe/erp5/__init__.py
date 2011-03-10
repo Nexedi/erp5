@@ -40,8 +40,6 @@ CONFIG = dict(
   test_ca_prefix='test_ca',
   # Zope
   zope_user='zope',
-  # ERP5
-  erp5_site_id='erp5',
   # MySQL
   mysql_database='erp5',
   mysql_port=45678,
@@ -74,16 +72,6 @@ class Recipe(BaseSlapRecipe):
   def _install(self):
     self.path_list = []
     self.requirements, self.ws = self.egg.working_set([__name__])
-    default_parameter_dict = dict(
-      ca_country_code='XX',
-      ca_email='xx@example.com',
-      ca_state='State',
-      ca_city='City',
-      ca_company='Company',
-      key_auth_path='/erp5/portal_slap'
-      )
-    for k, v in default_parameter_dict.iteritems():
-      self.parameter_dict.setdefault(k, v)
     self.installTestCertificateAuthority()
     self.installCertificateAuthority()
     self.installMemcached(ip=self.getLocalIPv4Address(), port=11000)
@@ -94,43 +82,12 @@ class Recipe(BaseSlapRecipe):
     zodb_dir = os.path.join(self.data_root_directory, 'zodb')
     self._createDirectory(zodb_dir)
     zodb_root_path = os.path.join(zodb_dir, 'root.fs')
-    url_list = []
-    if 'activity_node_amount' in self.parameter_dict or \
-       'login_node_amount' in self.parameter_dict:
-      self.zeo_address, self.zeo_storagename = self.installZeo(
-          self.getLocalIPv4Address(), 22001, 'root', zodb_root_path)
-      common_kw = dict(
-          zeo_address=self.zeo_address,
-          zeo_storagename=self.zeo_storagename,
-          ip=self.getLocalIPv4Address())
-      port = 12001
-      distribution_list = [self.installZope(port=port, name='zope_distribution',
-        with_timerservice=True, **common_kw)]
-      activity_list = []
-      for i in xrange(1, int(self.parameter_dict.get('activity_node_amount', 0)) + 1):
-        port += 1
-        activity_list.append(self.installZope(port=port, name='zope_activity_%s' % i,
-          with_timerservice=True, **common_kw))
-      login_list = []
-      for i in xrange(1, int(self.parameter_dict.get('login_node_amount', 0)) + 1):
-        port += 1
-        login_list.append(self.installZope(port=port, name='zope_login_%s' % i,
-          **common_kw))
-      url_list = activity_list + login_list + distribution_list
-    else:
-      login_list = url_list
-      url_list.append(self.installZope(ip=self.getLocalIPv4Address(),
+    zope_access = self.installZope(ip=self.getLocalIPv4Address(),
           port=12000 + 1, name='zope_%s' % 1,
-          zodb_root_path=zodb_root_path))
-
-    haproxy_login = self.installHaproxy(
-          ip=self.getLocalIPv4Address(), port='15000', name='login',
-          url_list=login_list,
-          server_check_path=self.parameter_dict.get('server_check_path', \
-                                   '/%s/getId' % CONFIG['erp5_site_id']))
+          zodb_root_path=zodb_root_path)
     self.connection_dict.update(
         apache_login=self.installLoginApache(ip=self.getGlobalIPv6Address(),
-          port=13000, backend=haproxy_login))
+          port=13000, backend=zope_access))
     self.installTestRunner()
     self.linkBinary()
     return self.path_list
@@ -232,7 +189,9 @@ class Recipe(BaseSlapRecipe):
         )])[0]
     self.path_list.append(runUnitTest)
 
-  def _installCertificateAuthority(self, prefix=''):
+  def _installCertificateAuthority(self, prefix='', ca_country_code='XX',
+      ca_email='xx@example.com', ca_state='State', ca_city='City',
+      ca_company='Company'):
     CONFIG.update(
       ca_dir=os.path.join(self.data_root_directory,
                           CONFIG['%sca_prefix' % prefix]))
@@ -260,11 +219,11 @@ class Recipe(BaseSlapRecipe):
         'openssl.cnf')
     ca_conf.update(
         working_directory=CONFIG['ca_dir'],
-        country_code=self.parameter_dict['ca_country_code'],
-        state=self.parameter_dict['ca_state'],
-        city=self.parameter_dict['ca_city'],
-        company=self.parameter_dict['ca_company'],
-        email_address=self.parameter_dict['ca_email'],
+        country_code=ca_country_code,
+        state=ca_state,
+        city=ca_city,
+        company=ca_company,
+        email_address=ca_email,
     )
     self._writeFile(ca_conf['openssl_configuration'],
         pkg_resources.resource_string(__name__,
@@ -386,10 +345,9 @@ class Recipe(BaseSlapRecipe):
       self._createDirectory(os.path.join(self.erp5_directory, directory))
     return []
 
-  def installERP5Site(self):
+  def installERP5Site(self, erp5_site_id='erp5'):
     """ Create a script controlled by supervisor, which creates a erp5
     site on current available zope and mysql environment"""
-    erp5_site_id = CONFIG['erp5_site_id']
     mysql_connection_string = "%s@%s:%s %s %s" % (CONFIG['mysql_database'],
                                                   CONFIG['mysql_ip'],
                                                   CONFIG['mysql_port'],
@@ -548,7 +506,8 @@ SSLRandomSeed connect builtin
           ]))
     return 'https://%(ip)s:%(port)s' % apache_conf
 
-  def installKeyAuthorisationApache(self, ip, port, backend):
+  def installKeyAuthorisationApache(self, ip, port, backend,
+      key_auth_path='/erp5/portal_slap'):
     ssl_template = """SSLEngine on
 SSLVerifyClient require
 RequestHeader set REMOTE_USER %%{SSL_CLIENT_S_DN_CN}s
@@ -570,7 +529,7 @@ SSLCARevocationPath %(ca_crl)s"""
           backend_path='/',
           port=apache_conf['port'],
           vhname=path.replace('/', ''),
-          key_auth_path=self.parameter_dict['key_auth_path'],
+          key_auth_path=key_auth_path,
     )
     rewrite_rule = rewrite_rule_template % d
     apache_conf.update(**dict(
