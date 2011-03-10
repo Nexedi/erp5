@@ -69,8 +69,8 @@ available_bt5_list = portal_templates.getRepositoryBusinessTemplateList(newest_o
 available_bt5_id_list = [x.title for x in available_bt5_list]\n
 required_bt5_id_list = signature.get(\'required_bt5_id_list\', [])\n
 if len(required_bt5_id_list) == 0:\n
-  # by default, we try to upgrade all business templates from repositories.\n
-  required_bt5_id_list = [i.title for i in available_bt5_list]\n
+  # by default, we try to upgrade all installed business templates.\n
+  required_bt5_id_list = portal_templates.getInstalledBusinessTemplateTitleList()\n
 upgradable_bt5_id_list = signature.get(\'upgradable_bt5_id_list\', [])\n
 reinstallable_bt5_id_list = signature.get(\'reinstallable_bt5_id_list\', signature.get(\'reinstalable_bt5_id_list\', []))\n
 before_triggered_bt5_id_dict = signature.get(\'before_triggered_bt5_id_dict\', {})\n
@@ -113,7 +113,7 @@ def installBT5(bt5_url, bt5_title, previous_bt5, bt5_counter, force=False):\n
                     reinstall=force)\n
   previous_bt5_id = bt5_id\n
   bt5_counter += 1\n
-  message_list.append("\\tInstall %s from %s"  % (bt5_title, bt5_url))\n
+  message_list.append("%s will be installed"  % bt5_url)\n
   return bt5_id\n
 \n
 previous_bt5 = None\n
@@ -138,8 +138,6 @@ for repository, bt5_id in bt5_list:\n
       bt5_counter += 1\n
       bt5_id = installBT5(bt5_url, bt5_title, previous_bt5, bt5_counter)\n
       previous_bt5 = bt5_id\n
-\n
-message_list.append("Business templates will be installed using activities.")\n
 \n
 return message_list\n
 

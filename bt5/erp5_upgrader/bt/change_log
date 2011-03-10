@@ -1,3 +1,6 @@
+2011-03-10 Kazuhiko
+* by default, all installed business templates will be upgraded, not all existing business templates in the repository.
+
 2011-02-10 Kazuhiko
 * support 'update_security_workflow_id_list' in upgrade signature.
 
