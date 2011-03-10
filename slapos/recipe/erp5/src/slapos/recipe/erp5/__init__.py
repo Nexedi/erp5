@@ -290,8 +290,8 @@ class Recipe(BaseSlapRecipe):
         certificate_authority_path=CONFIG['ca_dir']
     )
 
-  def _installConversionServer(self, prefix=''):
-    name = prefix + 'conversion_server'
+  def installConversionServer(self):
+    name = 'conversion_server'
     working_directory = self.createDataDirectory(name)
     conversion_server_dict = dict(
       working_path=working_directory,
@@ -323,9 +323,6 @@ class Recipe(BaseSlapRecipe):
       name + '_port': conversion_server_dict['port'],
       name + '_ip': conversion_server_dict['ip']
       })
-
-  def installConversionServer(self):
-    self._installConversionServer()
 
   def installCertificateAuthority(self):
     self._installCertificateAuthority()
