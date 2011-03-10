@@ -46,7 +46,7 @@ lock-filename %(lock-filename)s
 <zodb_db main>
   mount-point /
   <zeoclient>
-    server %(zeo_ip)s:%(zeo_port)s
+    server %(zeo_address)s
     storage %(zeo_storagename)s
     name %(zeo_storagename)s
   </zeoclient>

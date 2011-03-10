@@ -108,14 +108,32 @@ class Recipe(BaseSlapRecipe):
     CONFIG['zodb_root_path'] = os.path.join(zodb_dir,
                                             CONFIG['zodb_root_filename'])
     url_list = []
-    if 'zope_amount' in self.parameter_dict:
+    if 'activity_node_amount' in self.parameter_dict or \
+       'login_node_amount' in self.parameter_dict or \
+       'keyauth_node_amount' in self.parameter_dict:
       self.installZeo()
-      for i in xrange(1, int(self.parameter_dict.get('zope_amount')) + 1):
-        url_list.append(self.installZope(ip=self.getLocalIPv4Address(),
-          port=12000 + i, name='zope_%s' % i, simple_zope=False))
+      common_kw = dict(
+          zeo_address='%s:%s' % (CONFIG['zeo_ip'], CONFIG['zeo_port']),
+          zeo_storagename=CONFIG['zeo_storagename'],
+          ip=self.getLocalIPv4Address())
+      port = 12001
+      distribution_list = [self.installZope(port=port, name='zope_distribution', **common_kw)] 
+      activity_list = []
+      for i in xrange(1, int(self.parameter_dict.get('activity_node_amount', 0)) + 1):
+        port += 1
+        activity_list.append(self.installZope(port=port, name='zope_activity_%s' % i, **common_kw))
+      login_list = []
+      for i in xrange(1, int(self.parameter_dict.get('login_node_amount', 0)) + 1):
+        port += 1
+        login_list.append(self.installZope(port=port, name='zope_login_%s' % i, **common_kw))
+      keyauth_list = []
+      for i in xrange(1, int(self.parameter_dict.get('keyauth_node_amount', 0)) + 1):
+        port += 1
+        keyauth_list.append(self.installZope(port=port, name='keyauth_login_%s' % i, **common_kw))
+      url_list = activity_list + login_list + keyauth_list + distribution_list
     else:
       url_list.append(self.installZope(ip=self.getLocalIPv4Address(),
-          port=12000 + 1, name='zope_%s' % 1, simple_zope=True))
+          port=12000 + 1, name='zope_%s' % 1, zodb_root_path=CONFIG['zodb_root_path']))
 
     self.installHaproxy(ip=self.getGlobalIPv6Address(), port='15000',
         name='login', url_list=url_list)
@@ -414,14 +432,16 @@ class Recipe(BaseSlapRecipe):
       )[0]
     self.path_list.append(wrapper)
 
-  def installZope(self, ip, port, name, simple_zope):
+  def installZope(self, ip, port, name, zeo_address=None, zeo_storagename=None,
+      zodb_root_path=None):
     # Create zope configuration file
     zope_config = dict(
         products=self.options['products'],
-        zeo_ip=CONFIG['zeo_ip'],
-        zeo_port=CONFIG['zeo_port'],
-        zeo_storagename=CONFIG['zeo_storagename'],
     )
+    if zeo_address is not None and zeo_storagename is not None:
+      zope_config.update(zeo_address=zeo_address, zeo_storagename=zeo_storagename)
+    elif zodb_root_path is not None:
+      zope_config.update(zodb_root_path=zodb_root_path)
     zope_config['instance'] = self.erp5_directory
     zope_config['event_log'] = os.path.join(self.log_directory,
         '%s-event.log' % name)
@@ -445,7 +465,7 @@ class Recipe(BaseSlapRecipe):
     zope_config['path'] = ':'.join([self.bin_directory] +
         os.environ['PATH'].split(':'))
 
-    if simple_zope:
+    if zeo_address is None:
       zope_wrapper_template_location = self.getTemplateFilename(
           'zope.conf.simple.in')
     else:
