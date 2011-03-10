@@ -136,7 +136,7 @@ class Recipe(BaseSlapRecipe):
 
     self.connection_dict.update(
         haproxy_login=self.installHaproxy(
-          ip=self.getGlobalIPv6Address(), port='15000', name='login',
+          ip=self.getLocalIPv4Address(), port='15000', name='login',
           url_list=login_list, server_check_path=
           self.parameter_dict.get('server_check_path', '/erp5/getId')))
     self.connection_dict.update(
