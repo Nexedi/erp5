@@ -41,6 +41,8 @@ def updateERP5(args):
         url = '%s/manage_addProduct/ERP5/manage_addERP5Site' % base_url
         result = urllib.urlopen(url, urllib.urlencode({
           "id": site_id,
+         # This parameter should be an argument in future.
+          "erp5_catalog_storage": "erp5_mysql_innodb_catalog",
           "erp5_sql_connection_string": mysql_string,
           "cmf_activity_sql_connection_string": mysql_string, }))
         print result.read()
