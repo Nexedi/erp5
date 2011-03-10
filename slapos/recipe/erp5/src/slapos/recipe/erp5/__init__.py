@@ -134,8 +134,12 @@ class Recipe(BaseSlapRecipe):
       url_list.append(self.installZope(ip=self.getLocalIPv4Address(),
           port=12000 + 1, name='zope_%s' % 1, zodb_root_path=CONFIG['zodb_root_path']))
 
-    self.installHaproxy(ip=self.getGlobalIPv6Address(), port='15000',
-        name='login', url_list=login_list)
+    self.connection_dict.update(
+        haproxy_login=self.installHaproxy(
+          ip=self.getGlobalIPv6Address(), port='15000', name='login', url_list=login_list))
+    self.connection_dict.update(
+        apache_login=self.installLoginApache(ip=self.getGlobalIPv6Address(), port=13000,
+        backend=self.connection_dict['haproxy_login']))
     self.installTestRunner()
     self.linkBinary()
     self.computer_partition.setConnectionDict(self.connection_dict)
@@ -364,6 +368,7 @@ class Recipe(BaseSlapRecipe):
         self.options['haproxy_binary'].strip(), '-f', haproxy_conf_path]
       )[0]
     self.path_list.append(wrapper)
+    return '%s:%s' % (ip, port)
 
   def installERP5(self):
     """
@@ -498,16 +503,15 @@ class Recipe(BaseSlapRecipe):
         prefix + '-access.log')
     return apache_conf
 
-  def _writeApacheConfiguration(self, prefix, apache_conf):
+  def _writeApacheConfiguration(self, prefix, apache_conf, backend):
     rewrite_rule_template = \
-        "RewriteRule (.*) http://%(backend_ip)s:%(backend_port)s$1 [L,P]"
+        "RewriteRule (.*) http://%(backend)s$1 [L,P]"
     path_template = pkg_resources.resource_string(__name__,
       'template/apache.zope.conf.path.in')
     path = path_template % dict(path='/')
     d = dict(
           path=path,
-          backend_ip=self.backend_ip,
-          backend_port=self.backend_port,
+          backend=backend,
           backend_path='/',
           port=apache_conf['port'],
           vhname=path.replace('/', ''),
@@ -521,22 +525,21 @@ class Recipe(BaseSlapRecipe):
         pkg_resources.resource_string(__name__,
           'template/apache.zope.conf.in') % apache_conf)
 
-  def installLoginApache(self, index):
+  def installLoginApache(self, ip, port, backend):
     ssl_template = """SSLEngine on
 SSLCertificateFile %(login_certificate)s
 SSLCertificateKeyFile %(login_key)s
 SSLRandomSeed startup builtin
 SSLRandomSeed connect builtin
 """
-    apache_conf = self._getApacheConfigurationDict('login_apache_%s' % index,
-        self.getLocalIPv4Address(), CONFIG['login_apache_port_base'] + index)
+    apache_conf = self._getApacheConfigurationDict('login_apache', ip, port)
     apache_conf['server_name'] = '%s' % apache_conf['ip']
     apache_conf['ssl_snippet'] = ssl_template % CONFIG
-    apache_config_file = self._writeApacheConfiguration('login_apache_%s' % \
-      index, apache_conf)
+    apache_config_file = self._writeApacheConfiguration('login_apache',
+        apache_conf, backend)
     self.path_list.append(apache_config_file)
     self.path_list.extend(zc.buildout.easy_install.scripts([(
-      'login_apache_%s' % index,
+      'login_apache',
         __name__ + '.apache', 'runApache')], self.ws,
           sys.executable, self.wrapper_directory, arguments=[
             dict(
@@ -546,7 +549,7 @@ SSLRandomSeed connect builtin
               config=apache_config_file
             )
           ]))
-    self.connection_dict['login_%s' % index] = '%(ip)s:%(port)s' % apache_conf
+    return 'https://%(ip)s:%(port)s' % apache_conf
 
   def installKeyAuthorisationApache(self, index):
     ssl_template = """SSLEngine on
