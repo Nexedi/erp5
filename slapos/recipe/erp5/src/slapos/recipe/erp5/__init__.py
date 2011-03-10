@@ -43,6 +43,7 @@ def write_inituser(fn, user, password):
 
 
 class Recipe(BaseSlapRecipe):
+  connection_dict = {}
   def getTemplateFilename(self, template_name):
     return pkg_resources.resource_filename(__name__,
         'template/%s' % template_name)
@@ -68,9 +69,9 @@ class Recipe(BaseSlapRecipe):
           port=13000, backend=zope_access, key=login_key,
           certificate=login_certificate))
     #self.installERP5Site(user, password, zope_access,
-    #                 mysql_conf['database_name'], mysql_conf['ip'],
-    #                 mysql_conf['database_port'],mysql_conf['database_user'],
-    #                 mysql_conf['database_password'])
+    #                 mysql_conf['mysql_database'], mysql_conf['ip'],
+    #                 mysql_conf['tcp_port'], mysql_conf['mysql_user'],
+    #                 mysql_conf['mysql_password'])
     self.installTestRunner()
     self.linkBinary()
     return self.path_list
@@ -334,7 +335,7 @@ class Recipe(BaseSlapRecipe):
 
     # XXX Conversion server and memcache server coordinates are not relevant for
     # pure site creation.
-    https_connection_url = "https://%s:%s@%s/" % (user, password, zope_access)
+    https_connection_url = "http://%s:%s@%s/" % (user, password, zope_access)
     mysql_connection_string = "%s@%s:%s %s %s" % (database_name,
           database_ip, database_port, database_user, database_password)
 
