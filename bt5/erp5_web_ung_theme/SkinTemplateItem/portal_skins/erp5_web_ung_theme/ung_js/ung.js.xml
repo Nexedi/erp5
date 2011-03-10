@@ -154,22 +154,16 @@ function displayLoginForm(){  \n
           displayFormMessage("Please confirm your password correctly..");\n
           return false;\n
         }\n
-        $.ajax({\n
-          type: \'post\',\n
-          url: \'ERPSite_createUNGUser\',\n
-          data: $("form#create-user").serializeArray(),\n
-          dataType: "json",\n
-          success: function(data){\n
-            if (jQuery.parseJSON(data) == null){\n
-              displayFormMessage(formHash.login_name + " is not available, please try another...");\n
-              return false;\n
-            }\n
-            else {\n
-              var paramStr = "first_name=" + formHash.firstname +\n
-                       "&" + "last_name=" + formHash.lastname;\n
-              setTimeout(waitCreateUNGUser(paramStr), 2000);      \n
-            }\n
-          },\n
+        $.getJSON(\'ERPSite_createUNGUser?\' + $("form#create-user").serialize(), function(response){\n
+          if (response == null){\n
+            displayFormMessage(formHash.login_name + " is not available, please try another...");\n
+            return false;\n
+          }\n
+          else {\n
+            var paramStr = "first_name=" + formHash.firstname +\n
+                     "&" + "last_name=" + formHash.lastname;\n
+            setTimeout(waitCreateUNGUser(paramStr), 2000);      \n
+          }\n
         });\n
       });\n
     });\n
