@@ -4,8 +4,8 @@ The slapos.recipe.erp5 aims to instanciate an ERP5 environnment
 SLAP parameters
 ---------------
 
-activity_node_amount, login_node_amount, keyauth_node_amount
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+activity_node_amount, login_node_amount
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 :Optional: Yes
 :Type: integer

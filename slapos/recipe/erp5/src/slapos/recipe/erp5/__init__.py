@@ -109,8 +109,7 @@ class Recipe(BaseSlapRecipe):
                                             CONFIG['zodb_root_filename'])
     url_list = []
     if 'activity_node_amount' in self.parameter_dict or \
-       'login_node_amount' in self.parameter_dict or \
-       'keyauth_node_amount' in self.parameter_dict:
+       'login_node_amount' in self.parameter_dict:
       self.installZeo()
       common_kw = dict(
           zeo_address='%s:%s' % (CONFIG['zeo_ip'], CONFIG['zeo_port']),
@@ -126,11 +125,7 @@ class Recipe(BaseSlapRecipe):
       for i in xrange(1, int(self.parameter_dict.get('login_node_amount', 0)) + 1):
         port += 1
         login_list.append(self.installZope(port=port, name='zope_login_%s' % i, **common_kw))
-      keyauth_list = []
-      for i in xrange(1, int(self.parameter_dict.get('keyauth_node_amount', 0)) + 1):
-        port += 1
-        keyauth_list.append(self.installZope(port=port, name='keyauth_login_%s' % i, **common_kw))
-      url_list = activity_list + login_list + keyauth_list + distribution_list
+      url_list = activity_list + login_list + distribution_list
     else:
       url_list.append(self.installZope(ip=self.getLocalIPv4Address(),
           port=12000 + 1, name='zope_%s' % 1, zodb_root_path=CONFIG['zodb_root_path']))
