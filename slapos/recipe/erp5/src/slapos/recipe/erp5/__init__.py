@@ -127,11 +127,12 @@ class Recipe(BaseSlapRecipe):
         login_list.append(self.installZope(port=port, name='zope_login_%s' % i, **common_kw))
       url_list = activity_list + login_list + distribution_list
     else:
+      login_list = url_list
       url_list.append(self.installZope(ip=self.getLocalIPv4Address(),
           port=12000 + 1, name='zope_%s' % 1, zodb_root_path=CONFIG['zodb_root_path']))
 
     self.installHaproxy(ip=self.getGlobalIPv6Address(), port='15000',
-        name='login', url_list=url_list)
+        name='login', url_list=login_list)
     self.installTestRunner()
     self.linkBinary()
     self.computer_partition.setConnectionDict(self.connection_dict)
