@@ -52,10 +52,16 @@
             <key> <string>_body</string> </key>
             <value> <string>import json\n
 \n
+kw.update(context.REQUEST.form)\n
+\n
+if not kw:\n
+  return json.dumps(dict(response=False))\n
+\n
 portal = context.getPortalObject()\n
 person = portal.portal_catalog.getResultValue(portal_type="Person",\n
                                               validation_state="validated",\n
                                               **kw)\n
+\n
 return json.dumps(dict(response=(person is not None)))\n
 </string> </value>
         </item>
@@ -73,7 +79,7 @@ return json.dumps(dict(response=(person is not None)))\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Site_getUserValidationState</string> </value>
+            <value> <string>ERP5Site_checkIfUserExist</string> </value>
         </item>
       </dictionary>
     </pickle>

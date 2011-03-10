@@ -114,14 +114,14 @@ function changeCheckBoxValue(value){\n
 }\n
 \n
 function waitCreateUNGUser(paramStr){\n
-  $.get("ERP5Site_getUserValidationState?" + paramStr, {}, function(data, textStatus, XMLHttpRequest){\n
+  $.get("ERP5Site_checkIfUserExist?" + paramStr, {}, function(data, textStatus, xhr){\n
      data = jQuery.parseJSON(data);\n
      if (data.response == true){\n
        clearTimeout();\n
        window.location.reload();\n
      }\n
      else {\n
-       setTimeout(waitCreateUNGUser(paramStr), 2000);\n
+       setTimeout(waitCreateUNGUser(paramStr), 3500);\n
      }\n
   });\n
 }\n
@@ -160,8 +160,7 @@ function displayLoginForm(){  \n
             return false;\n
           }\n
           else {\n
-            var paramStr = "first_name=" + formHash.firstname +\n
-                     "&" + "last_name=" + formHash.lastname;\n
+            var paramStr = "reference=" + formHash.login_name;\n
             setTimeout(waitCreateUNGUser(paramStr), 2000);      \n
           }\n
         });\n

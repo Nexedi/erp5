@@ -136,7 +136,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: cell.getModificationDate()</string> </value>
+            <value> <string>cell/getModificationDate</string> </value>
         </item>
       </dictionary>
     </pickle>

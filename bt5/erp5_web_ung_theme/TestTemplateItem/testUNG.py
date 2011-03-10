@@ -298,8 +298,8 @@ class TestUNG(ERP5TypeTestCase):
     response = json.loads(self.portal.ERPSite_createUNGUser())
     self.assertEquals(response, None)
 
-  def testERP5Site_getUserValidationState(self):
-    """Test script ERP5Site_getUserValidationState"""
+  def testERP5Site_checkIfUserExist(self):
+    """Test script ERP5Site_checkIfUserExist"""
     portal = self.portal
     form_dict = dict(firstname="UNG",
                      lastname="User",
@@ -311,15 +311,15 @@ class TestUNG(ERP5TypeTestCase):
               last_name=form_dict["lastname"],
               reference=form_dict["login_name"],
              )
-    response = json.loads(portal.ERP5Site_getUserValidationState(**kw))
+    response = json.loads(portal.ERP5Site_checkIfUserExist(**kw))
     self.assertEquals(response.get("response"), False)
     self.stepTic()
-    response = json.loads(portal.ERP5Site_getUserValidationState(**kw))
+    response = json.loads(portal.ERP5Site_checkIfUserExist(**kw))
     self.assertEquals(response.get("response"), True)
     kw = dict(first_name="Not Exist",
               reference="no_reference",
              )
-    response = json.loads(portal.ERP5Site_getUserValidationState(**kw))
+    response = json.loads(portal.ERP5Site_checkIfUserExist(**kw))
     self.assertEquals(response.get("response"), False)
     self.login("ung_reference")
     user = portal.ERP5Site_getAuthenticatedMemberPersonValue()
