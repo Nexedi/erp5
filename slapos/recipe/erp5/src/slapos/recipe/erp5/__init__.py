@@ -403,7 +403,7 @@ class Recipe(BaseSlapRecipe):
     self.path_list.extend(zc.buildout.easy_install.scripts([('erp5_update',
             __name__ + '.erp5', 'updateERP5')], self.ws,
                   sys.executable, self.wrapper_directory,
-                  arguments=[erp5_site_id, mysql_connection_string, 
+                  arguments=[erp5_site_id, mysql_connection_string,
                              https_connection_url]))
 
     return []
