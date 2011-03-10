@@ -55,8 +55,8 @@ class Recipe(BaseSlapRecipe):
     self.installMemcached(ip=self.getLocalIPv4Address(), port=11000)
     self.installKumo(self.getLocalIPv4Address())
     self.installConversionServer(self.getLocalIPv4Address(), 23000, 23060)
-    self.installMysqlServer(self.getLocalIPv4Address(), 45678)
-    self.installERP5()
+    mysql_conf = self.installMysqlServer(self.getLocalIPv4Address(), 45678)
+    user, password = self.installERP5()
     zodb_dir = os.path.join(self.data_root_directory, 'zodb')
     self._createDirectory(zodb_dir)
     zodb_root_path = os.path.join(zodb_dir, 'root.fs')
@@ -67,6 +67,10 @@ class Recipe(BaseSlapRecipe):
         apache_login=self.installLoginApache(ip=self.getGlobalIPv6Address(),
           port=13000, backend=zope_access, key=login_key,
           certificate=login_certificate))
+    #self.installERP5Site(user, password, zope_access,
+    #                 mysql_conf['database_name'], mysql_conf['ip'],
+    #                 mysql_conf['database_port'],mysql_conf['database_user'],
+    #                 mysql_conf['database_password'])
     self.installTestRunner()
     self.linkBinary()
     return self.path_list
@@ -301,9 +305,13 @@ class Recipe(BaseSlapRecipe):
     self.erp5_directory = self.createDataDirectory('erp5shared')
     # Create init user
     password = self.generatePassword()
+    # XXX Unhardcoded me please
+    user = 'zope'
     write_inituser(os.path.join(self.erp5_directory, "inituser"),
-        'zope', password)
-    self.connection_dict.update(zope_user='zope', zope_password=password)
+        user, password)
+
+    # XXX Is this information usefull on connection dict?
+    self.connection_dict.update(zope_user=user, zope_password=password)
 
     self._createDirectory(self.erp5_directory)
     for directory in (
@@ -317,16 +325,18 @@ class Recipe(BaseSlapRecipe):
       'Products',
       ):
       self._createDirectory(os.path.join(self.erp5_directory, directory))
-    return []
+    return user, password
 
-  def installERP5Site(self, mysql_connection_string, erp5_site_id='erp5'):
+  def installERP5Site(self, user, password, zope_access, database_name,
+      database_ip, database_port, database_user, database_password, erp5_site_id='erp5'):
     """ Create a script controlled by supervisor, which creates a erp5
     site on current available zope and mysql environment"""
 
-    https_connection_url = "https://%s:%s@%s:%s/" % (self.connection_dict['zope_user'],
-                                                     self.connection_dict['zope_password'],
-                                                     self.backend_ip,
-                                                     self.backend_port)
+    # XXX Conversion server and memcache server coordinates are not relevant for
+    # pure site creation.
+    https_connection_url = "https://%s:%s@%s/" % (user, password, zope_access)
+    mysql_connection_string = "%s@%s:%s %s %s" % (database_name,
+          database_ip, database_port, database_user, database_password)
 
     self.path_list.extend(zc.buildout.easy_install.scripts([('erp5_update',
             __name__ + '.erp5', 'updateERP5')], self.ws,
@@ -579,3 +589,5 @@ SSLCARevocationPath %(ca_crl)s"""
         'configuration_file':mysql_conf_path,
         }]))
     self.path_list.extend([mysql_conf_path])
+    # The return could be more explicit database, user ...
+    return mysql_conf
