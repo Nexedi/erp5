@@ -40,13 +40,6 @@ CONFIG = dict(
   test_ca_prefix='test_ca',
   # Zope
   zope_user='zope',
-  # MySQL
-  mysql_database='erp5',
-  mysql_port=45678,
-  mysql_prefix='mysql',
-  mysql_user='user',
-  mysql_test_database='test_erp5',
-  mysql_test_user='test_user',
 )
 
 
@@ -72,7 +65,7 @@ class Recipe(BaseSlapRecipe):
     self.installMemcached(ip=self.getLocalIPv4Address(), port=11000)
     self.installKumo(self.getLocalIPv4Address())
     self.installConversionServer(self.getLocalIPv4Address(), 23000, 23060)
-    self.installMysqlServer()
+    self.installMysqlServer(self.getLocalIPv4Address(), 45678)
     self.installERP5()
     zodb_dir = os.path.join(self.data_root_directory, 'zodb')
     self._createDirectory(zodb_dir)
@@ -344,14 +337,9 @@ class Recipe(BaseSlapRecipe):
       self._createDirectory(os.path.join(self.erp5_directory, directory))
     return []
 
-  def installERP5Site(self, erp5_site_id='erp5'):
+  def installERP5Site(self, mysql_connection_string, erp5_site_id='erp5',):
     """ Create a script controlled by supervisor, which creates a erp5
     site on current available zope and mysql environment"""
-    mysql_connection_string = "%s@%s:%s %s %s" % (CONFIG['mysql_database'],
-                                                  CONFIG['mysql_ip'],
-                                                  CONFIG['mysql_port'],
-                                                  CONFIG['mysql_user'],
-                                                  CONFIG['mysql_password'])
 
     https_connection_url = "https://%s:%s@%s:%s/" % (self.connection_dict['zope_user'],
                                                      self.connection_dict['zope_password'],
@@ -553,23 +541,24 @@ SSLCARevocationPath %(ca_crl)s"""
           ]))
     return 'https://%(ip)s:%(port)s' % apache_conf
 
-  def installMysqlServer(self):
+  def installMysqlServer(self, ip, port, database='erp5', user='user',
+      test_database='test_erp5', test_user='test_user'):
     mysql_conf = dict(
-        ip=self.getLocalIPv4Address(),
+        ip=ip,
         data_directory=os.path.join(self.data_root_directory,
-          CONFIG['mysql_prefix']),
-        tcp_port=CONFIG['mysql_port'],
+          'mysql'),
+        tcp_port=port,
         pid_file=os.path.join(self.run_directory, 'mysqld.pid'),
         socket=os.path.join(self.run_directory, 'mysqld.sock'),
         error_log=os.path.join(self.log_directory, 'mysqld.log'),
         slow_query_log=os.path.join(self.log_directory,
         'mysql-slow.log'),
-        mysql_database=CONFIG['mysql_database'],
-        mysql_user=CONFIG['mysql_user'],
+        mysql_database=database,
+        mysql_user=user,
         mysql_password=self.generatePassword(),
         mysql_test_password=self.generatePassword(),
-        mysql_test_database=CONFIG['mysql_test_database'],
-        mysql_test_user=CONFIG['mysql_test_user'],
+        mysql_test_database=test_database,
+        mysql_test_user=test_user,
     )
     self._createDirectory(mysql_conf['data_directory'])
 
@@ -578,13 +567,13 @@ SSLCARevocationPath %(ca_crl)s"""
           mysql_conf))
 
     self.connection_dict.update(
-        mysql_database=CONFIG['mysql_database'],
+        mysql_database=mysql_conf['mysql_database'],
         mysql_ip=mysql_conf['ip'],
         mysql_password=mysql_conf['mysql_password'],
-        mysql_port=CONFIG['mysql_port'],
-        mysql_user=CONFIG['mysql_user'],
-        mysql_test_database=CONFIG['mysql_test_database'],
-        mysql_test_user=CONFIG['mysql_test_user'],
+        mysql_port=mysql_conf['tcp_port'],
+        mysql_user=mysql_conf['mysql_user'],
+        mysql_test_database=mysql_conf['mysql_test_database'],
+        mysql_test_user=mysql_conf['mysql_test_user'],
         mysql_test_password=mysql_conf['mysql_test_password'],
     )
     initialise_command_list = [self.options['mysql_install_binary'],
