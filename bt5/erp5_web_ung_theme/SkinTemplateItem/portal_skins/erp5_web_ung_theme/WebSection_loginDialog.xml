@@ -67,7 +67,6 @@
              </tr>\n
            </tbody>\n
          </table>\n
-\n
        </td>\n
      </tr>\n
      <tr>\n
@@ -117,7 +116,7 @@
   </table> \n
 </div>\n
 <div class="footer">\n
-  <a href="http://www.freecloudalliance.org/">Free Cloud Alliance</a>\n
+  <a target="_blank" href="http://www.freecloudalliance.org/">Free Cloud Alliance</a>\n
   -\n
   <a href="#">Help</a>\n
 </div>
