@@ -29,6 +29,8 @@
 import unittest
 import os
 import sys
+import imp
+import re
 
 from Testing import ZopeTestCase
 from Testing.ZopeTestCase import PortalTestCase, user_name
@@ -125,14 +127,27 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
         '''Returns the app object for a test.'''
         return self.getPortal().aq_parent
 
+from Products.ERP5Type.tests.runUnitTest import ERP5TypeTestLoader
+
+class ERP5TypeTestReLoader(ERP5TypeTestLoader):
+
+  def __init__(self, filter_test_list=()):
+    super(ERP5TypeTestLoader, self).__init__()
+    if len(filter_test_list):
+      # do not filter if no filter, otherwise no tests run
+      self.filter_test_list = filter_test_list
+
+  def loadTestsFromModule(self, module):
+    """ERP5Type test re-loader supports reloading test modules before
+    running them.
+    """
+    reload(module)
+    return super(ERP5TypeTestLoader, self).loadTestsFromModule(module)
 
 def runLiveTest(test_list, verbosity=1, stream=None, **kw):
   from Products.ERP5Type.tests.runUnitTest import DebugTestResult
-  from Products.ERP5Type.tests.runUnitTest import ERP5TypeTestLoader
   from Products.ERP5Type.tests import backportUnittest
   from StringIO import StringIO
-  import imp
-  import re
   # Add path of the TestTemplateItem folder of the instance
   path = kw.get('path', None)
   if path is not None and path not in sys.path:
@@ -141,12 +156,10 @@ def runLiveTest(test_list, verbosity=1, stream=None, **kw):
   import Products
   for product_path in Products.__path__:
     product_test_list.extend(glob(os.path.join(product_path, '*', 'tests')))
+  current_syspath = set(sys.path)
 
-  sys.path.extend(product_test_list)
-  # Reload the test class before runing tests
-  for test_name in test_list:
-    (test_file, test_path_name, test_description) = imp.find_module(test_name)
-    imp.load_module(test_name, test_file, test_path_name, test_description)
+  sys.path.extend(path for path in product_test_list
+                  if path not in current_syspath)
 
   TestRunner = backportUnittest.TextTestRunner
   if ERP5TypeLiveTestCase not in ERP5TypeTestCase.__bases__:
@@ -157,14 +170,10 @@ def runLiveTest(test_list, verbosity=1, stream=None, **kw):
         result = super(DebugTextTestRunner, self)._makeResult()
         return DebugTestResult(result)
     TestRunner = DebugTextTestRunner
-  loader = ERP5TypeTestLoader()
-  run_only = kw.get('run_only', None)
-  if run_only is not None:
-    ERP5TypeTestLoader.filter_test_list = \
-        [re.compile(x).search for x in run_only.split(',')]
+  run_only = kw.get('run_only', '').strip()
+  loader = ERP5TypeTestReLoader(filter_test_list=[re.compile(x.strip()).search 
+                                                  for x in run_only.split(',')])
   suite = loader.loadTestsFromNames(test_list)
-  if run_only is not None:
-    ERP5TypeTestLoader.filter_test_list = None
   output = stream
   if stream is None:
     output = StringIO()
