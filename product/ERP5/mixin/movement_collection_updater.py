@@ -73,7 +73,9 @@ class MovementCollectionUpdaterMixin:
     # Get divergence testers
     tester_list = self._getMatchingTesterList()
     if not tester_list and len(prevision_movement_list) > 1:
-      raise ValueError("It is not possible to match movements without divergence testers")
+      raise ValueError("It is not possible to match movements from movement"
+          " collection updater %r, because it does not contain any tester"
+          " configured as matching provider" % (self, ))
 
     # Create small groups of movements per hash keys
     decision_movement_dict = {}
