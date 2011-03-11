@@ -47,8 +47,9 @@ class Recipe(BaseSlapRecipe):
     return pkg_resources.resource_filename(__name__,
         'template/%s' % template_name)
 
+  site_id = 'erp5'
+
   def _install(self):
-    self.site_id = 'erp5'
     self.path_list = []
     self.requirements, self.ws = self.egg.working_set([__name__])
     ca_conf = self.installCertificateAuthority()
