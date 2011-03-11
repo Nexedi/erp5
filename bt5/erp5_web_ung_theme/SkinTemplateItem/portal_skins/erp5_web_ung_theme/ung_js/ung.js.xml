@@ -518,6 +518,10 @@ $().ready(function(){\n
     $("a.document").css("text-decoration", "none")\n
                    .css("color", "#000");\n
   }\n
+  var h3Tag = $("div#page_wrapper div h3");\n
+  if (h3Tag.text().replace(/^\\s+/,\'\').replace(/\\s+$/,\'\') == "Your tab is empty."){\n
+    h3Tag.hide();\n
+  }\n
   return false;\n
 });
 

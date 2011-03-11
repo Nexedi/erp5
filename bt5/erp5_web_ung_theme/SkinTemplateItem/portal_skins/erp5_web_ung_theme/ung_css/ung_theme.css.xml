@@ -1080,6 +1080,10 @@ td#form-message {\n
 \n
 div#advertisement h2 {\n
   font-size: 15pt;\n
+}\n
+\n
+div#advertisement p {\n
+  font-size: 12px !important;  \n
 }
 
 ]]></string> </value>
