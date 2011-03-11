@@ -200,7 +200,7 @@ class RuleMixin(Predicate):
 
     At expand time, we must replace or compensate certain
     properties. However, if some properties were overwritten
-    by a decision (ie. a resource if changed), then we
+    by a decision (ie. a resource is changed), then we
     should not try to compensate such a decision.
     """
     # Update movements
@@ -352,7 +352,7 @@ class RuleMixin(Predicate):
     decision_movement.
 
     TODO:
-       - is this asumption appropriate ?
+       - is this assumption appropriate ?
     """
     # Sample implementation - but it actually looks very generic
     # Case 1: movements which are not needed
@@ -436,7 +436,7 @@ class RuleMixin(Predicate):
           # Not Frozen can be updated
           kw = {}
           for tester in updating_tester_list:
-            if not tester.compare(prevision_movement, decision_movement): 
+            if not tester.compare(prevision_movement, decision_movement):
               # Only update those updatable properties which are not recorded
               kw_candidate = tester.getUpdatablePropertyDict(prevision_movement,
                                                              decision_movement)
@@ -445,7 +445,7 @@ class RuleMixin(Predicate):
                 if decision_movement.isPropertyRecorded(property_key):
                   del kw_candidate[property_key]
               kw.update(kw_candidate)
-              # XXX-JPS - there is a risk here that quanity is wrongly updated
+              # XXX-JPS - there is a risk here that quantity is wrongly updated
           if kw:
             movement_collection_diff.addUpdatableMovement(decision_movement, kw)
     # Second, we calculate if the total quantity is the same on both sides
@@ -471,3 +471,4 @@ class RuleMixin(Predicate):
         # We must create a profit and loss movement
         new_movement = self._newProfitAndLossMovement(prevision_movement)
         movement_collection_diff.addNewMovement(new_movement)
+
