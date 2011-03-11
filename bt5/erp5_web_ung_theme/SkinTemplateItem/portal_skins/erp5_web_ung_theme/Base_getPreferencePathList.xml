@@ -54,9 +54,20 @@
 \n
 if context.portal_membership.isAnonymousUser():\n
   return dumps(None)\n
+\n
 portal_preferences = context.portal_preferences\n
-return dumps(dict(preference=portal_preferences.getActivePreference().getRelativeUrl(), \n
-             system_preference=portal_preferences.getActiveSystemPreference().getRelativeUrl()))\n
+preference = portal_preferences.getActivePreference()\n
+system_preference = portal_preferences.getActiveSystemPreference()\n
+\n
+preference_dict = {}\n
+\n
+if preference:\n
+  preference_dict["preference"] = preference.getRelativeUrl()\n
+\n
+if system_preference:\n
+  preference_dict["system_preference"] = system_preference.getRelativeUrl()\n
+\n
+return dumps(preference_dict)\n
 </string> </value>
         </item>
         <item>
