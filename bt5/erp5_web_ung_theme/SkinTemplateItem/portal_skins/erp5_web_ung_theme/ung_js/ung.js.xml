@@ -373,8 +373,8 @@ $().ready(function(){\n
   });\n
   $("div#preference_dialog").dialog({\n
     autoOpen: false,\n
-    height: 480,\n
-    width: 330,\n
+    height: 215,\n
+    width: 319,\n
     modal:true,\n
     buttons: {\n
       "Save": function(){\n
@@ -382,11 +382,6 @@ $().ready(function(){\n
         $.ajax({\n
           url: ungPreferencePath + "/Base_edit",\n
           data: erp5PreferenceArgument + "&form_id=Preference_viewHtmlStyle",\n
-        });\n
-        var systemPreferenceArgument = $("form#system_preference").serialize();\n
-        $.ajax({\n
-          url: systemPreferencePath + "/Base_edit",\n
-          data: systemPreferenceArgument + "&form_id=SystemPreference_view",\n
         });\n
         var ungPreferenceArgument = $("form#ung_preference").serialize();\n
         $.ajax({\n
@@ -432,17 +427,10 @@ $().ready(function(){\n
       if ($("div#preference_dialog").html() == ""){\n
         $.getJSON("Base_getPreferencePathList", function(data){\n
           ungPreferencePath = data.preference;\n
-          systemPreferencePath = data.system_preference;\n
           $.get(ungPreferencePath + \'/Preference_viewHtmlStyle?editable_mode:int=1\', function(data){\n
             $("div#preference_dialog").append("<form id=\'erp5_preference\'>" + \n
                                               "<fieldset class=\'center editable\'>" + \n
                                               $(data).find(\'fieldset.center.editable\').html() +\n
-                                              "</fieldset></form>");\n
-          });\n
-          $.get(systemPreferencePath + \'/SystemPreference_view?editable_mode:int=1\', function(data){\n
-            $("div#preference_dialog").append("<form id=\'system_preference\'>" + \n
-                                              "<fieldset class=\'right editable\'>" + \n
-                                              $(data).find(\'fieldset.right.editable\').html() +\n
                                               "</fieldset></form>");\n
           });\n
           $.get(ungPreferencePath + \'/UNGPreference_view?editable_mode:int=1\', function(data){  \n
