@@ -28,7 +28,7 @@ def runMysql(args):
         break
   else:
     print "MySQL already initialised"
-  print "Starting ",mysqld_wrapper_list[0]
+  print "Starting %r" % mysqld_wrapper_list[0]
   os.execl(mysqld_wrapper_list[0], *mysqld_wrapper_list)
 
 
