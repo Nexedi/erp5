@@ -1084,6 +1084,12 @@ div#advertisement h2 {\n
 \n
 div#advertisement b {\n
   font-size: 12px !important;  \n
+}\n
+\n
+div.footer {\n
+  text-align: center;\n
+  margin-top: 40px;\n
+  font-size: 10pt;\n
 }
 
 ]]></string> </value>

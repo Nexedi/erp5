@@ -111,11 +111,13 @@
          </table>\n
        </td>\n
      </tr>\n
-   <div id="login-box">\n
-     \n
-  </div>\n
  </tbody>\n
  </table> \n
+</div>\n
+<div class="footer">\n
+  <a href="http://www.freecloudalliance.org/">Free Cloud Alliance</a>\n
+  -\n
+  <a href="#">Help</a>\n
 </div>
 
 ]]></unicode> </value>
