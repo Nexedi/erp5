@@ -344,3 +344,15 @@ class TestUNG(ERP5TypeTestCase):
     gadget = self.portal.portal_catalog.getResultValue(portal_type="Gadget",
                                                        validation_state="visible")
     self.assertEquals(gadget_id, gadget.getId())
+
+  def testBase_getPreferencePathList(self):
+    """Test if the paths of preference objects are returned correctly"""
+    self.logout()
+    self.assertEquals(json.loads(self.portal.Base_getPreferencePathList()), None)
+    self.login("ERP5TypeTestCase")
+    preference_dict = json.loads(self.portal.Base_getPreferencePathList())
+    self.assertEquals(preference_dict, {})
+    self.portal.portal_preferences.ung_preference.enable()
+    self.stepTic()
+    preference_dict = json.loads(self.portal.Base_getPreferencePathList())
+    self.assertEquals(preference_dict["preference"], "portal_preferences/ung_preference")
