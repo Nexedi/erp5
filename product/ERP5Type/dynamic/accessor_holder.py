@@ -300,8 +300,10 @@ def getPropertySheetValueList(site, property_sheet_name_set):
 
   for property_sheet_name in property_sheet_name_set:
     try:
-      property_sheet = getattr(property_sheet_tool, property_sheet_name)
-    except AttributeError:
+      property_sheet = property_sheet_tool._getOb(property_sheet_name)
+    except (AttributeError, KeyError):
+      # XXX: OFS.Folder explicitly raises AttributeError, BTreeFolder2
+      # implicitly raises KeyError...
       LOG("ERP5Type.dynamic", WARNING,
           "Ignoring missing Property Sheet " + property_sheet_name)
 
