@@ -75,6 +75,8 @@ class TestUNGSecurity(ERP5TypeTestCase):
     self.stepTic()
 
   def afterSetUp(self):
+    if self.portal.portal_preferences.ung_preference.getPreferenceState() != "global":
+      self.portal.portal_preferences.ung_preference.enable()
     person = self.portal.person_module.newContent(portal_type='Person',
                                                   reference="ung_user")
     assignment = person.newContent(portal_type='Assignment')
@@ -92,7 +94,6 @@ class TestUNGSecurity(ERP5TypeTestCase):
   def testERP5Site_createNewWebDocumentWithUNGRole(self):
     """Test use script ERP5Site_createNewWebDocument when a erp5 user have role
     to create and edit document in UNG"""
-    self.portal.portal_preferences.ung_preference.enable()
     self.login("ung_user")
     web_page = self.portal.portal_catalog.getResultValue(portal_type="Web Page")
     self.assertEquals(web_page, None)
@@ -182,9 +183,16 @@ class TestUNGSecurity(ERP5TypeTestCase):
     self.assertEquals(person.getValidationState(), "validated")
 
   def testBase_getPreferencePathList(self):
-    """Test if with a normal user the paths of preference objects are returned correctly"""
-    self.logout()
-    self.assertEquals(json.loads(self.portal.Base_getPreferencePathList()), None)
+    """Test if with normal user the paths of preference objects are returned correctly"""
+    person = self.portal.person_module.newContent(portal_type='Person',
+                                                  reference="ung_user2")
+    assignment = person.newContent(portal_type='Assignment')
+    assignment.setFunction("function/ung_user")
+    assignment.open()
+    self.stepTic()
     self.login("ung_user")
     preference_dict = json.loads(self.portal.Base_getPreferencePathList())
-    self.assertEquals(preference_dict["preference"], "portal_preferences/1")
+    self.assertEquals(preference_dict, {u'preference': u'portal_preferences/1'})
+    self.login("ung_user2")
+    preference_dict = json.loads(self.portal.Base_getPreferencePathList())
+    self.assertEquals(preference_dict, {u'preference': u'portal_preferences/2'})
