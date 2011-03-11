@@ -50,11 +50,12 @@ class Recipe(BaseSlapRecipe):
   def _install(self):
     self.path_list = []
     self.requirements, self.ws = self.egg.working_set([__name__])
-    login_key, login_certificate, key_auth_key, key_auth_certificate = \
-        self.installCertificateAuthority()
-    self.installMemcached(ip=self.getLocalIPv4Address(), port=11000)
-    self.installKumo(self.getLocalIPv4Address())
-    self.installConversionServer(self.getLocalIPv4Address(), 23000, 23060)
+    ca_conf = self.installCertificateAuthority()
+    memcached_conf = self.installMemcached(ip=self.getLocalIPv4Address(),
+        port=11000)
+    kumo_conf = self.installKumo(self.getLocalIPv4Address())
+    conversion_server_conf = self.installConversionServer(
+        self.getLocalIPv4Address(), 23000, 23060)
     mysql_conf = self.installMysqlServer(self.getLocalIPv4Address(), 45678)
     user, password = self.installERP5()
     zodb_dir = os.path.join(self.data_root_directory, 'zodb')
@@ -63,17 +64,22 @@ class Recipe(BaseSlapRecipe):
     zope_access = self.installZope(ip=self.getLocalIPv4Address(),
           port=12000 + 1, name='zope_%s' % 1,
           zodb_root_path=zodb_root_path)
-    self.connection_dict.update(
+    apache_conf = dict(
         apache_login=self.installLoginApache(ip=self.getGlobalIPv6Address(),
-          port=13000, backend=zope_access, key=login_key,
-          certificate=login_certificate))
+          port=13000, backend=zope_access, key=ca_conf['login_key'],
+          certificate=ca_conf['login_certificate']))
     if self.options.get('erp5_site_id') not in [None, ""]:
       self.installERP5Site(user, password, zope_access,
                mysql_conf['mysql_database'], mysql_conf['ip'],
                mysql_conf['tcp_port'], mysql_conf['mysql_user'],
                mysql_conf['mysql_password'], self.options.get('erp5_site_id'))
-    self.installTestRunner()
+    self.installTestRunner(ca_conf, mysql_conf, conversion_server_conf)
     self.linkBinary()
+    self.setConnectionDict(dict(
+      url=apache_conf['apache_login'],
+      user=user,
+      password=password
+    ))
     return self.path_list
 
   def linkBinary(self):
@@ -129,7 +135,7 @@ class Recipe(BaseSlapRecipe):
       self.substituteTemplate(self.getTemplateFilename('kumo_server.in'),
         config)))
 
-    self.connection_dict.update(
+    return dict(
       kumo_address = '%s:%s' % (config['kumo_gateway_ip'],
         config['kumo_gateway_port'])
     )
@@ -143,10 +149,10 @@ class Recipe(BaseSlapRecipe):
     self.path_list.append(self.createRunningWrapper('memcached',
       self.substituteTemplate(self.getTemplateFilename('memcached.in'),
         config)))
-    self.connection_dict.update(memcached_url='%s:%s' %
+    return dict(memcached_url='%s:%s' %
         (config['memcached_ip'], config['memcached_port']))
 
-  def installTestRunner(self):
+  def installTestRunner(self, ca_conf, mysql_conf, conversion_server_conf):
     """Installs bin/runTestSuite executable to run all tests using
        bin/runUnitTest"""
     # XXX: This method can be drastically simplified after #20110128-1ECA63
@@ -164,15 +170,15 @@ class Recipe(BaseSlapRecipe):
         instance_home=testinstance,
         prepend_path=self.bin_directory,
         openssl_binary=self.options['openssl_binary'],
-        test_ca_path=self.connection_dict['certificate_authority_path'],
+        test_ca_path=ca_conf['certificate_authority_path'],
         call_list=[self.options['runUnitTest_binary'],
           '--erp5_sql_connection_string', '%(mysql_test_database)s@%'
-          '(mysql_ip)s:%(mysql_port)s %(mysql_test_user)s '
-          '%(mysql_test_password)s' % self.connection_dict,
+          '(ip)s:%(tcp_port)s %(mysql_test_user)s '
+          '%(mysql_test_password)s' % mysql_conf,
           '--conversion_server_hostname=%(conversion_server_ip)s' % \
-                                                         self.connection_dict,
+                                                         conversion_server_conf,
           '--conversion_server_port=%(conversion_server_port)s' % \
-                                                         self.connection_dict
+                                                         conversion_server_conf
       ]
         )])[0]
     self.path_list.append(runUnitTest)
@@ -232,12 +238,11 @@ class Recipe(BaseSlapRecipe):
           key_auth_key=key_auth_key,
           key_auth_certificate=key_auth_certificate,
           )]))
-    self.connection_dict.update(
-        openssl_binary=self.options['openssl_binary'],
-        certificate_authority_path=config['ca_dir']
+    return dict(
+      login_key=login_key, login_certificate=login_certificate,
+      key_auth_key=key_auth_key, key_auth_certificate=key_auth_certificate,
+      certificate_authority_path=config['ca_dir']
     )
-
-    return login_key, login_certificate, key_auth_key, key_auth_certificate
 
   def installConversionServer(self, ip, port, openoffice_port):
     name = 'conversion_server'
@@ -268,10 +273,10 @@ class Recipe(BaseSlapRecipe):
       __name__ + '.execute', 'execute_with_signal_translation')], self.ws,
       sys.executable, self.wrapper_directory,
       arguments=[self.options['ooo_paster'].strip(), 'serve', config_file]))
-    self.connection_dict.update(**{
+    return {
       name + '_port': conversion_server_dict['port'],
       name + '_ip': conversion_server_dict['ip']
-      })
+      }
 
   def installHaproxy(self, ip, port, name, server_check_path, url_list):
     server_template = """  server %(name)s %(address)s cookie %(name)s check inter 20s rise 2 fall 4"""
@@ -310,9 +315,6 @@ class Recipe(BaseSlapRecipe):
     user = 'zope'
     write_inituser(os.path.join(self.erp5_directory, "inituser"),
         user, password)
-
-    # XXX Is this information usefull on connection dict?
-    self.connection_dict.update(zope_user=user, zope_password=password)
 
     self._createDirectory(self.erp5_directory)
     for directory in (
@@ -560,16 +562,6 @@ SSLCARevocationPath %(ca_crl)s"""
         self.substituteTemplate(self.getTemplateFilename('my.cnf.in'),
           mysql_conf))
 
-    self.connection_dict.update(
-        mysql_database=mysql_conf['mysql_database'],
-        mysql_ip=mysql_conf['ip'],
-        mysql_password=mysql_conf['mysql_password'],
-        mysql_port=mysql_conf['tcp_port'],
-        mysql_user=mysql_conf['mysql_user'],
-        mysql_test_database=mysql_conf['mysql_test_database'],
-        mysql_test_user=mysql_conf['mysql_test_user'],
-        mysql_test_password=mysql_conf['mysql_test_password'],
-    )
     initialise_command_list = [self.options['mysql_install_binary'],
       '--skip-name-resolve', '--no-defaults',
       '--datadir=%s' % mysql_conf['data_directory']]
