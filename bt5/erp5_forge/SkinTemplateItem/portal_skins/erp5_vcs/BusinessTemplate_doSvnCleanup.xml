@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.getVcsTool().cleanup(context)\n
+            <value> <string>context.getVcsTool().cleanup()\n
 \n
 context.REQUEST.set(\'portal_status_message\', \'Subversion locks removed successfully.\')\n
 return context.BusinessTemplate_viewSvnStatus()\n
