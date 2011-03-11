@@ -192,9 +192,9 @@ class Recipe(BaseSlapRecipe):
       ca_dir=os.path.join(self.data_root_directory, 'ca'))
     login_key = os.path.join(config['ca_dir'], 'private', 'login.key')
     login_certificate = os.path.join(config['ca_dir'], 'certs', 'login.crt')
-    key_auth_key = os.path.join(config['ca_dir'], 'private', 'keyauth.key'),
+    key_auth_key = os.path.join(config['ca_dir'], 'private', 'keyauth.key')
     key_auth_certificate = os.path.join(config['ca_dir'], 'certs',
-        'keyauth.crt'),
+        'keyauth.crt')
 
     config.update(
       ca_certificate=os.path.join(config['ca_dir'], 'cacert.pem'),
