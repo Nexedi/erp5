@@ -105,6 +105,9 @@ class TimerResponse(BaseResponse):
     def unauthorized(self):
         pass
 
+    def _unauthorized(self):
+        pass
+
     # This is taken from ZPublisher.HTTPResponse
     # I don't think it's safe to make TimerResponse a subclass of HTTPResponse,
     # so I inline here the method . This is required it you want unicode page

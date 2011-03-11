@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 
 modname = 'timerserver'
 version = open('version.txt').read().strip()
@@ -15,7 +16,7 @@ long_desc = short_desc
 web = ""
 ftp = ""
 mailing_list = ""
-#!/usr/bin/env python
+
 import sys
 try:
   from setuptools import setup
