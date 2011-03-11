@@ -243,6 +243,8 @@ class Recipe(BaseSlapRecipe):
     return dict(
       login_key=login_key, login_certificate=login_certificate,
       key_auth_key=key_auth_key, key_auth_certificate=key_auth_certificate,
+      ca_certificate=os.path.join(config['ca_dir'], 'cacert.pem'),
+      ca_crl=os.path.join(config['ca_dir'], 'crl'),
       certificate_authority_path=config['ca_dir']
     )
 
@@ -491,7 +493,7 @@ SSLRandomSeed connect builtin
           ]))
     return 'https://%(ip)s:%(port)s' % apache_conf
 
-  def installKeyAuthorisationApache(self, ip, port, backend,
+  def installKeyAuthorisationApache(self, ip, port, backend, ca_conf,
       key_auth_path='/erp5/portal_slap'):
     ssl_template = """SSLEngine on
 SSLVerifyClient require
@@ -501,7 +503,7 @@ SSLCertificateKeyFile %(key_auth_key)s
 SSLCACertificateFile %(ca_certificate)s
 SSLCARevocationPath %(ca_crl)s"""
     apache_conf = self._getApacheConfigurationDict('key_auth_apache', ip, port)
-    apache_conf['ssl_snippet'] = ssl_template % CONFIG
+    apache_conf['ssl_snippet'] = ssl_template % ca_conf
     prefix = 'ssl_key_auth_apache'
     rewrite_rule_template = \
       "RewriteRule (.*) http://%(backend)s%(key_auth_path)s$1 [L,P]"
@@ -530,9 +532,9 @@ SSLCARevocationPath %(ca_crl)s"""
         __name__ + '.apache', 'runApache')], self.ws,
           sys.executable, self.wrapper_directory, arguments=[
             dict(
-              required_path_list=[CONFIG['key_auth_certificate'],
-                CONFIG['key_auth_key'], CONFIG['ca_certificate'],
-                CONFIG['ca_crl']],
+              required_path_list=[ca_conf['key_auth_certificate'],
+                ca_conf['key_auth_key'], ca_conf['ca_certificate'],
+                ca_conf['ca_crl']],
               binary=self.options['httpd_binary'],
               config=apache_config_file
             )
