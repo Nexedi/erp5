@@ -135,10 +135,8 @@ class BusinessProcess(Path, XMLObject):
         trade_phase = (trade_phase,)
       trade_phase = set(x.split('trade_phase/', 1)[-1]
                         for x in trade_phase)
-    if kw.get('portal_type', None) is None:
-      kw['portal_type'] = self.getPortalTradeModelPathTypeList()
-    if kw.get('sort_on', None) is None:
-      kw['sort_on'] = 'int_index'
+    kw.setdefault('portal_type', self.getPortalTradeModelPathTypeList())
+    kw.setdefault('sort_on', 'int_index')
     original_path_list = self.objectValues(**kw) # Why Object Values ??? XXX-JPS
     LOG('self', 0, repr(self))
     LOG('objectValues', 0, repr(self.objectValues()))
@@ -159,12 +157,7 @@ class BusinessProcess(Path, XMLObject):
     # FIXME: Ideally, we should use the Domain Tool to search business paths,
     # and avoid using the low level Predicate API. But the Domain Tool does
     # support the condition above without scripting?
-    result = []
-    for path in path_list:
-      if path.test(context):
-        result.append(path)
-    LOG('result', 0, result)
-    return result
+    return [path for path in path_list if path.test(context)]
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getExpectedTradeModelPathStartAndStopDate')
   def getExpectedTradeModelPathStartAndStopDate(self, explanation, trade_model_path,
@@ -232,10 +225,8 @@ class BusinessProcess(Path, XMLObject):
         trade_phase = set((trade_phase,))
       else:
         trade_phase = set(trade_phase)
-    if kw.get('portal_type', None) is None:
-      kw['portal_type'] = self.getPortalBusinessLinkTypeList()
-    if kw.get('sort_on', None) is None:
-      kw['sort_on'] = 'int_index'
+    kw.setdefault('portal_type', self.getPortalBusinessLinkTypeList())
+    kw.setdefault('sort_on', 'int_index')
     original_business_link_list = self.objectValues(**kw) # Why Object Values ??? XXX-JPS
     # Separate the selection of business links into two steps
     # for easier debugging.
@@ -246,7 +237,8 @@ class BusinessProcess(Path, XMLObject):
         continue # Filter our business link which predecessor does not match
       if successor is not None and business_link.getSuccessor() != successor:
         continue # Filter our business link which successor does not match
-      if trade_phase is not None and not trade_phase.intersection(business_link.getTradePhaseList()):
+      if trade_phase is not None and not trade_phase.intersection(
+                                   business_link.getTradePhaseList()):
         continue # Filter our business link which trade phase does not match
       business_link_list.append(business_link)
     # Then, filter business links by Predicate API.
@@ -257,11 +249,8 @@ class BusinessProcess(Path, XMLObject):
     if context is None:
       LOG('context is None', 0, repr(business_link_list))
       return business_link_list
-    result = []
-    for business_link in business_link_list:
-      if business_link.test(context):
-        result.append(business_link)
-    return result
+    return [business_link for business_link in business_link_list
+                if business_link.test(context)]
 
   security.declareProtected(Permissions.AccessContentsInformation, 'isBusinessLinkCompleted')
   def isBusinessLinkCompleted(self, explanation, business_link):
