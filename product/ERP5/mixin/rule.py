@@ -100,10 +100,10 @@ class MovementGeneratorMixin:
     # Results will be appended to result
     result = []
     # Build a list of movement and business path
-    LOG('_getInputMovementList', 0, repr(self._getInputMovementList(movement_list=movement_list, 
-                                                   rounding=rounding)))
-    for input_movement in self._getInputMovementList(movement_list=movement_list, 
-                                                     rounding=rounding):
+    input_movement_list = self._getInputMovementList(
+                            movement_list=movement_list, rounding=rounding)
+    LOG('_getInputMovementList', 0, repr(input_movement_list))
+    for input_movement in input_movement_list:
       # Merge movement and business path properties (core implementation)
       # Lookup Business Process through composition (NOT UNION)
       business_process = input_movement.asComposedDocument()
