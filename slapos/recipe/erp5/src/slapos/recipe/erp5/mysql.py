@@ -1,6 +1,5 @@
 import os
 import subprocess
-import sys
 import time
 
 
@@ -33,21 +32,34 @@ def runMysql(args):
 
 
 def updateMysql(args):
-  mysql_command_list = args[0]
-  mysql_script = args[1]
+  conf = args[0]
   sleep = 30
   is_succeed = False
   while True:
     if not is_succeed:
-      mysql = subprocess.Popen(mysql_command_list, stdin=subprocess.PIPE,
-          stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-      result = mysql.communicate(mysql_script)[0]
-      if mysql.returncode is None:
-        mysql.kill()
-      if mysql.returncode != 0:
-        print 'Script failed with: %s' % result
+      mysql_upgrade_list = [conf['mysql_upgrade_binary'], '--no-defaults', '--user=root', '--socket=%s' % conf['socket']]
+      mysql_upgrade = subprocess.Popen(mysql_upgrade_list, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+      result = mysql_upgrade.communicate()[0]
+      if mysql_upgrade.returncode is None:
+        mysql_upgrade.kill()
+      if mysql_upgrade.returncode != 0 and not 'is already upgraded' in result:
+        print "Command %r failed with result:\n%s" % (mysql_upgrade_list, result)
         print 'Sleeping for %ss and retrying' % sleep
       else:
-        is_succeed = True
-        print 'Script succesfully run on database, exiting'
+        if mysql_upgrade.returncode == 0:
+          print "MySQL database upgraded with result:\n%s" % result
+        else:
+          print "No need to upgrade MySQL database"
+        mysql_list = [conf['mysql_binary'].strip(), '--no-defaults', '-B', '--user=root', '--socket=%s' % conf['socket']]
+        mysql = subprocess.Popen(mysql_list, stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        result = mysql.communicate(conf['mysql_script'])[0]
+        if mysql.returncode is None:
+          mysql.kill()
+        if mysql.returncode != 0:
+          print 'Command %r failed with:\n%s' % (mysql_list, result)
+          print 'Sleeping for %ss and retrying' % sleep
+        else:
+          is_succeed = True
+          print 'SlapOS initialisation script succesfully applied on database.'
     time.sleep(sleep)

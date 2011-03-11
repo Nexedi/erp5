@@ -522,16 +522,16 @@ SSLRandomSeed connect builtin
         self.substituteTemplate(self.getTemplateFilename('my.cnf.in'),
           mysql_conf))
 
-    mysql_command_list = [self.options['mysql_binary'].strip(),
-        '--no-defaults', '-B', '--user=root',
-        '--socket=%s' % mysql_conf['socket'],
-        ]
     mysql_script = pkg_resources.resource_string(__name__,
         'template/initmysql.sql.in') % mysql_conf
     self.path_list.extend(zc.buildout.easy_install.scripts([('mysql_update',
       __name__ + '.mysql', 'updateMysql')], self.ws,
-      sys.executable, self.wrapper_directory, arguments=[mysql_command_list,
-        mysql_script]))
+      sys.executable, self.wrapper_directory, arguments=[dict(
+        mysql_script=mysql_script,
+        mysql_binary=self.options['mysql_binary'].strip(),
+        mysql_upgrade_binary=self.options['mysql_upgrade_binary'].strip(),
+        socket=mysql_conf['socket'],
+        )]))
     self.path_list.extend(zc.buildout.easy_install.scripts([('mysqld',
       __name__ + '.mysql', 'runMysql')], self.ws,
         sys.executable, self.wrapper_directory, arguments=[dict(
