@@ -354,25 +354,31 @@ class RuleMixin(Predicate):
        - is this assumption appropriate ?
     """
     # Sample implementation - but it actually looks very generic
+
     # Case 1: movements which are not needed
     if prevision_movement is None:
       # decision_movement_list contains simulation movements which must
       # be deleted
       for decision_movement in decision_movement_list:
-        if decision_movement.isDeletable(): # If not frozen and all children are deletable
+        # If not frozen and all children are deletable
+        if decision_movement.isDeletable():
           # Delete deletable
           movement_collection_diff.addDeletableMovement(decision_movement)
         else:
           # Compensate non deletable
-          new_movement = decision_movement.asContext(quantity=-decision_movement.getQuantity())
+          new_movement = decision_movement.asContext(
+                            quantity=-decision_movement.getQuantity())
           movement_collection_diff.addNewMovement(new_movement)
       return
+
     # Case 2: movements which should be added
     elif len(decision_movement_list) == 0:
       # if decision_movement_list is empty, we can just create a new one.
       movement_collection_diff.addNewMovement(prevision_movement)
       return
-    # Case 3: movements which are needed but may need update or compensation_movement_list
+
+    # Case 3: movements which are needed but may need update or
+    # compensation_movement_list.
     #  let us imagine the case of a forward rule
     #  ie. what comes in must either go out or has been lost
     divergence_tester_list = self._getDivergenceTesterList()
@@ -404,7 +410,8 @@ class RuleMixin(Predicate):
             not_completed_movement = decision_movement
           # Frozen must be compensated
           if not _compare(profit_tester_list, prevision_movement, decision_movement):
-            new_movement = decision_movement.asContext(quantity=-decision_movement_quantity)
+            new_movement = decision_movement.asContext(
+                                quantity=-decision_movement_quantity)
             movement_collection_diff.addNewMovement(new_movement)
             compensated_quantity += decision_movement_quantity
         else:
@@ -427,7 +434,8 @@ class RuleMixin(Predicate):
         if decision_movement.isFrozen():
           # Frozen must be compensated
           if not _compare(divergence_tester_list, prevision_movement, decision_movement):
-            new_movement = decision_movement.asContext(quantity=-decision_movement_quantity)
+            new_movement = decision_movement.asContext(
+                                  quantity=-decision_movement_quantity)
             movement_collection_diff.addNewMovement(new_movement)
             compensated_quantity += decision_movement_quantity
         else:
@@ -449,22 +457,27 @@ class RuleMixin(Predicate):
             movement_collection_diff.addUpdatableMovement(decision_movement, kw)
     # Second, we calculate if the total quantity is the same on both sides
     # after compensation
-    quantity_movement = prevision_movement.asContext(quantity=decision_quantity-compensated_quantity)
+    quantity_movement = prevision_movement.asContext(
+                            quantity=decision_quantity-compensated_quantity)
     if not _compare(quantity_tester_list, prevision_movement, quantity_movement):
-      missing_quantity = prevision_quantity - real_quantity + compensated_quantity
+      missing_quantity = ( prevision_quantity
+                           - real_quantity
+                           + compensated_quantity )
       if updatable_movement is not None:
         # If an updatable movement still exists, we update it
-        updatable_movement.setQuantity(updatable_movement.getQuantity() + missing_quantity)
+        updatable_movement.setQuantity(
+            updatable_movement.getQuantity() + missing_quantity)
         updatable_movement.clearRecordedProperty('quantity')
       elif not_completed_movement is not None:
-        # It is still possible to add a new movement some movements are not completed
+        # It is still possible to add a new movement some movements are not
+        # completed
         new_movement = prevision_movement.asContext(quantity=missing_quantity)
         movement_collection_diff.addNewMovement(new_movement)
       elif updatable_compensation_movement is not None:
         # If not, it means that all movements are completed
         # but we can still update a profit and loss movement_collection_diff
-        updatable_compensation_movement.setQuantity(updatable_compensation_movement.getQuantity()
-                                                  + missing_quantity)
+        updatable_compensation_movement.setQuantity(
+            updatable_compensation_movement.getQuantity() + missing_quantity)
         updatable_compensation_movement.clearRecordedProperty('quantity')
       else:
         # We must create a profit and loss movement
