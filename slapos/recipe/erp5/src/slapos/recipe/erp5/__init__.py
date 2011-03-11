@@ -371,7 +371,9 @@ class Recipe(BaseSlapRecipe):
         self.options['runzeo_binary'].strip(), '-C', zeo_conf_path]
       )[0]
     self.path_list.append(wrapper)
-    return '%s:%s' % (config['zeo_ip'], config['zeo_port']), config['zeo_storagename']
+    return dict(
+      zeo_address='%s:%s' % (config['zeo_ip'], config['zeo_port']),
+      zeo_storagename=config['zeo_storagename'])
 
   def installZope(self, ip, port, name, zeo_address=None, zeo_storagename=None,
       zodb_root_path=None, with_timerservice=False):
