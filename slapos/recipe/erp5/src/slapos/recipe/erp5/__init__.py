@@ -495,54 +495,6 @@ SSLRandomSeed connect builtin
           ]))
     return 'https://%(ip)s:%(port)s' % apache_conf
 
-  def installKeyAuthorisationApache(self, ip, port, backend, ca_conf,
-      key_auth_path='/erp5/portal_slap'):
-    ssl_template = """SSLEngine on
-SSLVerifyClient require
-RequestHeader set REMOTE_USER %%{SSL_CLIENT_S_DN_CN}s
-SSLCertificateFile %(key_auth_certificate)s
-SSLCertificateKeyFile %(key_auth_key)s
-SSLCACertificateFile %(ca_certificate)s
-SSLCARevocationPath %(ca_crl)s"""
-    apache_conf = self._getApacheConfigurationDict('key_auth_apache', ip, port)
-    apache_conf['ssl_snippet'] = ssl_template % ca_conf
-    prefix = 'ssl_key_auth_apache'
-    rewrite_rule_template = \
-      "RewriteRule (.*) http://%(backend)s%(key_auth_path)s$1 [L,P]"
-    path_template = pkg_resources.resource_string(__name__,
-      'template/apache.zope.conf.path.in')
-    path = path_template % dict(path='/')
-    d = dict(
-          path=path,
-          backend=backend,
-          backend_path='/',
-          port=apache_conf['port'],
-          vhname=path.replace('/', ''),
-          key_auth_path=key_auth_path,
-    )
-    rewrite_rule = rewrite_rule_template % d
-    apache_conf.update(**dict(
-      path_enable=path,
-      rewrite_rule=rewrite_rule
-    ))
-    apache_config_file = self.createConfigurationFile(prefix + '.conf',
-        pkg_resources.resource_string(__name__,
-          'template/apache.zope.conf.in') % apache_conf)
-    self.path_list.append(apache_config_file)
-    self.path_list.extend(zc.buildout.easy_install.scripts([(
-      'key_auth_apache',
-        __name__ + '.apache', 'runApache')], self.ws,
-          sys.executable, self.wrapper_directory, arguments=[
-            dict(
-              required_path_list=[ca_conf['key_auth_certificate'],
-                ca_conf['key_auth_key'], ca_conf['ca_certificate'],
-                ca_conf['ca_crl']],
-              binary=self.options['httpd_binary'],
-              config=apache_config_file
-            )
-          ]))
-    return 'https://%(ip)s:%(port)s' % apache_conf
-
   def installMysqlServer(self, ip, port, database='erp5', user='user',
       test_database='test_erp5', test_user='test_user'):
     mysql_conf = dict(
