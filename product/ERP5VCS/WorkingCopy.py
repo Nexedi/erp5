@@ -195,6 +195,9 @@ class WorkingCopy(Implicit):
   def showOld(self, path):
     raise NotAWorkingCopyError
 
+  def update(self, keep=False):
+    raise NotAWorkingCopyError
+
   def newRevision(self):
     path = os.path.join('bt', 'revision')
     revision = int(self.showOld(path)) + 1
