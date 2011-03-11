@@ -93,6 +93,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
+                        <string>my_id</string>
                         <string>my_reference</string>
                         <string>my_category_expression</string>
                       </list>
