@@ -153,7 +153,7 @@ def _getPropertyList(document, acquire=True):
                       document.getPropertyIdList()]))
 
 def _getCategoryList(document, acquire=True):
-  bad_category_list = ['solver', 'delivery',]
+  bad_category_list = ['solver', ]
   getPropertyList = document.getPropertyList
   def filter_category_func(x):
     return len(x[1]) != 0 and x[0] not in bad_category_list and \
@@ -162,3 +162,4 @@ def _getCategoryList(document, acquire=True):
   return dict(filter(filter_category_func,
                      [(x, getPropertyList(x)) for x in \
                       document.getBaseCategoryList()]))
+    
