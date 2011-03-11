@@ -219,7 +219,7 @@ class RuleMixin(Predicate):
     Only account movements which are not associated to a delivery;
     Whenever delivery is there, delivery has priority
     """
-    return movement.getDeliveryValue() is None
+    return not movement.getDelivery()
 
   # Implementation of IDivergenceController # XXX-JPS move to IDivergenceController only mixin for 
   security.declareProtected( Permissions.AccessContentsInformation,
@@ -229,10 +229,9 @@ class RuleMixin(Predicate):
     Returns true if the Simulation Movement is divergent comparing to
     the delivery value
     """
-    delivery = movement.getDeliveryValue()
-    if delivery is None:
+    if not movement.getDelivery():
       return False
-    return len(self.getDivergenceList(movement)) != 0
+    return bool(self.getDivergenceList(movement))
 
   security.declareProtected(Permissions.View, 'getDivergenceList')
   def getDivergenceList(self, movement):
