@@ -46,3 +46,12 @@ def Folder_setOb(self, id, object):
   _updateCacheEntry(self.id, id)
 
 Folder._setOb = Folder_setOb
+
+def Folder_isERP5SitePresent(self):
+  """ Return True if a ERP5 Site is present as subobject. This is
+      usefull to identify if a erp5 is present already on a Zope
+      Setup.
+  """
+  return len(self.objectIds("ERP5 Site")) > 1
+
+Folder.isERP5SitePresent = Folder_isERP5SitePresent
