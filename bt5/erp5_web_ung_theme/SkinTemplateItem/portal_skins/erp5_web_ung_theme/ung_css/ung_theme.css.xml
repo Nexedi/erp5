@@ -1087,9 +1087,13 @@ div#advertisement b {\n
 }\n
 \n
 div.footer {\n
-  text-align: center !important;\n
-  margin-top: 40px !important;\n
-  font-size: 10pt !important;\n
+  text-align: center;\n
+  margin-top: 40px;\n
+  font-size: 10pt;\n
+}\n
+\n
+div.header-left h2 {\n
+  font-size: 14pt;\n
 }
 
 ]]></string> </value>
