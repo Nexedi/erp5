@@ -15,7 +15,7 @@ socket = %(socket)s
 datadir = %(data_directory)s
 pid-file = %(pid_file)s
 log-error = %(error_log)s
-log-slow-queries = %(slow_query_log)s
+log-slow-file = %(slow_query_log)s
 long_query_time = 5
 max_allowed_packet = 128M
 query_cache_size = 32M
@@ -42,7 +42,6 @@ plugin-load = ha_innodb_plugin.so
 # Force utf8 usage
 collation_server = utf8_unicode_ci
 character_set_server = utf8
-default-character-set = utf8
 skip-character-set-client-handshake
 
 [mysql]
