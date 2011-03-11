@@ -21,17 +21,19 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+# Foundation, Inc. 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 ##############################################################################
+
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zExceptions import Unauthorized
 from DateTime import DateTime
 import json
 
+
 class TestUNGSecurity(ERP5TypeTestCase):
-  """"""
+  """Test Suite to validate all cases of permissions in UNG"""
 
   def getTitle(self):
     return "Test UNG Security"
@@ -66,7 +68,7 @@ class TestUNGSecurity(ERP5TypeTestCase):
             'erp5_web_ung_core',
             'erp5_web_ung_theme',
             'erp5_web_ung_role')
-  
+
   def beforeTearDown(self):
     person_module = self.getPersonModule()
     person_module.manage_delObjects(list(person_module.objectIds()))
@@ -178,3 +180,11 @@ class TestUNGSecurity(ERP5TypeTestCase):
     person = self.portal.portal_catalog.getResultValue(portal_type="Person")
     self.assertEquals(person.getLastName(), "My Last Name")
     self.assertEquals(person.getValidationState(), "validated")
+
+  def testBase_getPreferencePathList(self):
+    """Test if with a normal user the paths of preference objects are returned correctly"""
+    self.logout()
+    self.assertEquals(json.loads(self.portal.Base_getPreferencePathList()), None)
+    self.login("ung_user")
+    preference_dict = json.loads(self.portal.Base_getPreferencePathList())
+    self.assertEquals(preference_dict["preference"], "portal_preferences/1")
