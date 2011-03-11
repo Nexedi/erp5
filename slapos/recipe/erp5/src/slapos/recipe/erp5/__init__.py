@@ -48,6 +48,7 @@ class Recipe(BaseSlapRecipe):
         'template/%s' % template_name)
 
   def _install(self):
+    self.site_id = 'erp5'
     self.path_list = []
     self.requirements, self.ws = self.egg.working_set([__name__])
     ca_conf = self.installCertificateAuthority()
