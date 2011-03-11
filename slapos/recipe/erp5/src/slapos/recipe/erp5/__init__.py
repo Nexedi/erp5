@@ -522,9 +522,6 @@ SSLRandomSeed connect builtin
         self.substituteTemplate(self.getTemplateFilename('my.cnf.in'),
           mysql_conf))
 
-    initialise_command_list = [self.options['mysql_install_binary'],
-      '--skip-name-resolve', '--no-defaults',
-      '--datadir=%s' % mysql_conf['data_directory']]
     mysql_command_list = [self.options['mysql_binary'].strip(),
         '--no-defaults', '-B', '--user=root',
         '--socket=%s' % mysql_conf['socket'],
@@ -537,11 +534,14 @@ SSLRandomSeed connect builtin
         mysql_script]))
     self.path_list.extend(zc.buildout.easy_install.scripts([('mysqld',
       __name__ + '.mysql', 'runMysql')], self.ws,
-        sys.executable, self.wrapper_directory, arguments=[
-          initialise_command_list, {
-        'mysqld_binary':self.options['mysqld_binary'],
-        'configuration_file':mysql_conf_path,
-        }]))
+        sys.executable, self.wrapper_directory, arguments=[dict(
+        mysql_install_binary=self.options['mysql_install_binary'].strip(),
+        mysqld_binary=self.options['mysqld_binary'].strip(),
+        data_directory=mysql_conf['data_directory'].strip(),
+        mysql_binary=self.options['mysql_binary'].strip(),
+        socket=mysql_conf['socket'].strip(),
+        configuration_file=mysql_conf_path,
+       )]))
     self.path_list.extend([mysql_conf_path])
     # The return could be more explicit database, user ...
     return mysql_conf
