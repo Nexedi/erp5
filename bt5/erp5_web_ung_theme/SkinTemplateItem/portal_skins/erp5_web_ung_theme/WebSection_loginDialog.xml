@@ -36,69 +36,86 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<div id="advertisement">\n
 <h2>Welcome to UNG Web Office</h2>\n
-<p>Sign in to edit documents, spreadsheets and drawing and share this document with your friends</p>\n
-</div>\n
-<div id="login-box">\n
-  <table id="field_table">\n
-    <tbody>\n
-      <tr>\n
+<div id="main-content">\n
+ <table border="0" width="100%" cellpadding="0" cellspacing="0">\n
+   <tbody>\n
+     <tr>\n
+       <td valign="top">\n
+         <div id="advertisement">\n
+           <b>Sign in to edit documents, spreadsheets and drawing and share this document with your friends</b>\n
+         </div>\n
+       </td>\n
        <td>\n
-        <table>\n
-          <tr>\n
-            <td align="center" colspan="2"><font size="-1">Login in</font></td>\n
-          </tr>\n
-          <tr></tr>\n
-          <tr>\n
-            <td><label for="name">Name:</label></td>\n
-            <td><input type="text" name="__ac_name" id="name" tal:attributes="value python: request.get(\'__ac_name\') or \'\'" /></td>\n
-          </tr>\n
-          <tr>\n
-            <td><label for="password">Password:</label></td>\n
-            <td><input type="password" name="__ac_password" id="password" /></td>\n
-          </tr>\n
-          <td align="center" colspan="2"><input type="submit" name="logged_in:method" class="submit" value="Sign In"></td>\n
-      </tr>\n
-    </tbody>\n
-  </table>\n
-  <p>\n
-  <table id="new-account-table">\n
-    <tbody>\n
-      <tr>\n
+         <table id="field_table">\n
+           <tbody>\n
+             <tr>\n
+               <td align="center">\n
+                 <table>\n
+                   <tr><td align="center" colspan="2"><font size="-1">Login in</font></td></tr>\n
+                   <tr></tr>\n
+                   <tr>\n
+                     <td align="center"><label for="name">Name:</label></td>\n
+                     <td align="center"><input type="text" name="__ac_name" id="name" tal:attributes="value python: request.get(\'__ac_name\') or \'\'" /></td>\n
+                   </tr>\n
+                   <tr>\n
+                     <td align="center"><label for="password">Password:</label></td><td><input type="password" name="__ac_password" id="password" /></td>\n
+                   </tr>\n
+                   <td align="center" colspan="2"><input type="submit" name="logged_in:method" class="submit" value="Sign In"></td>\n
+                 </table>\n
+               </td>\n
+             </tr>\n
+           </tbody>\n
+         </table>\n
+\n
+       </td>\n
+     </tr>\n
+     <tr>\n
+       <td><p></td>\n
        <td>\n
-        <table width="100%">\n
-          <tr>\n
-            <td align="center" colspan="2"><b>Don\'t have an UNG Account?</b></td>\n
-          </tr>\n
-          <tr>\n
-            <td id="new-account-form" align="center" colspan="2">Create an account now</td>\n
-          </tr>\n
-      </tr>\n
-    </tbody>\n
-  </table>\n
-  <p>\n
-  <table id="create-new-user">\n
-    <tbody>\n
-      <tr>\n
-        <td>\n
-          <form id="create-user" method="post">\n
-            <table width="100%">\n
-              <tr><td align="center" colspan="2"><b>Create an account</b></td></tr>\n
-              <tr><td id="form-message" align="center" colspan="2"></td></tr>\n
-              <tr><td>First name:</td><td><input type="text" name="firstname"/></td></tr>\n
-              <tr><td>Last name:</td><td><input type="text" name="lastname"/></td></tr>\n
-              <tr><td>Email:</td><td><input type="text" name="email"/></td></tr>\n
-              <tr><td>Login name:</td><td><input type="text" name="login_name"/></td></tr>\n
-              <tr><td>Password:</td><td><input type="password" name="password"/></td></tr>\n
-              <tr><td>Confirm Password:</td><td><input type="password" name="confirm"/></td></tr>\n
-              <td align="center" colspan="2"><input type="submit" name="logged_in:method" class="submit" value="Create Account"></td>\n
-            </table>\n
-          </form>\n
-        </td>\n
-      </tr>\n
-    </tbody>\n
-  </table>\n
+<table id="create-new-user">\n
+       <tbody>\n
+         <tr>\n
+           <td>\n
+             <form id="create-user" method="post">\n
+               <table width="100%">\n
+                 <tr><td align="center" colspan="2"><b>Create an account</b></td></tr>\n
+                 <tr><td id="form-message" align="center" colspan="2"></td></tr>\n
+                 <tr><td>First name:</td><td><input type="text" name="firstname"/></td></tr>\n
+                 <tr><td>Last name:</td><td><input type="text" name="lastname"/></td></tr>\n
+                 <tr><td>Email:</td><td><input type="text" name="email"/></td></tr>\n
+                 <tr><td>Login name:</td><td><input type="text" name="login_name"/></td></tr>\n
+                 <tr><td>Password:</td><td><input type="password" name="password"/></td></tr>\n
+                 <tr><td>Confirm Password:</td><td><input type="password" name="confirm"/></td></tr>\n
+                 <td align="center" colspan="2"><input type="submit" name="logged_in:method" class="submit" value="Create Account"></td>\n
+               </table>\n
+             </form>\n
+           </td>\n
+         </tr>\n
+      </tbody>\n
+    </table></td><tr>\n
+     <tr>\n
+       <td></td>\n
+       <td>\n
+         <table id="new-account-table">\n
+           <tbody>\n
+             <tr>\n
+               <td>\n
+                 <table width="100%">\n
+                   <tr><td align="center" colspan="2"><b>Don\'t have an UNG Account?</b></td></tr>\n
+                   <tr><td id="new-account-form" align="center" colspan="2">Create an account now</td></tr>\n
+                 </table>\n
+               </td>\n
+             </tr>\n
+           </tbody>\n
+         </table>\n
+       </td>\n
+     </tr>\n
+   <div id="login-box">\n
+     \n
+  </div>\n
+ </tbody>\n
+ </table> \n
 </div>
 
 ]]></unicode> </value>
