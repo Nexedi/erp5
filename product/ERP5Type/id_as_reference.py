@@ -67,10 +67,10 @@ def IdAsReferenceMixin(suffix):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getReference')
-    def getReference(self, default=None):
+    def getReference(self, *args):
       id = self.id
       if id[suffix_index:] == suffix:
         return id[:suffix_index]
-      return self._baseGetReference(default=default)
+      return self._baseGetReference(*args)
 
   return IdAsReferenceMixin
