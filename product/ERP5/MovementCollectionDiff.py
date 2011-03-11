@@ -115,7 +115,7 @@ def _getPropertyAndCategoryList(document):
 
 def _getPropertyList(document, acquire=True):
   property_map = document.getPropertyMap()
-  bad_property_list = ['id', 'uid', 'categories_list', 'int_index', 'last_id',]
+  bad_property_list = ['id', 'uid', 'categories_list', 'last_id',]
   # we don't want acquired properties without acquisition_mask_value
   for x in property_map:
     if x.has_key('acquisition_base_category') and not x.get('acquisition_mask_value', 0):
