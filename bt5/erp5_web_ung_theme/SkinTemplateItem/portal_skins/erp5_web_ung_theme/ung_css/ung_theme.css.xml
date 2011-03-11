@@ -1042,7 +1042,7 @@ table#field_table,\n
  table#new-account-table,\n
  table#create-new-user {\n
   border: 1px solid #C3D9FF;\n
-  width: 100%;\n
+  width: 78%;\n
 }\n
 \n
 table#field_table tbody,\n
@@ -1087,9 +1087,9 @@ div#advertisement b {\n
 }\n
 \n
 div.footer {\n
-  text-align: center;\n
-  margin-top: 40px;\n
-  font-size: 10pt;\n
+  text-align: center !important;\n
+  margin-top: 40px !important;\n
+  font-size: 10pt !important;\n
 }
 
 ]]></string> </value>
