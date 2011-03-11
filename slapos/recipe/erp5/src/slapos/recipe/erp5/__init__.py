@@ -76,9 +76,11 @@ class Recipe(BaseSlapRecipe):
     self.installTestRunner(ca_conf, mysql_conf, conversion_server_conf)
     self.linkBinary()
     self.setConnectionDict(dict(
-      url=apache_conf['apache_login'],
-      user=user,
-      password=password
+      site_url=apache_conf['apache_login'],
+      site_user=user,
+      site_password=password,
+      memcached_url=memcached_conf['memcached_url'],
+      kumo_url=kumo_conf['kumo_address']
     ))
     return self.path_list
 
