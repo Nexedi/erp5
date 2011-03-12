@@ -1,6 +1,7 @@
 import os
 import subprocess
 import time
+import sys
 
 
 def runMysql(args):
@@ -28,6 +29,8 @@ def runMysql(args):
   else:
     print "MySQL already initialised"
   print "Starting %r" % mysqld_wrapper_list[0]
+  sys.stdout.flush()
+  sys.stderr.flush()
   os.execl(mysqld_wrapper_list[0], *mysqld_wrapper_list)
 
 
