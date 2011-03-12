@@ -65,4 +65,6 @@ def updateMysql(args):
         else:
           is_succeed = True
           print 'SlapOS initialisation script succesfully applied on database.'
+    sys.stdout.flush()
+    sys.stderr.flush()
     time.sleep(sleep)
