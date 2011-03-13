@@ -2250,6 +2250,7 @@ class AssertPython27(AssertSoftwareMixin):
   rpath_list = [
       'bzip2',
       'gdbm',
+      'gettext',
       'ncurses',
       'openssl',
       'readline',
