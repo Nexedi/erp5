@@ -368,6 +368,7 @@ class RuleMixin(Predicate):
           # Compensate non deletable
           new_movement = decision_movement.asContext(
                             quantity=-decision_movement.getQuantity())
+          new_movement.setDelivery(None)
           movement_collection_diff.addNewMovement(new_movement)
       return
 
@@ -412,6 +413,7 @@ class RuleMixin(Predicate):
           if not _compare(profit_tester_list, prevision_movement, decision_movement):
             new_movement = decision_movement.asContext(
                                 quantity=-decision_movement_quantity)
+            new_movement.setDelivery(None)
             movement_collection_diff.addNewMovement(new_movement)
             compensated_quantity += decision_movement_quantity
         else:
@@ -436,6 +438,7 @@ class RuleMixin(Predicate):
           if not _compare(divergence_tester_list, prevision_movement, decision_movement):
             new_movement = decision_movement.asContext(
                                   quantity=-decision_movement_quantity)
+            new_movement.setDelivery(None)
             movement_collection_diff.addNewMovement(new_movement)
             compensated_quantity += decision_movement_quantity
         else:
@@ -472,6 +475,7 @@ class RuleMixin(Predicate):
         # It is still possible to add a new movement some movements are not
         # completed
         new_movement = prevision_movement.asContext(quantity=missing_quantity)
+        new_movement.setDelivery(None)
         movement_collection_diff.addNewMovement(new_movement)
       elif updatable_compensation_movement is not None:
         # If not, it means that all movements are completed
