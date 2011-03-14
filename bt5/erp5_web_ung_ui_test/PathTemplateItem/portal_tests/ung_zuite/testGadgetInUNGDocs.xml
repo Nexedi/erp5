@@ -50,6 +50,11 @@
       <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />\n
       <tr>\n
         <td>openAndWait</td>\n
+        <td>${base_url}/ERP5Site_cleanUpUNGKnowledgePadList</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>openAndWait</td>\n
         <td>${base_url}/web_site_module/ung/WebSite_logout</td>\n
         <td></td>\n
       </tr>\n
@@ -70,42 +75,27 @@
       </tr>\n
       <tr>\n
         <td>verifyTextPresent</td>\n
-        <td>All Documents</td>\n
+        <td>Please wait until your tab is being prepared.</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>waitForPageToLoad</td>\n
+        <td>30000</td>\n
         <td></td>\n
       </tr>\n
       <tr>\n
         <td>verifyTextPresent</td>\n
-        <td>Web Illustration</td>\n
+        <td>Add gadgets</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//a[@id="add-gadgets"]</td>\n
         <td></td>\n
       </tr>\n
       <tr>\n
         <td>verifyTextPresent</td>\n
-        <td>Web Page</td>\n
-        <td></td>\n
-      </tr>\n
-      <tr>\n
-        <td>verifyTextPresent</td>\n
-        <td>Web Table</td>\n
-        <td></td>\n
-      </tr>\n
-      <tr>\n
-        <td>verifyTextPresent</td>\n
-        <td>zope</td>\n
-        <td></td>\n
-      </tr>\n
-      <tr>\n
-        <td>clickAndWait</td>\n
-        <td>//a[@href="${base_url}/web_site_module/ung/WebSite_logout"]</td>\n
-        <td></td>\n
-      </tr>\n
-      <tr>\n
-        <td>verifyTextPresent</td>\n
-        <td>Welcome to UNG Web Office</td>\n
-        <td></td>\n
-      </tr>\n
-      <tr>\n
-        <td>verifyTextPresent</td>\n
-        <td>Create an account now</td>\n
+        <td>Add Gadget</td>\n
         <td></td>\n
       </tr>\n
     </tbody>\n
@@ -125,7 +115,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>testUNGLogin</string> </value>
+            <value> <string>testGadgetInUNGDocs</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
