@@ -141,6 +141,11 @@ try:
       if not username or not password:
         self.client.setException(SubversionLoginError(realm))
         return False, '', '', False
+      # BBB. support older versions of pysvn <= 1.6.3
+      if isinstance(user, unicode):
+        user = user.encode('utf-8')
+      if isinstance(password, unicode):
+        password = password.encode('utf-8')
       return True, user, password, False
   
   class NotifyCallback(Callback):
