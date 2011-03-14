@@ -72,7 +72,7 @@ class SubscriptionItem(Item, MovementGeneratorMixin, PeriodicityMixin):
                            )
 
   # IExpandable interface implementation
-  def expand(self, applied_rule_id=None, force=0, activate_kw=None, **kw):
+  def expand(self, applied_rule_id=None, activate_kw=None, **kw):
     """
       Lookup start / stop properties in related Open Order
       or Path and expand.

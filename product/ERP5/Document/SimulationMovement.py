@@ -272,7 +272,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
         transaction.get().addBeforeCommitHook(before_commit)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'expand')
-  def expand(self, force=0, **kw):
+  def expand(self, **kw):
     """
     Checks all existing applied rules and make sure they still apply.
     Checks for other possible rules and starts expansion process (instanciates
@@ -316,7 +316,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     self.setCausalityState('expanded')
     # expand
     for applied_rule in applied_rule_dict.itervalues():
-      applied_rule.expand(force=force, **kw)
+      applied_rule.expand(**kw)
 
     # disable and clear cache
     if not cache_enabled:
