@@ -38,13 +38,18 @@ from Products.ERP5Type.DateUtils import getRoundedMonthBetween, millis
 from Products.ERP5Type.DateUtils import getAccountableYearFraction
 from Products.ERP5.Document.Amount import Amount
 from Products.CMFCore.utils import getToolByName
-from Products.ERP5.Document.ImmobilisationMovement import UNIMMOBILISING_METHOD, NO_CHANGE_METHOD, AMORTISATION_METHOD_PREFIX
-from Products.ERP5.Document.ImmobilisationMovement import IMMOBILISATION_NEEDED_PROPERTY_LIST, IMMOBILISATION_UNCONTINUOUS_NEEDED_PROPERTY_LIST, IMMOBILISATION_FACULTATIVE_PROPERTY_LIST
+from Products.ERP5.Document.ImmobilisationMovement import (
+    UNIMMOBILISING_METHOD, NO_CHANGE_METHOD, AMORTISATION_METHOD_PREFIX )
+from Products.ERP5.Document.ImmobilisationMovement import (
+    IMMOBILISATION_NEEDED_PROPERTY_LIST,
+    IMMOBILISATION_UNCONTINUOUS_NEEDED_PROPERTY_LIST,
+    IMMOBILISATION_FACULTATIVE_PROPERTY_LIST )
 from zLOG import LOG
 
 NEGLIGEABLE_PRICE = 10e-8
 
-from Products.ERP5Type.Errors import ImmobilisationValidityError, ImmobilisationCalculationError
+from Products.ERP5Type.Errors import ImmobilisationValidityError
+from Products.ERP5Type.Errors import ImmobilisationCalculationError
 
 class ImmobilisableItem(XMLObject, Amount):
     """
