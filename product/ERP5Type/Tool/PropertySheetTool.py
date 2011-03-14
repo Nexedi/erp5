@@ -35,8 +35,13 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type.Accessor import Translation
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Core.PropertySheet import PropertySheet as PropertySheetDocument
+from zExceptions import BadRequest
 
-from zLOG import LOG, INFO
+from zLOG import LOG, INFO, WARNING
+
+KNOWN_BROKEN_PROPERTY_SHEET_DICT = {
+  'InventoryConstraint': 'erp5_trade',
+}
 
 class PropertySheetTool(BaseTool):
   """
@@ -92,9 +97,12 @@ class PropertySheetTool(BaseTool):
     """
     Create Property Sheets in portal_property_sheets from _all_
     filesystem Property Sheets
+    Returns the list of PropertySheet names which failed being imported.
     """
     from Products.ERP5Type import PropertySheet
 
+    failed_import = []
+    append = failed_import.append
     # Get all the filesystem Property Sheets
     for name, klass in PropertySheet.__dict__.iteritems():
       # If the Property Sheet is a string, it means that the Property
@@ -112,12 +120,34 @@ class PropertySheetTool(BaseTool):
       LOG("Tool.PropertySheetTool", INFO,
           "Creating %s in portal_property_sheets" % repr(name))
 
-      PropertySheetDocument.importFromFilesystemDefinition(self, klass)
+      try:
+        PropertySheetDocument.importFromFilesystemDefinition(self, klass)
+      except BadRequest:
+        if name in KNOWN_BROKEN_PROPERTY_SHEET_DICT:
+          LOG('PropertySheetTool', WARNING, 'Failed to import %s with error:' % (
+            name, ), error=True)
+          # Don't fail, this property sheet is known to have been broken in the
+          # past, this site might be upgrading from such broken version.
+          append(name)
+        else:
+          raise
 
-    if REQUEST is not None:
+    if REQUEST is None:
+      return failed_import
+    else:
       portal = self.getPortalObject()
-      message = portal.Base_translateString('Property Sheets successfully'\
-                                          ' imported from filesystem to ZODB.')
+      base_message = 'Property Sheets successfully imported from ' \
+        'filesystem to ZODB.'
+      mapping = {}
+      if failed_import:
+        base_message =+ ' These property sheets failed to be imported: ' \
+          '$failed_import . You must update the following business ' \
+          'templates to have fixed version of these property sheets: ' \
+          '$business_templates'
+        mapping['failed_import'] = ', '.join(failed_import)
+        mapping['business_templates'] = ', '.join(set(
+          KNOWN_BROKEN_PROPERTY_SHEET_DICT[x] for x in failed_import))
+      message = portal.Base_translateString(base_message, mapping=mapping)
       return self.Base_redirect('view',
                                 keep_items={'portal_status_message': message})
 
