@@ -72,6 +72,9 @@ def selfcached(func):
 class NotAWorkingCopyError(Exception): pass
 ModuleSecurityInfo(__name__).declarePublic('NotAWorkingCopyError')
 
+class NotVersionedError(Exception): pass
+ModuleSecurityInfo(__name__).declarePublic('NotVersionedError')
+
 class BusinessTemplateNotInstalled(Exception): pass
 ModuleSecurityInfo(__name__).declarePublic('BusinessTemplateNotInstalled')
 
@@ -200,7 +203,10 @@ class WorkingCopy(Implicit):
 
   def newRevision(self):
     path = os.path.join('bt', 'revision')
-    revision = int(self.showOld(path)) + 1
+    try:
+      revision = int(self.showOld(path)) + 1
+    except NotVersionedError:
+      return 1
     file = open(os.path.join(self.working_copy, path), 'w')
     try:
       file.write(str(revision))

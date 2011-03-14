@@ -33,7 +33,7 @@ from DateTime import DateTime
 from Products.ERP5Type.Message import translateString
 from ZTUtils import make_query
 from Products.ERP5VCS.WorkingCopy import \
-  WorkingCopy, NotAWorkingCopyError, Dir, File, selfcached
+  WorkingCopy, NotAWorkingCopyError, NotVersionedError, Dir, File, selfcached
 
 class GitError(EnvironmentError):
   def __init__(self, err, out, returncode):
@@ -223,8 +223,14 @@ class Git(WorkingCopy):
     return self.aq_parent.download(self.working_copy)
 
   def showOld(self, path):
-    return self.git('show', 'HEAD:' + self.prefix + path,
-                    strip=False, cwd=self.toplevel)
+    try:
+      return self.git('show', 'HEAD:' + self.prefix + path,
+                      strip=False, cwd=self.toplevel)
+    except GitError, e:
+      err = e.args[0]
+      if ' does not exist in ' in err or ' exists on disk, but not in ' in err:
+        raise NotVersionedError(path)
+      raise
 
   def getAuthor(self):
     portal = self.getPortalObject()

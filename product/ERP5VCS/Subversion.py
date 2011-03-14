@@ -37,7 +37,7 @@ from Products.ERP5Type.Message import translateString
 from Products.ERP5.Document.BusinessTemplate import BusinessTemplateFolder
 from Products.ERP5VCS.WorkingCopy import \
   WorkingCopy, Dir, File, chdir_working_copy, selfcached, \
-  NotAWorkingCopyError, VcsConflictError
+  NotAWorkingCopyError, NotVersionedError, VcsConflictError
 from Products.ERP5VCS.SubversionClient import \
   newSubversionClient, SubversionLoginError, SubversionSSLTrustError
 
@@ -139,9 +139,14 @@ class Subversion(WorkingCopy):
     return self.aq_parent.download('.')
 
   def showOld(self, path):
-    from pysvn import Revision, opt_revision_kind
-    return self._getClient().cat(os.path.join(self.working_copy, path),
-                                 Revision(opt_revision_kind.base))
+    from pysvn import ClientError, Revision, opt_revision_kind, svn_err
+    try:
+      return self._getClient().cat(os.path.join(self.working_copy, path),
+                                   Revision(opt_revision_kind.base))
+    except ClientError, e:
+      if e.args[1][-1][1] in (errno.ENOENT, svn_err.entry_not_found):
+        raise NotVersionedError(path)
+      raise
 
   @selfcached
   def info(self):
