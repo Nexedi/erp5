@@ -485,9 +485,6 @@ $().ready(function(){\n
     event.preventDefault();\n
     showNotImplementedMessage("a#right_message");\n
   });\n
-  $("a#login").click(function(event){\n
-    reloadLoginPage(event);\n
-  });\n
   $("input.listbox-check-all").click(function(event){\n
     event.preventDefault();\n
     changeCheckBoxValue(true);\n
