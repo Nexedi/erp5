@@ -9626,6 +9626,9 @@ msgstr "Association entre la colonne du tableur et la propriété"
 msgid "Spreadsheet Name"
 msgstr "Nom de la feuille de calcul"
 
+msgid "Start"
+msgstr "Démarrer"
+
 msgid "Start Accounting Period"
 msgstr "Démarrer la période comptable"
 
