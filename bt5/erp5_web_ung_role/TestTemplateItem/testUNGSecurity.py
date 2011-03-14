@@ -122,7 +122,11 @@ class TestUNGSecurity(ERP5TypeTestCase):
     self.assertEquals(len(self.portal.web_page_module.searchFolder()), 0)
     ung_web_site = self.portal.web_site_module.ung
     web_table = ung_web_site.WebSection_userFollowUpWebPage("share-Web.Table")
+    self.stepTic()
     self.assertNotEquals(web_table.getFollowUpList(), [])
+    self.assertEquals(len(self.portal.web_page_module.searchFolder()), 1)
+    web_table = self.portal.web_page_module.searchFolder()[0]
+    self.assertEquals(web_table.getPortalType(), "Web Table")
     self.login("ERP5TypeTestCase")
     self.assertEquals(web_table.getFollowUpValue().getFirstName(), "Gabriel")
 
