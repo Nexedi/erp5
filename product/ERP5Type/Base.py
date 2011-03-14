@@ -1634,7 +1634,7 @@ class Base( CopyContainer,
     return uid
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getLogicalPath')
-  def getLogicalPath(self, REQUEST=None) :
+  def getLogicalPath(self, REQUEST=None, **kw) :
     """
       Returns the absolute path of an object, using titles when available
     """
