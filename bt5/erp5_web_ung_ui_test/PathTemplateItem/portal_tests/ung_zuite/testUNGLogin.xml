@@ -49,26 +49,6 @@
     </thead><tbody>\n
       <tal:block metal:use-macro="here/Zuite_CommonTemplateForUNG/macros/init" />\n
       <tr>\n
-        <td>openAndWait</td>\n
-        <td>${ung_url}/WebSite_logout</td>\n
-        <td></td>\n
-      </tr>\n
-      <tr>\n
-        <td>type</td>\n
-        <td>//input[@name="__ac_name"]</td>\n
-        <td>zope</td>\n
-      </tr>\n
-      <tr>\n
-        <td>type</td>\n
-        <td>//input[@name="__ac_password"]</td>\n
-        <td>zope</td>\n
-      </tr>\n
-      <tr>\n
-        <td>clickAndWait</td>\n
-        <td>//input[@type="submit"]</td>\n
-        <td></td>\n
-      </tr>\n
-      <tr>\n
         <td>verifyTextPresent</td>\n
         <td>All Documents</td>\n
         <td></td>\n

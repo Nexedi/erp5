@@ -45,6 +45,26 @@
       <td>${base_url}/web_site_module/ung</td>\n
       <td>ung_url</td>\n
     </tr>\n
+    <tr>\n
+        <td>openAndWait</td>\n
+        <td>${ung_url}/WebSite_logout</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//input[@name="__ac_name"]</td>\n
+        <td>zope</td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//input[@name="__ac_password"]</td>\n
+        <td>zope</td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//input[@type="submit"]</td>\n
+        <td></td>\n
+      </tr>\n
   </tal:block>\n
 </tal:block>
 
