@@ -153,11 +153,13 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getSimulationState')
   def getSimulationState(self, id_only=1):
-    """
-      Returns the current state in simulation
+    """Returns the current state in simulation
 
-      Inherit from order or delivery or parent (but use a conversion
-      table to make orders planned when parent is confirmed)
+      Inherit from delivery or parent (using a conversion table to make orders
+      planned when parent is confirmed).
+      
+      In the case of simulation coming from an item, the simulation state is
+      delegated to the item.
 
       XXX: movements in zero stock rule can not acquire simulation state
     """
@@ -168,13 +170,22 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     order = self.getOrderValue()
     if order is not None:
       return order.getSimulationState()
+
     try:
-      parent_state = self.getParentValue().getSimulationState()
+      parent_state = None
+      try:
+        parent_state = self.getParentValue().getSimulationState()
+      except AttributeError:
+        item = self.getParentValue().getCausalityValue(
+                portal_type=self.getPortalItemTypeList())
+        if interfaces.IExpandableItem.providedBy(item):
+          return item.getSimulationMovementSimulationState(self)
+        raise
       return parent_to_movement_simulation_state[parent_state]
     except (KeyError, AttributeError):
       LOG('SimulationMovement.getSimulationState', WARNING,
           'Could not acquire simulation state from %s'
-          % self.getRelativeUrl())
+          % self.getRelativeUrl(), error=True)
       return None
 
   security.declareProtected( Permissions.AccessContentsInformation,

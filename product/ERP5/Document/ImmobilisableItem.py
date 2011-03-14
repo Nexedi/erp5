@@ -26,12 +26,13 @@
 #
 ##############################################################################
 
+import zope.interface
 from AccessControl import ClassSecurityInfo
 
 from DateTime import DateTime
 from string import capitalize
 
-from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.DateUtils import addToDate, getClosestDate, roundDate
 from Products.ERP5Type.DateUtils import getRoundedMonthBetween, millis
@@ -76,6 +77,24 @@ class ImmobilisableItem(XMLObject, Amount):
                       , PropertySheet.Reference
                       , PropertySheet.Amortisation
                       )
+
+    zope.interface.implements(interfaces.IExpandableItem,)
+
+    # IExpandableItem interface implementation
+    def getSimulationMovementSimulationState(self, simulation_movement):
+      """Returns the simulation state for this simulation movement.
+      """
+      portal = self.getPortalObject()
+      draft_state_list = portal.getDraftOrderStateList()
+      # if we have an order which is not draft, we'll consider the generated
+      # simulation movement are planned.
+      # This is probably oversimplified implementation, as we may want to look
+      # deliveries / invoices.
+      for movement in self.getAggregateRelatedValueList(
+          portal_type=portal.getPortalOrderMovementTypeList(),):
+        if movement.getSimulationState() not in draft_state_list:
+          return 'planned'
+      return 'draft'
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getImmobilisationRelatedMovementList')
