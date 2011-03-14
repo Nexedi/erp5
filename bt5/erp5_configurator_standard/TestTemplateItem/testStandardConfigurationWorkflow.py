@@ -75,7 +75,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
 
   def stepLogin(self, quiet=0, run=1, **kw):
     uf = self.getPortal().acl_users
-    uf._doAddUser('test_configurator_user', '', 
+    uf._doAddUser('test_configurator_user', '',
                               ['Manager', 'Assignee', 'Assignor',
                                'Associate', 'Auditor', 'Author'], [])
     user = uf.getUserById('test_configurator_user').__of__(uf)
@@ -141,7 +141,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     response_dict = self.portal.portal_configurator._next(
                             business_configuration, next_dict)
     sequence.edit(response_dict=response_dict)
-    
+
   def stepConfiguratorPrevious(self, sequence=None, sequence_list=None, **kw):
     """ Go to the previous form. """
     business_configuration = sequence.get("business_configuration")
@@ -222,8 +222,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     sequence.edit(next_dict=next_dict)
 
   def stepCheckMultiplePersonConfigurationItem(self, sequence=None, sequence_list=None, **kw):
-    """ 
-      Check if multiple Person Configuration Item of the Business
+    """Check if multiple Person Configuration Item of the Business
       Configuration have been created successfully.
     """
     business_configuration = sequence.get("business_configuration")
@@ -241,7 +240,6 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
         person_business_configuration_save = configuration_save
         break
 
-
     self.assertEquals(int(self.company_employees_number),
         len(person_business_configuration_save.contentValues()))
     return person_business_configuration_save
@@ -250,7 +248,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     """ Check the accounting form configuration. """
     response_dict = sequence.get("response_dict")
     if 'command' in response_dict:
-      self.assertEquals('show', response_dict['command']) 
+      self.assertEquals('show', response_dict['command'])
     self.assertEquals('Previous', response_dict['previous'])
     self.assertEquals('Configure accounting', response_dict['next'])
     self.assertCurrentStep('Accounting', response_dict)
@@ -313,7 +311,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     self.assertEquals(self.preference_group,
            preference_buisiness_configurator_item.getProperty(
               'preferred_accounting_transaction_section_category'))
-    
+
     # 3. some pre-configured accounts
     account_business_configuration_item =\
           accounting_business_configuration_save['2']
@@ -337,7 +335,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     # this ['14'] will break when we'll add more accounts
     self.assertEquals('Accounting Period Configurator Item',
         accounting_period_configuration_item.getPortalType())
-    
+
     self.assertEquals(DateTime(2008, 1, 1),
         accounting_period_configuration_item.getStartDate())
     self.assertEquals(DateTime(2008, 12, 31),
@@ -396,7 +394,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     # this created a currency
     preferences_business_configuration_save = business_configuration.\
                       contentValues(portal_types='Configuration Save')[-1]
- 
+
     currency_business_configuration_item =\
           preferences_business_configuration_save['1']
     self.assertEquals('Currency Configurator Item',
@@ -495,7 +493,6 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     expected_list = self.standard_bt5_list + bt5_tuple
     self.assertEquals([i for i in expected_list if i not in bt5_title_list], [])
 
-    
     self.assertFalse(bc_id in bt5_title_list)
 
     bt = business_configuration.getSpecialiseValue(portal_type="Business Template")
@@ -509,13 +506,13 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     expected_link_title_list = list(bt5_tuple) +\
              ['erp5_configurator_standard_categories']
 
-    self.assertSameSet(["%s.bt5" % i for i in expected_link_title_list], 
+    self.assertSameSet(["%s.bt5" % i for i in expected_link_title_list],
                         [i.getTitle() for i in link_list])
 
     # check for links
     file_list = business_configuration.searchFolder(portal_type="File")
     self.assertEquals(1, len(file_list))
-    self.assertEquals(business_configuration.getSpecialiseTitle(), 
+    self.assertEquals(business_configuration.getSpecialiseTitle(),
                       file_list[0].getTitle())
 
     file_title_list = ('%s' % bc_id,)
@@ -549,7 +546,7 @@ class TestConsultingConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
   """
 
   DEFAULT_SEQUENCE_LIST = """
-      stepCreateBusinessConfiguration 
+      stepCreateBusinessConfiguration
       stepTic
       stepSetConsultingWorkflow
       stepTic
@@ -661,7 +658,7 @@ class TestConsultingConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     ]
 
     # set preference group
-    self.preference_group = 'group/g' 
+    self.preference_group = 'group/g'
 
   def beforeTearDown(self):
     os.remove(self.categories_file_path)
@@ -674,7 +671,7 @@ class TestConsultingConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
                                portal_type="Business Configuration",
                                title='Test Configurator Consulting Workflow')
     next_dict = {}
-    sequence.edit(business_configuration=business_configuration, 
+    sequence.edit(business_configuration=business_configuration,
                   next_dict=next_dict)
 
   def stepSetConsultingWorkflow(self, sequence=None, sequence_list=None, **kw):
@@ -774,7 +771,7 @@ class TestConsultingConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     self.assertEquals(0, len(link_list))
 
   def stepCheckMultiplePersonConfigurationItem(self, sequence=None, sequence_list=None, **kw):
-    """ 
+    """
       Check if multiple Person Configuration Item of the Business
       Configuration have been created successfully.
     """
@@ -840,7 +837,7 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     Test Live Standard Configuration Workflow.
   """
   DEFAULT_SEQUENCE_LIST = """
-      stepCreateBusinessConfiguration 
+      stepCreateBusinessConfiguration
       stepTic
       stepSetStandardWorkflow
       stepTic
@@ -974,7 +971,7 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
       ),
     ]
     # set preference group
-    self.preference_group = 'group/my_group' 
+    self.preference_group = 'group/my_group'
 
   def stepCreateBusinessConfiguration(self,  sequence=None, sequence_list=None, **kw):
     """ Create one Business Configuration """
@@ -983,7 +980,7 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
                                portal_type="Business Configuration",
                                title='Test Configurator Standard Workflow')
     next_dict = {}
-    sequence.edit(business_configuration=business_configuration, 
+    sequence.edit(business_configuration=business_configuration,
                   next_dict=next_dict)
 
   def stepSetStandardWorkflow(self, sequence=None, sequence_list=None, **kw):
@@ -1062,7 +1059,7 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
                 default_address_region='americas/south_america/brazil')
 
   def stepCheckMultiplePersonConfigurationItem(self, sequence=None, sequence_list=None, **kw):
-    """ 
+    """
       Check if multiple Person Configuration Item of the Business
       Configuration have been created successfully.
     """
@@ -1149,7 +1146,7 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
       'purchase', 'sales']
     for account_id in account_id_list:
       account = self.portal.account_module._getOb(account_id)
-      self.assertNotEquals(account, None, 
+      self.assertNotEquals(account, None,
                      "%s account is not Found." % account_id)
 
   def stepCheckValidPersonList(self, sequence=None, sequence_list=None, **kw):
@@ -1203,11 +1200,11 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     business_configuration = sequence.get("business_configuration")
     gadget_list = self.getBusinessConfigurationObjectList(business_configuration, 'Gadget')
     for gadget in gadget_list:
-      self.assertEquals('public', gadget.getValidationState(), 
-                        "%s is not public but %s" % (gadget.getRelativeUrl(), 
+      self.assertEquals('public', gadget.getValidationState(),
+                        "%s is not public but %s" % (gadget.getRelativeUrl(),
                                                      gadget.getValidationState()))
       gadget.Base_checkConsistency()
- 
+
   def stepCheckPreferenceList(self, sequence=None, sequence_list=None, **kw):
     """
       Assert all the Peference properties.
@@ -1219,7 +1216,7 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     self.assertEquals(len(preference_list), 2)
 
     for preference in preference_list:
-      self.assertEquals(preference_tool[preference].getPreferenceState(), 
+      self.assertEquals(preference_tool[preference].getPreferenceState(),
                         'global')
 
     organisation_list = self.getBusinessConfigurationObjectList(business_configuration,
@@ -1242,7 +1239,7 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
                       preference_tool.getPreferredAccountingTransactionCurrency())
     self.assertEquals('gap/fr/pcg',
                       preference_tool.getPreferredAccountingTransactionGap())
-    self.assertEquals('group/my_group', 
+    self.assertEquals('group/my_group',
                   preference_tool.getPreferredAccountingTransactionSectionCategory())
     self.assertEquals('organisation_module/%s' % organisation_id,
                       preference_tool.getPreferredAccountingTransactionSourceSection())
@@ -1385,7 +1382,7 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     business_configuration = sequence.get('business_configuration')
     organisation_list = self.getBusinessConfigurationObjectList(business_configuration, 'Organisation')
     self.assertNotEquals(len(organisation_list), 0)
- 
+
     organisation = organisation_list[0]
     period_list = organisation.contentValues(portal_type='Accounting Period')
     self.assertEquals(1, len(period_list))
@@ -1402,7 +1399,7 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
 
   def stepCheckRuleValidation(self, sequence=None, sequence_list=None, **kw):
     """
-      Check if rule are validated 
+      Check if rule are validated
     """
     business_configuration = sequence.get('business_configuration')
     rule_dict = self.portal.ERPSite_getConfiguratorSimulationRuleDict()
@@ -2542,17 +2539,17 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
                                     portal_type='Accounting Transaction',
                                     start_date=DateTime(2010, 06, 01),
                                     stop_date=DateTime(2010, 06, 01))
-  
+
     accounting_transaction_b = self.portal.accounting_module.newContent(
                                     portal_type='Accounting Transaction',
                                     start_date=DateTime(2010, 06, 01),
                                     stop_date=DateTime(2010, 06, 01))
-  
+
     accounting_transaction_c = self.portal.accounting_module.newContent(
                                    portal_type='Accounting Transaction',
                                    start_date=DateTime(2010, 06, 01),
                                    stop_date=DateTime(2010, 06, 01))
-    
+
     accounting_transaction_x_related_to_a.setCausalityValue(\
                                                    accounting_transaction_a)
 
@@ -2563,12 +2560,12 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     accounting_transaction_a.setCausalityValueList([accounting_transaction_b,
                                                     accounting_transaction_c])
     self.stepTic()
-  
+
     accounting_transaction_list = accounting_transaction_a.\
           AccountingTransaction_getCausalityGroupedAccountingTransactionList()
-    
+
     self.assertEquals(5, len(accounting_transaction_list))
-  
+
     self.assertTrue(accounting_transaction_a in accounting_transaction_list)
     self.assertTrue(accounting_transaction_b in accounting_transaction_list)
     self.assertTrue(accounting_transaction_c in accounting_transaction_list)
@@ -2576,16 +2573,16 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
                                                 accounting_transaction_list)
     self.assertTrue(accounting_transaction_y_related_to_a in \
                                                 accounting_transaction_list)
-  
+
     accounting_transaction_x_related_to_a.delete()
     accounting_transaction_y_related_to_a.cancel()
     self.stepTic()
- 
+
     accounting_transaction_list = accounting_transaction_a.\
           AccountingTransaction_getCausalityGroupedAccountingTransactionList()
-  
+
     self.assertEquals(3, len(accounting_transaction_list))
-  
+
     self.assertFalse(accounting_transaction_x_related_to_a in \
                                                 accounting_transaction_list)
     self.assertFalse(accounting_transaction_y_related_to_a in \
@@ -2983,7 +2980,7 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     """
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
-   
+
 #  def exportConfiguratorBusinessTemplate(self):
 #    """ """
 #    # we save this configuration business template for another test
