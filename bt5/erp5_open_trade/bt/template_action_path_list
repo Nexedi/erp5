@@ -6,7 +6,6 @@ Open Internal Order Module | view
 Open Internal Order | aggregate_item
 Open Internal Order | apply_trade_condition
 Open Internal Order | detailed_report
-Open Internal Order | jump_to_related_sale_order
 Open Internal Order | order_print
 Open Internal Order | order_summary
 Open Internal Order | payment_condition
@@ -22,7 +21,6 @@ Open Purchase Order Module | view
 Open Purchase Order | aggregate_item
 Open Purchase Order | apply_trade_condition
 Open Purchase Order | detailed_report
-Open Purchase Order | jump_to_related_sale_order
 Open Purchase Order | order_print
 Open Purchase Order | order_summary
 Open Purchase Order | payment_condition
@@ -38,7 +36,6 @@ Open Sale Order Module | view
 Open Sale Order | aggregate_item
 Open Sale Order | apply_trade_condition
 Open Sale Order | detailed_report
-Open Sale Order | jump_to_related_sale_order
 Open Sale Order | order_print
 Open Sale Order | order_summary
 Open Sale Order | payment_condition
