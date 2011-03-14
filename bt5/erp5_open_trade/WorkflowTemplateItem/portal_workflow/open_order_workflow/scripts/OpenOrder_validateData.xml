@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># This script check that necessary data exists on Order\n
+            <value> <string># This script check that necessary data exists on this open order\n
 order = state_change[\'object\']\n
 order.Base_checkConsistency()\n
 </string> </value>

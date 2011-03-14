@@ -8,11 +8,11 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Open Order is now validated and starts to order repeatedly.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>auto_planned</string> </value>
+            <value> <string>validated</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -22,25 +22,22 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Auto Planned</string> </value>
+            <value> <string>Validated</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>order</string>
-                <string>order_action</string>
-                <string>plan</string>
-                <string>plan_action</string>
+                <string>archive</string>
+                <string>invalidate</string>
+                <string>invalidate_action</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>type_list</string> </key>
             <value>
-              <tuple>
-                <string>draft_order</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
       </dictionary>
@@ -74,7 +71,6 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
-                        <string>Associate</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
@@ -85,7 +81,6 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
-                        <string>Associate</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
@@ -96,7 +91,6 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
-                        <string>Associate</string>
                         <string>Manager</string>
                       </tuple>
                     </value>

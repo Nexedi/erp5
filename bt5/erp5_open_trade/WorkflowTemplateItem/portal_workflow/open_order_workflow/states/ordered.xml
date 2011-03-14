@@ -30,8 +30,8 @@
               <tuple>
                 <string>cancel</string>
                 <string>cancel_action</string>
-                <string>start</string>
-                <string>start_action</string>
+                <string>validate</string>
+                <string>validate_action</string>
               </tuple>
             </value>
         </item>
@@ -39,8 +39,8 @@
             <key> <string>type_list</string> </key>
             <value>
               <tuple>
-                <string>future_inventory</string>
                 <string>planned_order</string>
+                <string>future_inventory</string>
               </tuple>
             </value>
         </item>

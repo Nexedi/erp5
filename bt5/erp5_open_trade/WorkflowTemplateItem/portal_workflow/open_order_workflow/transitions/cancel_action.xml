@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Cancel Order</string> </value>
+            <value> <string>Cancel Open Order</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -24,7 +24,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Cancel the order</string> </value>
+            <value> <string>Cancel the open order</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -46,7 +46,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Cancel Order Action</string> </value>
+            <value> <string>Cancel Open Order Action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
@@ -67,7 +67,6 @@
               <tuple>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Manager</string>
               </tuple>
             </value>
         </item>

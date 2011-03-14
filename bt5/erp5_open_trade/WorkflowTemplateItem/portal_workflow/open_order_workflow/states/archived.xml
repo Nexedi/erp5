@@ -8,11 +8,11 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Order is now paused and stop next order.</string> </value>
+            <value> <string>This version of the open order is archived</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>suspended</string> </value>
+            <value> <string>archived</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -22,15 +22,12 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Suspended</string> </value>
+            <value> <string>Archived</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
-              <tuple>
-                <string>start</string>
-                <string>start_action</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

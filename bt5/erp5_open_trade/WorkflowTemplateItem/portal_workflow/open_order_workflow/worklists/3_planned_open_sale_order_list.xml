@@ -18,7 +18,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-sale_order_module/view?simulation_state=planned&portal_type=Open+Sale+Order&local_roles:list=Assignee&reset=1
+open_sale_order_module/view?validation_state=planned&portal_type=Open+Sale+Order&local_roles:list=Assignee&reset=1
 
 ]]></string> </value>
         </item>
@@ -81,7 +81,7 @@ sale_order_module/view?simulation_state=planned&portal_type=Open+Sale+Order&loca
                     </value>
                 </item>
                 <item>
-                    <key> <string>simulation_state</string> </key>
+                    <key> <string>validation_state</string> </key>
                     <value>
                       <tuple>
                         <string>planned</string>

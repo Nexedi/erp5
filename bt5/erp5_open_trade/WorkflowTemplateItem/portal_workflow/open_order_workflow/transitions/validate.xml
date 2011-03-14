@@ -20,11 +20,11 @@
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>OpenOrder_buildSaleOrder</string> </value>
+            <value> <string>OpenOrder_archivePrevious</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Validates the open order, and archive previous versions</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -34,11 +34,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>auto_order_periodically</string> </value>
+            <value> <string>validate</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string></string> </value>
+            <value> <string>validated</string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
@@ -46,7 +46,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Auto Order Periodically</string> </value>
+            <value> <string>Validate Open Order</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

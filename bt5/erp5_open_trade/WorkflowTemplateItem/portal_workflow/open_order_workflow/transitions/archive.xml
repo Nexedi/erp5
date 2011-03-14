@@ -34,11 +34,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>stop</string> </value>
+            <value> <string>archive</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string>stopped</string> </value>
+            <value> <string>archived</string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
@@ -46,7 +46,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Stop Open Order</string> </value>
+            <value> <string>Archive</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
