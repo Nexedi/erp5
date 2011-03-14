@@ -914,7 +914,8 @@ class TestKMSearch(TestKMMixIn):
     self.login()
     portal = self.getPortal()
     
-    # add connection sphinx_sql_connection 
+    # add connection sphinx_sql_connection
+    web_page_id = "test_web_page"
     connection_id = "sphinx_sql_connection"
     if connection_id not in portal.objectIds():
       portal_templates = portal.portal_templates    
@@ -942,14 +943,17 @@ class TestKMSearch(TestKMMixIn):
       self.stepTic()
 
       # add some test data
-      self.web_page = portal.web_page_module.newContent(portal_type='Web Page', 
+      self.web_page = portal.web_page_module.newContent(id=web_page_id,
+                                                        portal_type='Web Page', 
                                                         text_content="Sphinx search tool page")
       self.stepTic()
 
       # reindex site
       portal.ERP5Site_reindexSphinxSE()
       self.stepTic()
-
+    else:
+      self.web_page = portal.web_page_module.restrictedTraverse(web_page_id)
+      
   @expectedFailure
   def test_01_NoZODBSphinxSeSearch(self):
     """
