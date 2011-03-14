@@ -909,7 +909,47 @@ class TestKM(TestKMMixIn):
 class TestKMSearch(TestKMMixIn):
   
   business_template_list = TestKMMixIn.business_template_list + ["erp5_km_ui_test_data", "erp5_km_sphinxse_full_text_search"]
-  
+
+  def afterSetUp(self):
+    self.login()
+    portal = self.getPortal()
+    
+    # add connection sphinx_sql_connection 
+    connection_id = "sphinx_sql_connection"
+    if connection_id not in portal.objectIds():
+      portal_templates = portal.portal_templates    
+      website = self.portal.web_site_module.km_test_web_site
+      base_url = "http://www.erp5.org/dists/snapshot/bt5"      
+      portal.manage_addProduct['ZMySQLDA'].manage_addZMySQLConnection(
+                                            id=connection_id , 
+                                            title="Sphinx", 
+                                            connection_string="dummy@127.0.0.1:9306")
+      connection = getattr(portal, connection_id)
+      connection.manage_open_connection()
+      self.stepTic()
+
+      for bt5_id in ("erp5_full_text_sphinxse_catalog",):
+        bt5 = portal_templates.download("%s/%s.bt5" %(base_url, bt5_id))
+        bt5.install()
+        
+      # make z_catalog_sphinxse_index_list and z0_uncatalog_sphinxse_index use Sphinx connection
+      z_catalog_sphinxse_index_list = portal.restrictedTraverse("portal_catalog/erp5_mysql_innodb/z_catalog_sphinxse_index_list")
+      z0_uncatalog_sphinxse_index = portal.restrictedTraverse("portal_catalog/erp5_mysql_innodb/z0_uncatalog_sphinxse_index")
+      z_catalog_sphinxse_index_list.connection_id=connection_id
+      z0_uncatalog_sphinxse_index.connection_id=connection_id
+      
+      website.publish()
+      self.stepTic()
+
+      # add some test data
+      self.web_page = portal.web_page_module.newContent(portal_type='Web Page', 
+                                                        text_content="Sphinx search tool page")
+      self.stepTic()
+
+      # reindex site
+      portal.ERP5Site_reindexSphinxSE()
+      self.stepTic()
+
   @expectedFailure
   def test_01_NoZODBSphinxSeSearch(self):
     """
@@ -920,55 +960,61 @@ class TestKMSearch(TestKMMixIn):
       See http://www.erp5.org/HowToUseSphinxSE
     """
     portal = self.portal
-    portal_templates = portal.portal_templates
     website = self.portal.web_site_module.km_test_web_site
-    base_url = "http://www.erp5.org/dists/snapshot/bt5"
     
-    # add connection sphinx_sql_connection 
-    connection_id = "sphinx_sql_connection"
-    portal.manage_addProduct['ZMySQLDA'].manage_addZMySQLConnection(
-                                           id=connection_id , 
-                                           title="Sphinx", 
-                                           connection_string="dummy@127.0.0.1:9306")
-    connection = getattr(portal, connection_id)
-    connection.manage_open_connection()
-    self.stepTic()
-
-    for bt5_id in ("erp5_full_text_sphinxse_catalog",):
-      bt5 = portal_templates.download("%s/%s.bt5" %(base_url, bt5_id))
-      bt5.install()
-       
-    # make z_catalog_sphinxse_index_list and z0_uncatalog_sphinxse_index use Sphinx connection
-    z_catalog_sphinxse_index_list = portal.restrictedTraverse("portal_catalog/erp5_mysql_innodb/z_catalog_sphinxse_index_list")
-    z0_uncatalog_sphinxse_index = portal.restrictedTraverse("portal_catalog/erp5_mysql_innodb/z0_uncatalog_sphinxse_index")
-    z_catalog_sphinxse_index_list.connection_id=connection_id
-    z0_uncatalog_sphinxse_index.connection_id=connection_id
-    
-    website.publish()
-    self.stepTic()
-    
-    # reindex site
-    portal.ERP5Site_reindexSphinxSE()
-    self.stepTic()
-    
-    # add some test data
-    portal.web_page_module.newContent(portal_type='Web Page', 
-                                      text_content="Sphinx search tool page")
-    self.stepTic()
     self.changeSkin('KM')
-    
     # in search mode we do NOT access a ZODB object
     kw = {"list_style": "search",
           "search_text": "Sphinx search tool page"}
     search_result_list = website.WebSite_getFullTextSearchResultList(**kw)
     self.assertEqual(1, len(search_result_list))
     self.assertTrue(isinstance(search_result_list[0], TempBase))
-
+    self.assertEqual(self.web_page.getRelativeUrl(), search_result_list[0].path)
+    
     # in any other mode we do access a ZODB object (i.e. a brain)
     kw["list_style"] = "table"
     search_result_list = website.WebSite_getFullTextSearchResultList(**kw)
     self.assertEqual(1, len(search_result_list))
     self.assertEqual(False, isinstance(search_result_list[0], TempBase))
+    self.assertEqual(self.web_page, search_result_list[0].getObject())
+
+  @expectedFailure
+  def test_02_DocumentWebSectionList(self):
+    """
+      Test determing list of documents web section.
+    """
+    portal = self.portal
+    website = self.portal.web_site_module.km_test_web_site
+    web_page = self.web_page
+    
+    self.changeSkin('KM')
+    # in search mode we do NOT access a ZODB object
+    kw = {"list_style": "search",
+          "search_text": "Sphinx search tool page"}
+    search_result_list = website.WebSite_getFullTextSearchResultList(**kw)
+    self.assertEqual(0, len(search_result_list[0].section_list))
+
+    # set some groups to use Web Sections predicate
+    group_one = portal.portal_categories.restrictedTraverse("group/test_zuite/1")
+    web_page.setGroupValueList([group_one])
+    self.stepTic()
+    search_result_list = website.WebSite_getFullTextSearchResultList(**kw)
+    self.assertSameSet([website.restrictedTraverse("1")], \
+                       [portal.restrictedTraverse(x) for x in search_result_list[0].section_list])
+    # multiple sections                       
+    group_two = portal.portal_categories.restrictedTraverse("group/test_zuite/2")
+    web_page.setGroupValue([group_one, group_two])
+    self.stepTic()
+    search_result_list = website.WebSite_getFullTextSearchResultList(**kw)
+    self.assertSameSet([website.restrictedTraverse("1"), website.restrictedTraverse("2")], \
+                       [portal.restrictedTraverse(x) for x in search_result_list[0].section_list])                       
+    # unset
+    web_page.setGroupValue([])
+    self.stepTic()
+    search_result_list = website.WebSite_getFullTextSearchResultList(**kw)
+    self.assertSameSet([], \
+                       [portal.restrictedTraverse(x) for x in search_result_list[0].section_list])
+
     
 
 def test_suite():
