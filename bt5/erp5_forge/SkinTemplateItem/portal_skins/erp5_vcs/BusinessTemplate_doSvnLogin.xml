@@ -52,7 +52,12 @@
             <key> <string>_body</string> </key>
             <value> <string>context.getVcsTool().setLogin(auth, user, password)\n
 \n
-return context.REQUEST.traverseName(context, caller)(**caller_kw)\n
+request = context.REQUEST\n
+try:\n
+  traverseName = request.traverseName\n
+except AttributeError: # BBB: Zope2.8\n
+  return request.traverse(\'%s/%s\' % (context.getPath(), caller))(**dict(caller_kw))\n
+return traverseName(context, caller)(**caller_kw)\n
 </string> </value>
         </item>
         <item>
