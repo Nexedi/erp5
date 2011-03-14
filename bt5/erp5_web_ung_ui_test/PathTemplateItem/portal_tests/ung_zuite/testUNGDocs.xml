@@ -95,9 +95,19 @@
         <td></td>\n
       </tr>\n
       <tr>\n
+        <td>verifyTextNotPresent</td>\n
+        <td>All Documents</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
         <td>clickAndWait</td>\n
         <td>//a[@class="ung_docs"]</td>\n
         <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//a[@class="tree-open"]</td>\n
+        <td>All Documents</td>\n
       </tr>\n
     </tbody>\n
   </table>\n
