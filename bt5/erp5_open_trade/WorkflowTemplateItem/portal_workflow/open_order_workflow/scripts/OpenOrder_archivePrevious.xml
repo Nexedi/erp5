@@ -58,7 +58,7 @@ if not open_order.getReference():\n
 this_uid = open_order.getUid()\n
 \n
 # archive previously active open order with same reference\n
-for open_order in sci.getPortal().portal_catalog.searchFolder(\n
+for open_order in sci.getPortal().portal_catalog.searchResults(\n
                           portal_type=open_order.getPortalType(),\n
                           reference=open_order.getReference(),\n
                           validation_state=\'validated\'):\n
