@@ -109,6 +109,46 @@
         <td>//a[@class="tree-open"]</td>\n
         <td>All Documents</td>\n
       </tr>\n
+      <tr>\n
+        <td>openAndWait</td>\n
+        <td>${ung_url}/ERP5Site_createNewWebDocument?template=web_table_template</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//a[@name="document_title"]</td>\n
+        <td>Web Table</td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//td[@id="jSheetTitle_0"]</td>\n
+        <td>Spreadsheet Playground</td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//td[@id="jSheetMenu_0"]/span[@class="rootVoice"]</td>\n
+        <td>MENU</td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//a[@class="ung_docs"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>openAndWait</td>\n
+        <td>${ung_url}/ERP5Site_createNewWebDocument?template=web_page_template</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//a[@name="document_title"]</td>\n
+        <td>Web Page</td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//a[@class="ung_docs"]</td>\n
+        <td></td>\n
+      </tr>\n
     </tbody>\n
   </table>\n
 </body>\n
