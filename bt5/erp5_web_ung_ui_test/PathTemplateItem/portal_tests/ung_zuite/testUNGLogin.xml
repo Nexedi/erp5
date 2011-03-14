@@ -47,10 +47,10 @@
     <thead>\n
       <tr><td rowspan="1" colspan="3" tal:content="template/getId"/></tr>\n
     </thead><tbody>\n
-      <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />\n
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForUNG/macros/init" />\n
       <tr>\n
         <td>openAndWait</td>\n
-        <td>${base_url}/web_site_module/ung/WebSite_logout</td>\n
+        <td>${ung_url}/WebSite_logout</td>\n
         <td></td>\n
       </tr>\n
       <tr>\n
@@ -95,7 +95,7 @@
       </tr>\n
       <tr>\n
         <td>clickAndWait</td>\n
-        <td>//a[@href="${base_url}/web_site_module/ung/WebSite_logout"]</td>\n
+        <td>//a[@href="${ung_url}/WebSite_logout"]</td>\n
         <td></td>\n
       </tr>\n
       <tr>\n

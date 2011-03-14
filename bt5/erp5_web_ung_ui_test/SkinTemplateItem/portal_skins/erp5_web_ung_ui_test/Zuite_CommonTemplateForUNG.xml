@@ -36,67 +36,17 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
-      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
-<head>\n
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
-  <title tal:content="template/getId"/>\n
-</head>\n
-<body>\n
-  <table cellpadding="1" cellspacing="1" border="1">\n
-    <thead>\n
-      <tr><td rowspan="1" colspan="3" tal:content="template/getId"/></tr>\n
-    </thead><tbody>\n
-      <tal:block metal:use-macro="here/Zuite_CommonTemplateForUNG/macros/init" />\n
-      <tr>\n
-        <td>openAndWait</td>\n
-        <td>${ung_url}/WebSite_logout</td>\n
-        <td></td>\n
-      </tr>\n
-      <tr>\n
-        <td>type</td>\n
-        <td>//input[@name="__ac_name"]</td>\n
-        <td>zope</td>\n
-      </tr>\n
-      <tr>\n
-        <td>type</td>\n
-        <td>//input[@name="__ac_password"]</td>\n
-        <td>zope</td>\n
-      </tr>\n
-      <tr>\n
-        <td>clickAndWait</td>\n
-        <td>//input[@type="submit"]</td>\n
-        <td></td>\n
-      </tr>\n
-      <tr>\n
-        <td>verifyTextNotPresent</td>\n
-        <td>Text Format</td>\n
-        <td></td>\n
-      </tr>\n
-      <tr>\n
-        <td>click</td>\n
-        <td>//a[@id="settings"]</td>\n
-        <td></td>\n
-      </tr>\n
-      <tr>\n
-        <td>pause</td>\n
-        <td>2000</td>\n
-        <td></td>\n
-      </tr>\n
-      <tr>\n
-        <td>verifyTextPresent</td>\n
-        <td>Text Format</td>\n
-        <td></td>\n
-      </tr>\n
-      <tr>\n
-        <td>verifyTextPresent</td>\n
-        <td>FCK Editor</td>\n
-        <td></td>\n
-      </tr>\n
-    </tbody>\n
-  </table>\n
-</body>\n
-</html>
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+  <tal:block metal:define-macro="init">\n
+    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />\n
+    <tr>\n
+      <td>store</td>\n
+      <td>${base_url}/web_site_module/ung</td>\n
+      <td>ung_url</td>\n
+    </tr>\n
+  </tal:block>\n
+</tal:block>
 
 ]]></unicode> </value>
         </item>
@@ -110,7 +60,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>testUNGSettings</string> </value>
+            <value> <string>Zuite_CommonTemplateForUNG</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
