@@ -593,7 +593,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
                             'isBuildable')
   def isBuildable(self):
     """Simulation Movement buildable logic"""
-    if self.getDeliveryValue() is not None:
+    if self.getDelivery():
       # already delivered
       return False
 
@@ -815,8 +815,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
         else:
           return quantity - profit_quantity + delivery_error
       return mapping.getMappedProperty(self, property)
-    else:
-      return self.getProperty(property)
+    return self.getProperty(property)
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'setMappedProperty')
@@ -824,5 +823,4 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     mapping = self.getPropertyMappingValue()
     if mapping is not None:
       return mapping.setMappedProperty(self, property, value)
-    else:
-      return self.setProperty(property, value)
+    return self.setProperty(property, value)
