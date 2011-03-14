@@ -719,11 +719,12 @@ class Base( CopyContainer,
   security.declarePublic('provides')
   def provides(cls, interface_name):
     """
-    Check if the current class provides a particular interface
+    Check if the current class provides a particular interface from ERP5Type's
+    interfaces registry
     """
-    for interface in implementedBy(cls):
-      if interface.getName() == interface_name:
-        return True
+    interface = getattr(interfaces, interface_name, None)
+    if interface is not None:
+      return interface.implementedBy(cls)
     return False
   provides = classmethod(CachingMethod(provides, 'Base.provides',
                                        cache_factory='erp5_ui_long'))
