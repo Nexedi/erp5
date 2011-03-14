@@ -46,7 +46,6 @@ class MatrixError(Exception): pass
 class DuplicatedPropertyDictKeysError(Exception): pass
 
 class SelectMethodError(Exception): pass
-class SelectMovementError(Exception): pass
 
 class BuilderMixin(XMLObject, Amount, Predicate):
   """
@@ -321,7 +320,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
       for instance_to_update in instance_list:
         result, property_dict = self._test(
           instance_to_update, movement_group_node_list, divergence_list)
-        if result == True:
+        if result:
           instance = instance_to_update
           break
     return instance, property_dict
