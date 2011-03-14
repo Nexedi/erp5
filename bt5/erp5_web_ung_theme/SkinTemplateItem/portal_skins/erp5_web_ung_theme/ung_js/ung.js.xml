@@ -62,7 +62,9 @@ function showNotImplementedMessage(tag){\n
 \n
 function updateWebPage(){\n
   var parameterList = getUrlParameterList();\n
-  url = "Base_updateWebDocument?document_path=" + parameterList.document_path + "&webpage_path=" + parameterList.webpage_path;\n
+  url = "Base_updateWebDocument?document_path=" + \n
+         parameterList.document_path + \n
+         "&webpage_path=" + parameterList.webpage_path;\n
   $.get(url, {}, function(data, textStatus, XMLHttpRequest){\n
     response = jQuery.parseJSON(data);\n
     if (response.status != 200){\n
@@ -79,7 +81,6 @@ function checkConversion(){\n
   $.get("Base_getDocumentConversionState?path=" + parameterList.document_path, {},\n
                                                function(data, textStatus, XMLHttpRequest){\n
      status = jQuery.parseJSON(data);\n
-     console.log(status);\n
      switch (status) {\n
       case "converted":\n
         clearTimeout();\n
@@ -131,8 +132,10 @@ function displayFormMessage(message){\n
   $("td#form-message").fadeIn(300).delay(800).fadeOut(3000);\n
 }\n
 \n
-function displayLoginForm(){  \n
-  $("a.ung_docs, img[alt=\'calendar_logo_box\'], table#create-new-user, img[alt=\'mail_logo_box\']").hide();\n
+function displayLoginForm(){\n
+  var tagToHide = "a.ung_docs, img[alt=\'calendar_logo_box\']," + \n
+                  "table#create-new-user, img[alt=\'mail_logo_box\']";\n
+  $(tagToHide).hide();\n
   $("div.header-left div.field input, div.main-right, div.main-left").hide();\n
   $.get("WebSection_loginDialog", function(data){\n
     $("div.header-left fieldset.widget").append("<p>" + data + "</p>");\n
