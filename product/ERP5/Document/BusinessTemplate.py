@@ -4203,6 +4203,8 @@ class LocalRolesTemplateItem(BaseTemplateItem):
       xml_data += '\n  </role>'
     xml_data += '\n </local_roles>'
     xml_data += '\n</local_roles_item>'
+    if isinstance(xml_data, unicode)
+      xml_data = xml_data.encode('utf8')
     return xml_data
 
   def export(self, context, bta, **kw):
