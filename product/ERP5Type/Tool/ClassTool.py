@@ -1190,7 +1190,7 @@ def initialize( context ):
         writeLocalConstraint(class_id, text, create=create,
                              instance_home=self._v_instance_home.getPath())
 
-      security.declareProtected(Permissions.ManagePortal, 'runLiveTest')
+      security.declareProtected(Permissions.ManagePortal, 'readTestOutput')
       def readTestOutput(self, position=0):
         """
         Return unread part of the test result
