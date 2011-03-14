@@ -59,8 +59,6 @@ installed_business_template_list = context.portal_templates.getInstalledBusiness
 if \'erp5_configurator_standard\' not in installed_business_template_list:\n
   kw = context.Alarm_installBusinessTemplateList()\n
 \n
-context.activate(**kw).Alarm_setupBusinessConfiguration()\n
-\n
 log(\'Finished to launch the activities to setup the demo configuration!\')\n
 context.setEnabled(False)\n
 </string> </value>
