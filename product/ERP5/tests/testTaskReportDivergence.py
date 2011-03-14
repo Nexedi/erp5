@@ -151,7 +151,6 @@ class TestTaskReportDivergence(TestTaskReportDivergenceMixin, ERP5TypeTestCase) 
     """
     return 1
 
-  @newSimulationExpectedFailure
   def test_01_TestReportLineChangeQuantity(self, quiet=quiet, run=run_all_test):
     """
       Change the quantity on an delivery line, then
