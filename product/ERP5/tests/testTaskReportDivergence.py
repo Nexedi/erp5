@@ -173,7 +173,6 @@ class TestTaskReportDivergence(TestTaskReportDivergenceMixin, ERP5TypeTestCase) 
 
     sequence_list.play(self, quiet=quiet)
 
-  @newSimulationExpectedFailure
   def test_02_TestReportListChangeDestination(self, quiet=quiet, run=run_all_test):
     """
       Test generation of delivery list
