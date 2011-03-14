@@ -134,7 +134,8 @@ function displayFormMessage(message){\n
 \n
 function displayLoginForm(){\n
   var tagToHide = "a.ung_docs, img[alt=\'calendar_logo_box\']," + \n
-                  "table#create-new-user, img[alt=\'mail_logo_box\']";\n
+                  "table#create-new-user, img[alt=\'mail_logo_box\']" + \n
+                  ", div.navigation";\n
   $(tagToHide).hide();\n
   $("div.header-left div.field input, div.main-right, div.main-left").hide();\n
   $.get("WebSection_loginDialog", function(data){\n
@@ -146,6 +147,9 @@ function displayLoginForm(){\n
       });\n
       $("table#field_table, table#new-account-table, table#create-new-user").css("width", "100%");\n
       $("table#create-new-user").show();\n
+      $("td#back-login").click(function(event){\n
+        reloadLoginPage(event);\n
+      });\n
       $("form#create-user").submit(function(event){\n
         event.preventDefault();\n
         var formHash = {};\n
@@ -170,6 +174,18 @@ function displayLoginForm(){\n
       });\n
     });\n
   });\n
+}\n
+\n
+function reloadLoginPage(event){\n
+  event.preventDefault();\n
+  if ($("div#main-content").html() == null){\n
+    displayLoginForm();\n
+  }\n
+  if ($("table#create-new-user").css("display") != "none"){\n
+    $("table#field_table, table#new-account-table, table#create-new-user").css("width", "78%");\n
+    $("table#create-new-user").hide();\n
+    $("table#field_table, table#new-account-table").show();\n
+  }\n
 }\n
 \n
 $().ready(function(){\n
@@ -470,15 +486,7 @@ $().ready(function(){\n
     showNotImplementedMessage("a#right_message");\n
   });\n
   $("a#login").click(function(event){\n
-    event.preventDefault();\n
-    if ($("div#main-content").html() == null){\n
-      displayLoginForm();\n
-    }\n
-    if ($("table#create-new-user").css("display") != "none"){\n
-      $("table#field_table, table#new-account-table, table#create-new-user").css("width", "78%");\n
-      $("table#create-new-user").hide();\n
-      $("table#field_table, table#new-account-table").show();\n
-    }\n
+    reloadLoginPage(event);\n
   });\n
   $("input.listbox-check-all").click(function(event){\n
     event.preventDefault();\n

@@ -1094,6 +1094,13 @@ div.footer {\n
 \n
 div.header-left h2 {\n
   font-size: 14pt;\n
+}\n
+\n
+form#create-user table tbody tr:last-child td {\n
+  color: #20C;\n
+  text-decoration: underline;\n
+  font-size: 8pt;\n
+  cursor: pointer;\n
 }
 
 ]]></string> </value>
