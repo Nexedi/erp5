@@ -194,11 +194,6 @@ system_prefs = dict(\n
                              \'service_module/support_other\',],\n
   preferred_event_sender_email = preferred_event_sender_email,\n
   preferred_event_assessment_form_id_list = [],\n
-  # oood\n
-  # XXX-Luke: (critical) Use Conversion Server parameters related with\n
-  #           Business Configartion\n
-  preferred_ooodoc_server_address=\'localhost\',\n
-  preferred_ooodoc_server_port_number=8011,\n
   # dms\n
   # XXX-Luke: (proposal) Allow to define, maybe use some magic of\n
   #           representation\n
