@@ -70,8 +70,6 @@ class SystemPreferenceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
              'preferred_sale_opportunity_resource_list',
              'preferred_support_request_resource_list',
              # DMS
-             'preferred_ooodoc_server_address',
-             'preferred_ooodoc_server_port_number',
              'preferred_conversion_cache_factory',
              'preferred_document_email_ingestion_address',
              'preferred_document_reference_method_id',
