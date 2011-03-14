@@ -45,6 +45,8 @@
       <td>${base_url}/web_site_module/ung</td>\n
       <td>ung_url</td>\n
     </tr>\n
+  </tal:block>\n
+  <tal:block metal:define-macro="login">\n
     <tr>\n
         <td>openAndWait</td>\n
         <td>${ung_url}/WebSite_logout</td>\n

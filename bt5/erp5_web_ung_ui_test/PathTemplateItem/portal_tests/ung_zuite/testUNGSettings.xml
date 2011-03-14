@@ -48,6 +48,7 @@
       <tr><td rowspan="1" colspan="3" tal:content="template/getId"/></tr>\n
     </thead><tbody>\n
       <tal:block metal:use-macro="here/Zuite_CommonTemplateForUNG/macros/init" />\n
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForUNG/macros/login" />\n
       <tr>\n
         <td>verifyTextNotPresent</td>\n
         <td>Text Format</td>\n

@@ -48,10 +48,16 @@
       <tr><td rowspan="1" colspan="3" tal:content="template/getId"/></tr>\n
     </thead><tbody>\n
       <tal:block metal:use-macro="here/Zuite_CommonTemplateForUNG/macros/init" />\n
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForUNG/macros/login" />\n
       <tr>\n
-        <td>verifyTextPresent</td>\n
+        <td>verifyText</td>\n
+        <td>//a[@class="tree-open"]</td>\n
         <td>All Documents</td>\n
-        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//a[@id="settings"]</td>\n
+        <td>Settings</td>\n
       </tr>\n
       <tr>\n
         <td>verifyTextPresent</td>\n

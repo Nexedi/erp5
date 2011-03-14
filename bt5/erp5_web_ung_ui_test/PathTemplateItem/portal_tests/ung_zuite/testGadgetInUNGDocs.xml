@@ -53,6 +53,7 @@
         <td>${base_url}/ERP5Site_cleanUpUNGKnowledgePadList</td>\n
         <td></td>\n
       </tr>\n
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForUNG/macros/login" />\n
       <tr>\n
         <td>verifyTextPresent</td>\n
         <td>Please wait until your tab is being prepared.</td>\n
@@ -64,9 +65,9 @@
         <td></td>\n
       </tr>\n
       <tr>\n
-        <td>verifyTextPresent</td>\n
+        <td>verifyText</td>\n
+        <td>//a[@id="add-gadgets"]/span</td>\n
         <td>Add gadgets</td>\n
-        <td></td>\n
       </tr>\n
       <tr>\n
         <td>click</td>\n
