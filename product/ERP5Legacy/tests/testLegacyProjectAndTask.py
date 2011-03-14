@@ -49,6 +49,18 @@ Legacy_getBusinessTemplateList(TestTaskMixin)
 TestTaskReporting.createBusinessProcess = lambda self: None
 Legacy_getBusinessTemplateList(TestTaskReporting)
 
+def stepAcceptDateDecision(self, sequence=None, **kw):
+  task_report = sequence.get('task_report')
+  # XXX This is not really cool, when we will have nice api, it is required
+  # to use it
+  self.getPortal().portal_deliveries\
+      .task_report_builder.solveDeliveryGroupDivergence(
+      task_report.getRelativeUrl(),
+      property_dict={'start_date':[self.datetime + 15]})
+
+TestTaskReportDivergenceMixin.stepAcceptDateDecision = stepAcceptDateDecision
+
+
 def test_suite():
   suite = test_suite_list[0]()
   for test_suite in test_suite_list[1:]:
