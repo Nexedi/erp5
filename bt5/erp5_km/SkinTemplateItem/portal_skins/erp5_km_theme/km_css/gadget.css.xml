@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts95534465.43</string> </value>
+            <value> <string>ts00187260.45</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -469,36 +469,21 @@ div.block table.listbox button.sort_button:hover{\n
 \n
 /* Add gadgets link */\n
 #add_new_gadget_link{\n
-  margin-top:13px;\n
+  margin-top:6px;\n
   padding:0;  \n
 }\n
 \n
+#stick-gadgets,\n
+#unstick-gadgets,\n
 #add-gadgets{\n
-  border-bottom: none;\n
-  float:right;\n
-  background: url(km_img/bt-add.png) no-repeat 0 0px;\n
-  margin-top:0px;\n
-  padding:0;\n
-  width:72px;\n
-  height:18px;\n
   cursor: pointer;\n
-}\n
-\n
-#stick-gadgets span,\n
-#add-gadgets span{\n
-  display: none;\n
-}\n
-\n
-/* Stick gadget */\n
-#stick-gadgets{\n
-  border-bottom: none;\n
   float:right;\n
-  background: url(km_img/bt-stick.png) no-repeat 0 0px;\n
   margin-top:0px;\n
-  padding:0;\n
-  width:55px;\n
-  height:18px;\n
-  cursor: pointer;\n
+  padding:5px 10px;\n
+  height: auto;\n
+  width:auto;\n
+  margin-left: 5px;\n
+  border-bottom: none;\n
 }\n
 \n
 #stick-gadgets a{\n
@@ -696,7 +681,7 @@ div.block fieldset.gadget-profile div.field{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>12056</int> </value>
+            <value> <int>11792</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

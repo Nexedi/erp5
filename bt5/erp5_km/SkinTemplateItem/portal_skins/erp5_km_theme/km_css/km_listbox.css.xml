@@ -49,12 +49,18 @@ div.listbox-tree{\n
 div.listbox-action-widget {\n
   float:none;\n
 }\n
+div.listbox-action-widget span.description {\n
+  font-size:12px;\n
+}\n
+\n
+.listbox_actions_title{\n
+  display: none;\n
+}\n
 \n
 div.listbox-action-widget div.bottom_actions{\n
   float:left;\n
-  background-color:#E0DFD1;\n
-  padding-left:0.5em;\n
-  padding-bottom:0.2em;\n
+  background-color:transparent;\n
+  padding:0em\n
 }\n
 \n
 /* Title of the bar */\n
@@ -78,11 +84,7 @@ div.buttons_group {\n
 /* Buttons */\n
 div.listbox-action-widget button, \n
 div.listbox-action-widget a.button {\n
-  background-image: url(km_img/button_background.png) ;\n
-  background-position: 100% 0;\n
-  background-color: inherit;\n
   border:0 none;\n
-  color:#5F5A55;\n
   cursor:pointer;\n
   height:27px;\n
   float:left;\n
@@ -112,7 +114,7 @@ div.listbox-action-widget span.image{\n
   width:20px;\n
   margin-top:3px;\n
   z-index:2;\n
-  left:-5px;\n
+  left:-3px;\n
 }\n
 \n
 /* Description of botton */\n
@@ -124,9 +126,6 @@ div.listbox-action-widget span.description{\n
 div.listbox-action-widget button > span, \n
 div.listbox-action-widget a > span{\n
   display:block;\n
-  background-color:inherit;\n
-  background-image:url(km_img/button_background.png);\n
-  background-position:0 0;\n
   display:block;\n
   height:27px;\n
   left:-8px;\n

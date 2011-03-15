@@ -1425,35 +1425,6 @@ li.toolboxSection > div{\n
 }\n
 \n
 /* Buttons */\n
-#add_new_gadget_link {\n
-  margin-top:6px;\n
-}\n
-\n
-#stick-gadgets span, \n
-#add-gadgets span {\n
-  display:block;\n
-}\n
-\n
-#stick-gadgets,\n
-#add-gadgets{\n
-  padding:5px 10px;\n
-  height: auto;\n
-  width:auto;\n
-  margin-left: 5px;\n
-}\n
-\n
-div.listbox-action-widget span.description {\n
-  font-size:12px;\n
-}\n
-\n
-.listbox_actions_title{\n
-  display: none;\n
-}\n
-div.listbox-action-widget div.bottom_actions {\n
-  background-color:transparent;\n
-  padding:0em;\n
-}\n
-\n
 div.listbox-action-widget button, \n
 div.listbox-action-widget a.button,\n
 div.listbox-action-widget button > span, \n
@@ -1463,6 +1434,7 @@ button.formbt > span,\n
 button.bt-med, \n
 button.bt-med span,\n
 #stick-gadgets,\n
+#unstick-gadgets,\n
 #add-gadgets {\n
   background:transparent;\n
   background-color:#A8A799;\n
@@ -1474,6 +1446,11 @@ button.bt-med span,\n
   font-weight: normal;\n
 }\n
 \n
+#stick-gadgets:hover,\n
+#unstick-gadgets:hover,\n
+#add-gadgets:hover{\n
+  color: #828282;\n
+}\n
 \n
 button.formbt {\n
   height:auto;\n
@@ -1485,8 +1462,6 @@ button.formbt > span{\n
   height:auto;\n
   padding:0;\n
 }\n
-\n
-\n
 </tal:block>
 
 ]]></unicode> </value>
