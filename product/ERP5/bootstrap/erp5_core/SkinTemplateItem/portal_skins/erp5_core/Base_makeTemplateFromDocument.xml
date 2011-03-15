@@ -82,7 +82,7 @@ paste_info, = preference.manage_pasteObjects(cb_copy_data=cp, is_indexable=False
 template = getattr(preference, paste_info[\'new_id\'])\n
 template.makeTemplate()\n
 \n
-context.portal_caches.clearCacheFactory(\'erp5_ui_medium\')\n
+context.portal_caches.clearCacheFactory(\'erp5_ui_short\')\n
 \n
 return context.Base_redirect(form_id,\n
                              keep_items=dict(portal_status_message=message),\n
