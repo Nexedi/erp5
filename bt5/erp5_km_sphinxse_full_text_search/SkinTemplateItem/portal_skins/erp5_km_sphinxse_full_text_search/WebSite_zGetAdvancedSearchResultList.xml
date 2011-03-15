@@ -28,11 +28,11 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>base_category_uid_list\r\n
-kw\r\n
-search_string\r\n
-is_full_text_search_on\r\n
-use_text_excerpts\r\n
+            <value> <string>base_category_uid_list\n
+kw\n
+search_string\n
+is_full_text_search_on\n
+use_text_excerpts\n
 </string> </value>
         </item>
         <item>
@@ -90,9 +90,12 @@ SELECT catalog.uid, \n
        <dtml-if is_full_text_search_on> text, </dtml-if>\n
        category_uid,\n
        base_category_uid,\n
-       category_relative_url\n
+       category_relative_url,\n
+       versioning.version,\n
+       versioning.language\n
 \n
 FROM  catalog,\n
+      versioning,\n
       (SELECT catalog.uid\n
               <dtml-if is_full_text_search_on>\n
                 <dtml-if use_text_excerpts>\n
@@ -141,7 +144,7 @@ FROM  catalog,\n
             ) AS join_category\n
             ON search_results.uid = join_category.join_category_uid\n
 \n
-WHERE search_results.uid = catalog.uid\n
+WHERE search_results.uid = catalog.uid and versioning.uid = catalog.uid\n
 \n
 </dtml-let>
 

@@ -117,6 +117,8 @@ else:\n
                                 \'reference\': line[\'reference\'],\n
                                 \'category_relative_url\': line[\'category_relative_url\'],\n
                                 \'owner\': line[\'owner\'],\n
+                                \'version\': line[\'version\'],\n
+                                \'language\': line[\'language\'],\n
                                 \'web_site\': web_site.getRelativeUrl()})\n
   \n
   # one document can belong to n categories, we need show only one doc\n
