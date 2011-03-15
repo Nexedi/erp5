@@ -334,6 +334,9 @@ class TestDateTimeField(ERP5TypeTestCase):
     self.assertEquals(node.get('{%s}value-type' % NSMAP['office']), 'date')
     self.assertEquals(node.get('{%s}date-value' % NSMAP['office']),
                       value.ISO8601())
+    self.field.values['default'] = None
+    node = self.field.render_odt_variable(as_string=False)
+    self.assertTrue(node is not None)
 
 class TestTextAreaField(ERP5TypeTestCase):
   """Tests TextArea field
