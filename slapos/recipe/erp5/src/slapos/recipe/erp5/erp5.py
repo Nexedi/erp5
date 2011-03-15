@@ -45,8 +45,8 @@ def updateERP5(args):
   if len(bt5_list) > 0 and len(bt5_repository_list) == 0:
     bt5_repository_list = ["http://www.erp5.org/dists/snapshot/bt5"]
   erp5_catalog_storage = "erp5_mysql_innodb_catalog"
-  erp5_site_creation = 0
-  business_templates_setup_finished = 0
+  erp5_site_created = 0
+  business_template_setup_finished = 0
   sleep = 60
   while True:
     try:
@@ -55,15 +55,13 @@ def updateERP5(args):
         url = '%s/manage_addProduct/ERP5/manage_addERP5Site' % base_url
         result = urllib.urlopen(url, urllib.urlencode({
           "id": site_id,
-         # This parameter should be an argument in future.
           "erp5_catalog_storage": erp5_catalog_storage,
           "erp5_sql_connection_string": mysql_string,
           "cmf_activity_sql_connection_string": mysql_string, }))
-        erp5_site_creation = 1
+        erp5_site_created = 1
         print "ERP5 Site creation output: %s" % result.read()
 
-      # The site MUST be fresh
-      if erp5_site_creation and business_templates_setup_finished:
+      if erp5_site_created and not business_template_setup_finished:
         if proxy.isERP5SitePresent() == True:
           # Update URL to ERP5 Site
           erp5 = xmlrpclib.ServerProxy("%s/%s" % (base_url, site_id),
@@ -75,18 +73,19 @@ def updateERP5(args):
             erp5.portal_templates.\
                 updateRepositoryBusinessTemplateList(bt5_repository_list, None)
 
-          installed_bt5_list = erp5.portal_templates.getInstalledBusinessTemplateTitleList()
+          installed_bt5_list =\
+            erp5.portal_templates.getInstalledBusinessTemplateTitleList()
           for bt5 in bt5_list:
             if bt5 not in installed_bt5_list:
-              erp5.portal_templates.installBusinessTemplatesFromRepositories([bt5])
+              erp5.portal_templates.\
+                installBusinessTemplatesFromRepositories([bt5])
 
           repository_set = set(erp5.portal_templates.getRepositoryList())
           installed_bt5_list = erp5.portal_templates.getInstalledBusinessTemplateTitleList()
-          
-          if (set(repository_set) == set(bt5_repository_list)) and :
-              len([i for i in bt5_list not in installed_bt5_list])
+          if (set(repository_set) == set(bt5_repository_list)) and \
+              len([i for i in bt5_list not in installed_bt5_list]):
             print "Repositories updated and business templates installed."
-            business_templates_setup_finished = 1
+            business_template_setup_finished = 1
       else:
         print "ERP5 site is already present, ignore."
 
