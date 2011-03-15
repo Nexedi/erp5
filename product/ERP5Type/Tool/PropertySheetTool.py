@@ -140,7 +140,7 @@ class PropertySheetTool(BaseTool):
         'filesystem to ZODB.'
       mapping = {}
       if failed_import:
-        base_message =+ ' These property sheets failed to be imported: ' \
+        base_message += ' These property sheets failed to be imported: ' \
           '$failed_import . You must update the following business ' \
           'templates to have fixed version of these property sheets: ' \
           '$business_templates'
