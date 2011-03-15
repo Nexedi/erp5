@@ -910,7 +910,7 @@ class TestKMSearch(TestKMMixIn):
   
   business_template_list = TestKMMixIn.business_template_list + ["erp5_km_ui_test_data", "erp5_km_sphinxse_full_text_search"]
 
-  def afterSetUp(self):
+  def setupSphinx(self):
     self.login()
     portal = self.getPortal()
     
@@ -963,6 +963,7 @@ class TestKMSearch(TestKMMixIn):
       until test environment is properly setup.
       See http://www.erp5.org/HowToUseSphinxSE
     """
+    self.setupSphinx()
     portal = self.portal
     website = self.portal.web_site_module.km_test_web_site
     
@@ -987,6 +988,7 @@ class TestKMSearch(TestKMMixIn):
     """
       Test determing list of documents web section.
     """
+    self.setupSphinx()
     portal = self.portal
     website = self.portal.web_site_module.km_test_web_site
     web_page = self.web_page
@@ -1018,8 +1020,6 @@ class TestKMSearch(TestKMMixIn):
     search_result_list = website.WebSite_getFullTextSearchResultList(**kw)
     self.assertSameSet([], \
                        [portal.restrictedTraverse(x) for x in search_result_list[0].section_list])
-
-    
 
 def test_suite():
   suite = unittest.TestSuite()
