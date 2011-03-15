@@ -335,6 +335,8 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
         kw[k] = v
       accessor_name = 'get%sValueList' % ''.join([part.capitalize() for part in base_category.split('_')])
       jump_reference_list = getattr(here, accessor_name)(portal_type=portal_type, filter=kw)
+      if not isinstance(value, (list, tuple)):
+        value = value,
       for jump_reference, display_value in zip(jump_reference_list, value):
         string_list.append('<a href="%s">%s</a>' % \
                 (jump_reference.absolute_url(),
