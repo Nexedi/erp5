@@ -335,10 +335,10 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
         kw[k] = v
       accessor_name = 'get%sValueList' % ''.join([part.capitalize() for part in base_category.split('_')])
       jump_reference_list = getattr(here, accessor_name)(portal_type=portal_type, filter=kw)
-      for jump_reference in jump_reference_list:
+      for jump_reference, display_value in zip(jump_reference_list, value):
         string_list.append('<a href="%s">%s</a>' % \
                 (jump_reference.absolute_url(),
-                  jump_reference.getTitle()))
+                 display_value))
       html_string = '<br />'.join(string_list)
     else:
       html_string = self.default_widget_rendering_instance.render_view(field,
