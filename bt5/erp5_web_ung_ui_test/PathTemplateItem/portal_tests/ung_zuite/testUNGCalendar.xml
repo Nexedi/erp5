@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+<head>\n
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
+  <title tal:content="template/getId"/>\n
+</head>\n
+<body>\n
+  <table cellpadding="1" cellspacing="1" border="1">\n
+    <thead>\n
+      <tr><td rowspan="1" colspan="3" tal:content="template/getId"/></tr>\n
+    </thead><tbody>\n
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForUNG/macros/init" />\n
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForUNG/macros/login" />\n
+      <tr>\n
+        <td>openAndWait</td>\n
+        <td>${ung_url}/calendar</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//span[@class=\'showdayflash\']</td>\n
+        <td>Refresh</td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//span[@title=\'Sunday\']</td>\n
+        <td>Su</td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//span[@class=\'showmonthview\']</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//span[@class=\'showdayview\']</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//input[@name=\'searchable-text\']</td>\n
+        <td>UNG Event</td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//input[@id=\'submit-search\']</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>pause</td>\n
+        <td>1000</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyTextPresent</td>\n
+        <td>No Results</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//td[@id="resultview"]</td>\n
+        <td>Results: 0 to UNG Event</td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//a[@id="back-calendar"]</td>\n
+        <td></td>\n
+      </tr>\n
+    </tbody>\n
+  </table>\n
+</body>\n
+</html>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>testUNGCalendar</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
