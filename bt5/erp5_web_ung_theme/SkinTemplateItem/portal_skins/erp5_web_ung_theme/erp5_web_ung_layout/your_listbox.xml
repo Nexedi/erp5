@@ -206,7 +206,12 @@
                 <item>
                     <key> <string>sort</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>DESC</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
