@@ -30,6 +30,7 @@ import xmlrpclib
 import socket
 
 def updateERP5(args):
+  # FIXME Use a dict
   site_id = args[0]
   mysql_string = args[1]
   base_url = args[2]
@@ -40,7 +41,12 @@ def updateERP5(args):
   bt5_repository_list = []
   if len(args) > 7:
     bt5_repository_list = args[7]
+
+  if len(bt5_list) > 0 and len(bt5_repository_list) == 0:
+    bt5_repository_list = ["http://www.erp5.org/dists/snapshot/bt5"]
   erp5_catalog_storage = "erp5_mysql_innodb_catalog"
+  erp5_site_creation = 0
+  business_templates_setup_finished = 0
   sleep = 60
   while True:
     try:
@@ -53,53 +59,39 @@ def updateERP5(args):
           "erp5_catalog_storage": erp5_catalog_storage,
           "erp5_sql_connection_string": mysql_string,
           "cmf_activity_sql_connection_string": mysql_string, }))
-        print result.read()
-
+        erp5_site_creation = 1
         print "ERP5 Site creation output: %s" % result.read()
 
+      # The site MUST be fresh
+      if erp5_site_creation and business_templates_setup_finished:
         if proxy.isERP5SitePresent() == True:
-          print "Site was created successfuly!"
-
           # Update URL to ERP5 Site
           erp5 = xmlrpclib.ServerProxy("%s/%s" % (base_url, site_id),
                                        allow_none=1)
 
-          # Update Cache Coordinates
-          erp5.portal_memcached.default_memcached_plugin.\
-                setUrlString(memcached_provider)
-
-          # Update and enable System preferrence with ERP5 Site Coordinates.
-          # XXX NO SYSTEM PREFERENCE AS DEFAULT so it is used Default
-          # Preference instead as object creation is not possible by
-          # xmlrpc or post.
-          preference = erp5.portal_preferences.default_site_preference
-          preference.setPreferredOoodocServerAddress(conversion_server_address)
-          preference.setPreferredOoodocServerPortNumber(conversion_server_port)
-          preference.enable()
-
-          if len(bt5_repository_list) > 0:
+          repository_list = erp5.portal_templates.getRepositoryList()
+          if len(bt5_repository_list) > 0 and \
+             set(bt5_repository_list) != set(repository_list):
             erp5.portal_templates.\
                 updateRepositoryBusinessTemplateList(bt5_repository_list, None)
 
-          if len(bt5_list) > 0:
-            # XXX If no repository is provided, use just trunk.
-            if len(erp5.portal_templates.getRepositoryList()) == 0:
-              bt5_repository_list = ["http://www.erp5.org/dists/snapshot/bt5"]
-              erp5.portal_templates.\
-                updateRepositoryBusinessTemplateList(bt5_repository_list, None)
+          installed_bt5_list = erp5.portal_templates.getInstalledBusinessTemplateTitleList()
+          for bt5 in bt5_list:
+            if bt5 not in installed_bt5_list:
+              erp5.portal_templates.installBusinessTemplatesFromRepositories([bt5])
 
-            erp5.portal_templates.\
-              installBusinessTemplatesFromRepositories(bt5_list)
-
-          # The persistent cache is only configurable after install \
-          # erp5_dms.
-          #erp5.portal_memcached.persistent_memcached_plugin.\
-          #       setUrlString(kumo_address)
+          repository_set = set(erp5.portal_templates.getRepositoryList())
+          installed_bt5_list = erp5.portal_templates.getInstalledBusinessTemplateTitleList()
+          
+          if (set(repository_set) == set(bt5_repository_list)) and :
+              len([i for i in bt5_list not in installed_bt5_list])
+            print "Repositories updated and business templates installed."
+            business_templates_setup_finished = 1
       else:
         print "ERP5 site is already present, ignore."
 
     except IOError:
       print "Unable to create the ERP5 Site!"
     except socket.error, e:
-      print "Unable to connect to ZOPE!"
+      print "Unable to connect to ZOPE! %s" % e
     time.sleep(sleep)
