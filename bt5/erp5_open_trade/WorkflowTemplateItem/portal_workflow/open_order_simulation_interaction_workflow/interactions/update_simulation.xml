@@ -58,8 +58,8 @@
               <list>
                 <string>_set.*</string>
                 <string>plan</string>
-                <string>confirm</string>
                 <string>order</string>
+                <string>validate</string>
               </list>
             </value>
         </item>
