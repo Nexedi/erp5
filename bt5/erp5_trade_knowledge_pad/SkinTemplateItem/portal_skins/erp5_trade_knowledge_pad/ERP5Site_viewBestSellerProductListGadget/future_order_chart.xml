@@ -1,0 +1,529 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="OOoChart" module="Products.ERP5Form.OOoChart"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>future_order_chart</string> </value>
+        </item>
+        <item>
+            <key> <string>message_values</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>external_validator_failed</string> </key>
+                    <value> <string>The input failed the external validator.</string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>overrides</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>chart_legend</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>chart_position</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>chart_stacked</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>chart_three_dimensional</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>chart_title_or_no</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>chart_type</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>colour_column_list</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>connect_bars</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>data_label_number</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>data_label_symbol</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>data_label_text</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>deep</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>enabled</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>external_validator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>grid_graph</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>grid_size</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>image_display</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>image_format</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>interpolation</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>lines_used</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>listbox_form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>listbox_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>ooo_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>position_legend</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>regression_type</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>sector_pie_offset</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>series_source</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>symbol_type</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>user_column_id_list</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>user_data_title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>x_axis_property_list</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>y_axis_property_list</string> </key>
+                    <value> <string></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>tales</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>chart_legend</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>chart_position</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>chart_stacked</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>chart_three_dimensional</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>chart_title_or_no</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>chart_type</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>colour_column_list</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>connect_bars</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>data_label_number</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>data_label_symbol</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>data_label_text</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>deep</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>enabled</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>external_validator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>grid_graph</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>grid_size</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>image_display</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>image_format</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>interpolation</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>lines_used</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>listbox_form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>listbox_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>ooo_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>position_legend</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>regression_type</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>sector_pie_offset</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>series_source</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>symbol_type</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>user_column_id_list</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>user_data_title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>x_axis_property_list</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>y_axis_property_list</string> </key>
+                    <value> <string></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>values</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>chart_legend</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>chart_position</string> </key>
+                    <value> <string>false</string> </value>
+                </item>
+                <item>
+                    <key> <string>chart_stacked</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>chart_three_dimensional</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>chart_title_or_no</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>chart_type</string> </key>
+                    <value> <string>chart:circle</string> </value>
+                </item>
+                <item>
+                    <key> <string>colour_column_list</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>getAvailableInventory</string>
+                          <string>00BB44</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>connect_bars</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>data_label_number</string> </key>
+                    <value> <string>none</string> </value>
+                </item>
+                <item>
+                    <key> <string>data_label_symbol</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>data_label_text</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>deep</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>enabled</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>external_validator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>grid_graph</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>grid_size</string> </key>
+                    <value> <string>major</string> </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>image_display</string> </key>
+                    <value> <string>small</string> </value>
+                </item>
+                <item>
+                    <key> <string>image_format</string> </key>
+                    <value> <string>jpg</string> </value>
+                </item>
+                <item>
+                    <key> <string>interpolation</string> </key>
+                    <value> <string>none</string> </value>
+                </item>
+                <item>
+                    <key> <string>lines_used</string> </key>
+                    <value> <string>0</string> </value>
+                </item>
+                <item>
+                    <key> <string>listbox_form_id</string> </key>
+                    <value> <string>ERP5Site_viewBestSellerProductListGadget</string> </value>
+                </item>
+                <item>
+                    <key> <string>listbox_id</string> </key>
+                    <value> <string>listbox</string> </value>
+                </item>
+                <item>
+                    <key> <string>ooo_template</string> </key>
+                    <value> <string>ERP5Site_viewChart</string> </value>
+                </item>
+                <item>
+                    <key> <string>position_legend</string> </key>
+                    <value> <string>end</string> </value>
+                </item>
+                <item>
+                    <key> <string>regression_type</string> </key>
+                    <value> <string>none</string> </value>
+                </item>
+                <item>
+                    <key> <string>sector_pie_offset</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>series_source</string> </key>
+                    <value> <string>columns</string> </value>
+                </item>
+                <item>
+                    <key> <string>symbol_type</string> </key>
+                    <value> <string>none</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Best Sellers Products by Quantity Sold</string> </value>
+                </item>
+                <item>
+                    <key> <string>user_column_id_list</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>user_data_title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>x_axis_property_list</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>y_axis_property_list</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
