@@ -282,6 +282,47 @@ div.listbox-page-navigation button.listbox_next_page span.image {\n
 \n
 div.listbox-page-navigation button.listbox_last_page span.image {\n
   background-image:url(km_img/2rightarrowv.png);\n
+}\n
+\n
+/* Listbox preview */\n
+div.search-details, \n
+span.found{\n
+  padding-top: 5px;\n
+}\n
+\n
+div.search-details .reference-link,\n
+div.search-details .version,\n
+div.search-details .language{\n
+  color: #228822;\n
+}\n
+\n
+div.listbox-search-mode div.maximal-width{\n
+  width: 80%;\n
+}\n
+#listbox-preview-connector{\n
+  height:27px;\n
+  position:absolute;\n
+  left:-10px;\n
+  width:10px;\n
+  top:82px; /* in the middle of #listbox-preview */\n
+  display:inline;\n
+  background: url("left-arrow-connector.png");\n
+}\n
+\n
+#listbox-preview{\n
+  position:relative;\n
+  top:35px; /* will be adjusted by JS */\n
+  width:18%;\n
+  padding-left:5px;\n
+  padding-bottom:15px;\n
+  padding-top:10px;\n
+  background-color:white;\n
+  float:left;\n
+  border:1px solid black;\n
+  -moz-box-shadow:4px 4px 4px rgba(0, 0, 0, 0.5);\n
+  -webkit-box-shadow:4px 4px 4px rgba(0, 0, 0, 0.5);\n
+  min-height:180px;\n
+  z-index:5;\n
 }
 
 ]]></unicode> </value>

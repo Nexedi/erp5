@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts98286735.58</string> </value>
+            <value> <string>ts99855935.94</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -73,38 +73,89 @@ function requestPasswordReset(script_name){\n
   main_form.submit();\n
 };\n
 \n
+//enable or disable right side search result preview\n
+var show_preview=false;\n
 var popup_local_dict={};\n
 var popup_request_dict={};\n
-function showPopik(dom_id, action, path){\n
+\n
+function togglePreview(dom_id,path){\n
   /* \n
-  Show / Hide popup details window up in search mode.\n
+  Enable or disable right preview in search mode listbox style. \n
   */\n
-  var popup = $("#" + dom_id);\n
-  function delayedDocumentDetailsPopupWindowLoad(){\n
-    $.ajax({url:path+"/Document_getPopupInfo", \n
-            success: function(data){\n
-                           popup.html(data);\n
+  listbox_container = $("#"+dom_id).parents("div.listbox-container")\n
+  if(!$("#listbox-preview").length){\n
+    // init only once per listbox\n
+    listbox_container.append(\'<div id="listbox-preview"><img src="ajax-loader.gif" title="Loading" alt="Loading" /><p>Loading...</p> </div>\');\n
+    show_preview=true;\n
+    showPopik(dom_id, path);\n
+  }\n
+  else{\n
+    // we can switch it off\n
+    $("#listbox-preview").remove();\n
+    show_preview=false;}\n
+}\n
+\n
+function formatPreview(dom_id, path){\n
+  /*\n
+    Format visually the popup preview.\n
+  */\n
+  popup = $("#listbox-preview");\n
+  dom_object = $("#"+dom_id);\n
+  parent_row = dom_object.parents("tr").first()\n
+  row_object = dom_object.parents("tr").first();\n
+  class_name = row_object.attr("class"); \n
+  class_name = class_name.replace("listbox-data-line-","");\n
+  class_name = class_name.replace("DataA","");\n
+  class_name = class_name.replace("DataB","");\n
+  row_index = parseInt(class_name);\n
+  //calculate current row offset relative to listbox\'s table.tbody\n
+  offset = parent_row.position("tbody").top - $("tr.listbox-data-line-0").position("tbody").top;\n
+  popup.css("top", offset + "px");\n
+}\n
+\n
+function requestPopupInfo(dom_id, path){\n
+  /*\n
+    Get popup infor from server and cache it locally for page\'s lifetime.\n
+  */\n
+  var popup = $("#listbox-preview");\n
+  popup_request_dict[dom_id] = popup_request_dict;\n
+  $.ajax({url: path + "/Document_getPopupInfo", \n
+          success: function(popup_html){\n
+                           formatPreview(dom_id, path);\n
+                           popup.html(popup_html);\n
                            popup.show();\n
-                           popup_local_dict[dom_id] = data;}});\n
+                           popup_local_dict[dom_id] = popup_html;}});\n
   }\n
   \n
-  if (action){\n
-    if (path==\'\'){popup.show();}\n
-    else{\n
-      // we must request popup info with another request\n
-      popup_html = popup_local_dict[dom_id];\n
-      popup_request = popup_request_dict[dom_id]\n
-      if (popup_html==undefined&&popup_request==undefined){\n
-        popup_request_dict[dom_id] = path;\n
-        setTimeout(delayedDocumentDetailsPopupWindowLoad, 500);\n
-      }\n
-      else{popup.show();}\n
-    }\n
+\n
+function showPopik(dom_id, path){\n
+  /* \n
+    Show / Hide popup details window up in search mode. \n
+  */\n
+  if(!show_preview) return;\n
+  popup = $("#listbox-preview");\n
+  if($("#hidden_popup_listbox_"+dom_id).length){\n
+    // popup info is inline just copy it\n
+    formatPreview(dom_id, path);\n
+    popup_html = $("#hidden_popup_listbox_"+dom_id).html();\n
+    popup.html(popup_html);\n
+    popup.show();\n
+    return\n
   }\n
-  else{popup.hide();}\n
-}\n
- \n
-
+  // we must request popup info with another request\n
+  popup_html = popup_local_dict[dom_id];\n
+  popup_request = popup_request_dict[dom_id];\n
+  if (popup_html==undefined&&popup_request==undefined){\n
+    // still not cached for page\'s lifetime not any pending requests to server\n
+    requestPopupInfo(dom_id, path);\n
+  }\n
+  else{\n
+    // cached for page\'s lifetime\n
+    formatPreview(dom_id, path);\n
+    popup.html(popup_html);\n
+    popup.show();\n
+  }\n
+}
 
 ]]></string> </value>
         </item>
@@ -114,7 +165,7 @@ function showPopik(dom_id, action, path){\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>2648</int> </value>
+            <value> <int>4458</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

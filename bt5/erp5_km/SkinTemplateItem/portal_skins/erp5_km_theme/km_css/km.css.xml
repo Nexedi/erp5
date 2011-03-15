@@ -831,7 +831,7 @@ div.actions button {\n
 }\n
 \n
 /* Search Popup window */\n
-div.search_popup {\n
+/*div.search_popup {\n
   background-color: #FFFFFF;\n
   border: 1px solid black;\n
   display: none;\n
@@ -841,12 +841,7 @@ div.search_popup {\n
   top: 130px;\n
   width: 150px;\n
   z-index: 100;\n
-}\n
-\n
-/* Search listbox styling */\n
-div.searchDetails, span.found{\n
-  padding-top: 5px;\n
-}\n
+}*/\n
 \n
 /* Download Document in various format widget */\n
 div.download-document-format-list-container{\n
@@ -1108,9 +1103,12 @@ table tbody tr td {\n
   -webkit-transition-timing-function: linear;\n
 }\n
 \n
-.section {\n
+.section, \n
+.owner {\n
   border-bottom: 1px solid #e9e9e9;\n
+  margin-right:5px;\n
 }\n
+\n
 \n
 \n
 /* ## link styling ################################### start # */\n
@@ -1276,22 +1274,6 @@ span.found em{\n
   font-weight: bold;\n
 }\n
 \n
-div.searchDetails a.section-link{\n
-  color: inherit;\n
-}\n
-\n
-div.searchDetails a.reference-link{\n
-  color: #228822;\n
-}\n
-\n
-div.searchDetails a.owner-link{\n
-  color: inherit;\n
-}\n
-\n
-div.searchDetails a.modification-date-link{\n
-  color: inherit;\n
-}\n
-\n
 /* workflow states  colors*/\n
  .draft-state { \n
   color:#4574cb; \n
@@ -1299,7 +1281,8 @@ div.searchDetails a.modification-date-link{\n
  .published-state, .released-state, .shared-state { \n
   color: green; \n
 }\n
-.hidden-state{\n
+.hidden-state,\n
+.deleted-state{\n
   color:red;\n
 }\n
 .archived-state{\n
@@ -1440,6 +1423,70 @@ a.history-link{\n
 li.toolboxSection > div{\n
   bottom:0px;\n
 }\n
+\n
+/* Buttons */\n
+#add_new_gadget_link {\n
+  margin-top:6px;\n
+}\n
+\n
+#stick-gadgets span, \n
+#add-gadgets span {\n
+  display:block;\n
+}\n
+\n
+#stick-gadgets,\n
+#add-gadgets{\n
+  padding:5px 10px;\n
+  height: auto;\n
+  width:auto;\n
+  margin-left: 5px;\n
+}\n
+\n
+div.listbox-action-widget span.description {\n
+  font-size:12px;\n
+}\n
+\n
+.listbox_actions_title{\n
+  display: none;\n
+}\n
+div.listbox-action-widget div.bottom_actions {\n
+  background-color:transparent;\n
+  padding:0em;\n
+}\n
+\n
+div.listbox-action-widget button, \n
+div.listbox-action-widget a.button,\n
+div.listbox-action-widget button > span, \n
+div.listbox-action-widget a > span,\n
+button.formbt, \n
+button.formbt > span,\n
+button.bt-med, \n
+button.bt-med span,\n
+#stick-gadgets,\n
+#add-gadgets {\n
+  background:transparent;\n
+  background-color:#A8A799;\n
+  color: white;\n
+  -webkit-border-radius:4px;\n
+  -moz-border-radius:4px;\n
+  border-radius:4px;\n
+  font-size: 12px;\n
+  font-weight: normal;\n
+}\n
+\n
+\n
+button.formbt {\n
+  height:auto;\n
+  margin-left:5px;\n
+  padding:0 10px 0 0;\n
+}\n
+\n
+button.formbt > span{\n
+  height:auto;\n
+  padding:0;\n
+}\n
+\n
+\n
 </tal:block>
 
 ]]></unicode> </value>
