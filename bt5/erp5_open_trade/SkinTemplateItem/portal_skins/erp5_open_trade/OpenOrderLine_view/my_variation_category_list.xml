@@ -287,7 +287,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getVariationRangeCategoryItemList(display_base_category = 0)</string> </value>
+            <value> <string>python: here.getVariationRangeCategoryItemList(display_base_category=0, display_id=\'translated_title\')</string> </value>
         </item>
       </dictionary>
     </pickle>

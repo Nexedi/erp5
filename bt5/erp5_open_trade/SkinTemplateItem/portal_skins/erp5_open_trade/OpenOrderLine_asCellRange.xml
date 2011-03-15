@@ -58,9 +58,9 @@ if resource is not None:\n
   base_category_list = resource.getVariationBaseCategoryList(omit_optional_variation=1)\n
 \n
   for base_category in base_category_list:\n
-    if matrixbox == 1:\n
+    if matrixbox:\n
       # XXX matrixbox is right_display (not as listfield) => invert display and value in item\n
-      cell_range.append( map(lambda x: (x[1],x[0]), context.getVariationCategoryItemList(base_category_list = (base_category,) ) ) )\n
+      cell_range.append( map(lambda x: (x[1],x[0]), context.getVariationCategoryItemList(base_category_list=(base_category,), display_id=\'translated_title\' ) ) )\n
     else:\n
       cell_range.append( context.getVariationCategoryList(base_category_list = (base_category,) ) )\n
 \n
