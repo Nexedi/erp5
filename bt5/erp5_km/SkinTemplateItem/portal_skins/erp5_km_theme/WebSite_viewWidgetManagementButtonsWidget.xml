@@ -47,33 +47,17 @@
   This widget displays buttons used to add or stick widgets\n
   -->\n
 </tal:block>\n
-<tal:block tal:condition="here/Base_canUserAddGadget">\n
-  <tal:block tal:define="\n
-                mode python: \'web_section\';\n
-                default_pad_group python: options.get(\'default_pad_group\', None);\n
-                knowledge_pads python: here.ERP5Site_getKnowledgePadListForUser(mode=mode,\n
-                                                         default_pad_group=default_pad_group);\n
-                struct python: here.ERP5Site_getActiveKnowledgePadForUser(knowledge_pads, default_pad_group);\n
-                active_knowledge_pad python: struct[0];\n
-                current_web_section python:\n
-                    context.REQUEST.get(\'current_web_section\', here);\n
-                current_web_section python:\n
-                  test(current_web_section.getPortalType()==\'Web Site\',\n
-                                               here, current_web_section);\n
-                current_web_section_url python: current_web_section.absolute_url();\n
-                isKnowledgePadTemplateUsed python:\n
-                  request.get(\'is_knowledge_pad_template_used\', 0);\n
-                editable_mode python: context.REQUEST.get(\'editable_mode\', False);\n
-                cancel_url string:${current_web_section_url}/view">\n
 \n
-    <ul tal:condition="active_knowledge_pad"\n
-        class="widget_management_box">\n
-      <li>\n
-        <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/add_new_gadget"> Add Gadgets</span>\n
-        <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/stick"> Stick/Unstick</span>\n
-      </li>\n
-    </ul>\n
-  </tal:block>\n
+<span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/global_definitions"/>\n
+\n
+<tal:block tal:condition="here/Base_canUserAddGadget">\n
+  <ul tal:condition="python: active_knowledge_pad is not None"\n
+      class="widget_management_box">\n
+    <li>\n
+      <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/add_new_gadget"> Add Gadgets</span>\n
+      <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/stick"> Stick/Unstick</span>\n
+    </li>\n
+  </ul>\n
 </tal:block>
 
 ]]></unicode> </value>
