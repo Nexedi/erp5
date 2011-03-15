@@ -138,7 +138,7 @@ if (request_software_instance is None):\n
     open_order = portal.portal_catalog.getResultValue(\n
       default_destination_section_uid=person.getUid(),\n
       portal_type="Open Sale Order",\t \t \n
-      simulation_state="started")\n
+      validation_state="validated")\n
     if open_order is None:\n
       person_slap_interface_state = person.getSlapState()\n
       if person_slap_interface_state == \'open_order_created\':\n
@@ -153,7 +153,7 @@ if (request_software_instance is None):\n
               title="ViFiB Open Order")\n
         person.createOpenOrder(open_order_url=open_order.getRelativeUrl())\n
         open_order.order()\n
-        open_order.start()\n
+        open_order.validate()\n
 \n
     open_order.newContent(\n
       portal_type="Open Sale Order Line",\n
