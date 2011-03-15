@@ -53,8 +53,21 @@
             <value> <string>configuration_save = context.restrictedTraverse(configuration_save_url)\n
 \n
 # specify is bt5 is a public or not\n
-bt5_installation_list = ((\'erp5_configurator_standard_categories\', True,),\n
-                         )\n
+bt5_installation_list = ((\'erp5_simulation\', True,),\n
+                         (\'erp5_dhtml_style\', True,),\n
+                         (\'erp5_jquery\', True,),\n
+                         (\'erp5_jquery_ui\', True,),\n
+                         (\'erp5_xhtml_jquery_style\', True,),\n
+                         (\'erp5_crm\', True,), \n
+                         (\'erp5_pdm\', True,),\n
+                         (\'erp5_trade\', True),\n
+                         (\'erp5_knowledge_pad\', True),\n
+                         (\'erp5_accounting\', True),\n
+                         (\'erp5_tax_resource\', True),\n
+                         (\'erp5_discount_resource\',True),\n
+                         (\'erp5_invoicing\', True),\n
+                         (\'erp5_configurator_standard_categories\', True,),\n
+                        )\n
 \n
 for name in bt5_installation_list:\n
   configuration_save.addConfigurationItem("Standard BT5 Configurator Item",\n
