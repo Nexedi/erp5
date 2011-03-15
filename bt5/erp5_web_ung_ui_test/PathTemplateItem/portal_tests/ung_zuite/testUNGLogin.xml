@@ -164,6 +164,11 @@
         <td>//input[@type="submit"]</td>\n
         <td></td>\n
       </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//div[@class=" navigation-right"]/fieldset/div/div/a[2]</td>\n
+        <td>ung_user</td>\n
+      </tr>     \n
     </tbody>\n
   </table>\n
 </body>\n
