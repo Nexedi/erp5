@@ -78,23 +78,27 @@ class ImmobilisableItem(XMLObject, Amount):
                       , PropertySheet.Amortisation
                       )
 
-    zope.interface.implements(interfaces.IExpandableItem,)
+    # FIXME: ImmobilisableItem have to implement IExpandableItem, but they do
+    # not have 'expand' method at the time beeing, simulation methods used here
+    # have different names.
 
-    # IExpandableItem interface implementation
-    def getSimulationMovementSimulationState(self, simulation_movement):
-      """Returns the simulation state for this simulation movement.
-      """
-      portal = self.getPortalObject()
-      draft_state_list = portal.getDraftOrderStateList()
-      # if we have an order which is not draft, we'll consider the generated
-      # simulation movement are planned.
-      # This is probably oversimplified implementation, as we may want to look
-      # deliveries / invoices.
-      for movement in self.getAggregateRelatedValueList(
-          portal_type=portal.getPortalOrderMovementTypeList(),):
-        if movement.getSimulationState() not in draft_state_list:
-          return 'planned'
-      return 'draft'
+##     zope.interface.implements(interfaces.IExpandableItem,)
+## 
+##     # IExpandableItem interface implementation
+##     def getSimulationMovementSimulationState(self, simulation_movement):
+##       """Returns the simulation state for this simulation movement.
+##       """
+##       portal = self.getPortalObject()
+##       draft_state_list = portal.getDraftOrderStateList()
+##       # if we have an order which is not draft, we'll consider the generated
+##       # simulation movement are planned.
+##       # This is probably oversimplified implementation, as we may want to look
+##       # deliveries / invoices.
+##       for movement in self.getAggregateRelatedValueList(
+##           portal_type=portal.getPortalOrderMovementTypeList(),):
+##         if movement.getSimulationState() not in draft_state_list:
+##           return 'planned'
+##       return 'draft'
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getImmobilisationRelatedMovementList')
