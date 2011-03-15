@@ -16,12 +16,14 @@ DRAW_URI = 'urn:oasis:names:tc:opendocument:xmlns:drawing:1.0'
 TEXT_URI = 'urn:oasis:names:tc:opendocument:xmlns:text:1.0'
 FORM_URI = 'urn:oasis:names:tc:opendocument:xmlns:form:1.0'
 OFFICE_URI = 'urn:oasis:names:tc:opendocument:xmlns:office:1.0'
+STYLE_URI = 'urn:oasis:names:tc:opendocument:xmlns:style:1.0'
 
 NSMAP = {
           'draw': DRAW_URI,
           'text': TEXT_URI,
           'form': FORM_URI,
           'office': OFFICE_URI,
+          'style': STYLE_URI,
         }
 
 EForm = ElementMaker(namespace=FORM_URI, nsmap=NSMAP)
@@ -1752,6 +1754,9 @@ class IntegerWidget(TextWidget) :
     text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
     text_node.text = str(value)
     attr_dict['{%s}value' % OFFICE_URI] = str(value)
+    formula_attribute_name = '{%s}formula' % TEXT_URI
+    if formula_attribute_name in attr_dict:
+      del attr_dict[formula_attribute_name]
     text_node.attrib.update(attr_dict)
     if as_string:
       return etree.tostring(text_node)
