@@ -36,7 +36,7 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<tal:block tal:define="owner python: options.get(\'owner\', None);\n
+<tal:block tal:define="owner_list python: options.get(\'owner_list\', None);\n
                        modification_date python: options.get(\'modification_date\', None);\n
                        release_date python: options.get(\'release_date\', None);\n
                        publication_date python: options.get(\'publication_date\', None);\n
@@ -47,20 +47,57 @@
                        language python: options.get(\'language\', None);\n
                        version python: options.get(\'version\', None);\n
                        thumbnail_url python: options.get(\'thumbnail_url\', None);\n
+                       url python: options.get(\'url\', None);\n
+                       sections python: options.get(\'sections\', None);\n
                        format python: request.get(\'format\', context.portal_preferences.getPreference(\'preferred_image_format\', \'png\'));\n
                        quality python: request.get(\'format\', context.portal_preferences.getPreference(\'preferred_image_quality\', \'75.0\'))">\n
 \n
+  <span id="listbox-preview-connector"></span>\n
+\n
   <div class="popup_row" tal:condition="thumbnail_url">\n
-    <img alt="Thumbnail" \n
+    <a tal:attributes="href url">\n
+      <img alt="Thumbnail" \n
          i18n:translate="alt" i18n:domain="ui"\n
          tal:attributes="src string:${thumbnail_url}?display=thumbnail&amp;format=${format}&amp;quality=${quality}"/>\n
+    </a>\n
+  </div>\n
+\n
+  <div class="popup_row" tal:condition="reference">    \n
+    <span class="popup_label" \n
+          i18n:translate="" i18n:domain="ui">Reference:</span>\n
+    <span class="reference"\n
+          tal:content="reference|nothing"/>\n
+  </div>\n
+\n
+  <div class="popup_row" tal:condition="version">    \n
+    <span class="popup_label" \n
+          i18n:translate="" i18n:domain="ui">Version:</span>\n
+    <span class="version"\n
+          tal:content="version|nothing"/>\n
+  </div>\n
+\n
+  <div class="popup_row" tal:condition="language">    \n
+    <span class="popup_label" \n
+          i18n:translate="" i18n:domain="ui">Language:</span>\n
+    <span class="language"\n
+          tal:content="language|nothing"/>\n
+  </div>  \n
+    \n
+  <div class="popup_row" tal:condition="project">\n
+    <span class="popup_label " \n
+          i18n:translate="" i18n:domain="ui">Project:</span>\n
+    <span class="project"\n
+          tal:content="project|nothing"/>\n
   </div>\n
   \n
-  <div class="popup_row" tal:condition="owner">\n
+  <div class="popup_row" tal:condition="owner_list">\n
     <span class="popup_label" \n
-          i18n:translate="" i18n:domain="ui">Owners:</span>\n
-    <span class="owner" \n
-          tal:content="owner|nothing"/>\n
+          i18n:translate="" i18n:domain="ui">Owner:</span>\n
+    <span tal:repeat="owner owner_list"\n
+          class="owner">\n
+      <a tal:attributes="href owner/url"\n
+         tal:content="owner/title"/>\n
+    </span>\n
   </div> \n
   \n
   <div class="popup_row" tal:condition="modification_date">\n
@@ -83,49 +120,24 @@
     <span class="publication_date"\n
           tal:content="publication_date|nothing"/>\n
   </div>\n
+\n
+  <div class="popup_row" tal:condition="sections">  \n
+    <span class="popup_label" \n
+          i18n:translate="" i18n:domain="ui">Section:</span>\n
+    <span tal:repeat="section sections"\n
+          class="section">\n
+      <a tal:attributes="href section/url"\n
+         tal:content="section/title"/>\n
+    </span>\n
+  </div>\n
   \n
   <div class="popup_row" tal:condition="status">    \n
     <span class="popup_label" \n
-          i18n:translate="" i18n:domain="ui">Status:</span>\n
-    <span class="status"\n
+          i18n:translate="" i18n:domain="ui">State:</span>\n
+    <span tal:attributes="class python:\'%s-state\' %status.lower()"\n
           tal:content="status|nothing"/>\n
   </div>\n
-\n
-  <div class="popup_row" tal:condition="reference">    \n
-    <span class="popup_label" \n
-          i18n:translate="" i18n:domain="ui">Reference:</span>\n
-    <span class="reference"\n
-          tal:content="reference|nothing"/>\n
-  </div>\n
-\n
-  <div class="popup_row" tal:condition="language">    \n
-    <span class="popup_label" \n
-          i18n:translate="" i18n:domain="ui">Language:</span>\n
-    <span class="language"\n
-          tal:content="language|nothing"/>\n
-  </div>  \n
-    \n
-  <div class="popup_row" tal:condition="version">    \n
-    <span class="popup_label" \n
-          i18n:translate="" i18n:domain="ui">Version:</span>\n
-    <span class="version"\n
-          tal:content="version|nothing"/>\n
-  </div>  \n
-  \n
-  <div class="popup_row" tal:condition="group">\n
-    <span class="popup_label" \n
-          i18n:translate="" i18n:domain="ui">Group:</span>\n
-    <span class="group"\n
-          tal:content="group|nothing"/>\n
-  </div>\n
-    \n
-  <div class="popup_row" tal:condition="project">\n
-    <span class="popup_label " \n
-          i18n:translate="" i18n:domain="ui">Project:</span>\n
-    <span class="project"\n
-          tal:content="project|nothing"/>\n
-  </div>\n
-    \n
+   \n
 </tal:block>
 
 ]]></unicode> </value>

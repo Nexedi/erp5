@@ -12,7 +12,9 @@
         </item>
         <item>
             <key> <string>_Cacheable__manager_id</string> </key>
-            <value> <string>http_cache</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -60,10 +62,8 @@
 """\n
 from zExceptions import Unauthorized\n
 \n
-translateString = context.Base_translateString\n
 doc_info = {}\n
-owner_list = context.Base_getOwnerInfoList()\n
-doc_info[\'owner\'] = \'; \'.join([owner[\'title\'] for owner in owner_list])\n
+doc_info[\'owner_list\'] = context.Base_getOwnerInfoList()\n
 \n
 if context.getModificationDate() is not None:\n
   doc_info[\'modification_date\'] = context.WebSite_getFancyRelativeDate(context.getModificationDate())\n
@@ -119,6 +119,7 @@ for websection in website.getWebSectionValueList(context):\n
   sections.append({\'title\': websection.getCompactTranslatedTitle(),\n
                    \'url\': websection.absolute_url()})\n
 doc_info[\'sections\'] = sections\n
+doc_info[\'url\'] = context.absolute_url()\n
 \n
 return context.Document_viewPopupTemplate(**doc_info)\n
 </string> </value>
