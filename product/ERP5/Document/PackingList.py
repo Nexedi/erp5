@@ -80,17 +80,6 @@ class PackingList(Delivery):
                       , PropertySheet.Order
                       )
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
-                              'isDivergent')
-    def isDivergent(self,**kw):
-      """
-        Returns 1 if not simulated or inconsistent target and values
-      """
-      if self.getSimulationState() not in self.getPortalDraftOrderStateList():
-        if not self.isSimulated():
-          return 1
-      return Delivery.isDivergent(self, **kw)
-
     #######################################################
     # Container computation
     security.declareProtected(Permissions.AccessContentsInformation, 
