@@ -1,4 +1,7 @@
 2010-12-28 gabriel
+* Added erp5_full_text_myisam_catalog as dependency
+
+2010-12-28 gabriel
 * Added new UNG Preference tab to preferences. For now, this tab contains one field to choose the theme for sheet editor.
 
 2010-12-27 gabriel
