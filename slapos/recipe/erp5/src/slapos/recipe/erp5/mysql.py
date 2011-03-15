@@ -14,6 +14,7 @@ def runMysql(args):
   if not os.path.isdir(os.path.join(conf['data_directory'], 'mysql')):
     while True:
       # XXX: Protect with proper root password
+      # XXX: Follow http://dev.mysql.com/doc/refman/5.0/en/default-privileges.html
       popen = subprocess.Popen([conf['mysql_install_binary'],
         '--skip-name-resolve', '--no-defaults', '--datadir=%s' %
         conf['data_directory']],
