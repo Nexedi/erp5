@@ -95,6 +95,26 @@
         <td></td>\n
       </tr>\n
       <tr>\n
+        <td>click</td>\n
+        <td>//a[@name="document_title"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//input[@id="name"]</td>\n
+        <td>Functional UNG Test</td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//div[@class="ui-dialog-buttonset"]/button[1]/span</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//a[@name="document_title"]</td>\n
+        <td>Functional UNG Test</td>\n
+      </tr>\n
+      <tr>\n
         <td>verifyTextNotPresent</td>\n
         <td>All Documents</td>\n
         <td></td>\n
@@ -108,6 +128,21 @@
         <td>verifyText</td>\n
         <td>//a[@class="tree-open"]</td>\n
         <td>All Documents</td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//input[@name="field_your_search_text"]</td>\n
+        <td>Functional UNG Test</td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//input[@value="Search Docs"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyTextNotPresent</td>\n
+        <td>No result.</td>\n
+        <td></td>\n
       </tr>\n
       <tr>\n
         <td>openAndWait</td>\n
@@ -185,6 +220,11 @@
         <td></td>\n
       </tr>\n
       <tr>\n
+        <td>setTimeout</td>\n
+        <td>30000</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
         <td>verifyTextNotPresent</td>\n
         <td>No result.</td>\n
         <td></td>\n
@@ -202,6 +242,11 @@
       <tr>\n
         <td>clickAndWait</td>\n
         <td>//button[@class="delete"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>setTimeout</td>\n
+        <td>2000</td>\n
         <td></td>\n
       </tr>\n
       <tr>\n
