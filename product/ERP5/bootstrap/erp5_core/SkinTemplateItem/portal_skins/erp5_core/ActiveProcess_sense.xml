@@ -53,6 +53,8 @@
             <value> <string encoding="cdata"><![CDATA[
 
 for result in context.getResultList():\n
+  if result is None:\n
+    continue # Workaround for bogus results\n
   # This is useful is result is returned as a Return instance\n
   if result.severity > result.INFO:\n
     return True\n
