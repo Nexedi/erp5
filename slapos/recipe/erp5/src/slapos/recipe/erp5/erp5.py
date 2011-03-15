@@ -63,6 +63,7 @@ def updateERP5(args):
 
       if erp5_site_created and not business_template_setup_finished:
         if proxy.isERP5SitePresent() == True:
+          print "Start to set initial business template setup."
           # Update URL to ERP5 Site
           erp5 = xmlrpclib.ServerProxy("%s/%s" % (base_url, site_id),
                                        allow_none=1)
@@ -83,7 +84,7 @@ def updateERP5(args):
           repository_set = set(erp5.portal_templates.getRepositoryList())
           installed_bt5_list = erp5.portal_templates.getInstalledBusinessTemplateTitleList()
           if (set(repository_set) == set(bt5_repository_list)) and \
-              len([i for i in bt5_list not in installed_bt5_list]):
+              len([i for i in bt5_list if i not in installed_bt5_list]) == 0:
             print "Repositories updated and business templates installed."
             business_template_setup_finished = 1
       else:
