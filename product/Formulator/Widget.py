@@ -1570,17 +1570,18 @@ class DateTimeWidget(Widget):
     if not value and field.get_value('default_now'):
       value = DateTime()
     text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
-    # http://www.w3.org/TR/2004/REC-xmlschema-2-20041028/#dateTime
-    attr_dict['{%s}date-value' % OFFICE_URI] = value.ISO8601()
-    # According http://wiki.services.openoffice.org/wiki/Documentation/How_Tos/Calc:_Date_%26_Time_functions
-    # default offset is 30/12/1899
-    number_of_second_in_day = 86400 #24 * 60 * 60
-    timestamp = float(value)
-    # XXX Works only if the timezone is the same in OpenOffice
-    ooo_offset_timestamp = float(DateTime(1899, 12, 30))
-    days_value = (timestamp - ooo_offset_timestamp) / number_of_second_in_day
-    attr_dict['{%s}formula' % TEXT_URI] = 'ooow:%f' % days_value
-    text_node.attrib.update(attr_dict)
+    if value:
+      # http://www.w3.org/TR/2004/REC-xmlschema-2-20041028/#dateTime
+      attr_dict['{%s}date-value' % OFFICE_URI] = value.ISO8601()
+      # According http://wiki.services.openoffice.org/wiki/Documentation/How_Tos/Calc:_Date_%26_Time_functions
+      # default offset is 30/12/1899
+      number_of_second_in_day = 86400 #24 * 60 * 60
+      timestamp = float(value)
+      # XXX Works only if the timezone is the same in OpenOffice
+      ooo_offset_timestamp = float(DateTime(1899, 12, 30))
+      days_value = (timestamp - ooo_offset_timestamp) / number_of_second_in_day
+      attr_dict['{%s}formula' % TEXT_URI] = 'ooow:%f' % days_value
+      text_node.attrib.update(attr_dict)
     if as_string:
       return etree.tostring(text_node)
     return text_node
