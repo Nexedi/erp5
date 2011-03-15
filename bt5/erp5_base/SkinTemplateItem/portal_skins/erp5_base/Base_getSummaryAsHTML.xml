@@ -50,16 +50,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""\n
-  Generate a HTML Summary in search result mode.\n
+            <value> <string>"""\n
+  Generate a HTML Summary of an object.\n
   Use "No ZODB" approach if possible.  \n
 """\n
 request = context.REQUEST\n
-is_temp_object = context.isTempObject()\n
-is_web_mode = request.get(\'is_web_mode\', False)\n
 portal = context.getPortalObject()\n
+is_temp_object = context.isTempObject()\n
 \n
 if not is_temp_object:\n
   web_site = request.get(\'current_web_site\', context.getWebSiteValue())\n
@@ -67,108 +64,68 @@ else:\n
   web_site = portal.restrictedTraverse(context.web_site)\n
 web_site_url = web_site.absolute_url()\n
 \n
-\n
-def getOwnerHTML():\n
-  html = []\n
-  if is_temp_object:\n
-     html.append(\'<a href="Base_redirectToPersonByReference?reference=%s" class="owner-link"/> %s </a>\' \\\n
-                   %(context.owner, context.owner))\n
-  else:\n
-    owners = context.Base_getOwnerInfoList()\n
-    for owner in owners:\n
-      html.append(\'<a href="%s" class="owner-link"/>%s</a>\' %(owner[\'url\'], owner[\'title\']))\n
-  return "".join(html)\n
-\n
-def getReferenceHTML():\n
-  html = ""\n
-  if is_temp_object:\n
-    reference = context.reference\n
-    permanent_url = \'%s/%s\' %(web_site_url, context.path)\n
-    document_web_section_list = [web_site.restrictedTraverse(x) for x in context.section_list]\n
-  else:\n
-    reference = context.getReference()\n
-    permanent_url = web_site.getPermanentURL(context)\n
-    document_web_section_list = web_site.getWebSectionValueList(context)\n
-  if reference:\n
-      html += \'<a href="%s" class="reference-link">%s</a>\' %(permanent_url, reference)\n
-  for section in document_web_section_list:\n
-      html += \'<a href="%s" class="section-link">%s</a>\' %(section.absolute_url(), section.getCompactTranslatedTitle())\n
-  return html\n
-\n
 if is_temp_object:\n
   uid = context.uid\n
   url = context.path\n
   title = context.title\n
-  popup = \'Loading ..\'\n
   path = context.path\n
-  modification_date = context.Base_FormatDate(context.modification_date)\n
+  version = context.version\n
+  language = context.language\n
+  modification_date = context.modification_date\n
   found = context.text\n
   portal_type = context.object_portal_type\n
-  owner_html = getOwnerHTML()\n
+  # empty as we still have no ZODB object to render it (it will be done with AJAX\n
+  inline_popup = None\n
+  owner_url = "Base_redirectToPersonByReference?reference=%s" %context.owner\n
+  owner_title = context.owner\n
+  reference = context.reference\n
+  reference_url = \'%s/%s\' %(web_site_url, path)\n
+  document_web_section_list = [web_site.restrictedTraverse(x) for x in context.section_list]\n
 else:\n
   # a real ZODB object\n
   uid = context.getUid()\n
   url = context.absolute_url()\n
   title = context.getTitle() or (hasattr(context, \'getReference\') and context.getReference()) or context.getId()\n
-  portal_type = context.getTranslatedPortalType()\n
-  popup = context.Document_getPopupInfo(web_site)\n
-  if isinstance(popup, unicode):\n
-    popup = popup.encode(\'utf-8\')\n
+  path = context.getRelativeUrl()\n
+  version = context.getVersion()\n
+  language = context.getLanguage()\n
+  modification_date = context.modification_date\n
+  inline_popup = context.Document_getPopupInfo(web_site)\n
+  if isinstance(inline_popup, unicode):\n
+    inline_popup = inline_popup.encode(\'utf-8\')\n
   found = context.Base_showFoundText()\n
-  owner_html = getOwnerHTML()\n
-  modification_date = context.Base_FormatDate(context.modification_date)\n
-  path = \'\'\n
+  portal_type = context.getTranslatedPortalType()\n
+  owner_list = context.Base_getOwnerInfoList()\n
+  if len(owner_list):\n
+    owner_url = owner_list[0]["url"]\n
+    owner_title = owner_list[0]["title"]\n
+  else:\n
+    owner_url = None\n
+    owner_title = None\n
+  reference = context.getReference\n
+  reference_url = web_site.getPermanentURL(context)\n
+  document_web_section_list = web_site.getWebSectionValueList(context)\n
 \n
 local_parameter_dict = {\n
   \'uid\': uid,\n
   \'url\': url,\n
   \'title\': title,\n
-  \'reference_html\': getReferenceHTML(),\n
   \'portal_type\': portal_type,\n
-  \'popup\': popup,\n
   \'found\': found,\n
-  \'owner_html\': owner_html,\n
   \'modification_date\': modification_date,\n
   \'path\': path,\n
-}\n
+  \'version\': version,\n
+  \'language\': language,\n
+  \'owner_url\': owner_url,\n
+  \'owner_title\': owner_title,\n
+  \'reference\': reference,\n
+  \'reference_url\': reference_url,\n
+  \'document_web_section_list\': document_web_section_list,\n
+  \'inline_popup\': inline_popup}\n
 \n
-html = """\n
-      <div onmouseout="showPopik(\'dom_popup_listbox_%(uid)s\', false, \'%(path)s\')"            \n
-           onmouseover="showPopik(\'dom_popup_listbox_%(uid)s\', true, \'%(path)s\')" \n
-           class="item_nohighlight">   \n
-        <div id="dom_popup_listbox_%(uid)s"\n
-             class="search_popup" \n
-             style="z-index: 100; display: none;">\n
-        %(popup)s\n
-        </div>\n
-        <div>  \n
-          <a href="%(url)s">\n
-              <span class="search_result_title">%(title)s</span>\n
-              <span class="search_result_portal_type">%(portal_type)s</span>\n
-          </a>\n
-        </div>\n
-\n
-        <span class="searchDetails found">\n
-          %(found)s\n
-        </span>\n
-\n
-        <div class="searchDetails coordinates">\n
-          %(reference_html)s\n
-\n
-          %(owner_html)s\n
-\n
-          <a class="history-link" href="%(url)s/Base_viewHistory">\n
-            %(modification_date)s\n
-          </a>\n
-               \n
-        </div>\n
-      \n
-    </div>""" % local_parameter_dict\n
-\n
+html = context.Base_viewSummaryAsHTML(**local_parameter_dict)\n
 return html\n
-
-
-]]></string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

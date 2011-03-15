@@ -1,0 +1,147 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<tal:block tal:define="uid options/uid;\n
+                       path options/path;\n
+                       title options/title;\n
+                       portal_type options/portal_type;\n
+                       url options/url;\n
+                       found options/found;\n
+                       version options/version;\n
+                       language options/language;\n
+                       owner_url options/owner_url;\n
+                       owner_title options/owner_title;\n
+                       reference options/reference;\n
+                       reference_url options/reference_url;\n
+                       document_web_section_list options/document_web_section_list;\n
+                       modification_date python: context.Base_FormatDate(options[\'modification_date\']);\n
+                       inline_popup options/inline_popup">\n
+\n
+  <div class="search-text-summary"\n
+       tal:attributes="id uid;\n
+                       onmouseover string:showPopik(\'${uid}\', \'${path}\')">   \n
+\n
+    <div style="display: none;"\n
+         tal:condition="inline_popup"\n
+         tal:attributes="id string:hidden_popup_listbox_${uid}"\n
+         tal:content="structure inline_popup"/>\n
+\n
+    <div class="search-header">  \n
+\n
+      <a tal:attributes="href url">\n
+        <span class="search_result_title"\n
+              tal:content="title"/>\n
+        <span class="search_result_portal_type"\n
+              tal:content="portal_type"/>\n
+      </a>\n
+\n
+      <img src="km_img/find.png" \n
+           tal:attributes="onClick string:togglePreview(\'${uid}\', \'${path}\')"\n
+           title="Turn On / Off preview"/>\n
+\n
+    </div>\n
+\n
+    <span class="search-details found"\n
+          tal:content="structure found"/>\n
+\n
+    <div class="search-details coordinates">\n
+      \n
+      <a class="reference-link"\n
+         tal:content="reference"\n
+         tal:attributes="href reference_url"\n
+         title="Reference"/>\n
+\n
+      - <span class="version" \n
+              tal:content="version"\n
+              title="Version"/>\n
+      - <span class="language" \n
+              tal:content="language"\n
+              title="Language"/>\n
+\n
+      <tal:block tal:condition="document_web_section_list">\n
+        - \n
+        <a class="section-link"\n
+           tal:repeat="section document_web_section_list"\n
+           tal:attributes="href section/absolute_url"\n
+           tal:content="section/getCompactTranslatedTitle"\n
+           title="Publication section"/>\n
+      </tal:block>\n
+\n
+      <tal:block tal:condition="python: owner_title is not None and owner_url is not None">\n
+        -<a class="owner-link" \n
+            tal:attributes="href owner_url"\n
+            tal:content="owner_title"\n
+            title="Owner"/>\n
+      </tal:block> \n
+\n
+      -<a class="history-link" \n
+         tal:attributes="href string:${url}/Base_viewHistory"\n
+         tal:content="modification_date"\n
+         title="Modification date"/>\n
+               \n
+    </div>\n
+  </div>\n
+\n
+</tal:block>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_viewSummaryAsHTML</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
