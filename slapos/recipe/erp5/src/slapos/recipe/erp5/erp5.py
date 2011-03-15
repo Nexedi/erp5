@@ -26,38 +26,80 @@
 ##############################################################################
 import time
 import urllib
+import xmlrpclib
+import socket
 
 def updateERP5(args):
-  base_url = args[2]
-  mysql_string = args[1]
   site_id = args[0]
-  sleep = 30
+  mysql_string = args[1]
+  base_url = args[2]
+  memcached_provider = args[3]
+  conversion_server_address = args[4]
+  conversion_server_port = args[5]
+  bt5_list = args[6]
+  bt5_repository_list = []
+  if len(args) > 7:
+    bt5_repository_list = args[7]
+  erp5_catalog_storage = "erp5_mysql_innodb_catalog"
+  sleep = 60
   while True:
     try:
-      test_url = '%s/%s/getId' % (base_url, site_id)
-      result = urllib.urlopen(test_url).read()
-      # XXX This result should be more assertive
-      if result != site_id:
+      proxy = xmlrpclib.ServerProxy(base_url)
+      if proxy.isERP5SitePresent() == False:
         url = '%s/manage_addProduct/ERP5/manage_addERP5Site' % base_url
         result = urllib.urlopen(url, urllib.urlencode({
           "id": site_id,
          # This parameter should be an argument in future.
-          "erp5_catalog_storage": "erp5_mysql_innodb_catalog",
+          "erp5_catalog_storage": erp5_catalog_storage,
           "erp5_sql_connection_string": mysql_string,
           "cmf_activity_sql_connection_string": mysql_string, }))
         print result.read()
 
-        result = urllib.urlopen(test_url).read()
+        print "ERP5 Site creation output: %s" % result.read()
 
-      if result == site_id:
-        print "Ready for install one business."
-        # XXX Suggestion for future
-        # POST '%s/erp5/portal_templates/updateRepositoryBusinessTemplateList <
-        #                                                        repository_list
+        if proxy.isERP5SitePresent() == True:
+          print "Site was created successfuly!"
 
-        # POST '%s/erp5/portal_templates/installBusinessTemplatesFromRepositories <
-        #                                                        template_list
+          # Update URL to ERP5 Site
+          erp5 = xmlrpclib.ServerProxy("%s/%s" % (base_url, site_id),
+                                       allow_none=1)
+
+          # Update Cache Coordinates
+          erp5.portal_memcached.default_memcached_plugin.\
+                setUrlString(memcached_provider)
+
+          # Update and enable System preferrence with ERP5 Site Coordinates.
+          # XXX NO SYSTEM PREFERENCE AS DEFAULT so it is used Default
+          # Preference instead as object creation is not possible by
+          # xmlrpc or post.
+          preference = erp5.portal_preferences.default_site_preference
+          preference.setPreferredOoodocServerAddress(conversion_server_address)
+          preference.setPreferredOoodocServerPortNumber(conversion_server_port)
+          preference.enable()
+
+          if len(bt5_repository_list) > 0:
+            erp5.portal_templates.\
+                updateRepositoryBusinessTemplateList(bt5_repository_list, None)
+
+          if len(bt5_list) > 0:
+            # XXX If no repository is provided, use just trunk.
+            if len(erp5.portal_templates.getRepositoryList()) == 0:
+              bt5_repository_list = ["http://www.erp5.org/dists/snapshot/bt5"]
+              erp5.portal_templates.\
+                updateRepositoryBusinessTemplateList(bt5_repository_list, None)
+
+            erp5.portal_templates.\
+              installBusinessTemplatesFromRepositories(bt5_list)
+
+          # The persistent cache is only configurable after install \
+          # erp5_dms.
+          #erp5.portal_memcached.persistent_memcached_plugin.\
+          #       setUrlString(kumo_address)
+      else:
+        print "ERP5 site is already present, ignore."
 
     except IOError:
-      print "Unable to connect!"
+      print "Unable to create the ERP5 Site!"
+    except socket.error, e:
+      print "Unable to connect to ZOPE!"
     time.sleep(sleep)

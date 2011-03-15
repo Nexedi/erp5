@@ -33,6 +33,8 @@ import sys
 import zc.buildout
 import zc.recipe.egg
 
+CREATE_ERP5_SITE = 0
+
 # Taken from Zope2 egg
 def write_inituser(fn, user, password):
   fp = open(fn, "w")
@@ -70,11 +72,9 @@ class Recipe(BaseSlapRecipe):
         apache_login=self.installLoginApache(ip=self.getGlobalIPv6Address(),
           port=13000, backend=zope_access, key=ca_conf['login_key'],
           certificate=ca_conf['login_certificate']))
-    if self.options.get('erp5_site_id') not in [None, ""]:
+    if CREATE_ERP5_SITE:
       self.installERP5Site(user, password, zope_access,
-               mysql_conf['mysql_database'], mysql_conf['ip'],
-               mysql_conf['tcp_port'], mysql_conf['mysql_user'],
-               mysql_conf['mysql_password'], self.options.get('erp5_site_id'))
+            mysql_conf, conversion_server_conf, memcached_conf, self.site_id)
     self.installTestRunner(ca_conf, mysql_conf, conversion_server_conf)
     self.linkBinary()
     self.setConnectionDict(dict(
@@ -336,24 +336,29 @@ class Recipe(BaseSlapRecipe):
       self._createDirectory(os.path.join(self.erp5_directory, directory))
     return user, password
 
-  def installERP5Site(self, user, password, zope_access, database_name,
-          database_ip, database_port, database_user, database_password,
-          erp5_site_id='erp5'):
+  def installERP5Site(self, user, password, zope_access, mysql_conf,
+          conversion_server_conf, memcached_conf, erp5_site_id):
     """ Create a script controlled by supervisor, which creates a erp5
     site on current available zope and mysql environment"""
-
     # XXX Conversion server and memcache server coordinates are not relevant
     # for pure site creation.
     https_connection_url = "http://%s:%s@%s/" % (user, password, zope_access)
-    mysql_connection_string = "%s@%s:%s %s %s" % (database_name,
-          database_ip, database_port, database_user, database_password)
+    mysql_connection_string = "%(mysql_database)s@%(ip)s:%(tcp_port)s %(mysql_user)s %(mysql_password)s" % mysql_conf
+
     # XXX URL list vs. repository + list of bt5 names?
     bt5_url_list = self.options.get("bt5_url_list", '')
+    bt5_repository_list = self.options.get("bt5_repository_list", '')
     self.path_list.extend(zc.buildout.easy_install.scripts([('erp5_update',
             __name__ + '.erp5', 'updateERP5')], self.ws,
                   sys.executable, self.wrapper_directory,
-                  arguments=[erp5_site_id, mysql_connection_string,
-                             https_connection_url, bt5_url_list]))
+                  arguments=[erp5_site_id,
+                             mysql_connection_string,
+                             https_connection_url,
+                             memcached_conf['memcached_url'],
+                             conversion_server_conf['conversion_server_ip'],
+                             conversion_server_conf['conversion_server_port'],
+                             bt5_url_list,
+                             bt5_repository_list]))
     return []
 
   def installZeo(self, ip, port, name, path):
