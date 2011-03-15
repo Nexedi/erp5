@@ -52,6 +52,6 @@ def Folder_isERP5SitePresent(self):
       usefull to identify if a erp5 is present already on a Zope
       Setup.
   """
-  return len(self.objectIds("ERP5 Site")) > 1
+  return len(self.objectIds("ERP5 Site")) > 0
 
 Folder.isERP5SitePresent = Folder_isERP5SitePresent
