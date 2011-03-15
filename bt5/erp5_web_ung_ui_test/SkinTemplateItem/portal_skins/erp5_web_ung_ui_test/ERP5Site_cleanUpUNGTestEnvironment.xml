@@ -60,6 +60,12 @@ for pad in pad_list:\n
   pad_object = context.restrictedTraverse(pad.getPath())\n
   portal.knowledge_pad_module.deleteContent(pad_object.getId())\n
 \n
+person = portal.portal_catalog.getResultValue(portal_type="Person", reference="ung_user")\n
+\n
+context.log(person)\n
+if person:\n
+  portal.person_module.deleteContent(person.getId())\n
+\n
 return True\n
 </string> </value>
         </item>
@@ -68,8 +74,16 @@ return True\n
             <value> <string></string> </value>
         </item>
         <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Site_cleanUpUNGKnowledgePadList</string> </value>
+            <value> <string>ERP5Site_cleanUpUNGTestEnvironment</string> </value>
         </item>
       </dictionary>
     </pickle>

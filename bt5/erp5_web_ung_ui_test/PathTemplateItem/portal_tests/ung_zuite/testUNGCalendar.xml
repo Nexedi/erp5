@@ -104,6 +104,11 @@
         <td>//a[@id="back-calendar"]</td>\n
         <td></td>\n
       </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//span[@class="addcal"]</td>\n
+        <td></td>\n
+      </tr>\n
     </tbody>\n
   </table>\n
 </body>\n
