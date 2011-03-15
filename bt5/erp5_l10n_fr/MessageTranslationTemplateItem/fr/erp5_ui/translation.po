@@ -5503,6 +5503,9 @@ msgstr "Règle de facturation"
 msgid "Item"
 msgstr "Objet"
 
+msgid "Item Tracking"
+msgstr "Traçabilité"
+
 msgid "Item Type List"
 msgstr "Types d'objets"
 
@@ -6527,8 +6530,26 @@ msgstr "Campagnes en cours"
 msgid "Open Meetings"
 msgstr "Réunions en cours"
 
+msgid "Open Order"
+msgstr "Commande ouverte"
+
+msgid "Open Order Line"
+msgstr "Ligne de commande ouverte"
+
 msgid "Open Project"
 msgstr "Ouvrir le projet"
+
+msgid "Open Sale Order"
+msgstr "Commande ouverte de vente"
+
+msgid "Open Sale Order Line"
+msgstr "Ligne de commande ouverte de vente"
+
+msgid "Open Sale Order Lines"
+msgstr "Lignes de commande ouverte de vente"
+
+msgid "Open Sale Orders"
+msgstr "Commandes ouvertes de vente"
 
 msgid "Open Support Requests"
 msgstr "Demandes d'assistance en cours"
@@ -11264,6 +11285,9 @@ msgstr "Montant des lignes sélectionnées"
 
 msgid "Total for class ${account_class}"
 msgstr "Total pour la classe ${account_class}"
+
+msgid "Tracking"
+msgstr "Traçabilité"
 
 msgid "Trade"
 msgstr "Négoce"
