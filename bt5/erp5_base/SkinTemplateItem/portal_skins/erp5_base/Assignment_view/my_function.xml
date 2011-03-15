@@ -77,11 +77,11 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_function</string> </value>
+                    <value> <string>my_view_mode_function</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Assignment_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewBaseFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
