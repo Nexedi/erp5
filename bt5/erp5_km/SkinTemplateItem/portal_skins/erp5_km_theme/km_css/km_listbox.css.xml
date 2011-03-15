@@ -306,7 +306,7 @@ div.listbox-search-mode div.maximal-width{\n
   width:10px;\n
   top:82px; /* in the middle of #listbox-preview */\n
   display:inline;\n
-  background: url("left-arrow-connector.png");\n
+  background: url("km_img/left-arrow-connector.png");\n
 }\n
 \n
 #listbox-preview{\n
