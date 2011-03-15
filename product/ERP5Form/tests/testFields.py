@@ -258,6 +258,7 @@ class TestIntegerField(ERP5TypeTestCase):
     self.assertEquals(node.get('{%s}value-type' % NSMAP['office']), 'float')
     self.assertEquals(node.get('{%s}value' % NSMAP['office']), str(value))
     self.assertEquals(node.text, str(value))
+    self.assertTrue('{%s}formula' % NSMAP['text'] not in node.attrib)
 
   def test_render_odg_view(self):
     self.field.values['default'] = 34
