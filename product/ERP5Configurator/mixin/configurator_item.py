@@ -27,24 +27,40 @@
 #
 ##############################################################################
 
+from zLOG import LOG, INFO
+import time
+
 class ConfiguratorItemMixin:
   """ This is the base class for all configurator item. """
- 
-  def install(self, object, business_configuration, prefix = ''):
+
+  def install(self, document, business_configuration, prefix=''):
     """ Add object to customer customization template. """
     bt5_obj = business_configuration.getSpecialiseValue()
-    if object.getPortalType() in ['Category', 'Base Category']:
+    if document.getPortalType() in ['Category', 'Base Category']:
       prefix = "portal_categories/"
-    template_path_list = ['%s%s' % (prefix, object.getRelativeUrl()),
-                          '%s%s/**' % (prefix, object.getRelativeUrl())]
+    template_path_list = ['%s%s' % (prefix, document.getRelativeUrl()),
+                          '%s%s/**' % (prefix, document.getRelativeUrl())]
     current_template_path_list = list(bt5_obj.getTemplatePathList())
     current_template_path_list.extend(template_path_list)
     bt5_obj.edit(template_path_list=current_template_path_list)
-  
-  def addToCustomerBT5ByRelativeUrl(self, business_configuration, relative_url_list):
-    """ Add object to customer customization template object by its relative url. """
+
+  def addToCustomerBT5ByRelativeUrl(self, business_configuration,
+                                          relative_url_list):
+    """ Add object to customer customization template object by
+       its relative url. """
     bt5_obj = business_configuration.getSpecialiseValue()
     current_template_path_list = list(bt5_obj.getTemplatePathList())
     current_template_path_list.extend(relative_url_list)
     bt5_obj.edit(template_path_list=current_template_path_list)
+
+  def buildItem(self, business_configuration_relative_url):
+    """ Invoke build process """
+    business_configuration = self.getPortalObject().restrictedTraverse(\
+       business_configuration_relative_url)
+    LOG('CONFIGURATOR', INFO, 'Building --> %s' % self)
+    start_build = time.time()
+    result = self.build(business_configuration)
+    LOG('CONFIGURATOR', INFO, 'Built    --> %s (%.02fs)' % (self,
+                                     time.time()-start_build))
+    return result
 
