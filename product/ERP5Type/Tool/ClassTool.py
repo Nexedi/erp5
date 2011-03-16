@@ -1203,6 +1203,17 @@ def initialize( context ):
           result = global_stream.read()
         return result
 
+      security.declarePrivate('_getCommaSeparatedParameterList')
+      def _getCommaSeparatedParameterList(self, parameter_list):
+        # clean parameter_list and split it by commas if necessary
+        if not parameter_list:
+          parameter_list = ()
+        elif isinstance(parameter_list, basestring):
+          parameter_list = tuple(parameter_name.strip()
+                                 for parameter_name in parameter_list.split(',')
+                                 if parameter_name.strip())
+        return parameter_list
+
       security.declareProtected(Permissions.ManagePortal, 'runLiveTest')
       def runLiveTest(self, test_list=None, run_only=None, debug=False,
                       verbose=False):
@@ -1218,18 +1229,22 @@ def initialize( context ):
         # Allow having strings for verbose and debug
         verbose = int(verbose) and True or False
         debug = int(debug) and True or False
-        if test_list is None:
-          test_list = []
-        elif isinstance(test_list, str):
-          test_list = test_list.split(',')
+        test_list = self._getCommaSeparatedParameterList(test_list)
+        run_only = self._getCommaSeparatedParameterList(run_only)
+        if not test_list:
+          # no test to run
+          return ''
         path = os.path.join(getConfiguration().instancehome, 'tests')
         verbosity = verbose and 2 or 1
-        instance_home = getConfiguration().instancehome
         global global_stream
         global_stream = StringIO()
         from Products.ERP5Type.tests.ERP5TypeLiveTestCase import runLiveTest
-        result = runLiveTest(test_list, run_only=run_only, debug=debug, path=path,
-                           stream=global_stream, verbosity=verbosity)
+        result = runLiveTest(test_list,
+                             run_only=run_only,
+                             debug=debug,
+                             path=path,
+                             stream=global_stream,
+                             verbosity=verbosity)
         global_stream.seek(0)
         return global_stream.read()
 

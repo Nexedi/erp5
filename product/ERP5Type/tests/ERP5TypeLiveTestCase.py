@@ -132,18 +132,37 @@ from Products.ERP5Type.tests.runUnitTest import ERP5TypeTestLoader
 
 class ERP5TypeTestReLoader(ERP5TypeTestLoader):
 
-  def __init__(self, filter_test_list=()):
-    super(ERP5TypeTestReLoader, self).__init__()
-    if len(filter_test_list):
-      # do not filter if no filter, otherwise no tests run
-      self.filter_test_list = filter_test_list
+    def __init__(self, filter_test_list=()):
+        super(ERP5TypeTestReLoader, self).__init__()
+        if len(filter_test_list):
+            # do not filter if no filter, otherwise no tests run
+            self.filter_test_list = filter_test_list
 
-  def loadTestsFromModule(self, module):
-    """ERP5Type test re-loader supports reloading test modules before
-    running them.
-    """
-    reload(module)
-    return super(ERP5TypeTestReLoader, self).loadTestsFromModule(module)
+    def loadTestsFromNames(self, test_list):
+        # ERP5TypeTestLoader is monkey-patched into unittest
+        # so we have to monkeypatch it in turn
+        if self.filter_test_list is not None:
+            old_filter_test_list = ERP5TypeTestLoader.filter_test_list
+            ERP5TypeTestLoader.filter_test_list = self.filter_test_list
+        try:
+            return super(ERP5TypeTestReLoader,
+                         self).loadTestsFromNames(test_list)
+        finally:
+            # and undo the monkeypatch afterwards
+            if self.filter_test_list:
+                ERP5TypeTestLoader.filter_test_list = old_filter_test_list
+
+    def loadTestsFromModule(self, module):
+        """ERP5Type test re-loader supports reloading test modules before
+        running them.
+        """
+        reload(module)
+        return super(ERP5TypeTestReLoader, self).loadTestsFromModule(module)
+
+    def loadTestsFromTestCase(self, testCaseClass):
+        reload(sys.modules[testCaseClass.__module__])
+        return super(ERP5TypeTestReLoader,
+                     self).loadTestsFromTestCase(testCaseClass)
 
 def runLiveTest(test_list, verbosity=1, stream=None, **kw):
   from Products.ERP5Type.tests.runUnitTest import DebugTestResult
@@ -171,19 +190,11 @@ def runLiveTest(test_list, verbosity=1, stream=None, **kw):
         result = super(DebugTextTestRunner, self)._makeResult()
         return DebugTestResult(result)
     TestRunner = DebugTextTestRunner
-  run_only = kw.get('run_only', '').strip()
-  filter_test_list = [re.compile(x.strip()).search 
-                      for x in run_only.split(',')]
-  loader = ERP5TypeTestReLoader()
-  # ERP5TypeTestLoader is monkey-patched into unittest
-  # so we have to monkeypatch it
-  if filter_test_list:
-    old_filter_test_list = ERP5TypeTestLoader.filter_test_list
-    ERP5TypeTestLoader.filter_test_list = filter_test_list
+  run_only = kw.get('run_only', ())
+  filter_test_list = [re.compile(x).search 
+                      for x in run_only]
+  loader = ERP5TypeTestReLoader(filter_test_list)
   suite = loader.loadTestsFromNames(test_list)
-  # and undo the monkeypatch afterwards
-  if filter_test_list:
-    ERP5TypeTestLoader.filter_test_list = old_filter_test_list
   output = stream
   if stream is None:
     output = StringIO()
