@@ -80,6 +80,11 @@
         <td></td>\n
       </tr>\n
       <tr>\n
+        <td>type</td>\n
+        <td>//input[@id="name"]</td>\n
+        <td>Document Shared</td>\n
+      </tr>\n
+      <tr>\n
         <td>click</td>\n
         <td>//p[@id="more_properties"]</td>\n
         <td></td>\n
@@ -203,7 +208,7 @@
       <tr>\n
         <td>verifyText</td>\n
         <td>//a[@name="document_title"]</td>\n
-        <td>Web Page</td>\n
+        <td>Document Shared</td>\n
       </tr>\n
     </tbody>\n
   </table>\n
