@@ -136,6 +136,7 @@
                         <string>my_view_mode_tales_expression</string>
                         <string>my_view_mode_id_as_reference</string>
                         <string>my_view_mode_read_only_reference</string>
+                        <string>my_email_field</string>
                       </list>
                     </value>
                 </item>
