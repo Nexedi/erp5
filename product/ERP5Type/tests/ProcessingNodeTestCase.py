@@ -169,7 +169,8 @@ class ProcessingNodeTestCase(backportUnittest.TestCase, ZopeTestCase.TestCase):
         message_count = len(message_list)
         # This prevents an infinite loop.
         count -= 1
-        if count == 0:
+        if count == 0 or (message_count and set([x.processing_node for x in 
+              message_list]).issubset(set([-2, -3]))):
           error_message = 'tic is looping forever. '
           try:
             self.assertNoPendingMessage()
