@@ -367,12 +367,6 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, ImmobilisationMovement):
 
 # divergence support with solving
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'isDivergent')
-    def isDivergent(self):
-      """ Returns true if the delivery line is divergent
-      """
-      return bool(self.getDivergenceList())
-
     security.declareProtected(Permissions.AccessContentsInformation, 'getDivergenceList')
     def getDivergenceList(self):
       """
