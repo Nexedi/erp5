@@ -53,51 +53,7 @@
         <td>${ung_url}/WebSite_logout</td>\n
         <td></td>\n
       </tr>\n
-      <tr>\n
-        <td>click</td>\n
-        <td>//td[@id="new-account-form"]</td>\n
-        <td></td>\n
-      </tr>\n
-      <tr>\n
-        <td>type</td>\n
-        <td>//input[@name="firstname"]</td>\n
-        <td>Gabriel</td>\n
-      </tr>\n
-      <tr>\n
-        <td>type</td>\n
-        <td>//input[@name="lastname"]</td>\n
-        <td>Monnerat</td>\n
-      </tr>\n
-      <tr>\n
-        <td>type</td>\n
-        <td>//input[@name="email"]</td>\n
-        <td>example@example.com</td>\n
-      </tr>\n
-      <tr>\n
-        <td>type</td>\n
-        <td>//input[@name="login_name"]</td>\n
-        <td>ung_user</td>\n
-      </tr>\n
-      <tr>\n
-        <td>type</td>\n
-        <td>//input[@name="password"]</td>\n
-        <td>1234</td>\n
-      </tr>\n
-      <tr>\n
-        <td>type</td>\n
-        <td>//input[@name="confirm"]</td>\n
-        <td>1234</td>\n
-      </tr>\n
-      <tr>\n
-        <td>click</td>\n
-        <td>//input[@value="Create Account"]</td>\n
-        <td></td>\n
-      </tr>\n
-      <tr>\n
-        <td>waitForPageToLoad</td>\n
-        <td>30000</td>\n
-        <td></td>\n
-      </tr>\n
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForUNG/macros/create-user" />\n
       <tr>\n
         <td>type</td>\n
         <td>//input[@name="__ac_name"]</td>\n
