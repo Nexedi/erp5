@@ -711,7 +711,7 @@ class TestConsultingConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     spreadsheet = categories_spreadsheet_configuration_item\
                     .getConfigurationSpreadsheet()
     self.assertNotEquals(None, spreadsheet)
-    self.assertEquals('Spreadsheet', spreadsheet.getPortalType())
+    self.assertEquals('Embedded File', spreadsheet.getPortalType())
     self.failUnless(spreadsheet.hasData())
 
   def stepSetupRolesConfiguratorItem(self, sequence=None, sequence_list=None, **kw):
