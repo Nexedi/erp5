@@ -252,8 +252,8 @@ $(document).ready(function() {     \n
   });\n
   $("div#new_event_dialog").dialog({\n
     autoOpen: false,\n
-    height: 258,\n
-    width: 410,\n
+    height: 270,\n
+    width: 400,\n
     modal: true,\n
   });\n
   $( "#datepicker" ).datepicker({\n
