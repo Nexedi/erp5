@@ -62,7 +62,6 @@ for pad in pad_list:\n
 \n
 person = portal.portal_catalog.getResultValue(portal_type="Person", reference="ung_user")\n
 \n
-context.log(person)\n
 if person:\n
   portal.person_module.deleteContent(person.getId())\n
 \n
