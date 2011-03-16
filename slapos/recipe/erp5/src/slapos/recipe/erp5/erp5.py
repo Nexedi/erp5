@@ -45,7 +45,6 @@ def updateERP5(args):
   if len(bt5_list) > 0 and len(bt5_repository_list) == 0:
     bt5_repository_list = ["http://www.erp5.org/dists/snapshot/bt5"]
   erp5_catalog_storage = "erp5_mysql_innodb_catalog"
-  erp5_site_created = 0
   business_template_setup_finished = 0
   sleep = 60
   while True:
@@ -58,10 +57,9 @@ def updateERP5(args):
           "erp5_catalog_storage": erp5_catalog_storage,
           "erp5_sql_connection_string": mysql_string,
           "cmf_activity_sql_connection_string": mysql_string, }))
-        erp5_site_created = 1
         print "ERP5 Site creation output: %s" % result.read()
 
-      if erp5_site_created and not business_template_setup_finished:
+      if not business_template_setup_finished:
         if proxy.isERP5SitePresent() == True:
           print "Start to set initial business template setup."
           # Update URL to ERP5 Site
@@ -82,7 +80,8 @@ def updateERP5(args):
                 installBusinessTemplatesFromRepositories([bt5])
 
           repository_set = set(erp5.portal_templates.getRepositoryList())
-          installed_bt5_list = erp5.portal_templates.getInstalledBusinessTemplateTitleList()
+          installed_bt5_list = erp5.portal_templates.\
+               getInstalledBusinessTemplateTitleList()
           if (set(repository_set) == set(bt5_repository_list)) and \
               len([i for i in bt5_list if i not in installed_bt5_list]) == 0:
             print "Repositories updated and business templates installed."
@@ -94,4 +93,6 @@ def updateERP5(args):
       print "Unable to create the ERP5 Site!"
     except socket.error, e:
       print "Unable to connect to ZOPE! %s" % e
+    except xmlrpclib.Fault, e:
+      print "XMLRPC Fault: %s" % e
     time.sleep(sleep)
