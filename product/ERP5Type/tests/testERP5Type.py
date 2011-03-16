@@ -3107,5 +3107,4 @@ def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Type))
   suite.addTest(unittest.makeSuite(TestAccessControl))
-  suite.addTest(unittest.makeSuite(TestInstanceBaseCategoryList))
   return suite
