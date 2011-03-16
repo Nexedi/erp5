@@ -190,6 +190,68 @@
         <td>//td[@class="listbox-table-no-result-row"]/span</td>\n
         <td>No result.</td>\n
       </tr>\n
+      <tr>\n
+        <td>openAndWait</td>\n
+        <td>${ung_url}/ERP5Site_createNewWebDocument?template=web_table_template</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//a[@name="document_title"]</td>\n
+        <td>Web Table</td>\n
+      </tr>\n
+      <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities"/>\n
+      <tr>\n
+        <td>openAndWait</td>\n
+        <td>${ung_url}</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//table[@class="your_listbox-table-domain-tree"]/tbody/tr[3]/td[2]/a</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//td[@class="listbox-table-no-result-row"]/span</td>\n
+        <td>No result.</td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//table[@class="your_listbox-table-domain-tree"]/tbody/tr[4]/td[2]/a</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//tbody/tr[@class="your_listbox-data-line-0 DataA"]/td[3]/a</td>\n
+        <td>Web Table</td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//tbody/tr[@class="your_listbox-data-line-0 DataA"]/td[4]/a</td>\n
+        <td>Draft</td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//td[@class="listbox-table-select-cell"]/input</td>\n
+        <td></td>\n
+      </tr>\n
+      <--<tr>\n
+        <td>clickAndWait</td>\n
+        <td>//button[@class="delete"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities"/>\n
+      <tr>\n
+        <td>openAndWait</td>\n
+        <td>${ung_url}</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//table[@class="your_listbox-table-domain-tree"]/tbody/tr[11]/td/a</td>\n
+        <td></td>\n
+      </tr>-->\n
     </tbody>\n
   </table>\n
 </body>\n
