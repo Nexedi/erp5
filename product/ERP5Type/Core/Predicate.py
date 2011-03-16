@@ -451,8 +451,8 @@ class Predicate(XMLObject):
       self._range_criterion = PersistentMapping()
     if 'criterion_property_list' in kwd:
       criterion_property_list = kwd['criterion_property_list']
-      identity_criterion = {}
-      range_criterion = {}
+      identity_criterion = PersistentMapping()
+      range_criterion = PersistentMapping()
       for criterion in self._identity_criterion.iterkeys() :
         if criterion in criterion_property_list :
           identity_criterion[criterion] = self._identity_criterion[criterion]
