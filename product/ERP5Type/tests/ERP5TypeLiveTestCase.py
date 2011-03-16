@@ -114,6 +114,7 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
         '''
         # Disabling portal_activities is required in order to avoid
         # conflict with other threads doing tic in the same time
+        self.login()
         self.initial_transaction_hash = transaction.get().__hash__()
         self.activity_tool_subscribed = self.getPortalObject()\
                 .portal_activities.isSubscribed()

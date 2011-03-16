@@ -306,7 +306,14 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       """
       Most of the time, we need to login before doing anything
       """
-      PortalTestCase.login(self, user_name)
+      try:
+        PortalTestCase.login(self, user_name)
+      except AttributeError:
+        uf = self.getPortal().acl_users
+        uf._doAddUser('ERP5TypeTestCase', '', ['Manager', 'Member', 'Assignee',
+                      'Assignor', 'Author', 'Auditor', 'Associate'], [])
+        return PortalTestCase.login(self, user_name)
+
 
     def logout(self):
       PortalTestCase.logout(self)
