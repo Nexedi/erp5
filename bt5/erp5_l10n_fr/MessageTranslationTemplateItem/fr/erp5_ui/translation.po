@@ -4345,6 +4345,21 @@ msgstr "L'évènement a été assigné et attend d'être traité par un utilisat
 msgid "Events in this state are outgoing events which were posted. Some events may be delivered later, whenever the recipient confirms he received them."
 msgstr "Les évènements dans cet état ont été envoyés au destinataire."
 
+msgid "Events to Declare"
+msgstr "Evènements à déclarer"
+
+msgid "Events to Validate"
+msgstr "Evènements à valider"
+
+msgid "Events to Send"
+msgstr "Evènements à envoyer"
+
+msgid "Events to Receive"
+msgstr "Evènements à recevoir"
+
+msgid "Events to Treat"
+msgstr "Evènements à traiter"
+
 msgid "Everybody"
 msgstr "Tout le monde"
 
@@ -8888,11 +8903,17 @@ msgstr "Module des livraisons de vente"
 msgid "Sale Packing List Movements"
 msgstr "Mouvements de livraison de vente"
 
+msgid "Sale Packing List to Confirm"
+msgstr "Livraisons de vente à confirmer"
+
 msgid "Sale Packing List to Prepare"
 msgstr "Livraisons de vente à préparer"
 
 msgid "Sale Packing List to Process"
 msgstr "Livraisons de vente à créer"
+
+msgid "Sale Packing List to Receive"
+msgstr "Livraisons de vente à recevoir"
 
 msgid "Sale Packing List to Ship"
 msgstr "Livraisons de vente à expédier"
