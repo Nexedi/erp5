@@ -2,8 +2,8 @@ Business Configuration Module | Business Configuration
 Business Configuration | Configuration Save
 Business Configuration | File
 Business Configuration | Link
+Categories Spreadsheet Configurator Item | Embedded File
 Categories Spreadsheet Configurator Item | File
-Categories Spreadsheet Configurator Item | Spreadsheet
 Configuration Save | Account Configurator Item
 Configuration Save | Accounting Period Configurator Item
 Configuration Save | Catalog Keyword Key Configurator Item
@@ -32,4 +32,4 @@ Person Configurator Item | Address
 Person Configurator Item | Career
 Person Configurator Item | Email
 Person Configurator Item | Telephone
-Portal Type Roles Spreadsheet Configurator Item | Spreadsheet
+Portal Type Roles Spreadsheet Configurator Item | Embedded File

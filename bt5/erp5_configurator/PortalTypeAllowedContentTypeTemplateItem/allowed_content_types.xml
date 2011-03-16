@@ -8,8 +8,8 @@
   <item>Business Configuration</item>
  </portal_type>
  <portal_type id="Categories Spreadsheet Configurator Item">
+  <item>Embedded File</item>
   <item>File</item>
-  <item>Spreadsheet</item>
  </portal_type>
  <portal_type id="Configuration Save">
   <item>Account Configurator Item</item>
@@ -46,6 +46,6 @@
   <item>Telephone</item>
  </portal_type>
  <portal_type id="Portal Type Roles Spreadsheet Configurator Item">
-  <item>Spreadsheet</item>
+  <item>Embedded File</item>
  </portal_type>
 </allowed_content_type_list>
