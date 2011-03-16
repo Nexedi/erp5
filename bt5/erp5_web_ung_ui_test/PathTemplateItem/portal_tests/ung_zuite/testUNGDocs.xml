@@ -129,6 +129,12 @@
         <td>//a[@class="tree-open"]</td>\n
         <td>All Documents</td>\n
       </tr>\n
+      <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities"/>\n
+      <tr>\n
+        <td>openAndWait</td>\n
+        <td>${ung_url}</td>\n
+        <td></td>\n
+      </tr>\n
       <tr>\n
         <td>type</td>\n
         <td>//input[@name="field_your_search_text"]</td>\n
@@ -181,6 +187,16 @@
       </tr>\n
       <tr>\n
         <td>clickAndWait</td>\n
+        <td>//div[@class="action_menu"]/li/ul/li[1]/a</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//a[@name="document_state"]</td>\n
+        <td>Cancelled</td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
         <td>//a[@class="ung_docs"]</td>\n
         <td></td>\n
       </tr>\n
@@ -209,9 +225,10 @@
         <td>//button[@class="delete"]</td>\n
         <td></td>\n
       </tr>\n
+      <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities"/>\n
       <tr>\n
-        <td>setTimeout</td>\n
-        <td>30000</td>\n
+        <td>openAndWait</td>\n
+        <td>${ung_url}</td>\n
         <td></td>\n
       </tr>\n
       <tr>\n
