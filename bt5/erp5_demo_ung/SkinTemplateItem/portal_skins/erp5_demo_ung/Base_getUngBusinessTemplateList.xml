@@ -50,7 +50,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return (\'erp5_base\',\n
+            <value> <string>return (\'erp5_core_proxy_field_legacy\',\n
+        \'erp5_full_text_myisam_catalog\',\n
+        \'erp5_base\',\n
+        \'erp5_simulation\',\n
+        \'erp5_dhtml_style\',\n
         \'erp5_web\',\n
         \'erp5_ingestion_mysql_innodb_catalog\',\n
         \'erp5_ingestion\',\n
@@ -71,10 +75,11 @@
         \'erp5_jquery_plugin_jqchart\',\n
         \'erp5_jquery_plugin_colorpicker\',\n
         \'erp5_jquery_plugin_elastic\',\n
-        \'erp5_jquery_plugin_wdcalendar\'\n
+        \'erp5_jquery_plugin_wdcalendar\',\n
         \'erp5_jquery_sheet_editor\',\n
         \'erp5_xinha_editor\',\n
         \'erp5_svg_editor\',\n
+        \'erp5_web_ung_role\',\n
         \'erp5_web_ung_core\',\n
         \'erp5_web_ung_theme\',)\n
 </string> </value>

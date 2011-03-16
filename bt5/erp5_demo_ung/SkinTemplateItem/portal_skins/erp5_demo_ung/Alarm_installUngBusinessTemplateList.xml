@@ -60,9 +60,10 @@ business_template_list = context.Base_getUngBusinessTemplateList()\n
 \n
 kw = dict(tag="start")\n
 for business_template_id in business_template_list:\n
-  portal.portal_templates.activate(**kw).installBusinessTemplatesFromRepositories((business_template_id,))\n
-  kw["after_tag"] = kw["tag"]\n
-  kw["tag"] = business_template_id\n
+  if business_template_id not in portal.portal_templates.getInstalledBusinessTemplateTitleList():\n
+    portal.portal_templates.activate(**kw).installBusinessTemplatesFromRepositories((business_template_id,))\n
+    kw["after_tag"] = kw["tag"]\n
+    kw["tag"] = business_template_id\n
 \n
 return kw\n
 </string> </value>
