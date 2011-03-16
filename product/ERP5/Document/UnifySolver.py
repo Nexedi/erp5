@@ -72,6 +72,18 @@ class UnifySolver(AcceptSolver):
       delivery_dict.setdefault(simulation_movement.getDeliveryValue(),
                                []).append(simulation_movement)
     for movement, simulation_movement_list in delivery_dict.iteritems():
+      # the movement might not be the right place to correct the
+      # divergence, so we have to find the right place.
+      root_delivery = movement.getRootDeliveryValue()
+      while (movement != root_delivery and
+             not movement.hasProperty(solved_property)):
+        movement = movement.getParentValue()
+      # NOTE: the code above was copied and adapted from the top of
+      # "SolverTool.getSolverDecisionApplicationValueList()", because
+      # we don't have enough info (a divergence tester) to invoke it
+      # from here, and also because a Solver instance needs to be
+      # independent from the divergence testers that caused it, as it
+      # could be the consolidated result of many divergence testers.
       if activate_kw is not None:
         movement.setDefaultActivateParameters(
           activate_kw=activate_kw, **activate_kw)
