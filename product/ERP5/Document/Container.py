@@ -101,7 +101,7 @@ class Container(Movement, XMLObject):
       """
       return 0
 
-    security.declareProtected(Permissions.View, 'isDivergent')
+    security.declareProtected(Permissions.AccessContentsInformation, 'isDivergent')
     def isDivergent(self):
       """
         Returns 1 if the target is not met according to the current information

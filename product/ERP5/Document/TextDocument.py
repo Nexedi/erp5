@@ -116,7 +116,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
 
       return text
 
-    security.declareProtected(Permissions.View, 'asSubjectText')
+    security.declareProtected(Permissions.AccessContentsInformation, 'asSubjectText')
     def asSubjectText(self, substitution_method_parameter_dict=None, safe_substitute=True, **kw):
       """
         Converts the subject of the document to a textual representation.

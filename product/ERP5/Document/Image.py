@@ -392,7 +392,7 @@ class Image(TextConvertableMixin, File, OFSImage):
     """At least see if it *might* be valid."""
     return self.getWidth() and self.getHeight() and self.getData() and self.getContentType()
 
-  security.declareProtected(Permissions.View, 'getSizeFromImageDisplay')
+  security.declareProtected(Permissions.AccessContentsInformation, 'getSizeFromImageDisplay')
   def getSizeFromImageDisplay(self, image_display):
     """Return the size for this image display,
        or dimension of this image.

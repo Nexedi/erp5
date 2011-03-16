@@ -223,7 +223,7 @@ class Alarm(XMLObject, PeriodicityMixin):
     # a new cache plugin which uses ZODB to store values
     # for a long time.
 
-  security.declareProtected(Permissions.View, 'report')
+  security.declareProtected(Permissions.AccessContentsInformation, 'report')
   def report(self, reset=0, process=None):
     """
     This methods produces a report (HTML) to display

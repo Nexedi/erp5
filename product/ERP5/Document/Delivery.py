@@ -324,14 +324,14 @@ class Delivery(XMLObject, ImmobilisationDelivery,
 
     #######################################################
     # Causality computation
-    security.declareProtected(Permissions.View, 'isConvergent')
+    security.declareProtected(Permissions.AccessContentsInformation, 'isConvergent')
     def isConvergent(self,**kw):
       """
         Returns 0 if the target is not met
       """
       return int(not self.isDivergent(**kw))
 
-    security.declareProtected(Permissions.View, 'isSimulated')
+    security.declareProtected(Permissions.AccessContentsInformation, 'isSimulated')
     def isSimulated(self):
       """
         Returns 1 if all movements have a delivery or order counterpart
@@ -348,7 +348,7 @@ class Delivery(XMLObject, ImmobilisationDelivery,
           # else Do we need to create a simulation movement ? XXX probably not
       return 1
 
-    security.declareProtected(Permissions.View, 'isDivergent')
+    security.declareProtected(Permissions.AccessContentsInformation, 'isDivergent')
     def isDivergent(self, fast=0, **kw):
       """
         Returns 1 if the target is not met according to the current information
@@ -365,7 +365,7 @@ class Delivery(XMLObject, ImmobilisationDelivery,
           return 1
       return 0
 
-    security.declareProtected(Permissions.View, 'getDivergenceList')
+    security.declareProtected(Permissions.AccessContentsInformation, 'getDivergenceList')
     def getDivergenceList(self, **kw):
       """
       Return a list of messages that contains the divergences

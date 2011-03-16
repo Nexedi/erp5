@@ -131,7 +131,7 @@ class ExternalSource(XMLObject, UrlMixin, CrawlableMixin):
     """
     return None
 
-  security.declareProtected(Permissions.View, 'isIndexContent')
+  security.declareProtected(Permissions.AccessContentsInformation, 'isIndexContent')
   def isIndexContent(self, content=None):
     """
       This method is able to tell if content object is an index or

@@ -59,7 +59,7 @@ class ContainerCell(DeliveryCell):
                       , PropertySheet.ItemAggregation
                       )
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'isAccountable')
     def isAccountable(self):
       """
@@ -70,7 +70,7 @@ class ContainerCell(DeliveryCell):
       # Never accountable
       return 0
 
-    security.declareProtected(Permissions.View, 'isDivergent')
+    security.declareProtected(Permissions.AccessContentsInformation, 'isDivergent')
     def isDivergent(self):
       """
         Returns 1 if the target is not met according to the current information

@@ -310,7 +310,7 @@ class Telephone(Coordinate, Base):
   security.declareProtected(Permissions.ModifyPortalContent, '_setText')
   _setText = fromText
 
-  security.declareProtected(Permissions.View, 'asText')
+  security.declareProtected(Permissions.AccessContentsInformation, 'asText')
   def asText(self):
     """
       Returns the telephone number in standard format
@@ -379,10 +379,10 @@ class Telephone(Coordinate, Base):
       return None
     return 'tel:%s' % (url_string.replace(' ',''))
 
-  security.declareProtected(Permissions.View, 'getText')
+  security.declareProtected(Permissions.AccessContentsInformation, 'getText')
   getText = asText
 
-  security.declareProtected(Permissions.View, 'standardTextFormat')
+  security.declareProtected(Permissions.AccessContentsInformation, 'standardTextFormat')
   def standardTextFormat(self):
     """
       Returns the standard text formats for telephone numbers

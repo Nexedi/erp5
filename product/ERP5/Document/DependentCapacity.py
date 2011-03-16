@@ -53,7 +53,7 @@ class DependentCapacity(Capacity):
                       , PropertySheet.Amount
                       )
 
-    security.declareProtected(Permissions.View, 'asCapacityItemList')
+    security.declareProtected(Permissions.AccessContentsInformation, 'asCapacityItemList')
     def asCapacityItemList(self):
       """
         Returns an association list of points and capacity values
