@@ -253,57 +253,54 @@ class TestBPMImplementation(TestBPMMixin):
     self.assertEquals('something',
         business_link.getSource(default='something'))
 
-  @newSimulationExpectedFailure
-  def test_BuinessPathDynamicCategoryAccessProvider(self):
+  def test_BusinessPathDynamicCategoryAccessProvider(self):
     source_node = self.portal.organisation_module.newContent(
                     portal_type='Organisation')
     source_section_node = self.portal.organisation_module.newContent(
                     portal_type='Organisation')
-    business_link = self.createBusinessLink()
-    business_link.setSourceMethodId('BusinessLink_getDefaultSourceList')
+    business_path = self.createTradeModelPath()
+    business_path.setSourceMethodId('TradeModelPath_getDefaultSourceList')
 
     context_movement = self.createMovement()
     context_movement.setSourceValue(source_node)
     context_movement.setSourceSectionValue(source_section_node)
-    self.assertEquals(None, business_link.getSourceValue())
+    self.assertEquals(None, business_path.getSourceValue())
     self.assertEquals([source_node],
-                      business_link.getSourceValueList(context=context_movement))
+                      business_path.getSourceValueList(context=context_movement))
     self.assertEquals([source_node.getRelativeUrl()],
-                      business_link.getSourceList(context=context_movement))
+                      business_path.getSourceList(context=context_movement))
     self.assertEquals(source_node.getRelativeUrl(),
-      business_link.getSource(context=context_movement, default='something'))
+      business_path.getSource(context=context_movement, default='something'))
 
-  @newSimulationExpectedFailure
-  def test_BuinessPathDynamicCategoryAccessProviderBusinessLinkPrecedence(self):
+  def test_BusinessPathDynamicCategoryAccessProviderBusinessLinkPrecedence(self):
     movement_node = self.portal.organisation_module.newContent(
                     portal_type='Organisation')
     path_node = self.portal.organisation_module.newContent(
                     portal_type='Organisation')
-    business_link = self.createBusinessLink()
-    business_link.setSourceMethodId('BusinessLink_getDefaultSourceList')
-    business_link.setSourceValue(path_node)
+    business_path = self.createTradeModelPath()
+    business_path.setSourceMethodId('TradeModelPath_getDefaultSourceList')
+    business_path.setSourceValue(path_node)
 
     context_movement = self.createMovement()
     context_movement.setSourceValue(movement_node)
-    self.assertEquals(path_node, business_link.getSourceValue())
+    self.assertEquals(path_node, business_path.getSourceValue())
     self.assertEquals(path_node,
-                      business_link.getSourceValue(context=context_movement))
+                      business_path.getSourceValue(context=context_movement))
     self.assertEquals([path_node],
-                      business_link.getSourceValueList(context=context_movement))
+                      business_path.getSourceValueList(context=context_movement))
 
-  @newSimulationExpectedFailure
-  def test_BuinessPathDynamicCategoryAccessProviderEmptyMovement(self):
-    business_link = self.createBusinessLink()
-    business_link.setSourceMethodId('BusinessLink_getDefaultSourceList')
+  def test_BusinessPathDynamicCategoryAccessProviderEmptyMovement(self):
+    business_path = self.createTradeModelPath()
+    business_path.setSourceMethodId('TradeModelPath_getDefaultSourceList')
 
     context_movement = self.createMovement()
-    self.assertEquals(None, business_link.getSourceValue())
+    self.assertEquals(None, business_path.getSourceValue())
     self.assertEquals(None,
-                      business_link.getSourceValue(context=context_movement))
+                      business_path.getSourceValue(context=context_movement))
     self.assertEquals(None,
-                      business_link.getSource(context=context_movement))
+                      business_path.getSource(context=context_movement))
     self.assertEquals('something',
-      business_link.getSource(context=context_movement, default='something'))
+      business_path.getSource(context=context_movement, default='something'))
 
   @newSimulationExpectedFailure
   def test_BusinessState_getRemainingTradePhaseList(self):
