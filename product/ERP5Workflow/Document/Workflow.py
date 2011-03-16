@@ -30,12 +30,9 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
-from zLOG import LOG, ERROR, DEBUG, WARNING
 
 from tempfile import mktemp
 import os
-import sys
-from os.path import basename, splitext, join
 from Products.DCWorkflowGraph.config import bin_search_path, DOT_EXE
 from Products.DCWorkflowGraph.DCWorkflowGraph import bin_search
 
@@ -76,7 +73,7 @@ class Workflow(XMLObject):
     document.setCategoryMembership(state_bc_id, self.getSource())
 
     object = self.getStateChangeInformation(document, self.getSourceValue())
-   
+
     # Initialize workflow history
     status_dict = {state_bc_id: self.getSource()}
     variable_list = self.contentValues(portal_type='Variable')
@@ -99,12 +96,12 @@ class Workflow(XMLObject):
       document.workflow_history = PersistentMapping()
       # XXX this _p_changed is apparently not necessary
       document._p_changed = 1
-      
+
     # Add an entry for the workflow in the history
     workflow_key = self._generateHistoryKey()
     if not document.workflow_history.has_key(workflow_key):
       document.workflow_history[workflow_key] = ()
-      
+
     # Update history
     document.workflow_history[workflow_key] += (status_dict, )
     # XXX this _p_changed marks the document modified, but the
@@ -112,13 +109,13 @@ class Workflow(XMLObject):
     document._p_changed = 1
     # XXX this _p_changed is apparently not necessary
     document.workflow_history._p_changed = 1
-    
+
   def getCurrentStatusDict(self, document):
     """
     Get the current status dict.
     """
     workflow_key = self._generateHistoryKey()
-    
+
     # Copy is requested
     result = document.workflow_history[workflow_key][-1].copy()
     return result
@@ -166,7 +163,7 @@ class Workflow(XMLObject):
       return result
 
   def getPOT(self):
-      """ 
+      """
       get the pot, copy from:
       "dcworkfow2dot.py":http://awkly.org/Members/sidnei/weblog_storage/blog_27014
       and Sidnei da Silva owns the copyright of the this function
@@ -186,7 +183,7 @@ class Workflow(XMLObject):
           if destination_state is None:
             # take care of 'remain in state' transitions
             destination_state = state
-          # 
+          #
           key = (state.getId(), destination_state.getId())
           value = transition_dict.get(key, [])
           value.append(available_transition.getTitle())
