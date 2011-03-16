@@ -70,7 +70,7 @@ class Immobilisation(Delivery, XMLObject):
                       , PropertySheet.Amortisation
                       )
 
-  security.declareProtected(Permissions.View, 'isMovement')
+  security.declareProtected(Permissions.AccessContentsInformation, 'isMovement')
   def isMovement(self, **kw):
     """
     An Immobilisation must not be indexed in stock table, so it is not a Movement
