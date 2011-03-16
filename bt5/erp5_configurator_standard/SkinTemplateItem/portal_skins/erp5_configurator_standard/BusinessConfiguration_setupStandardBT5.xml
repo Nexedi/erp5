@@ -58,6 +58,10 @@ bt5_installation_list = ((\'erp5_simulation\', True,),\n
                          (\'erp5_jquery\', True,),\n
                          (\'erp5_jquery_ui\', True,),\n
                          (\'erp5_xhtml_jquery_style\', True,),\n
+                         (\'erp5_web\',True,),\n
+                         (\'erp5_ingestion_mysql_innodb_catalog\',True,),\n
+                         (\'erp5_ingestion\',True,),\n
+                         (\'erp5_dms\',True,),\n
                          (\'erp5_crm\', True,), \n
                          (\'erp5_pdm\', True,),\n
                          (\'erp5_trade\', True),\n
