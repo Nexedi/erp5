@@ -60,10 +60,12 @@ for pad in pad_list:\n
   pad_object = context.restrictedTraverse(pad.getPath())\n
   portal.knowledge_pad_module.deleteContent(pad_object.getId())\n
 \n
-person = portal.portal_catalog.getResultValue(portal_type="Person", reference="ung_user")\n
+person_list = portal.portal_catalog(portal_type="Person",\n
+                                    reference=["ung_user", "ung_user2"])\n
 \n
-if person:\n
-  portal.person_module.deleteContent(person.getId())\n
+for person in person_list:\n
+  person_object = context.restrictedTraverse(person.getPath())\n
+  portal.person_module.deleteContent(person_object.getId())\n
 \n
 return True\n
 </string> </value>
