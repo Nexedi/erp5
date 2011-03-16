@@ -552,136 +552,6 @@ fieldset.right .field {\n
   float: left;\n
 }\n
 \n
-\n
-/* Buttons */\n
-\n
-a.bt-edit:link, \n
-a.bt-edit:active, \n
-a.bt-edit:visited {\n
-  height:24px;\n
-  width:auto;\n
-  display:block;\n
-  padding-left:10px;\n
-  margin: 0 0 5px 0;\n
-}\n
-\n
-a.bt-edit:link strong, \n
-a.bt-edit:active strong, \n
-a.bt-edit:visited strong {\n
-  height:100%;\n
-  width:auto;\n
-  display:block;\n
-  line-height:24px;\n
-  white-space: nowrap;\n
-}\n
-\n
-a.bt-edit strong img {\n
-  position: relative;\n
-  top:2px;\n
-}\n
-\n
-button#bt-clone {\n
-  margin-top: 1em;\n
-}\n
-\n
-button.formbt {\n
-  width: auto;\n
-  height:35px;\n
-  cursor: pointer;\n
-  border:none;\n
-  padding: 0 20px 0 0;\n
-  margin: 0 5px 0 0;\n
-  position: relative;\n
-  overflow: visible;\n
-}\n
-\n
-button::-moz-focus-inner{\n
-  border:none;\n
-}\n
-\n
-button.formbt > span {\n
-  display:block;\n
-  width:100%;\n
-  height:35px;\n
-  margin:0;\n
-  padding:0 0 0 5px;\n
-  line-height:35px;\n
-  position: relative;\n
-  left:-2px;\n
-  white-space: nowrap;\n
-}\n
-\n
-a.bt-download:link, \n
-a.bt-download:active, \n
-a.bt-download:visited,\n
-a.bt-rss:link, \n
-a.bt-rss:active, \n
-a.bt-rss:visited {\n
-  padding-right:15px;\n
-  position: absolute;\n
-  right:10px;\n
-  top:10px;\n
-}\n
-\n
-button.bt-med {\n
-  width: auto;\n
-  height:24px;\n
-  cursor: pointer;\n
-  border:none;\n
-  padding: 0 20px 0 0;\n
-  margin: 0 5px 0 0;\n
-  position: relative;\n
-  overflow: visible;\n
-}\n
-\n
-button.bt-med span {\n
-  display:block;\n
-  width:100%;\n
-  height:24px;\n
-  margin:0;\n
-  padding:0 0 0 10px;\n
-  line-height:24px;\n
-  position: relative;\n
-  left:-2px;\n
-  white-space: nowrap;\n
-}\n
-\n
-button.bt-med span img {\n
-  display:inline;\n
-  position: relative;\n
-  top:3px;\n
-  margin-right:5px;\n
-}\n
-\n
-.bt-small {\n
-  display:block;\n
-  width: auto;\n
-  height:18px;\n
-  cursor: pointer;\n
-  border:none;\n
-  padding: 0 15px 0 0;\n
-  margin: -2px 2px 0 2px;\n
-  position: relative;\n
-  overflow: visible;\n
-}\n
-\n
-.bt-small span {\n
-  display:block;\n
-  width:100%;\n
-  height:18px;\n
-  margin:0;\n
-  padding:0 0 0 10px;\n
-  line-height:18px;\n
-  position: relative;\n
-  left:-2px;\n
-  white-space: nowrap;\n
-}\n
-\n
-.bt-small span img {\n
-  display:inline;\n
-  margin-right:2px;\n
-}\n
-\n
 .input input[type=image] {\n
   width: auto !important;\n
 }\n
@@ -1163,89 +1033,6 @@ table tbody tr td {\n
   background-position: 0 -23px;\n
 }\n
 \n
-\n
-/* Buttons */\n
-a.bt-download:link, a.bt-download:active, a.bt-download:visited {\n
-  background: url(km_img/icon-save.png) no-repeat transparent;\n
-}\n
-\n
-a.bt-rss:link, a.bt-rss:active, a.bt-rss:visited {\n
-  background: url(km_img/icon-rss.png) no-repeat transparent;\n
-}\n
-\n
-a.bt-download:link, a.bt-download:active, a.bt-download:visited,\n
-a.bt-rss:link, a.bt-rss:active, a.bt-rss:visited {\n
-  background-position: 100% 50%;\n
-  color:#000;\n
-}\n
-\n
-a.block-refresh { background-position: 0 0; }\n
-\n
-a.block-minimize { background-position: -17px 0 !important; }\n
-\n
-a.block-remove { background-position: -34px 0 !important; }\n
-\n
-a.block-edit-form { background-position: -51px 0 !important; }\n
-\n
-a.block-refresh:hover { background-position: 0 100% !important; }\n
-\n
-a.block-minimize:hover { background-position: -17px 100% !important; }\n
-\n
-a.block-remove:hover { background-position: -34px 100% !important; }\n
-\n
-a.block-edit-form:hover { background-position: -51px 100% !important; }\n
-\n
-a.bt-edit:link, a.bt-edit:active, a.bt-edit:visited {\n
-  background: url(km_img/bt-edit.png) no-repeat transparent;\n
-}\n
-\n
-a.bt-edit:link strong, a.bt-edit:active strong,\n
-a.bt-edit:visited strong {\n
-  background: url(km_img/bt-edit.png) no-repeat transparent;\n
-  background-position: 100% 0;\n
-  color:#828282;\n
-}\n
-\n
-a.bt-edit:hover {\n
-  background-position: 0 100%;\n
-}\n
-\n
-a.bt-edit:hover strong {\n
-  color:#4f4f4f;\n
-  background-position: 100% 100%;\n
-}\n
-\n
-button.formbt, button.bt-med span, .bt-small span { color:#828282; }\n
-button.formbt:hover span, button.bt-med:hover span, .bt-small:hover span { color:#4f4f4f; }\n
-\n
-button.formbt, button.formbt > span { background: url(km_img/formbt.png) no-repeat transparent; }\n
-\n
-button.bt-med, button.bt-med span { \n
-  background: url(km_img/button-med.png) no-repeat transparent; \n
-  background-color: #E9E9E9;\n
-}\n
-\n
-.bt-small, .bt-small span { background: url(km_img/button-small.png) no-repeat transparent; }\n
-\n
-button.formbt, button.bt-med, .bt-small { background-position: 100% 0; }\n
-\n
-button.formbt:hover, button.bt-med:hover, .bt-small:hover { background-position: 100% 100%; }\n
-\n
-button.formbt:hover span, button.bt-med:hover span, .bt-small:hover span { background-position: 0 100%; }\n
-\n
-button#input-save-view span.image {background: url(km_img/bt-save2.png) no-repeat transparent;}\n
-button#input-save-edit span.image {background: url(km_img/bt-save.png) no-repeat transparent;}\n
-\n
-button#input-save-edit span.image,\n
-button#input-save-view span.image {\n
-  position: relative;\n
-  margin:8px;\n
-  float: left;\n
-  width: 19px;\n
-  height: 18px;\n
-}\n
-\n
-\n
 /* Form styling */\n
 .meta input.search_button:hover,\n
 .search_button:hover {\n
@@ -1394,20 +1181,6 @@ table tr th button {\n
   font-size:9pt;\n
 }\n
 \n
-.saveView, .saveEdit { text-indent:15px; font-size:10pt; }\n
-\n
-/* ## link styling ################################### start # */\n
-\n
-a.bt-edit strong { font-size:8pt; }\n
-\n
-a.status:link, a.status:active, a.status:visited, .status { font-weight:normal; }\n
-\n
-a.bt-download:link, a.bt-download:active, a.bt-download:visited,\n
-a.bt-rss:link, a.bt-rss:active, a.bt-rss:visited { font-weight: normal; font-size:9pt; }\n
-\n
-.bt-small { font-weight:normal; font-size:7pt; }\n
-\n
-\n
 div#wrapper_headline span.header_title {\n
   font-size:1.2em;\n
   font-weight:bold;\n
@@ -1425,6 +1198,109 @@ li.toolboxSection > div{\n
 }\n
 \n
 /* Buttons */\n
+button#bt-clone {\n
+  margin-top: 1em;\n
+}\n
+\n
+button.formbt {\n
+  width: auto;\n
+  height:35px;\n
+  cursor: pointer;\n
+  border:none;\n
+  padding: 0 20px 0 0;\n
+  margin: 0 5px 0 0;\n
+  position: relative;\n
+  overflow: visible;\n
+}\n
+\n
+button.formbt > span {\n
+  display:block;\n
+  width:100%;\n
+  height:35px;\n
+  margin:0;\n
+  padding:0 0 0 5px;\n
+  line-height:35px;\n
+  position: relative;\n
+  left:-2px;\n
+  white-space: nowrap;\n
+}\n
+\n
+button.bt-med {\n
+  width: auto;\n
+  height:26px;\n
+  cursor: pointer;\n
+  border:none;\n
+  padding: 0 20px 0 0;\n
+  margin: 0 5px 0 0;\n
+  position: relative;\n
+  overflow: visible;\n
+}\n
+\n
+button.bt-med span {\n
+  display:block;\n
+  width:100%;\n
+  height:24px;\n
+  margin:0;\n
+  padding:0 0 0 10px;\n
+  line-height:24px;\n
+  position: relative;\n
+  left:-2px;\n
+  white-space: nowrap;\n
+}\n
+\n
+button.bt-med span img {\n
+  display:inline;\n
+  position: relative;\n
+  top:3px;\n
+  margin-right:5px;\n
+}\n
+\n
+.bt-small {\n
+  display:block;\n
+  width: auto;\n
+  height:18px;\n
+  cursor: pointer;\n
+  border:none;\n
+  padding: 0 15px 0 0;\n
+  margin: -2px 2px 0 2px;\n
+  position: relative;\n
+  overflow: visible;\n
+}\n
+\n
+.bt-small span {\n
+  display:block;\n
+  width:100%;\n
+  height:18px;\n
+  margin:0;\n
+  padding:0 0 0 10px;\n
+  line-height:18px;\n
+  position: relative;\n
+  left:-2px;\n
+  white-space: nowrap;\n
+}\n
+\n
+.bt-small span img {\n
+  display:inline;\n
+  margin-right:2px;\n
+}\n
+\n
+button#input-save-edit span.image,\n
+button#input-save-view span.image {\n
+  position: relative;\n
+  margin:8px;\n
+  float: left;\n
+  width: 19px;\n
+  height: 18px;\n
+}\n
+\n
+button#input-save-view span.image {\n
+  background: url(km_img/button-save-view.png) no-repeat transparent;\n
+}\n
+\n
+button#input-save-edit span.image {\n
+  background: url(km_img/button-save-edit.png) no-repeat transparent;\n
+}\n
+\n
 div.listbox-action-widget button, \n
 div.listbox-action-widget a.button,\n
 div.listbox-action-widget button > span, \n
@@ -1448,7 +1324,9 @@ button.bt-med span,\n
 \n
 #stick-gadgets:hover,\n
 #unstick-gadgets:hover,\n
-#add-gadgets:hover{\n
+#add-gadgets:hover,\n
+button.formbt:hover span,\n
+button.bt-med:hover span{\n
   color: #828282;\n
 }\n
 \n

@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts00187260.45</string> </value>
+            <value> <string>ts00281126.99</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -373,11 +373,39 @@ a.block-edit-form{\n
   margin-top: 4px;\n
 }\n
 \n
+a.block-refresh { \n
+  background-position: 0 0;\n
+}\n
+\n
+a.block-minimize { \n
+  background-position: -17px 0;\n
+}\n
+\n
+a.block-remove { \n
+  background-position: -34px 0;\n
+}\n
+\n
+a.block-edit-form { \n
+  background-position: -51px 0;\n
+}\n
+\n
+a.block-minimize:hover { \n
+  background-position: -17px 100%;\n
+}\n
+\n
+a.block-remove:hover { \n
+  background-position: -34px 100%;\n
+}\n
+\n
+a.block-edit-form:hover { \n
+  background-position: -51px 100%;\n
+}\n
+\n
+\n
 /* Style for showing movement between gadget columns */\n
 div.block-hover {\n
   border: 2px dashed #f00;\n
 }\n
-\n
 \n
 /* Gadget layout */\n
 .block h3.handle{\n
@@ -410,14 +438,10 @@ div.block-hover {\n
 }\n
 \n
 .gadget {\n
-\tmargin:0;\n
-\tpadding:0;\n
-\tborder:none;\n
+  margin:0;\n
+  padding:0;\n
+  border:none;\n
 }\n
-\n
-\n
-/* Gadget content */\n
-\n
 \n
 /* Gadget edit form */\n
 div.edit-form {\n
@@ -681,7 +705,7 @@ div.block fieldset.gadget-profile div.field{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>11792</int> </value>
+            <value> <int>12176</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
