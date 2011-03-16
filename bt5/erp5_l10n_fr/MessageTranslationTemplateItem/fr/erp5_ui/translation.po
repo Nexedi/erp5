@@ -5356,6 +5356,18 @@ msgstr "Lignes de commande interne"
 msgid "Internal Orders"
 msgstr "Commandes internes"
 
+msgid "Internal Orders to Check"
+msgstr "Commandes internes à examiner"
+
+msgid "Internal Orders to Confirm"
+msgstr "Commandes internes à confirmer"
+
+msgid "Internal Orders to Offer"
+msgstr "Commandes internes à proposer"
+
+msgid "Internal Orders to Validate"
+msgstr "Commandes internes à valider"
+
 msgid "Internal Packing List"
 msgstr "Livraison interne"
 
@@ -5376,6 +5388,24 @@ msgstr "Mouvements de livraison interne"
 
 msgid "Internal Packing Lists"
 msgstr "Livraisons internes"
+
+msgid "Internal Packing Lists to Confirm"
+msgstr "Livraisons internes à confirmer"
+
+msgid "Internal Packing Lists to Declare Delivered"
+msgstr "Livraisons internes à déclarer livrées"
+
+msgid "Internal Packing Lists to Prepare"
+msgstr "Livraisons internes à préparer"
+
+msgid "Internal Packing Lists to Receive"
+msgstr "Livraisons internes à recevoir"
+
+msgid "Internal Packing Lists to Ship"
+msgstr "Livraisons internes à expédier"
+
+msgid "Internal Packing Lists Workflow"
+msgstr "Workflow des livraisons internes"
 
 msgid "Internal Reference"
 msgstr "Référence interne"
