@@ -34,6 +34,14 @@ from patches import python
 from zLOG import LOG, INFO
 DISPLAY_BOOT_PROCESS = False
 
+# We have a name conflict with source_reference and destination_reference,
+# which are at the same time property accessors for 'source_reference'
+# property, and category accessors (similar to getSourceValue().getReference())
+# When this is set to True, those accessors will be the property accessors.
+# At the time beeing, if it's set to False for document having both category
+# and property, the result seem to be undefined.
+SOURCE_DESTINATION_REFERENCE_LEGACY = True
+
 # This is used to register all Document classes used in ERP5
 # items are class names, values are class paths, e.g.:
 #   'Person' -> 'Products.ERP5.Document.Person.Person'
