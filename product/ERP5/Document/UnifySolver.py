@@ -75,7 +75,6 @@ class UnifySolver(AcceptSolver):
       if activate_kw is not None:
         movement.setDefaultActivateParameters(
           activate_kw=activate_kw, **activate_kw)
-      configuration_dict = self.getConfigurationPropertyDict()
       new_value = configuration_dict.get('value')
       movement.setProperty(solved_property, new_value)
       for simulation_movement in simulation_movement_list:
