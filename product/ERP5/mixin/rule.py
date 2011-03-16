@@ -98,7 +98,6 @@ class MovementGeneratorMixin:
     # Build a list of movement and business path
     input_movement_list = self._getInputMovementList(
                             movement_list=movement_list, rounding=rounding)
-    LOG('_getInputMovementList', 0, repr(input_movement_list))
     for input_movement in input_movement_list:
       # Merge movement and business path properties (core implementation)
       # Lookup Business Process through composition (NOT UNION)

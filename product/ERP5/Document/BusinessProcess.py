@@ -138,12 +138,6 @@ class BusinessProcess(Path, XMLObject):
     kw.setdefault('portal_type', self.getPortalTradeModelPathTypeList())
     kw.setdefault('sort_on', 'int_index')
     original_path_list = self.objectValues(**kw) # Why Object Values ??? XXX-JPS
-    LOG('self', 0, repr(self))
-    LOG('objectValues', 0, repr(self.objectValues()))
-    LOG('portal_type', 0, repr(kw['portal_type']))
-    LOG('objectValues kw', 0, repr(self.objectValues(**kw)))
-    LOG('trade_phase', 0, trade_phase)
-    LOG('original_path_list', 0, original_path_list)
     # Separate the selection of trade model paths into two steps
     # for easier debugging.
     # First, collect trade model paths which can be applicable to a given context.
@@ -152,7 +146,6 @@ class BusinessProcess(Path, XMLObject):
       # Filter our business path which trade phase does not match
       if trade_phase is None or trade_phase.intersection(path.getTradePhaseList()):
         path_list.append(path)
-    LOG('path_list', 0, path_list)
     # Then, filter trade model paths by Predicate API.
     # FIXME: Ideally, we should use the Domain Tool to search business paths,
     # and avoid using the low level Predicate API. But the Domain Tool does
@@ -187,7 +180,6 @@ class BusinessProcess(Path, XMLObject):
       raise ValueError('a reference date method must be defined on every Trade Model Path')
 
     explanation_cache = _getExplanationCache(explanation)
-    LOG('calling explanation_cache.getReferenceDate', 0, '%s %s %s %s' % (explanation, self, trade_date, reference_date_method_id))
     reference_date = explanation_cache.getReferenceDate(self, trade_date, reference_date_method_id)
 
     # Computer start_date and stop_date (XXX-JPS this could be cached and accelerated)    
@@ -245,9 +237,9 @@ class BusinessProcess(Path, XMLObject):
     # FIXME: Ideally, we should use the Domain Tool to search business links,
     # and avoid using the low level Predicate API. But the Domain Tool does
     # support the condition above without scripting?
-    LOG('business_link_list', 0, repr(business_link_list))
     if context is None:
-      LOG('context is None', 0, repr(business_link_list))
+      LOG('ERP5.Document.BusinessProcess', 0, 'Context is None %r' %
+                  (business_link_list,))
       return business_link_list
     return [business_link for business_link in business_link_list
                 if business_link.test(context)]
@@ -262,7 +254,6 @@ class BusinessProcess(Path, XMLObject):
 
     business_link -- a Business Link document
     """
-    LOG('In isBusinessLinkCompleted', 0, repr(business_link))
     # Return False if Business Link is not completed
     if not business_link.isCompleted(explanation):
       return False
@@ -362,9 +353,7 @@ class BusinessProcess(Path, XMLObject):
     business_link -- a Business Link document
     """
     # If everything is delivered, no need to build
-    LOG('In isBusinessLinkBuildable', 0, repr(business_link))
     if business_link.isDelivered(explanation):
-      LOG('In isBusinessLinkBuildable', 0, 'business link is delivered and thus False')
       return False
     # We must take the closure cause only way to combine business process
     closure_process = _getBusinessLinkClosure(self, explanation, business_link)
@@ -522,10 +511,8 @@ class BusinessProcess(Path, XMLObject):
 
     trade_state -- a Trade State category
     """
-    LOG('In isTradeStateCompleted', 0, repr(trade_state))
     for business_link in self.getBusinessLinkValueList(successor=trade_state):
       if not self.isBusinessLinkCompleted(explanation, business_link):
-        LOG('A business link is not completed', 0, repr(business_link))
         return False
     return True      
 
@@ -837,6 +824,5 @@ class BusinessProcess(Path, XMLObject):
     """
       Build whatever is buildable
     """
-    LOG('In business process build', 0, repr(explanation))
     for business_link in self.getBuildableBusinessLinkValueList(explanation):
       business_link.build(explanation=explanation)

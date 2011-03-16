@@ -116,8 +116,6 @@ class ExplanationCache:
       simulation_movement_id = simulation_movement.getId()
       insert_movement = True
       for path_id in container_path:
-        LOG('path_dict', 0, repr(path_dict))
-        LOG('local_path_dict', 0, repr(local_path_dict))
         local_path_dict = local_path_dict.setdefault(path_id, {})
         if type(local_path_dict) is not types.DictType:
           # A movement was already inserted
@@ -125,7 +123,6 @@ class ExplanationCache:
           break
       if insert_movement:
         local_path_dict[simulation_movement_id] = simulation_movement
-      LOG('path_dict result', 0, repr(path_dict))
 
     # For each delivery movement
     for movement in self._getDeliveryMovementList():
@@ -137,8 +134,6 @@ class ExplanationCache:
     # assembling path '/erp5/portal_simulation/1/34/23/43%'
     result = []
     def browsePathDict(prefix, local_path_dict):
-      LOG('browsePathDict result in', 0, repr(result))
-      LOG('browsePathDict local_path_dict in', 0, repr(local_path_dict))
       for key, value in local_path_dict.items():
         if type(value) is not types.DictType:
           # We have a real root
@@ -147,7 +142,6 @@ class ExplanationCache:
           # XXX-JPS here we must add all parent movements XXX-JPS
         else:
           browsePathDict('%s/%s' % (prefix, key), value) # Recursing with string append is slow XXX-JPS
-      LOG('browsePathDict result out', 0, repr(result))
 
     # path_dict is typically like this:
     #  {'': {'erp5': {'portal_simulation': {'3': {'4': <SimulationMovement at /erp5/portal_simulation/3/4>}}}}}
@@ -210,7 +204,6 @@ class ExplanationCache:
           kw['path'] = self.getSimulationPathPatternList() # XXX-JPS Explicit Query is better
         if kw.get('explanation_uid', None) is None:
           kw['explanation_uid'] = self.getRootExplanationUidList()
-        LOG('lookup movements', 0, repr(kw))
         self.simulation_movement_cache[kw_tuple] = \
                self.portal_catalog(portal_type="Simulation Movement",
                                    **kw)
@@ -342,7 +335,6 @@ class ExplanationCache:
     # whenever trade model path define time constraints within the same
     # movement generator (ie. transformation with multiple phases)
     path_list = business_process.getTradeModelPathValueList(trade_phase=trade_phase, context=business_process)
-    LOG('path_list', 0, '%s' % trade_phase)
     if not len(path_list):
       raise ValueError('No Trade Model Path defines a reference data.')
 
