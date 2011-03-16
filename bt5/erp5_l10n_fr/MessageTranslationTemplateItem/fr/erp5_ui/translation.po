@@ -6551,6 +6551,9 @@ msgstr "Commande ouverte"
 msgid "Open Order Line"
 msgstr "Ligne de commande ouverte"
 
+msgid "Open Order Workflow"
+msgstr "Workflow des commandes ouvertes"
+
 msgid "Open Project"
 msgstr "Ouvrir le projet"
 
@@ -8929,6 +8932,9 @@ msgstr "Livraisons de vente à créer"
 
 msgid "Sale Packing List to ship"
 msgstr "Livraisons de vente à envoyer"
+
+msgid "Sale Packing List Workflow"
+msgstr "Workflow des livraisons de vente"
 
 msgid "Sale Packing Lists"
 msgstr "Livraisons de vente"
