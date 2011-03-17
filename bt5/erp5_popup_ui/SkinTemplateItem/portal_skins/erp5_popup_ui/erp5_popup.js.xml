@@ -166,7 +166,7 @@ $(function() {\n
             }\n
           });\n
 \n
-          $(\'tr.listbox_search_line input[type="text"]\', dialog).removeAttr(\'onkeypress\').keypress(function(event) {\n
+          $(\'th.listbox-table-filter-cell input[type="text"]\', dialog).removeAttr(\'onkeypress\').keypress(function(event) {\n
             if (event.keyCode == \'13\') {\n
               event.preventDefault();\n
               //var self = $(this);\n
