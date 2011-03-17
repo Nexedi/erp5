@@ -218,8 +218,8 @@ class BusinessConfiguration(Item):
               self.REQUEST.set(field.id, '')
           form_html = self.Base_mainConfiguratorFormTemplate( \
                              current_form_number=form_counter + 1,\
-                             max_form_numbers = forms_number, \
-                             form_html = getattr(context, form_id)())
+                             max_form_numbers=forms_number,\
+                             form_html=getattr(context, form_id)())
           html_forms.append(form_html)
     if html_forms != []:
       html = "\n".join(html_forms)
@@ -241,7 +241,7 @@ class BusinessConfiguration(Item):
       if transition._checkPermission(self) and \
            transition.getTransitionFormId() is not None:
         return  self._displayNextForm(context=conf_save, transition=transition)
-  
+
   security.declarePrivate('_validateNextForm')
   def _validateNextForm(self, **kw):
     """ Validate the form displayed to the user. """
@@ -342,7 +342,7 @@ class BusinessConfiguration(Item):
       self._global_configuration_attributes[key] = value
 
   security.declareProtected(Permissions.View, 'getGlobalConfigurationAttr')
-  def getGlobalConfigurationAttr(self, key, default = None):
+  def getGlobalConfigurationAttr(self, key, default=None):
     """ Get global business configuration attribute. """
     global_configuration_attributes = getattr(self, '_global_configuration_attributes', {})
     return global_configuration_attributes.get(key, default)
@@ -354,13 +354,13 @@ class BusinessConfiguration(Item):
     """
     bt5_file_list = []
     for bt_link in self.contentValues(portal_type="Link"):
-      bt5_item = dict(bt5_id = bt_link.getUrlString(), 
-                      bt5_filedata = "")
+      bt5_item = dict(bt5_id=bt_link.getUrlString(), 
+                      bt5_filedata="")
       bt5_file_list.append(bt5_item)
 
     for bt_file in self.contentValues(portal_type="File"):
-      bt5_item = dict(bt5_id = bt_file.getId(),
-                      bt5_filedata = bt_file.getData())
+      bt5_item = dict(bt5_id=bt_file.getId(),
+                      bt5_filedata=bt_file.getData())
       bt5_file_list.append(bt5_item)
     return bt5_file_list
 
@@ -381,13 +381,13 @@ class BusinessConfiguration(Item):
     for configuration_save in self._getConfigurationStack():
       # XXX: check which items are configure-able
       configuration_item_list = [x for x in configuration_save.contentValues()]
-      configuration_item_list.sort(lambda x,y: cmp(x.getIntId(), y.getIntId()))
+      configuration_item_list.sort(lambda x, y: cmp(x.getIntId(), y.getIntId()))
       for configurator_item in configuration_item_list:
         configurator_item.activate(**kw).buildItem(self.getRelativeUrl())
         kw["after_tag"] = kw["tag"]
         kw["tag"] = "configurator_item_%s_%s" % (configurator_item.getId(),
                                                  configurator_item.getUid())
-       
+
     LOG('CONFIGURATOR', INFO, 
         'Build process started for %s ended after %.02fs' % (self.getRelativeUrl(),
                                                              time.time() - start))
@@ -399,7 +399,7 @@ class BusinessConfiguration(Item):
       Remove all traces from user input (i.e. Configuration Saves, workflow history).
     """
     object_ids = []
-    for obj in self.contentValues(filter = {'portal_type': ['Configuration Save', 'File', 'Link']}):
+    for obj in self.contentValues(filter={'portal_type': ['Configuration Save', 'File', 'Link']}):
       object_ids.append(obj.getId())
     self.manage_delObjects(object_ids)
     del self.workflow_history
@@ -422,7 +422,7 @@ class BusinessConfiguration(Item):
     return bt5_title in bt5_title_list
 
   security.declareProtected(Permissions.ModifyPortalContent, 'installConfiguration')
-  def installConfiguration(self, execute_after_setup_script = 1):
+  def installConfiguration(self, execute_after_setup_script=1):
     """ 
       Install in remote instance already built list of business templates 
       which are saved in the Business Configuration.
