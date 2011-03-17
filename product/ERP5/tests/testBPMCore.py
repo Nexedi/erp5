@@ -194,8 +194,7 @@ class TestBPMMixin(ERP5TypeTestCase):
 
 class TestBPMImplementation(TestBPMMixin):
   """Business Process implementation tests"""
-  @newSimulationExpectedFailure
-  def test_BusinessProcess_getPathValueList(self):
+  def test_BusinessProcess_getBusinessLinkValueList(self):
     business_process = self.createBusinessProcess()
 
     accounting_business_link = business_process.newContent(
@@ -214,18 +213,18 @@ class TestBPMImplementation(TestBPMMixin):
 
     self.assertSameSet(
       (accounting_business_link, accounting_delivery_business_link),
-      business_process.getPathValueList(trade_phase='default/accounting')
+      business_process.getBusinessLinkValueList(trade_phase='default/accounting')
     )
 
     self.assertSameSet(
       (delivery_business_link, accounting_delivery_business_link),
-      business_process.getPathValueList(trade_phase='default/delivery')
+      business_process.getBusinessLinkValueList(trade_phase='default/delivery')
     )
 
     self.assertSameSet(
       (accounting_delivery_business_link, delivery_business_link,
         accounting_business_link),
-      business_process.getPathValueList(trade_phase=('default/delivery',
+      business_process.getBusinessLinkValueList(trade_phase=('default/delivery',
         'default/accounting'))
     )
 
