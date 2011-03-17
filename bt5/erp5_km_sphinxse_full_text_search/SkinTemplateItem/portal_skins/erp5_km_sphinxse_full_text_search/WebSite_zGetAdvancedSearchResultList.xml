@@ -87,10 +87,10 @@ SELECT catalog.uid, \n
        catalog.reference, \n
        catalog.modification_date,\n
        catalog.owner,\n
-       <dtml-if is_full_text_search_on> text, </dtml-if>\n
-       category_uid,\n
-       base_category_uid,\n
-       category_relative_url,\n
+       <dtml-if is_full_text_search_on> search_results.text, </dtml-if>\n
+       join_category.category_uid,\n
+       join_category.base_category_uid,\n
+       join_category.category_relative_url,\n
        versioning.version,\n
        versioning.language\n
 \n
@@ -100,10 +100,10 @@ FROM  catalog,\n
               <dtml-if is_full_text_search_on>\n
                 <dtml-if use_text_excerpts>\n
                 /*  MySQL server can produc text excerpts */\n
-                , sphinx_snippets(full_text.SearchableText, \'erp5\', \'<dtml-var "search_string">\') as text\n
+                , sphinx_snippets(full_text.SearchableText, \'erp5\', \'<dtml-var "search_string">\') AS text\n
                 <dtml-else>\n
                 /* Return all searchable text to server which will extract found text excerpts */\n
-                , full_text.SearchableText as text\n
+                , full_text.SearchableText AS text\n
                 </dtml-if>\n
               </dtml-if>\n
               <dtml-if "query[\'select_expression\']">\n
@@ -125,13 +125,13 @@ FROM  catalog,\n
         <dtml-else> LIMIT 1000 </dtml-if>) \n
 \n
         AS search_results LEFT JOIN \n
-          (SELECT category.uid as join_category_uid, \n
+          (SELECT category.uid AS join_category_uid, \n
                   category.base_category_uid AS base_category_uid,\n
                   category.category_uid AS category_uid,\n
-                  catalog.relative_url as category_relative_url\n
+                  catalog.relative_url AS category_relative_url\n
             FROM category, catalog\n
             WHERE category.category_strict_membership = 1\n
-                  and category.base_category_uid in \n
+                  AND category.base_category_uid IN \n
                     (<dtml-in prefix="loop" expr="base_category_uid_list">\n
                         <dtml-if sequence-end>\n
                           <dtml-sqlvar expr="loop_item" type="int">\n
@@ -139,12 +139,12 @@ FROM  catalog,\n
                           <dtml-sqlvar expr="loop_item" type="int">,\n
                         </dtml-if>\n
                       </dtml-in>)\n
-                  and category.category_uid = catalog.uid\n
+                  AND category.category_uid = catalog.uid\n
 \n
             ) AS join_category\n
             ON search_results.uid = join_category.join_category_uid\n
 \n
-WHERE search_results.uid = catalog.uid and versioning.uid = catalog.uid\n
+WHERE search_results.uid = catalog.uid AND versioning.uid = catalog.uid\n
 \n
 </dtml-let>
 
