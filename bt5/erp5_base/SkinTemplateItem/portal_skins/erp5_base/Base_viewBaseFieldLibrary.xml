@@ -87,6 +87,8 @@
                         <string>my_view_mode_listbox</string>
                         <string>my_view_mode_assignment_listbox</string>
                         <string>my_view_mode_person_listbox</string>
+                        <string>my_view_mode_site</string>
+                        <string>my_view_mode_group</string>
                       </list>
                     </value>
                 </item>
