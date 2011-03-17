@@ -50,6 +50,11 @@
       <td>${base_url}/ERP5Site_cleanUpUNGTestEnvironment</td>\n
       <td></td>\n
     </tr>\n
+    <tr>\n
+      <td>openAndWait</td>\n
+      <td>${ung_url}/WebSite_logout</td>\n
+      <td></td>\n
+    </tr>\n
   </tal:block>\n
   <tal:block metal:define-macro="login">\n
     <tr>\n

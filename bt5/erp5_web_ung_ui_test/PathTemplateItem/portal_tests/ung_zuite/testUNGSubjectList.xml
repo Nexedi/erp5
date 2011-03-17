@@ -75,24 +75,14 @@
         <td></td>\n
       </tr>\n
       <tr>\n
-        <td>type</td>\n
-        <td>//input[@id="name"]</td>\n
-        <td>Document Shared</td>\n
-      </tr>\n
-      <tr>\n
         <td>click</td>\n
         <td>//p[@id="more_properties"]</td>\n
-        <td></td>\n
+        <td>Edit More Properties</td>\n
       </tr>\n
       <tr>\n
         <td>type</td>\n
-        <td>//input[@id="reference"]</td>\n
-        <td>web.Page.UNG.Test</td>\n
-      </tr>\n
-      <tr>\n
-        <td>type</td>\n
-        <td>//input[@id="version"]</td>\n
-        <td>002</td>\n
+        <td>//textarea[@id="keyword_list"]</td>\n
+        <td>UNG Subject</td>\n
       </tr>\n
       <tr>\n
         <td>clickAndWait</td>\n
@@ -100,110 +90,34 @@
         <td></td>\n
       </tr>\n
       <tr>\n
-        <td>clickAndWait</td>\n
-        <td>//a[@id="share_document"]</td>\n
+        <td>openAndWait</td>\n
+        <td>${ung_url}/Base_clearCache</td>\n
         <td></td>\n
       </tr>\n
       <tr>\n
-        <td>verifyText</td>\n
-        <td>//a[@name="document_state"]</td>\n
-        <td>Shared</td>\n
+        <td>verifyTextPresent</td>\n
+        <td>Cleared</td>\n
+        <td></td>\n
       </tr>\n
-      <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities"/>\n
       <tr>\n
         <td>openAndWait</td>\n
         <td>${ung_url}</td>\n
         <td></td>\n
       </tr>\n
       <tr>\n
-        <td>clickAndWait</td>\n
-        <td>//table[@class="your_listbox-table-domain-tree"]/tbody/tr[9]/td/a</td>\n
-        <td></td>\n
-      </tr>\n
-      <tr>\n
         <td>verifyTextNotPresent</td>\n
-        <td>No Result</td>\n
+        <td>Ung subject</td>\n
         <td></td>\n
-      </tr>\n
-      <tr>\n
-        <td>verifyText</td>\n
-        <td>//a[@class="tree-open"]</td>\n
-        <td>Shared by me</td>\n
-      </tr>\n
-      <tr>\n
-        <td>openAndWait</td>\n
-        <td>${ung_url}/WebSite_logout</td>\n
-        <td></td>\n
-      </tr>\n
-      <tr>\n
-        <td>click</td>\n
-        <td>//td[@id="new-account-form"]</td>\n
-        <td></td>\n
-      </tr>\n
-      <tr>\n
-        <td>type</td>\n
-        <td>//input[@name="firstname"]</td>\n
-        <td>Another</td>\n
-      </tr>\n
-      <tr>\n
-        <td>type</td>\n
-        <td>//input[@name="lastname"]</td>\n
-        <td>User</td>\n
-      </tr>\n
-      <tr>\n
-        <td>type</td>\n
-        <td>//input[@name="email"]</td>\n
-        <td>example2@example.com</td>\n
-      </tr>\n
-      <tr>\n
-        <td>type</td>\n
-        <td>//input[@name="login_name"]</td>\n
-        <td>ung_user2</td>\n
-      </tr>\n
-      <tr>\n
-        <td>type</td>\n
-        <td>//input[@name="password"]</td>\n
-        <td>1234</td>\n
-      </tr>\n
-      <tr>\n
-        <td>type</td>\n
-        <td>//input[@name="confirm"]</td>\n
-        <td>1234</td>\n
-      </tr>\n
-      <tr>\n
-        <td>click</td>\n
-        <td>//input[@value="Create Account"]</td>\n
-        <td></td>\n
-      </tr>\n
-      <tr>\n
-        <td>waitForPageToLoad</td>\n
-        <td>30000</td>\n
-        <td></td>\n
-      </tr>\n
-      <tr>\n
-        <td>type</td>\n
-        <td>//input[@name="__ac_name"]</td>\n
-        <td>ung_user2</td>\n
-      </tr>\n
-      <tr>\n
-        <td>type</td>\n
-        <td>//input[@name="__ac_password"]</td>\n
-        <td>1234</td>\n
       </tr>\n
       <tr>\n
         <td>clickAndWait</td>\n
-        <td>//input[@type="submit"]</td>\n
+        <td>//table[@class="your_listbox-table-domain-tree"]/tbody/tr[5]/td/a</td>\n
         <td></td>\n
       </tr>\n
       <tr>\n
-        <td>openAndWait</td>\n
-        <td>${ung_url}/?key=web.Page.UNG.Test</td>\n
+        <td>verifyTextPresent</td>\n
+        <td>Ung subject</td>\n
         <td></td>\n
-      </tr>\n
-      <tr>\n
-        <td>verifyText</td>\n
-        <td>//a[@name="document_title"]</td>\n
-        <td>Document Shared</td>\n
       </tr>\n
     </tbody>\n
   </table>\n
@@ -222,7 +136,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>testShareDocumentInUNGDocs</string> </value>
+            <value> <string>testUNGSubjectList</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>

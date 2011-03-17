@@ -48,11 +48,6 @@
       <tr><td rowspan="1" colspan="3" tal:content="template/getId"/></tr>\n
     </thead><tbody>\n
       <tal:block metal:use-macro="here/Zuite_CommonTemplateForUNG/macros/init" />\n
-      <tr>\n
-        <td>openAndWait</td>\n
-        <td>${ung_url}/WebSite_logout</td>\n
-        <td></td>\n
-      </tr>\n
       <tal:block metal:use-macro="here/Zuite_CommonTemplateForUNG/macros/create-user" />\n
       <tr>\n
         <td>type</td>\n
