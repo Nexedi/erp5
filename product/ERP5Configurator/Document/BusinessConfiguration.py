@@ -100,7 +100,7 @@ class BusinessConfiguration(Item):
     transition_list = current_state.getAvailableTransitionList(self)
     transition_number = len(transition_list)
     if transition_number > 1:
-      raise TypeError, "More than one transition is available."
+      raise TypeError("More than one transition is available.")
     elif transition_number == 0:
       return None
 
@@ -115,7 +115,6 @@ class BusinessConfiguration(Item):
       form_kw = {}
     current_state = self.getCurrentStateValue()
     transition = self.getNextTransition()
-    next_state = self.unrestrictedTraverse(transition.getDestination())
     ## it's possible that we have already saved a configuration save object 
     ## in workflow_history for this state so we use it
     configuration_save = self._getConfSaveForStateFromWorkflowHistory()
@@ -150,7 +149,6 @@ class BusinessConfiguration(Item):
       transition = self.getNextTransition()
     while transition is not None:
       form_id = transition.getTransitionFormId()
-      current_state = self.getCurrentStateValue()
       if self.isDownloadConfigurationState():
         ## exec next transition for this business configuration 
         self._executeTransition()
