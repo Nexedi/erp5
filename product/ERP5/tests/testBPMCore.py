@@ -302,129 +302,42 @@ class TestBPMImplementation(TestBPMMixin):
     self.assertEquals('something',
       business_path.getSource(context=context_movement, default='something'))
 
-  @newSimulationExpectedFailure
   def test_BusinessState_getRemainingTradePhaseList(self):
     """
-    This test case is described for what trade_phase is remaining after the state.
-    In this case, root explanation is path of between "b" and "d", and
-    path of between "a" and "b" has a condition which simulation state of
-    explanation must be "ordered" to pass the path. (*1)
-    But this test case will be passed the condition.
-
-                            (root explanation)
-       default/discount     default/invoicing     default/accounting
-    a ------------------ b ------------------- d -------------------- e
-       (cond="ordered")   \                   /
-                           \                 /
-          default/delivery  \               / default/payment
-                             \             /
-                              \           /
-                               \         /
-                                \       /
-                                 \     /
-                                  \   /
-                                   \ /
-                                    c
+    This test case is described for what trade_phase is remaining after the
+    given business link.
     """
     # define business process
     category_tool = self.getCategoryTool()
     business_process = self.createBusinessProcess()
-    business_link_a_b = self.createBusinessLink(business_process)
-    business_link_b_c = self.createBusinessLink(business_process)
-    business_link_b_d = self.createBusinessLink(business_process)
-    business_link_c_d = self.createBusinessLink(business_process)
-    business_link_d_e = self.createBusinessLink(business_process)
-    business_state_a = category_tool.trade_state.state_a
-    business_state_b = category_tool.trade_state.state_b
-    business_state_c = category_tool.trade_state.state_c
-    business_state_d = category_tool.trade_state.state_d
-    business_state_e = category_tool.trade_state.state_e
-    business_link_a_b.setPredecessorValue(business_state_a)
-    business_link_b_c.setPredecessorValue(business_state_b)
-    business_link_b_d.setPredecessorValue(business_state_b)
-    business_link_c_d.setPredecessorValue(business_state_c)
-    business_link_d_e.setPredecessorValue(business_state_d)
-    business_link_a_b.setSuccessorValue(business_state_b)
-    business_link_b_c.setSuccessorValue(business_state_c)
-    business_link_b_d.setSuccessorValue(business_state_d)
-    business_link_c_d.setSuccessorValue(business_state_d)
-    business_link_d_e.setSuccessorValue(business_state_e)
+    business_link_order = self.createBusinessLink(business_process,
+                                 title='order', id='order',
+                                 trade_phase='default/order')
+    business_link_deliver = self.createBusinessLink(business_process,
+                                 title='deliver', id='deliver',
+                                 trade_phase='default/delivery')
+    business_link_invoice = self.createBusinessLink(business_process,
+                                 title='invoice', id='invoice',
+                                 trade_phase='default/invoicing')
+    trade_state = category_tool.trade_state
+    business_link_order.setSuccessorValue(trade_state.ordered)
+    business_link_deliver.setPredecessorValue(trade_state.ordered)
+    business_link_deliver.setSuccessorValue(trade_state.delivered)
+    business_link_invoice.setPredecessorValue(trade_state.delivered)
+    business_link_invoice.setSuccessorValue(trade_state.invoiced)
 
-    # set title for debug
-    business_link_a_b.edit(title="a_b")
-    business_link_b_c.edit(title="b_c")
-    business_link_b_d.edit(title="b_d")
-    business_link_c_d.edit(title="c_d")
-    business_link_d_e.edit(title="d_e")
-    
-    # set trade_phase
-    business_link_a_b.edit(trade_phase=['default/discount'],
-                           completed_state=['ordered']) # (*1)
-    business_link_b_c.edit(trade_phase=['default/delivery'])
-    business_link_b_d.edit(trade_phase=['default/invoicing'])
-    business_link_c_d.edit(trade_phase=['default/payment'])
-    business_link_d_e.edit(trade_phase=['default/accounting'])
+    trade_phase = category_tool.trade_phase.default
 
-    # mock order
-    order = self.portal.sale_order_module.newContent(portal_type="Sale Order")
-    order_line = order.newContent(portal_type="Sale Order Line", quantity=1)
-
-    # make simulation
-    order.order()
-
-    self.stepTic()
-
-    applied_rule = order.getCausalityRelatedValue()
-    sm = applied_rule.contentValues(portal_type="Simulation Movement")[0]
-    sm.edit(causality_value=business_link_a_b)
-
-    # make other movements for each business path
-    applied_rule.newContent(portal_type="Simulation Movement",
-                            causality_value=business_link_b_c,
-                            order_value=order_line)
-    applied_rule.newContent(portal_type="Simulation Movement",
-                            causality_value=business_link_b_d,
-                            order_value=order_line)
-    applied_rule.newContent(portal_type="Simulation Movement",
-                            causality_value=business_link_c_d,
-                            order_value=order_line)
-    applied_rule.newContent(portal_type="Simulation Movement",
-                            causality_value=business_link_d_e,
-                            order_value=order_line)
-
-    self.stepTic()
-
-    trade_phase = self.portal.portal_categories.trade_phase.default
-
-    # assertion which getRemainingTradePhaseList must return category which will be passed
-    # discount is passed, business_link_a_b is already completed, because simulation state is "ordered"
-    self.assertEquals(set([trade_phase.delivery,
-                           trade_phase.invoicing,
-                           trade_phase.payment,
-                           trade_phase.accounting]),
-                      set(business_process.getRemainingTradePhaseList(order,
-                          business_state_a)))
-    self.assertEquals(set([trade_phase.delivery,
-                           trade_phase.invoicing,
-                           trade_phase.payment,
-                           trade_phase.accounting]),
-                      set(business_process.getRemainingTradePhaseList(order,
-                          business_state_b)))
-    self.assertEquals(set([trade_phase.payment,
-                           trade_phase.accounting]),
-                      set(business_process.getRemainingTradePhaseList(order,
-                          business_state_c)))
-    self.assertEquals(set([trade_phase.accounting]),
-                      set(business_process.getRemainingTradePhaseList(order,
-                          business_state_d)))
-
-    # when trade_phase_list is defined in arguments, the result is filtered by base category.
-    self.assertEquals(set([trade_phase.delivery,
-                           trade_phase.accounting]),
-                      set(business_process\
-                          .getRemainingTradePhaseList(order, business_state_a,
-                                                      trade_phase_list=['default/delivery',
-                                                                        'default/accounting'])))
+    self.assertEquals([trade_phase.delivery,
+                       trade_phase.invoicing],
+                      business_process.getRemainingTradePhaseList(
+                       business_process.order))
+    self.assertEquals([trade_phase.invoicing],
+                      business_process.getRemainingTradePhaseList(
+                       business_process.deliver))
+    self.assertEquals([],
+                      business_process.getRemainingTradePhaseList(
+                       business_process.invoice))
 
   @newSimulationExpectedFailure
   def test_BusinessLink_calculateExpectedDate(self):

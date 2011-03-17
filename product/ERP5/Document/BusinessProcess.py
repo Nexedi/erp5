@@ -30,6 +30,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.Path import Path
 from Products.ERP5.ExplanationCache import _getExplanationCache, _getBusinessLinkClosure
@@ -594,8 +595,9 @@ class BusinessProcess(Path, XMLObject):
         return False
     return True
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getRemainingTradePhaseList')
-  def getRemainingTradePhaseList(self, explanation, business_link, trade_phase_list=None):
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getRemainingTradePhaseList')
+  def getRemainingTradePhaseList(self, business_link):
     """Returns the list of remaining trade phases which to be achieved
     as part of a business process. This list is calculated by analysing 
     the graph of business link and trade states, starting from a given
@@ -608,11 +610,6 @@ class BusinessProcess(Path, XMLObject):
 
     business_link -- a Business Link document
 
-    trade_phase_list -- if provided, the result is filtered by it after
-                        being collected - XXX-JPS - is this really useful ?
-
-    NOTE: this code has not been reviewed and needs review
-
     NOTE: explanation is not involved here because we consider here that
     self is the result of asUnionBusinessProcess and thus only contains
     applicable Business Link to a given simulation subtree. Since the list
@@ -622,25 +619,39 @@ class BusinessProcess(Path, XMLObject):
     """
     remaining_trade_phase_list = []
     trade_state = business_link.getSuccessor()
-    for link in [x for x in self.objectValues(portal_type="Business Link") \
-        if x.getPredecessor() == trade_state]:
-      # XXX When no simulations related to link, what should link.isCompleted return?
-      #     if True we don't have way to add remaining trade phases to new movement
-      if not (link.getRelatedSimulationMovementValueList(explanation) and
-              link.isCompleted(explanation)):
-        remaining_trade_phase_list += link.getTradePhaseValueList()
+    tv = getTransactionalVariable(self)
+    # We might need a key which depends on the explanation
+    key = 'BusinessProcess_predecessor_successor_%s' % self.getRelativeUrl()
+    predecessor_successor_dict = tv.get(key, None)
+    if predecessor_successor_dict is None:
+      predecessor_successor_dict = {'predecessor':{},
+                                    'successor':{}}
+      for business_link in self.objectValues(portal_type="Business Link"):
+        for property_name in ('predecessor', 'successor'):
+          property_value = business_link.getProperty(property_name)
+          if property_value:
+            business_link_list = predecessor_successor_dict[property_name].\
+                setdefault(property_value, [])
+            business_link_list.append(business_link)
+      tv[key] = predecessor_successor_dict
+
+    business_link_list = predecessor_successor_dict['predecessor'].\
+                           get(trade_state, [])
+    assert len(business_link_list) <= 1, \
+        "code is not able yet to manage this case"
+    for link in business_link_list:
+      remaining_trade_phase_list += link.getTradePhaseValueList()
 
       # collect to successor direction recursively
-      state = link.getSuccessorValue()
+      state = link.getSuccessor()
       if state is not None:
+        next_business_link_list = predecessor_successor_dict['successor'].\
+                                    get(state, [])
+        assert len(next_business_link_list) == 1, \
+            "code is not able yet to manage this case"
         remaining_trade_phase_list.extend(
-          self.getRemainingTradePhaseList(explanation, state, None))
-
-    # filter just at once if given
-    if trade_phase_list is not None:
-      remaining_trade_phase_list = filter(
-        lambda x : x.getLogicalPath() in trade_phase_list,
-        remaining_trade_phase_list)
+          self.getRemainingTradePhaseList(
+          next_business_link_list[0]))
 
     return remaining_trade_phase_list
 
