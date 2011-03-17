@@ -176,7 +176,7 @@ fieldset.hidden_fieldset { \n
   width:22.5%;\n
   position:relative;\n
   margin-left: 19px;\n
-  padding-top: 10px;\n
+  padding-top: 4px;\n
 }\n
 \n
 \n
@@ -1338,6 +1338,9 @@ button.formbt > span{\n
 }\n
 .ui-dialog-title{\n
   font-weight: bold;\n
+  display:block;\n
+  float:left;\n
+  font-size:16px;\n
 }\n
 .ui-icon-closethick{\n
   text-transform: uppercase;\n
@@ -1346,6 +1349,7 @@ button.formbt > span{\n
   position:absolute;\n
   background: white;\n
   padding:10px;\n
+  border:1px solid #C0BFB3;\n
   -moz-border-radius:4px 4px 4px 4px;\n
   -webkit-border-radius:4px 4px 4px 4px;\n
   border-radius:4px 4px 4px 4px;\n
