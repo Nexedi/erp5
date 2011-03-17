@@ -141,10 +141,6 @@ class TestBPMMixin(ERP5TypeTestCase):
   def createBusinessLink(self, business_process=None, **kw):
     if business_process is None:
       business_process = self.createBusinessProcess()
-    kw['destination_method_id'] = kw.pop('destination_method_id',
-        'BusinessLink_getDefaultDestinationList')
-    kw['source_method_id'] = kw.pop('source_method_id',
-        'BusinessLink_getDefaultSourceList')
     business_link = business_process.newContent(
       portal_type=self.business_link_portal_type, **kw)
     return business_link
