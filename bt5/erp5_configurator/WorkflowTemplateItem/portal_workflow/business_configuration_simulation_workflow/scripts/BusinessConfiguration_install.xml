@@ -50,8 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal = state_change.getPortal()\n
-business_configuration = state_change[\'object\']\n
+            <value> <string>business_configuration = state_change[\'object\']\n
 \n
 # build Business Configuration bt5s and saved them inside\n
 business_configuration.installConfiguration()\n
