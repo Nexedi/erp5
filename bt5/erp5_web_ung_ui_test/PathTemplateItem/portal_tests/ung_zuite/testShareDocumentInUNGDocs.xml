@@ -100,6 +100,11 @@
         <td>pt-br</td>\n
       </tr>\n
       <tr>\n
+        <td>type</td>\n
+        <td>//textarea[@id="keyword_list"]</td>\n
+        <td>My Subject</td>\n
+      </tr>\n
+      <tr>\n
         <td>clickAndWait</td>\n
         <td>//div[@class="ui-dialog-buttonset"]/button[1]</td>\n
         <td></td>\n
@@ -229,6 +234,11 @@
         <td>verifyValue</td>\n
         <td>//input[@id="language"]</td>\n
         <td>pt-br</td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyValue</td>\n
+        <td>//textarea[@id="keyword_list"]</td>\n
+        <td>My Subject</td>\n
       </tr>\n
     </tbody>\n
   </table>\n
