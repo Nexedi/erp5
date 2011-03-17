@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="ERP5TypeInformation" module="Products.ERP5Type.ERP5Type"/>
+      <global name="Base Type" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -34,6 +34,7 @@
             <key> <string>group_list</string> </key>
             <value>
               <tuple>
+                <string>node</string>
                 <string>payment_node</string>
               </tuple>
             </value>
@@ -44,11 +45,15 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>permission</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>redirect_script</string> </key>
@@ -57,6 +62,22 @@
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>type_class</string> </key>
+            <value> <string>BankAccount</string> </value>
+        </item>
+        <item>
+            <key> <string>type_interface</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_mixin</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
       </dictionary>
     </pickle>
