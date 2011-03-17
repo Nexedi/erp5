@@ -46,10 +46,10 @@ from DateTime import DateTime
 # global (RAM) cookie storage
 cookiejar = cookielib.CookieJar()
 last_loggedin_user_and_password = None
-referer  = None
+referer = None
 installation_status = {'bt5': {'current': 0,
-                               'all': 0,},
-                       'activity_list': [],}
+                               'all': 0, },
+                       'activity_list': [], }
 
 # cookie name to store user's preferred language name
 LANGUAGE_COOKIE_NAME = 'configurator_user_preferred_language'
@@ -87,7 +87,7 @@ def _validateFormToRequest(form, REQUEST, **kw):
       ## missing fields
       validation_status = 2
     ## extract form arguments and remove leading prefixes
-    if validation_status==0:
+    if validation_status == 0:
       for field in form.get_fields():
         field_id = field.id
         value = getattr(REQUEST, field_id, None)
@@ -104,21 +104,20 @@ def _validateFormToRequest(form, REQUEST, **kw):
 
 
 class ConfiguratorTool(BaseTool):
-  """                                       
-    This tool provides a Configurator Tool.
-  """                 
+  """This tool provides a Configurator Tool.
+  """
 
   id = 'portal_configurator'
   title = 'Configurator Tool'
   meta_type = 'ERP5 Configurator Tool'
-  portal_type = 'Configurator Tool'   
+  portal_type = 'Configurator Tool'
 
   isPortalContent = ConstantGetter('isPortalContent', value=True)
 
   security = ClassSecurityInfo()
 
   security.declareProtected(Permissions.ManagePortal, 'manage_overview')
-  manage_overview = DTMLFile('explainConfiguratorTool', _dtmldir )
+  manage_overview = DTMLFile('explainConfiguratorTool', _dtmldir)
 
   def getConfiguratorUserPreferredLanguage(self):
     """ Get configuration language as selected by user """
@@ -159,21 +158,21 @@ class ConfiguratorTool(BaseTool):
         REQUEST.RESPONSE.setCookie(LANGUAGE_COOKIE_NAME,
                                    user_preferred_language,
                                    path='/',
-                                   expires=(DateTime()+30).rfc822())
+                                   expires=(DateTime() + 30).rfc822())
       # set encoded __ac_key cookie at client's browser
       __ac_key = quote(encodestring(password))
       expires = (DateTime() + 1).toZone('GMT').rfc822()
       REQUEST.RESPONSE.setCookie('__ac_key',
                                  __ac_key,
-                                 expires = expires)
+                                 expires=expires)
       REQUEST.set('__ac_key', __ac_key)
-      REQUEST.RESPONSE.setCookie(BUSINESS_CONFIGURATION_COOKIE_NAME, 
-                                 bc, 
-                                 expires = expires)
+      REQUEST.RESPONSE.setCookie(BUSINESS_CONFIGURATION_COOKIE_NAME,
+                                 bc,
+                                 expires=expires)
       REQUEST.set(BUSINESS_CONFIGURATION_COOKIE_NAME, bc)
       return self.next(REQUEST=REQUEST)
     else:
-      REQUEST.set('portal_status_message', 
+      REQUEST.set('portal_status_message',
                    self.Base_translateString('Incorrect Configuration Key'))
       return self.view()
 
@@ -186,17 +185,17 @@ class ConfiguratorTool(BaseTool):
       password = quote(encodestring(password))
     # Not still not finished yet.
     if business_configuration is None:
-      business_configuration = self.REQUEST.get(BUSINESS_CONFIGURATION_COOKIE_NAME, None)
+      business_configuration = self.REQUEST.get(
+               BUSINESS_CONFIGURATION_COOKIE_NAME, None)
     if None not in [password, business_configuration]:
       def is_key_valid(password, business_configuration):
         bc = self.getPortalObject().unrestrictedTraverse(business_configuration)
         return quote(encodestring(bc.getReference(''))) == password
-      return CachingMethod(is_key_valid, 
-                           "ConfiguratorTool_is_key_valid", 
+      return CachingMethod(is_key_valid,
+                           "ConfiguratorTool_is_key_valid",
                            cache_factory='erp5_content_long')(
                                      password, business_configuration)
     return False
-
 
   #security.declareProtected(Permissions.ModifyPortalContent, 'next')
   def next(self, REQUEST):
@@ -204,18 +203,18 @@ class ConfiguratorTool(BaseTool):
     # check if user is allowed to access service
     portal = self.getPortalObject()
     if not self._isCorrectConfigurationKey():
-      REQUEST.set('portal_status_message', 
+      REQUEST.set('portal_status_message',
                   self.Base_translateString('Incorrect Configuration Key'))
       return self.view()
     kw = self.REQUEST.form.copy()
     business_configuration = REQUEST.get(BUSINESS_CONFIGURATION_COOKIE_NAME)
     bc = portal.restrictedTraverse(business_configuration)
     if bc is None:
-      REQUEST.set('portal_status_message', 
+      REQUEST.set('portal_status_message',
                    self.Base_translateString(
                      'You cannot Continue. Unable to find your Business Configuration.'))
       return self.view()
-    response = self._next(business_configuration=bc,kw=kw)
+    response = self._next(business_configuration=bc, kw=kw)
     ## Parse server response
     command = response["command"]
     if command == "show":
@@ -231,7 +230,6 @@ class ConfiguratorTool(BaseTool):
     need_validation = 1
     validation_errors = None
     response = {}
-    portal = self.getPortalObject()
 
     ## initial state no previous form to validate
     if business_configuration.isInitialConfigurationState():
@@ -255,19 +253,19 @@ class ConfiguratorTool(BaseTool):
       ## iterate all forms
       for form_counter in range(0, isMultiEntryTransition):
         single_form_kw = {}
-        for key,value in form_kw.items():
+        for key, value in form_kw.items():
           if isinstance(value, list) or isinstance(value, tuple):
             ## we have more than one form shown
             single_form_kw[key] = value[form_counter]
             # save original value in request in some cases of multiple forms
             # we need it for validation
-            single_form_kw['_original_%s' %key] = value
+            single_form_kw['_original_%s' % key] = value
           else:
             ## even though we have multiple entry transition customer wants
             ## ONE form!
             single_form_kw[key] = value
         ## update properly REQUEST with current form data
-        for key,value in single_form_kw.items():
+        for key, value in single_form_kw.items():
           self.REQUEST.set(key, value)
         ## get validation status
         validation_status, dummy, validation_errors = \
@@ -298,7 +296,7 @@ class ConfiguratorTool(BaseTool):
           single_form_html = form()
         ## wrap in form template
         single_form_html = self.Base_mainConfiguratorFormTemplate(
-                                current_form_number = form_counter +1,
+                                current_form_number = form_counter + 1,
                                 max_form_numbers = isMultiEntryTransition,
                                 form_html = single_form_html)
         ## add to list of forms as html code
@@ -316,7 +314,7 @@ class ConfiguratorTool(BaseTool):
                   next = self.Base_translateString(transition.getTitle()),
                   data = html_data)
         return response
-    
+
     ## show next form in transitions
     rendered = False
     while rendered is False:
@@ -327,9 +325,9 @@ class ConfiguratorTool(BaseTool):
         else:
           validation_status, form_kw, validation_errors = \
               business_configuration._validateNextForm(**kw)
-        if validation_status==1:
+        if validation_status == 1:
           need_validation = 0
-        elif validation_status==2:
+        elif validation_status == 2:
           rendered = True
           need_validation = 0
           if business_configuration.getNextTransition() == None:
@@ -434,7 +432,7 @@ class ConfiguratorTool(BaseTool):
     portal_activities = getToolByName(self.getPortalObject(),
         'portal_activities')
     is_bt5_installation_over = (portal_activities.countMessageWithTag(
-      'initialERP5Setup')==0)
+      'initialERP5Setup') == 0)
     if 0 == len(portal_activities.getMessageList()) and \
         is_bt5_installation_over:
       html = self.ConfiguratorTool_viewSuccessfulConfigurationMessageRenderer()
@@ -465,7 +463,7 @@ class ConfiguratorTool(BaseTool):
     active_process = self.portal_activities.newActiveProcess()
     REQUEST.set('active_process_id', active_process.getId())
     request_restore_dict = {'__ac_key': REQUEST.get('__ac_key',
-      None),}
+                                                       None), }
     self.activate(active_process=active_process, tag = 'initialERP5Setup'
         ).initialERP5Setup(business_configuration.getRelativeUrl(), request_restore_dict)
     return self.ConfiguratorTool_viewInstallationStatus(REQUEST)
