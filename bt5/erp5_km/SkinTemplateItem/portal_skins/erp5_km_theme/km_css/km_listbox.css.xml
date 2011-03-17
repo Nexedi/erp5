@@ -86,7 +86,6 @@ div.listbox-action-widget button, \n
 div.listbox-action-widget a.button {\n
   border:0 none;\n
   cursor:pointer;\n
-  height:27px;\n
   float:left;\n
   margin-right:3px;\n
   margin-bottom:3px;\n

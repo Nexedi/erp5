@@ -242,12 +242,7 @@ fieldset.left{\n
   overflow: hidden;\n
 }\n
 \n
-div.input > input {\n
-  max-width:320px;\n
-}\n
-\n
 /* Top navigation */\n
-\n
 #menu {\n
   width:100%;\n
   height:40px;\n
@@ -550,10 +545,6 @@ fieldset.left .field,\n
 fieldset.right .field {\n
   margin: 5px 0;\n
   float: left;\n
-}\n
-\n
-.input input[type=image] {\n
-  width: auto !important;\n
 }\n
 \n
 .bottom_actions {\n
@@ -1340,6 +1331,29 @@ button.formbt > span{\n
   height:auto;\n
   padding:0;\n
 }\n
+\n
+/* Pop up ui */\n
+.ui-dialog-titlebar{\n
+  text-align:right;\n
+}\n
+.ui-dialog-title{\n
+  font-weight: bold;\n
+}\n
+.ui-icon-closethick{\n
+  text-transform: uppercase;\n
+}\n
+.ui-dialog{\n
+  position:absolute;\n
+  background: white;\n
+  padding:10px;\n
+  -moz-border-radius:4px 4px 4px 4px;\n
+  -webkit-border-radius:4px 4px 4px 4px;\n
+  border-radius:4px 4px 4px 4px;\n
+  -moz-box-shadow:4px 4px 4px rgba(0, 0, 0, 0.5);\n
+  -webkit-box-shadow:4px 4px 4px rgba(0, 0, 0, 0.5);\n
+  box-shadow:4px 4px 4px rgba(0, 0, 0, 0.5);\n
+}\n
+\n
 </tal:block>
 
 ]]></unicode> </value>
