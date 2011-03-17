@@ -84,6 +84,9 @@
                     <value>
                       <list>
                         <string>my_view_mode_function</string>
+                        <string>my_view_mode_listbox</string>
+                        <string>my_view_mode_assignment_listbox</string>
+                        <string>my_view_mode_person_listbox</string>
                       </list>
                     </value>
                 </item>
