@@ -174,6 +174,81 @@
         <td>//table[@class="your_listbox-table-domain-tree"]/tbody/tr[4]/td[2]/a</td>\n
         <td>Cloudooo</td>\n
       </tr>\n
+      <tr>\n
+        <td>openAndWait</td>\n
+        <td>${ung_url}/ERP5Site_createNewWebDocument?template=web_table_template</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//a[@name="document_title"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//input[@id="name"]</td>\n
+        <td>Document Sample</td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//p[@id="more_properties"]</td>\n
+        <td>Edit More Properties</td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//textarea[@id="keyword_list"]</td>\n
+        <td>Web Table Subject</td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//div[@class="ui-dialog-buttonset"]/button[1]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>openAndWait</td>\n
+        <td>${ung_url}/Base_clearCache</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyTextPresent</td>\n
+        <td>Cleared</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>openAndWait</td>\n
+        <td>${ung_url}</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//table[@class="your_listbox-table-domain-tree"]/tbody/tr[5]/td/a</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//table[@class="your_listbox-table-domain-tree"]/tbody/tr[5]/td[2]/a</td>\n
+        <td>Web table subject</td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//table[@class="your_listbox-table-domain-tree"]/tbody/tr[5]/td[2]/a</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyElementPresent</td>\n
+        <td>//table[@class="listbox your_listbox your_listbox-table"]/tbody/tr[1]/td[1]/input</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyElementPresent</td>\n
+        <td>//table[@class="listbox your_listbox your_listbox-table"]/tbody/tr[1]/td[2]/input</td>\n
+        <td>Document Sample</td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyElementNotPresent</td>\n
+        <td>//table[@class="listbox your_listbox your_listbox-table"]/tbody/tr[2]/td[1]/input</td>\n
+        <td></td>\n
+      </tr>\n
     </tbody>\n
   </table>\n
 </body>\n
