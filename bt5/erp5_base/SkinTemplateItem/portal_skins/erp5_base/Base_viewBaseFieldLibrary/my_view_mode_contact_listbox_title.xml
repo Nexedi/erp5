@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_title</string> </value>
+            <value> <string>my_view_mode_contact_listbox_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>

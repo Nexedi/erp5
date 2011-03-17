@@ -77,11 +77,11 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>listbox_int_index</string> </value>
+                    <value> <string>my_view_mode_contact_listbox_int_index</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Entity_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewBaseFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

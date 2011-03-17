@@ -77,15 +77,11 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_contact_listbox</string> </value>
+                    <value> <string>my_view_mode_contact_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Entity_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>lines</string> </key>
-                    <value> <int>20</int> </value>
+                    <value> <string>Base_viewBaseFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>

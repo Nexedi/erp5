@@ -89,6 +89,9 @@
                         <string>my_view_mode_person_listbox</string>
                         <string>my_view_mode_site</string>
                         <string>my_view_mode_group</string>
+                        <string>my_view_mode_contact_listbox</string>
+                        <string>my_view_mode_contact_listbox_int_index</string>
+                        <string>my_view_mode_contact_listbox_title</string>
                       </list>
                     </value>
                 </item>
