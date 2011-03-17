@@ -153,9 +153,9 @@ $(function() {\n
             load(form.attr(\'action\'), $.param(params) + \'&\' + form.serialize());\n
           });\n
 \n
-          // XXX Remove the hardcoded handler.\n
-          $(\'input[type="text"][name="listbox_page_start"][onkeypress]\', dialog).removeAttr(\'onkeypress\');\n
-          $(\'input[type="text"][name="listbox_page_start"]\', dialog).keypress(function(event) {\n
+          // listbox type in page number\n
+          $(\'input[name="listbox_page_start"][onkeypress]\', dialog).removeAttr(\'onkeypress\');\n
+          $(\'input[name="listbox_page_start"]\', dialog).keypress(function(event) {\n
             if (event.keyCode == \'13\') {\n
               event.preventDefault();\n
               var self = $(this);\n
@@ -165,7 +165,18 @@ $(function() {\n
               load(\'listbox_setPage\', form.serialize());\n
             }\n
           });\n
-\n
+          \n
+          // Listbox next & previous, last & first buttons\n
+          $.each(["listbox_nextPage", "listbox_previousPage", "listbox_firstPage", "listbox_lastPage"], \n
+                 function(index, value) {\n
+                   var button = $(\'button[type="submit"][name="\' + value + \':method"]\', dialog).first();\n
+                   button.click(function(event) {\n
+                                  var form = $(\'form.main_form\', dialog);\n
+                                  event.preventDefault();\n
+                                  load(value, form.serialize());            \n
+                   });\n
+          });\n
+         \n
           $(\'th.listbox-table-filter-cell input[type="text"]\', dialog).removeAttr(\'onkeypress\').keypress(function(event) {\n
             if (event.keyCode == \'13\') {\n
               event.preventDefault();\n
