@@ -131,6 +131,9 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
 from Products.ERP5Type.tests.runUnitTest import ERP5TypeTestLoader
 
 class ERP5TypeTestReLoader(ERP5TypeTestLoader):
+    """ERP5Type test re-loader supports reloading test modules before
+    running them.
+    """
 
     def __init__(self, filter_test_list=()):
         super(ERP5TypeTestReLoader, self).__init__()
@@ -153,14 +156,12 @@ class ERP5TypeTestReLoader(ERP5TypeTestLoader):
                 ERP5TypeTestLoader.filter_test_list = old_filter_test_list
 
     def loadTestsFromModule(self, module):
-        """ERP5Type test re-loader supports reloading test modules before
-        running them.
-        """
         reload(module)
         return super(ERP5TypeTestReLoader, self).loadTestsFromModule(module)
 
     def loadTestsFromTestCase(self, testCaseClass):
-        reload(sys.modules[testCaseClass.__module__])
+        testModule = reload(sys.modules[testCaseClass.__module__])
+        testCaseClass = getattr(testModule, testCaseClass.__name__)
         return super(ERP5TypeTestReLoader,
                      self).loadTestsFromTestCase(testCaseClass)
 
