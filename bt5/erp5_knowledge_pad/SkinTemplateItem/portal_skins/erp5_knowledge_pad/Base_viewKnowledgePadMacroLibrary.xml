@@ -88,8 +88,7 @@
 <tal:block metal:define-macro="add_new_gadget"\n
            tal:define="active_knowledge_pad_relative_url active_knowledge_pad/getRelativeUrl;">\n
   <a tal:condition="not: isKnowledgePadTemplateUsed"\n
-     onclick="return addNewPad()"\n
-     tal:attributes="onclick string: addNewPad(\'${cancel_url}\',\'${active_knowledge_pad_relative_url}\',\'${mode}\')"\n
+     tal:attributes="href string:Base_viewGadgetListDialog?reset=1&amp;cancel_url=${cancel_url}&amp;mode=${mode}&amp;active_pad_relative_url=${active_knowledge_pad_relative_url}"\n
      title="Add gadgets"\n
      i18n:domain="ui"\n
      i18n:attributes="title"\n

@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts99770782.61</string> </value>
+            <value> <string>ts00370324.82</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -314,6 +314,11 @@ function loadPadFromServer(pad_relative_url, selected_pad_dom_id, mode){\n
   // set new active pad\n
   active_knowledge_pad_relative_url = pad_relative_url;\n
   \n
+  // update "Add Gadget" link\n
+  current_url = $("#add-gadgets").attr("href");\n
+  new_url = current_url.substring(0, current_url.indexOf("active_pad_relative_url=")+24)+active_knowledge_pad_relative_url\n
+  $("#add-gadgets").attr("href", new_url);\n
+  \n
   //function metadataFetchFailed(meta){}\n
   function handleServerSuccess(data){\n
     body = data.body\n
@@ -326,15 +331,6 @@ function loadPadFromServer(pad_relative_url, selected_pad_dom_id, mode){\n
     eval(javascript);\n
     // give some timeout as we can be sometimes two fast loading a tab\n
     setTimeout("$(\'#loading-wrapper\').first().hide();", 250 );};\n
-}\n
-\n
-function addNewPad(cancel_url, knowledge_pad_relative_url, mode){\n
-  // if it\'s first time we switch set active_knowledge_pad_relative_url\n
-  if(active_knowledge_pad_relative_url==\'\'){\n
-    active_knowledge_pad_relative_url = knowledge_pad_relative_url;\n
-  }\n
-  // redirect to add gadget dialog\n
-  window.location=add_new_gadget_form_id + "?reset=1&cancel_url="+cancel_url+"&active_pad_relative_url="+active_knowledge_pad_relative_url+"&mode="+mode; \n
 }\n
 \n
 function addPadOnServerOnEnter(event, mode, cancel_url){\n
@@ -497,7 +493,7 @@ $(document).ready(initialize);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>18445</int> </value>
+            <value> <int>18244</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
