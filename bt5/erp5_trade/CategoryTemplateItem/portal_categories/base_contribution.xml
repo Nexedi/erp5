@@ -16,7 +16,7 @@
         </item>
         <item>
             <key> <string>acquisition_portal_type</string> </key>
-            <value> <string>python: portal.getPortalMovementTypeList() + portal.getPortalAmountGeneratorLineTypeList()</string> </value>
+            <value> <string>python: portal.getPortalMovementTypeList() + portal.getPortalAmountGeneratorLineTypeList() + portal.getPortalSupplyPathTypeList()</string> </value>
         </item>
         <item>
             <key> <string>categories</string> </key>
@@ -30,6 +30,14 @@
             <key> <string>description</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>fallback_base_category</string> </key>
+            <value>
+              <tuple>
+                <string>base_amount</string>
+              </tuple>
             </value>
         </item>
         <item>

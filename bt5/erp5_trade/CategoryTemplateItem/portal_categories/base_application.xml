@@ -16,7 +16,7 @@
         </item>
         <item>
             <key> <string>acquisition_portal_type</string> </key>
-            <value> <string>python: portal.getPortalMovementTypeList() + portal.getPortalAmountGeneratorLineTypeList()</string> </value>
+            <value> <string>python: portal.getPortalMovementTypeList() + portal.getPortalAmountGeneratorLineTypeList() + portal.getPortalSupplyPathTypeList()</string> </value>
         </item>
         <item>
             <key> <string>categories</string> </key>
