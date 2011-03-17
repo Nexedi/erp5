@@ -119,6 +119,61 @@
         <td>Ung subject</td>\n
         <td></td>\n
       </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//table[@class="listbox your_listbox your_listbox-table"]/tbody/tr[1]/td[3]/a</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//a[@name="document_title"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//p[@id="more_properties"]</td>\n
+        <td>Edit More Properties</td>\n
+      </tr>\n
+      <tr>\n
+        <td>runScript</td>\n
+        <td>document.getElementById("keyword_list").value = "VPN\\nCloudooo"</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//div[@class="ui-dialog-buttonset"]/button[1]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>openAndWait</td>\n
+        <td>${ung_url}/Base_clearCache</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyTextPresent</td>\n
+        <td>Cleared</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>openAndWait</td>\n
+        <td>${ung_url}</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//table[@class="your_listbox-table-domain-tree"]/tbody/tr[5]/td/a</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//table[@class="your_listbox-table-domain-tree"]/tbody/tr[3]/td[2]/a</td>\n
+        <td>Vpn</td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//table[@class="your_listbox-table-domain-tree"]/tbody/tr[4]/td[2]/a</td>\n
+        <td>Cloudooo</td>\n
+      </tr>\n
     </tbody>\n
   </table>\n
 </body>\n
