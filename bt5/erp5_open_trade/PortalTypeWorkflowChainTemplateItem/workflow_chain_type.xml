@@ -9,7 +9,7 @@
  </chain>
  <chain>
   <type>Open Internal Order Line</type>
-  <workflow>edit_workflow, open_order_line_matrix_interaction_workflow, open_order_path_simulation_interaction_workflow</workflow>
+  <workflow>edit_workflow, movement_resource_interaction_workflow, open_order_line_matrix_interaction_workflow, open_order_path_simulation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Open Purchase Order</type>
@@ -21,7 +21,7 @@
  </chain>
  <chain>
   <type>Open Purchase Order Line</type>
-  <workflow>edit_workflow, open_order_line_matrix_interaction_workflow, open_order_path_simulation_interaction_workflow</workflow>
+  <workflow>edit_workflow, movement_resource_interaction_workflow, open_order_line_matrix_interaction_workflow, open_order_path_simulation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Open Sale Order</type>
@@ -33,6 +33,6 @@
  </chain>
  <chain>
   <type>Open Sale Order Line</type>
-  <workflow>edit_workflow, open_order_line_matrix_interaction_workflow, open_order_path_simulation_interaction_workflow</workflow>
+  <workflow>edit_workflow, movement_resource_interaction_workflow, open_order_line_matrix_interaction_workflow, open_order_path_simulation_interaction_workflow</workflow>
  </chain>
 </workflow_chain>
