@@ -231,6 +231,8 @@ class ConfiguratorTool(BaseTool):
     validation_errors = None
     response = {}
 
+    business_configuration.initializeWorkflow()
+
     ## initial state no previous form to validate
     if business_configuration.isInitialConfigurationState():
       need_validation = 0

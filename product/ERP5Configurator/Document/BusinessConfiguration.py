@@ -91,6 +91,18 @@ class BusinessConfiguration(Item):
     """
     return self.getCurrentStateTitle() == END_STATE_TITLE
 
+  security.declareProtected(Permissions.ModifyPortalContent, \
+      'initializeWorkflow')
+  def initializeWorkflow(self):
+    """ Initialize Related Workflow"""
+    workflow = self.getResourceValue()
+    if workflow is not None and \
+      (self.getResource() not in self.workflow_history):
+      if len(self.objectValues("ERP5 Configuration Save")) > 0:
+        raise ValueError("Business Configuration Cannot be initialized, \
+                          it contains one or more Configurator Save")
+      workflow.initializeDocument(self)
+
   security.declareProtected(Permissions.View, 'getNextTransition')
   def getNextTransition(self):
     """ Return next transition. """
@@ -269,8 +281,7 @@ class BusinessConfiguration(Item):
     next_state = self.unrestrictedTraverse(transition.getDestination())
     workflow_history = current_state.getWorkflowHistory(self)
     for wh in workflow_history:
-      wh_state = self.unrestrictedTraverse(wh['current_state'])
-      if wh_state == next_state:
+      if next_state == self.unrestrictedTraverse(wh['current_state']):
         configuration_save = self.unrestrictedTraverse(wh['configuration_save_url'])
     return configuration_save
 
