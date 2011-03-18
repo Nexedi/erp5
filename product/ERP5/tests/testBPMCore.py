@@ -560,62 +560,61 @@ class TestBPMisBuildableImplementation(TestBPMDummyDeliveryMovementMixin):
     order = self._createDelivery()
     order_line = self._createMovement(order)
 
+
     # first level rule with simulation movement
     applied_rule = self.portal.portal_simulation.newContent(
         portal_type='Applied Rule', causality_value=order)
 
-    simulation_movement = applied_rule.newContent(
-      portal_type = 'Simulation Movement',
-      delivery_value = order_line,
-      causality_value = self.order_link
-    )
+    def setTestClassProperty(prefix, property_name, document):
+      if prefix:
+        property_name = "%s_%s" % (prefix, property_name)
+      setattr(self, property_name, document)
+      return document
 
-    # second level rule with simulation movement
-    delivery_rule = simulation_movement.newContent(
-        portal_type='Applied Rule')
-    delivery_simulation_movement = delivery_rule.newContent(
+    def constructSimulationTree(applied_rule, prefix=None):
+      document = setTestClassProperty(prefix, 'simulation_movement',
+        applied_rule.newContent(
+        portal_type = 'Simulation Movement',
+        delivery_value = order_line,
+        causality_value = self.order_link
+        ))
+
+      # second level rule with simulation movement
+      document = setTestClassProperty(prefix, 'delivery_rule',
+        document.newContent(
+        portal_type='Applied Rule'))
+      document = setTestClassProperty(prefix, 'delivery_simulation_movement',
+        document.newContent(
         portal_type='Simulation Movement',
-        causality_value = self.delivery_link)
+        causality_value = self.delivery_link))
 
-    # third level rule with simulation movement
-    invoicing_rule = delivery_simulation_movement.newContent(
-        portal_type='Applied Rule')
-    invoicing_simulation_movement = invoicing_rule.newContent(
-        portal_type='Simulation Movement',
-        causality_value = self.invoice_link)
+      # third level rule with simulation movement
+      document = setTestClassProperty(prefix, 'invoicing_rule',
+          document.newContent(
+          portal_type='Applied Rule'))
+      document = setTestClassProperty(prefix, 'invoicing_simulation_movement',
+          document.newContent(
+          portal_type='Simulation Movement',
+          causality_value = self.invoice_link))
 
-    # split simulation movement for first level applied rule
-    split_simulation_movement = applied_rule.newContent(
-      portal_type = 'Simulation Movement', delivery_value = order_line,
-      causality_value = self.order_link)
-
-    # second level rule with simulation movement for split parent movement
-    split_delivery_rule = split_simulation_movement.newContent(
-        portal_type='Applied Rule')
-    split_delivery_simulation_movement = split_delivery_rule.newContent(
-        portal_type='Simulation Movement',
-        causality_value = self.delivery_link)
-
-    # third level rule with simulation movement for split parent movement
-    split_invoicing_rule = split_delivery_simulation_movement.newContent(
-        portal_type='Applied Rule')
-    split_invoicing_simulation_movement = split_invoicing_rule.newContent(
-        portal_type='Simulation Movement',
-        causality_value = self.invoice_link)
+    constructSimulationTree(applied_rule)
+    constructSimulationTree(applied_rule, prefix='split')
 
     order.setSimulationState(self.completed_state)
     self.stepTic()
 
-    # in the beginning only order related movements shall be buildable
-    self.assertEquals(self.business_process.isBusinessLinkBuildable(
-       order, self.delivery_link), True)
-    self.assertEquals(delivery_simulation_movement.isBuildable(), True)
-    self.assertEquals(split_delivery_simulation_movement.isBuildable(), True)
+    def checkIsBusinessLinkBuildable(explanation, business_link, value):
+      self.assertEquals(self.business_process.isBusinessLinkBuildable(
+       explanation, business_link), value)
 
-    self.assertEquals(self.business_process.isBusinessLinkBuildable(
-       order, self.invoice_link), False)
-    self.assertEquals(invoicing_simulation_movement.isBuildable(), False)
-    self.assertEquals(split_invoicing_simulation_movement.isBuildable(),
+    # in the beginning only order related movements shall be buildable
+    checkIsBusinessLinkBuildable(order, self.delivery_link, True)
+    self.assertEquals(self.delivery_simulation_movement.isBuildable(), True)
+    self.assertEquals(self.split_delivery_simulation_movement.isBuildable(), True)
+
+    checkIsBusinessLinkBuildable(order, self.invoice_link, False)
+    self.assertEquals(self.invoicing_simulation_movement.isBuildable(), False)
+    self.assertEquals(self.split_invoicing_simulation_movement.isBuildable(),
         False)
 
     # add delivery
@@ -623,7 +622,7 @@ class TestBPMisBuildableImplementation(TestBPMDummyDeliveryMovementMixin):
     delivery_line = self._createMovement(delivery)
 
     # relate not split movement with delivery (deliver it)
-    delivery_simulation_movement.edit(delivery_value = delivery_line)
+    self.delivery_simulation_movement.edit(delivery_value = delivery_line)
 
     self.stepTic()
 
@@ -635,20 +634,15 @@ class TestBPMisBuildableImplementation(TestBPMDummyDeliveryMovementMixin):
     #
     # delivery_link (for delivery) is not buildable - delivery is already
     # built for those movements
-    self.assertEquals(self.business_process.isBusinessLinkBuildable(
-       order, self.delivery_link), True)
-    self.assertEquals(split_delivery_simulation_movement.isBuildable(), True)
+    checkIsBusinessLinkBuildable(order, self.delivery_link, True)
+    self.assertEquals(self.split_delivery_simulation_movement.isBuildable(), True)
 
-    self.assertEquals(self.business_process.isBusinessLinkBuildable(
-       delivery, self.delivery_link), False)
-    self.assertEquals(self.business_process.isBusinessLinkBuildable(
-       delivery, self.invoice_link), False)
-    self.assertEquals(delivery_simulation_movement.isBuildable(), False)
-    self.assertEquals(invoicing_simulation_movement.isBuildable(), False)
-    self.assertEquals(self.business_process.isBusinessLinkBuildable(
-       order, self.invoice_link), False)
-    self.assertEquals(split_invoicing_simulation_movement.isBuildable(),
-        False)
+    checkIsBusinessLinkBuildable(delivery, self.delivery_link, False)
+    checkIsBusinessLinkBuildable(delivery, self.invoice_link, False)
+    self.assertEquals(self.delivery_simulation_movement.isBuildable(), False)
+    self.assertEquals(self.invoicing_simulation_movement.isBuildable(), False)
+    checkIsBusinessLinkBuildable(order, self.invoice_link, False)
+    self.assertEquals(self.split_invoicing_simulation_movement.isBuildable(), False)
 
     # put delivery in simulation state configured on path (and this state is
     # available directly on movements)
@@ -669,20 +663,15 @@ class TestBPMisBuildableImplementation(TestBPMDummyDeliveryMovementMixin):
     #
     # split movement for invoicing is not buildable - no proper delivery
     # related for previous path
-    self.assertEquals(self.business_process.isBusinessLinkBuildable(
-       order, self.delivery_link), True)
-    self.assertEquals(invoicing_simulation_movement.isBuildable(), True)
-    self.assertEquals(self.business_process.isBusinessLinkBuildable(
-       delivery, self.invoice_link), True)
+    checkIsBusinessLinkBuildable(order, self.delivery_link, True)
+    self.assertEquals(self.invoicing_simulation_movement.isBuildable(), True)
+    checkIsBusinessLinkBuildable(delivery, self.invoice_link, True)
 
-    self.assertEquals(self.business_process.isBusinessLinkBuildable(
-       order, self.invoice_link), False)
-    self.assertEquals(self.business_process.isBusinessLinkBuildable(
-       delivery, self.invoice_link), True)
-    self.assertEquals(self.business_process.isBusinessLinkBuildable(
-       delivery, self.delivery_link), False)
-    self.assertEquals(delivery_simulation_movement.isBuildable(), False)
-    self.assertEquals(split_invoicing_simulation_movement.isBuildable(),
+    checkIsBusinessLinkBuildable(order, self.invoice_link, False)
+    checkIsBusinessLinkBuildable(delivery, self.invoice_link, True)
+    checkIsBusinessLinkBuildable(delivery, self.delivery_link, False)
+    self.assertEquals(self.delivery_simulation_movement.isBuildable(), False)
+    self.assertEquals(self.split_invoicing_simulation_movement.isBuildable(),
         False)
 
   @newSimulationExpectedFailure
