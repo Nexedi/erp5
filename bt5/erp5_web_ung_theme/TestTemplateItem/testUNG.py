@@ -82,7 +82,7 @@ class TestUNG(ERP5TypeTestCase):
 
   def getTitleListToBySubjectDomain(self):
     parent = self.portal.portal_domains.ung_domain.by_subject
-    return [domain.getTitle() for domain in self.portal.WebPageModule_generateDomain(0, parent)]
+    return [domain.getTitle() for domain in self.portal.ERP5Site_generateDomain(0, parent)]
 
   def testERP5Site_createNewWebDocument(self):
     """Test if the script creates the objects using Templates correctly"""
@@ -97,8 +97,8 @@ class TestUNG(ERP5TypeTestCase):
                                            portal_type="Web Illustration",
                                            reference="default-Web.Illustration.Reference")
 
-  def testWebPageModule_generateDomain(self):
-    """Test if script WebPageModule_generateDomain generates the list of
+  def testERP5Site_generateDomain(self):
+    """Test if script ERP5Site_generateDomain generates the list of
     domains correctly"""
     web_page = self.portal.web_page_module.newContent(portal_type="Web Page")
     self.stepTic()

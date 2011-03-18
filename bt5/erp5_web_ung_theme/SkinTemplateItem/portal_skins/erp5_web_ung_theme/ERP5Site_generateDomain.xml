@@ -129,7 +129,7 @@ return domain_list\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebPageModule_generateDomain</string> </value>
+            <value> <string>ERP5Site_generateDomain</string> </value>
         </item>
       </dictionary>
     </pickle>

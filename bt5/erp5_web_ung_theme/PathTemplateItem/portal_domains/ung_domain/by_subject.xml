@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>domain_generator_method_id</string> </key>
-            <value> <string>WebPageModule_generateDomain</string> </value>
+            <value> <string>ERP5Site_generateDomain</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
