@@ -58,8 +58,7 @@
 bc_list = context.business_configuration_module.searchFolder(portal_type="Business Configuration")\n
 result_list = []\n
 for business_configuration in bc_list:\n
-  if None not in [business_configuration.getResource(), \n
-              business_configuration.getCurrentState()]:\n
+  if None not in [business_configuration.getResource()]:\n
     title = business_configuration.getTitle()\n
     relative_url = business_configuration.getRelativeUrl()\n
     result_list.append((title, relative_url))\n
