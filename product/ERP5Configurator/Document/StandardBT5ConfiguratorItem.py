@@ -68,8 +68,10 @@ class StandardBT5ConfiguratorItem(ConfiguratorItemMixin, XMLObject):
     filename_bt5_id = '%s.bt5' % bt5_id
     if business_configuration.isStandardBT5(filename_bt5_id):
       if bt5_id not in installed_bt_list:
+        update_catalog = self.getUpdateCatalog(0)
         bt_url = template_tool.getBusinessTemplateUrl(None, filename_bt5_id)
-        template_tool.updateBusinessTemplateFromUrl(bt_url)
+        template_tool.updateBusinessTemplateFromUrl(bt_url,
+                                              update_catalog=update_catalog)
         LOG("StandardBT5ConfiguratorItem", INFO,
             "Install %s for %s" % (bt_url, self.getRelativeUrl()))
       else:
