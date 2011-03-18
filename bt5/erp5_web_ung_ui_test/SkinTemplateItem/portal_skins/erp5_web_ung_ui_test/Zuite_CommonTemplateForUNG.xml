@@ -64,12 +64,12 @@
       </tr>\n
       <tr>\n
         <td>type</td>\n
-        <td>//input[@name="__ac_name"]</td>\n
+        <td>__ac_name</td>\n
         <td>zope</td>\n
       </tr>\n
       <tr>\n
         <td>type</td>\n
-        <td>//input[@name="__ac_password"]</td>\n
+        <td>__ac_password</td>\n
         <td>zope</td>\n
       </tr>\n
       <tr>\n
