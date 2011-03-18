@@ -88,7 +88,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: object is not None and object.isWebMode()</string> </value>
+            <value> <string>python: object is not None and object.isWebMode() and not object.isEditableMode()</string> </value>
         </item>
       </dictionary>
     </pickle>
