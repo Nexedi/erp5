@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.WebSection_userFollowUpWebPage()\n
+            <value> <string>context.ERP5Site_userFollowUpWebPage(context.getReference())\n
 if context.getReference().startswith("default-"):\n
   context.setReference(DateTime().millis())\n
 context.share()\n
@@ -63,7 +63,7 @@ return "%s/?key=%s" % (context.REQUEST.get("URL3"), context.getReference())\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSection_shareDocument</string> </value>
+            <value> <string>WebPage_shareDocument</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -148,7 +148,7 @@ class TestUNG(ERP5TypeTestCase):
     self.stepTic()
     self.assertEquals(len(self.portal.portal_catalog(relative_url=relative_url)), 0)
 
-  def testWebSection_userFollowUpWebPage(self):
+  def testERP5Site_userFollowUpWebPage(self):
     """Test if user is added in field Follow Up of Web Page"""
     web_page = self.portal.web_page_module.newContent(portal_type="Web Page")
     web_page.setReference("new.Web-Page")
@@ -164,12 +164,12 @@ class TestUNG(ERP5TypeTestCase):
     assignment.open()
     self.stepTic()
     self.login("ung_new_user")
-    self.portal.WebSection_userFollowUpWebPage("new.Web-Page")
+    self.portal.ERP5Site_userFollowUpWebPage("new.Web-Page")
     self.stepTic()
     self.login("ERP5TypeTestCase")
     self.assertEquals("ung_new_user", web_page.getFollowUpValue().getReference())
     self.login("ung_new_user2")
-    self.portal.WebSection_userFollowUpWebPage("new.Web-Page")
+    self.portal.ERP5Site_userFollowUpWebPage("new.Web-Page")
     self.stepTic()
     self.login("ERP5TypeTestCase")
     reference_list = [user.getReference() for user in web_page.getFollowUpValueList()]

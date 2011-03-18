@@ -58,7 +58,7 @@ portal = context.getPortalObject()\n
 request = context.REQUEST\n
 \n
 if request.form.has_key("key"):\n
-  webpage = context.WebSection_userFollowUpWebPage(reference=context.REQUEST.form.get("key"))\n
+  webpage = context.ERP5Site_userFollowUpWebPage(reference=context.REQUEST.form.get("key"))\n
   webpage_id = webpage.getId()\n
   editor_name = context.Base_getEditorViewName(webpage.getPortalType())\n
   return context.Base_redirect("/web_page_module/%s/%s" % (webpage_id, editor_name),\n

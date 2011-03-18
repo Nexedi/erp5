@@ -310,7 +310,7 @@ $().ready(function(){\n
       $("div.action_menu ul li a#share_document").click(function(event){\n
         event.preventDefault();\n
         $.ajax({\n
-               url: \'WebSection_shareDocument\',\n
+               url: \'WebPage_shareDocument\',\n
                async: false,\n
         });\n
         location.reload();\n
