@@ -98,6 +98,8 @@
                         <string>your_file</string>
                         <string>your_redirect_url</string>
                         <string>your_attach_document_to_context</string>
+                        <string>your_group</string>
+                        <string>your_publication_section</string>
                       </list>
                     </value>
                 </item>

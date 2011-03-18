@@ -72,8 +72,11 @@ if user_login is None:\n
   # get current authenticated user\n
   user_login = str(portal.portal_membership.getAuthenticatedMember())\n
   \n
-document_kw = {}\n
-document_kw[\'user_login\'] = user_login\n
+document_kw = {\'user_login\': user_login,\n
+               \'group\': group,\n
+               \'publication_section\': publication_section,\n
+              }\n
+\n
 if use_context_for_container:\n
   document_kw[\'container_path\'] = context_url\n
 if portal_type not in MARKER:\n
@@ -163,7 +166,7 @@ return document\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>file=None, url=None, portal_type=None, classification=None, synchronous_metadata_discovery=None, redirect_to_document=None, attach_document_to_context=False, use_context_for_container=False, redirect_url=None, cancel_url=None, batch_mode=False, max_repeat=0, editable_mode = 1, follow_up_list=None, user_login=None, **kw</string> </value>
+            <value> <string>file=None, url=None, portal_type=None, classification=None, synchronous_metadata_discovery=None, redirect_to_document=None, attach_document_to_context=False, use_context_for_container=False, redirect_url=None, cancel_url=None, batch_mode=False, max_repeat=0, editable_mode = 1, follow_up_list=None, user_login=None, group=None, publication_section=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
