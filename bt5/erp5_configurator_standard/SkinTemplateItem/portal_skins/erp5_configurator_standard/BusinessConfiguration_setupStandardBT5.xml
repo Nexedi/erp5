@@ -52,31 +52,33 @@
             <key> <string>_body</string> </key>
             <value> <string>configuration_save = context.restrictedTraverse(configuration_save_url)\n
 \n
-# specify is bt5 is a public or not\n
-bt5_installation_list = ((\'erp5_simulation\', True,),\n
-                         (\'erp5_dhtml_style\', True,),\n
-                         (\'erp5_jquery\', True,),\n
-                         (\'erp5_jquery_ui\', True,),\n
-                         (\'erp5_xhtml_jquery_style\', True,),\n
-                         (\'erp5_web\',True,),\n
-                         (\'erp5_ingestion_mysql_innodb_catalog\',True,),\n
-                         (\'erp5_ingestion\',True,),\n
-                         (\'erp5_dms\',True,),\n
-                         (\'erp5_crm\', True,), \n
-                         (\'erp5_pdm\', True,),\n
-                         (\'erp5_trade\', True),\n
-                         (\'erp5_knowledge_pad\', True),\n
-                         (\'erp5_accounting\', True),\n
-                         (\'erp5_tax_resource\', True),\n
-                         (\'erp5_discount_resource\',True),\n
-                         (\'erp5_invoicing\', True),\n
-                         (\'erp5_configurator_standard_categories\', True,),\n
+bt5_installation_list = (\'erp5_simulation\',\n
+                         \'erp5_dhtml_style\',\n
+                         \'erp5_jquery\',\n
+                         \'erp5_jquery_ui\',\n
+                         \'erp5_xhtml_jquery_style\',\n
+                         \'erp5_web\',\n
+                         \'erp5_ingestion_mysql_innodb_catalog\',\n
+                         \'erp5_ingestion\',\n
+                         \'erp5_dms\',\n
+                         \'erp5_crm\', \n
+                         \'erp5_pdm\',\n
+                         \'erp5_trade\',\n
+                         \'erp5_knowledge_pad\',\n
+                         \'erp5_accounting\',\n
+                         \'erp5_tax_resource\',\n
+                         \'erp5_discount_resource\',\n
+                         \'erp5_invoicing\',\n
+                         \'erp5_configurator_standard_categories\',\n
                         )\n
+\n
+bt5_update_catalog = (\'erp5_ingestion_mysql_innodb_catalog\', )\n
 \n
 for name in bt5_installation_list:\n
   configuration_save.addConfigurationItem("Standard BT5 Configurator Item",\n
-                                          bt5_id=name[0],\n
-                                          is_public=name[1])\n
+                                          title=name, bt5_id=name,\n
+                                          update_catalog=(name in bt5_update_catalog)\n
+                                          )\n
 </string> </value>
         </item>
         <item>
