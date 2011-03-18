@@ -57,7 +57,7 @@ activate_kw = dict()\n
 if getattr(delivery, \'calculatePacking\', None) is not None:\n
   try:\n
     container = object.getContainerValue()\n
-    activate_kw[\'path_and_method_id\'] = (container.getPath(),\n
+    activate_kw[\'after_path_and_method_id\'] = (container.getPath(),\n
                                          \'recursiveImmediateReindexObject\')\n
   except AttributeError:\n
     pass\n
