@@ -55,11 +55,40 @@ class UnifySolver(AcceptSolver):
   # Declarative interfaces
   zope.interface.implements(interfaces.ISolver,)
 
+  def _getActualTargetMovement(self, movement, solved_property):
+    # The movement might not be the right place to correct the
+    # divergence, if the property is obtained by direct Acquisition.
+    root_delivery = movement.getRootDeliveryValue()
+    while (movement != root_delivery and
+           not movement.hasProperty(solved_property)):
+      movement = movement.getParentValue()
+    # NOTE: the code above was copied and adapted from the top of
+    # "SolverTool.getSolverDecisionApplicationValueList()", because
+    # we don't have enough info (a divergence tester) to invoke it
+    # from here, and also because a Solver instance needs to be
+    # independent from the divergence testers that caused it, as it
+    # could be the consolidated result of many divergence testers.
+    return movement
+
+  def _getAffectedSimulationMovementList(self, movement, solved_property):
+    # All Simulations movements pointing to this movement, or to
+    # submovements that also don't have the property, need to be
+    # updated, otherwise we could be solving one divergence just to
+    # create another divergence in a simulation movement that wasn't
+    # divergent before.
+    simulation_movement_list = []
+    for sub_movement in movement.getMovementList():
+      if sub_movement.hasProperty(solved_property):
+        continue
+      for simulation_movement in sub_movement.getDeliveryRelatedValueList():
+        simulation_movement_list.append(simulation_movement)
+    return simulation_movement_list
+
   # ISolver Implementation
   def solve(self, activate_kw=None):
     """
-    Adopt new property to simulation movements, with keeping the
-    original one recorded.
+    Adopt new property value to simulation movements and their deliveries,
+    while keeping the original one recorded.
     """
     configuration_dict = self.getConfigurationPropertyDict()
     portal_type = self.getPortalObject().portal_types.getTypeInfo(self)
@@ -70,26 +99,21 @@ class UnifySolver(AcceptSolver):
     delivery_dict = {}
     for simulation_movement in self.getDeliveryValueList():
       delivery_dict.setdefault(simulation_movement.getDeliveryValue(),
-                               []).append(simulation_movement)
-    for movement, simulation_movement_list in delivery_dict.iteritems():
-      # the movement might not be the right place to correct the
-      # divergence, so we have to find the right place.
-      root_delivery = movement.getRootDeliveryValue()
-      while (movement != root_delivery and
-             not movement.hasProperty(solved_property)):
-        movement = movement.getParentValue()
-      # NOTE: the code above was copied and adapted from the top of
-      # "SolverTool.getSolverDecisionApplicationValueList()", because
-      # we don't have enough info (a divergence tester) to invoke it
-      # from here, and also because a Solver instance needs to be
-      # independent from the divergence testers that caused it, as it
-      # could be the consolidated result of many divergence testers.
+                               set()).add(simulation_movement)
+    for movement, simulation_movement_set in delivery_dict.iteritems():
+      # get the movement that actually has the property to update
+      movement = self._getActualTargetMovement(movement, solved_property)
+      # and all other simulation movements we should also update
+      simulation_movement_set.update(self._getAffectedSimulationMovementList(
+          movement,
+          solved_property,
+      ))
       if activate_kw is not None:
         movement.setDefaultActivateParameters(
           activate_kw=activate_kw, **activate_kw)
       new_value = configuration_dict.get('value')
       movement.setProperty(solved_property, new_value)
-      for simulation_movement in simulation_movement_list:
+      for simulation_movement in simulation_movement_set:
         if activate_kw is not None:
           simulation_movement.setDefaultActivateParameters(
             activate_kw=activate_kw, **activate_kw)
