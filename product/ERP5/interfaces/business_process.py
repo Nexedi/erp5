@@ -279,7 +279,7 @@ class ITradeStateProcess(Interface):
 
   def isTradeStateCompleted(explanation, trade_state):
     """Returns True if all predecessor trade states are
-    completed and if no successor trade state is completed
+    completed and if the provided trade state is also completed
     in the context of given explanation.
 
     explanation -- an Order, Order Line, Delivery or Delivery Line or

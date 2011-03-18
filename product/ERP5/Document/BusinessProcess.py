@@ -504,8 +504,7 @@ class BusinessProcess(Path, XMLObject):
   security.declareProtected(Permissions.AccessContentsInformation, 'isTradeStateCompleted')
   def isTradeStateCompleted(self, explanation, trade_state):
     """Returns True if all predecessor trade states are
-    completed and if no successor trade state is completed
-    in the context of given explanation.
+    completed in the context of given explanation.
 
     explanation -- an Order, Order Line, Delivery or Delivery Line or
                    Applied Rule which implicitely defines a simulation subtree
