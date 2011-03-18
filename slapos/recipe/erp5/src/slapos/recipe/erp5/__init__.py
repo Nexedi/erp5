@@ -500,7 +500,8 @@ SSLRandomSeed connect builtin
               config=apache_config_file
             )
           ]))
-    return 'https://%(ip)s:%(port)s' % apache_conf
+    # Note: IPv6 is assumed always
+    return 'https://[%(ip)s]:%(port)s' % apache_conf
 
   def installMysqlServer(self, ip, port, database='erp5', user='user',
       test_database='test_erp5', test_user='test_user'):
