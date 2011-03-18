@@ -31,6 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.CMFActivity.Errors import ActivityPendingError
 from zLOG import LOG, WARNING
+from Acquisition import aq_base
 
 def IdAsReferenceMixin(suffix):
   suffix_index = - len(suffix)
@@ -71,6 +72,9 @@ def IdAsReferenceMixin(suffix):
       id = self.id
       if id[suffix_index:] == suffix:
         return id[:suffix_index]
-      return self._baseGetReference(*args)
+      try:
+        return self._baseGetReference(*args)
+      except AttributeError:
+        return getattr(aq_base(self), 'default_reference', (args or [None])[0])
 
   return IdAsReferenceMixin
