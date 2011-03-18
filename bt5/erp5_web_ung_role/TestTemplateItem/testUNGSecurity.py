@@ -200,3 +200,17 @@ class TestUNGSecurity(ERP5TypeTestCase):
     self.login("ung_user2")
     preference_dict = json.loads(self.portal.Base_getPreferencePathList())
     self.assertEquals(preference_dict, {u'preference': u'portal_preferences/2'})
+  
+  def testWebPage_shareDocument(self):
+    """ """
+    self.login("ung_user")
+    self.portal.ERP5Site_createNewWebDocument("web_page_template")
+    self.stepTic()
+    web_page = self.portal.portal_catalog.getResultValue(portal_type="Web Page")
+    self.assertEquals(web_page.getValidationState(), "draft")
+    response = web_page.WebPage_shareDocument()
+    self.stepTic()
+    self.assertEquals(response, "".join((self.portal.absolute_url(),
+                                         "/?key=",
+                                         web_page.getReference())))
+    self.assertEquals(web_page.getValidationState(), "shared")
