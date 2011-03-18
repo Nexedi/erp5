@@ -28,12 +28,10 @@
 
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.ImmobilisableItem import ImmobilisationValidityError
 
-
-NEGLIGEABLE_PRICE = 10e-8
 
 class ImmobilisationDelivery(XMLObject):
     """
@@ -122,16 +120,17 @@ class ImmobilisationDelivery(XMLObject):
       sub_movement_list = self.contentValues()
       for movement in self.getImmobilisationMovementList(**kw):
         for item in movement.getAggregateValueList():
-          future_movement_list = item.getFutureImmobilisationMovementValueList(
-                                     at_date = self.getStopDate(),
-                                     from_movement = self,
-                                     filter_valid = 0)
-          if future_movement_list is not None:
-            for next_movement in future_movement_list:
-              if next_movement is not None and \
-                 next_movement not in sub_movement_list and \
-                 next_movement not in returned_list and \
-                 next_movement.getStopDate() != self.getStopDate():
-                returned_list.append(next_movement)
+          if interfaces.IImmobilisationItem.providedBy(item):
+            future_movement_list = item.getFutureImmobilisationMovementValueList(
+                                       at_date = self.getStopDate(),
+                                       from_movement = self,
+                                       filter_valid = 0)
+            if future_movement_list is not None:
+              for next_movement in future_movement_list:
+                if next_movement is not None and \
+                   next_movement not in sub_movement_list and \
+                   next_movement not in returned_list and \
+                   next_movement.getStopDate() != self.getStopDate():
+                  returned_list.append(next_movement)
       return returned_list
       

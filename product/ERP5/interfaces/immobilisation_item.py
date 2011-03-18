@@ -1,14 +1,14 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2002-2008 Nexedi SA and Contributors. All Rights Reserved.
-#                         Jean-Paul Smets-Solanes <jp@nexedi.com>
-#                         Yusei TAHARA <yusei@nexedi.com>
+# Copyright (c) 2011 Nexedi SA and Contributors. All Rights Reserved.
+#               
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly adviced to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -27,19 +27,17 @@
 #
 ##############################################################################
 
-from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions
-from Products.ERP5.Document.ImmobilisableItem import ImmobilisableItem
+from zope.interface import Interface
 
+class IImmobilisationItem(Interface):
+  """An immobilisation item is an item that acts as an immobilisation.
 
-class Machine(ImmobilisableItem):
+  XXX At this time this interface is here to mark some item as beeing used as
+  beeing immobilisation. We might consider making it just a marker interface
+  """
+  def getFutureImmobilisationMovementValueList(at_date, from_movement,
+      filter_valid):
+    """Returns the future immobilisation movements.
+    XXX this method exists but seems wrong, as future movements just belongs to
+    simulation API.
     """
-    Machine represents 
-    """
-
-    meta_type = 'ERP5 Machine'
-    portal_type = 'Machine'
-    add_permission = Permissions.AddPortalContent
-
-    # Declarative security
-    security = ClassSecurityInfo()

@@ -28,7 +28,7 @@
 
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.Movement import Movement
@@ -140,26 +140,27 @@ class ImmobilisationMovement(Movement, XMLObject):
     # Check if the date of this movement is unique
     date_error = 0
     for item in self.getAggregateValueList():
-      same_date_list = item.getUnfilteredImmobilisationMovementValueList(
-                     from_date = self.getStopDate(),
-                     to_date = self.getStopDate(),
-                     include_to_date = 1)
-      error_found = 0
-      for other_movement in same_date_list:
-        if other_movement != self and other_movement.getRootDeliveryValue().getImmobilisationState() == 'valid':
-          error_found = 1
-          date_error = 1
-      if error_found:
-        if to_translate:
-          msg = {'msg':"An other movement already exists at the same date for item ${item}",
-                 'mapping': {'item':item.getRelativeUrl()}
-                }
-        else:
-          msg = "An other movement alreay exists at the same date for item %s" % item.getRelativeUrl()
-        errors.append([self.getRelativeUrl(),
-                      "Property value inconsistency", 0,
-                      msg
-                     ])
+      if interfaces.IImmobilisationItem.providedBy(item):
+        same_date_list = item.getUnfilteredImmobilisationMovementValueList(
+                       from_date = self.getStopDate(),
+                       to_date = self.getStopDate(),
+                       include_to_date = 1)
+        error_found = 0
+        for other_movement in same_date_list:
+          if other_movement != self and other_movement.getRootDeliveryValue().getImmobilisationState() == 'valid':
+            error_found = 1
+            date_error = 1
+        if error_found:
+          if to_translate:
+            msg = {'msg':"An other movement already exists at the same date for item ${item}",
+                   'mapping': {'item':item.getRelativeUrl()}
+                  }
+          else:
+            msg = "An other movement alreay exists at the same date for item %s" % item.getRelativeUrl()
+          errors.append([self.getRelativeUrl(),
+                        "Property value inconsistency", 0,
+                        msg
+                       ])
 
     # Return to avoid infinite loops in case of date errors
     if date_error:
@@ -197,17 +198,18 @@ class ImmobilisationMovement(Movement, XMLObject):
               return checkPreviousMovementForItem(previous_movement, item)
             return checkPreviousMovementForItem(previous_movement, item)
           for item in self.getAggregateValueList():
-            if not checkPreviousMovementForItem(self,item):
-              check_uncontinuous = 1
-            else:
-              # The last movement which is not a NO_CHANGE is valid
-              # Now check if the method is the same, then if the period is really continuing from previous movement
-              previous_movement = item.getLastImmobilisationMovementValue(at_date=self.getStopDate())
-              previous_movement_method = previous_movement.getActualAmortisationMethodForItem(item)
-              if previous_movement_method != method:
+            if interfaces.IImmobilisationItem.providedBy(item):
+              if not checkPreviousMovementForItem(self,item):
                 check_uncontinuous = 1
-                # If the previous method is the same, it means the previous movement did
-                # not stop the immobilisation, because stopping is a particular method
+              else:
+                # The last movement which is not a NO_CHANGE is valid
+                # Now check if the method is the same, then if the period is really continuing from previous movement
+                previous_movement = item.getLastImmobilisationMovementValue(at_date=self.getStopDate())
+                previous_movement_method = previous_movement.getActualAmortisationMethodForItem(item)
+                if previous_movement_method != method:
+                  check_uncontinuous = 1
+                  # If the previous method is the same, it means the previous movement did
+                  # not stop the immobilisation, because stopping is a particular method
     if check_uncontinuous:
       errors.extend(checkValuesAreNotNone(IMMOBILISATION_UNCONTINUOUS_NEEDED_PROPERTY_LIST))
       property_list = self.getUncontinuousNeededSpecificParameterListForItem(None)

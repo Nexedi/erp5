@@ -42,7 +42,7 @@ from Products.ERP5.tests.utils import newSimulationExpectedFailure
 class TestImmobilisationMixin(ERP5TypeTestCase):
   run_all_test = 1
   # Different variables used for this test
-  item_portal_type = 'Apparel Fabric Item'
+  item_portal_type = 'Computer'
   packing_list_portal_type = 'Purchase Packing List'
   packing_list_line_portal_type = 'Purchase Packing List Line'
   internal_packing_list_portal_type = 'Internal Packing List'
@@ -79,15 +79,16 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
       Return the list of business templates.
 
     """
-    return ("erp5_base",
+    return ("erp5_core_proxy_field_legacy",
+            "erp5_base",
             "erp5_pdm",# Needed by accounting
             "erp5_simulation",
             "erp5_trade",
             "erp5_accounting",
             "erp5_invoicing",
             "erp5_simplified_invoicing",
-            "erp5_apparel", # In order to use items
             "erp5_immobilisation",
+            "erp5_computer_immobilisation", # In order to use items
             "erp5_simulation_test",
             )
 

@@ -33,11 +33,11 @@ from DateTime import DateTime
 from string import capitalize
 
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
-from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.DateUtils import addToDate, getClosestDate, roundDate
 from Products.ERP5Type.DateUtils import getRoundedMonthBetween, millis
 from Products.ERP5Type.DateUtils import getAccountableYearFraction
 from Products.ERP5.Document.Amount import Amount
+from Products.ERP5.Document.Item import Item
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5.Document.ImmobilisationMovement import (
     UNIMMOBILISING_METHOD, NO_CHANGE_METHOD, AMORTISATION_METHOD_PREFIX )
@@ -52,7 +52,7 @@ NEGLIGEABLE_PRICE = 10e-8
 from Products.ERP5Type.Errors import ImmobilisationValidityError
 from Products.ERP5Type.Errors import ImmobilisationCalculationError
 
-class ImmobilisableItem(XMLObject, Amount):
+class ImmobilisableItem(Item, Amount):
     """
       An Immobilisable Item is an Item which can be immobilised 
       and amortised in accounting
@@ -82,23 +82,30 @@ class ImmobilisableItem(XMLObject, Amount):
     # not have 'expand' method at the time beeing, simulation methods used here
     # have different names.
 
-##     zope.interface.implements(interfaces.IExpandableItem,)
-## 
-##     # IExpandableItem interface implementation
-##     def getSimulationMovementSimulationState(self, simulation_movement):
-##       """Returns the simulation state for this simulation movement.
-##       """
-##       portal = self.getPortalObject()
-##       draft_state_list = portal.getDraftOrderStateList()
-##       # if we have an order which is not draft, we'll consider the generated
-##       # simulation movement are planned.
-##       # This is probably oversimplified implementation, as we may want to look
-##       # deliveries / invoices.
-##       for movement in self.getAggregateRelatedValueList(
-##           portal_type=portal.getPortalOrderMovementTypeList(),):
-##         if movement.getSimulationState() not in draft_state_list:
-##           return 'planned'
-##       return 'draft'
+    zope.interface.implements(interfaces.IExpandableItem,
+                              interfaces.IImmobilisationItem)
+ 
+    # IExpandableItem interface implementation
+    def getSimulationMovementSimulationState(self, simulation_movement):
+      """Returns the simulation state for this simulation movement.
+      """
+      portal = self.getPortalObject()
+      draft_state_list = portal.getDraftOrderStateList()
+      # if we have an order which is not draft, we'll consider the generated
+      # simulation movement are planned.
+      # This is probably oversimplified implementation, as we may want to look
+      # deliveries / invoices.
+      for movement in self.getAggregateRelatedValueList(
+          portal_type=portal.getPortalOrderMovementTypeList(),):
+        if movement.getSimulationState() not in draft_state_list:
+          return 'planned'
+      return 'draft'
+ 
+    def expand(self, applied_rule_id=None, activate_kw=None, **kw):
+      """Expand is not implemented that way for now...
+      """
+      pass
+
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getImmobilisationRelatedMovementList')
