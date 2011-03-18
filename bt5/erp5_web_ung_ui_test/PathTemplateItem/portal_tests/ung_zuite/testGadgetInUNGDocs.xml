@@ -70,8 +70,38 @@
         <td></td>\n
       </tr>\n
       <tr>\n
+        <td>verifyTextNotPresent</td>\n
+        <td>Join ERP5 Network !</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyElementNotPresent</td>\n
+        <td>//a[@class="clickable-block block-remove"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
         <td>verifyTextPresent</td>\n
         <td>Add Gadget</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//input[@id="erp5_documentation"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//div[@class="ui-dialog-buttonset"]/button[1]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyTextPresent</td>\n
+        <td>Join ERP5 Network !</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyElementPresent</td>\n
+        <td>//a[@class="clickable-block block-remove"]</td>\n
         <td></td>\n
       </tr>\n
     </tbody>\n
