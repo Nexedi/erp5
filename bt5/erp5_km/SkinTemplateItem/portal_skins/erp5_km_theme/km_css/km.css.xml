@@ -1300,6 +1300,7 @@ button.formbt, \n
 button.formbt > span,\n
 button.bt-med, \n
 button.bt-med span,\n
+a.bt-small,\n
 #stick-gadgets,\n
 #unstick-gadgets,\n
 #add-gadgets {\n
@@ -1317,7 +1318,8 @@ button.bt-med span,\n
 #unstick-gadgets:hover,\n
 #add-gadgets:hover,\n
 button.formbt:hover span,\n
-button.bt-med:hover span{\n
+button.bt-med:hover span,\n
+a.bt-small:hover{\n
   color: #828282;\n
 }\n
 \n
