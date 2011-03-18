@@ -202,8 +202,16 @@ class ExplanationCache:
         # all simulation movements from a site
         if kw.get('path', None) is None:
           kw['path'] = self.getSimulationPathPatternList() # XXX-JPS Explicit Query is better
-        if kw.get('explanation_uid', None) is None:
-          kw['explanation_uid'] = self.getRootExplanationUidList()
+        # XXX-Seb It seems incompatible with the way explanation is working
+        # Indeed, the explanation is not the same all other the simulation tree
+        #      path                explanation
+        # portal_simulation/91/1 testing_folder/17
+        # portal_simulation/91/1/1 testing_folder/17
+        # portal_simulation/91/1/1/1 testing_folder/18
+        # portal_simulation/91/1/1/1/1 testing_folder/18
+        # portal_simulation/91/1/1/1/1/1 testing_folder/17
+        #if kw.get('explanation_uid', None) is None:
+        #  kw['explanation_uid'] = self.getRootExplanationUidList()
         self.simulation_movement_cache[kw_tuple] = \
                self.portal_catalog(portal_type="Simulation Movement",
                                    **kw)
@@ -243,14 +251,16 @@ class ExplanationCache:
 
     # Build a list of path patterns which apply to current business_link
     path_list = self.getSimulationPathPatternList()
-    path_list = map(lambda x:x[0:-1], path_list) # Remove trailing %
+    path_list = [x for x in path_list if x[-1] != '%'] # Remove trailing %
     path_set = set()
     for simulation_movement in \
         self.getBusinessLinkRelatedSimulationMovementValueList(business_link):
       simulation_path = simulation_movement.getPath()
       for path in path_list:
         if simulation_path.startswith(path):
-          path_set.add(path) # Only keep a path pattern which matches current simulation movement
+          # Only keep a path pattern which matches current simulation movement
+          path_set.add(path)
+          path_set.add("%s/%%" % path)
 
     # Lookup in cache based on path_tuple
     path_tuple = tuple(path_set) # XXX-JPS is the order guaranteed here ?
