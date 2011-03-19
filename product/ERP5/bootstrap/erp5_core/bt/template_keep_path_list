@@ -11,3 +11,6 @@ portal_contribution_registry/web_page_by_content.xml
 portal_contribution_registry/webpage_extension.xml
 portal_contribution_registry/webpage_mimetype.xml
 portal_property_sheets
+portal_types/Applied Rule/view
+portal_types/Simulation Movement/view
+portal_types/Simulation Tool/view
