@@ -547,7 +547,8 @@ class TestBPMDummyDeliveryMovementMixin(TestBPMMixin):
     self.stepTic()
 
 class TestBPMisBuildableImplementation(TestBPMDummyDeliveryMovementMixin):
-  def test_isBuildable_OrderedDeliveredInvoiced(self):
+
+  def test_isBuildable(self):
     """Test isBuildable for ordered, delivered and invoiced sequence
 
     Here Business Process sequence corresponds simulation tree.
@@ -673,116 +674,6 @@ class TestBPMisBuildableImplementation(TestBPMDummyDeliveryMovementMixin):
     self.assertEquals(self.delivery_simulation_movement.isBuildable(), False)
     self.assertEquals(self.split_invoicing_simulation_movement.isBuildable(),
         False)
-
-  @newSimulationExpectedFailure
-  def test_isBuildable_OrderedInvoicedDelivered(self):
-    """Test isBuildable for ordered, invoiced and delivered sequence
-
-    Here Business Process sequence do not corresponds simulation tree.
-
-    delivery_path is related to root applied rule, and invoice_path is related
-    to rule below, but invoice_path is before delivery_path in seuqence.
-    """
-    self._createOrderedInvoicedDeliveredBusinessProcess()
-
-    order = self._createDelivery()
-    order_line = self._createMovement(order)
-
-    applied_rule = self.portal.portal_simulation.newContent(
-        portal_type='Applied Rule', causality_value=order)
-
-    simulation_movement = applied_rule.newContent(
-      portal_type = 'Simulation Movement',
-      delivery_value = order_line,
-      causality_value = self.order_link
-    )
-
-    delivery_rule = simulation_movement.newContent(
-        portal_type='Applied Rule')
-    delivery_simulation_movement = delivery_rule.newContent(
-        portal_type='Simulation Movement',
-        causality_value = self.delivery_path)
-
-    invoicing_rule = delivery_simulation_movement.newContent(
-        portal_type='Applied Rule')
-    invoicing_simulation_movement = invoicing_rule.newContent(
-        portal_type='Simulation Movement',
-        causality_value = self.invoice_path)
-
-    order.setSimulationState(self.completed_state)
-    self.stepTic()
-
-    self.assertEquals(self.delivery_path.isBuildable(order), False)
-    self.assertEquals(delivery_simulation_movement.isBuildable(), False)
-
-    self.assertEquals(self.invoice_path.isBuildable(order), True)
-    self.assertEquals(invoicing_simulation_movement.isBuildable(), True)
-
-    delivery = self._createDelivery(causality_value = order)
-    delivery_line = self._createMovement(delivery)
-
-    invoicing_simulation_movement.edit(delivery_value = delivery_line)
-
-    self.stepTic()
-
-    self.assertEquals(self.delivery_path.isBuildable(order), False)
-
-    self.assertEquals(self.delivery_path.isBuildable(delivery), False)
-    self.assertEquals(self.invoice_path.isBuildable(delivery), False)
-    self.assertEquals(delivery_simulation_movement.isBuildable(), False)
-    self.assertEquals(invoicing_simulation_movement.isBuildable(), False)
-    self.assertEquals(self.invoice_path.isBuildable(order), False)
-
-    # put delivery in simulation state configured on path (and this state is
-    # available directly on movements)
-
-    delivery.setSimulationState(self.completed_state)
-
-    self.assertEqual(self.completed_state, delivery.getSimulationState())
-
-    self.stepTic()
-
-    self.assertEquals(self.delivery_path.isBuildable(order), True)
-    self.assertEquals(self.delivery_path.isBuildable(delivery), True)
-    self.assertEquals(invoicing_simulation_movement.isBuildable(), False)
-    self.assertEquals(self.invoice_path.isBuildable(delivery), False)
-    self.assertEquals(self.invoice_path.isBuildable(order), False)
-    self.assertEquals(delivery_simulation_movement.isBuildable(), True)
-
-    # now simulate compensation
-
-    compensated_simulation_movement = delivery_rule.newContent(
-      portal_type = 'Simulation Movement',
-      delivery_value = order_line,
-      causality_value = self.delivery_path
-    )
-
-    compensated_invoicing_rule = compensated_simulation_movement.newContent(
-        portal_type='Applied Rule')
-
-    compensated_invoicing_simulation_movement = compensated_invoicing_rule \
-      .newContent(portal_type='Simulation Movement',
-          causality_value = self.invoice_path)
-
-    # and delivery some part of tree
-
-    another_delivery = self._createDelivery(causality_value = delivery)
-    another_delivery_line = self._createMovement(another_delivery)
-
-    delivery_simulation_movement.edit(delivery_value=another_delivery_line)
-
-    self.stepTic()
-
-    self.assertEquals(self.delivery_path.isBuildable(order), False)
-
-    self.assertEquals(delivery_simulation_movement.isBuildable(), False)
-    self.assertEquals(invoicing_simulation_movement.isBuildable(), False)
-
-    self.assertEquals(self.invoice_path.isBuildable(order), True)
-    self.assertEquals(compensated_invoicing_simulation_movement.isBuildable(),
-        True)
-
-    self.assertEquals(compensated_simulation_movement.isBuildable(), False)
 
 class TestBPMisCompletedImplementation(TestBPMDummyDeliveryMovementMixin):
   @newSimulationExpectedFailure
