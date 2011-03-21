@@ -192,8 +192,115 @@ class TestBPMMixin(ERP5TypeTestCase):
     self.createAndValidateAccounts()
     self.stepTic()
 
+class TestBPMDummyDeliveryMovementMixin(TestBPMMixin):
+  def _createDelivery(self, **kw):
+    return self.folder.newContent(portal_type='Dummy Delivery', **kw)
 
-class TestBPMImplementation(TestBPMMixin):
+  def _createMovement(self, delivery, **kw):
+    return delivery.newContent(portal_type='Dummy Movement', **kw)
+
+  def getBusinessTemplateList(self):
+    return super(TestBPMDummyDeliveryMovementMixin, self)\
+        .getBusinessTemplateList() \
+        + ('erp5_dummy_movement', )
+
+  def afterSetUp(self):
+    super(TestBPMDummyDeliveryMovementMixin, self).afterSetUp()
+    if not hasattr(self.portal, 'testing_folder'):
+      self.portal.newContent(portal_type='Folder',
+                            id='testing_folder')
+    self.folder = self.portal.testing_folder
+    self.stepTic()
+
+  def beforeTearDown(self):
+    super(TestBPMDummyDeliveryMovementMixin, self).beforeTearDown()
+    self.portal.deleteContent(id='testing_folder')
+    self.stepTic()
+
+  completed_state = 'delivered'
+  frozen_state = 'confirmed'
+
+  completed_state_list = [completed_state]
+  frozen_state_list = [completed_state, frozen_state]
+
+  def _createOrderedDeliveredInvoicedBusinessProcess(self):
+    # simple business process preparation
+    business_process = self.createBusinessProcess()
+    category_tool = self.getCategoryTool()
+    ordered = category_tool.trade_state.ordered
+    delivered = category_tool.trade_state.delivered
+    invoiced = category_tool.trade_state.invoiced
+
+    # path which is completed, as soon as related simulation movements are in
+    # proper state
+    self.order_link = self.createBusinessLink(business_process,
+        successor_value = ordered,
+        trade_phase='default/order',
+        completed_state_list = self.completed_state_list,
+        frozen_state_list = self.frozen_state_list)
+
+    self.delivery_link = self.createBusinessLink(business_process,
+        predecessor_value = ordered, successor_value = delivered,
+        trade_phase='default/delivery',
+        completed_state_list = self.completed_state_list,
+        frozen_state_list = self.frozen_state_list)
+
+    self.invoice_link = self.createBusinessLink(business_process,
+        predecessor_value = delivered, successor_value = invoiced,
+        trade_phase='default/invoicing')
+    self.stepTic()
+
+  def constructSimulationTreeAndDeliveries(self):
+    """
+    Construct a simple simulation tree with deliveries. This is
+    not real simulation tree, we only need the structure, most
+    usual properties are not there (quantities, arrow, etc)
+    """
+    # create order and order line to have starting point for business process
+    self.order = order = self._createDelivery()
+    order_line = self._createMovement(order)
+
+    # first level rule with simulation movement
+    applied_rule = self.portal.portal_simulation.newContent(
+        portal_type='Applied Rule', causality_value=order)
+
+    def setTestClassProperty(prefix, property_name, document):
+      if prefix:
+        property_name = "%s_%s" % (prefix, property_name)
+      setattr(self, property_name, document)
+      return document
+
+    def constructSimulationTree(applied_rule, prefix=None):
+      document = setTestClassProperty(prefix, 'simulation_movement',
+        applied_rule.newContent(
+        portal_type = 'Simulation Movement',
+        delivery_value = order_line,
+        causality_value = self.order_link
+        ))
+
+      # second level rule with simulation movement
+      document = setTestClassProperty(prefix, 'delivery_rule',
+        document.newContent(
+        portal_type='Applied Rule'))
+      document = setTestClassProperty(prefix, 'delivery_simulation_movement',
+        document.newContent(
+        portal_type='Simulation Movement',
+        causality_value = self.delivery_link))
+
+      # third level rule with simulation movement
+      document = setTestClassProperty(prefix, 'invoicing_rule',
+          document.newContent(
+          portal_type='Applied Rule'))
+      document = setTestClassProperty(prefix, 'invoicing_simulation_movement',
+          document.newContent(
+          portal_type='Simulation Movement',
+          causality_value = self.invoice_link))
+
+    constructSimulationTree(applied_rule)
+    constructSimulationTree(applied_rule, prefix='split')
+    self.stepTic()
+
+class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
   """Business Process implementation tests"""
   def test_BusinessProcess_getBusinessLinkValueList(self):
     business_process = self.createBusinessProcess()
@@ -464,116 +571,6 @@ class TestBPMImplementation(TestBPMMixin):
     self.assertEquals(business_link_d_e.getExpectedStartDate(mock), DateTime('2009/04/08 GMT+9'))
     self.assertEquals(business_link_d_e.getExpectedStopDate(mock), DateTime('2009/04/12 GMT+9'))
 
-class TestBPMDummyDeliveryMovementMixin(TestBPMMixin):
-  def _createDelivery(self, **kw):
-    return self.folder.newContent(portal_type='Dummy Delivery', **kw)
-
-  def _createMovement(self, delivery, **kw):
-    return delivery.newContent(portal_type='Dummy Movement', **kw)
-
-  def getBusinessTemplateList(self):
-    return super(TestBPMDummyDeliveryMovementMixin, self)\
-        .getBusinessTemplateList() \
-        + ('erp5_dummy_movement', )
-
-  def afterSetUp(self):
-    super(TestBPMDummyDeliveryMovementMixin, self).afterSetUp()
-    if not hasattr(self.portal, 'testing_folder'):
-      self.portal.newContent(portal_type='Folder',
-                            id='testing_folder')
-    self.folder = self.portal.testing_folder
-    self.stepTic()
-
-  def beforeTearDown(self):
-    super(TestBPMDummyDeliveryMovementMixin, self).beforeTearDown()
-    self.portal.deleteContent(id='testing_folder')
-    self.stepTic()
-
-  completed_state = 'delivered'
-  frozen_state = 'confirmed'
-
-  completed_state_list = [completed_state]
-  frozen_state_list = [completed_state, frozen_state]
-
-  def _createOrderedDeliveredInvoicedBusinessProcess(self):
-    # simple business process preparation
-    business_process = self.createBusinessProcess()
-    category_tool = self.getCategoryTool()
-    ordered = category_tool.trade_state.ordered
-    delivered = category_tool.trade_state.delivered
-    invoiced = category_tool.trade_state.invoiced
-
-    # path which is completed, as soon as related simulation movements are in
-    # proper state
-    self.order_link = self.createBusinessLink(business_process,
-        successor_value = ordered,
-        trade_phase='default/order',
-        completed_state_list = self.completed_state_list,
-        frozen_state_list = self.frozen_state_list)
-
-    self.delivery_link = self.createBusinessLink(business_process,
-        predecessor_value = ordered, successor_value = delivered,
-        trade_phase='default/delivery',
-        completed_state_list = self.completed_state_list,
-        frozen_state_list = self.frozen_state_list)
-
-    self.invoice_link = self.createBusinessLink(business_process,
-        predecessor_value = delivered, successor_value = invoiced,
-        trade_phase='default/invoicing')
-    self.stepTic()
-
-  def constructSimulationTreeAndDeliveries(self):
-    """
-    Construct a simple simulation tree with deliveries. This is
-    not real simulation tree, we only need the structure, most
-    usual properties are not there (quantities, arrow, etc)
-    """
-    # create order and order line to have starting point for business process
-    self.order = order = self._createDelivery()
-    order_line = self._createMovement(order)
-
-    # first level rule with simulation movement
-    applied_rule = self.portal.portal_simulation.newContent(
-        portal_type='Applied Rule', causality_value=order)
-
-    def setTestClassProperty(prefix, property_name, document):
-      if prefix:
-        property_name = "%s_%s" % (prefix, property_name)
-      setattr(self, property_name, document)
-      return document
-
-    def constructSimulationTree(applied_rule, prefix=None):
-      document = setTestClassProperty(prefix, 'simulation_movement',
-        applied_rule.newContent(
-        portal_type = 'Simulation Movement',
-        delivery_value = order_line,
-        causality_value = self.order_link
-        ))
-
-      # second level rule with simulation movement
-      document = setTestClassProperty(prefix, 'delivery_rule',
-        document.newContent(
-        portal_type='Applied Rule'))
-      document = setTestClassProperty(prefix, 'delivery_simulation_movement',
-        document.newContent(
-        portal_type='Simulation Movement',
-        causality_value = self.delivery_link))
-
-      # third level rule with simulation movement
-      document = setTestClassProperty(prefix, 'invoicing_rule',
-          document.newContent(
-          portal_type='Applied Rule'))
-      document = setTestClassProperty(prefix, 'invoicing_simulation_movement',
-          document.newContent(
-          portal_type='Simulation Movement',
-          causality_value = self.invoice_link))
-
-    constructSimulationTree(applied_rule)
-    constructSimulationTree(applied_rule, prefix='split')
-    self.stepTic()
-
-class TestBPMisBuildableImplementation(TestBPMDummyDeliveryMovementMixin):
-
   def test_isBuildable(self):
     """Test isBuildable for ordered, delivered and invoiced sequence
 
@@ -659,8 +656,6 @@ class TestBPMisBuildableImplementation(TestBPMDummyDeliveryMovementMixin):
     self.assertEquals(self.split_invoicing_simulation_movement.isBuildable(),
         False)
 
-class TestBPMisCompletedImplementation(TestBPMDummyDeliveryMovementMixin):
-
   def test_isCompleted(self):
     """Test isCompleted for ordered, delivered and invoiced sequence"""
     self._createOrderedDeliveredInvoicedBusinessProcess()
@@ -727,8 +722,6 @@ class TestBPMisCompletedImplementation(TestBPMDummyDeliveryMovementMixin):
     self.assertEqual(self.delivery_link.isCompleted(self.order), True)
     self.assertEqual(self.delivery_link.isPartiallyCompleted(self.order), True)
 
-class TestBPMisFrozenImplementation(TestBPMDummyDeliveryMovementMixin):
-
   def test_isFrozen_OrderedDeliveredInvoiced(self):
     """Test isFrozen for ordered, delivered and invoiced sequence"""
     self._createOrderedDeliveredInvoicedBusinessProcess()
@@ -794,7 +787,4 @@ class TestBPMisFrozenImplementation(TestBPMDummyDeliveryMovementMixin):
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestBPMImplementation))
-  suite.addTest(unittest.makeSuite(TestBPMisBuildableImplementation))
-  suite.addTest(unittest.makeSuite(TestBPMisCompletedImplementation))
-  suite.addTest(unittest.makeSuite(TestBPMisFrozenImplementation))
   return suite
