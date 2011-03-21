@@ -10,16 +10,16 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>editable_columns</string>
-                <string>sort</string>
-                <string>title</string>
+                <string>all_columns</string>
                 <string>columns</string>
+                <string>editable_columns</string>
+                <string>list_method</string>
+                <string>portal_types</string>
                 <string>search_columns</string>
                 <string>selection_name</string>
-                <string>list_method</string>
+                <string>sort</string>
                 <string>sort_columns</string>
-                <string>all_columns</string>
-                <string>portal_types</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -134,6 +134,10 @@
                           <string>Event Type</string>
                         </tuple>
                         <tuple>
+                          <string>resource_translated_title</string>
+                          <string>Event Nature</string>
+                        </tuple>
+                        <tuple>
                           <string>description</string>
                           <string>Description</string>
                         </tuple>
@@ -179,6 +183,12 @@
                     <key> <string>list_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>portal_types</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
                 <item>
