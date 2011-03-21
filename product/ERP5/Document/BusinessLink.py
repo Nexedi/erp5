@@ -218,7 +218,7 @@ class BusinessLink(Path, Predicate):
     if not movement_list:
       return False # Frozen is True only if some delivered movements exist
     for movement in movement_list:
-      if movement.getDelivery() and movement.getSimulationState() not in acceptable_state_list: # XXX-JPS is it acceptable optimizatoin ?
+      if movement.getSimulationState() not in acceptable_state_list:
         return False
     return True
 
