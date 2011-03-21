@@ -109,6 +109,42 @@
         <td>//span[@class="addcal"]</td>\n
         <td></td>\n
       </tr>\n
+      <tr>\n
+        <td>select</td>\n
+        <td>//select[@name="portal_type"]</td>\n
+        <td>Note</td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//input[@name="title"]</td>\n
+        <td>My Event</td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//textarea[@name="event_text_content"]</td>\n
+        <td>Text of Event</td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//textarea[@name="event_text_content"]</td>\n
+        <td>Text of Event</td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//div[@aria-labelledby=\'ui-dialog-title-new_event_dialog\']//button</td>\n
+        <td></td>\n
+      </tr>\n
+      <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities"/>\n
+      <tr>\n
+        <td>openAndWait</td>\n
+        <td>${ung_url}/calendar</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyTextPresent</td>\n
+        <td>My Event</td>\n
+        <td></td>\n
+      </tr>\n
     </tbody>\n
   </table>\n
 </body>\n
