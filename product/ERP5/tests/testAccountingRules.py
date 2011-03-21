@@ -1644,84 +1644,6 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       simulation_movement.getPrice()
     )
 
-  def test_01_HasEverything(self, quiet=QUIET, run=RUN_ALL_TESTS):
-    """ check necessary tools and modules are present. """
-    if not run:
-      return
-    if not quiet:
-      ZopeTestCase._print('\nTest Has Everything ')
-      LOG('Testing... ', INFO, 'testHasEverything')
-    self.failUnless(self.getCategoryTool() != None)
-    self.failUnless(self.getSimulationTool() != None)
-    self.failUnless(self.getTypeTool() != None)
-    self.failUnless(self.getSQLConnection() != None)
-    self.failUnless(self.getCatalogTool() != None)
-    self.failUnless(self.getRuleTool() != None)
-    self.failUnless(self.getAccountModule() != None)
-    self.failUnless(self.getAccountingModule() != None)
-    self.failUnless(self.getOrganisationModule() != None)
-    self.failUnless(self.getProductModule() != None)
-    self.failUnless(self.getCurrencyModule() != None)
-
-  @newSimulationExpectedFailure
-  def test_02_UpdateInvoiceTransactionRuleMatrix(self, quiet=QUIET,
-                                              run=RUN_ALL_TESTS):
-    """ test edition of matrix and rule.
-    Try to update the matrix after adding some predicates,
-    and check if all objects were created
-    """
-    if not run:
-      return
-    if not quiet:
-      message = 'Test Update Invoice Transaction Rule Matrix'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', INFO, message)
-
-    self.playSequence("""
-      stepCreateInvoiceTransactionRule
-      stepUpdateInvoiceTransactionRuleMatrix
-      stepCreatePaymentRule
-      stepUpdatePaymentRuleMatrix
-      stepValidateInvoiceTransaction
-      stepTic
-      stepCheckAddPredicate
-      stepTic
-      stepCheckRemovePredicate
-      stepTic
-      stepCheckRestoreOriginalPredicates
-    """, quiet=quiet)
-
-  @newSimulationExpectedFailure
-  def test_03_invoiceTransactionRule_getMatchingCell(self,
-                                    quiet=QUIET, run=RUN_ALL_TESTS):
-    """ test predicates for the cells of invoice transaction rule
-    """
-    if not run:
-      return
-    if not quiet:
-      message = 'Test Invoice Transaction Rule getMatchingCell '
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', INFO, message)
-
-    self.playSequence("""
-      stepCreateAccounts
-      stepCreateEntities
-      stepCreateCurrencies
-      stepTic
-      stepCreateInvoiceTransactionRule
-      stepUpdateInvoiceTransactionRuleMatrix
-      stepCreatePaymentRule
-      stepUpdatePaymentRuleMatrix
-      stepValidateInvoiceTransaction
-      stepCreateProducts
-      stepTic
-      stepCreateDummyInvoice
-      stepCreateMatchableInvoiceMovements
-      stepCheckMatchableInvoiceMovements
-      stepCreateNotMatchableInvoiceMovements
-      stepCheckNotMatchableInvoiceMovements
-    """, quiet=quiet)
-
   @newSimulationExpectedFailure
   def test_04_SimpleInvoice(self, quiet=QUIET, run=RUN_ALL_TESTS):
     """ Simple Invoice.
@@ -2124,14 +2046,6 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepRebuildAndCheckNothingIsCreated
       """, quiet=quiet )
 
-  def TODO_test_07_PaymentRuleForInvoice(self, quiet=QUIET, run=RUN_ALL_TESTS):
-    """ Payment Rule.
-      checks the payment rule is applied on invoice simulation
-      movement. """
-    # checks :
-    #   date from trade condition
-    #   quantity from sum of receivable movement
-    #   link to sale invoice
 
   @newSimulationExpectedFailure
   def test_planning_invoice_creates_simulation(self, quiet=QUIET):
