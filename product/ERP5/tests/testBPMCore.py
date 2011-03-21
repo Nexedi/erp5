@@ -546,21 +546,15 @@ class TestBPMDummyDeliveryMovementMixin(TestBPMMixin):
         trade_phase='default/delivery')
     self.stepTic()
 
-class TestBPMisBuildableImplementation(TestBPMDummyDeliveryMovementMixin):
-
-  def test_isBuildable(self):
-    """Test isBuildable for ordered, delivered and invoiced sequence
-
-    Here Business Process sequence corresponds simulation tree.
-
-    delivery_path is related to root applied rule, and invoice_path is related
-    to rule below, and invoice_path is after delivery_path
+  def constructSimulationTreeAndDeliveries(self):
     """
-    self._createOrderedDeliveredInvoicedBusinessProcess()
+    Construct a simple simulation tree with deliveries. This is
+    not real simulation tree, we only need the structure, most
+    usual properties are not there (quantities, arrow, etc)
+    """
     # create order and order line to have starting point for business process
-    order = self._createDelivery()
+    self.order = order = self._createDelivery()
     order_line = self._createMovement(order)
-
 
     # first level rule with simulation movement
     applied_rule = self.portal.portal_simulation.newContent(
@@ -601,7 +595,20 @@ class TestBPMisBuildableImplementation(TestBPMDummyDeliveryMovementMixin):
     constructSimulationTree(applied_rule)
     constructSimulationTree(applied_rule, prefix='split')
 
-    order.setSimulationState(self.completed_state)
+class TestBPMisBuildableImplementation(TestBPMDummyDeliveryMovementMixin):
+
+  def test_isBuildable(self):
+    """Test isBuildable for ordered, delivered and invoiced sequence
+
+    Here Business Process sequence corresponds simulation tree.
+
+    delivery_path is related to root applied rule, and invoice_path is related
+    to rule below, and invoice_path is after delivery_path
+    """
+    self._createOrderedDeliveredInvoicedBusinessProcess()
+    self.constructSimulationTreeAndDeliveries()
+
+    self.order.setSimulationState(self.completed_state)
     self.stepTic()
 
     def checkIsBusinessLinkBuildable(explanation, business_link, value):
@@ -609,17 +616,17 @@ class TestBPMisBuildableImplementation(TestBPMDummyDeliveryMovementMixin):
        explanation, business_link), value)
 
     # in the beginning only order related movements shall be buildable
-    checkIsBusinessLinkBuildable(order, self.delivery_link, True)
+    checkIsBusinessLinkBuildable(self.order, self.delivery_link, True)
     self.assertEquals(self.delivery_simulation_movement.isBuildable(), True)
     self.assertEquals(self.split_delivery_simulation_movement.isBuildable(), True)
 
-    checkIsBusinessLinkBuildable(order, self.invoice_link, False)
+    checkIsBusinessLinkBuildable(self.order, self.invoice_link, False)
     self.assertEquals(self.invoicing_simulation_movement.isBuildable(), False)
     self.assertEquals(self.split_invoicing_simulation_movement.isBuildable(),
         False)
 
     # add delivery
-    delivery = self._createDelivery(causality_value = order)
+    delivery = self._createDelivery(causality_value = self.order)
     delivery_line = self._createMovement(delivery)
 
     # relate not split movement with delivery (deliver it)
@@ -635,14 +642,14 @@ class TestBPMisBuildableImplementation(TestBPMDummyDeliveryMovementMixin):
     #
     # delivery_link (for delivery) is not buildable - delivery is already
     # built for those movements
-    checkIsBusinessLinkBuildable(order, self.delivery_link, True)
+    checkIsBusinessLinkBuildable(self.order, self.delivery_link, True)
     self.assertEquals(self.split_delivery_simulation_movement.isBuildable(), True)
 
     checkIsBusinessLinkBuildable(delivery, self.delivery_link, False)
     checkIsBusinessLinkBuildable(delivery, self.invoice_link, False)
     self.assertEquals(self.delivery_simulation_movement.isBuildable(), False)
     self.assertEquals(self.invoicing_simulation_movement.isBuildable(), False)
-    checkIsBusinessLinkBuildable(order, self.invoice_link, False)
+    checkIsBusinessLinkBuildable(self.order, self.invoice_link, False)
     self.assertEquals(self.split_invoicing_simulation_movement.isBuildable(), False)
 
     # put delivery in simulation state configured on path (and this state is
@@ -664,11 +671,11 @@ class TestBPMisBuildableImplementation(TestBPMDummyDeliveryMovementMixin):
     #
     # split movement for invoicing is not buildable - no proper delivery
     # related for previous path
-    checkIsBusinessLinkBuildable(order, self.delivery_link, True)
+    checkIsBusinessLinkBuildable(self.order, self.delivery_link, True)
     self.assertEquals(self.invoicing_simulation_movement.isBuildable(), True)
     checkIsBusinessLinkBuildable(delivery, self.invoice_link, True)
 
-    checkIsBusinessLinkBuildable(order, self.invoice_link, False)
+    checkIsBusinessLinkBuildable(self.order, self.invoice_link, False)
     checkIsBusinessLinkBuildable(delivery, self.invoice_link, True)
     checkIsBusinessLinkBuildable(delivery, self.delivery_link, False)
     self.assertEquals(self.delivery_simulation_movement.isBuildable(), False)
