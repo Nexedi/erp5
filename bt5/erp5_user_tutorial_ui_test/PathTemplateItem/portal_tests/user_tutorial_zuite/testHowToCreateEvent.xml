@@ -66,9 +66,9 @@
 <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user">Login As Functional Test User</span>\n
 \n
 <tr>\n
-  <td>clickAndWait</td>\n
-  <td>link=Campaigns</td>\n
-  <td></td>\n
+  <td>selectAndWait</td>\n
+  <td>//select[@name="select_module"]</td>\n
+  <td>Campaigns</td>\n
 </tr>\n
 <tal:block tal:content="structure python: here.Zuite_generateListboxBrowsing(listbox_selection=([\'title\', here.Zuite_getHowToInfo()[\'create_event_howto_campaign_title\']],), enter_object=True)"/>\n
 <tr>\n

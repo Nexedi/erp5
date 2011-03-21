@@ -71,10 +71,11 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>clickAndWait</td>\n
-  <td>link=Events</td>\n
-  <td></td>\n
+  <td>selectAndWait</td>\n
+  <td>//select[@name="select_module"]</td>\n
+  <td>Events</td>\n
 </tr>\n
+\n
 <tal:block tal:content="structure python: here.Zuite_generateListboxBrowsing(listbox_selection=([\'title\', here.Zuite_getHowToInfo()[\'post_event_howto_event_title\']],), enter_object=True)"/>\n
 <tr>\n
   <td>selectAndWait</td>\n

@@ -66,9 +66,9 @@
 <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user">Login As Functional Test User</span>\n
 \n
 <tr>\n
-  <td>clickAndWait</td>\n
-  <td>link=Products</td>\n
-  <td></td>\n
+  <td>selectAndWait</td>\n
+  <td>//select[@name="select_module"]</td>\n
+  <td>Products</td>\n
 </tr>\n
 <tr>\n
   <td>selectAndWait</td>\n
@@ -207,9 +207,9 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>clickAndWait</td>\n
-  <td>link=Products</td>\n
-  <td></td>\n
+  <td>selectAndWait</td>\n
+  <td>//select[@name="select_module"]</td>\n
+  <td>Products</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n

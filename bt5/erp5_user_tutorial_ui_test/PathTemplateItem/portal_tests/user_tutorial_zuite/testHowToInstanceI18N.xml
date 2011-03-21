@@ -102,10 +102,11 @@ XXX: This is the way user would have done but it fails for FF in some conditions
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>clickAndWait</td>\n
-  <td>link=Personnes</td>\n
-  <td></td>\n
+  <td>selectAndWait</td>\n
+  <td>//select[@name="select_module"]</td>\n
+  <td>Personnes</td>\n
 </tr>\n
+\n
 <tr>\n
   <td>clickAndWait</td>\n
   <td>Folder_show:method</td>\n

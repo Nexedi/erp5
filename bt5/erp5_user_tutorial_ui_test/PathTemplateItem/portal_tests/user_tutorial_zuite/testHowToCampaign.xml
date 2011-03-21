@@ -66,9 +66,9 @@
 <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user">Login As Functional Test User</span>\n
 \n
 <tr>\n
-  <td>clickAndWait</td>\n
-  <td>link=Campaigns</td>\n
-  <td></td>\n
+  <td>selectAndWait</td>\n
+  <td>//select[@name="select_module"]</td>\n
+  <td>Campaigns</td>\n
 </tr>\n
 <tr>\n
   <td>selectAndWait</td>\n
