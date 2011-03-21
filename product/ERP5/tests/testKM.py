@@ -33,6 +33,8 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from Products.ERP5Type.Base import TempBase
+from Products.ERP5OOo.tests.testDms import makeFileUpload,TestDocumentMixin, TestDocument
+import transaction
 
 def _getGadgetInstanceUrlFromKnowledgePad(knowledge_pad,  gadget):
   """ Get Knowledge Box's relative URL specialising a gadget in a Knowledge Pad."""
@@ -40,7 +42,7 @@ def _getGadgetInstanceUrlFromKnowledgePad(knowledge_pad,  gadget):
                 portal_type = 'Knowledge Box',  
                 specialise_uid = gadget.getUid())[0].getObject().getRelativeUrl()
 
-class TestKMMixIn(ERP5TypeTestCase):
+class TestKMMixIn(TestDocumentMixin):
   """
     Mix in class for Knowledge Management system.
   """
@@ -72,6 +74,7 @@ class TestKMMixIn(ERP5TypeTestCase):
                                      custom_render_method_id='WebSite_viewKnowledgePad',
                                      layout_configuration_form_id='WebSection_viewKMMinimalThemeConfiguration')
     self.websection = self.website.newContent(portal_type='Web Section')
+    TestDocumentMixin.afterSetUp(self)
 
   def setupWebSite(self, **kw):
     """
@@ -1020,6 +1023,111 @@ class TestKMSearch(TestKMMixIn):
     search_result_list = website.WebSite_getFullTextSearchResultList(**kw)
     self.assertSameSet([], \
                        [portal.restrictedTraverse(x) for x in search_result_list[0].section_list])
+
+  @expectedFailure
+  def test_03_testImplicitRelations(self):
+    """
+      Test implicit (wiki-like) relations.
+      XXX: find way to have test implementation used from testDms.test_07_testImplicitRelations
+    """
+   
+    portal = self.portal
+    website = self.portal.web_site_module.km_test_web_site
+    web_page = self.web_page
+    
+    self.setupSphinx()
+    self.stepTic()
+    self.changeSkin('KM')
+        
+    def sqlresult_to_document_list(result):
+      return [i.getObject() for i in result]
+
+    # create docs to be referenced:
+    # (1) TEST, 002, en
+    filename = 'TEST-en-002.odt'
+    file = makeFileUpload(filename)
+    document1 = self.portal.portal_contributions.newContent(file=file)
+
+    # (2) TEST, 002, fr
+    as_name = 'TEST-fr-002.odt'
+    file = makeFileUpload(filename, as_name)
+    document2 = self.portal.portal_contributions.newContent(file=file)
+
+    # (3) TEST, 003, en
+    as_name = 'TEST-en-003.odt'
+    file = makeFileUpload(filename, as_name)
+    document3 = self.portal.portal_contributions.newContent(file=file)
+
+    # create docs to contain references in text_content:
+    # REF, 001, en; "I use reference to look up TEST"
+    filename = 'REF-en-001.odt'
+    file = makeFileUpload(filename)
+    document4 = self.portal.portal_contributions.newContent(file=file)
+
+    # REF, 002, en; "I use reference to look up TEST"
+    filename = 'REF-en-002.odt'
+    file = makeFileUpload(filename)
+    document5 = self.portal.portal_contributions.newContent(file=file)
+
+    # REFLANG, 001, en: "I use reference and language to look up TEST-fr"
+    filename = 'REFLANG-en-001.odt'
+    file = makeFileUpload(filename)
+    document6 = self.portal.portal_contributions.newContent(file=file)
+
+    # REFVER, 001, en: "I use reference and version to look up TEST-002"
+    filename = 'REFVER-en-001.odt'
+    file = makeFileUpload(filename)
+    document7 = self.portal.portal_contributions.newContent(file=file)
+
+    # REFVERLANG, 001, en: "I use reference, version and language to look up TEST-002-en"
+    filename = 'REFVERLANG-en-001.odt'
+    file = makeFileUpload(filename)
+    document8 = self.portal.portal_contributions.newContent(file=file)
+
+    transaction.commit()
+    self.tic()
+    # the implicit predecessor will find documents by reference.
+    # version and language are not used.
+    # the implicit predecessors should be:
+    
+   
+    # for (1): REF-002, REFLANG, REFVER, REFVERLANG
+    # document1's reference is TEST. getImplicitPredecessorValueList will
+    # return latest version of documents which contains string "TEST".
+    #self.assertSameSet(
+    #  [document5, document6, document7, document8],
+    #  sqlresult_to_document_list(document1.getImplicitPredecessorValueList()))
+
+    # clear transactional variable cache
+    transaction.commit()
+
+    # the implicit successors should be return document with appropriate
+    # language.
+
+    # if user language is 'en'.
+    self.portal.Localizer.changeLanguage('en')
+
+    self.assertSameSet(
+      [document3],
+      sqlresult_to_document_list(document5.getImplicitSuccessorValueList()))
+
+    # clear transactional variable cache
+    transaction.commit()
+
+    # if user language is 'fr'.
+    self.portal.Localizer.changeLanguage('fr')
+    self.assertSameSet(
+      [document2],
+      sqlresult_to_document_list(document5.getImplicitSuccessorValueList()))
+
+    # clear transactional variable cache
+    transaction.commit()
+
+    # if user language is 'ja'.
+    self.portal.Localizer.changeLanguage('ja')
+    self.assertSameSet(
+      [document3],
+      sqlresult_to_document_list(document5.getImplicitSuccessorValueList()))
 
 def test_suite():
   suite = unittest.TestSuite()
