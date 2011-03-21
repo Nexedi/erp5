@@ -53,14 +53,6 @@
             <value> <string>portal = context.getPortalObject()\n
 ung_website = portal.web_site_module.ung\n
 \n
-def cleanUpModule(module):\n
-  object_list = module.searchFolder()\n
-\n
-  for object in object_list:\n
-    real_object = context.restrictedTraverse(object.getPath())\n
-    module.deleteContent(real_object.getId())\n
-\n
-\n
 pad_list = portal.portal_catalog(portal_type="Knowledge Pad",\n
                                  publication_section_uid=ung_website.getUid())\n
 \n
@@ -74,9 +66,6 @@ person_list = portal.portal_catalog(portal_type="Person",\n
 for person in person_list:\n
   person_object = context.restrictedTraverse(person.getPath())\n
   portal.person_module.deleteContent(person_object.getId())\n
-\n
-cleanUpModule(portal.web_page_module)\n
-cleanUpModule(portal.event_module)\n
 \n
 return True\n
 </string> </value>
