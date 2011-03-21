@@ -90,14 +90,14 @@
         <td></td>\n
       </tr>\n
       <tr>\n
-        <td>verifyTextPresent</td>\n
-        <td>No Results</td>\n
-        <td></td>\n
-      </tr>\n
-      <tr>\n
         <td>verifyText</td>\n
         <td>//td[@id="resultview"]</td>\n
         <td>Results: 0 to UNG Event</td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyTextPresent</td>\n
+        <td>No Results</td>\n
+        <td></td>\n
       </tr>\n
       <tr>\n
         <td>clickAndWait</td>\n
@@ -108,6 +108,11 @@
         <td>click</td>\n
         <td>//span[@class="addcal"]</td>\n
         <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>waitForCondition</td>\n
+        <td>selenium.isElementPresent("portal_type")</td>\n
+        <td>10000</td>\n
       </tr>\n
       <tr>\n
         <td>select</td>\n

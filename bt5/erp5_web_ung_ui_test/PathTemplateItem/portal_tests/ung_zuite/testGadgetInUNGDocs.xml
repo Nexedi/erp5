@@ -119,6 +119,16 @@
         <td>//a[@class="clickable-block block-remove"]</td>\n
         <td></td>\n
       </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//a[@class="clickable-block block-remove"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>assertConfirmation</td>\n
+        <td>Are you sure you want to remove this gadget from your personalized page?</td>\n
+        <td></td>\n
+      </tr>\n
     </tbody>\n
   </table>\n
 </body>\n
