@@ -522,30 +522,6 @@ class TestBPMDummyDeliveryMovementMixin(TestBPMMixin):
         trade_phase='default/invoicing')
     self.stepTic()
 
-  def _createOrderedInvoicedDeliveredBusinessProcess(self):
-    business_process = self.createBusinessProcess()
-    category_tool = self.getCategoryTool()
-    ordered = category_tool.trade_state.ordered
-    delivered = category_tool.trade_state.delivered
-    invoiced = category_tool.trade_state.invoiced
-
-    self.order_link = self.createBusinessLink(business_process,
-        successor_value = ordered,
-        trade_phase='default/order',
-        completed_state_list = self.completed_state_list,
-        frozen_state_list = self.frozen_state_list)
-
-    self.invoice_path = self.createBusinessLink(business_process,
-        predecessor_value = ordered, successor_value = invoiced,
-        trade_phase='default/invoicing',
-        completed_state_list = self.completed_state_list,
-        frozen_state_list = self.frozen_state_list)
-
-    self.delivery_link = self.createBusinessLink(business_process,
-        predecessor_value = invoiced, successor_value = delivered,
-        trade_phase='default/delivery')
-    self.stepTic()
-
   def constructSimulationTreeAndDeliveries(self):
     """
     Construct a simple simulation tree with deliveries. This is
