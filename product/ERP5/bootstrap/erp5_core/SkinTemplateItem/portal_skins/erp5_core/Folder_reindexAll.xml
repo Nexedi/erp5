@@ -92,7 +92,7 @@ def Folder_reindexObjectList(id_list_list):\n
      sql_catalog_id=sql_catalog_id,\n
      passive_commit=passive_commit,\n
   )\n
-\n
+archive_test_script = getattr(context.getPortalObject(), "Archive_test", None)\n
 try:\n
   tree_id_list = folder.getTreeIdList()\n
 except (NotImplementedError, AttributeError):\n
@@ -112,24 +112,31 @@ except (NotImplementedError, AttributeError):\n
   if remaining_object_id_count > 0:\n
     id_list_list.append(id_list[-remaining_object_id_count:])\n
   Folder_reindexObjectList(id_list_list)\n
-else:  \n
-  if start_tree is not None:\n
-    new_tree_id_list = []  \n
+else:\n
+  if archive_test_script is not None:\n
+    new_tree_id_list = []\n
     for tree_id in tree_id_list:\n
-      if tree_id >= start_tree:\n
+      if folder.Archive_test(tree_id=tree_id, start_tree=start_tree, stop_tree=stop_tree):\n
         new_tree_id_list.append(tree_id)\n
     tree_id_list = new_tree_id_list\n
-    \n
-  if stop_tree is not None:\n
-    new_tree_id_list = []  \n
-    for tree_id in tree_id_list:\n
-      if tree_id < stop_tree:\n
-        new_tree_id_list.append(tree_id)\n
-    tree_id_list = new_tree_id_list\n
+  else:\n
+    if start_tree is not None:\n
+      new_tree_id_list = []\n
+      for tree_id in tree_id_list:\n
+        if tree_id >= start_tree:\n
+          new_tree_id_list.append(tree_id)\n
+      tree_id_list = new_tree_id_list\n
+\n
+    if stop_tree is not None:\n
+      new_tree_id_list = []\n
+      for tree_id in tree_id_list:\n
+        if tree_id < stop_tree:\n
+          new_tree_id_list.append(tree_id)\n
+      tree_id_list = new_tree_id_list\n
 \n
   if len(tree_id_list) == 0:\n
     return\n
-        \n
+\n
   i = 0\n
 \n
   tree_tag = "%s_tree" % folder_id\n
