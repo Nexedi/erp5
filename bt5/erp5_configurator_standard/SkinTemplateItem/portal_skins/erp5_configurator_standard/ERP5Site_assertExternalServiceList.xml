@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>portal = context.getPortalObject()\n
+portal_preferences = portal.portal_preferences\n
+system_preference = None\n
+clear_cache = 0\n
+conversion_check = False\n
+\n
+if "conversion_server" in kw:\n
+  conversion_server_address, conversion_server_port = kw["conversion_server"].split(":")\n
+\n
+  def getActiveSystemPreference():\n
+    system_preference = portal_preferences.getActiveSystemPreference()\n
+    if system_preference is None:\n
+      system_preference = portal_preferences.newContent(\n
+                                   portal_type="System Preference", \n
+                                   title="Automatically Created.")\n
+      system_preference.enable()\n
+    return system_preference\n
+\n
+  if portal_preferences.getPreferredOoodocServerAddress() != conversion_server_address:\n
+    system_preference = getActiveSystemPreference()\n
+    system_preference.setPreferredOoodocServerAddress(conversion_server_address)\n
+    clear_cache = 1\n
+\n
+  if int(portal_preferences.getPreferredOoodocServerPortNumber()) != int(conversion_server_port):\n
+    if system_preference is None:\n
+      system_preference = getActiveSystemPreference()\n
+    system_preference.setPreferredOoodocServerPortNumber(int(conversion_server_port))\n
+    clear_cache = 1\n
+\n
+if "memcached_server" in kw:\n
+  default_memcached_plugin = getattr(portal.portal_memcached, "default_memcached_plugin", None)\n
+  if default_memcached_plugin.getUrlString() != kw["memcached_server"]:\n
+    default_memcached_plugin.setUrlString(kw["memcached_server"])\n
+\n
+if "kumo_server" in kw:\n
+  persistent_memcached_plugin = getattr(portal.portal_memcached, "persistent_memcached_plugin", None)\n
+  if persistent_memcached_plugin is not None:\n
+    if persistent_memcached_plugin.getUrlString() != kw["kumo_server"]:\n
+      persistent_memcached_plugin.setUrlString(kw["kumo_server"])\n
+\n
+\n
+if clear_cache:\n
+  portal.portal_caches.clearAllCache()\n
+\n
+if "conversion_server" in kw:\n
+  conversion_check = (portal_preferences.getPreferredOoodocServerAddress() == conversion_server_address) and \\\n
+                    (int(portal_preferences.getPreferredOoodocServerPortNumber()) == int(conversion_server_port))\n
+   \n
+return conversion_check and \\\n
+       default_memcached_plugin.getUrlString() == kw.get("memcached_server") and \\\n
+       persistent_memcached_plugin is not None and \\\n
+       persistent_memcached_plugin.getUrlString() == kw.get("kumo_server")\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Site_assertExternalServiceList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
