@@ -73,6 +73,14 @@ return dumps(gadget_data_list)\n
             <value> <string></string> </value>
         </item>
         <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>WebSection_getGadgetPathList</string> </value>
         </item>

@@ -70,6 +70,14 @@ knowledge_box.visible()\n
             <value> <string>gadget_id</string> </value>
         </item>
         <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>WebSection_addGadget</string> </value>
         </item>
