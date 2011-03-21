@@ -238,7 +238,25 @@ $(function() {\n
         }\n
     });\n
   });\n
+  \n
+  // login logout links for KM\n
+  $(\'a[id="login-logout-link"]\').click(function(event) {\n
+    if($(\'a[id="login-logout-link"]\').attr("href").indexOf("login_form")==-1){\n
+      // we show popup only for login_form\n
+      return\n
+    }\n
+    event.preventDefault();\n
 \n
+    dialog.erp5_popup({\n
+        dialog: { title: $(\'label\', this.parentNode.parentNode).text() },\n
+        load: {\n
+            url: this.href,\n
+            method: $.get,\n
+        }\n
+    });\n
+  });\n
+  \n
+  \n
   // Make the Add gadget dialog work as pop-ups.\n
   $(\'a[id="add-gadgets"]\').click(function(event) {\n
     event.preventDefault();\n
