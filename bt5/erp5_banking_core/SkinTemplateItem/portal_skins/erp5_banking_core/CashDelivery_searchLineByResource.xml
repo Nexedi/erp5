@@ -67,7 +67,7 @@ return None\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>resource_id=None, portal_type</string> </value>
+            <value> <string>resource_id, portal_type</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
