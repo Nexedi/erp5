@@ -70,8 +70,8 @@ class Recipe(BaseSlapRecipe):
         apache_login=self.installLoginApache(ip=self.getGlobalIPv6Address(),
           port=13000, backend=zope_access, key=ca_conf['login_key'],
           certificate=ca_conf['login_certificate']))
-    self.installERP5Site(user, password, zope_access,
-            mysql_conf, conversion_server_conf, memcached_conf, self.site_id)
+    self.installERP5Site(user, password, zope_access, mysql_conf, 
+             conversion_server_conf, memcached_conf, kumo_conf, self.site_id)
     self.installTestRunner(ca_conf, mysql_conf, conversion_server_conf)
     self.linkBinary()
     self.setConnectionDict(dict(
@@ -334,13 +334,17 @@ class Recipe(BaseSlapRecipe):
     return user, password
 
   def installERP5Site(self, user, password, zope_access, mysql_conf,
-          conversion_server_conf=None, memcached_conf=None, erp5_site_id='erp5'):
+          conversion_server_conf=None, memcached_conf=None, kumo_conf=None, erp5_site_id='erp5'):
     """ Create a script controlled by supervisor, which creates a erp5
     site on current available zope and mysql environment"""
-    if conversion_server_conf is None:
-      conversion_server_conf = {}
+    conversion_server = None
+    if conversion_server_conf is not None:
+      conversion_server = "%s:%s" % (conversion_server_conf['conversion_server_ip'],
+             conversion_server_conf['conversion_server_port'])
     if memcached_conf is None:
       memcached_conf = {}
+    if kumo_conf is None:
+      kumo_conf = {}
     # XXX Conversion server and memcache server coordinates are not relevant
     # for pure site creation.
     https_connection_url = "http://%s:%s@%s/" % (user, password, zope_access)
@@ -359,8 +363,8 @@ class Recipe(BaseSlapRecipe):
                              mysql_connection_string,
                              https_connection_url,
                              memcached_conf.get('memcached_url'),
-                             conversion_server_conf.get('conversion_server_ip'),
-                             conversion_server_conf.get('conversion_server_port'),
+                             conversion_server,
+                             kumo_conf.get("kumo_address"),
                              bt5_list,
                              bt5_repository_list]))
     return []

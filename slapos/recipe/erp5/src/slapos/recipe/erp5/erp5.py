@@ -35,8 +35,8 @@ def updateERP5(args):
   mysql_string = args[1]
   base_url = args[2]
   memcached_provider = args[3]
-  conversion_server_address = args[4]
-  conversion_server_port = args[5]
+  conversion_server = args[4]
+  kumo_provider = args[5]
   bt5_list = args[6]
   bt5_repository_list = []
   if len(args) > 7:
@@ -46,7 +46,9 @@ def updateERP5(args):
     bt5_repository_list = ["http://www.erp5.org/dists/snapshot/bt5"]
   erp5_catalog_storage = "erp5_mysql_innodb_catalog"
   business_template_setup_finished = 0
-  sleep = 60
+  external_service_assertion = 1
+  update_script_id = "ERP5Site_assertExternalServiceList"
+  sleep = 120
   while True:
     try:
       proxy = xmlrpclib.ServerProxy(base_url)
@@ -87,8 +89,14 @@ def updateERP5(args):
               len([i for i in bt5_list if i not in installed_bt5_list]) == 0:
             print "Repositories updated and business templates installed."
             business_template_setup_finished = 1
-      else:
-        print "ERP5 site is already present, ignore."
+
+      if external_service_assertion:
+        url = "%s/%s/%s" % (base_url, site_id, update_script_id)
+        result = urllib.urlopen(url, urllib.urlencode({
+          "memcached" : memcached_provider,
+          "kumo" : kumo_provider,
+          "conversion_server" : conversion_server,})).read()
+        external_service_assertion = not (result == "True")
 
     except IOError:
       print "Unable to create the ERP5 Site!"
