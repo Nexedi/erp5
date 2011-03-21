@@ -274,9 +274,9 @@
                               createDefaultPadForUser">\n
     <div class="wait_block">\n
       <h2 i18n:translate="" i18n:domain="ui"> \n
-        Please wait until your tab is being prepared.\n
+        Please wait while your home area is being prepared.\n
       </h2>\n
-      <p i18n:translate="" i18n:domain="ui"> You\'ll be automatically redirected.</p>\n
+      <p i18n:translate="" i18n:domain="ui"> You will be automatically redirected.</p>\n
       <script type="text/javascript"\n
               tal:content="string: createDefaultPadOnServer(5000, \'${default_pad_group}\', \'view\', \'${mode}\');"/>\n
       </div>\n
@@ -290,7 +290,7 @@
   <div tal:condition="python: waitForActivitiesOnServer and isUserAllowedToCreateKnowledgePads">\n
     <div class="wait_block">\n
       <h2 i18n:translate="" i18n:domain="ui"> \n
-        Please wait until your home is being updated.</h2>\n
+        Please wait while your home area is being updated.</h2>\n
       <p i18n:translate="" i18n:domain="ui"> You\'ll be automatically redirected.</p>\n
       <script type="text/javascript" \n
               tal:content="string: checkForActivitiesOnServer(5000, \'view\', \'${mode}\', \'${default_pad_group}\');"/>\n
@@ -301,7 +301,7 @@
 <tal:block metal:define-macro="loading_message">\n
   <div id="loading-wrapper" style="display:none;">\n
     <img src="ajax-loader.gif" title="Loading" alt="Loading"/>\n
-    <p i18n:translate="" i18n:domain="ui"> Please wait until your changes are being applied. </p>\n
+    <p i18n:translate="" i18n:domain="ui"> Please wait while your changes are being applied. </p>\n
   </div>\n
 \n
 </tal:block>
