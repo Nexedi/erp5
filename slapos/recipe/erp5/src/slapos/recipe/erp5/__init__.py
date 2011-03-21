@@ -334,9 +334,13 @@ class Recipe(BaseSlapRecipe):
     return user, password
 
   def installERP5Site(self, user, password, zope_access, mysql_conf,
-          conversion_server_conf, memcached_conf, erp5_site_id):
+          conversion_server_conf=None, memcached_conf=None, erp5_site_id='erp5'):
     """ Create a script controlled by supervisor, which creates a erp5
     site on current available zope and mysql environment"""
+    if conversion_server_conf is None:
+      conversion_server_conf = {}
+    if memcached_conf is None:
+      memcached_conf = {}
     # XXX Conversion server and memcache server coordinates are not relevant
     # for pure site creation.
     https_connection_url = "http://%s:%s@%s/" % (user, password, zope_access)
@@ -354,9 +358,9 @@ class Recipe(BaseSlapRecipe):
                   arguments=[erp5_site_id,
                              mysql_connection_string,
                              https_connection_url,
-                             memcached_conf['memcached_url'],
-                             conversion_server_conf['conversion_server_ip'],
-                             conversion_server_conf['conversion_server_port'],
+                             memcached_conf.get('memcached_url'),
+                             conversion_server_conf.get('conversion_server_ip'),
+                             conversion_server_conf.get('conversion_server_port'),
                              bt5_list,
                              bt5_repository_list]))
     return []
