@@ -50,6 +50,7 @@ def updateERP5(args):
   while True:
     try:
       proxy = xmlrpclib.ServerProxy(base_url)
+      print "Adding site at %r" % base_url
       if proxy.isERP5SitePresent() == False:
         url = '%s/manage_addProduct/ERP5/manage_addERP5Site' % base_url
         result = urllib.urlopen(url, urllib.urlencode({
