@@ -50,14 +50,15 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
+            <value> <string>from Products.ERP5Type.Log import log\n
+portal = context.getPortalObject()\n
 portal_preferences = portal.portal_preferences\n
 system_preference = None\n
 clear_cache = 0\n
 conversion_check = False\n
 \n
-if "conversion_server" in kw:\n
-  conversion_server_address, conversion_server_port = kw["conversion_server"].split(":")\n
+if conversion_server is not None:\n
+  conversion_server_address, conversion_server_port = conversion_server.split(":")\n
 \n
   def getActiveSystemPreference():\n
     system_preference = portal_preferences.getActiveSystemPreference()\n
@@ -79,34 +80,34 @@ if "conversion_server" in kw:\n
     system_preference.setPreferredOoodocServerPortNumber(int(conversion_server_port))\n
     clear_cache = 1\n
 \n
-if "memcached_server" in kw:\n
+if memcached is not None:\n
   default_memcached_plugin = getattr(portal.portal_memcached, "default_memcached_plugin", None)\n
-  if default_memcached_plugin.getUrlString() != kw["memcached_server"]:\n
-    default_memcached_plugin.setUrlString(kw["memcached_server"])\n
+  if default_memcached_plugin.getUrlString() != memcached:\n
+    default_memcached_plugin.setUrlString(memcached)\n
 \n
-if "kumo_server" in kw:\n
+if kumo is not None:\n
   persistent_memcached_plugin = getattr(portal.portal_memcached, "persistent_memcached_plugin", None)\n
   if persistent_memcached_plugin is not None:\n
-    if persistent_memcached_plugin.getUrlString() != kw["kumo_server"]:\n
-      persistent_memcached_plugin.setUrlString(kw["kumo_server"])\n
+    if persistent_memcached_plugin.getUrlString() != kumo:\n
+      persistent_memcached_plugin.setUrlString(kumo)\n
 \n
 \n
 if clear_cache:\n
   portal.portal_caches.clearAllCache()\n
 \n
-if "conversion_server" in kw:\n
+if conversion_server is not None:\n
   conversion_check = (portal_preferences.getPreferredOoodocServerAddress() == conversion_server_address) and \\\n
                     (int(portal_preferences.getPreferredOoodocServerPortNumber()) == int(conversion_server_port))\n
    \n
 return conversion_check and \\\n
-       default_memcached_plugin.getUrlString() == kw.get("memcached_server") and \\\n
+       default_memcached_plugin.getUrlString() == memcached and \\\n
        persistent_memcached_plugin is not None and \\\n
-       persistent_memcached_plugin.getUrlString() == kw.get("kumo_server")\n
+       persistent_memcached_plugin.getUrlString() == kumo\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>conversion_server=None, memcached=None, kumo=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
