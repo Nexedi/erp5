@@ -87,6 +87,17 @@ class TestBPMMixin(ERP5TypeTestCase):
       specialise=self.default_business_process)
     self.business_process = business_process
     business_process._edit(**kw)
+    self.createTradeModelPath(self.business_process,
+      reference='order_path',
+      trade_phase_value_list=('default/order',))
+    self.createTradeModelPath(self.business_process,
+      reference='delivery_path',
+      trade_phase_value_list=('default/delivery',),
+      trade_date='trade_phase/default/order')
+    self.createTradeModelPath(self.business_process,
+      reference='invoice_path',
+      trade_phase_value_list=('default/invoicing',),
+      trade_date='trade_phase/default/delivery')
     self.createTradeModelPath(business_process,
       reference='default_path',
       trade_phase_value_list=('default/discount', 'default/tax'),
@@ -156,6 +167,9 @@ class TestBPMMixin(ERP5TypeTestCase):
       trade_model_path._setCriterionPropertyList(tuple(criterion_property_dict))
       for property, identity in criterion_property_dict.iteritems():
         trade_model_path.setCriterion(property, identity)
+    reference = kw.get('reference', None)
+    if reference is not None:
+      setattr(self, reference, trade_model_path)
     return trade_model_path
 
   def createMovement(self):
@@ -250,18 +264,24 @@ class TestBPMDummyDeliveryMovementMixin(TestBPMMixin):
         trade_phase='default/invoicing')
     self.stepTic()
 
-  def constructSimulationTreeAndDeliveries(self):
+  def constructSimulationTreeAndDeliveries(self, simulation_depth=None,
+               dummy_split=False):
     """
     Construct a simple simulation tree with deliveries. This is
     not real simulation tree, we only need the structure, most
     usual properties are not there (quantities, arrow, etc)
+
+    simulation_depth : level of simulation where we should stop
     """
     # create order and order line to have starting point for business process
     self.order = order = self._createDelivery()
     order_line = self._createMovement(order)
 
+    if simulation_depth is None:
+      simulation_depth = float('inf')
+
     # first level rule with simulation movement
-    applied_rule = self.portal.portal_simulation.newContent(
+    self.applied_rule = self.portal.portal_simulation.newContent(
         portal_type='Applied Rule', causality_value=order)
 
     def setTestClassProperty(prefix, property_name, document):
@@ -275,29 +295,38 @@ class TestBPMDummyDeliveryMovementMixin(TestBPMMixin):
         applied_rule.newContent(
         portal_type = 'Simulation Movement',
         delivery_value = order_line,
-        causality_value = self.order_link
+        trade_phase='default/order',
+        causality_value_list=[self.order_link, self.order_path]
         ))
 
-      # second level rule with simulation movement
-      document = setTestClassProperty(prefix, 'delivery_rule',
-        document.newContent(
-        portal_type='Applied Rule'))
-      document = setTestClassProperty(prefix, 'delivery_simulation_movement',
-        document.newContent(
-        portal_type='Simulation Movement',
-        causality_value = self.delivery_link))
+      if simulation_depth > 1:
 
-      # third level rule with simulation movement
-      document = setTestClassProperty(prefix, 'invoicing_rule',
+        # second level rule with simulation movement
+        document = setTestClassProperty(prefix, 'delivery_rule',
           document.newContent(
           portal_type='Applied Rule'))
-      document = setTestClassProperty(prefix, 'invoicing_simulation_movement',
+        document = setTestClassProperty(prefix, 'delivery_simulation_movement',
           document.newContent(
           portal_type='Simulation Movement',
-          causality_value = self.invoice_link))
+          trade_phase='default/delivery',
+          causality_value_list=[self.delivery_link, self.delivery_path]))
 
-    constructSimulationTree(applied_rule)
-    constructSimulationTree(applied_rule, prefix='split')
+        if simulation_depth > 2:
+
+          # third level rule with simulation movement
+          document = setTestClassProperty(prefix, 'invoicing_rule',
+              document.newContent(
+              portal_type='Applied Rule'))
+          document = setTestClassProperty(prefix,
+                        'invoicing_simulation_movement',
+              document.newContent(
+              portal_type='Simulation Movement',
+              trade_phase='default/invoicing',
+              causality_value_list=[self.invoice_link, self.invoice_path]))
+
+    constructSimulationTree(self.applied_rule)
+    if dummy_split:
+      constructSimulationTree(self.applied_rule, prefix='split')
     self.stepTic()
 
 class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
@@ -442,19 +471,44 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
                       business_process.getRemainingTradePhaseList(
                        business_process.invoice))
 
-  @newSimulationExpectedFailure
-  def test_BusinessLink_calculateExpectedDate(self):
+  def test_BusinessProcess_getExpectedTradeModelPathStartAndStopDate(self):
     """
     This test case is described for what start/stop date is expected on
-    each path by explanation.
-    In this case, root explanation is path of between "b" and "d", and
-    lead time and wait time is set on each path.
-    ("l" is lead time, "w" is wait_time)
+    path by explanation.
+    """
+    # define business process
+    self._createOrderedDeliveredInvoicedBusinessProcess()
 
-    Each path must calculate most early day from getting most longest
-    path in the simulation.
+    base_date = DateTime('2009/04/01 GMT+9')
 
-    "referential_date" represents for which date have to get of explanation from reality.
+    self.constructSimulationTreeAndDeliveries(simulation_depth=1)
+    # Set dates manually since we have dummy simulation
+    self.simulation_movement.edit(start_date=base_date, stop_date=base_date)
+    self.tic()
+
+    def checkExpectedDates(explanation, start_date, stop_date, delay_mode=None):
+      self.assertEquals(
+        self.business_process.getExpectedTradeModelPathStartAndStopDate(
+            explanation, self.delivery_path, delay_mode=delay_mode),
+        (start_date, stop_date))
+
+    # Default behavior, no delay
+    checkExpectedDates(self.order, base_date, base_date)
+
+    # Update business process in order to introduce delay
+    self.delivery_path.edit(min_delay=1.0, max_delay=3.0)
+    self.constructSimulationTreeAndDeliveries(simulation_depth=2)
+    # Set dates manually since we have dummy simulation
+    self.simulation_movement.edit(start_date=base_date, stop_date=base_date)
+    checkExpectedDates(self.order, base_date, base_date + 2)
+    checkExpectedDates(self.order, base_date, base_date + 1, delay_mode='min')
+    checkExpectedDates(self.order, base_date, base_date + 3, delay_mode='max')
+    checkExpectedDates(self.delivery_simulation_movement.getParentValue(),
+                       base_date, base_date + 2)
+
+    """
+    XXX More complex scenarios must be tested, like when several path are
+    possible like this :
 
                   (root_explanation)
         l:2, w:1         l:3, w:1       l:4, w:2
@@ -467,109 +521,9 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
                          \   /
                           \ /
                            c
+
+    For now the implementation and documentation is not clear enough.
     """
-    # define business process
-    category_tool = self.getCategoryTool()
-    business_process = self.createBusinessProcess()
-    business_link_a_b = self.createBusinessLink(business_process)
-    business_link_b_c = self.createBusinessLink(business_process)
-    business_link_b_d = self.createBusinessLink(business_process)
-    business_link_c_d = self.createBusinessLink(business_process)
-    business_link_d_e = self.createBusinessLink(business_process)
-    business_state_a = category_tool.trade_state.state_a
-    business_state_b = category_tool.trade_state.state_b
-    business_state_c = category_tool.trade_state.state_c
-    business_state_d = category_tool.trade_state.state_d
-    business_state_e = category_tool.trade_state.state_e
-    business_link_a_b.setPredecessorValue(business_state_a)
-    business_link_b_c.setPredecessorValue(business_state_b)
-    business_link_b_d.setPredecessorValue(business_state_b)
-    business_link_c_d.setPredecessorValue(business_state_c)
-    business_link_d_e.setPredecessorValue(business_state_d)
-    business_link_a_b.setSuccessorValue(business_state_b)
-    business_link_b_c.setSuccessorValue(business_state_c)
-    business_link_b_d.setSuccessorValue(business_state_d)
-    business_link_c_d.setSuccessorValue(business_state_d)
-    business_link_d_e.setSuccessorValue(business_state_e)
-
-    business_process.edit(referential_date='stop_date')
-    business_link_a_b.edit(title='a_b', lead_time=2, wait_time=1)
-    business_link_b_c.edit(title='b_c', lead_time=2, wait_time=1)
-    business_link_b_d.edit(title='b_d', lead_time=3, wait_time=1)
-    business_link_c_d.edit(title='c_d', lead_time=3, wait_time=0)
-    business_link_d_e.edit(title='d_e', lead_time=4, wait_time=2)
-
-    # root explanation
-    business_link_b_d.edit(deliverable=True)
-    self.stepTic()
-
-    """
-    Basic test, lead time of reality and simulation are consistent.
-    """
-    class Mock:
-      def __init__(self, date):
-        self.date = date
-      def getStartDate(self):
-        return self.date
-      def getStopDate(self):
-        return self.date + 3 # lead time of reality
-
-    base_date = DateTime('2009/04/01 GMT+9')
-    mock = Mock(base_date)
-
-    # root explanation.
-    self.assertEquals(business_link_b_d.getExpectedStartDate(mock), DateTime('2009/04/01 GMT+9'))
-    self.assertEquals(business_link_b_d.getExpectedStopDate(mock), DateTime('2009/04/04 GMT+9'))
-
-    # assertion for each path without root explanation.
-    self.assertEquals(business_link_a_b.getExpectedStartDate(mock), DateTime('2009/03/27 GMT+9'))
-    self.assertEquals(business_link_a_b.getExpectedStopDate(mock), DateTime('2009/03/29 GMT+9'))
-    self.assertEquals(business_link_b_c.getExpectedStartDate(mock), DateTime('2009/03/30 GMT+9'))
-    self.assertEquals(business_link_b_c.getExpectedStopDate(mock), DateTime('2009/04/01 GMT+9'))
-    self.assertEquals(business_link_c_d.getExpectedStartDate(mock), DateTime('2009/04/01 GMT+9'))
-    self.assertEquals(business_link_c_d.getExpectedStopDate(mock), DateTime('2009/04/04 GMT+9'))
-    self.assertEquals(business_link_d_e.getExpectedStartDate(mock), DateTime('2009/04/06 GMT+9'))
-    self.assertEquals(business_link_d_e.getExpectedStopDate(mock), DateTime('2009/04/10 GMT+9'))
-
-    """
-    Test of illegal case, lead time of reality and simulation are inconsistent,
-    always reality is taken, but it depends on which date(e.g. start_date and stop_date) is referential.
-
-    How we know which is referential, currently implementation of it can be known by
-    BusinessProcess.isStartDateReferential and BusinessProcess.isStopDateReferential.
-
-    In this test case, stop_date on business_link_b_d is referential, because business_link_b_d is
-    root explanation and business_process refer to stop_date as referential.
-
-    calculation example(when referential date is 2009/04/06 GMT+9):
-    start_date of business_link_b_d = referential_date - 3(lead_time of business_link_b_d)
-                                    = 2009/04/06 GMT+9 - 3
-                                    = 2009/04/03 GMT+9
-    """
-    class Mock:
-      def __init__(self, date):
-        self.date = date
-      def getStartDate(self):
-        return self.date
-      def getStopDate(self):
-        return self.date + 5 # changed
-
-    base_date = DateTime('2009/04/01 GMT+9')
-    mock = Mock(base_date)
-
-    self.assertEquals(business_link_b_d.getExpectedStartDate(mock), DateTime('2009/04/03 GMT+9'))
-    # This is base in this context, because referential_date is 'stop_date'
-    self.assertEquals(business_link_b_d.getExpectedStopDate(mock), DateTime('2009/04/06 GMT+9'))
-
-    # assertion for each path without root explanation.
-    self.assertEquals(business_link_a_b.getExpectedStartDate(mock), DateTime('2009/03/29 GMT+9'))
-    self.assertEquals(business_link_a_b.getExpectedStopDate(mock), DateTime('2009/03/31 GMT+9'))
-    self.assertEquals(business_link_b_c.getExpectedStartDate(mock), DateTime('2009/04/01 GMT+9'))
-    self.assertEquals(business_link_b_c.getExpectedStopDate(mock), DateTime('2009/04/03 GMT+9'))
-    self.assertEquals(business_link_c_d.getExpectedStartDate(mock), DateTime('2009/04/03 GMT+9'))
-    self.assertEquals(business_link_c_d.getExpectedStopDate(mock), DateTime('2009/04/06 GMT+9'))
-    self.assertEquals(business_link_d_e.getExpectedStartDate(mock), DateTime('2009/04/08 GMT+9'))
-    self.assertEquals(business_link_d_e.getExpectedStopDate(mock), DateTime('2009/04/12 GMT+9'))
 
   def test_isBuildable(self):
     """Test isBuildable for ordered, delivered and invoiced sequence
@@ -580,7 +534,7 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
     to rule below, and invoice_path is after delivery_path
     """
     self._createOrderedDeliveredInvoicedBusinessProcess()
-    self.constructSimulationTreeAndDeliveries()
+    self.constructSimulationTreeAndDeliveries(dummy_split=True)
 
     self.order.setSimulationState(self.completed_state)
     self.stepTic()
@@ -659,7 +613,7 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
   def test_isCompleted(self):
     """Test isCompleted for ordered, delivered and invoiced sequence"""
     self._createOrderedDeliveredInvoicedBusinessProcess()
-    self.constructSimulationTreeAndDeliveries()
+    self.constructSimulationTreeAndDeliveries(dummy_split=True)
 
     self.assertEqual(self.delivery_link.isCompleted(self.order), False)
     self.assertEqual(self.delivery_link.isPartiallyCompleted(self.order), False)
@@ -725,7 +679,7 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
   def test_isFrozen_OrderedDeliveredInvoiced(self):
     """Test isFrozen for ordered, delivered and invoiced sequence"""
     self._createOrderedDeliveredInvoicedBusinessProcess()
-    self.constructSimulationTreeAndDeliveries()
+    self.constructSimulationTreeAndDeliveries(dummy_split=True)
 
     self.assertEqual(self.order_link.isFrozen(self.order), False)
     self.assertEqual(self.delivery_link.isFrozen(self.order), False)
