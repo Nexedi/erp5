@@ -48,6 +48,12 @@
 <tr><td rowspan="1" colspan="3">How-to Sale Order / Packing List / Invoices / Payment </td></tr>\n
 </thead><tbody>\n
 \n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>SKIP TO RUN THIS TEST UNTIL THIS TEST BE REFACTORED TO USE NEW SIMULATION.</td>\n
+  <td></td>\n
+</tr>\n
+\n
 <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment">init</span>\n
 \n
 <tr>\n

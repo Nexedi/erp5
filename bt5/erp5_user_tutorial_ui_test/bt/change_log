@@ -1,4 +1,7 @@
 22-03-2011 lucas
+- Added a skip on the beginning of the testHowToSaleOrder.
+
+22-03-2011 lucas
 - Fixed tests titles by adding the prefix How-to. It will be easier to identify where such tests comes from in case of failure.
 
 22-03-2011 lucas
