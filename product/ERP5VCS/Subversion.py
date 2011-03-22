@@ -244,6 +244,7 @@ class Subversion(WorkingCopy):
     selected_set = set(added)
     selected_set.update(modified)
     selected_set.update(removed)
+    assert selected_set, "nothing to commit"
     self.revert('.', recurse=True, exclude_set=selected_set)
     revision = self._getClient().checkin('.', changelog, True)
     return context.REQUEST.RESPONSE.redirect('%s/view?%s' % (
