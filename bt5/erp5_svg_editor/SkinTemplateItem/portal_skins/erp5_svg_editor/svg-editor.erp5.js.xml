@@ -44,7 +44,7 @@
                              url: "getTextContent",\n
                              async: false\n
                             }).responseText;\n
-  svg_canvas.setSvgString(text_content);\n
+  text_content != "" ? svg_canvas.setSvgString(text_content) : null;\n
 }\n
 \n
 $(document).ready(function(){\n
@@ -55,8 +55,10 @@ $(document).ready(function(){\n
        type: "POST",\n
        url: "Base_setTextContentWrapper",\n
        data: "text=" + svg_canvas.getSvgString(),\n
+       success: function(){\n
+         window.location.reload();\n
+       }\n
     });\n
-    window.location.reload();\n
   });\n
   var text_content = $.ajax({\n
                              url: "getTextContent",\n
