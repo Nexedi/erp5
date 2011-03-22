@@ -53,27 +53,9 @@
             <value> <string>return (\'erp5_core_proxy_field_legacy\',\n
         \'erp5_full_text_myisam_catalog\',\n
         \'erp5_base\',\n
-        \'erp5_simulation\',\n
-        \'erp5_dhtml_style\',\n
-        \'erp5_jquery\',\n
-        \'erp5_jquery_ui\',\n
-        \'erp5_xhtml_jquery_style\',\n
-        \'erp5_web\',\n
-        \'erp5_ingestion\',\n
-        \'erp5_ingestion_mysql_innodb_catalog\',\n
-        \'erp5_accounting\', \n
-        \'erp5_dms\', \n
-        \'erp5_knowledge_pad\',\n
-        \'erp5_pdm\',\n
-        \'erp5_crm\',\n
-        \'erp5_trade\',\n
-        \'erp5_tax_resource\', \n
-        \'erp5_discount_resource\',\n
-        \'erp5_invoicing\',\n
         \'erp5_workflow\',\n
         \'erp5_configurator\',\n
-        \'erp5_configurator_standard_categories\',\n
-        \'erp5_configurator_standard\',)\n
+        \'erp5_configurator_standard\')\n
 </string> </value>
         </item>
         <item>
