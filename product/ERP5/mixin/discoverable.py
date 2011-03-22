@@ -31,7 +31,6 @@ from AccessControl import ClassSecurityInfo, getSecurityManager
 from ZODB.POSException import ConflictError
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Utils import convertToUpperCase
-from Products.CMFCore.utils import getToolByName
 from Products.ERP5.mixin.cached_convertable import CachedConvertableMixin
 import os
 import re
@@ -181,8 +180,7 @@ class DiscoverableMixin(CachedConvertableMixin):
       # through to portal_contribution_registry
       # to guess destination portal_type against all properties.
       # If returned portal_type is different, then reingest.
-      registry = getToolByName(self.getPortalObject(),
-                              'portal_contribution_registry')
+      registry = self.getPortalObject().portal_contribution_registry
       portal_type = registry.findPortalTypeName(context=self)
       if portal_type != self.getPortalType():
         return self.migratePortalType(portal_type)
