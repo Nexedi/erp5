@@ -83,17 +83,7 @@ XXX: This is the way user would have done but it fails for FF in some conditions
 </tr>\n
 <tr>\n
   <td>verifyTextPresent</td>\n
-  <td>Recherche rapide</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>verifyTextPresent</td>\n
-  <td>Partage</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>verifyTextPresent</td>\n
-  <td>Navigation</td>\n
+  <td>Mes favoris</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -114,7 +104,7 @@ XXX: This is the way user would have done but it fails for FF in some conditions
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>translated_validation_state_title</td>\n
+  <td>listbox_translated_validation_state_title</td>\n
   <td>Valid%</td>\n
 </tr>\n
 <tr>\n

@@ -1,4 +1,8 @@
 22-03-2011 lucas
+- Make the test testHowToInstanceI18N independent of ERP5 front page.
+- Fixed the listbox element name.
+
+22-03-2011 lucas
 - Fixed the listbox element name.
 
 21-03-2011 lucas
