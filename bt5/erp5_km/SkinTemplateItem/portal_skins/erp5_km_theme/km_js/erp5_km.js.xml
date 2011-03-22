@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts99855935.94</string> </value>
+            <value> <string>ts00782283.02</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -155,7 +155,24 @@ function showPopik(dom_id, path){\n
     popup.html(popup_html);\n
     popup.show();\n
   }\n
-}
+}\n
+\n
+function initialize_form(){\n
+  /* \n
+    Pressing enter in an input field in editable_mode must called default form submit button.\n
+    Due to different browser implementations in regard to determing which is the *right*\n
+    form\'s submit button (in KM case we can have many) we explicitly catch events and call it.\n
+  */\n
+   if($("#input-save-edit")){\n
+     $(\'#main_form\').each(function() {\n
+          $(\'input\').keypress(function(e) {\n
+            if(e.which == 10 || e.which == 13) {$("#input-save-edit").click();}\n
+          });\n
+      })\n
+   }\n
+ }\n
+ \n
+$(document).ready(initialize_form);
 
 ]]></string> </value>
         </item>
@@ -165,7 +182,7 @@ function showPopik(dom_id, path){\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4458</int> </value>
+            <value> <int>5038</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
