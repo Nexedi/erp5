@@ -1023,14 +1023,12 @@ class TestKMSearch(TestKMMixIn):
       Test implicit (wiki-like) relations.
       XXX: find way to have test implementation used from testDms.test_07_testImplicitRelations
     """
-   
+    self.setupSphinx()
+    self.changeSkin('KM')
+       
     portal = self.portal
     website = self.portal.web_site_module.km_test_web_site
     web_page = self.web_page
-    
-    self.setupSphinx()
-    self.stepTic()
-    self.changeSkin('KM')
         
     def sqlresult_to_document_list(result):
       return [i.getObject() for i in result]
