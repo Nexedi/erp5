@@ -38,31 +38,31 @@
 
 <tal:block tal:define="actions  python:here.Base_filterDuplicateActions(here.portal_actions.listFilteredActionsFor(here));\n
                        dummy    python:request.set(\'actions\', actions);">\n
-       <a tal:condition="python: context.getModificationDate() is not None">\n
-         <a tal:content="python: \'Updated %s by\' % context.getModificationDate().toZone(\'UTC\').ISO()"/>\n
-       </a>\n
-       <a tal:content="here/portal_membership/getAuthenticatedMember"/>\n
-\n
-       <button onclick="javascript:clickSaveButton(\'Base_edit\')" \n
-               name="Base_edit:method" title="Save" \n
-               class="save" type="submit">Save</button>\n
-       <div class="action_menu">\n
-       <tal:block tal:define="portal_path here/absolute_url;\n
-                       url_suffix python: \'/ERP5Site_createNewWebDocument?select_action=\'">\n
-         <li><a id="change_state">Change State<img tal:attributes="src python: portal_path + \'/ung_images/arrow.png\'"></a>\n
-           <ul>\n
-             <tal:block tal:repeat="action actions/workflow">\n
-             <li>\n
-               <a tal:attributes="href string:workflow ${action/url}">\n
-                 <h6 tal:content="action/name"></h6>\n
-               </a>\n
-             </li>\n
-             </tal:block>\n
-           </ul>\n
-         </li>\n
-        </tal:block>\n
-        </div>\n
-      <a id=\'sharing_url\'></a>\n
+  <a tal:condition="python: context.getModificationDate() is not None">\n
+    <a tal:content="python: \'Updated %s by\' % context.getModificationDate().ISO()"/>\n
+  </a>\n
+  <a tal:content="here/portal_membership/getAuthenticatedMember"/>\n
+  <button onclick="javascript:clickSaveButton(\'Base_edit\')"\n
+                   name="Base_edit:method" title="Save" \n
+                   class="save" type="submit">Save</button>\n
+  <div class="action_menu">\n
+    <tal:block tal:define="portal_path here/absolute_url;\n
+                           url_suffix python: \'/ERP5Site_createNewWebDocument?select_action=\'">\n
+      <li>\n
+        <a id="change_state">Change State<img tal:attributes="src python: portal_path + \'/ung_images/arrow.png\'"></a>\n
+        <ul>\n
+          <tal:block tal:repeat="action actions/workflow">\n
+            <li>\n
+              <a tal:attributes="href string:workflow ${action/url}">\n
+                <h6 tal:content="action/name"></h6>\n
+              </a>\n
+            </li>\n
+          </tal:block>\n
+        </ul>\n
+      </li>\n
+    </tal:block>\n
+  </div>\n
+  <a id=\'sharing_url\'></a>\n
 </tal:block>
 
 ]]></unicode> </value>
