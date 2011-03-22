@@ -26,3 +26,15 @@ def Alarm_updatePersonModulePasswordInformation(self, **kw):
 
   return result.keys()
 
+def Alarm_hideChangePasswordAction(self):
+  """
+    The TioLive Instance has an action to change the user password 
+    and it redirects to TioLive Master.
+
+    Once the instance is going to be decoupled, such action must be hidden,
+    because the password management must be done locally instead of
+    Tiolive Master.
+  """
+  for action in self.portal_actions.listActions():
+    if action.id == 'tiolive_change_password':
+      action.visible = 0

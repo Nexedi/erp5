@@ -1,2 +1,5 @@
+2011-03-22 lucas
+- We must hide the change password action, once the password management is done locally.
+
 2011-01-18 lucas
 - Initial version

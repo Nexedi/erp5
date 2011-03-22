@@ -71,6 +71,9 @@ if not context.Alarm_moveObsoleteSkinObjectList():\n
 context.Alarm_removeAuthenticationPlugin()\n
 context.setEnabled(False)\n
 \n
+# Hide change password action\n
+context.Alarm_hideChangePasswordAction()\n
+\n
 # Notify customer\n
 context.Alarm_notifyDecoupleInstance(person_list=result)\n
 \n
