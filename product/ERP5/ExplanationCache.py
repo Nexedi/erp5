@@ -212,9 +212,13 @@ class ExplanationCache:
         # portal_simulation/91/1/1/1/1/1 testing_folder/17
         #if kw.get('explanation_uid', None) is None:
         #  kw['explanation_uid'] = self.getRootExplanationUidList()
+        catalog_kw = kw.copy()
+        if catalog_kw.has_key('trade_phase'):
+          catalog_kw['trade_phase_relative_url'] = catalog_kw['trade_phase']
+          del catalog_kw['trade_phase']
         self.simulation_movement_cache[kw_tuple] = \
                self.portal_catalog(portal_type="Simulation Movement",
-                                   **kw)
+                                   **catalog_kw)
         
     return self.simulation_movement_cache[kw_tuple]
 
