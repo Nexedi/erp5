@@ -291,6 +291,47 @@
         <td>//a[@class="domain_selected"]</td>\n
         <td>Hidden</td>\n
       </tr>\n
+      <!-- Test the abbreviation of the title -->\n
+      <tr>\n
+        <td>openAndWait</td>\n
+        <td>${ung_url}/ERP5Site_createNewWebDocument?template=web_page_template</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//a[@name="document_title"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//input[@id="name"]</td>\n
+        <td>Add a Big Title to Test the abbreviation</td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//div[@class="ui-dialog-buttonset"]/button[1]/span</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>setTimeout</td>\n
+        <td>30000</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//a[@name="document_title"]</td>\n
+        <td>Add a Big Title to Test the ab...</td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//a[@name="document_title"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyValue</td>\n
+        <td>//input[@id="name"]</td>\n
+        <td>Add a Big Title to Test the abbreviation</td>\n
+      </tr>\n
     </tbody>\n
   </table>\n
 </body>\n
