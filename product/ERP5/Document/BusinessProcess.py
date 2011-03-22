@@ -167,9 +167,6 @@ class BusinessProcess(Path, XMLObject):
     delay_mode -- optional value to specify calculation mode ('min', 'max')
                   if no value specified use average delay
     """
-    if explanation.getPortalType() != 'Applied Rule':
-      raise TypeError('explanation must be an Applied Rule')
-
     if explanation.getParentValue().getPortalType() == 'Simulation Tool':
       raise ValueError('explanation must not be a Root Applied Rule')
 
