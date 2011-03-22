@@ -57,14 +57,15 @@ if not person:\n
   return None\n
 \n
 result_list = portal.portal_catalog(reference=reference, limit=1)\n
-webpage = result_list[0].getObject()\n
+web_page = result_list[0].getObject()\n
 \n
-if person.getRelativeUrl() not in webpage.getFollowUpList():\n
-  value_list = webpage.getFollowUpValueList()\n
+follow_up_list = web_page.getFollowUpList()\n
+if person.getRelativeUrl() not in follow_up_list:\n
+  value_list = follow_up_list\n
   value_list.append(person)\n
-  webpage.setFollowUpValueList(value_list)\n
+  web_page.setFollowUpValueList(value_list)\n
 \n
-return webpage\n
+return web_page\n
 </string> </value>
         </item>
         <item>
