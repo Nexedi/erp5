@@ -127,7 +127,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: context.hasStopDate() and context.getStopDate()</string> </value>
+            <value> <string>python: context.hasStopDate() and context.getStopDate() or None</string> </value>
         </item>
       </dictionary>
     </pickle>
