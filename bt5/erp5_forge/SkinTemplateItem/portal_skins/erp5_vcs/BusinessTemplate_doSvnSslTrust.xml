@@ -65,7 +65,7 @@ return traverseName(context, caller)(**caller_kw)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>caller, caller_kw={}, added=(), removed=(), modified=(), changelog=None</string> </value>
+            <value> <string>caller, caller_kw={}, added=(), removed=(), modified=(), changelog=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
