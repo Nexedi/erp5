@@ -60,21 +60,6 @@ business_template = context.getSpecialiseValue()\n
 N_ = context.Base_translateString\n
 isTransitionPossible = portal.portal_workflow.isTransitionPossible\n
 \n
-# disable the default preference that comes with erp5_core\n
-# all needed preferences are configured by Configurator\n
-# disable the default configurator system preference \n
-# that comes when instance is delivered\n
-# XXX Rafael: Is this still TRUE? it is not safe (or good)\n
-# disable people preferences after setted.\n
-preference_to_disable_list = [\'default_site_preference\', \n
-                              \'default_initial_configurator_system_preference\']\n
-\n
-for preference_to_disable in preference_to_disable_list:\n
-  preference = getattr(portal_preferences, preference_to_disable, None)\n
-  if preference is not None:\n
-    if isTransitionPossible(preference, \'disable\'):\n
-      preference.disable()\n
-\n
 if business_template is not None:\n
   # update role settings for modules which exists already\n
   for portal_type in business_template.getTemplatePortalTypeRolesList():\n
@@ -133,9 +118,10 @@ if business_template is not None:\n
             assignment.updateLocalRolesOnSecurityGroups()\n
             print "\\tOpen (assignment): ", assignment.getRelativeUrl()\n
 \n
-  # XXX: We do not care about gadgets now\n
-  # This should be a Configurator Item Instead.\n
-  #portal.ERP5Site_setupGadget()\n
+  for gadget in context.portal_gadgets.objectValues():\n
+    if gadget.getValidationState() == \'invisible\':\n
+      gadget.visible()\n
+      gadget.public()\n
 \n
 # update security settings for default preference # XXX why ???\n
 default_configurator_preference = getattr(portal_preferences,\n
