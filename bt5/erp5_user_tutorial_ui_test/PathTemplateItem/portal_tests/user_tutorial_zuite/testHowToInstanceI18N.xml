@@ -40,12 +40,12 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">\n
 <head>\n
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
-<title>I18n</title>\n
+<title>How-To Instance I18n</title>\n
 </head>\n
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">I18n</td></tr>\n
+<tr><td rowspan="1" colspan="3">How-To Instance I18n</td></tr>\n
 </thead><tbody>\n
 \n
 <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment">init</span>\n

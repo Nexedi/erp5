@@ -40,12 +40,12 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">\n
 <head>\n
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
-<title>How-to Person & Org. Linking</title>\n
+<title>How-to Person and Organisation linking</title>\n
 </head>\n
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">Person and Organisation linking</td></tr>\n
+<tr><td rowspan="1" colspan="3">How-to Person and Organisation linking</td></tr>\n
 </thead><tbody>\n
 \n
 <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment">init</span>\n

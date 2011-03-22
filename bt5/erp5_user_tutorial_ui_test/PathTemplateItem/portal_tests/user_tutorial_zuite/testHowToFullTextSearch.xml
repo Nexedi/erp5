@@ -40,14 +40,14 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">\n
 <head>\n
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
-<title>Full Text Search</title>\n
+<title>How-To Full Text Search</title>\n
 </head>\n
 <body tal:define="configuration python: here.Zuite_getHowToInfo();\n
                   search_name_string python: configuration[\'full_text_person_title\'];\n
                   search_organisation_string python: configuration[\'full_text_organisation_title\'];">\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">Full Text Search</td></tr>\n
+<tr><td rowspan="1" colspan="3">How-To Full Text Search</td></tr>\n
 </thead><tbody>\n
 \n
 <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment">init</span>\n
