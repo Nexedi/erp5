@@ -58,6 +58,7 @@
 */\n
 \n
 <tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\');\n
+                   viewable_area_maximal_width python:here.getLayoutProperty(\'layout_viewable_area_maximal_width\', \'1000\');\n
                    menu_opacity python:here.getLayoutProperty(\'layout_navigation_menu_opacity\', \'0.80\');\n
                    menu_width python:here.getLayoutProperty(\'layout_navigation_menu_width\', \'145px\');\n
                    menu_indent python:here.getLayoutProperty(\'layout_navigation_menu_indent\', \'155px\');\n
@@ -114,14 +115,11 @@ table {\n
 \n
 a:link, \n
 a:active, \n
-a:visited { \n
+a:visited,\n
+a:hover { \n
   color: #000; \n
   font-weight:normal; \n
   text-decoration: none;\n
-}\n
-\n
-a:hover { \n
-  color: #000; \n
 }\n
 \n
 .transition_message{\n
@@ -144,10 +142,12 @@ fieldset.hidden_fieldset { \n
 #main_content{\n
   width:auto;\n
 }\n
-\n
+#main_form{\n
+  height: 100%;\n
+}\n
 #mainwrapper {\n
   min-height: 100%;\n
-  width:1000px;\n
+  width:<tal:block tal:replace="viewable_area_maximal_width">1000</tal:block>px;\n
   margin: 0 auto;\n
 }\n
 \n
@@ -426,7 +426,7 @@ div#mainwrapper div.wrapper div.gadget fieldset.widget legend{\n
 }\n
 \n
 #footer {\n
-  width:1000px; \n
+  width:<tal:block tal:replace="viewable_area_maximal_width">1000</tal:block>px; \n
   margin: 0 auto;\n
 }\n
 \n
@@ -685,7 +685,7 @@ div.actions button {\n
 /* Download Document in various format widget */\n
 div.download-document-format-list-container{\n
   color:#000000;\n
-  left:525px;\n
+  left:560px;\n
   top:0px;\n
   position:absolute;\n
   z-index:3; /* Collapse menu z-index is 1 */\n
