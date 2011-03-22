@@ -52,27 +52,27 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-# XXX: ERP5VCS_doCreateJavaScriptStatus should send lists\n
-if isinstance(added, basestring):\n
-  added = added != \'none\' and filter(None, added.split(\',\')) or ()\n
-if isinstance(modified, basestring):\n
-  modified = modified != \'none\' and filter(None, modified.split(\',\')) or \'\'\n
-if isinstance(removed, basestring):\n
-  removed = removed != \'none\' and filter(None, removed.split(\',\')) or ()\n
+kw = {}\n
+request = container.REQUEST\n
+for k in \'added\', \'modified\', \'removed\':\n
+  file_list = request.get(k, ())\n
+  # XXX: ERP5VCS_doCreateJavaScriptStatus should send lists\n
+  if isinstance(file_list, basestring):\n
+    file_list = file_list != \'none\' and filter(None, file_list.split(\',\')) or ()\n
+  kw[k] = file_list\n
 \n
-if changelog is None or not changelog.strip():\n
-  request = container.REQUEST\n
+changelog = request.get(\'changelog\', \'\')\n
+if not changelog.strip():\n
   from Products.ERP5Type.Message import translateString\n
   error_msg = "Please set a ChangeLog message."\n
   request.set(\'portal_status_message\', translateString(error_msg))\n
   request.set(\'cancel_url\', context.absolute_url() +\n
     \'/BusinessTemplate_viewVcsStatus?do_extract:int=0\'\n
     \'&portal_status_message=Commit%20cancelled.\')\n
-  context = context.asContext(added=added, modified=modified, removed=removed)\n
-  return context.BusinessTemplate_viewVcsChangelog()\n
+  return context.asContext(**kw).BusinessTemplate_viewVcsChangelog()\n
 \n
 try:\n
-  return context.getVcsTool().commit(changelog, added, modified, removed)\n
+  return context.getVcsTool().commit(changelog, **kw)\n
 except Exception, error:\n
   return context.BusinessTemplate_handleException(error, script.id)\n
 
@@ -81,7 +81,7 @@ except Exception, error:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>added=(),modified=(),removed=(), changelog=None, **kw</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

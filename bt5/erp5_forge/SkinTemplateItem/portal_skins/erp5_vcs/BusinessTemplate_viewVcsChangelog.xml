@@ -77,9 +77,6 @@
                         <string>added_files</string>
                         <string>modified_files</string>
                         <string>removed_files</string>
-                        <string>your_added</string>
-                        <string>your_modified</string>
-                        <string>your_removed</string>
                       </list>
                     </value>
                 </item>
@@ -96,11 +93,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>svn_commit_changelog</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_dialog</string> </value>
+            <value> <string>vcs_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
