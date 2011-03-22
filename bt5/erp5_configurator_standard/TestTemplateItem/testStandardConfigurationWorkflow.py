@@ -63,10 +63,14 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
                        'erp5_tax_resource',
                        'erp5_discount_resource',
                        'erp5_invoicing',
-                       'erp5_configurator_standard_categories')
+                       'erp5_configurator_standard_categories',
+                       'erp5_trade_knowledge_pad',
+                       'erp5_crm_knowledge_pad',
+                       'erp5_simplified_invoicing')
 
   def getBusinessTemplateList(self):
     return ('erp5_core_proxy_field_legacy',
+        'erp5_full_text_myisam_catalog',
         'erp5_base',
         'erp5_workflow',
         'erp5_configurator',
