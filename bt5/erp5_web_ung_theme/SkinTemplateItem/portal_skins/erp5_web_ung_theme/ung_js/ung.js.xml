@@ -188,6 +188,17 @@ function reloadLoginPage(event){\n
   }\n
 }\n
 \n
+function displayDocumentTitle(title){\n
+  var document_title = title;\n
+  document_title == null ? document_title = getObjectPropertyValue("getTitle"): null;\n
+  if (document_title.length > 30){\n
+    $("a[name=\'document_title\']").html(document_title.substring(0,30) + "...");\n
+  }\n
+  else{\n
+    $("a[name=\'document_title\']").html(document_title);\n
+  };\n
+}\n
+\n
 $().ready(function(){\n
   $("p.clear").remove();\n
   if ($("a#login").html() != null){\n
@@ -222,7 +233,7 @@ $().ready(function(){\n
         break;\n
     }\n
   }\n
-  $("a[name=\'document_title\']").html(getObjectPropertyValue("getTitle"));\n
+  displayDocumentTitle(null);\n
   $("input#upload").click(function(event){\n
     event.preventDefault();\n
     $("#upload_document").dialog("open");\n
@@ -340,7 +351,7 @@ $().ready(function(){\n
         var new_version = $("input#version.version").attr("value");\n
         var new_int_index = $("input#sort_index.sort_index").attr("value");\n
         var new_subject_list = $("textarea#keyword_list").attr("value").replace(/\\n+/g, ",");\n
-        $("a[name=\'document_title\']").html(new_title);\n
+        displayDocumentTitle(new_title);\n
         setObjectPropertyValue("setTitle", new_title, "value");\n
         setObjectPropertyValue("setReference", new_reference, "value");\n
         setObjectPropertyValue("setShortTitle", new_short_title, "value");\n
@@ -467,10 +478,11 @@ $().ready(function(){\n
     .click(function(){\n
       $("div#more_property").hide();\n
       $("p#hide_properties").hide();\n
-      if ($("input#name.title").attr("value") != getObjectPropertyValue("getTitle")) {\n
-        $(this).html(getObjectPropertyValue("getTitle"));\n
+      var document_title = getObjectPropertyValue("getTitle");\n
+      if ($("input#name.title").attr("value") != document_title) {\n
+        displayDocumentTitle();\n
       }\n
-      $("input#name.title").attr("value", getObjectPropertyValue("getTitle"));\n
+      $("input#name.title").attr("value", document_title);\n
       $("input#short_title.short_title").attr("value", getObjectPropertyValue("getShortTitle"));\n
       $("input#reference.reference").attr("value", getObjectPropertyValue("getReference"));\n
       $("input#version.version").attr("value", getObjectPropertyValue("getVersion"));\n
