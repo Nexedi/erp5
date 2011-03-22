@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts00281126.99</string> </value>
+            <value> <string>ts00797726.15</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -150,6 +150,14 @@ h3.handle span.handle {\n
   border-bottom: 1px solid #FFFFFF;\n
 }\n
 \n
+/* Gadget container at bottom */\n
+div#km_left div#wrapper_bottom {\n
+  border:0 none;\n
+  clear:left;\n
+  margin:10px;\n
+}\n
+\n
+\n
 /* disable cursor for anonymous users */\n
 .portal-column-undraggable .handle{\n
   cursor: default;\n
@@ -164,13 +172,10 @@ div.block fieldset label{\n
   display: block;\n
 }\n
 \n
-.front_pad { /* This class is used to display gadgets in front page */\n
+/* This class is used to display gadgets in front page */\n
+.front_pad { \n
   margin: 0;\n
-  padding-top: 0px;\n
-  padding-bottom: 0px;\n
-  padding-left: 7px;\n
-  padding-right: 7px;\n
-  width: 936px; /* XXX-JPS Related to front splash and page width - should become dynamic */\n
+  padding:0 7px;\n
 }\n
 \n
 /* column gadget in bottom */\n
@@ -566,7 +571,7 @@ div.portal-column-undraggable h3.handle span{\n
 \n
 /* Decrease padding for gadgets\' text */\n
 fieldset.gadget div.text{\n
-  padding: 3px;\n
+  padding: 3px 0;\n
 }\n
 \n
 /* Gadget Browser */\n
@@ -644,9 +649,6 @@ div.gadget_advertisement{\n
 div.gadget-relations .listbox-head-title span{\n
   color: #000;\n
 }\n
-div.gadget-relations .listbox-body{\n
-  padding-left:5px;\n
-}\n
 \n
 div.gadget-relations div.listbox-head-navigation,\n
 div.gadget-relations .listbox-label-line{\n
@@ -705,7 +707,7 @@ div.block fieldset.gadget-profile div.field{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>12176</int> </value>
+            <value> <int>12075</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

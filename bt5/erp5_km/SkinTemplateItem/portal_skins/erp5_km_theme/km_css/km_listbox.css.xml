@@ -112,7 +112,6 @@ div.listbox-action-widget span.image{\n
   height:20px;\n
   width:20px;\n
   margin-top:3px;\n
-  z-index:2;\n
   left:-3px;\n
 }\n
 \n
@@ -288,6 +287,27 @@ span.found{\n
   padding-top: 5px;\n
 }\n
 \n
+/* Search listbox pop up styling */\n
+span.search_result_title{\n
+  color: #1111CC;\n
+}\n
+\n
+span.found{\n
+  color: #000000;\n
+}\n
+\n
+.section, \n
+.owner {\n
+  border-bottom: 1px solid #e9e9e9;\n
+  margin-right:5px;\n
+}\n
+\n
+a.section-link,\n
+a.owner-link,\n
+a.history-link{\n
+  margin-left: 5px;\n
+}\n
+\n
 div.search-details .reference-link,\n
 div.search-details .version,\n
 div.search-details .language{\n
@@ -320,7 +340,6 @@ div.listbox-search-mode div.maximal-width{\n
   -moz-box-shadow:4px 4px 4px rgba(0, 0, 0, 0.5);\n
   -webkit-box-shadow:4px 4px 4px rgba(0, 0, 0, 0.5);\n
   min-height:180px;\n
-  z-index:5;\n
 }
 
 ]]></unicode> </value>

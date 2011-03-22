@@ -109,6 +109,7 @@ button {\n
 \n
 table {\n
   border: 1px solid #ecebe2;\n
+  font-size:9pt;\n
 }\n
 \n
 a:link, \n
@@ -140,9 +141,13 @@ fieldset.hidden_fieldset { \n
   display: none;\n
 }\n
 \n
+#main_content{\n
+  width:auto;\n
+}\n
+\n
 #mainwrapper {\n
   min-height: 100%;\n
-  width:952px;\n
+  width:1000px;\n
   margin: 0 auto;\n
 }\n
 \n
@@ -167,10 +172,6 @@ fieldset.hidden_fieldset { \n
   padding-top: 5px;\n
 }\n
 \n
-#main_form {\n
-  height:100%;\n
-}\n
-\n
 #wrapper_right{\n
   float: left;\n
   width:22.5%;\n
@@ -178,7 +179,6 @@ fieldset.hidden_fieldset { \n
   margin-left: 19px;\n
   padding-top: 4px;\n
 }\n
-\n
 \n
 #km_left {\n
   float: left;\n
@@ -196,14 +196,6 @@ fieldset.hidden_fieldset { \n
   width: auto;\n
 }\n
 \n
-/* Gadget container at bottom */\n
-div#km_left div#wrapper_bottom {\n
-  border:0 none;\n
-  clear:left;\n
-  font-size:0.7em;\n
-  margin:10px;\n
-}\n
-\n
 div#main_content fieldset.bottom label {\n
   display:none;\n
 }\n
@@ -215,31 +207,6 @@ div#wrapper_headline span.header_title {\n
 div#wrapper_headline div.header_title {\n
   float:left;\n
   width: auto;\n
-}\n
-\n
-.content .field label, \n
-.content .field .input {\n
-  width: 100%;\n
-  padding-left:10px;\n
-}\n
-\n
-\n
-.content .field label {\n
-  width:30%;\n
-  float:left;\n
-}\n
-\n
-.content .error .input {\n
-  border:2px solid #FF4400;\n
-}\n
-\n
-.content .field .error {\n
-  background-color:inherit;\n
-  color:#FF4400;\n
-}\n
-\n
-fieldset.left{\n
-  overflow: hidden;\n
 }\n
 \n
 /* Top navigation */\n
@@ -459,7 +426,7 @@ div#mainwrapper div.wrapper div.gadget fieldset.widget legend{\n
 }\n
 \n
 #footer {\n
-  width:952px;\n
+  width:1000px; \n
   margin: 0 auto;\n
 }\n
 \n
@@ -475,6 +442,30 @@ div#mainwrapper div.wrapper div.gadget fieldset.widget legend{\n
 }\n
 \n
 /* Forms */\n
+.content .field label, \n
+.content .field .input {\n
+  width: 100%;\n
+  padding-left:10px;\n
+}\n
+\n
+.content .field label {\n
+  width:30%;\n
+  float:left;\n
+}\n
+\n
+.content .error .input {\n
+  border:2px solid #FF4400;\n
+}\n
+\n
+.content .field .error {\n
+  background-color:inherit;\n
+  color:#FF4400;\n
+}\n
+\n
+fieldset.left{\n
+  overflow: hidden;\n
+}\n
+\n
 form p,\n
 .bottom_actions{\n
   margin:5px 0;\n
@@ -691,26 +682,13 @@ div.actions button {\n
   right: 0;\n
 }\n
 \n
-/* Search Popup window */\n
-/*div.search_popup {\n
-  background-color: #FFFFFF;\n
-  border: 1px solid black;\n
-  display: none;\n
-  left: 500px;\n
-  padding: 10px;\n
-  position: fixed;\n
-  top: 130px;\n
-  width: 150px;\n
-  z-index: 100;\n
-}*/\n
-\n
 /* Download Document in various format widget */\n
 div.download-document-format-list-container{\n
   color:#000000;\n
   left:525px;\n
   top:0px;\n
   position:absolute;\n
-  z-index:200; /* Collapse menu z-index is 100 */\n
+  z-index:3; /* Collapse menu z-index is 1 */\n
   width:200px;\n
 }\n
 div.download-document-format-list-container span{\n
@@ -964,16 +942,6 @@ table tbody tr td {\n
   -webkit-transition-timing-function: linear;\n
 }\n
 \n
-.section, \n
-.owner {\n
-  border-bottom: 1px solid #e9e9e9;\n
-  margin-right:5px;\n
-}\n
-\n
-\n
-\n
-/* ## link styling ################################### start # */\n
-\n
 #header a:link, #header a:active, #header a:visited {\n
   color:#fff;\n
   font-weight:bold;\n
@@ -1015,12 +983,12 @@ table tbody tr td {\n
   background-position: 0 100%;\n
 }\n
 \n
-#menu #login-logout-link:link, #menu #login-logout-link:active, #menu #login-logout-link:visited {\n
+#login-logout-link:link, #login-logout-link:active, #login-logout-link:visited {\n
   background: url(km_img/login.gif) no-repeat transparent;\n
   background-position: 0 -3px;\n
 }\n
 \n
-#menu #login-logout-link:hover {\n
+#login-logout-link:hover {\n
   background-position: 0 -23px;\n
 }\n
 \n
@@ -1028,28 +996,6 @@ table tbody tr td {\n
 .meta input.search_button:hover,\n
 .search_button:hover {\n
 \tbackground-position: 0 100%;\n
-}\n
-\n
-/* Search pop up styling */\n
-div.popup_row .reference{\n
-  color: inherit;\n
-}\n
-\n
-/* Search listbox styling */\n
-span.search_result_title{\n
-  color: #1111CC;\n
-}\n
-\n
-span.search_result_portal_type{\n
-  color: inherit;\n
-}\n
-\n
-span.found{\n
-  color: #000000;\n
-}\n
-\n
-span.found em{\n
-  font-weight: bold;\n
 }\n
 \n
 /* workflow states  colors*/\n
@@ -1070,7 +1016,7 @@ span.found em{\n
 \n
 /* Collapse down navigation */\n
 #menu ul.nav li{\n
-  z-index:110;\n
+  z-index:1;\n
 }\n
 \n
 #menu ul.nav li a, #menu ul.nav li a:visited {\n
@@ -1163,24 +1109,12 @@ span.found em{\n
 \n
 div.collapse-menu-root{\n
   display:block;\n
-  z-index:111;\n
-}\n
-\n
-table tr td, \n
-table tr th, \n
-table tr th button {\n
-  font-size:9pt;\n
+  z-index:2;\n
 }\n
 \n
 div#wrapper_headline span.header_title {\n
   font-size:1.2em;\n
   font-weight:bold;\n
-}\n
-\n
-a.section-link,\n
-a.owner-link,\n
-a.history-link{\n
-  margin-left: 5px;\n
 }\n
 \n
 /* Bottom toolbar */\n
@@ -1358,6 +1292,9 @@ button.formbt > span{\n
   -moz-box-shadow:4px 4px 4px rgba(0, 0, 0, 0.5);\n
   -webkit-box-shadow:4px 4px 4px rgba(0, 0, 0, 0.5);\n
   box-shadow:4px 4px 4px rgba(0, 0, 0, 0.5);\n
+}\n
+#jquery_erp5_dialog  h1 a{\n
+  display:none;\n
 }\n
 \n
 </tal:block>
