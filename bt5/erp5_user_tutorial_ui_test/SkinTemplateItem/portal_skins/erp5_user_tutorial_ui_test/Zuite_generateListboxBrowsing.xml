@@ -66,7 +66,7 @@ for selection in listbox_selection:\n
 """\\\n
 <tr>\n
   <td>type</td>\n
-  <td>//tr[@class=\'listbox-search-line\']/th[@class="listbox-table-filter-cell"]/input[@name=\'%s\']</td>\n
+  <td>//tr[@class=\'listbox-search-line\']/th[@class="listbox-table-filter-cell"]/input[@name=\'listbox_%s\']</td>\n
   <td>%s</td>\n
 </tr>\n
 """ % (selection[0], selection[1])\n
