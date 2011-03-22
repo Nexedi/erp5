@@ -66,7 +66,10 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
                        'erp5_configurator_standard_categories',
                        'erp5_trade_knowledge_pad',
                        'erp5_crm_knowledge_pad',
-                       'erp5_simplified_invoicing')
+                       'erp5_simplified_invoicing',
+                       'erp5_ods_style',
+                       'erp5_odt_style',
+                       'erp5_ooo_import')
 
   def getBusinessTemplateList(self):
     return ('erp5_core_proxy_field_legacy',
