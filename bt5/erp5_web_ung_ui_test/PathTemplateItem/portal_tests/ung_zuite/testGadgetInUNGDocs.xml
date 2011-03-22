@@ -120,6 +120,11 @@
         <td></td>\n
       </tr>\n
       <tr>\n
+        <td>verifyElementNotPresent</td>\n
+        <td>//div[@id="page_wrapper"]/div[1]/h4</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
         <td>click</td>\n
         <td>//a[@class="clickable-block block-remove"]</td>\n
         <td></td>\n
@@ -127,6 +132,16 @@
       <tr>\n
         <td>assertConfirmation</td>\n
         <td>Are you sure you want to remove this gadget from your personalized page?</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//a[@class="ung_docs"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyElementPresent</td>\n
+        <td>//div[@id="page_wrapper"]/div[1]/h4</td>\n
         <td></td>\n
       </tr>\n
     </tbody>\n
