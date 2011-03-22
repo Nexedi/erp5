@@ -682,13 +682,6 @@ class TestKM(TestKMMixIn):
     assignment =  person.newContent(portal_type = 'Assignment')
     self.stepTic()
     self.changeSkin('KM')
-    self.failUnless('1 records' in 
-            self.publish(self.base_url_pattern 
-              %(self.web_section_url+'/%s' %assigned_members_subsection.getId(),  
-                gadget_view_form_id, 
-                assigned_members_subsection.getRelativeUrl(),  
-                km_assigned_member_gadget_box_url)
-            , self.auth).getBody())
     self.failUnless(person.getTitle() in 
                     self.publish(self.base_url_pattern 
             %(self.web_section_url+'/%s' %assigned_members_subsection.getId(),  
