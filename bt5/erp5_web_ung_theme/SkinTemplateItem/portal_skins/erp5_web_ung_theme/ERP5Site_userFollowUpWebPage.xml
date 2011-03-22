@@ -56,8 +56,7 @@ person = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
 if not person:\n
   return None\n
 \n
-result_list = portal.portal_catalog(reference=reference, limit=1)\n
-web_page = result_list[0].getObject()\n
+web_page = portal.portal_catalog.getResultValue(reference=reference)\n
 \n
 follow_up_list = web_page.getFollowUpList()\n
 if person.getRelativeUrl() not in follow_up_list:\n
