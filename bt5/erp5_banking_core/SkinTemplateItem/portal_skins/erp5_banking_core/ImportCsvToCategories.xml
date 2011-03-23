@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -357,107 +354,8 @@ return printed\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>import_file, **kw</string> </value>
-        </item>
-        <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>import_file</string>
-                            <string>kw</string>
-                            <string>_print_</string>
-                            <string>_print</string>
-                            <string>lowerCase</string>
-                            <string>upperCase</string>
-                            <string>l_clean</string>
-                            <string>l_split</string>
-                            <string>None</string>
-                            <string>create_category</string>
-                            <string>generate_vault_dict</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>request</string>
-                            <string>getattr</string>
-                            <string>import_type</string>
-                            <string>line_list</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>line</string>
-                            <string>_getitem_</string>
-                            <string>e_list</string>
-                            <string>len</string>
-                            <string>e</string>
-                            <string>category</string>
-                            <string>acquired_vault_code</string>
-                            <string>sub_cat</string>
-                            <string>parent_code</string>
-                            <string>code</string>
-                            <string>repr</string>
-                            <string>KeyError</string>
-                            <string>vault_type_dict</string>
-                            <string>vault_type_list</string>
-                            <string>subvault_dict</string>
-                            <string>vault</string>
-                            <string>subvault</string>
-                            <string>subvault_code</string>
-                            <string>counter_string_list</string>
-                            <string>one_way_counter_list</string>
-                            <string>two_way_counter_list</string>
-                            <string>counter_list</string>
-                            <string>max_counter</string>
-                            <string>counter_name</string>
-                            <string>range</string>
-                            <string>i</string>
-                            <string>_write_</string>
-                            <string>counter_string</string>
-                            <string>counter_subvault</string>
-                            <string>c</string>
-                            <string>vault_type</string>
-                            <string>subvault_data</string>
-                            <string>subvault_path</string>
-                            <string>subcat_vault_type</string>
-                            <string>new_category_obj</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -466,12 +364,6 @@ return printed\n
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

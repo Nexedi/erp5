@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -210,119 +207,12 @@ else:\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>listbox=None,batch_mode=0,resource=None,previous_resource=None,verbose=0,**kw</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>5</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>listbox</string>
-                            <string>batch_mode</string>
-                            <string>resource</string>
-                            <string>previous_resource</string>
-                            <string>verbose</string>
-                            <string>kw</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
-                            <string>Products.ERP5Type.Document</string>
-                            <string>newTempBase</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>request</string>
-                            <string>item_model</string>
-                            <string>Products.ERP5Form.Selection</string>
-                            <string>Selection</string>
-                            <string>selection</string>
-                            <string>None</string>
-                            <string>error_value</string>
-                            <string>field_error_dict</string>
-                            <string>generate_error</string>
-                            <string>convertTravelerCheckReferenceToInt</string>
-                            <string>convertCheckReferenceToInt</string>
-                            <string>_getiter_</string>
-                            <string>line</string>
-                            <string>destination_payment_reference</string>
-                            <string>reference_range_min</string>
-                            <string>reference_range_max</string>
-                            <string>check_amount</string>
-                            <string>int</string>
-                            <string>quantity</string>
-                            <string>message</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>x</string>
-                            <string>account_list</string>
-                            <string>len</string>
-                            <string>_getitem_</string>
-                            <string>account</string>
-                            <string>_write_</string>
-                            <string>destination_trade</string>
-                            <string>convert_func</string>
-                            <string>value_denomination</string>
-                            <string>ValueError</string>
-                            <string>check_amount_relative_url</string>
-                            <string>check_amount_value</string>
-                            <string>check_quantity</string>
-                            <string>same_type</string>
-                            <string>xrange</string>
-                            <string>i</string>
-                            <string>_apply_</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <none/>
-                <int>0</int>
-                <none/>
-                <none/>
-                <int>0</int>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>CheckDelivery_generateCheckDetailInputDialog</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

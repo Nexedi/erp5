@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -169,12 +166,6 @@ return resource_dict\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>resource, variation_text, movement=None, display_simulation_state=0, explanation_uid=None, cache_dict=None</string> </value>
         </item>
@@ -187,90 +178,8 @@ return resource_dict\n
             </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>6</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>resource</string>
-                            <string>variation_text</string>
-                            <string>movement</string>
-                            <string>display_simulation_state</string>
-                            <string>explanation_uid</string>
-                            <string>cache_dict</string>
-                            <string>resource_dict</string>
-                            <string>None</string>
-                            <string>_getattr_</string>
-                            <string>cache_title_category_url</string>
-                            <string>cache_translated_title_category_url</string>
-                            <string>cache_resource_portal_type</string>
-                            <string>cache_resource</string>
-                            <string>cache_translated_portal_type</string>
-                            <string>cache_translated_simulation_state</string>
-                            <string>getTitleFromCategoryUrl</string>
-                            <string>getTranslatedTitleFromCategoryUrl</string>
-                            <string>_getiter_</string>
-                            <string>variation</string>
-                            <string>_write_</string>
-                            <string>current_resource_portal_type</string>
-                            <string>context</string>
-                            <string>portal</string>
-                            <string>resource_value</string>
-                            <string>resource_info_dict</string>
-                            <string>KeyError</string>
-                            <string>_getitem_</string>
-                            <string>catalog_explanation</string>
-                            <string>source_reference</string>
-                            <string>explanation_portal_type</string>
-                            <string>simulation_state</string>
-                            <string>simulation_state_title</string>
-                            <string>translated_portal_type</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <none/>
-                <int>0</int>
-                <none/>
-                <none/>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Base_getResourceInformationDictFromUrlAndVariation</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

@@ -2,19 +2,10 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="CheckBoxField" module="Products.Formulator.StandardFields"/>
-        <tuple/>
-      </tuple>
+      <global name="CheckBoxField" module="Products.Formulator.StandardFields"/>
     </pickle>
     <pickle>
       <dictionary>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>my_unique_per_account</string> </value>
