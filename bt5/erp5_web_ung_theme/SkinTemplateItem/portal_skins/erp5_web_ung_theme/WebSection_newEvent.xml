@@ -37,7 +37,7 @@
             <value> <unicode encoding="cdata"><![CDATA[
 
 <form id="create_new_event">\n
-  <label>Event Type</label>\n
+  <label tal:content="python:unicode(here.Base_translateString(\'Event Type\'), \'utf-8\')">Event Type</label>\n
   <select name="portal_type">\n
     <option>Acknowledgement</option>\n
     <option>Fax Message</option>\n
