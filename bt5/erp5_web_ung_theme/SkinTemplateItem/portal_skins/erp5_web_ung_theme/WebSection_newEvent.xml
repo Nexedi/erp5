@@ -36,25 +36,26 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
+<tal:block tal:define="default_language python:here.Localizer.get_selected_language()">\n
 <form id="create_new_event">\n
-  <label tal:content="python:unicode(here.Base_translateString(\'Event Type\'), \'utf-8\')">Event Type</label>\n
+  <label tal:content="python:here.Base_translateString(\'Event Type\', lang=default_language)">Event Type</label>\n
   <select name="portal_type">\n
-    <option>Acknowledgement</option>\n
-    <option>Fax Message</option>\n
-    <option>Letter</option>\n
-    <option>Mail Message</option>\n
-    <option>Note</option>\n
-    <option>Phone Call</option>\n
-    <option>Short Message</option>\n
-    <option>Site Message</option>\n
-    <option>Visit</option>\n
-    <option>Web Message</option>\n
+    <option tal:content="python:here.Base_translateString(\'Acknowledgement\', lang=default_language)">Acknowledgement</option>\n
+    <option tal:content="python:here.Base_translateString(\'Fax Message\', lang=default_language)">Fax Message</option>\n
+    <option tal:content="python:here.Base_translateString(\'Letter\', lang=default_language)">Letter</option>\n
+    <option tal:content="python:here.Base_translateString(\'Mail Message\', lang=default_language)">Mail Message</option>\n
+    <option tal:content="python:here.Base_translateString(\'Note\', lang=default_language)">Note</option>\n
+    <option tal:content="python:here.Base_translateString(\'Phone Call\', lang=default_language)">Phone Call</option>\n
+    <option tal:content="python:here.Base_translateString(\'Short Message\', lang=default_language)">Short Message</option>\n
+    <option tal:content="python:here.Base_translateString(\'Site Message\', lang=default_language)">Site Message</option>\n
+    <option tal:content="python:here.Base_translateString(\'Visit\', lang=default_language)">Visit</option>\n
+    <option tal:content="python:here.Base_translateString(\'Web Message\', lang=default_language)">Web Message</option>\n
   </select>\n
   <p>\n
-  <label>Title: </label>\n
+  <label tal:content="python:here.Base_translateString(\'Title\', lang=default_language)">Title </label>:\n
   <input name="title" value="" type="text" size="30">\n
   <p>\n
-  <label>Start Date: </label>\n
+  <label tal:content="python:here.Base_translateString(\'Start Date\', lang=default_language)">Start Date </label>:\n
   <input class="start_date_field" name="start_date_month" value="" maxlength="2" type="text" size="2">/\n
   <input class="start_date_field" name="start_date_day" value="" maxlength="2" type="text" size="2">/\n
   <input class="start_date_field" name="start_date_year" value="2011" maxlength="4" type="text" size="4">\n
@@ -62,7 +63,7 @@
   <input class="start_date_field" name="start_date_hour" value="" maxlength="2" type="text" size="2">:\n
   <input class="start_date_field" name="start_date_minute" value="" maxlength="2" type="text" size="2">\n
   <p>\n
-  <label>Stop Date: </label>\n
+  <label tal:content="python:here.Base_translateString(\'Stop Date\', lang=default_language)">Stop Date </label>:\n
   <input class="stop_date_field" name="stop_date_month" value="" maxlength="2" type="text" size="2">/\n
   <input class="stop_date_field" name="stop_date_day" value="" maxlength="2" type="text" size="2">/\n
   <input class="stop_date_field" name="stop_date_year" value="2011" maxlength="4" type="text" size="4">\n
@@ -70,9 +71,10 @@
   <input class="stop_date_field" name="stop_date_hour" value="" maxlength="2" type="text" size="2">:\n
   <input class="stop_date_field" name="stop_date_minute" value="" maxlength="2" type="text" size="2">\n
   <p>\n
-  <label>Text: </label>\n
+  <label tal:content="python:here.Base_translateString(\'Text\', lang=default_language)">Text </label>:\n
   <textarea name="event_text_content" rows="2" cols="30"></textarea>\n
-</form>
+</form>\n
+</tal:block>
 
 ]]></unicode> </value>
         </item>
