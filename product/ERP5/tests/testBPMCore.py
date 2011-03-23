@@ -79,7 +79,7 @@ class TestBPMMixin(ERP5TypeTestCase):
     self.createCategoriesInCategory(category_tool.tax_share, 'AB')
 
   @reindex
-  def createBusinessProcess(self, **kw):
+  def createBusinessProcess(self, create_order_to_invoice_path=False, **kw):
     module = self.portal.getDefaultModule(
         portal_type=self.business_process_portal_type,)
     business_process =  module.newContent(
@@ -87,17 +87,18 @@ class TestBPMMixin(ERP5TypeTestCase):
       specialise=self.default_business_process)
     self.business_process = business_process
     business_process._edit(**kw)
-    self.createTradeModelPath(self.business_process,
-      reference='order_path',
-      trade_phase_value_list=('default/order',))
-    self.createTradeModelPath(self.business_process,
-      reference='delivery_path',
-      trade_phase_value_list=('default/delivery',),
-      trade_date='trade_phase/default/order')
-    self.createTradeModelPath(self.business_process,
-      reference='invoice_path',
-      trade_phase_value_list=('default/invoicing',),
-      trade_date='trade_phase/default/delivery')
+    if create_order_to_invoice_path:
+      self.createTradeModelPath(self.business_process,
+        reference='order_path',
+        trade_phase_value_list=('default/order',))
+      self.createTradeModelPath(self.business_process,
+        reference='delivery_path',
+        trade_phase_value_list=('default/delivery',),
+        trade_date='trade_phase/default/order')
+      self.createTradeModelPath(self.business_process,
+        reference='invoice_path',
+        trade_phase_value_list=('default/invoicing',),
+        trade_date='trade_phase/default/delivery')
     self.createTradeModelPath(business_process,
       reference='default_path',
       trade_phase_value_list=('default/discount', 'default/tax'),
@@ -239,7 +240,8 @@ class TestBPMDummyDeliveryMovementMixin(TestBPMMixin):
 
   def _createOrderedDeliveredInvoicedBusinessProcess(self):
     # simple business process preparation
-    business_process = self.createBusinessProcess()
+    business_process = self.createBusinessProcess(
+        create_order_to_invoice_path=True)
     category_tool = self.getCategoryTool()
     ordered = category_tool.trade_state.ordered
     delivered = category_tool.trade_state.delivered
