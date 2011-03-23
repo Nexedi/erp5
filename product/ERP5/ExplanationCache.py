@@ -130,7 +130,7 @@ class ExplanationCache:
         updatePathDict(simulation_movement)
     
     # Build result by browsing path_dict and
-    # assembling path '/erp5/portal_simulation/1/34/23/43%'
+    # assembling path '/erp5/portal_simulation/1/34/23/43/%'
     result = []
     def browsePathDict(prefix, local_path_dict):
       for key, value in local_path_dict.items():
