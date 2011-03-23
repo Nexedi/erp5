@@ -27,7 +27,6 @@
 #
 ##############################################################################
 
-import types
 from zLOG import LOG
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Cache import transactional_cached
@@ -117,7 +116,7 @@ class ExplanationCache:
       insert_movement = True
       for path_id in container_path:
         local_path_dict = local_path_dict.setdefault(path_id, {})
-        if type(local_path_dict) is not types.DictType:
+        if not isinstance(local_path_dict, dict):
           # A movement was already inserted
           insert_movement = False
           break
@@ -135,7 +134,7 @@ class ExplanationCache:
     result = []
     def browsePathDict(prefix, local_path_dict):
       for key, value in local_path_dict.items():
-        if type(value) is not types.DictType:
+        if not isinstance(value, dict):
           # We have a real root
           result.append('%s/%s' % (prefix, key))
           result.append('%s/%s/%%' % (prefix, key))
