@@ -5,6 +5,9 @@
  <portal_type id="Gadget Tool">
   <item>Gadget</item>
  </portal_type>
+ <portal_type id="Gadget Type">
+  <item>Action Information</item>
+ </portal_type>
  <portal_type id="Knowledge Pad">
   <item>Knowledge Box</item>
  </portal_type>

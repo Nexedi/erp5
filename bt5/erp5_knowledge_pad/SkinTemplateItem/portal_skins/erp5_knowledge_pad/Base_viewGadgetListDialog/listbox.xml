@@ -17,11 +17,9 @@
                 <string>editable_columns</string>
                 <string>hide_rows_on_no_search_criterion</string>
                 <string>list_method</string>
-                <string>portal_types</string>
+                <string>meta_types</string>
                 <string>search_columns</string>
-                <string>selection_name</string>
                 <string>sort</string>
-                <string>sort_columns</string>
                 <string>title</string>
                 <string>url_columns</string>
               </list>
@@ -104,23 +102,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>portal_types</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>search_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>sort</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>sort_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -205,12 +191,12 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>portal_types</string> </key>
+                    <key> <string>meta_types</string> </key>
                     <value>
                       <list>
                         <tuple>
-                          <string>Gadget</string>
-                          <string>Gadget</string>
+                          <string>ERP5 Gadget</string>
+                          <string>ERP5 Gadget</string>
                         </tuple>
                       </list>
                     </value>
@@ -231,10 +217,6 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>gadget_tool_view_gadget_add_dialog</string> </value>
-                </item>
-                <item>
                     <key> <string>sort</string> </key>
                     <value>
                       <list>
@@ -243,12 +225,6 @@
                           <string>Title</string>
                         </tuple>
                       </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>sort_columns</string> </key>
-                    <value>
-                      <list/>
                     </value>
                 </item>
                 <item>
@@ -292,7 +268,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:[[\'validation_state\', \'!=invisible\'], [\'gadget_type_uid\', context.getPortalObject().restrictedTraverse(\'portal_categories/gadget_type/%s\' %request.get(\'mode\', None) , None) is not None and context.getPortalObject().restrictedTraverse(\'portal_categories/gadget_type/%s\' %request.get(\'mode\',None), None).getUid() or \'\'],]</string> </value>
+            <value> <string>python:[[\'path\',\'%/portal_gadgets/%\'],[\'validation_state\', \'!=invisible\'], [\'gadget_type_uid\', context.getPortalObject().restrictedTraverse(\'portal_categories/gadget_type/%s\' %request.get(\'mode\', None) , None) is not None and context.getPortalObject().restrictedTraverse(\'portal_categories/gadget_type/%s\' %request.get(\'mode\',None), None).getUid() or \'\'],]</string> </value>
         </item>
       </dictionary>
     </pickle>

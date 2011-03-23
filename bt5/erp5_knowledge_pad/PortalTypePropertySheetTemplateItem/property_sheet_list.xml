@@ -2,4 +2,7 @@
  <portal_type id="Gadget">
   <item>Gadget</item>
  </portal_type>
+ <portal_type id="Gadget Type">
+  <item>Gadget</item>
+ </portal_type>
 </property_sheet_list>
