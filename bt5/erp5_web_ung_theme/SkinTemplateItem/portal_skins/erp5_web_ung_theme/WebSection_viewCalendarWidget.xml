@@ -51,6 +51,7 @@
   <script src="portal_skins/erp5_jquery/jquery/plugin/wdcalendar/wdCalendar_lang_US.js" type="text/javascript"></script>\n
   <script src="portal_skins/erp5_jquery/jquery/plugin/wdcalendar/jquery.calendar.js" type="text/javascript"></script>\n
   <script src="ung_js/ung_calendar.js" type="text/javascript"></script>\n
+  <tal:block tal:define="default_language python:here.Localizer.get_selected_language()">\n
   <div>\n
     <div id="calhead" style="padding-left:1px;padding-right:1px;">\n
       <div class="cHead">\n
@@ -64,7 +65,7 @@
       <div id="caltoolbar" class="ctoolbar">\n
         <div id="showtodaybtn" class="fbutton">\n
           <div>\n
-            <span title=\'Click to back to today\' class="showtoday">\n
+            <span title=\'Click to back to today\' class="showtoday" tal:content="python:here.Base_translateString(\'Today\', lang=default_language)">\n
               Today\n
             </span>\n
           </div>\n
@@ -80,28 +81,28 @@
         </div>\n
         <div id="showdaybtn" class="fbutton">\n
           <div>\n
-            <span title=\'Day\' class="showdayview">\n
+            <span title=\'Day\' class="showdayview" tal:content="python:here.Base_translateString(\'Day\', lang=default_language)">\n
               Day\n
             </span>\n
           </div>\n
         </div>\n
         <div id="showweekbtn" class="fbutton fcurrent">\n
           <div>\n
-            <span title=\'Week\' class="showweekview">\n
+            <span title=\'Week\' class="showweekview" tal:content="python:here.Base_translateString(\'Week\', lang=default_language)">\n
               Week\n
             </span>\n
           </div>\n
         </div>\n
         <div id="showmonthbtn" class="fbutton">\n
           <div>\n
-            <span title=\'Month\' class="showmonthview">\n
+            <span title=\'Month\' class="showmonthview" tal:content="python:here.Base_translateString(\'Month\', lang=default_language)">\n
               Month\n
             </span>\n
           </div>\n
         </div>\n
         <div id="showreflashbtn" class="fbutton">\n
           <div>\n
-            <span title=\'Refresh view\' class="showdayflash">\n
+            <span title=\'Refresh view\' class="showdayflash" tal:content="python:here.Base_translateString(\'Refresh\', lang=default_language)">\n
               Refresh\n
             </span>\n
           </div>\n
@@ -120,6 +121,7 @@
       </div>\n
       <div id="new_event_dialog"/>\n
   </div>\n
+  </tal:block>\n
 </html>
 
 ]]></unicode> </value>

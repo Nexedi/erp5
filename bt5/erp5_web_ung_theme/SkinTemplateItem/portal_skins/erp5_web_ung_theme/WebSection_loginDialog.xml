@@ -36,7 +36,8 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<h2>Welcome to UNG Web Office</h2>\n
+<tal:block tal:define="default_language python:here.Localizer.get_selected_language();">\n
+<h2 tal:content="python:here.Base_translateString(\'Welcome to UNG Web Office\', lang=default_language)">Page Title</h2>\n
 <div id="main-content">\n
  <table border="0" width="100%" cellpadding="0" cellspacing="0">\n
    <tbody>\n
@@ -52,16 +53,32 @@
              <tr>\n
                <td align="center">\n
                  <table>\n
-                   <tr><td align="center" colspan="2"><font size="-1">Login in</font></td></tr>\n
+                   <tr>\n
+                     <td align="center" colspan="2">\n
+                       <font size="-1" tal:content="python:here.Base_translateString(\'Login in\', lang=default_language)">Login in</font>\n
+                     </td>\n
+                   </tr>\n
                    <tr></tr>\n
                    <tr>\n
-                     <td align="center"><label for="name">Name:</label></td>\n
-                     <td align="center"><input type="text" name="__ac_name" id="name" tal:attributes="value python: request.get(\'__ac_name\') or \'\'" /></td>\n
+                     <td align="center">\n
+                       <label for="name" tal:content="python:here.Base_translateString(\'Name\', lang=default_language)">Name</label>\n
+                     </td>\n
+                     <td align="center">\n
+                       <input type="text" name="__ac_name" id="name" tal:attributes="value python: request.get(\'__ac_name\') or \'\'" />\n
+                     </td>\n
                    </tr>\n
                    <tr>\n
-                     <td align="center"><label for="password">Password:</label></td><td><input type="password" name="__ac_password" id="password" /></td>\n
+                     <td align="center">\n
+                       <label for="password" tal:content="python:here.Base_translateString(\'Password\', lang=default_language)">Password</label>\n
+                     </td>\n
+                     <td><input type="password" name="__ac_password" id="password" /></td>\n
                    </tr>\n
-                   <td align="center" colspan="2"><input type="submit" name="logged_in:method" class="submit" value="Sign In"></td>\n
+                   <td align="center" colspan="2">\n
+                     <input type="submit" \n
+                            name="logged_in:method"\n
+                            class="submit" \n
+                            tal:attributes="value python:here.Base_translateString(\'Name\', lang=default_language)">\n
+                   </td>\n
                  </table>\n
                </td>\n
              </tr>\n
@@ -78,15 +95,37 @@
                <td>\n
                  <form id="create-user" method="post">\n
                    <table width="100%">\n
-                     <tr><td align="center" colspan="2"><b>Create an account</b></td></tr>\n
+                     <tr>\n
+                       <td align="center" colspan="2">\n
+                         <b tal:content="python:here.Base_translateString(\'Create an account\', lang=default_language)">Create an account</b>\n
+                       </td>\n
+                     </tr>\n
                      <tr><td id="form-message" align="center" colspan="2"></td></tr>\n
-                     <tr><td>First name:</td><td><input type="text" name="firstname"/></td></tr>\n
-                     <tr><td>Last name:</td><td><input type="text" name="lastname"/></td></tr>\n
-                     <tr><td>Email:</td><td><input type="text" name="email"/></td></tr>\n
-                     <tr><td>Login name:</td><td><input type="text" name="login_name"/></td></tr>\n
-                     <tr><td>Password:</td><td><input type="password" name="password"/></td></tr>\n
-                     <tr><td>Confirm Password:</td><td><input type="password" name="confirm"/></td></tr>\n
-                     <td align="center" colspan="2"><input type="submit" name="logged_in:method" class="submit" value="Create Account"></td>\n
+                     <tr>\n
+                       <td tal:content="python:here.Base_translateString(\'First name\', lang=default_language)">First Name</td>\n
+                       <td><input type="text" name="firstname"/></td>\n
+                     </tr>\n
+                     <tr>\n
+                        <td tal:content="python:here.Base_translateString(\'Last name\', lang=default_language)">Last Name</td>\n
+                        <td><input type="text" name="lastname"/></td>\n
+                     </tr>\n
+                     <tr><td>Email</td><td><input type="text" name="email"/></td></tr>\n
+                     <tr>\n
+                        <td tal:content="python:here.Base_translateString(\'Login name\', lang=default_language)">Login name</td>\n
+                        <td><input type="text" name="login_name"/></td>\n
+                     </tr>\n
+                     <tr>\n
+                       <td tal:content="python:here.Base_translateString(\'Password\', lang=default_language)">Password</td>\n
+                       <td><input type="password" name="password"/></td>\n
+                     </tr>\n
+                     <tr>\n
+                       <td tal:content="python:here.Base_translateString(\'Confirm Password\', lang=default_language)">Confirm Password</td>\n
+                       <td><input type="password" name="confirm"/></td>\n
+                     </tr>\n
+                     <td align="center" colspan="2">\n
+                       <input type="submit" name="logged_in:method" \n
+                              class="submit" tal:attributes="value python:here.Base_translateString(\'Create Account\', lang=default_language)">\n
+                     </td>\n
                      <tr><td id="back-login" align="left" colspan="2"><< Back</td></tr>\n
                    </table>\n
                  </form>\n
@@ -120,7 +159,8 @@
   <a target="_blank" href="http://www.freecloudalliance.org/">Free Cloud Alliance</a>\n
   -\n
   <a href="#">Help</a>\n
-</div>
+</div>\n
+</tal:block>
 
 ]]></unicode> </value>
         </item>
