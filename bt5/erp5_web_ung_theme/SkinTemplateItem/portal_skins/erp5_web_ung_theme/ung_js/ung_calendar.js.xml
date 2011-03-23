@@ -273,6 +273,9 @@ $(document).ready(function() {     \n
     $("div#dvCalMain.calmain div#gridcontainer").css("background", "none repeat scroll 0 0 #FFFFFF");\n
     $("div#dvwkcontaienr.wktopcontainer").remove();\n
     $("div#gridcontainer div#dvtec.scolltimeevent").remove();\n
+    if (document.getElementById("blank-result") != null){\n
+      $("div#blank-result").remove();\n
+    }\n
     $("div#gridcontainer div.event-listview,div#gridcontainer div.toolbar-listview").remove();\n
     var tableList = Array();\n
     tableList.push("<div class=\'toolbar-listview\'>",\n
@@ -331,9 +334,9 @@ $(document).ready(function() {     \n
                $("div#gridcontainer").css("height", \n
                  $("div#gridcontainer table tbody tr").length*$("div.event-listview tr").height() + "px");\n
              } else {\n
-               $("div#gridcontainer")\n
-                   .css("height", "54px")\n
-                   .append("No Results");\n
+                $("div#gridcontainer")\n
+                  .css("height", "54px")\n
+                  .append("<div id=\'blank-result\'>No Results</div>");\n
              }\n
            },\n
     });\n
