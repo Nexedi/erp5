@@ -370,7 +370,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>WebPageModule_getObjectList</string> </value>
+            <value> <string>WebSection_getWebPageObjectList</string> </value>
         </item>
       </dictionary>
     </pickle>
