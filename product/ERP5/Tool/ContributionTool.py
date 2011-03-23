@@ -405,7 +405,8 @@ class ContributionTool(BaseTool):
           # be for user interface and should thus be handled by
           # ZODB scripts
           document.activate(after_path_and_method_id=(document.getPath(),
-            ('convertToBaseFormat', 'Document_tryToConvertToBaseFormat'))) \
+            ('convertToBaseFormat', 'Document_tryToConvertToBaseFormat',
+             'immediateReindexObject', 'recursiveImmediateReindexObject')))\
           .discoverMetadata(filename=filename,
                             user_login=user_login,
                             input_parameter_dict=input_parameter_dict)
