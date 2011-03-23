@@ -54,14 +54,15 @@
   <tal:block \n
         tal:condition="python: getattr(here, box_id, None) is not None"\n
         tal:define="box python: getattr(here, box_id);\n
-                    box_dom_id python: \'%s\' %box.getRelativeUrl().replace(\'/\', \'_\');\n
+                    box_relative_url box/getRelativeUrl;\n
+                    box_dom_id python: \'%s\' %box_relative_url.replace(\'/\', \'_\');\n
                     view_form_dom_id python: \'%s_content\' %box_dom_id;\n
                     edit_form_dom_id python: \'%s_edit_form\' %box_dom_id;\n
                     gadget_title_dom_id python: \'%s_gadget_title\' %box_dom_id;\n
                     gadget python: box.getSpecialiseValue();\n
                     gadget_state python: gadget.getValidationState();\n
-                    dummy python: request.set(\'box_relative_url\', box.getRelativeUrl());\n
-                    dummy python: request.form.update(dict(box_relative_url=box.getRelativeUrl()));\n
+                    dummy python: request.set(\'box_relative_url\', box_relative_url);\n
+                    dummy python: request.form.update(dict(box_relative_url=box_relative_url));\n
                     edit_form_id gadget/getEditFormId;\n
                     view_form_id gadget/getViewFormId;\n
                     render_type gadget/getRenderType;\n
@@ -122,9 +123,7 @@
               </tal:block>\n
 \n
               <tal:block tal:condition="python: edit_form_object is not None"\n
-                         tal:define="box_relative_url python: box.getRelativeUrl();\n
-                                     box_dom_id python: box_relative_url.replace(\'/\', \'_\');\n
-                                     form_fields_main_prefix python: \'gadget_preference_%s_field\' %box_dom_id;">\n
+                         tal:define="form_fields_main_prefix python: \'gadget_preference_%s_field\' %box_dom_id;">\n
 \n
                 <!-- render edit gadget preferences form -->\n
                 <span tal:replace="structure python: edit_form_object(key_prefix=form_fields_main_prefix)"/>\n
