@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts95442223.79</string> </value>
+            <value> <string>ts00882107.52</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -55,7 +55,9 @@
   font-weight: bold;\n
   font-size: 90%;\n
 }\n
-\n
+.invisible{\n
+  display:none;\n
+}\n
 /* 3 columng gadget layout */\n
 div.portal-column {\n
   float: left;\n
@@ -495,7 +497,7 @@ div.gadget-rss-reader .body {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8226</int> </value>
+            <value> <int>8255</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

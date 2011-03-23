@@ -40,10 +40,10 @@
     tal:define="layout here/KnowledgePad_getBoxColumnLayout;\n
                 real_context python: options.get(\'real_context\', None);\n
                 cancel_url python: options.get(\'cancel_url\', None);\n
-                isAnon python: here.portal_membership.isAnonymousUser();\n
+                is_anonymous_user python: here.portal_membership.isAnonymousUser();\n
                 is_tab_empty here/KnowledgePad_isEmpty;\n
                 columns python: options.get(\'columns\', 3);\n
-                column_css_class python: test(isAnon, \n
+                column_css_class python: test(is_anonymous_user, \n
                                               \'portal-column portal-column-undraggable\', \n
                                               \'portal-column\');">\n
 \n
