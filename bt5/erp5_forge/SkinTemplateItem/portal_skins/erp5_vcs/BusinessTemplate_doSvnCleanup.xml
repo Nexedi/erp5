@@ -50,15 +50,17 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.getVcsTool().cleanup()\n
+            <value> <string>portal = context.getPortalObject()\n
 \n
-context.REQUEST.set(\'portal_status_message\', \'Subversion locks removed successfully.\')\n
-return context.BusinessTemplate_viewSvnStatus()\n
+context.getVcsTool().cleanup()\n
+\n
+message = portal.Base_translateString(\'Subversion locks removed successfully.\')\n
+return context.Base_redirect(form_id, keep_items={\'portal_status_message\': message})\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>form_id=\'view\'</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
