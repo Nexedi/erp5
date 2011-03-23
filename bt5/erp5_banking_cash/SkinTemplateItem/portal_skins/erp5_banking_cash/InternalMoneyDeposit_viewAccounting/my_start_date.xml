@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
-        <tuple/>
-      </tuple>
+      <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -213,10 +210,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="BasicForm" module="Products.Formulator.Form"/>
-        <tuple/>
-      </tuple>
+      <global name="BasicForm" module="Products.Formulator.Form"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -343,10 +337,7 @@
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <tuple>
-        <global name="StringField" module="Products.Formulator.StandardFields"/>
-        <tuple/>
-      </tuple>
+      <global name="StringField" module="Products.Formulator.StandardFields"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -603,10 +594,7 @@
   </record>
   <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
-      <tuple>
-        <global name="IntegerField" module="Products.Formulator.StandardFields"/>
-        <tuple/>
-      </tuple>
+      <global name="IntegerField" module="Products.Formulator.StandardFields"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -855,10 +843,7 @@
   </record>
   <record id="5" aka="AAAAAAAAAAU=">
     <pickle>
-      <tuple>
-        <global name="IntegerField" module="Products.Formulator.StandardFields"/>
-        <tuple/>
-      </tuple>
+      <global name="IntegerField" module="Products.Formulator.StandardFields"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -1107,10 +1092,7 @@
   </record>
   <record id="6" aka="AAAAAAAAAAY=">
     <pickle>
-      <tuple>
-        <global name="IntegerField" module="Products.Formulator.StandardFields"/>
-        <tuple/>
-      </tuple>
+      <global name="IntegerField" module="Products.Formulator.StandardFields"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -1359,10 +1341,7 @@
   </record>
   <record id="7" aka="AAAAAAAAAAc=">
     <pickle>
-      <tuple>
-        <global name="IntegerField" module="Products.Formulator.StandardFields"/>
-        <tuple/>
-      </tuple>
+      <global name="IntegerField" module="Products.Formulator.StandardFields"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -1611,10 +1590,7 @@
   </record>
   <record id="8" aka="AAAAAAAAAAg=">
     <pickle>
-      <tuple>
-        <global name="IntegerField" module="Products.Formulator.StandardFields"/>
-        <tuple/>
-      </tuple>
+      <global name="IntegerField" module="Products.Formulator.StandardFields"/>
     </pickle>
     <pickle>
       <dictionary>
