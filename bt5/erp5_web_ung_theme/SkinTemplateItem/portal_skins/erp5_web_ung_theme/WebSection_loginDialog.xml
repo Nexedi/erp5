@@ -102,16 +102,16 @@
                      </tr>\n
                      <tr><td id="form-message" align="center" colspan="2"></td></tr>\n
                      <tr>\n
-                       <td tal:content="python:here.Base_translateString(\'First name\', lang=default_language)">First Name</td>\n
+                       <td tal:content="python:here.Base_translateString(\'First Name\', lang=default_language)">First Name</td>\n
                        <td><input type="text" name="firstname"/></td>\n
                      </tr>\n
                      <tr>\n
-                        <td tal:content="python:here.Base_translateString(\'Last name\', lang=default_language)">Last Name</td>\n
+                        <td tal:content="python:here.Base_translateString(\'Last Name\', lang=default_language)">Last Name</td>\n
                         <td><input type="text" name="lastname"/></td>\n
                      </tr>\n
                      <tr><td>Email</td><td><input type="text" name="email"/></td></tr>\n
                      <tr>\n
-                        <td tal:content="python:here.Base_translateString(\'Login name\', lang=default_language)">Login name</td>\n
+                        <td tal:content="python:here.Base_translateString(\'Login Name\', lang=default_language)">Login name</td>\n
                         <td><input type="text" name="login_name"/></td>\n
                      </tr>\n
                      <tr>\n
@@ -126,7 +126,7 @@
                        <input type="submit" name="logged_in:method" \n
                               class="submit" tal:attributes="value python:here.Base_translateString(\'Create Account\', lang=default_language)">\n
                      </td>\n
-                     <tr><td id="back-login" align="left" colspan="2"><< Back</td></tr>\n
+                     <tr><td id="back-login" align="left" colspan="2"><< Back </td></tr>\n
                    </table>\n
                  </form>\n
                </td>\n
@@ -143,8 +143,17 @@
              <tr>\n
                <td>\n
                  <table width="100%">\n
-                   <tr><td align="center" colspan="2"><b>Don\'t have an UNG Account?</b></td></tr>\n
-                   <tr><td id="new-account-form" align="center" colspan="2">Create an account now</td></tr>\n
+                   <tr>\n
+                     <td align="center" colspan="2">\n
+                       <b>Don\'t have an UNG Account?</b>\n
+                     </td>\n
+                   </tr>\n
+                   <tr>\n
+                     <td id="new-account-form" \n
+                         align="center" \n
+                         colspan="2" \n
+                         tal:content="python:here.Base_translateString(\'Create an account now\', lang=default_language)">Create an account now</td>\n
+                   </tr>\n
                  </table>\n
                </td>\n
              </tr>\n
@@ -158,7 +167,7 @@
 <div class="footer">\n
   <a target="_blank" href="http://www.freecloudalliance.org/">Free Cloud Alliance</a>\n
   -\n
-  <a href="#">Help</a>\n
+  <a href="#" tal:content="python:here.Base_translateString(\'Help\', lang=default_language)">Help</a>\n
 </div>\n
 </tal:block>
 
