@@ -220,12 +220,11 @@
                     <value> <string encoding="cdata"><![CDATA[
 
 <div class="toolbar">\n
-<button title="Archive" name="" type="submit" class="archive">Archive</button>\n
-<button title="Report Spam" name="#" type="submit" class="report_spam">Report Spam</button>\n
-<button title="Delete" name="WebSection_deleteObjectList:method" type="submit" class="delete">Delete</button>\n
-<button title="Labels" name="" type="submit" class="labels">Labels</button>\n
-<button title="More Actions" name="" type="submit" class="actions">More Actions</button>\n
-\n
+<button title="Archive" name="" type="submit" class="archive" i18n:translate="" i18n:domain="ui">Archive</button>\n
+<button title="Report Spam" name="#" type="submit" class="report_spam" i18n:translate="" i18n:domain="ui">Report Spam</button>\n
+<button title="Delete" name="WebSection_deleteObjectList:method" type="submit" class="delete" i18n:translate="" i18n:domain="ui">Delete</button>\n
+<button title="Labels" name="" type="submit" class="labels" i18n:translate="" i18n:domain="ui">Labels</button>\n
+<button title="More Actions" name="" type="submit" class="actions" i18n:translate="" i18n:domain="ui">More Actions</button>\n
 </div>
 
 ]]></string> </value>

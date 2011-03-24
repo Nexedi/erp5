@@ -220,7 +220,7 @@
                     <value> <string encoding="cdata"><![CDATA[
 
 <input name="searchable-text" type="text"/>\n
-<input id="submit-search" type="submit" value="Search Mail" />
+<input id="submit-search" type="submit" value="Search Mail" i18n:translate="" i18n:domain="ui"/>
 
 ]]></string> </value>
                 </item>
