@@ -131,7 +131,7 @@ $(function() {\n
           $(\'.wrapper\', dialog).remove();\n
 \n
           // Insert the same buttons as at the bottom into near the top.\n
-          $(\'div.bottom_actions\', dialog).clone().insertAfter($(\'div.dialog_box\', dialog)).css(\'margin-bottom\', \'1em\');\n
+          //$(\'div.bottom_actions\', dialog).clone().insertAfter($(\'div.dialog_box\', dialog)).css(\'margin-bottom\', \'1em\');\n
 \n
           $(\'input[type="image"], button.sort_button, .dialog_selector > button, button.save\', dialog).click(function(event) {\n
             event.preventDefault();\n
