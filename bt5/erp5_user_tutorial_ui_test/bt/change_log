@@ -1,4 +1,7 @@
 24-03-2011 lucas
+- Make the test testHowToPerson independent of ERP5 front page.
+
+24-03-2011 lucas
 - Make the test testHowToOutgoingEvent independent of ERP5 front page.
 
 24-03-2011 lucas
