@@ -167,7 +167,11 @@ a.email {\n
 }\n
 \n
 div.header-left {\n
-    margin-top: -9px !important;\n
+  margin-top: -9px !important;\n
+}\n
+\n
+div.listbox-tree {\n
+  display: none !important;\n
 }</string> </value>
         </item>
         <item>

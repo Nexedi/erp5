@@ -57,6 +57,8 @@
   XXX - check if it is possible with DateField\n
 """\n
 date = context.getStartDate()\n
+if not date:\n
+  return None\n
 if date.isCurrentDay():\n
   return date.AMPMMinutes()\n
 else:\n
