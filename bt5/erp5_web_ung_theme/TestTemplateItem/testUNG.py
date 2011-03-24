@@ -356,3 +356,24 @@ class TestUNG(ERP5TypeTestCase):
     self.stepTic()
     preference_dict = json.loads(self.portal.Base_getPreferencePathList())
     self.assertEquals(preference_dict["preference"], "portal_preferences/ung_preference")
+  
+  def testWebSection_getWebPageObjectList(self):
+    """Test if the paths of preference objects are returned correctly"""
+    self.portal.web_page_module.manage_delObjects(list(self.portal.web_page_module.objectIds()))
+    self.stepTic()
+    self.portal.web_page_module.newContent(portal_type="Web Page")
+    self.portal.web_page_module.newContent(portal_type="Web Table")
+    self.portal.web_page_module.newContent(portal_type="Web Illustration")
+    self.stepTic()
+    kw = {"portal_type": "Web Page"}
+    result_list = self.portal.web_site_module.ung.WebSection_getWebPageObjectList(**kw)
+    self.assertEquals(len(result_list), 1)
+    self.assertEquals(result_list[0].getPortalType(), "Web Page")
+    kw["portal_type"] = "Web Illustration"
+    result_list = self.portal.web_site_module.ung.WebSection_getWebPageObjectList(**kw)
+    self.assertEquals(len(result_list), 1)
+    self.assertEquals(result_list[0].getPortalType(), "Web Illustration")
+    kw["portal_type"] = "Web Table"
+    result_list = self.portal.web_site_module.ung.WebSection_getWebPageObjectList(**kw)
+    self.assertEquals(len(result_list), 1)
+    self.assertEquals(result_list[0].getPortalType(), "Web Table")
