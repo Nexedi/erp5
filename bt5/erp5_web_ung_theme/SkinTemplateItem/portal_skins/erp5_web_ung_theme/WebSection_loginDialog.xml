@@ -36,15 +36,14 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<tal:block tal:define="default_language python:here.Localizer.get_selected_language();">\n
-<h2 tal:content="python:here.Base_translateString(\'Welcome to UNG Web Office\', lang=default_language)">Page Title</h2>\n
+<h2 i18n:translate="" i18n:domain="ui">Welcome to UNG Web Office</h2>\n
 <div id="main-content">\n
  <table border="0" width="100%" cellpadding="0" cellspacing="0">\n
    <tbody>\n
      <tr>\n
        <td valign="top">\n
          <div id="advertisement">\n
-           <b>Sign in to edit documents, spreadsheets and drawing and share this document with another users</b>\n
+           <b i18n:translate="" i18n:domain="ui">Sign in to edit documents, spreadsheets and drawing and share this document with another users</b>\n
          </div>\n
        </td>\n
        <td>\n
@@ -55,13 +54,13 @@
                  <table>\n
                    <tr>\n
                      <td align="center" colspan="2">\n
-                       <font size="-1" tal:content="python:here.Base_translateString(\'Login in\', lang=default_language)">Login in</font>\n
+                       <font size="-1" i18n:translate="" i18n:domain="ui">Login in</font>\n
                      </td>\n
                    </tr>\n
                    <tr></tr>\n
                    <tr>\n
                      <td align="center">\n
-                       <label for="name" tal:content="python:here.Base_translateString(\'Name\', lang=default_language)">Name</label>\n
+                       <label for="name" i18n:translate="" i18n:domain="ui">Name</label>\n
                      </td>\n
                      <td align="center">\n
                        <input type="text" name="__ac_name" id="name" tal:attributes="value python: request.get(\'__ac_name\') or \'\'" />\n
@@ -69,7 +68,7 @@
                    </tr>\n
                    <tr>\n
                      <td align="center">\n
-                       <label for="password" tal:content="python:here.Base_translateString(\'Password\', lang=default_language)">Password</label>\n
+                       <label for="password" i18n:translate="" i18n:domain="ui">Password</label>\n
                      </td>\n
                      <td><input type="password" name="__ac_password" id="password" /></td>\n
                    </tr>\n
@@ -77,7 +76,7 @@
                      <input type="submit" \n
                             name="logged_in:method"\n
                             class="submit" \n
-                            tal:attributes="value python:here.Base_translateString(\'Name\', lang=default_language)">\n
+                            value="Name" i18n:translate="" i18n:domain="ui">\n
                    </td>\n
                  </table>\n
                </td>\n
@@ -97,34 +96,34 @@
                    <table width="100%">\n
                      <tr>\n
                        <td align="center" colspan="2">\n
-                         <b tal:content="python:here.Base_translateString(\'Create an account\', lang=default_language)">Create an account</b>\n
+                         <b i18n:translate="" i18n:domain="ui">Create an account</b>\n
                        </td>\n
                      </tr>\n
                      <tr><td id="form-message" align="center" colspan="2"></td></tr>\n
                      <tr>\n
-                       <td tal:content="python:here.Base_translateString(\'First Name\', lang=default_language)">First Name</td>\n
+                       <td i18n:translate="" i18n:domain="ui">First Name</td>\n
                        <td><input type="text" name="firstname"/></td>\n
                      </tr>\n
                      <tr>\n
-                        <td tal:content="python:here.Base_translateString(\'Last Name\', lang=default_language)">Last Name</td>\n
+                        <td i18n:translate="" i18n:domain="ui">Last Name</td>\n
                         <td><input type="text" name="lastname"/></td>\n
                      </tr>\n
                      <tr><td>Email</td><td><input type="text" name="email"/></td></tr>\n
                      <tr>\n
-                        <td tal:content="python:here.Base_translateString(\'Login Name\', lang=default_language)">Login name</td>\n
+                        <td i18n:translate="" i18n:domain="ui">Login name</td>\n
                         <td><input type="text" name="login_name"/></td>\n
                      </tr>\n
                      <tr>\n
-                       <td tal:content="python:here.Base_translateString(\'Password\', lang=default_language)">Password</td>\n
+                       <td i18n:translate="" i18n:domain="ui">Password</td>\n
                        <td><input type="password" name="password"/></td>\n
                      </tr>\n
                      <tr>\n
-                       <td tal:content="python:here.Base_translateString(\'Confirm Password\', lang=default_language)">Confirm Password</td>\n
+                       <td i18n:translate="" i18n:domain="ui">Confirm Password</td>\n
                        <td><input type="password" name="confirm"/></td>\n
                      </tr>\n
                      <td align="center" colspan="2">\n
                        <input type="submit" name="logged_in:method" \n
-                              class="submit" tal:attributes="value python:here.Base_translateString(\'Create Account\', lang=default_language)">\n
+                              class="submit" value="Create Account" i18n:translate="" i18n:domain="ui">\n
                      </td>\n
                      <tr><td id="back-login" align="left" colspan="2"><< Back </td></tr>\n
                    </table>\n
@@ -152,7 +151,7 @@
                      <td id="new-account-form" \n
                          align="center" \n
                          colspan="2" \n
-                         tal:content="python:here.Base_translateString(\'Create an account now\', lang=default_language)">Create an account now</td>\n
+                         i18n:translate="" i18n:domain="ui">Create an account now</td>\n
                    </tr>\n
                  </table>\n
                </td>\n
@@ -167,9 +166,8 @@
 <div class="footer">\n
   <a target="_blank" href="http://www.freecloudalliance.org/">Free Cloud Alliance</a>\n
   -\n
-  <a href="#" tal:content="python:here.Base_translateString(\'Help\', lang=default_language)">Help</a>\n
-</div>\n
-</tal:block>
+  <a href="#" i18n:translate="" i18n:domain="ui">Help</a>\n
+</div>
 
 ]]></unicode> </value>
         </item>

@@ -37,8 +37,7 @@
             <value> <unicode encoding="cdata"><![CDATA[
 
 <tal:block tal:define="actions  python:here.Base_filterDuplicateActions(here.portal_actions.listFilteredActionsFor(here));\n
-                       dummy    python:request.set(\'actions\', actions);\n
-                       default_language python:here.Localizer.get_selected_language()">\n
+                       dummy    python:request.set(\'actions\', actions);">\n
   <a tal:condition="python: context.getModificationDate() is not None">\n
     <a tal:content="python: \'Updated %s by\' % context.getModificationDate().ISO()"/>\n
   </a>\n
@@ -46,7 +45,7 @@
   <button onclick="javascript:clickSaveButton(\'Base_edit\')"\n
           name="Base_edit:method" \n
           class="save" type="submit"\n
-          tal:content="python:here.Base_translateString(\'Save\', lang=default_language)">Save</button>\n
+          i18n:translate="" i18n:domain="ui">Save</button>\n
   <div class="action_menu">\n
     <tal:block tal:define="portal_path here/absolute_url;\n
                            url_suffix python: \'/ERP5Site_createNewWebDocument?select_action=\'">\n

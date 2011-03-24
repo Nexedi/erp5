@@ -36,13 +36,10 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<tal:block tal:define="portal_path python: here.getWebSiteValue().absolute_url();\n
-                       default_language python:here.Localizer.get_selected_language()">\n
+<tal:block tal:define="portal_path python: here.getWebSiteValue().absolute_url();">\n
  <a class="email" tal:attributes="href string:${portal_path}/mail">Email</a>\n
- <a class="document" tal:attributes="href string:${portal_path}"\n
-                     tal:content="python:here.Base_translateString(\'Documents\', lang=default_language)">Documents</a>\n
- <a class="calendar" tal:attributes="href string:${portal_path}/calendar"\n
-                     tal:content="python:here.Base_translateString(\'Calendar\', lang=default_language)">Calendar</a>\n
+ <a class="document" tal:attributes="href string:${portal_path}" i18n:translate="" i18n:domain="ui">Documents</a>\n
+ <a class="calendar" tal:attributes="href string:${portal_path}/calendar" i18n:translate="" i18n:domain="ui">Calendar</a>\n
 </tal:block>
 
 ]]></unicode> </value>

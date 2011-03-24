@@ -36,7 +36,6 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<tal:block tal:define="default_language python:here.Localizer.get_selected_language()">\n
 <div class="gadget-column">\n
   <div class="gadget-action">\n
    <div class="menu_create_object">\n
@@ -66,8 +65,8 @@
     </li> \n
         </tal:block>\n
   </div>\n
-  <input type="submit" id="upload" name="Upload" tal:attributes="value python:here.Base_translateString(\'Upload\', lang=default_language)"/>\n
-    <div id="upload_document" tal:attributes="title python:here.Base_translateString(\'Upload Document\', lang=default_language)">\n
+  <input type="submit" id="upload" name="Upload" value="Upload" i18n:translate="" i18n:domain="ui"/>\n
+    <div id="upload_document" title="Upload Document" i18n:translate="" i18n:domain="ui">\n
       <form action="WebSection_uploadDocument" method="post" enctype="multipart/form-data">\n
         <fieldset id="file_box">\n
           <input type="file" size="30" name="file">\n
@@ -77,14 +76,14 @@
             <option value="Web Table">Web Table</option>\n
           </select>\n
           <br />\n
-          <input type="submit" id="submit_document" tal:attributes="value python:here.Base_translateString(\'Submit\', lang=default_language)">\n
+          <input type="submit" id="submit_document" value="Submit" i18n:translate="" i18n:domain="ui">\n
         </fieldset>\n
       </form> \n
     </div>\n
   <div class="file-selection">\n
    <div class="file-quick-search"></div>\n
   </div>\n
-  <div class="gadget-listbox" id="gadget-listbox" tal:attributes="title python:here.Base_translateString(\'Add Gadgets\', lang=default_language)">\n
+  <div class="gadget-listbox" id="gadget-listbox" name="Add Gadgets" i18n:translate="" i18n:domain="ui">\n
     <table id="gadget-table"></table>\n
   </div>\n
   <div class="front_pad">\n
@@ -96,8 +95,7 @@
                                                                            columns=1)"\n
              class="draggable_wrapper"/>\n
   </div>\n
-</div>\n
-</tal:block>
+</div>
 
 ]]></unicode> </value>
         </item>

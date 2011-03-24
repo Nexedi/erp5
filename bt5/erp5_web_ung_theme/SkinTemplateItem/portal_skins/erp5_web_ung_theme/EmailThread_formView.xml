@@ -37,15 +37,15 @@
             <value> <unicode encoding="cdata"><![CDATA[
 
 <div class="compose-mail-page">\n
-<button title="Send" type="submit" id="send-mail"> Send </button>\n
-<button title="Save" type="submit" id="save-mail"> Save </button>\n
-<button title="Discard" type="submit" id="discard-mail"> Discard </button>\n
+<button title="Send" type="submit" id="send-mail" i18n:translate="" i18n:domain="ui"> Send </button>\n
+<button title="Save" type="submit" id="save-mail" i18n:translate="" i18n:domain="ui"> Save </button>\n
+<button title="Discard" type="submit" id="discard-mail" i18n:translate="" i18n:domain="ui"> Discard </button>\n
 <div class="compose-mail">\n
 <form>\n
 <table id="form-table">\n
    <tr>\n
      <td valign="top">\n
-          <label for="to">To: </label>\n
+          <label for="to" i18n:translate="" i18n:domain="ui">To:</label>\n
         </td>\n
         <td valign="top">\n
           <textarea rows="2" type="text" cols="100" id="to" name="to"/>\n
@@ -55,8 +55,8 @@
         <td valign="top">\n
         </td>\n
         <td valign="top">\n
-          <span id="add-cc-field"> Add Cc </span>\n
-          <span id="add-bcc-field"> Add Bcc </span>\n
+          <span id="add-cc-field" i18n:translate="" i18n:domain="ui"> Add Cc </span>\n
+          <span id="add-bcc-field" i18n:translate="" i18n:domain="ui"> Add Bcc </span>\n
         </td>\n
      </tr>\n
      <tr id="cc">\n
@@ -77,7 +77,7 @@
      </tr>\n
      <tr>\n
         <td valign="top">\n
-          <label for="subject">Subject: </label>\n
+          <label for="subject" i18n:translate="" i18n:domain="ui">Subject </label>:\n
         </td>\n
         <td valign="top">\n
           <input type="text" size="80" name="subject" id="subject"/>\n
@@ -89,9 +89,9 @@
 <form>\n
 </div>\n
 <br/>\n
-<button title="Send" type="submit" id="send-mail"> Send </button>\n
-<button title="Save" type="submit" id="save-mail"> Save </button>\n
-<button title="Discard" type="submit" id="discard-mail"> Discard </button>\n
+<button title="Send" type="submit" id="send-mail" i18n:translate="" i18n:domain="ui"> Send </button>\n
+<button title="Save" type="submit" id="save-mail" i18n:translate="" i18n:domain="ui"> Save </button>\n
+<button title="Discard" type="submit" id="discard-mail" i18n:translate="" i18n:domain="ui"> Discard </button>\n
 </div>
 
 ]]></unicode> </value>

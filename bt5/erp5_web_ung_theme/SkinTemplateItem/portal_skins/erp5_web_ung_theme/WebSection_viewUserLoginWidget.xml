@@ -38,24 +38,19 @@
 
 <tal:block tal:define="website here/getWebSiteValue;\n
                        enctype string:multipart/form-data;\n
-                       portal_path python:website.absolute_url();\n
-                       default_language python:here.Localizer.get_selected_language()">\n
- <a id="right_message" tal:content="python:here.Base_translateString(\'Not Implemented yet\', lang=default_language)">Not Implemented yet</a>\n
- <div id="preference_dialog" tal:attributes="title python:here.Base_translateString(\'UNG Preferences\', lang=default_language)"></div> \n
+                       portal_path python:website.absolute_url();">\n
+ <a id="right_message" i18n:translate="" i18n:domain="ui">Not Implemented yet</a>\n
+ <div id="preference_dialog" title="UNG Preferences" i18n:translate="" i18n:domain="ui"></div> \n
  <tal:block tal:condition="here/portal_membership/isAnonymousUser">\n
-   <a id="login" href="#"\n
-      tal:content="python:here.Base_translateString(\'Sign in\', lang=default_language)">Sign in</a>\n
+   <a id="login" href="#" i18n:translate="" i18n:domain="ui">Sign in</a>\n
  </tal:block>\n
  <tal:block tal:condition="python:not here.portal_membership.isAnonymousUser()">\n
    <a tal:content="here/portal_membership/getAuthenticatedMember"/>\n
  </tal:block>\n
  <tal:block tal:condition="python: not here.portal_membership.isAnonymousUser()">\n
-   | <a id="settings" href="#"\n
-        tal:content="python:here.Base_translateString(\'Settings\', lang=default_language)">Settings</a> \n
-   | <a id="help" href="#"\n
-        tal:content="python:here.Base_translateString(\'Help\', lang=default_language)">Help</a> \n
-   | <a tal:attributes="href string:${portal_path}/WebSite_logout"\n
-        tal:content="python:here.Base_translateString(\'Sign out\', lang=default_language)">Sign out</a>\n
+   | <a id="settings" href="#" i18n:translate="" i18n:domain="ui">Settings</a> \n
+   | <a id="help" href="#" i18n:translate="" i18n:domain="ui">Help</a> \n
+   | <a tal:attributes="href string:${portal_path}/WebSite_logout" i18n:translate="" i18n:domain="ui">Sign out</a>\n
  </tal:block>\n
 </tal:block>
 

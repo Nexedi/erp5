@@ -36,15 +36,13 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<tal:block tal:define="default_language python:here.Localizer.get_selected_language()">\n
-  <div class="toolbar">\n
-    <button name="WebSection_deleteObjectList:method" \n
-            type="submit" class="delete"\n
-            tal:content="python:here.Base_translateString(\'Delete\', lang=default_language)">Delete</button>\n
-    <button name="#" type="submit" class="change_state"\n
-            tal:content="python:here.Base_translateString(\'Change State\', lang=default_language)">Change State</button>\n
-  </div>\n
-</tal:block>
+<div class="toolbar">\n
+  <button name="WebSection_deleteObjectList:method" \n
+          type="submit" class="delete"\n
+          i18n:translate="" i18n:domain="ui">Delete</button>\n
+  <button name="#" type="submit" class="change_state"\n
+          i18n:translate="" i18n:domain="ui">Change State</button>\n
+</div>
 
 ]]></unicode> </value>
         </item>
