@@ -1,4 +1,7 @@
 24-03-2011 lucas
+- Added verification before creating an Organisation.
+
+24-03-2011 lucas
 - Fixed the listbox element name.
 
 22-03-2011 lucas

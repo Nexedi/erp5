@@ -71,6 +71,11 @@
   <td>Organisations</td>\n
 </tr>\n
 <tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="breadcrumb"]/a[2]</td>\n
+  <td>Organisations</td>\n
+</tr>\n
+<tr>\n
   <td>selectAndWait</td>\n
   <td>//select[@name="select_action"]</td>\n
   <td>Add Organisation</td>\n
