@@ -83,7 +83,7 @@
   <div class="file-selection">\n
    <div class="file-quick-search"></div>\n
   </div>\n
-  <div class="gadget-listbox" id="gadget-listbox" name="Add Gadgets" i18n:translate="" i18n:domain="ui">\n
+  <div class="gadget-listbox" id="gadget-listbox" title="Add Gadgets" i18n:translate="" i18n:domain="ui">\n
     <table id="gadget-table"></table>\n
   </div>\n
   <div class="front_pad">\n

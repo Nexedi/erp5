@@ -55,8 +55,8 @@
         <td valign="top">\n
         </td>\n
         <td valign="top">\n
-          <span id="add-cc-field" i18n:translate="" i18n:domain="ui"> Add Cc</span>\n
-          <span id="add-bcc-field" i18n:translate="" i18n:domain="ui"> Add Bcc</span>\n
+          <span id="add-cc-field" i18n:translate="" i18n:domain="ui">Add Cc</span>\n
+          <span id="add-bcc-field" i18n:translate="" i18n:domain="ui">Add Bcc</span>\n
         </td>\n
      </tr>\n
      <tr id="cc">\n

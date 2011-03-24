@@ -54,19 +54,14 @@
   <div>\n
     <div id="calhead" style="padding-left:1px;padding-right:1px;">\n
       <div class="cHead">\n
-        <div id="loadingpannel" class="ptogtitle loadicon" style="display: none;" i18n:translate="" i18n:domain="ui">\n
-          Loading data...\n
-        </div>\n
-        <div id="errorpannel" class="ptogtitle loaderror" style="display: none;" i18n:translate="" i18n:domain="ui">\n
-          Sorry, could not load your data, please try again later\n
-        </div>\n
+        <div id="loadingpannel" class="ptogtitle loadicon" style="display: none;" i18n:translate="" i18n:domain="ui">Loading data...</div>\n
+        <div id="errorpannel" class="ptogtitle loaderror" style="display: none;" \n
+              i18n:translate="" i18n:domain="ui">Sorry, could not load your data, please try again later</div>\n
       </div>\n
       <div id="caltoolbar" class="ctoolbar">\n
         <div id="showtodaybtn" class="fbutton">\n
           <div>\n
-            <span title=\'Click to back to today\' class="showtoday" i18n:translate="" i18n:domain="ui">\n
-              Today\n
-            </span>\n
+            <span title=\'Click to back to today\' class="showtoday" i18n:translate="" i18n:domain="ui">Today</span>\n
           </div>\n
         </div>\n
         <div id="sfprevbtn" title="Prev" class="fbutton">\n
@@ -87,23 +82,17 @@
         </div>\n
         <div id="showweekbtn" class="fbutton fcurrent">\n
           <div>\n
-            <span title=\'Week\' class="showweekview" i18n:translate="" i18n:domain="ui">\n
-              Week\n
-            </span>\n
+            <span title=\'Week\' class="showweekview" i18n:translate="" i18n:domain="ui">Week</span>\n
           </div>\n
         </div>\n
         <div id="showmonthbtn" class="fbutton">\n
           <div>\n
-            <span title=\'Month\' class="showmonthview" i18n:translate="" i18n:domain="ui">\n
-              Month\n
-            </span>\n
+            <span title=\'Month\' class="showmonthview" i18n:translate="" i18n:domain="ui">Month</span>\n
           </div>\n
         </div>\n
         <div id="showreflashbtn" class="fbutton">\n
           <div>\n
-            <span title=\'Refresh view\' class="showdayflash" i18n:translate="" i18n:domain="ui">\n
-              Refresh\n
-            </span>\n
+            <span title=\'Refresh view\' class="showdayflash" i18n:translate="" i18n:domain="ui">Refresh</span>\n
           </div>\n
         </div>\n
         </div>\n
