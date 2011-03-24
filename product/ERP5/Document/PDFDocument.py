@@ -123,7 +123,7 @@ class PDFDocument(Image):
       return ''
     mime_type = 'text/plain'
     portal_transforms = self.getPortalObject().portal_transforms
-    filename = self.getStandardFilename(format='txt')
+    filename = self.getFilename()
     result = portal_transforms.convertToData(mime_type, str(self.getData()),
                                              context=self, filename=filename,
                                              mimetype=self.getContentType())

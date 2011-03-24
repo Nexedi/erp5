@@ -155,7 +155,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
           kw['charset'] = convert_kw['encoding'] = charset
         if not self.hasConversion(**kw):
           portal_transforms = portal.portal_transforms
-          filename = self.getStandardFilename(format=format)
+          filename = self.getFilename()
           if mime_type == 'text/html':
             mime_type = 'text/x-html-safe'
           result = portal_transforms.convertToData(mime_type, text_content,

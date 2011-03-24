@@ -247,7 +247,7 @@ class Image(TextConvertableMixin, File, OFSImage):
     portal_transforms = portal.portal_transforms
     result = portal_transforms.convertToData(mime_type, content,
                                              object=self, context=self,
-                                             filename=self.getTitleOrId(),
+                                             filename=self.getFilename(),
                                              mimetype=src_mimetype)
     if result is None:
       # portal_transforms fails to convert.
