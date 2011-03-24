@@ -28,10 +28,17 @@
 #
 ##############################################################################
 
+import decimal
+
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Core.Predicate import Predicate
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.mixin.equivalence_tester import EquivalenceTesterMixin
+
+# On Python 2.4, this dictionary doesn't include ROUND_05UP
+ROUNDING_OPTION_DICT = dict((name, value) 
+                            for name, value in decimal.__dict__.items()
+                            if name.startswith('ROUND_'))
 
 # On Python >= 2.6, we could compute a value based on sys.float_info.epsilon
 DEFAULT_PRECISION = 1e-12
@@ -164,18 +171,18 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
                  value=relative_tolerance_max))
 
   def _round(self, value):
-    from decimal import (Decimal, ROUND_DOWN, ROUND_UP, ROUND_CEILING,
-                         ROUND_FLOOR, ROUND_HALF_DOWN, ROUND_HALF_EVEN,
-                         ROUND_HALF_UP)
-    # Python2.4 did not support ROUND_05UP yet.
-    rounding_option_dict = {'ROUND_DOWN':ROUND_DOWN,
-                            'ROUND_UP':ROUND_UP,
-                            'ROUND_CEILING':ROUND_CEILING,
-                            'ROUND_FLOOR':ROUND_FLOOR,
-                            'ROUND_HALF_DOWN':ROUND_HALF_DOWN,
-                            'ROUND_HALF_EVEN':ROUND_HALF_EVEN,
-                            'ROUND_HALF_UP':ROUND_HALF_UP}
-    rounding_option = rounding_option_dict.get(self.getDecimalRoundingOption(),
-                                               ROUND_DOWN)
-    return Decimal(str(value)).quantize(Decimal(self.getDecimalExponent()),
-                                    rounding=rounding_option)
+    # on Python 2.4, looking up 'ROUND_05UP' will return ROUND_DOWN here
+    rounding_option = ROUNDING_OPTION_DICT.get(self.getDecimalRoundingOption(),
+                                               decimal.ROUND_DOWN)
+    exponent = decimal.Decimal(self.getDecimalExponent())
+    # In Python 2.7, the str() below will no longer be necessary
+    result = decimal.Decimal(str(value)).quantize(exponent,
+                                                  rounding=rounding_option)
+    # XXX everything in ERP5 is in float and, in Python 2.6, Decimals
+    # and floats don't compare numerically, ex: 
+    #   Decimal(1) < 2. is False
+    # 
+    # So we downcast the return value to float here. If ERP5 is
+    # converted to Decimals everywhere, then the float() call should
+    # go away
+    return float(result)
