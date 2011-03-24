@@ -57,6 +57,7 @@ class TestPackingListMixin(TestOrderMixin):
         SetOrderPriceCurrency
         SetOrderProfile
         """
+  # Simple order without cell
   default_sequence = default_order_sequence + """
         CreateNotVariatedResource
         Tic
@@ -315,8 +316,6 @@ class TestPackingListMixin(TestOrderMixin):
     # build split deliveries manually. XXX ad-hoc
     previous_tag = None
     for delivery_builder in packing_list.getBuilderList():
-      this_builder_tag = '%s_split_%s' % (packing_list.getPath(),
-                                          delivery_builder.getId())
       after_tag = []
       if previous_tag:
         after_tag.append(previous_tag)
@@ -573,60 +572,66 @@ class TestPackingListMixin(TestOrderMixin):
       child_simulation_movement = simulation_movement.objectValues()[0].objectValues()[0]
       self.assertEquals(child_simulation_movement.getDeliveryValue(),None)
 
+  def stepCheckTwoSimulationLines(self, sequence):
+    """
+    Check there are exactly two simulation lines related to the packing list
+    line(s)
+    """
+    simulation_movement_list = self._getSPLSimulationMovementList(sequence)
+    self.assertEquals(len(simulation_movement_list),2)
+
+  def _getSPLSimulationMovementList(self, sequence):
+    """ Get the simulation movement lines from sales packing list movements """
+    packing_list = sequence['packing_list']
+    movement_list = packing_list.getMovementList()
+    simulation_movement_list = []
+    for movement in movement_list:
+      simulation_movement_list.extend(
+        movement.getDeliveryRelatedValueList()
+      )
+    return simulation_movement_list
+
   def stepModifySimulationLineQuantity(self,sequence=None, sequence_list=None, **kw):
     """
-      Check if simulation movement are disconnected
+      Modify quantity on simulation lines related to SPL lines
     """
-    applied_rule = sequence.get('applied_rule')
-    simulation_movement_list = applied_rule.objectValues()
-#    self.assertEquals(len(simulation_movement_list),1)
+    simulation_movement_list = self._getSPLSimulationMovementList(sequence)
     for simulation_movement in simulation_movement_list:
+      # we record the property so it doesn't get changed by expand with
+      # the value from a higher simulation level
+      simulation_movement.recordProperty('quantity')
       simulation_movement.edit(quantity=self.default_quantity-1)
-      simulation_movement.getDeliveryValue().edit(quantity=self.default_quantity-1)
-      simulation_movement.expand()
-
-  def stepModifySimulationLineQuantityForMergedLine(self,sequence=None, sequence_list=None, **kw):
-    """
-      Check if simulation movement are disconnected
-    """
-    applied_rule = sequence.get('applied_rule')
-    simulation_movement_list = applied_rule.objectValues()
-    self.assertEquals(len(simulation_movement_list),2)
-    for simulation_movement in simulation_movement_list:
-      simulation_movement.edit(quantity=self.default_quantity-1)
-      simulation_movement.getDeliveryValue().edit(quantity=self.default_quantity-1)
+      #simulation_movement.getDeliveryValue().edit(quantity=self.default_quantity-1)
       simulation_movement.expand()
 
   def stepModifySimulationLineStartDate(self,sequence=None, sequence_list=None, **kw):
     """
-    Modify simulation line start date
+    Modify start_date on simulation lines related to SPL lines
     """
-    applied_rule = sequence.get('applied_rule')
-    simulation_movement_list = applied_rule.objectValues()
-    resource_list = sequence.get('resource_list')
+    simulation_movement_list = self._getSPLSimulationMovementList(sequence)
     for simulation_movement in simulation_movement_list:
+      # we record the property so it doesn't get changed by expand with
+      # the value from a higher simulation level
       simulation_movement.recordProperty('start_date')
       simulation_movement.edit(start_date=self.datetime+15)
       simulation_movement.expand()
 
   def stepModifyOneSimulationLineStartDate(self,sequence=None, sequence_list=None, **kw):
     """
-      Check if simulation movement are disconnected
+      Modify start_date on only one simulation line related to SPL lines
     """
-    applied_rule = sequence.get('applied_rule')
-    simulation_movement_list = applied_rule.objectValues()
-    resource_list = sequence.get('resource_list')
-    self.assertEquals(len(simulation_movement_list),len(resource_list))
+    simulation_movement_list = self._getSPLSimulationMovementList(sequence)
+    self.assertEquals(len(simulation_movement_list),
+                      len(sequence['resource_list']))
     simulation_movement_list[-1].recordProperty('start_date')
     simulation_movement_list[-1].edit(start_date=self.datetime+15)
     simulation_movement_list[-1].expand()
 
   def stepModifySimulationLineResource(self,sequence=None, sequence_list=None, **kw):
     """
-      Check if simulation movement are disconnected
+      Modify the resource on simulation lines related to SPL lines
     """
-    applied_rule = sequence.get('applied_rule')
-    simulation_movement_list = applied_rule.objectValues()
+    simulation_movement_list = self._getSPLSimulationMovementList(sequence)
     resource_list = sequence.get('resource_list')
     for simulation_movement in simulation_movement_list:
       simulation_movement.recordProperty('resource')
@@ -635,10 +640,9 @@ class TestPackingListMixin(TestOrderMixin):
 
   def stepModifyOneSimulationLineResource(self,sequence=None, sequence_list=None, **kw):
     """
-      Check if simulation movement are disconnected
+      Modify the resource on only one simulation line related to SPL lines
     """
-    applied_rule = sequence.get('applied_rule')
-    simulation_movement_list = applied_rule.objectValues()
+    simulation_movement_list = self._getSPLSimulationMovementList(sequence)
     resource_list = sequence.get('resource_list')
     simulation_movement_list[-1].recordProperty('resource')
     simulation_movement_list[-1].edit(resource_value=resource_list[-1])
@@ -646,21 +650,22 @@ class TestPackingListMixin(TestOrderMixin):
 
   def stepNewPackingListAdoptPrevisionQuantity(self,sequence=None, sequence_list=None, **kw):
     """
-      Check if simulation movement are disconnected
+      Solve quantity divergence on new_packing_list with 'Adopt Solver'
     """
     packing_list = sequence.get('new_packing_list')
     self._solveDivergence(packing_list, 'quantity', 'Adopt Solver')
 
-  def stepUnifyDestinationWithDecision(self,sequence=None, sequence_list=None, **kw):
+  def stepAcceptDecisionDestination(self,sequence=None, sequence_list=None, **kw):
     """
-      Check if simulation movement are disconnected
+      Solve destination divergence on packing_list with 'Adopt Solver'
     """
     packing_list = sequence.get('packing_list')
     self._solveDivergence(packing_list, 'destination', 'Accept Solver')
 
   def stepUnifyStartDateWithDecision(self,sequence=None, sequence_list=None, **kw):
     """
-      Check if simulation movement are disconnected
+      Solve start_date divergence on packing_list with the 'Unify Solver',
+      using the start_date of the packing_list.
     """
     packing_list = sequence.get('packing_list')
     self._solveDivergence(packing_list, 'start_date', 'Unify Solver',
@@ -668,11 +673,11 @@ class TestPackingListMixin(TestOrderMixin):
 
   def stepUnifyStartDateWithPrevision(self,sequence=None, sequence_list=None, **kw):
     """
-      Check if simulation movement are disconnected
+      Solve start_date divergence on packing_list with the 'Unify Solver',
+      using the start_date of one of the simulation movements.
     """
     packing_list = sequence.get('packing_list')
-    applied_rule = sequence.get('applied_rule')
-    simulation_movement_list = applied_rule.objectValues()
+    simulation_movement_list = self._getSPLSimulationMovementList(sequence)
     self._solveDivergence(packing_list, 'start_date',
       'Unify Solver', value=simulation_movement_list[-1].getStartDate())
 
@@ -719,9 +724,9 @@ class TestPackingListMixin(TestOrderMixin):
     packing_list_line = sequence.get('packing_list_line')
     self.assertEquals(packing_list_line.getQuantity(),(self.default_quantity-1)*2)
 
-  def stepCheckPackingListLineWithDifferentResource(self,sequence=None, sequence_list=None, **kw):
+  def stepCheckPackingListLineWithNewResource(self,sequence=None, sequence_list=None, **kw):
     """
-      Look if the packing list has new previsions
+      Look if the packing list has new resource
     """
     packing_list_line = sequence.get('packing_list_line')
     new_resource = sequence.get('resource')
@@ -732,6 +737,11 @@ class TestPackingListMixin(TestOrderMixin):
                            for x in simulation_line_list], [])
     self.assertEquals(sorted(packing_list_line.getCausalityList()),
                       sorted(order_line_list))
+
+  def stepCheckPackingListLineWithPreviousResource(self, sequence=None):
+    packing_list_line = sequence.get('packing_list_line')
+    old_resource = sequence['resource_list'][-2]
+    self.assertEquals(packing_list_line.getResourceValue(), old_resource)
 
   def stepCheckPackingListLineWithSameResource(self,sequence=None, sequence_list=None, **kw):
     """
@@ -1009,7 +1019,6 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     if not run: return
     sequence_list = SequenceList()
 
-    # Test with a simply order without cell
     sequence_string = self.default_sequence + """
         DecreasePackingListLineQuantity
         CheckPackingListIsCalculating
@@ -1028,13 +1037,12 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     if not run: return
     sequence_list = SequenceList()
 
-    # Test with a simply order without cell
     sequence_string = self.default_sequence + """
         ChangePackingListDestination
         CheckPackingListIsCalculating
         Tic
         CheckPackingListIsDiverged
-        UnifyDestinationWithDecision
+        AcceptDecisionDestination
         Tic
         CheckPackingListIsSolved
         CheckPackingListIsNotDivergent
@@ -1048,7 +1056,6 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     if not run: return
     sequence_list = SequenceList()
 
-    # Test with a simply order without cell
     sequence_string = self.default_sequence + """
         ChangePackingListStartDate
         CheckPackingListIsCalculating
@@ -1068,7 +1075,6 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     if not run: return
     sequence_list = SequenceList()
 
-    # Test with a simply order without cell
     sequence_string = self.default_sequence + """
         CheckSimulationConnected
         DeletePackingListLine
@@ -1084,7 +1090,6 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     if not run: return
     sequence_list = SequenceList()
 
-    # Test with a simply order without cell
     sequence_string = self.default_sequence + """
         ModifySimulationLineQuantity
         Tic
@@ -1103,7 +1108,6 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     if not run: return
     sequence_list = SequenceList()
 
-    # Test with a simply order without cell
     sequence_string = self.default_sequence + """
         ModifySimulationLineQuantity
         Tic
@@ -1122,9 +1126,9 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     if not run: return
     sequence_list = SequenceList()
 
-    # Test with a simply order without cell
     sequence_string = self.default_sequence_with_duplicated_lines + """
-        ModifySimulationLineQuantityForMergedLine
+        CheckTwoSimulationLines
+        ModifySimulationLineQuantity
         Tic
         CheckPackingListIsDiverged
         AdoptPrevisionQuantity
@@ -1141,9 +1145,9 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     if not run: return
     sequence_list = SequenceList()
 
-    # Test with a simply order without cell
     sequence_string = self.default_sequence_with_duplicated_lines + """
-        ModifySimulationLineQuantityForMergedLine
+        CheckTwoSimulationLines
+        ModifySimulationLineQuantity
         Tic
         CheckPackingListIsDiverged
         AcceptDecisionQuantity
@@ -1156,14 +1160,10 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
 
     sequence_list.play(self, quiet=quiet)
 
-  # This test does not work as it is because of the different behaviour of
-  # Adopt Solver.
-  @newSimulationExpectedFailure
   def test_05d_SimulationChangeResourceOnOneSimulationMovementForMergedLine(self, quiet=quiet, run=run_all_test):
     if not run: return
     sequence_list = SequenceList()
 
-    # Test with a simply order without cell
     sequence_string = self.default_sequence_with_duplicated_lines + """
         CreateNotVariatedResource
         ModifyOneSimulationLineResource
@@ -1171,9 +1171,24 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
         CheckPackingListIsDiverged
         AdoptPrevisionResource
         Tic
+        # Trying to Solve the divergence above with one simulation
+        # movement changes the resource
+        CheckPackingListLineWithNewResource
+        # but doesn't solve the divergence as it is now divergent with the
+        # other simulation movement
+        CheckPackingListIsDiverged
+        # solving again reverts the value.
+        AdoptPrevisionResource
+        Tic
+        CheckPackingListLineWithPreviousResource
+        # but now the packing list is divergent with the previous
+        # simulation movement
+        CheckPackingListIsDiverged
+        # We have to chose one of them and accept the decision
+        AcceptDecisionResource
+        Tic
         CheckPackingListIsNotDivergent
         CheckPackingListIsSolved
-        CheckPackingListLineWithDifferentResource
         """
     sequence_list.addSequenceString(sequence_string)
 
@@ -1183,7 +1198,6 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     if not run: return
     sequence_list = SequenceList()
 
-    # Test with a simply order without cell
     sequence_string = self.default_sequence_with_two_lines + """
         ModifySimulationLineResource
         Tic
@@ -1198,15 +1212,14 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
 
     sequence_list.play(self, quiet=quiet)
 
-  @newSimulationExpectedFailure
   def test_05f_SimulationChangeAndPartialAcceptDecision(self, quiet=quiet, run=run_all_test):
     if not run: return
     sequence_list = SequenceList()
 
-    # Test with a simply order without cell
     sequence_string = self.default_sequence_with_duplicated_lines + """
         CreateNotVariatedResource
-        ModifySimulationLineQuantityForMergedLine
+        CheckTwoSimulationLines
+        ModifySimulationLineQuantity
         ModifyOneSimulationLineResource
         ModifySimulationLineStartDate
         Tic
@@ -1231,12 +1244,10 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
   # an applied rule which with the new simulation structure is not the same as
   # in the original test packing list.
 
-  @newSimulationExpectedFailure
   def test_06_SimulationChangeStartDate(self, quiet=quiet, run=run_all_test):
     if not run: return
     sequence_list = SequenceList()
 
-    # Test with a simply order without cell
     sequence_string = self.default_sequence + """
         ModifySimulationLineStartDate
         Tic
@@ -1251,12 +1262,10 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
 
     sequence_list.play(self, quiet=quiet)
 
-  @newSimulationExpectedFailure
   def test_07_SimulationChangeStartDateWithTwoOrderLine(self, quiet=quiet, run=run_all_test):
     if not run: return
     sequence_list = SequenceList()
 
-    # Test with a simply order without cell
     sequence_string = self.default_sequence_with_two_lines + """
         ModifySimulationLineStartDate
         Tic
@@ -1273,12 +1282,10 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
 
     sequence_list.play(self, quiet=quiet)
 
-  @newSimulationExpectedFailure
   def test_07a_SimulationChangeStartDateWithTwoOrderLine(self, quiet=quiet, run=run_all_test):
     if not run: return
     sequence_list = SequenceList()
 
-    # Test with a simply order without cell
     sequence_string = self.default_sequence_with_two_lines + """
         ModifyOneSimulationLineStartDate
         Tic
@@ -1299,7 +1306,6 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     if not run: return
     sequence_list = SequenceList()
 
-    # Test with a simply order without cell
     sequence_string = self.default_sequence + """
         AddPackingListContainer
         AddPackingListContainerLine
@@ -1315,7 +1321,6 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
 
     sequence_list.play(self, quiet=quiet)
 
-  @newSimulationExpectedFailure
   def test_09_AddContainersWithVariatedResources(self, quiet=quiet, run=run_all_test):
     if not run: return
     sequence_list = SequenceList()
@@ -1356,7 +1361,6 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     if not run: return
     sequence_list = SequenceList()
 
-    # Test with a simply order without cell
     sequence_string = self.default_sequence + """
         IncreasePackingListLineQuantity
         CheckPackingListIsCalculating
@@ -1383,7 +1387,6 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     if not run: return
     sequence_list = SequenceList()
 
-    # Test with a simply order without cell
     sequence_string = self.default_sequence + """
         DecreasePackingListLineQuantity
         CheckPackingListIsCalculating
@@ -1418,7 +1421,6 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     if not run: return
     sequence_list = SequenceList()
 
-    # Test with a simply order without cell
     sequence_string = self.default_sequence + """
         IncreasePackingListLineQuantity
         CheckPackingListIsCalculating
@@ -1442,7 +1444,6 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     if not run: return
     sequence_list = SequenceList()
 
-    # Test with a simply order without cell
     sequence_string = self.default_sequence + """
         CreateNotVariatedResource
         ChangePackingListLineResource
@@ -1517,7 +1518,6 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
       delivery_builder.__class__.build = doNothing
       sequence_list = SequenceList()
 
-      # Test with a simply order without cell
       sequence_string = self.confirmed_order_without_packing_list
       sequence_list.addSequenceString(sequence_string)
       sequence_list.play(self)
@@ -1611,7 +1611,6 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     """
     sequence_list = SequenceList()
 
-    # Test with a simply order without cell
     sequence_string = self.default_order_sequence + """
         CreateNotVariatedResource
         CreateSourceAccount
@@ -1646,7 +1645,6 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     """
     sequence_list = SequenceList()
 
-    # Test with a simply order without cell
     sequence_string = self.default_sequence + """
         DecreasePackingListLineQuantity
         Tic
@@ -1674,7 +1672,6 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     """
     sequence_list = SequenceList()
 
-    # Test with a simply order without cell
     sequence_string = self.default_sequence + """
         CreateNotVariatedResource
         ChangePackingListLineResource
@@ -1868,7 +1865,6 @@ class TestSolvingPackingList(TestPackingListMixin, ERP5TypeTestCase):
     """
     sequence_list = SequenceList()
 
-    # Test with a simply order without cell
     sequence_string = """
         SetUpAutomaticQuantityAcceptSolver
         """ + self.default_sequence + """
@@ -1889,7 +1885,6 @@ class TestSolvingPackingList(TestPackingListMixin, ERP5TypeTestCase):
     """
     sequence_list = SequenceList()
 
-    # Test with a simply order without cell
     sequence_string = """
         SetUpAutomaticQuantityAdoptSolver
         """ + self.default_sequence + """
