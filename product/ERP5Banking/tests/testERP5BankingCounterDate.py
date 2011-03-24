@@ -29,6 +29,7 @@
 
 # import requested python module
 import os
+import transaction
 from zLOG import LOG
 from DateTime import DateTime
 from Testing import ZopeTestCase
@@ -76,7 +77,7 @@ class TestERP5BankingCounterDate(TestERP5BankingMixin):
     self.login('super_user')
     counter_date_module = self.getPortal().counter_date_module
     counter_date_module.manage_delObjects(ids=[x for x in counter_date_module.objectIds()])
-    get_transaction().commit()
+    transaction().commit()
     self.tic()
 
   def openCounterDate(self, date=None, site=None, id='counter_date_1', open=True, force_check=0):
@@ -112,7 +113,7 @@ class TestERP5BankingCounterDate(TestERP5BankingMixin):
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ', 0, message)
     self.openCounterDate(site=self.paris, id='counter_date_1')
-    get_transaction().commit()
+    transaction().commit()
     self.tic()
     self.openCounterDate(site=self.paris, id='counter_date_2', open=0)
     # open counter date and counter
@@ -180,7 +181,7 @@ class TestERP5BankingCounterDate(TestERP5BankingMixin):
       counter_date = getattr(self, id)
       self.assertEquals(counter_date.getReference(), reference)
       counter_date.close()
-      get_transaction().commit()
+      transaction().commit()
       self.tic()
 
     # Starts at one
@@ -189,12 +190,12 @@ class TestERP5BankingCounterDate(TestERP5BankingMixin):
     openAndTest(self.paris, DateTime('2008/01/02'), '2')
     # Monotonous: create one but leave it in draft, check same day
     self.openCounterDate(site=self.paris, id='counter_date_2008_01_03_paris_draft', date=DateTime('2008/01/03'), open=0)
-    get_transaction().commit()
+    transaction().commit()
     self.tic()
     openAndTest(self.paris, DateTime('2008/01/03'), '3')
     # Monotonous: create one but leave it in draft, check next day
     self.openCounterDate(site=self.paris, id='counter_date_2008_01_04_paris_draft', date=DateTime('2008/01/04'), open=0)
-    get_transaction().commit()
+    transaction().commit()
     self.tic()
     openAndTest(self.paris, DateTime('2008/01/05'), '4')
     # Site-scoped
@@ -216,7 +217,7 @@ class TestERP5BankingCounterDate(TestERP5BankingMixin):
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ', 0, message)
     self.openCounterDate(site=self.paris, id='counter_date_1')
-    get_transaction().commit()
+    transaction().commit()
     self.openCounterDate(site=self.paris, id='counter_date_2', open=0)
     # open counter date and counter
     self.assertRaises(ValidationFailed,
