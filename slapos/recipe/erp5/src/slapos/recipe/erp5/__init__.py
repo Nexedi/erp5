@@ -351,10 +351,8 @@ class Recipe(BaseSlapRecipe):
     mysql_connection_string = "%(mysql_database)s@%(ip)s:%(tcp_port)s %(mysql_user)s %(mysql_password)s" % mysql_conf
 
     # XXX URL list vs. repository + list of bt5 names?
-    bt5_list = self.parameter_dict.get("bt5_list",
-                 self.options.get("bt5_list", '')).split()
-    bt5_repository_list = self.parameter_dict.get("bt5_repository_list",
-                              self.options.get("bt5_repository_list", '')).split()
+    bt5_list = self.parameter_dict.get("bt5_list", "").split()
+    bt5_repository_list = self.parameter_dict.get("bt5_repository_list", "").split()
 
     self.path_list.extend(zc.buildout.easy_install.scripts([('erp5_update',
             __name__ + '.erp5', 'updateERP5')], self.ws,
