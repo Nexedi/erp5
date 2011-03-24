@@ -102,7 +102,8 @@ $(function() {\n
       if (!query) query = {};\n
       if (!ajax_method) ajax_method = $.post;\n
       //dialog.empty();\n
-\n
+      // scroll up to begin of "window"\n
+      window.scrollTo(0,0);\n
       // Some bogus animations for having the user to feel easier.\n
       var animate = function() {\n
         var element = $(\'p.loading\', dialog);\n
