@@ -79,6 +79,11 @@ class UnifySolver(AcceptSolver):
     simulation_movement_list = []
     for sub_movement in movement.getMovementList():
       if sub_movement.hasProperty(solved_property):
+        # XXX-Leo, what if there is a sub_movement that doesn't have the
+        # property, but has a "parent" that DOES have the property and
+        # that parent is not 'movement'? Perhaps we should check instead if
+        # self._getActualTargetMovement(sub_movement,solved_property)==movement
+        # before considering its related simulation movements for inclusion...
         continue
       for simulation_movement in sub_movement.getDeliveryRelatedValueList():
         simulation_movement_list.append(simulation_movement)
