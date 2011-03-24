@@ -125,7 +125,7 @@
                        <input type="submit" name="logged_in:method" \n
                               class="submit" value="Create Account" i18n:translate="" i18n:domain="ui">\n
                      </td>\n
-                     <tr><td id="back-login" align="left" colspan="2"><< Back</td></tr>\n
+                     <tr><td id="back-login" align="left" colspan="2">&lt;&lt<span i18n:translate="" i18n:domain="ui">Back</span></td></tr>\n
                    </table>\n
                  </form>\n
                </td>\n
