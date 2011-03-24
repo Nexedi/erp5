@@ -119,7 +119,7 @@ XXX: This is the way user would have done but it fails for FF in some conditions
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>translated_validation_state_title</td>\n
+  <td>listbox_translated_validation_state_title</td>\n
   <td>Brouillon</td>\n
 </tr>\n
 <tr>\n
