@@ -71,8 +71,7 @@ if exchange_line.getBasePrice() in (None, 0, 0.0):\n
 \n
 \n
 # We have to looking for other currency exchanges lines\n
-from Products.ERP5Type.Document import newTempBase\n
-temp_object = newTempBase(context.getPortalObject(),\'temp_object\')\n
+temp_object = exchange_line.getParentValue().newContent(portal_type="Currency Exchange Line", temp=1)\n
 start_date = exchange_line.getStartDate()\n
 temp_kw = {\'category_list\':[\'resource/%s\' % exchange_line.getParentValue().getRelativeUrl(),\n
                             \'price_currency/%s\' % exchange_line.getPriceCurrency()],\n
