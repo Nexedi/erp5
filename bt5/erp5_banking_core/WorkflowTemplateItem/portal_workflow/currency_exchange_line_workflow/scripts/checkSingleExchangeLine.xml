@@ -71,7 +71,7 @@ if exchange_line.getBasePrice() in (None, 0, 0.0):\n
 \n
 \n
 # We have to looking for other currency exchanges lines\n
-temp_object = exchange_line.getParentValue().newContent(portal_type="Currency Exchange Line", temp=1)\n
+temp_object = exchange_line.getParentValue().newContent(portal_type="Currency Exchange Line", temp_object=True)\n
 start_date = exchange_line.getStartDate()\n
 temp_kw = {\'category_list\':[\'resource/%s\' % exchange_line.getParentValue().getRelativeUrl(),\n
                             \'price_currency/%s\' % exchange_line.getPriceCurrency()],\n
