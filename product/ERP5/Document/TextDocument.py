@@ -168,7 +168,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
                                   'portal_transforms failed to convert '
                                   'from %r to %s: %r' % 
                                   (src_mimetype, mime_type, self))
-                                  
+
           if format in VALID_IMAGE_FORMAT_LIST:
             # do resize by temporary image
             temp_image = self.portal_contributions.newContent(
