@@ -62,8 +62,7 @@ class OOOdCommandTransform(commandtransform):
 
   def __init__(self, context, name, data, mimetype):
     commandtransform.__init__(self, name)
-    if name:
-      self.__name__ = name
+    self.__name__ = name
     self.mimetype = mimetype
     self.context = context
     if self.mimetype == 'text/html':
