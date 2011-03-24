@@ -29,7 +29,7 @@ limit_memory_used = 3000
 ## OOFactory Settings
 #
 # The pool consist of several OpenOffice.org instances
-application_hostname = localhost
+application_hostname = %(ip)s
 # OpenOffice Port
 openoffice_port = %(openoffice_port)s
 # LD_LIBRARY_PATH passed to OpenOffice
