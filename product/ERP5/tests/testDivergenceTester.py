@@ -29,7 +29,7 @@
 import unittest
 import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.Sequence import SequenceList
+from Products.ERP5Type.tests.Sequence import Sequence
 from Products.ERP5.tests.testPackingList import TestPackingListMixin
 from Products.ERP5.tests.utils import newSimulationExpectedFailure
 
@@ -40,6 +40,14 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
   run_all_test = 1
   quiet = 0
 
+  divergence_test_sequence_suffix = '''
+    SetPackingListMovementAndSimulationMovement
+    ResetDeliveringRule
+    CheckPackingListIsNotDivergent
+  '''
+  divergence_test_sequence = (TestPackingListMixin.default_sequence +
+                              divergence_test_sequence_suffix)
+
   def getTitle(self):
     return "Divergence Tester"
 
@@ -48,78 +56,55 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
                         validation_state="validated")
 
   def afterSetUp(self):
-    """
-    Remove all divergence testers from order_rule.
-    """
-    rule = self.getDeliveringRule()
+    self.validateRules()
+
+  def beforeTearDown(self):
+    transaction.abort()
+    portal_rules = self.portal.portal_rules
+    rule_id_list = [rule_id for rule_id in portal_rules.objectIds()
+                    if rule_id.startswith('testDivergenceTester_')]
+    if rule_id_list:
+      portal_rules.deleteContent(rule_id_list)
+      transaction.commit()
+      self.tic()
+
+  def stepResetDeliveringRule(self, sequence):
+    original_rule = rule = self.getDeliveringRule()
+    self.assertEqual(rule.getId(), 'new_delivery_simulation_rule')
+    # We clone the rule and clean it up to be able to experiment with it
+    portal_rules = self.portal.portal_rules
+    prefix = 'testDivergenceTester_'
+    new_rule_id = prefix + rule.getId()
+    new_rule_reference = prefix + rule.getReference()
+    rule = portal_rules.manage_clone(rule, new_rule_id)
+    transaction.savepoint(optimistic=True)
+    rule.setVersion(str(int(rule.getVersion()) + 1))
+    rule.setReference(new_rule_reference)
     tester_list = rule.contentValues(
              portal_type=rule.getPortalDivergenceTesterTypeList())
     rule.deleteContent([x.getId() for x in tester_list])
+    rule.validate()
+    # override the rule that oversees the packing_list_lines if possible:
+    movement = sequence.get('packing_list_line')
+    if movement is not None:
+      applied_rule = movement.getDeliveryRelatedValue().getParentValue()
+      applied_rule.setSpecialiseValue(rule)
     transaction.commit()
     self.tic()
+    sequence.edit(rule=rule)
 
-  def bootstrapSite(self):
+  def stepSetPackingListMovementAndSimulationMovement(self, sequence):
     """
-    Manager has to create an administrator user first.
+    Set the packing movement, delivery
     """
-    self.logMessage("Bootstrap the site by creating required " \
-                    "order, simulation, ...")
-    sequence_list = SequenceList()
-    # Create a clean packing list
-    sequence_string = ' \
-          stepCreateOrganisation1 \
-          stepCreateOrganisation2 \
-          stepCreateOrganisation3 \
-          stepCreateOrder \
-          stepSetOrderProfile \
-          stepCreateNotVariatedResource \
-          stepTic \
-          stepCreateOrderLine \
-          stepSetOrderLineResource \
-          stepSetOrderLineDefaultValues \
-          stepOrderOrder \
-          stepTic \
-          stepConfirmOrder \
-          stepTic \
-    '
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=self.quiet)
-    self.logMessage("Bootstrap finished")
-
-  def setUpOnce(self, quiet=1, run=run_all_test):
-    """
-    Create an order and generate a packing list from it.
-    This has to be called only once.
-    """
-    self.validateRules()
-    transaction.commit()
-    self.tic(verbose=1)
-    self.bootstrapSite()
-
-  def stepGetPackingList(self, sequence=None, sequence_list=None, **kw):
-    """
-    Set the packing list in the sequence
-    """
-    sql_result = self.getPortal().portal_catalog(
-                         portal_type=self.packing_list_portal_type)
-    self.assertEquals(1, len(sql_result))
-    packing_list = sql_result[0].getObject()
-    # XXX Hardcoded id
-    movement=packing_list['1']
+    packing_list = sequence['packing_list']
+    # XXX-Leo can't we just use sequence['packing_list_line']?
+    movement = packing_list.getMovementList()[0]
     rule = self.getDeliveringRule()
     sequence.edit(
         packing_list=packing_list,
         movement=movement,
-        rule=rule,
         sim_mvt=movement.getDeliveryRelatedValueList()[0])
-
-  def stepCheckPackingListIsDivergent(self, sequence=None, 
-                                      sequence_list=None, **kw):
-    """
-    Test if packing list is divergent
-    """
-    packing_list = sequence.get('packing_list')
-    self.assertTrue(packing_list.isDivergent())
 
   def stepSetNewQuantity(self, sequence=None, 
                          sequence_list=None, **kw):
@@ -148,26 +133,56 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     self.assertNotEqual(prevision, decision)
     movement.setQuantity(decision)
 
-  def stepAddQuantityDivergenceTester(self, sequence=None, 
-                                      sequence_list=None, **kw):
+  def _addDivergenceTester(self, sequence, tester_type, tester_name, **kw):
     """
-    Add a quantity divergence tester in the rule
+    Add a divergence tester to the rule
     """
+    kw.setdefault('tested_property', tester_name)
     rule = sequence.get('rule')
-    rule.newContent(portal_type='Quantity Divergence Tester')
+    divergence_tester = rule.newContent(id=tester_name,
+                                        portal_type=tester_type,
+                                        **kw)
+    sequence[tester_name + '_divergence_tester'] = divergence_tester
+    return divergence_tester
 
-  @newSimulationExpectedFailure
+  def stepAddQuantityDivergenceTester(self, sequence):
+    self._addDivergenceTester(
+      sequence,
+      tester_name='quantity',
+      tester_type='Net Converted Quantity Divergence Tester',
+      quantity_range_max=0.0,
+    )
+
+  def stepAddSourceCategoryDivergenceTester(self, sequence):
+    self._addDivergenceTester(
+      sequence,
+      tester_name='source',
+      tester_type='Category Membership Divergence Tester',
+    )
+
+  def stepAddAggregateCategoryDivergenceTester(self, sequence):
+    self._addDivergenceTester(
+      sequence,
+      tester_name='aggregate',
+      tester_type='Category Membership Divergence Tester',
+    )
+
+  def stepAddStartDateDivergenceTester(self, sequence):
+    self._addDivergenceTester(
+      sequence,
+      tester_name='start_date',
+      tester_type='DateTime Divergence Tester',
+      quantity=0,
+    )
+
   def test_01_QuantityDivergenceTester(self, quiet=quiet, run=run_all_test):
     """
     Test the quantity divergence tester
     """
     if not run: return
-    sequence_list = SequenceList()
-    # Create a clean packing list
-    sequence_string = """
-          GetPackingList
-          CheckPackingListIsNotDivergent
+    sequence_string = self.divergence_test_sequence + """
           SetNewQuantity
+          Tic
           CheckPackingListIsNotDivergent
           AddQuantityDivergenceTester
           CheckPackingListIsDivergent
@@ -177,8 +192,8 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
           CheckPackingListIsNotDivergent
           Tic
     """
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=self.quiet)
+    sequence = Sequence(self)
+    sequence(sequence_string, quiet=self.quiet)
 
   def stepSetNewSource(self, sequence=None, 
                        sequence_list=None, **kw):
@@ -187,23 +202,6 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     """
     packing_list = sequence.get('packing_list')
     packing_list.setSource(None)
-
-  def stepAddCategoryDivergenceTester(self, sequence=None, 
-                                      sequence_list=None, **kw):
-    """
-    Add a category divergence tester in the rule
-    """
-    rule = sequence.get('rule')
-    tester = rule.newContent(portal_type='Category Divergence Tester')
-    sequence.edit(tester=tester)
-
-  def stepConfigureCategoryDivergenceTesterForSource(self, sequence=None, 
-                                      sequence_list=None, **kw):
-    """
-    Add a category divergence tester in the rule
-    """
-    tester = sequence.get('tester')
-    tester.setTestedPropertyList(['source | Source'])
 
   def stepSetPreviousSource(self, sequence=None, 
                             sequence_list=None, **kw):
@@ -214,29 +212,23 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     packing_list = sequence.get('packing_list')
     packing_list.setSource(sim_mvt.getSource())
 
-  @newSimulationExpectedFailure
   def test_02_CategoryDivergenceTester(self, quiet=quiet, run=run_all_test):
     """
     Test the category divergence tester
     """
     if not run: return
-    sequence_list = SequenceList()
-    # Create a clean packing list
-    sequence_string = """
-          GetPackingList
-          CheckPackingListIsNotDivergent
+    sequence_string = self.divergence_test_sequence + """
           SetNewSource
+          Tic
           CheckPackingListIsNotDivergent
-          AddCategoryDivergenceTester
-          CheckPackingListIsNotDivergent
-          ConfigureCategoryDivergenceTesterForSource
+          AddSourceCategoryDivergenceTester
           CheckPackingListIsDivergent
           SetPreviousSource
           CheckPackingListIsNotDivergent
           Tic
     """
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=self.quiet)
+    sequence = Sequence(self)
+    sequence(sequence_string, quiet=self.quiet)
 
   def stepSetNewStartDate(self, sequence=None, 
                        sequence_list=None, **kw):
@@ -245,23 +237,6 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     """
     packing_list = sequence.get('packing_list')
     packing_list.setStartDate(packing_list.getStartDate()+10)
-
-  def stepAddPropertyDivergenceTester(self, sequence=None, 
-                                      sequence_list=None, **kw):
-    """
-    Add a property divergence tester in the rule
-    """
-    rule = sequence.get('rule')
-    tester = rule.newContent(portal_type='Property Divergence Tester')
-    sequence.edit(tester=tester)
-
-  def stepConfigurePropertyDivergenceTesterForStartDate(self, sequence=None, 
-                                      sequence_list=None, **kw):
-    """
-    Add a property divergence tester in the rule
-    """
-    tester = sequence.get('tester')
-    tester.setTestedPropertyList(['start_date | Start Date'])
 
   def stepSetPreviousStartDate(self, sequence=None, 
                                sequence_list=None, **kw):
@@ -272,29 +247,22 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     packing_list = sequence.get('packing_list')
     packing_list.setStartDate(sim_mvt.getStartDate())
 
-  @newSimulationExpectedFailure
   def test_03_PropertyDivergenceTester(self, quiet=quiet, run=run_all_test):
     """
     Test the property divergence tester
     """
     if not run: return
-    sequence_list = SequenceList()
-    # Create a clean packing list
-    sequence_string = """
-          GetPackingList
-          CheckPackingListIsNotDivergent
+    sequence_string = self.divergence_test_sequence + """
           SetNewStartDate
           CheckPackingListIsNotDivergent
-          AddPropertyDivergenceTester
-          CheckPackingListIsNotDivergent
-          ConfigurePropertyDivergenceTesterForStartDate
+          AddStartDateDivergenceTester
           CheckPackingListIsDivergent
           SetPreviousStartDate
           CheckPackingListIsNotDivergent
           Tic
     """
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=self.quiet)
+    sequence = Sequence(self)
+    sequence(sequence_string, quiet=self.quiet)
 
   def stepSetNewAggregate(self, sequence=None, 
                           sequence_list=None, **kw):
@@ -302,17 +270,9 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     Modify the aggregate of the delivery movement
     """
     movement = sequence.get('movement')
-    # Set a aggregate value which does not exist
-    # but it should not be a problem for testing the divergency
+    # Set an aggregate value which does not exist
+    # but it should not be a problem for testing the divergence
     movement.setAggregate('a_great_module/a_random_id')
-
-  def stepConfigureCategoryDivergenceTesterForAggregate(self, sequence=None, 
-                                                        sequence_list=None, **kw):
-    """
-    Add a category divergence tester in the rule
-    """
-    tester = sequence.get('tester')
-    tester.setTestedPropertyList(['aggregate | Aggregate'])
 
   def stepSetPreviousAggregate(self, sequence=None, 
                             sequence_list=None, **kw):
@@ -322,56 +282,67 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     movement = sequence.get('movement')
     movement.setAggregate(None)
 
-  @newSimulationExpectedFailure
   def test_04_CategoryDivergenceTester(self, quiet=quiet, run=run_all_test):
     """
     Test the category divergence tester
     """
     if not run: return
-    sequence_list = SequenceList()
-    # Create a clean packing list
-    sequence_string = """
-          GetPackingList
-          CheckPackingListIsNotDivergent
+    sequence_string = self.divergence_test_sequence + """
           SetNewAggregate
           CheckPackingListIsNotDivergent
-          AddCategoryDivergenceTester
-          CheckPackingListIsNotDivergent
-          ConfigureCategoryDivergenceTesterForAggregate
+          AddAggregateCategoryDivergenceTester
           CheckPackingListIsDivergent
           SetPreviousAggregate
           CheckPackingListIsNotDivergent
           Tic
     """
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=self.quiet)
+    sequence = Sequence(self)
+    sequence(sequence_string, quiet=self.quiet)
 
-  @newSimulationExpectedFailure
   def test_QuantityDivergenceTesterCompareMethod(self):
-    rule = self.portal.portal_rules.newContent(portal_type='Delivery Rule')
-    divergence_tester = rule.newContent(portal_type='Quantity Divergence Tester')
+    # XXX-Leo this test is actually just testing
+    # FloatEquivalenceTester, and is incomplete. It should test also
+    # with:
+    # 
+    #  * divergence_test_sequence.setProperty('quantity_range_min', ...)
+    #  * divergence_test_sequence.setProperty('tolerance_base', ...)
+    #    * including all variants like resources, prices and precisions
+    sequence = Sequence(self)
+    sequence(self.confirmed_order_without_packing_list + '''
+      ResetDeliveringRule
+      AddQuantityDivergenceTester
+    ''')
+    divergence_tester = sequence['quantity_divergence_tester']
 
-    self.assert_(not divergence_tester.isDecimalAlignmentEnabled())
-    self.assertEqual(divergence_tester.compare(3.0, 3.001), False)
-    self.assertEqual(divergence_tester.compare(3.0, 3.0), True)
+    decision = sequence['order_line']
+    prevision = decision.getDeliveryRelatedValue(
+      portal_type=self.simulation_movement_portal_type)
+    def divergence_tester_compare(prevision_value, decision_value):
+      prevision.setQuantity(prevision_value)
+      decision.setQuantity(decision_value)
+      return divergence_tester.compare(prevision, decision)
+
+    self.assertFalse(divergence_tester.isDecimalAlignmentEnabled())
+    self.assertFalse(divergence_tester_compare(3.0, 3.001))
+    self.assertTrue(divergence_tester_compare(3.0, 3.0))
 
     divergence_tester.setDecimalAlignmentEnabled(True)
     divergence_tester.setDecimalRoundingOption('ROUND_DOWN')
     divergence_tester.setDecimalExponent('0.01')
 
-    self.assertEqual(divergence_tester.compare(3.0, 3.001), True)
-    self.assertEqual(divergence_tester.compare(3.0, 3.0), True)
+    self.assertTrue(divergence_tester_compare(3.0, 3.001))
+    self.assertTrue(divergence_tester_compare(3.0, 3.0))
 
     divergence_tester.setDecimalExponent('0.001')
-    self.assertEqual(divergence_tester.compare(3.0, 3.001), False)
+    self.assertFalse(divergence_tester_compare(3.0, 3.001))
 
     divergence_tester.setDecimalRoundingOption('ROUND_UP')
     divergence_tester.setDecimalExponent('0.01')
-    self.assertEqual(divergence_tester.compare(3.0, 3.001), False)
+    self.assertFalse(divergence_tester_compare(3.0, 3.001))
 
     divergence_tester.setDecimalRoundingOption('ROUND_HALF_UP')
     divergence_tester.setDecimalExponent('0.01')
-    self.assertEqual(divergence_tester.compare(3.0, 3.001), True)
+    self.assertTrue(divergence_tester_compare(3.0, 3.001))
 
 
 def test_suite():
