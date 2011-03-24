@@ -70,8 +70,6 @@ class OOOdCommandTransform(commandtransform):
       data = self.includeExternalCssList(data)
     tmp_ooo = newTempOOoDocument(context, name)
     tmp_ooo.edit( data=data,
-                  fname=self.name(),
-                  source_reference=self.name(),
                   filename=self.name(),
                   content_type=self.mimetype,)
     tmp_ooo.convertToBaseFormat()
