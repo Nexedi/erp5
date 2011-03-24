@@ -73,7 +73,7 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_multi_list_field</string> </value>
+                    <value> <string>my_category_list</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
