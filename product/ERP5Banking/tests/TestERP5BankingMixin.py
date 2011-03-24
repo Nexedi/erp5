@@ -51,7 +51,8 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
       the unit test framework in order to know which business templates
       need to be installed to run the test on.
     """
-    return ('erp5_base',
+    return ('erp5_core_proxy_field_legacy',
+            'erp5_base',
             'erp5_pdm',
             'erp5_trade',
             'erp5_accounting',
