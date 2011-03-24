@@ -68,7 +68,7 @@ class OOOdCommandTransform(commandtransform):
     self.context = context
     if self.mimetype == 'text/html':
       data = self.includeExternalCssList(data)
-    tmp_ooo = newTempOOoDocument(context, name)
+    tmp_ooo = newTempOOoDocument(context, str(id(self)))
     tmp_ooo.edit( data=data,
                   filename=self.name(),
                   content_type=self.mimetype,)
