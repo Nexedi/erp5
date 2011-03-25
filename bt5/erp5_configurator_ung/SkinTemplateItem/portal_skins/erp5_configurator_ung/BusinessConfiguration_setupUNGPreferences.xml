@@ -1,0 +1,256 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# XXX-Luke: Beware, I will modify this script *very* much\n
+portal = context.getPortalObject()\n
+\n
+configuration_save_url = kw.get(\'configuration_save_url\', None)\n
+preferred_event_sender_email = kw.get(\'preferred_event_sender_email\', \'\')\n
+preferred_date_order = kw.get(\'preferred_date_order\', None)\n
+preferred_language_list = kw.get(\'lang\', [])\n
+\n
+configuration_save = context.restrictedTraverse(configuration_save_url)\n
+business_configuration = configuration_save.getParent()\n
+\n
+# if preferred email is not specified used previously saved company email.\n
+company_email = context.getGlobalConfigurationAttr(\'company_email\')\n
+if preferred_event_sender_email in (\'\', None,):\n
+  preferred_event_sender_email = company_email\n
+\n
+# price currency contains all currency info like iso code& precision \';\'\n
+# separated\n
+currency_info = kw[\'price_currency\']\n
+currency_reference, currency_base_unit_quantity, currency_title  = \\\n
+    currency_info.split(\';\')\n
+configuration_save.addConfigurationItem(\n
+    "Currency Configurator Item",\n
+    reference = currency_reference,\n
+    base_unit_quantity = currency_base_unit_quantity,\n
+    title = currency_title,)\n
+context.setGlobalConfigurationAttr(default_currency=currency_reference)\n
+\n
+# adjust price_currency for organisation configuration item\n
+organisation_configurator_item = context.getGlobalConfigurationAttr(\n
+    \'organisation_configurator_item\')\n
+organisation_configurator_item_obj = context.restrictedTraverse(\n
+    organisation_configurator_item, None)\n
+organisation_configurator_item_obj.setPriceCurrency(currency_reference)\n
+\n
+# CRM\n
+# Create services used in crm preference.\n
+# XXX I think here is not a good place.(yusei)\n
+service_list = (\n
+  # sale opportunity\n
+  (\'product\', \'Product\'),\n
+  (\'service\', \'Service\'),\n
+  # campaign\n
+  (\'marketing_campaign\', \'Marketing Campaign\'),\n
+  (\'marketing_survey\', \'Market Survey\'),\n
+  (\'marketing_purchases\', \'Purchases Campaign\'),\n
+  (\'marketing_sales\', \'Sales Campaign\'),\n
+  (\'marketing_other\', \'Other Marketing Service\'),\n
+  # support request\n
+  (\'support_administrative\', \'Administrative Support\'),\n
+  (\'support_financial\', \'Financial Support\'),\n
+  (\'support_it\', \'IT Support\'),\n
+  (\'support_other\', \'Other Support Service\'),\n
+  # meeting\n
+  (\'organisation_conference\', \'Conference\'),\n
+  (\'organisation_partnership\', \'Partnership Meeting\'),\n
+  (\'organisation_purchases\', \'Purchases Meeting\'),\n
+  (\'organisation_project\', \'Project Meeting\'),\n
+  (\'organisation_sales\', \'Sales Meeting\'),\n
+  (\'organisation_other\', \'Other Meeting\'),\n
+  # event\n
+  (\'event_complaint\', \'Complaint\'),\n
+  (\'event_announcement\', \'Announcement\'),\n
+  (\'event_inquiry\', \'Inquiry\'),\n
+  (\'event_advertisement\', \'Advertisement\'),\n
+  (\'event_spam\', \'Spam\'),\n
+  (\'event_information\', \'Information\'),\n
+  (\'event_other\', \'Other event\'),\n
+  )\n
+configuration_save.addConfigurationItem("Service Configurator Item",\n
+                                        service_list=service_list)\n
+\n
+# configure preferences\n
+prefs = dict(\n
+  # UI\n
+  preferred_category_child_item_list_method_id =\n
+                   \'getCategoryChildTranslatedLogicalPathItemList\',\n
+  preferred_text_format = \'text/html\',\n
+  preferred_text_editor = \'fck_editor\',\n
+  preferred_date_order = preferred_date_order,\n
+  preferred_listbox_view_mode_line_count = 20,\n
+  preferred_listbox_list_mode_line_count = 20,\n
+  preferred_string_field_width = 30,\n
+  preferred_textarea_width = 80,\n
+  preferred_textarea_height = 5,\n
+  preferred_report_style = \'ODT\',\n
+  preferred_report_format = \'pdf\',\n
+  preferred_money_quantity_field_width = 10, # TODO: adapt this\n
+                                             # based on the selected\n
+                                             # currency, XOF needs\n
+                                             # more than 10 for\n
+                                             # example\n
+  preferred_html_style_access_tab = 1,\n
+  preferred_quantity_field_width = 8,\n
+  # accounting\n
+  preferred_accounting_transaction_currency = \'currency_module/%s\' % \\\n
+      currency_reference,\n
+)\n
+\n
+configuration_save.addConfigurationItem(\n
+    \'Preference Configurator Item\',\n
+    object_id = \'default_configurator_preference\',\n
+    description = "The default parameters for the site are set on this "\n
+    "preference",\n
+    title = "Default Configurator Site Preference",\n
+    **prefs)\n
+\n
+# configure system preferences\n
+# some preparation\n
+system_prefs = dict(\n
+  # CRM\n
+  preferred_campaign_resource_list = [\n
+                             \'service_module/marketing_campaign\',\n
+                             \'service_module/marketing_survey\',\n
+                             \'service_module/marketing_purchases\',\n
+                             \'service_module/marketing_sales\',\n
+                             \'service_module/marketing_other\',],\n
+  preferred_event_resource_list = [\n
+                             \'service_module/event_complaint\',\n
+                             \'service_module/event_announcement\',\n
+                             \'service_module/event_inquiry\',\n
+                             \'service_module/event_advertisement\',\n
+                             \'service_module/event_spam\',\n
+                             \'service_module/event_information\',\n
+                             \'service_module/event_other\',],\n
+  preferred_meeting_resource_list = [\n
+                             \'service_module/organisation_conference\',\n
+                             \'service_module/organisation_partnership\',\n
+                             \'service_module/organisation_purchases\',\n
+                             \'service_module/organisation_project\',\n
+                             \'service_module/organisation_sales\',\n
+                             \'service_module/organisation_other\',],\n
+  preferred_sale_opportunity_resource_list = [\n
+                             \'service_module/product\',\n
+                             \'service_module/service\',],\n
+  preferred_support_request_resource_list = [\n
+                             \'service_module/support_administrative\',\n
+                             \'service_module/support_financial\',\n
+                             \'service_module/support_it\',\n
+                             \'service_module/support_other\',],\n
+  preferred_event_sender_email = preferred_event_sender_email,\n
+  preferred_event_assessment_form_id_list = [],\n
+  # dms\n
+  # XXX-Luke: (proposal) Allow to define, maybe use some magic of\n
+  #           representation\n
+  preferred_document_file_name_regular_expression = \\\n
+      \'(?P<node_reference>[a-zA-Z0-9_-]+)-(?P<local_reference>[a-zA-Z0-9_.]+)\'\n
+      \'-(?P<version>[0-9a-zA-Z.]+)-(?P<language>[a-z]{2})[^-]*?\',\n
+  preferred_document_reference_regular_expression = \'(?P<reference>[a-zA-Z0-9\'\n
+      \'-_.]+-[a-zA-Z0-9-_.]+)(|-(?P<version>[0-9a-zA-Z.]+))(|-(?P<language>[a\'\n
+      \'-z]{2})[^-]*)?\',\n
+  preferred_document_classification = \'collaborative/team\',\n
+  preferred_synchronous_metadata_discovery = True,\n
+  preferred_redirect_to_document = True,\n
+  # pdm\n
+  preferred_product_individual_variation_base_category_list = [\'variation\'],\n
+  preferred_component_individual_variation_base_category_list = [\'variation\'],\n
+  preferred_service_individual_variation_base_category_list = [\'variation\'],\n
+  # trade\n
+  preferred_supplier_role_list = [\'supplier\'],\n
+  preferred_client_role_list = [\'client\'],\n
+  preferred_sale_use_list = [\'trade/sale\'],\n
+  preferred_purchase_use_list = [\'trade/purchase\'],\n
+  preferred_packing_use_list = [\'trade/container\'],\n
+  # Express preferences\n
+  preferred_express_subscription_status = 1,\n
+  preferred_express_configuration_status = 1,\n
+  preferred_express_after_setup_script_id = \'ERP5Generator_afterSetup\')\n
+\n
+configuration_save.addConfigurationItem(\n
+    \'System Preference Configurator Item\',\n
+    object_id = \'default_configurator_system_preference\',\n
+    description="The default system parameters for the site are set on this \'\\\n
+    \'preference",\n
+    title="Default Configurator System Site Preference",\n
+    **system_prefs)\n
+\n
+\n
+# preferred_languages\n
+for bt5_id in preferred_language_list:\n
+  configuration_save.addConfigurationItem("Standard BT5 Configurator Item",\n
+                                          bt5_id=bt5_id)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>BusinessConfiguration_setupUNGPreferences</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Configure global ERP5 preferences</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
