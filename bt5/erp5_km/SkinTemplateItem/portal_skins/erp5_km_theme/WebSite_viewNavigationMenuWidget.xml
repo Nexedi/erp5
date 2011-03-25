@@ -156,7 +156,7 @@
     <a href="#" i18n:translate="" i18n:domain="ui">Settings</a>\n
     <ul>\n
       <li>\n
-        <a tal:attributes="href string:${portal_path}/WebSite_redirectToUserPerson"\n
+        <a tal:attributes="href string:${portal_path}/WebSite_redirectToUserView"\n
             i18n:translate="" \n
             i18n:domain="ui">My Profile</a>\n
       </li>\n
