@@ -37,7 +37,6 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5.tests.testOrder import TestOrderMixin
 from DateTime import DateTime
 from Products.ERP5Type.Globals import PersistentMapping
-from Products.ERP5.tests.utils import newSimulationExpectedFailure
 
 class TestPackingListMixin(TestOrderMixin):
   """
@@ -1376,7 +1375,6 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
 
     sequence_list.play(self, quiet=quiet)
 
-  @newSimulationExpectedFailure
   def test_11_PackingListDecreaseTwoTimesQuantityAndUpdateDelivery(self,
                                                quiet=quiet, run=run_all_test):
     """
@@ -1662,7 +1660,6 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
 
     sequence_list.play(self, quiet=quiet)
 
-  @newSimulationExpectedFailure
   def test_19_ChangeResourceOnPackingListAndOrder(self, quiet=quiet):
     """
       Change the resource on a packing list line, and accept the
