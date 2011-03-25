@@ -1361,9 +1361,9 @@ class Base( CopyContainer,
       keep_existing -- if set to 1 or True, only those properties for which
       hasProperty is False will be updated.
     """
-    key_list = kw.keys()
-    if len(key_list) == 0:
+    if not kw:
       return
+    key_list = kw.keys()
     modified_property_dict = self._v_modified_property_dict = {}
     modified_object_dict = {}
 
@@ -1390,14 +1390,17 @@ class Base( CopyContainer,
       for key in key_list:
         # We only change if the value is different
         # This may be very long...
-        old_value = None
-        if not force_update:
+        if force_update:
+          update = True
+          old_value = None
+        else:
           try:
             old_value = getProperty(key, evaluate=0)
           except TypeError:
             old_value = getProperty(key)
+          update = old_value != kw[key]
 
-        if old_value != kw[key] or force_update:
+        if update:
           # We keep in a thread var the previous values
           # this can be useful for interaction workflow to implement lookups
           # XXX If iteraction workflow script is triggered by edit and calls
