@@ -563,7 +563,7 @@ class BaseTemplateItem(Implicit, Persistent):
     obj.__class__ = newklass
     return obj
 
-  def removeProperties(self, obj, export):
+  def removeProperties(self, obj, export, keep_workflow_history=False):
     """
     Remove unneeded properties for export
     """
@@ -572,8 +572,10 @@ class BaseTemplateItem(Implicit, Persistent):
     classname = klass.__name__
 
     attr_set = set(('_dav_writelocks', '_filepath', '_owner', 'uid',
-                    'workflow_history', '__ac_local_roles__'))
+                    '__ac_local_roles__'))
     if export:
+      if not keep_workflow_history:
+        attr_set.add('workflow_history')
       # PythonScript covers both Zope Python scripts
       # and ERP5 Python Scripts
       if isinstance(obj, PythonScript):
@@ -701,7 +703,8 @@ class ObjectTemplateItem(BaseTemplateItem):
       relative_url = '/'.join([url,id])
       obj = p.unrestrictedTraverse(relative_url)
       obj = obj._getCopy(context)
-      obj = self.removeProperties(obj, 1)
+      keep_workflow_history = self.isKeepWorkflowObject(relative_url)
+      obj = self.removeProperties(obj, 1, keep_workflow_history)
       id_list = obj.objectIds() # FIXME duplicated variable name
       if hasattr(aq_base(obj), 'groups'): # XXX should check metatype instead
         # we must keep groups because they are deleted along with subobjects
@@ -728,7 +731,8 @@ class ObjectTemplateItem(BaseTemplateItem):
       except AttributeError:
         raise AttributeError, "Could not find object '%s' during business template processing." % relative_url
       _recursiveRemoveUid(obj)
-      obj = self.removeProperties(obj, 1)
+      keep_workflow_history = self.isKeepWorkflowObject(relative_url)
+      obj = self.removeProperties(obj, 1, keep_workflow_history)
       id_list = obj.objectIds()
       if hasattr(aq_base(obj), 'groups'): # XXX should check metatype instead
         # we must keep groups because they are deleted along with subobjects
@@ -1020,7 +1024,6 @@ class ObjectTemplateItem(BaseTemplateItem):
           saved_uid_dict = {}
           subobjects_dict = {}
           portal_type_dict = {}
-          workflow_history = None
           old_obj = container._getOb(object_id, None)
           object_existed = old_obj is not None
           if object_existed:
@@ -1047,11 +1050,6 @@ class ObjectTemplateItem(BaseTemplateItem):
                 portal_type_dict[attr] = getattr(old_obj, attr, ())
               portal_type_dict['workflow_chain'] = \
                 getChainByType(context)[1].get('chain_' + object_id, '')
-            # try to keep workflow history for specified objects.
-            workflow_history = getattr(old_obj, 'workflow_history', None)
-            if workflow_history is not None \
-                   and context.isKeepWorkflowObject(path):
-                workflow_history = deepcopy(workflow_history)
             container.manage_delObjects([object_id])
 
           # install object
@@ -1100,7 +1098,11 @@ class ObjectTemplateItem(BaseTemplateItem):
           # useless because we will already reindex every created object, so
           # we avoid duplication of reindexation
           obj.isIndexable = ConstantGetter('isIndexable', value=False)
+          # keep workflow history if exists
+          workflow_history = getattr(obj, 'workflow_history', None)
           obj.manage_afterClone(obj)
+          if workflow_history is not None:
+            setattr(obj, 'workflow_history', workflow_history)
           del obj.isIndexable
           if getattr(aq_base(obj), 'reindexObject', None) is not None:
             obj.reindexObject()
@@ -1131,9 +1133,6 @@ class ObjectTemplateItem(BaseTemplateItem):
                 # an object which cannot (e.g. External Method).
                 LOG('BusinessTemplate', WARNING,
                     'could not restore %r in %r' % (subobject_id, obj))
-          # copy workflow history if required
-          if workflow_history is not None:
-            setattr(obj, 'workflow_history', workflow_history)
           if obj.meta_type in ('Z SQL Method',):
             fixZSQLMethod(portal, obj)
           # portal transforms specific initialization
@@ -1402,7 +1401,8 @@ class PathTemplateItem(ObjectTemplateItem):
         obj = obj.__of__(context)
         _recursiveRemoveUid(obj)
         id_list = obj.objectIds()
-        obj = self.removeProperties(obj, 1)
+        keep_workflow_history = self.isKeepWorkflowObject(relative_url)
+        obj = self.removeProperties(obj, 1, keep_workflow_history)
         if hasattr(aq_base(obj), 'groups'):
           # we must keep groups because it's ereased when we delete subobjects
           groups = deepcopy(obj.groups)
@@ -1520,7 +1520,8 @@ class CategoryTemplateItem(ObjectTemplateItem):
       relative_url = '/'.join([url,id])
       obj = p.unrestrictedTraverse(relative_url)
       obj = obj._getCopy(context)
-      obj = self.removeProperties(obj, 1)
+      keep_workflow_history = self.isKeepWorkflowObject(relative_url)
+      obj = self.removeProperties(obj, 1, keep_workflow_history)
       id_list = obj.objectIds()
       if id_list:
         self.build_sub_objects(context, id_list, relative_url)
@@ -1542,7 +1543,8 @@ class CategoryTemplateItem(ObjectTemplateItem):
         else:
           raise ValueError, "%s not found" % relative_url
       _recursiveRemoveUid(obj)
-      obj = self.removeProperties(obj, 1)
+      keep_workflow_history = self.isKeepWorkflowObject(relative_url)
+      obj = self.removeProperties(obj, 1, keep_workflow_history)
       include_sub_categories = obj.__of__(context).getProperty('business_template_include_sub_categories', 0)
       id_list = obj.objectIds()
       if len(id_list) > 0 and include_sub_categories:
@@ -1905,7 +1907,9 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
                                       'hidden_content_type_list',
                                       'property_sheet_list',
                                       'base_category_list',
-                                      'last_id', 'uid', 'workflow_history'):
+                                      'last_id', 'uid') or \
+            (attr == 'workflow_history' and
+             not self.isKeepWorkflowObject(relative_url)):
           delattr(obj, attr)
       self._objects[relative_url] = obj
       obj.wl_clearLocks()
@@ -2769,7 +2773,8 @@ class ActionTemplateItem(ObjectTemplateItem):
           continue
         raise NotFound('Action %r not found' % id)
       key = posixpath.join(url[-2], url[-1], value)
-      self._objects[key] = self.removeProperties(action, 1)
+      keep_workflow_history = self.isKeepWorkflowObject(key)
+      self._objects[key] = self.removeProperties(action, 1, keep_workflow_history)
       self._objects[key].wl_clearLocks()
 
   def install(self, context, trashbin, **kw):

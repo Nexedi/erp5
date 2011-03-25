@@ -267,7 +267,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Paths of objects whose workflow histories should be kept</string> </value>
+                    <value> <string>Paths of objects whose workflow histories should be exported</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
