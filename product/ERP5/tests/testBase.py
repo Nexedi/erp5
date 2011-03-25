@@ -1085,8 +1085,11 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
       def __init__(self, filename):
         self.filename = os.path.basename(filename)
         file.__init__(self, filename)
-    f = self.portal.newContent(portal_type='File', id='f')
-    f._edit(content_type='text/plain', file=DummyFile(__file__))
+    file_document = self.portal.portal_contributions.newContent(
+                                          portal_type='File',
+                                          file=DummyFile(__file__),
+                                          content_type='text/plain')
+
     # login as a member
     uf = self.portal.acl_users
     uf._doAddUser('member_user', 'secret', ['Member'], [])
@@ -1094,8 +1097,10 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     newSecurityManager(None, user)
 
     # if it didn't raise Unauthorized, Ok
-    response = self.publish('%s/Base_download' % f.getPath())
-    self.assertEquals(file(__file__).read(), response.body)
+    basic = '%s:' % self.username
+    response = self.publish('%s/Base_download' % file_document.getPath(),
+                            basic=basic)
+    self.assertEquals(file_document.getData(), response.body)
     self.assertEquals('text/plain',
                       response.getHeader('content-type').split(';')[0])
     self.assertEquals('attachment; filename="%s"' % os.path.basename(__file__),
