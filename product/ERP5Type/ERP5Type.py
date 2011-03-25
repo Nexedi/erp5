@@ -195,8 +195,6 @@ class LocalRoleAssignorMixIn(object):
       role.uid = None
       return role
 
-_MARKER = object()
-
 class ERP5TypeInformation(XMLObject,
                           FactoryTypeInformation,
                           LocalRoleAssignorMixIn,
@@ -352,7 +350,7 @@ class ERP5TypeInformation(XMLObject,
 
     security.declarePublic('constructInstance')
     def constructInstance(self, container, id, created_by_builder=0,
-                          temp_object=0, compute_local_role=_MARKER,
+                          temp_object=0, compute_local_role=None,
                           notify_workflow=True, *args, **kw ):
       """
       Build a "bare" instance of the appropriate type in
@@ -360,12 +358,9 @@ class ERP5TypeInformation(XMLObject,
       Call the init_script for the portal_type.
       Returns the object.
       """
-      if compute_local_role is _MARKER:
+      if compute_local_role is None:
         # If temp object, set to False
-        if temp_object:
-          compute_local_role = False
-        else:
-          compute_local_role = True
+        compute_local_role = not temp_object
       if not temp_object and not self.isConstructionAllowed(container):
         raise AccessControl_Unauthorized('Cannot create %s' % self.getId())
 
