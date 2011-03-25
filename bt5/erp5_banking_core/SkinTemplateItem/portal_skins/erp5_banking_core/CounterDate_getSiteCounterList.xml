@@ -50,9 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Document import newTempBase\n
-\n
-site = context.Baobab_getVaultSite(vault=context.getSiteValue())\n
+            <value> <string>site = context.Baobab_getVaultSite(vault=context.getSiteValue())\n
 counter_list = [x.getObject() for x in context.portal_catalog(portal_type="Counter", site_uid = site.getUid())]\n
 \n
 def sort_counter(a,b):\n
