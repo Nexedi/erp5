@@ -71,7 +71,10 @@ if exchange_line.getBasePrice() in (None, 0, 0.0):\n
 \n
 \n
 # We have to looking for other currency exchanges lines\n
-temp_object = exchange_line.getParentValue().newContent(portal_type="Currency Exchange Line", temp_object=True)\n
+# Note: SupplyCell is the class of Currency Exchange Line portal type objects\n
+# But in reality, anything should do.\n
+from Products.ERP5Type.Document import newTempSupplyCell as newTemp\n
+temp_object = newTemp(context.getPortalObject(),\'temp_object\')\n
 start_date = exchange_line.getStartDate()\n
 temp_kw = {\'category_list\':[\'resource/%s\' % exchange_line.getParentValue().getRelativeUrl(),\n
                             \'price_currency/%s\' % exchange_line.getPriceCurrency()],\n
@@ -154,7 +157,8 @@ for line in line_list:\n
                             <string>None</string>
                             <string>msg</string>
                             <string>Products.ERP5Type.Document</string>
-                            <string>newTempBase</string>
+                            <string>newTempSupplyCell</string>
+                            <string>newTemp</string>
                             <string>context</string>
                             <string>temp_object</string>
                             <string>start_date</string>
