@@ -134,38 +134,36 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
     # get the cash container item from the monetary reception
     cash_container_item_list = [x.getObject() for x in self.simulation_tool.getCurrentTrackingList(node=self.reception.getRelativeUrl())]
     self.assertEqual(len(cash_container_item_list), 2)
-    def reference_sort(a, b):
-      return cmp(a.getReference(), b.getReference())
-    cash_container_item_list.sort(reference_sort)
+    cash_container_item_list.sort(key=lambda x: x.getReference())
 
     # contruct list of dict to create cash container
     new_cash_container_list = []
-    i = 1
-    for cash_container in cash_container_item_list:
+    append = new_cash_container_list.append
+    for i, cash_container in enumerate(cash_container_item_list):
       # register cash container on self to check aggregate value later
-      setattr(self, 'cash_container_item_%s' %(str(i), ), cash_container)
-      container_dict = {}
-      container_dict['id'] = str(i)
-      container_dict['reference'] = cash_container.getReference()
-      container_dict['range_start'] = cash_container.getCashNumberRangeStart()
-      container_dict['range_stop'] = cash_container.getCashNumberRangeStop()
+      setattr(self, 'cash_container_item_%s' % (i, ), cash_container)
       cash_container_line = cash_container.objectValues()[0]
-      container_dict['quantity'] = cash_container_line.getQuantity()
-      container_dict['aggregate'] = cash_container
-      new_cash_container_list.append(container_dict)
-      i += 1
-      
-    def reference_sort(a, b):
-      return cmp(a['reference'], b['reference'])
-    new_cash_container_list.sort(reference_sort)
+      append({
+        'id': str(i),
+        'reference': cash_container.getReference(),
+        'range_start': cash_container.getCashNumberRangeStart(),
+        'range_stop': cash_container.getCashNumberRangeStop(),
+        'quantity': cash_container_line.getQuantity(),
+        'aggregate': cash_container,
+      })
 
-    global_dict = {}
-    global_dict['emission_letter'] = 'p'
-    global_dict['variation'] = '2003'
-    global_dict['cash_status'] = 'new_not_emitted'
-    global_dict['resource'] = self.billet_10000
-
-    self.createCashContainer(self.cash_movement, 'Cash Movement New Not Emitted Container', global_dict, new_cash_container_list, 'Cash Movement New Not Emitted Line')
+    self.createCashContainer(
+      self.cash_movement,
+      'Cash Movement New Not Emitted Container',
+      {
+        'emission_letter': 'p',
+        'variation': '2003',
+        'cash_status': 'new_not_emitted',
+        'resource': self.billet_10000,
+      },
+      new_cash_container_list,
+      'Cash Movement New Not Emitted Line',
+    )
 
     self.stepTic()
     self.assertEqual(len(self.cash_movement.objectValues()), 3)
@@ -242,8 +240,7 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
     self.assertEqual(self.container_1.getCashNumberRangeStart(), '0')
     self.assertEqual(self.container_1.getCashNumberRangeStop(), '100')
     self.assertEqual(len(self.container_1.getAggregateValueList()), 1)
-    self.assertEqual(self.container_1.getAggregateValueList()[0], self.cash_container_item_1)
-#    self.assertTrue(self.container_1.getAggregateValueList()[0] == self.cash_container_item_1 or self.container_1.getAggregateValueList()[0] == self.cash_container_item_2)
+    self.assertEqual(self.container_1.getAggregateValueList()[0], self.cash_container_item_0)
     self.assertEqual(len(self.container_1.objectIds()), 1)
     # now get the line and check it
     self.container_line_1 = self.container_1.objectValues()[0]
@@ -279,8 +276,7 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
     self.assertEqual(self.container_2.getCashNumberRangeStart(), '100')
     self.assertEqual(self.container_2.getCashNumberRangeStop(), '200')
     self.assertEqual(len(self.container_2.getAggregateValueList()), 1)
-    self.assertEqual(self.container_2.getAggregateValueList()[0], self.cash_container_item_2)
-#    self.assertTrue(self.container_2.getAggregateValueList()[0] == self.cash_container_item_2 or self.container_2.getAggregateValueList()[0] == self.cash_container_item_1)
+    self.assertEqual(self.container_2.getAggregateValueList()[0], self.cash_container_item_1)
     self.assertEqual(len(self.container_2.objectIds()), 1)
     # now get the line and check it
     self.container_line_2 = self.container_2.objectValues()[0]
@@ -335,18 +331,18 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
     # define the sequence
     
     
-    sequence_string = 'Tic CheckObjects ' \
-                      + 'CreateMonetaryReception Tic ' \
-                      + 'CheckInitialInventory CheckInitialContainerInventory ' \
-                      + 'CreateCashMovement Tic ' \
-                      + 'CreateCashContainer Tic ' \
-                      + 'CheckCashDeliveryLine ' \
-                      + 'CheckCashContainer1 CheckCashContainer2 ' \
-                      + 'ConfirmDocument Tic ' \
-                      + 'StartDocument Tic ' \
-                      + 'StopDocument Tic ' \
-                      + 'DeliverDocument Tic ' \
-                      + 'CheckFinalInventory CheckFinalContainerInventory'
+    sequence_string = 'stepTic stepCheckObjects ' \
+      'stepCreateMonetaryReception stepTic ' \
+      'stepCheckInitialInventory stepCheckInitialContainerInventory ' \
+      'stepCreateCashMovement stepTic ' \
+      'stepCreateCashContainer stepTic ' \
+      'stepCheckCashDeliveryLine ' \
+      'stepCheckCashContainer1 stepCheckCashContainer2 ' \
+      'stepConfirmDocument stepTic ' \
+      'stepStartDocument stepTic ' \
+      'stepStopDocument stepTic ' \
+      'stepDeliverDocument stepTic ' \
+      'stepCheckFinalInventory stepCheckFinalContainerInventory'
                       
     
     sequence_list.addSequenceString(sequence_string)
