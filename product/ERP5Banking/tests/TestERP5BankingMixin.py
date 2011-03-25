@@ -154,7 +154,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
 
     if self.PAS_installed:
       # reindexing is required for the security to work
-      transaction().commit()
+      transaction.commit()
       self.tic()
 
 

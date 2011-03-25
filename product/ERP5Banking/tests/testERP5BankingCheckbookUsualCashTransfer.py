@@ -177,7 +177,7 @@ class TestERP5BankingCheckbookUsualCashTransfer(TestERP5BankingCheckbookUsualCas
     # in the source
     self.createCheckbookReception()
     self.checkItemsCreated()
-    transaction().commit()
+    transaction.commit()
     self.tic()
     self.createCheckbookVaultTransfer()
 

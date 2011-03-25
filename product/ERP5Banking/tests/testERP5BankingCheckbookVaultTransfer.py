@@ -71,7 +71,7 @@ class TestERP5BankingCheckbookVaultTransferMixin(TestERP5BankingMixin):
                                    wf_id='checkbook_reception_workflow')
     self.workflow_tool.doActionFor(self.checkbook_reception, 'deliver_action', 
                                    wf_id='checkbook_reception_workflow')
-    transaction().commit()
+    transaction.commit()
     self.tic()
 
   def createCheckbookReceptionWithTravelerCheck(self, sequence=None, 

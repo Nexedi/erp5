@@ -119,7 +119,7 @@ class TestERP5BankingCheckbookDeliveryMixin(TestERP5BankingMixin):
     # in the source
     self.createCheckbookReception()
     self.checkItemsCreated()
-    transaction().commit()
+    transaction.commit()
     self.tic()
     self.createCheckbookVaultTransfer()
 
