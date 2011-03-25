@@ -59,21 +59,29 @@
   - Implement a wholistic view on user information\n
     (documents, membership, etc.)\n
 """\n
-user_list = context.portal_catalog(reference=user, portal_type="Person")\n
-if len(user_list):\n
-  # We found a user\n
-  user_object = user_list[0].getObject()\n
-  return user_object.Base_redirect(\'view\')\n
-\n
-# No user found\n
 translateString = context.Base_translateString\n
-return context.Base_redirect(form_id, editable_mode=editable_mode,\n
-                             keep_items={\'portal_status_message\': translateString("Sorry, user ${user} could not be accessed.", mapping = dict(user = user))})\n
+\n
+# Return if anonymous\n
+if context.portal_membership.isAnonymousUser():\n
+  msg = translateString("Anonymous users do not have a personal profile.")\n
+  return context.Base_redirect(form_id="view", \n
+                               keep_items={\'portal_status_message\':msg})\n
+\n
+# Call generic erp5_base method to find user value  \n
+person_object = context.ERP5Site_getAuthenticatedMemberPersonValue(user)\n
+\n
+# Return if no such user\n
+if person_object is None:\n
+  msg = translateString("This user has no personal profile.")\n
+  return context.Base_redirect(form_id="view", keep_items={\'portal_status_message\':msg})\n
+\n
+return person_object.Base_redirect(form_id="view",\n
+                                   keep_items={\'editable_mode\':editable_mode})\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>user, form_id, editable_mode=0</string> </value>
+            <value> <string>user=None, form_id="view", editable_mode=0</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
