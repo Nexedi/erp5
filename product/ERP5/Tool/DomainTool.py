@@ -177,15 +177,14 @@ class DomainTool(BaseTool):
         else:
           category_list = context.getCategoryList()
       else:
-        category_list = []
         if acquired:
-          for tested_base_category in tested_base_category_list:
-            category_list.extend(
-                context.getAcquiredCategoryMembershipList(tested_base_category, base=1))
+          getter = context.getAcquiredCategoryMembershipList
         else:
-          for tested_base_category in tested_base_category_list:
-            category_list.extend(
-                context.getCategoryMembershipList(tested_base_category, base=1))
+          getter = context.getCategoryMembershipList
+        category_list = []
+        extend = category_list.extend
+        for tested_base_category in tested_base_category_list:
+          extend(getter(tested_base_category, base=1))
 
       if tested_base_category_list != []:
         preferred_predicate_category_list = portal_preferences.getPreferredPredicateCategoryList()
