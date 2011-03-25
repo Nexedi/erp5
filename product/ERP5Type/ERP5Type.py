@@ -404,11 +404,7 @@ class ERP5TypeInformation(XMLObject,
 
       # Portal type has to be set before setting other attributes
       # in order to initialize aq_dynamic
-      if hasattr(ob, '_setPortalTypeName'):
-        #ob._setPortalTypeName(self.getId())
-        # XXX rafael: if we use _set because it is trigger by interaction
-        # workflow and it is annoyning without security setted
-        ob.portal_type = self.getId()
+      ob.portal_type = self.getId()
 
       if compute_local_role:
         # Do not reindex object because it's already done by manage_afterAdd
