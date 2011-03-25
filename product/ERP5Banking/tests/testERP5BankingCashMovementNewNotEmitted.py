@@ -106,11 +106,11 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
     self.assertEqual(self.cash_movement_module.getPortalType(), 'Cash Movement New Not Emitted Module')
     self.assertEqual(len(self.cash_movement_module.objectValues()), 0)
 
-  def stepCreateCashMovement(self, sequence=None, sequence_list=None, 
+  def stepCreateCashMovement(self, sequence=None, sequence_list=None,
                              none_destination=0, **kwd):
     self.cash_movement = self.cash_movement_module.newContent(
       id='cash_movement_1',
-      portal_type='Cash Movement New Not Emitted', 
+      portal_type='Cash Movement New Not Emitted',
       source=self.reception_site.getRelativeUrl(),
       destination_section_value=self.spain,
       description='test',
@@ -329,23 +329,32 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
       return
     sequence_list = SequenceList()
     # define the sequence
-    
-    
-    sequence_string = 'stepTic stepCheckObjects ' \
-      'stepCreateMonetaryReception stepTic ' \
-      'stepCheckInitialInventory stepCheckInitialContainerInventory ' \
-      'stepCreateCashMovement stepTic ' \
-      'stepCreateCashContainer stepTic ' \
-      'stepCheckCashDeliveryLine ' \
-      'stepCheckCashContainer1 stepCheckCashContainer2 ' \
-      'stepConfirmDocument stepTic ' \
-      'stepStartDocument stepTic ' \
-      'stepStopDocument stepTic ' \
-      'stepDeliverDocument stepTic ' \
-      'stepCheckFinalInventory stepCheckFinalContainerInventory'
-                      
-    
-    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.addSequenceString("""
+      stepTic
+      stepCheckObjects
+      stepCreateMonetaryReception
+      stepTic
+      stepCheckInitialInventory
+      stepCheckInitialContainerInventory
+      stepCreateCashMovement
+      stepTic
+      stepCreateCashContainer
+      stepTic
+      stepCheckCashDeliveryLine
+      stepCheckCashContainer1
+      stepCheckCashContainer2
+      stepConfirmDocument
+      stepTic
+      stepStartDocument
+      stepTic
+      stepStopDocument
+      stepTic
+      stepDeliverDocument
+      stepTic
+      stepCheckFinalInventory
+      stepCheckFinalContainerInventory
+    """)
 
     # play the sequence
     sequence_list.play(self)
