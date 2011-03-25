@@ -52,16 +52,15 @@
             <key> <string>_body</string> </key>
             <value> <string>configuration_save = context.restrictedTraverse(configuration_save_url)\n
 \n
-bt5_installation_list = (\'erp5_simulation\'\n
+bt5_installation_list = (\'erp5_simulation\',\n
                          \'erp5_dhtml_style\',\n
+                         \'erp5_jquery\',\n
+                         \'erp5_jquery_ui\',\n
                          \'erp5_web\',\n
                          \'erp5_ingestion\',\n
                          \'erp5_dms\',\n
                          \'erp5_crm\',\n
                          \'erp5_knowledge_pad\',\n
-                         \'erp5_view_style\',\n
-                         \'erp5_jquery\',\n
-                         \'erp5_jquery_ui\',\n
                          \'erp5_jquery_plugin_spinbtn\',\n
                          \'erp5_jquery_plugin_jgraduate\',\n
                          \'erp5_jquery_plugin_svgicon\',\n
