@@ -79,8 +79,11 @@ class AdoptSolver(SolverMixin, ConfigurableMixin, XMLObject):
       for solved_property in solved_property_list:
         # XXX hardcoded
         if solved_property == 'quantity':
+          # For 'quantity' case, we need to recalculate delivery_ratio
+          # for all related simulation movements.
+          simulation_movement_list = movement.getDeliveryRelatedValueList()
           total_quantity = sum(
-            [x.getQuantity() for x in movement.getDeliveryRelatedValueList()])
+            [x.getQuantity() for x in simulation_movement_list])
           movement.setQuantity(total_quantity)
           for simulation_movement in simulation_movement_list:
             quantity = simulation_movement.getQuantity()
