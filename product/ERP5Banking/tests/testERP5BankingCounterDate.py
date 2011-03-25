@@ -176,7 +176,7 @@ class TestERP5BankingCounterDate(TestERP5BankingMixin):
       LOG('Testing... ', 0, message)
     counter_date_module = self.getPortal().counter_date_module
     def openAndTest(site, date, reference):
-      id = 'counter_date_%s_%s' % (str(date).replace('/', '_'), site.getId())
+      id = 'counter_date_%s_%s' % (date.strftime('%Y%m%d')), site.getId())
       self.openCounterDate(site=site, date=date, id=id)
       counter_date = getattr(self, id)
       self.assertEquals(counter_date.getReference(), reference)
