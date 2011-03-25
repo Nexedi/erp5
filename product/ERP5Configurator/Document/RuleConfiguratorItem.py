@@ -27,12 +27,10 @@
 ##############################################################################
 
 import zope.interface
-from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Configurator.mixin.configurator_item import ConfiguratorItemMixin
-from zLOG import LOG, INFO
 
 class RuleConfiguratorItem(ConfiguratorItemMixin, XMLObject):
   """ Setup Rules. """
@@ -70,6 +68,6 @@ class RuleConfiguratorItem(ConfiguratorItemMixin, XMLObject):
 
       content_list = value.pop('content_list')
       for content_dict in content_list:
-        sub_object = rule.newContent(**content_dict)
+        rule.newContent(**content_dict)
 
       self.install(rule, business_configuration)
