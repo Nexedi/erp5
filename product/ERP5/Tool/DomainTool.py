@@ -103,9 +103,10 @@ class DomainTool(BaseTool):
         invoked with "test=False" value. Otherwise, it should only change
         execution duration.
       """
-      portal_catalog = context.portal_catalog
-      portal_categories = context.portal_categories
-      portal_preferences = context.portal_preferences
+      portal = self.getPortalObject()
+      portal_catalog = portal.portal_catalog
+      portal_categories = portal.portal_categories
+      portal_preferences = portal.portal_preferences
       # Search the columns of the predicate table
       column_list = [x.split('.')[1] for x in portal_catalog.getColumnIds()
                      if x.startswith('predicate.')]
