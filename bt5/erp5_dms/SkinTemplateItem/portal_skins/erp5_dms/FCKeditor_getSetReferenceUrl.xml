@@ -57,7 +57,7 @@ if brain.getValidationState() == \'embedded\':\n
 else:\n
   reference = brain.getReference()\n
 format = context.getPortalObject().portal_preferences.getPreferredImageFormat()\n
-return "javascript:SelectFile(\'%s?format=%s\')" % (reference.replace("\'", "\\\\\'"), format)\n
+return unicode("javascript:SelectFile(\'%s?format=%s\')" % (reference.replace("\'", "\\\\\'"), format), \'utf-8\')\n
 </string> </value>
         </item>
         <item>
