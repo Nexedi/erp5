@@ -621,15 +621,21 @@ class Catalog(Folder,
     """
     Return the list of role keys.
     """
-    return [tuple([y.strip() for y in x.split('|')]) \
-              for x in self.sql_catalog_role_keys]
+    role_key_dict = {}
+    for role_key in self.sql_catalog_role_keys:
+      role, column = role_key.split('|')
+      role_key_dict[role.strip()] = column.strip()
+    return role_key_dict.items()
 
   def getSQLCatalogLocalRoleKeysList(self):
     """
     Return the list of local role keys.
     """
-    return [tuple([y.strip() for y in x.split('|')]) \
-              for x in self.sql_catalog_local_role_keys]
+    local_role_key_dict = {}
+    for role_key in self.sql_catalog_local_role_keys:
+      role, column = role_key.split('|')
+      local_role_key_dict[role.strip()] = column.strip()
+    return role_key_dict.items()
 
   def manage_exportProperties(self, REQUEST=None, RESPONSE=None):
     """
