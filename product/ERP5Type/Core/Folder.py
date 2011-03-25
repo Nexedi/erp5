@@ -95,6 +95,8 @@ def dummyFilter(object,REQUEST=None):
 def dummyTestAfter(object,REQUEST=None):
   return []
 
+_MARKER = object()
+
 class FolderMixIn(ExtensionClass.Base):
   """A mixin class for folder operations, add content, delete content etc.
   """
@@ -114,11 +116,17 @@ class FolderMixIn(ExtensionClass.Base):
   def newContent(self, id=None, portal_type=None, id_group=None,
           default=None, method=None, container=None, created_by_builder=0,
           activate_kw=None, is_indexable=None, temp_object=0, reindex_kw=None,
-          **kw):
+          compute_local_role=_MARKER, notify_workflow=True,  **kw):
     """Creates a new content.
     This method is public, since TypeInformation.constructInstance will perform
     the security check.
     """
+    if compute_local_role is _MARKER:
+      # If temp object, set to False
+      if temp_object:
+        compute_local_role = False
+      else:
+        compute_local_role = True
     pt = self._getTypesTool()
     if container is None:
       container = self
@@ -161,7 +169,9 @@ class FolderMixIn(ExtensionClass.Base):
                            temp_object=temp_object or temp_container,
                            activate_kw=activate_kw,
                            reindex_kw=reindex_kw,
-                           is_indexable=is_indexable
+                           is_indexable=is_indexable,
+                           compute_local_role=compute_local_role,
+                           notify_workflow=notify_workflow,
                            ) # **kw) removed due to CMF bug
       # TODO :the **kw makes it impossible to create content not based on
       # ERP5TypeInformation, because factory method often do not support

@@ -38,6 +38,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.dynamic.accessor_holder import getPropertySheetValueList, \
     getAccessorHolderList
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
 ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT = 'ERP5Type_asSecurityGroupId'
 
@@ -47,6 +48,23 @@ from sys import exc_info
 from zLOG import LOG, ERROR
 from Products.CMFCore.exceptions import zExceptions_Unauthorized
 
+def getCurrentUserIdOrAnonymousToken():
+  """Return connected user_id or simple token for
+  Anonymous users in scope of transaction.
+  """
+  tv = getTransactionalVariable()
+  USER_ID_KEY = '_user_id'
+  ANONYMOUS_OWNER_ROLE_VALUE = 'Anonymous Owner'
+  try:
+    return tv[USER_ID_KEY]
+  except KeyError:
+    user = getSecurityManager().getUser()
+    if user is not None:
+      user_id = user.getId()
+    else:
+      user_id = ANONYMOUS_OWNER_ROLE_VALUE
+    tv[USER_ID_KEY] = user_id
+    return user_id
 
 class LocalRoleAssignorMixIn(object):
     """Mixin class used by type informations to compute and update local roles
@@ -177,6 +195,7 @@ class LocalRoleAssignorMixIn(object):
       role.uid = None
       return role
 
+_MARKER = object()
 
 class ERP5TypeInformation(XMLObject,
                           FactoryTypeInformation,
@@ -333,13 +352,20 @@ class ERP5TypeInformation(XMLObject,
 
     security.declarePublic('constructInstance')
     def constructInstance(self, container, id, created_by_builder=0,
-                          temp_object=0, *args, **kw ):
+                          temp_object=0, compute_local_role=_MARKER,
+                          notify_workflow=True, *args, **kw ):
       """
       Build a "bare" instance of the appropriate type in
       'container', using 'id' as its id.
       Call the init_script for the portal_type.
       Returns the object.
       """
+      if compute_local_role is _MARKER:
+        # If temp object, set to False
+        if temp_object:
+          compute_local_role = False
+        else:
+          compute_local_role = True
       if not temp_object and not self.isConstructionAllowed(container):
         raise AccessControl_Unauthorized('Cannot create %s' % self.getId())
 
@@ -351,6 +377,10 @@ class ERP5TypeInformation(XMLObject,
 
       if temp_object:
         ob = ob.__of__(container)
+        # Setup only Owner local role on Document like
+        # container._setObject(set_owner=True) does.
+        user_id = getCurrentUserIdOrAnonymousToken()
+        ob.manage_setLocalRoles(user_id, ['Owner'])
         for ignore in ('activate_kw', 'is_indexable', 'reindex_kw'):
           kw.pop(ignore, None)
       else:
@@ -380,10 +410,11 @@ class ERP5TypeInformation(XMLObject,
         # workflow and it is annoyning without security setted
         ob.portal_type = self.getId()
 
-      if not temp_object:
+      if compute_local_role:
         # Do not reindex object because it's already done by manage_afterAdd
         self.updateLocalRolesOnDocument(ob, reindex=False)
 
+      if notify_workflow:
         # notify workflow after generating local roles, in order to prevent
         # Unauthorized error on transition's condition
         workflow_tool = getToolByName(portal, 'portal_workflow', None)
@@ -391,6 +422,7 @@ class ERP5TypeInformation(XMLObject,
           for workflow in workflow_tool.getWorkflowsFor(ob):
             workflow.notifyCreated(ob)
 
+      if not temp_object:
         init_script = self.getTypeInitScriptId()
         if init_script:
           # Acquire the init script in the context of this object
