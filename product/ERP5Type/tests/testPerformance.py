@@ -36,7 +36,6 @@ from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
 from Products.ERP5Type.tests.utils import LogInterceptor
-from cProfile import Profile
 import os
 
 # Define variable to chek if performance are good or not
@@ -203,6 +202,7 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
                           '%.4f < %.4f < %.4f' % (min, req_time, max))
 
     def profile(self, func, suffix=''):
+        from cProfile import Profile
         prof_file = '%s%s' % (func.__name__, suffix)
         try:
             os.unlink(prof_file)
