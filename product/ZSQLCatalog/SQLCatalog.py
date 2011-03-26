@@ -635,7 +635,7 @@ class Catalog(Folder,
     for role_key in self.sql_catalog_local_role_keys:
       role, column = role_key.split('|')
       local_role_key_dict[role.strip()] = column.strip()
-    return role_key_dict.items()
+    return local_role_key_dict.items()
 
   def manage_exportProperties(self, REQUEST=None, RESPONSE=None):
     """
