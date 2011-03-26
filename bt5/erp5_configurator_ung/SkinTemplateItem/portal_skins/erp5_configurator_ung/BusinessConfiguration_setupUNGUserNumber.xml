@@ -52,7 +52,6 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-context.log(kw)\n
 configuration_save_url = kw.get(\'configuration_save_url\', None)\n
 company_employees_number = kw.get(\'company_employees_number\', 1)\n
 next_transition = context.getNextTransition().getRelativeUrl()\n
