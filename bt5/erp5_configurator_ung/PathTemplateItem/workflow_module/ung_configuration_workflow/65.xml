@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>after_script_id</string> </key>
-            <value> <string>BusinessConfiguration_setupAssignment</string> </value>
+            <value> <string>BusinessConfiguration_setupUNGAssignment</string> </value>
         </item>
         <item>
             <key> <string>categories</string> </key>
@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>transition_form_id</string> </key>
-            <value> <string>BusinessConfiguration_setupAssignmentForm</string> </value>
+            <value> <string>BusinessConfiguration_setupUNGAssignmentForm</string> </value>
         </item>
       </dictionary>
     </pickle>
