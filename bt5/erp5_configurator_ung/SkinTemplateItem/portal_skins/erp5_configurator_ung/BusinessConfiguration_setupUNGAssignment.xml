@@ -51,53 +51,17 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>configuration_save = context.restrictedTraverse(configuration_save_url)\n
-"""\n
-gap_info_list = context.BusinessConfiguration_getAvailableGAPList()\n
-selected_gap_info = None\n
-for gap_info in gap_info_list:\n
-  if gap_info[\'id\'] == accounting_plan:\n
-    selected_gap_info = gap_info\n
 \n
-#assert selected_gap_info is not None\n
-\n
-## install accounting bt5 template based on selected accounting plan\n
-configuration_save.addConfigurationItem("Standard BT5 Configurator Item",\n
-                                        bt5_id=selected_gap_info[\'bt5\'])\n
-\n
-group_id = context.getGlobalConfigurationAttr(\'group_id\')\n
-if group_id is None:\n
-  # if group_id is not found, use \'group\'\n
-  group_id = context.getGlobalConfigurationAttr(\'group\')\n
-\n
-accounting_transaction_simulation_state_list = \'delivered stopped\' # XXX is it OK not to pass a list ?\n
-\n
-gap_account_map = context.BusinessConfiguration_getDefaultAccountList()\n
-\n
-for item in gap_account_map[accounting_plan]:\n
-  configuration_save.addConfigurationItem("Account Configurator Item", **item)\n
-\n
-## Configure accounting preferences\n
-configuration_save.addConfigurationItem(\n
-          \'Preference Configurator Item\',\n
-          object_id = \'default_configurator_preference\',\n
-          preferred_accounting_transaction_from_date = None,\n
-          preferred_accounting_transaction_at_date = None,\n
-          preferred_section_category = \'group/%s\' % group_id,\n
-          preferred_accounting_transaction_section_category = \'group/%s\' % group_id,\n
-          preferred_accounting_transaction_gap = selected_gap_info[\'root\'],\n
-          preferred_accounting_transaction_simulation_state_list\n
-                = accounting_transaction_simulation_state_list)\n
-"""\n
-## Configure accounting period\n
-configuration_save.addConfigurationItem("Accounting Period Configurator Item",\n
+## Configure assignment period\n
+configuration_save.addConfigurationItem("Assignment Configurator Item",\n
                                         start_date=period_start_date,\n
                                         stop_date=period_stop_date,\n
-                                        short_title=period_title)\n
+                                        assignment_title=assignment_title)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>configuration_save_url=None, accounting_plan=\'\', period_start_date=None, period_stop_date=None, period_title=None, **kw</string> </value>
+            <value> <string>configuration_save_url=None, period_start_date=None, period_stop_date=None, assignment_title=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
