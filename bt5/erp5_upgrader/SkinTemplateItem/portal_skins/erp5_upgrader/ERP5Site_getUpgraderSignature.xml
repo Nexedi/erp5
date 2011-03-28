@@ -267,6 +267,7 @@ FINALIZE_ALARM_SCRIPT = ( \'ERP5Site_upgradeGlobalPropertyList\',\n
                           \'ERP5Site_upgradeObjectClass\',\n
                           \'ERP5Site_upgradeSQLCatalogFilter\',\n
                           \'ERP5Site_upgradeAlarmToolConfiguration\',\n
+                          \'ERP5Site_upgradeSQLCatalog\',\n
                         )\n
 \n
 # \n

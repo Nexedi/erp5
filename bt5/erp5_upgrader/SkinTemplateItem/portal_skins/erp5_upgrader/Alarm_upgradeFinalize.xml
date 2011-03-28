@@ -50,9 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""\n
+            <value> <string>"""\n
   Finalize Upgrade is the final step of upgrader. Here should contains\n
   the scripts that should be executed after the business template installation.\n
 """\n
@@ -85,11 +83,6 @@ if bt5_upgrader_sense:\n
 for script_id in context.ERP5Site_getUpgraderSignature().get(\'finalize_upgrade_script_list\', []):\n
   message_list.extend(getattr(context, script_id)(upgrade=1))\n
 \n
-# Verify if there was any change previously and \n
-if len(message_list) > 0:\n
- message_list.extend(context.ERP5Site_upgradeSQLCatalog(upgrade=1))\n
- clear_cache_kw[\'after_tag\'] = \'tag_migration_finish\'\n
-\n
 activate(active_process=active_process,\n
            activity=\'SQLQueue\',\n
            priority=2).Alarm_saveActiveResult(summary="Finalize Upgrade",\n
@@ -105,9 +98,7 @@ activate(active_process=active_process,\n
            after_tag=clear_cache_kw[\'tag\']).ERP5Site_notifyUpgradeIntegrity(active_process=active_process)\n
 \n
 return message_list\n
-
-
-]]></string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
