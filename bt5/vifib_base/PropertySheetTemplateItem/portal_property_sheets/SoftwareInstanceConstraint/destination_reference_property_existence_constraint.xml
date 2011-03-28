@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Property Existence Constraint" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>constraint_property</string> </key>
+            <value>
+              <tuple>
+                <string>destination_reference</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Property destination reference must be defined</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>destination_reference_property_existence_constraint</string> </value>
+        </item>
+        <item>
+            <key> <string>message_no_such_property</string> </key>
+            <value> <string>Destination Reference must be set</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Property Existence Constraint</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

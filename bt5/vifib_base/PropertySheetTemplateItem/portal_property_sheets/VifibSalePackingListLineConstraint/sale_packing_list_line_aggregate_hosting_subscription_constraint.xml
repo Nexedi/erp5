@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Category Membership Arity Constraint" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>constraint_base_category</string> </key>
+            <value>
+              <tuple>
+                <string>aggregate</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>constraint_portal_type</string> </key>
+            <value> <string>python: \'Hosting Subscription\'</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>sale_packing_list_line_aggregate_hosting_subscription_constraint</string> </value>
+        </item>
+        <item>
+            <key> <string>max_arity</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>message_arity_with_portal_type_not_in_range</string> </key>
+            <value> <string>There should be exactly one ${portal_type} present in Items</string> </value>
+        </item>
+        <item>
+            <key> <string>message_arity_with_portal_type_too_small</string> </key>
+            <value> <string>There should be exactly one ${portal_type} present in Items</string> </value>
+        </item>
+        <item>
+            <key> <string>min_arity</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Category Membership Arity Constraint</string> </value>
+        </item>
+        <item>
+            <key> <string>test_tales_expression</string> </key>
+            <value> <string>python: object.getResourceValue() is not None and object.getResource() in [object.portal_preferences.getPreferredInstanceSetupResource(), object.portal_preferences.getPreferredInstanceHostingResource(), object.portal_preferences.getPreferredInstanceCleanupResource()]</string> </value>
+        </item>
+        <item>
+            <key> <string>use_acquisition</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
