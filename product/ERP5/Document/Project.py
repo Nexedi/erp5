@@ -52,6 +52,7 @@ class Project(XMLObject, XMLMatrix):
     add_permission = Permissions.AddPortalContent
     # XXX to index start_date and stop_date in delivery table:
     isDelivery = ConstantGetter('isDelivery', value=True)
+    isAccountable = ConstantGetter('isAccountable', value=False)
 
     zope.interface.implements(interfaces.INode)
 
