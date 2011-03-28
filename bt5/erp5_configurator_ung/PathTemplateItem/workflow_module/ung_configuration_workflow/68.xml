@@ -40,6 +40,10 @@
             <key> <string>title</string> </key>
             <value> <string>Configure Web Site</string> </value>
         </item>
+        <item>
+            <key> <string>transition_form_id</string> </key>
+            <value> <string>BusinessConfiguration_setupUNGWebSiteForm</string> </value>
+        </item>
       </dictionary>
     </pickle>
   </record>

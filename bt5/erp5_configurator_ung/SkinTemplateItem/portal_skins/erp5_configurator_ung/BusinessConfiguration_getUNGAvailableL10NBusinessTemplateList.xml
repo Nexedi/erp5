@@ -50,34 +50,31 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.log(kw)\n
-portal = context.getPortalObject()\n
-isTransitionPossible = portal.portal_workflow.isTransitionPossible\n
+            <value> <string>Base_translateString = context.Base_translateString\n
 \n
-# enable erp5 preference\n
-ung_preference = getattr(portal.portal_preferences, \'ung_preference\', None)\n
-if ung_preference is not None and isTransitionPossible(ung_preference, \'enable\'):\n
-  ung_preference.enable()\n
-\n
-# publish the ung web site\n
-ung_web_site = getattr(portal.web_site_module, \'ung\', None)\n
-if ung_web_site is not None and isTransitionPossible(ung_web_site, \'publish\', None):\n
-    ung_web_site.publish()\n
-\n
-language = kw.get("default_available_language", "en")\n
-ung_web_site.setDefaultAvailableLanguage(language)\n
-for web_section in ung_web_site.contentValues(portal_types=\'Web Section\'):\n
-  if isTransitionPossible(web_section, \'publish\', None):\n
-    web_section.publish()\n
+return [\n
+  dict(id=\'fr\',\n
+       name=Base_translateString(\'French\'),\n
+       bt5=\'erp5_l10n_fr\',),\n
+  dict(id=\'pl\',\n
+       name=Base_translateString(\'Polish\'),\n
+       bt5=\'erp5_l10n_pl_PL\',),\n
+  dict(id=\'pt-BR\',\n
+       name=Base_translateString(\'Portuguese / Brazil\'),\n
+       bt5=\'erp5_l10n_pt-BR\',),\n
+  dict(id=\'ko\',\n
+       name=Base_translateString(\'Korean\'),\n
+       bt5=\'erp5_l10n_ko\',),\n
+]\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BusinessConfiguration_setupUNGWebSite</string> </value>
+            <value> <string>BusinessConfiguration_getUNGAvailableL10NBusinessTemplateList</string> </value>
         </item>
       </dictionary>
     </pickle>

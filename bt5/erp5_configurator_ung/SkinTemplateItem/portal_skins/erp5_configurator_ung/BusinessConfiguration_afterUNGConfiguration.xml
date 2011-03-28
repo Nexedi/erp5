@@ -52,7 +52,6 @@
             <key> <string>_body</string> </key>
             <value> <string>""" This script will be called to apply the customization. """\n
 from AccessControl import getSecurityManager\n
-from Products.ERP5Type.Log import log\n
 \n
 portal = context.getPortalObject()\n
 portal_preferences = portal.portal_preferences\n
@@ -67,7 +66,7 @@ if business_template is not None:\n
                     filter=dict(portal_type=portal_type))\n
     for module in module_list:\n
       module.updateLocalRolesOnSecurityGroups()\n
-      print "Updated Role Mappings for: %s(%s) " %(module.getTitle(), module.getPortalType())\n
+      context.log("Updated Role Mappings for: %s(%s) " % (module.getTitle(), module.getPortalType()))\n
 \n
   for preference_to_enable in business_template.getTemplatePreferenceList():\n
     preference = getattr(portal_preferences, preference_to_enable, None)\n
@@ -81,7 +80,7 @@ if business_template is not None:\n
     # no need to update security on categories\n
     if obj is not None and obj.getPortalType() not in (\'Category\', \'Base Category\',):\n
       obj.updateLocalRolesOnSecurityGroups()\n
-      print "Updated Role Mappings for: ", path, obj.getPortalType()\n
+      context.log("Updated Role Mappings for: ", path, obj.getPortalType())\n
 \n
   # validate and open all objects\n
   for path in business_template.getTemplatePathList():\n
@@ -92,18 +91,13 @@ if business_template is not None:\n
                                  \'Organisation\'):\n
         if isTransitionPossible(obj, \'validate\'):\n
           obj.validate()\n
-          print "Validated: ", obj.getRelativeUrl()\n
-        for period in obj.contentValues(filter={\'portal_type\':\'Accounting Period\'}):\n
-          if isTransitionPossible(period, \'start\'):\n
-            period.start()\n
-            period.updateLocalRolesOnSecurityGroups()\n
-            print "\\tOpen (Accounting Period): ", period.getRelativeUrl()\n
+          context.log("Validated: ", obj.getRelativeUrl())\n
 \n
         for assignment in obj.contentValues(filter={\'portal_type\':\'Assignment\'}):\n
           if isTransitionPossible(assignment, \'open\'):\n
             assignment.open()\n
             assignment.updateLocalRolesOnSecurityGroups()\n
-            print "\\tOpen (assignment): ", assignment.getRelativeUrl()\n
+            context.log("\\tOpen (assignment): ", assignment.getRelativeUrl())\n
 \n
   for gadget in context.portal_gadgets.objectValues():\n
     if gadget.getValidationState() == \'invisible\':\n
@@ -120,35 +114,13 @@ if default_configurator_preference is not None:\n
 # XXX This should be part of Configuration Item probably, but as access_tab is\n
 # going to be deprecated, make sure it still requires set business application\n
 # info modules.\n
-module_business_application_map = {\'base\': (\'currency_module\',\n
-                                            \'organisation_module\',\n
+module_business_application_map = {\'base\': (\'organisation_module\',\n
                                             \'person_module\',),\n
-                                   \'accounting\': (\'accounting_module\',\n
-                                                  \'account_module\',),\n
-                                   \'crm\': (\'campaign_module\',\n
-                                           \'event_module\',\n
-                                           \'meeting_module\',\n
-                                           \'sale_opportunity_module\',\n
-                                           \'support_request_module\',),\n
+                                   \'crm\': (\'event_module\',),\n
                                    \'dms\': (\'document_module\',\n
                                            \'image_module\',\n
                                            \'document_ingestion_module\',\n
                                            \'web_page_module\',),\n
-                                   \'trade\': (\'internal_packing_list_module\',\n
-                                             \'inventory_module\',\n
-                                             \'purchase_order_module\',\n
-                                             \'purchase_packing_list_module\',\n
-                                             \'purchase_trade_condition_module\',\n
-                                             \'returned_sale_packing_list_module\',\n
-                                             \'sale_order_module\',\n
-                                             \'sale_packing_list_module\',\n
-                                             \'sale_trade_condition_module\'),\n
-                                   \'pdm\': (\'component_module\',\n
-                                           \'product_module\',\n
-                                           \'purchase_supply_module\',\n
-                                           \'sale_supply_module\',\n
-                                           \'service_module\',\n
-                                           \'transformation_module\',),\n
                                    }\n
 \n
 for business_application_category_id, module_ids in module_business_application_map.items():\n
@@ -157,14 +129,12 @@ for business_application_category_id, module_ids in module_business_application_
     if module is not None:\n
       module.edit(business_application = business_application_category_id)\n
 \n
-print "Indexing translations"\n
+context.log("Indexing translations")\n
 portal.ERP5Site_updateTranslationTable()\n
 \n
 # clear cache so user security is recalculated\n
 portal.portal_caches.clearAllCache()\n
-print "Clear cache."\n
-\n
-log("%s" % printed)\n
+context.log("Clear cache.")\n
 </string> </value>
         </item>
         <item>
