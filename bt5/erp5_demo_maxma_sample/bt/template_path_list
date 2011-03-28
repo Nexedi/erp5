@@ -3,6 +3,7 @@ event_module
 event_module/**
 inventory_module
 inventory_module/**
+knowledge_pad_module/5
 organisation_module
 organisation_module/**
 person_module
