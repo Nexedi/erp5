@@ -56,8 +56,24 @@ from AccessControl import getSecurityManager\n
 portal = context.getPortalObject()\n
 portal_preferences = portal.portal_preferences\n
 business_template = context.getSpecialiseValue()\n
-N_ = context.Base_translateString\n
 isTransitionPossible = portal.portal_workflow.isTransitionPossible\n
+\n
+# enable erp5 preference\n
+ung_preference = getattr(portal.portal_preferences, \'ung_preference\', None)\n
+if ung_preference is not None and isTransitionPossible(ung_preference, \'enable\'):\n
+  ung_preference.enable()\n
+\n
+# publish the ung web site\n
+ung_web_site = getattr(portal.web_site_module, \'ung\', None)\n
+if ung_web_site is not None and isTransitionPossible(ung_web_site, \'publish\', None):\n
+    ung_web_site.publish()\n
+\n
+language = context.getGlobalConfigurationAttr("default_available_language")\n
+context.log(language)\n
+ung_web_site.setDefaultAvailableLanguage(language)\n
+for web_section in ung_web_site.contentValues(portal_types=\'Web Section\'):\n
+  if isTransitionPossible(web_section, \'publish\', None):\n
+    web_section.publish()\n
 \n
 if business_template is not None:\n
   # update role settings for modules which exists already\n
