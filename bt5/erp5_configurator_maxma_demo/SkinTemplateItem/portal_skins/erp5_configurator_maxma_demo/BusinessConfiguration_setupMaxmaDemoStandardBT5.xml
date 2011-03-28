@@ -76,7 +76,7 @@ bt5_installation_list = (\'erp5_simulation\',\n
                          \'erp5_ods_style\',\n
                          \'erp5_odt_style\',\n
                          \'erp5_ooo_import\',\n
-                         #\'erp5_maxma_testcase\'\n
+                         \'erp5_demo_maxma_sample\'\n
                         )\n
 \n
 bt5_update_catalog = (\'erp5_ingestion_mysql_innodb_catalog\', )\n
