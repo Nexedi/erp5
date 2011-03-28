@@ -42,7 +42,7 @@ class HTMLToOdt:
       html_node.insert(0, head)
       SubElement(head, 'meta', **{'http-equiv': 'Content-Type',
                                   'content': 'text/html; charset=utf-8'})
-    orig = html.tostring(html_tree, encoding='utf-8')
+    orig = html.tostring(html_node, encoding='utf-8', method='xml')
 
     doc = OOOdCommandTransform(context, filename, orig, self.inputs[0])
     odt = doc.convertTo('odt')
