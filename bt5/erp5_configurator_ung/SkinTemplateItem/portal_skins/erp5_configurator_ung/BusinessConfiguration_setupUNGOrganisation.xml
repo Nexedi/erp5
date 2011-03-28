@@ -51,27 +51,12 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>configuration_save = context.restrictedTraverse(configuration_save_url)\n
-company_email = kw[\'default_email_text\']\n
-\n
-# create under \'portal_categories/group\' a new category using company title\n
-group_id = \'my_group\' #\'_\'.join(kw[\'title\'].split(\' \'))[:20]\n
 \n
 organisation_configurator_item = configuration_save.addConfigurationItem(\n
     "Organisation Configurator Item",\n
-    group=group_id,\n
-    site=\'main\',\n
     **kw)\n
 \n
-configuration_save.addConfigurationItem("Category Configurator Item",\n
-                                        category_root=\'group\',\n
-                                        object_id=group_id,\n
-                                        title=kw[\'title\'])\n
-\n
-# store globally group_id \n
-context.setGlobalConfigurationAttr(group_id=group_id)\n
-\n
-# store globally company\'s email\n
-context.setGlobalConfigurationAttr(company_email=company_email)\n
+context.setGlobalConfigurationAttr(company_email=kw.get(\'default_email_text\'))\n
 \n
 # store globally company\'s configurator item which we can use later to reconfigure\n
 context.setGlobalConfigurationAttr(\n

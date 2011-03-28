@@ -52,39 +52,33 @@
             <key> <string>_body</string> </key>
             <value> <string>configuration_save_url = kw.get(\'configuration_save_url\', None)\n
 configuration_save = context.restrictedTraverse(configuration_save_url)\n
-organisation_id = context.getGlobalConfigurationAttr(\'organisation_id\')\n
-group_id = context.getGlobalConfigurationAttr(\'group_id\')\n
 \n
-company_user_number = context.getGlobalConfigurationAttr(\'company_employees_number\')\n
+user_number = context.getGlobalConfigurationAttr(\'user_number\')\n
 \n
 ## get only form keys\n
 form_keys = [i for i in kw.keys() if i.startswith(\'field_your_\') and i!=\'field_your_search_text\']\n
 \n
-if company_user_number == 1:\n
+function = "function/ung_user"\n
+if user_number == 1:\n
   # only one user\n
   for key in (\'configuration_save_url\', \'transition\', \'client_id\', \'password_confirm\'):\n
     kw.pop(key, None)\n
-  function = kw.pop(\'function\', None)\n
-  configuration_save.addConfigurationItem("Person Configurator Item", \n
-                                           organisation_id = organisation_id,\n
-                                           function = function,\n
-                                           group_id = group_id,\n
-                                            **kw)\n
+  configuration_save.addConfigurationItem("Person Configurator Item",\n
+                                          function=function,\n
+                                          **kw)\n
 else:\n
   # many users\n
-  context.log(company_user_number)\n
-  for employee_counter in range(0, company_user_number):\n
+  for counter in range(user_number):\n
     user_kw = {}\n
     for key in form_keys:\n
       new_key = key.replace("field_your_", "")\n
-      user_kw[new_key] = kw[key][employee_counter]\n
+      value = kw.get(key)\n
+      if value:\n
+        user_kw[new_key] = value[counter]\n
     # add an user\n
-    function = user_kw.pop(\'function\', None)\n
     user_kw.pop(\'password_confirm\', None)\n
-    configuration_save.addConfigurationItem("Person Configurator Item", \n
-                                            organisation_id = organisation_id,\n
-                                            function = function,\n
-                                            group_id = group_id,\n
+    configuration_save.addConfigurationItem("Person Configurator Item",\n
+                                            function=function,\n
                                             **user_kw)\n
 </string> </value>
         </item>

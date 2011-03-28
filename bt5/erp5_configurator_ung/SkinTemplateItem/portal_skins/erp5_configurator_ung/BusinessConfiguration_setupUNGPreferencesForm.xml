@@ -94,7 +94,6 @@
                     <value>
                       <list>
                         <string>your_preferred_event_sender_email</string>
-                        <string>your_price_currency</string>
                         <string>your_preferred_date_order</string>
                         <string>your_lang</string>
                       </list>

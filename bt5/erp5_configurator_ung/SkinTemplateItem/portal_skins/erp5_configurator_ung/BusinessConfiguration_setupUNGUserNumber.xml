@@ -53,19 +53,19 @@
             <value> <string encoding="cdata"><![CDATA[
 
 configuration_save_url = kw.get(\'configuration_save_url\', None)\n
-company_employees_number = kw.get(\'company_employees_number\', 1)\n
+user_number = kw.get(\'user_number\', 1)\n
 next_transition = context.getNextTransition().getRelativeUrl()\n
 \n
-if company_employees_number > 1:\n
+if user_number > 1:\n
   # mark next transition  as multiple\n
-  context.setMultiEntryTransition(next_transition, company_employees_number)\n
+  context.setMultiEntryTransition(next_transition, user_number)\n
 else:\n
   # explicitly reset next transition as not multiple because \n
   # we may have already set it as multiple\n
   context.setMultiEntryTransition(next_transition, 0)\n
 \n
 # store globally\n
-context.setGlobalConfigurationAttr(company_employees_number=company_employees_number)\n
+context.setGlobalConfigurationAttr(user_number=user_number)\n
 
 
 ]]></string> </value>
@@ -80,7 +80,7 @@ context.setGlobalConfigurationAttr(company_employees_number=company_employees_nu
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Setup number of company\'s employees</string> </value>
+            <value> <string>Setup number of users</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -68,7 +68,7 @@
                     <key> <string>Default</string> </key>
                     <value>
                       <list>
-                        <string>your_company_employees_number</string>
+                        <string>your_user_number</string>
                       </list>
                     </value>
                 </item>

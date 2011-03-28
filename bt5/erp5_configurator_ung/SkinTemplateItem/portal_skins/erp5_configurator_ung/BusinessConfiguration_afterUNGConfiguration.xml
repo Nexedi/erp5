@@ -89,20 +89,7 @@ if business_template is not None:\n
     if obj is not None and hasattr(obj, \'getPortalType\'):\n
       # XXX This hardcoded list is a bit inconvinient.\n
       if obj.getPortalType() in (\'Person\', \n
-                                 \'Organisation\', \n
-                                 \'Account\', \n
-                                 \'Service\', \'Product\',\n
-                                 \'Sale Trade Condition\', \n
-                                 \'Purchase Trade Condition\',\n
-                                 \'Order Root Simulation Rule\', \n
-                                 \'Delivery Root Simulation Rule\',\n
-                                 \'Trade Model Simulation Rule\', \n
-                                 \'Accounting Transaction Root Simulation Rule\',\n
-                                 \'Invoice Transaction Simulation Rule\', \n
-                                 \'Payment Simulation Rule\',\n
-                                 \'Invoice Root Simulation Rule\', \n
-                                 \'Delivery Simulation Rule\', \n
-                                 \'Invoice Simulation Rule\'):\n
+                                 \'Organisation\'):\n
         if isTransitionPossible(obj, \'validate\'):\n
           obj.validate()\n
           print "Validated: ", obj.getRelativeUrl()\n

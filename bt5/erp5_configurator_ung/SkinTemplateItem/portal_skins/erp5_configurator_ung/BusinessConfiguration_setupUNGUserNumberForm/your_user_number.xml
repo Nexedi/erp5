@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_price_currency</string> </value>
+            <value> <string>your_user_number</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -247,7 +247,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>What is the currency used in your company?</string> </value>
+                    <value> <string>Select the number of user accounts you want to configure</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -271,7 +271,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getPriceCurrency()</string> </value>
+            <value> <string>python: getattr(here, field.getId().replace(\'your_\',\'\',1), \'\')</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -284,7 +284,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.BusinessConfiguration_getISOCurrencyList()</string> </value>
+            <value> <string>python: [[key,key] for key in range(1,10)]</string> </value>
         </item>
       </dictionary>
     </pickle>
