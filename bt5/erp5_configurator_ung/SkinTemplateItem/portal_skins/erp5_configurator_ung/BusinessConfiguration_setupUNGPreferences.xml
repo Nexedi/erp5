@@ -68,9 +68,7 @@ if preferred_event_sender_email in (\'\', None,):\n
 \n
 # configure preferences\n
 prefs = dict(\n
-  # UI\n
-  preferred_category_child_item_list_method_id =\n
-                   \'getCategoryChildTranslatedLogicalPathItemList\',\n
+  preferred_category_child_item_list_method_id = \'getCategoryChildTranslatedLogicalPathItemList\',\n
   preferred_text_format = \'text/html\',\n
   preferred_text_editor = \'fck_editor\',\n
   preferred_date_order = preferred_date_order,\n
@@ -83,9 +81,7 @@ prefs = dict(\n
   preferred_report_format = \'pdf\',\n
   preferred_money_quantity_field_width = 10,\n
   preferred_html_style_access_tab = 1,\n
-  preferred_quantity_field_width = 8,\n
-  preferred_ooodoc_server_address = "localhost",\n
-  preferred_ooodoc_server_port_number = 8011)\n
+  preferred_quantity_field_width = 8)\n
 \n
 configuration_save.addConfigurationItem(\n
     \'Preference Configurator Item\',\n
@@ -107,7 +103,9 @@ system_prefs = dict(\n
       \'-_.]+-[a-zA-Z0-9-_.]+)(|-(?P<version>[0-9a-zA-Z.]+))(|-(?P<language>[a\'\n
       \'-z]{2})[^-]*)?\',\n
   preferred_synchronous_metadata_discovery = True,\n
-  preferred_redirect_to_document = True)\n
+  preferred_redirect_to_document = True,\n
+  preferred_ooodoc_server_address = "localhost",\n
+  preferred_ooodoc_server_port_number = 8011)\n
 \n
 configuration_save.addConfigurationItem(\'System Preference Configurator Item\',\n
     object_id = \'default_configurator_system_preference\',\n
@@ -115,7 +113,6 @@ configuration_save.addConfigurationItem(\'System Preference Configurator Item\',
     \'preference",\n
     title="Default Configurator System Site Preference",\n
     **system_prefs)\n
-\n
 \n
 # preferred_languages\n
 for bt5_id in preferred_language_list:\n
