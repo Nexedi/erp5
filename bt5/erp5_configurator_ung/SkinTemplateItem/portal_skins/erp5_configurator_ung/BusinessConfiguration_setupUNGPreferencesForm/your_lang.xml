@@ -278,7 +278,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(x[\'name\'], x[\'bt5\']) for x in context.BusinessConfiguration_getAvailableL10NBusinessTemplateList()]</string> </value>
+            <value> <string>python: [(x[\'name\'], x[\'bt5\']) for x in context.BusinessConfiguration_getUNGAvailableL10NBusinessTemplateList()]</string> </value>
         </item>
       </dictionary>
     </pickle>

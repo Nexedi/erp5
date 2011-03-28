@@ -284,7 +284,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/BusinessConfiguration_getPreferredDateOrderList</string> </value>
+            <value> <string>here/BusinessConfiguration_getUNGPreferredDateOrderList</string> </value>
         </item>
       </dictionary>
     </pickle>
