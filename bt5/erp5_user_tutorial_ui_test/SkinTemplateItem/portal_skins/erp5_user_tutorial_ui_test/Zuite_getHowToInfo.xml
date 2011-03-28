@@ -105,8 +105,8 @@ return {\'now\': DateTime(),\n
         \'create_event_howto_event_content\': \'ZUITE-TEST-CREATE-EVENT-EVENT-CONTENT this is the content of our event.\',\n
         \'post_event_howto_person_title\': \'ZUITE-TEST-POST-EVENT-PERSON-SUPERVISOR\',\n
         \'post_event_howto_person2_title\': \'ZUITE-TEST-POST-EVENT-PERSON-OPERATION-MANAGER\',\n
-        \'post_event_howto_person_email\': \'vincentd@nexedi.com\',\n
-        \'post_event_howto_person2_email\': \'vincentd@nexedi.com\',\n
+        \'post_event_howto_person_email\': \'lucas@nexedi.com\',\n
+        \'post_event_howto_person2_email\': \'lucas@nexedi.com\',\n
         \'post_event_howto_organisation_title\': \'ZUITE-TEST-POST-EVENT-ORGANISATION-001\',\n
         \'post_event_howto_currency_title\': \'Euro\',\n
         \'post_event_howto_currency_tag\': \'EUR\',\n
@@ -120,8 +120,8 @@ return {\'now\': DateTime(),\n
         \'incoming_event_howto_service_title\': \'Test Functional Incoming Service\',\n
         \'incoming_event_howto_person_title\': \'ZUITE-TEST-INCOMING-EVENT-PERSON-SUPERVISOR\',\n
         \'incoming_event_howto_person2_title\': \'ZUITE-TEST-INCOMING-EVENT-PERSON-OPERATION-MANAGER\',\n
-        \'incoming_event_howto_person_email\': \'vincentd@nexedi.com\',\n
-        \'incoming_event_howto_person2_email\': \'vincentd@nexedi.com\',\n
+        \'incoming_event_howto_person_email\': \'lucas@nexedi.com\',\n
+        \'incoming_event_howto_person2_email\': \'lucas@nexedi.com\',\n
         \'incoming_event_howto_organisation_title\': \'ZUITE-TEST-INCOMING-EVENT-ORGANISATION-001\',\n
         \'incoming_event_howto_currency_title\': \'Euro\',\n
         \'incoming_event_howto_currency_tag\': \'EUR\',\n
@@ -136,8 +136,8 @@ return {\'now\': DateTime(),\n
 \n
         \'outgoing_event_howto_person_title\': \'ZUITE-TEST-OUTGOING-EVENT-PERSON-SUPERVISOR\',\n
         \'outgoing_event_howto_person2_title\': \'ZUITE-TEST-OUTGOING-EVENT-PERSON-OPERATION-MANAGER\',\n
-        \'outgoing_event_howto_person_email\': \'vincentd@nexedi.com\',\n
-        \'outgoing_event_howto_person2_email\': \'vincentd@nexedi.com\',\n
+        \'outgoing_event_howto_person_email\': \'lucas@nexedi.com\',\n
+        \'outgoing_event_howto_person2_email\': \'lucas@nexedi.com\',\n
         \'outgoing_event_howto_organisation_title\': \'ZUITE-TEST-OUTGOING-EVENT-ORGANISATION-001\',\n
         \'outgoing_event_howto_currency_title\': \'Euro\',\n
         \'outgoing_event_howto_currency_tag\': \'EUR\',\n
