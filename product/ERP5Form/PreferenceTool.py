@@ -154,7 +154,7 @@ class PreferenceTool(BaseTool):
       # preferences.
       actual_user = acl_users.getUser(str(user))
       if actual_user is not None:
-        newSecurityManager(self.REQUEST, actual_user.__of__(acl_users))
+        newSecurityManager(None, actual_user.__of__(acl_users))
       tv_key = 'PreferenceTool._getSortedPreferenceList/%s/%s' % (user,
                                                                   sql_catalog_id)
       if tv.get(tv_key, None) is None:
