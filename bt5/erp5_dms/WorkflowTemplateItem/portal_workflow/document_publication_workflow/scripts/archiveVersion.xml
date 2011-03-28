@@ -57,32 +57,35 @@ The previous version is archived automatically.\n
 This will only apply to documents with enough coordinates\n
 (ex. reference, language, version).\n
 """\n
-o = state_change[\'object\']\n
-reference = o.getReference()\n
+document = state_change[\'object\']\n
+reference = document.getReference()\n
 if not reference:\n
   # If this object has no reference, we can not do anything\n
   return\n
 \n
-language = o.getLanguage()\n
+portal = document.getPortalObject()\n
+portal_catalog = portal.portal_catalog\n
+language = document.getLanguage()\n
 if not language:\n
   # If language is None, we have to check is this document\n
   # is language independent. In this case, archival is possible\n
   # But if a document exists with same reference and defined\n
   # language, we can not do anything\n
-  for o in context.portal_catalog(reference=reference, validation_state=validation_state):\n
-    document = o.getObject()\n
-    if not document.getLanguage():\n
-      document.archive()\n
+  for old_document in portal_catalog(reference=reference, validation_state=validation_state):\n
+    old_document = old_document.getObject()\n
+    if not old_document.getLanguage():\n
+      old_document.archive()\n
   return\n
 \n
 # We can now archive all documents with same reference and language in published state\n
-for o in context.portal_catalog(reference=reference, language=language, validation_state=validation_state):\n
-  o.getObject().archive()\n
+for old_document in portal_catalog(reference=reference, language=language, validation_state=validation_state):\n
+  old_document = old_document.getObject()\n
+  old_document.archive()\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change, validation_state=[\'published\', \'published_alive\']</string> </value>
+            <value> <string>state_change, validation_state=[\'published\', \'published_alive\', \'released\', \'released_alive\', \'shared\', \'shared_alive\']</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
