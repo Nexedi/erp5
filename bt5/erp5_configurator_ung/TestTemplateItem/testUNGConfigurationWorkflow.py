@@ -221,7 +221,6 @@ class TestUNGConfiguratorWorkflow(ERP5TypeTestCase):
   def stepCheckUserAccountNumberThree(self, sequence=None, sequence_list=None, **kw):
     """ """
     business_configuration = sequence.get("business_configuration")
-    import ipdb;ipdb.set_trace()
     organisation_config_save = business_configuration['3']
  
   def stepSetupMultipleUserAccountThree(self, sequence=None, sequence_list=None, **kw):
