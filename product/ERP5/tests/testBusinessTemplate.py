@@ -5825,6 +5825,48 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals(bt.getChangeLog(), 'MODIFIED')
     self.assertEquals(portal.getTitle(), 'MODIFIED')
 
+  def test_updateBusinessTemplateFromUrl_stringCastingBug(self):
+    pt = self.getTemplateTool()
+    template = pt.newContent(portal_type='Business Template')
+    self.failUnless(template.getBuildingState() == 'draft')
+    self.failUnless(template.getInstallationState() == 'not_installed')
+    title = 'install_casting_to_int_bug_check'
+    template.edit(title=title,
+                  version='1.0',
+                  description='bt for unit_test')
+    transaction.commit()
+
+    template.build()
+    transaction.commit()
+
+    cfg = getConfiguration()
+    template_path = os.path.join(cfg.instancehome, 'tests', '%s' % (title,))
+    # remove previous version of bt it exists
+    if os.path.exists(template_path):
+      shutil.rmtree(template_path)
+    template.export(path=template_path, local=1)
+    self.failUnless(os.path.exists(template_path))
+
+    # setup version '9'
+    first_revision = '9'
+    open(os.path.join(template_path, 'bt', 'revision'), 'w').write(first_revision)
+    pt.updateBusinessTemplateFromUrl(template_path)
+    new_bt = pt.getInstalledBusinessTemplate(title)
+    
+    self.assertEqual(new_bt.getRevision(), first_revision)
+
+    # setup revision '11', becasue: '11' < '9' (string comp), but 11 > 9 (int comp)
+    second_revision = '11'
+    self.assertTrue(second_revision < first_revision)
+    self.assertTrue(int(second_revision) > int(first_revision))
+
+    open(os.path.join(template_path, 'bt', 'revision'), 'w').write(second_revision)
+    pt.updateBusinessTemplateFromUrl(template_path)
+    newer_bt = pt.getInstalledBusinessTemplate(title)
+
+    self.assertNotEqual(new_bt, newer_bt)
+    self.assertEqual(newer_bt.getRevision(), second_revision)
+
   def stepCreateCustomWorkflow(self, sequence=None, sequence_list=None, **kw):
     """
     Create a custom workflow
