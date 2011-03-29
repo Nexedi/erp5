@@ -288,7 +288,6 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     if 'command' in response_dict:
       self.assertEquals('show', response_dict['command'])
     self.assertEquals('Previous', response_dict['previous'])
-    import pdb;pdb.set_trace()
     self.assertEquals('Configure ERP5 Preferences', response_dict['next'])
     self.assertCurrentStep('Application preferences', response_dict)
 
