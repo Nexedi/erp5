@@ -88,6 +88,8 @@ class TestUNGConfiguratorWorkflow(ERP5TypeTestCase):
      stepConfiguratorNext
      stepTic
      stepCheckConfigureWebSiteForm
+     stepSetupWebSiteConfiguration
+     stepTic
   """
 
   def getBusinessTemplateList(self):
@@ -273,6 +275,18 @@ class TestUNGConfiguratorWorkflow(ERP5TypeTestCase):
     self.assertEquals('show', response_dict['command'])
     self.assertEquals('Previous', response_dict['previous'])
     self.assertEquals('Configure Web Site', response_dict['next'])
+
+  def stepSetupWebSiteConfiguration(self, sequence=None, sequence_list=None, **kw):
+    """ """
+    next_dict = dict(your_default_available_language="pt-BR")
+    sequence.edit(next_dict=next_dict)
+
+  def stepCheckConfigureInstallationForm(self, sequence=None, sequence_list=None, **kw):
+    """ Check the installation form """
+    response_dict = sequence.get("response_dict")
+    self.assertEquals('show', response_dict['command'])
+    self.assertEquals('Previous', response_dict['previous'])
+    self.assertEquals('Install', response_dict['next'])
 
   def test_standard_workflow_brazil(self):
     """ Test the standard workflow with brazilian configuration """
