@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+      <global name="File" module="OFS.Image"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -11,23 +11,19 @@
             <value> <string>http_cache</string> </value>
         </item>
         <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts01396443.57</string> </value>
+        </item>
+        <item>
             <key> <string>__name__</string> </key>
             <value> <string>erp5_popup.js</string> </value>
         </item>
         <item>
-            <key> <string>_vars</string> </key>
-            <value>
-              <dictionary/>
-            </value>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
         </item>
         <item>
-            <key> <string>globals</string> </key>
-            <value>
-              <dictionary/>
-            </value>
-        </item>
-        <item>
-            <key> <string>raw</string> </key>
+            <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
 /*\n
@@ -110,8 +106,8 @@ $(function() {\n
         if (element.length != 0) {\n
           //element.animate({opacity: 1}, 2000, \'linear\');\n
           //element.animate({opacity: 0}, 2000, \'linear\', animate);\n
-          element.animate({color: "white"}, 2000, \'linear\');\n
-          element.animate({color: "black"}, 2000, \'linear\', animate);\n
+          element.animate({color: \'white\'}, 2000, \'linear\');\n
+          element.animate({color: \'black\'}, 2000, \'linear\', animate);\n
         }\n
       };\n
       $(\'<div class="loading" style="background-color: #AAAAAA; opacity: 0.5; position: absolute; left: 0%; width: 100%; top: 0%; height: 100%; transparent;"><p class="loading" style="position: absolute; left: 0%; width: 100%; top: 30%; height: 40%; text-align: center; color: black; font-size: 32pt;">Loading...</p></div>\').appendTo(dialog);\n
@@ -123,7 +119,7 @@ $(function() {\n
           dialog.empty();\n
           //$(\'div.loading\', dialog).remove();\n
 \n
-          dialog.html($(\'<div />\').append(data.replace(/<script(.|\\s)*?\\/script>/g, "")).find(\'form\'));\n
+          dialog.html($(\'<div />\').append(data.replace(/<script(.|\\s)*?\\/script>/g, \'\')).find(\'form\'));\n
 \n
           // XXX Get rid of unneeded stuff in JavaScript for now.\n
           $(\'.bars, .breadcrumb, .logged_in_as\', dialog).remove();\n
@@ -168,7 +164,7 @@ $(function() {\n
           });\n
           \n
           // Listbox next & previous, last & first buttons\n
-          $.each(["listbox_nextPage", "listbox_previousPage", "listbox_firstPage", "listbox_lastPage"], \n
+          $.each([\'listbox_nextPage\', \'listbox_previousPage\', \'listbox_firstPage\', \'listbox_lastPage\'], \n
                  function(index, value) {\n
                    var button = $(\'button[type="submit"][name="\' + value + \':method"]\', dialog).first();\n
                    button.click(function(event) {\n
@@ -242,7 +238,7 @@ $(function() {\n
   \n
   // login logout links for KM\n
   $(\'a[id="login-logout-link"]\').click(function(event) {\n
-    if($(\'a[id="login-logout-link"]\').attr("href").indexOf("login_form")==-1){\n
+    if($(\'a[id="login-logout-link"]\').attr(\'href\').indexOf(\'login_form\')==-1){\n
       // we show popup only for login_form\n
       return\n
     }\n
@@ -275,6 +271,14 @@ $(function() {\n
 
 
 ]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>10183</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
