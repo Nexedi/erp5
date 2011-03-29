@@ -1257,7 +1257,9 @@ class TemplateTool (BaseTool):
             previous_revision = None
           if imported_revision is not None and imported_revision is not None \
               and (imported_revision <= previous_revision):
-            log("%s is already installed with revision %r, which is same or newer revision then new revision %r." % (bt_title, previous_bt5.getRevision(), imported_bt5.getRevision()))
+            log("%s is already installed with revision %r, which is same or "
+                "newer revision then new revision %r." % (bt_title,
+                  previous_bt5.getRevision(), imported_bt5.getRevision()))
             return imported_bt5
 
         for listbox_line in listbox_object_list:
