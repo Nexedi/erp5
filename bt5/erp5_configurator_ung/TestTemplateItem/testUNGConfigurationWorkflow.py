@@ -33,7 +33,8 @@ class TestUNGConfiguratorWorkflow(ERP5TypeTestCase):
     Test Live UNG Configuration Workflow.
   """
 
-  standard_bt5_list = ('erp5_simulation',
+  standard_bt5_list = ('erp5_ingestion_mysql_innodb_catalog',
+                       'erp5_simulation',
                        'erp5_dhtml_style',
                        'erp5_jquery',
                        'erp5_jquery_ui',
@@ -76,10 +77,11 @@ class TestUNGConfiguratorWorkflow(ERP5TypeTestCase):
      stepTic
      stepCheckConfigureUserAccountNumberForm
      stepCheckOrganisationConfiguratorItem
-     stepSetupUserAccounNumberThree
+     stepSetupUserAccountNumberThree
      stepConfiguratorNext
      stepTic
      stepCheckConfigureMultipleUserAccountForm
+     stepCheckUserAccountNumberThree
      stepSetupMultipleUserAccountThree
      stepConfiguratorNext
      stepTic
@@ -89,7 +91,16 @@ class TestUNGConfiguratorWorkflow(ERP5TypeTestCase):
      stepTic
      stepCheckConfigureWebSiteForm
      stepSetupWebSiteConfiguration
+     stepConfiguratorNext
      stepTic
+     stepCheckConfigureInstallationForm
+     stepSetupInstallConfiguration
+     stepConfiguratorNext
+     stepTic
+     stepCheckInstallConfiguration
+     stepStartConfigurationInstallation
+     stepTic
+     stepCheckUNGWebSiteAfterInstallation
   """
 
   def getBusinessTemplateList(self):
@@ -184,7 +195,7 @@ class TestUNGConfiguratorWorkflow(ERP5TypeTestCase):
     """ Check if organisation was created fine """
     business_configuration = sequence.get("business_configuration")
     organisation_config_save = business_configuration['3']
-    self.assertEquals(organisation_config_save.getTitle(), 
+    self.assertEquals(organisation_config_save.getTitle(),
                       "My Organisation")
     self.assertEquals(1, len(organisation_config_save.contentValues()))
     organisation_config_item = organisation_config_save['1']
@@ -193,7 +204,7 @@ class TestUNGConfiguratorWorkflow(ERP5TypeTestCase):
     self.assertEquals(organisation_config_item.getDefaultEmailText(),
                       'me@example.com')
 
-  def stepSetupUserAccounNumberThree(self, sequence=None, sequence_list=None, **kw):
+  def stepSetupUserAccountNumberThree(self, sequence=None, sequence_list=None, **kw):
     """ Create one more user account """
     next_dict = dict(field_your_user_number="3")
     sequence.edit(next_dict=next_dict)
@@ -206,6 +217,12 @@ class TestUNGConfiguratorWorkflow(ERP5TypeTestCase):
     self.assertEquals('Previous', response_dict['previous'])
     self.assertEquals('Configure user accounts', response_dict['next'])
     self.assertCurrentStep('Configuration of users', response_dict)
+
+  def stepCheckUserAccountNumberThree(self, sequence=None, sequence_list=None, **kw):
+    """ """
+    business_configuration = sequence.get("business_configuration")
+    import ipdb;ipdb.set_trace()
+    organisation_config_save = business_configuration['3']
  
   def stepSetupMultipleUserAccountThree(self, sequence=None, sequence_list=None, **kw):
     """ Create multiple user account """
@@ -216,7 +233,8 @@ class TestUNGConfiguratorWorkflow(ERP5TypeTestCase):
         field_your_reference="person_creator",
         field_your_password='person_creator',
         field_your_password_confirm='person_creator',
-        field_your_default_email_text='test@test.com',
+        field_your_default_email_
+text='test@test.com',
         field_your_default_telephone_text='',
       ), dict(
         field_your_first_name='Person',
@@ -287,6 +305,28 @@ class TestUNGConfiguratorWorkflow(ERP5TypeTestCase):
     self.assertEquals('show', response_dict['command'])
     self.assertEquals('Previous', response_dict['previous'])
     self.assertEquals('Install', response_dict['next'])
+
+  def stepSetupInstallConfiguration(self, sequence=None, sequence_list=None, **kw):
+    """ Install the Configuration """
+    sequence.edit(next_dict={})
+
+  def stepCheckInstallConfiguration(self, sequence=None, sequence_list=None, **kw):
+    """ Check the installation of the configuration """
+    response_dict = sequence.get("response_dict")
+    self.assertEquals('install', response_dict['command'])
+
+  def stepStartConfigurationInstallation(self, sequence=None, sequence_list=None, **kw):
+    """ Starts the installation """
+    business_configuration = sequence.get("business_configuration")
+    self.portal.portal_configurator.startInstallation(
+         business_configuration, REQUEST=self.portal.REQUEST)
+
+  def stepCheckUNGWebSiteAfterInstallation(self, sequence=None, sequence_list=None, **kw):
+    """ Check if UNG Web Site is published and your language"""
+    self.assertEquals(self.portal.web_site_module.ung.getValidationState(),
+                      "published")
+    self.assertEquals(self.portal.web_site_module.ung.getDefaultAvailableLanguage(),
+                      "pt-BR")
 
   def test_standard_workflow_brazil(self):
     """ Test the standard workflow with brazilian configuration """

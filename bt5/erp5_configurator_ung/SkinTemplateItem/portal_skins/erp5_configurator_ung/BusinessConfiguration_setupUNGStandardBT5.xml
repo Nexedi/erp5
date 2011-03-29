@@ -52,7 +52,8 @@
             <key> <string>_body</string> </key>
             <value> <string>configuration_save = context.restrictedTraverse(configuration_save_url)\n
 \n
-bt5_installation_list = (\'erp5_simulation\',\n
+bt5_installation_list = (\'erp5_ingestion_mysql_innodb_catalog\',\n
+                         \'erp5_simulation\',\n
                          \'erp5_dhtml_style\',\n
                          \'erp5_jquery\',\n
                          \'erp5_jquery_ui\',\n
