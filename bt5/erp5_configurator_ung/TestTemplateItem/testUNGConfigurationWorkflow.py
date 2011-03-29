@@ -87,7 +87,7 @@ class TestUNGConfiguratorWorkflow(ERP5TypeTestCase):
      stepSetupPreferenceConfigurationBrazil
      stepConfiguratorNext
      stepTic
-     stepCheckConfigureInstallationForm
+     stepCheckConfigureWebSiteForm
   """
 
   def getBusinessTemplateList(self):
@@ -214,7 +214,7 @@ class TestUNGConfiguratorWorkflow(ERP5TypeTestCase):
         field_your_reference="person_creator",
         field_your_password='person_creator',
         field_your_password_confirm='person_creator',
-        field_your_default_email_text='',
+        field_your_default_email_text='test@test.com',
         field_your_default_telephone_text='',
       ), dict(
         field_your_first_name='Person',
@@ -222,7 +222,7 @@ class TestUNGConfiguratorWorkflow(ERP5TypeTestCase):
         field_your_reference="person_assignee",
         field_your_password='person_assignee',
         field_your_password_confirm='person_assignee',
-        field_your_default_email_text='',
+        field_your_default_email_text='test@test.com',
         field_your_default_telephone_text='',
       ), dict(
         field_your_first_name='Person',
@@ -230,7 +230,7 @@ class TestUNGConfiguratorWorkflow(ERP5TypeTestCase):
         field_your_reference="person_assignor",
         field_your_password='person_assignor',
         field_your_password_confirm='person_assignor',
-        field_your_default_email_text='',
+        field_your_default_email_text='test@test.com',
         field_your_default_telephone_text='',
       ),
     ]
@@ -255,22 +255,24 @@ class TestUNGConfiguratorWorkflow(ERP5TypeTestCase):
     if 'command' in response_dict:
       self.assertEquals('show', response_dict['command'])
     self.assertEquals('Previous', response_dict['previous'])
-    self.assertEquals('ERP5 Preferences', response_dict['next'])
-    self.assertCurrentStep('Configure ERP5 Preference', response_dict)
+    self.assertEquals('Configure ERP5 Preferences', response_dict['next'])
+    self.assertCurrentStep('ERP5 preferences', response_dict)
 
   def stepSetupPreferenceConfigurationBrazil(self, sequence=None, sequence_list=None, **kw):
     """ Setup the Brazil preference configuration """
     next_dict = dict(field_your_preferred_date_order='dmy',
-                     field_your_lang='erp5_l10n_fr',)
+                     field_your_lang='erp5_l10n_pt-BR',
+                     field_your_preferred_event_sender_email="test@test.com",
+                     default_field_your_lang=1)
     sequence.edit(next_dict=next_dict)
 
-  def stepCheckConfigureInstallationForm(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckConfigureWebSiteForm(self, sequence=None, sequence_list=None, **kw):
     """ Check the installation form """
     response_dict = sequence.get("response_dict")
     # configuration is finished. We are at the Install state.
     self.assertEquals('show', response_dict['command'])
     self.assertEquals('Previous', response_dict['previous'])
-    self.assertEquals('Install', response_dict['next'])
+    self.assertEquals('Configure Web Site', response_dict['next'])
 
   def test_standard_workflow_brazil(self):
     """ Test the standard workflow with brazilian configuration """
