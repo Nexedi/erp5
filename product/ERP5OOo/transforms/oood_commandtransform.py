@@ -22,6 +22,13 @@ try:
 except ImportError:
   from cgi import parse_qsl
 
+
+# XXX Must be replaced by portal_data_adapters soon
+from Products.ERP5OOo.Document.OOoDocument import OOoServerProxy
+from Products.ERP5OOo.Document.OOoDocument import enc
+from Products.ERP5OOo.Document.OOoDocument import dec
+
+
 CLEAN_RELATIVE_PATH = re.compile('^../')
 
 class OOoDocumentDataStream:
@@ -67,12 +74,7 @@ class OOOdCommandTransform(commandtransform):
     self.context = context
     if self.mimetype == 'text/html':
       data = self.includeExternalCssList(data)
-    tmp_ooo = newTempOOoDocument(context, str(id(self)))
-    tmp_ooo.edit( data=data,
-                  filename=self.name(),
-                  content_type=self.mimetype,)
-    tmp_ooo.convertToBaseFormat()
-    self.ooo = tmp_ooo
+    self.data = data
 
   def name(self):
     return self.__name__
@@ -194,8 +196,18 @@ class OOOdCommandTransform(commandtransform):
                           xml_declaration=False, pretty_print=False, )
 
   def convertTo(self, format):
-    if self.ooo.isTargetFormatAllowed(format):
-      mime, data = self.ooo.convert(format)
+    server_proxy = OOoServerProxy(self.context)
+    response_code, response_dict, message = \
+                           server_proxy.getAllowedTargetItemList(self.mimetype)
+    allowed_extension_list = response_dict['response_data']
+    if format in dict(allowed_extension_list):
+      response_code, response_dict, message = server_proxy.run_generate(
+                                                                '',
+                                                                enc(self.data),
+                                                                None,
+                                                                format,
+                                                                self.mimetype)
+      data = dec(response_dict['data'])
       if self.mimetype == 'text/html':
         data = self.includeImageList(data)
       return data
