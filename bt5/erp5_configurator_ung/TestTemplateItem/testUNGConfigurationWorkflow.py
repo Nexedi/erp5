@@ -65,7 +65,7 @@ class TestUNGConfiguratorWorkflow(ERP5TypeTestCase):
   DEFAULT_SEQUENCE_LIST = """
      stepCreateBusinessConfiguration
      stepTic
-     stepSetConsultingWorkflow
+     stepSetUNGWorkflow
      stepTic
      stepConfiguratorNext
      stepTic
@@ -76,9 +76,18 @@ class TestUNGConfiguratorWorkflow(ERP5TypeTestCase):
      stepTic
      stepCheckConfigureUserAccountNumberForm
      stepCheckOrganisationConfiguratorItem
-#     stepSetupUserAccounNumberSix
-#     stepConfiguratorNext
+     stepSetupUserAccounNumberThree
+     stepConfiguratorNext
      stepTic
+     stepCheckConfigureMultipleUserAccountForm
+     stepSetupMultipleUserAccountThree
+     stepConfiguratorNext
+     stepTic
+     stepCheckConfigurePreferenceForm
+     stepSetupPreferenceConfigurationBrazil
+     stepConfiguratorNext
+     stepTic
+     stepCheckConfigureInstallationForm
   """
 
   def getBusinessTemplateList(self):
@@ -103,8 +112,8 @@ class TestUNGConfiguratorWorkflow(ERP5TypeTestCase):
     sequence.edit(business_configuration=business_configuration, 
                   next_dict=next_dict)
 
-  def stepSetConsultingWorkflow(self, sequence=None, sequence_list=None, **kw):
-    """ Set Consulting Workflow into Business Configuration """
+  def stepSetUNGWorkflow(self, sequence=None, sequence_list=None, **kw):
+    """ Set UNG Workflow into Business Configuration """
     business_configuration = sequence.get("business_configuration")
     self.setBusinessConfigurationWorkflow(business_configuration,
                                    "workflow_module/ung_configuration_workflow")
@@ -167,7 +176,7 @@ class TestUNGConfiguratorWorkflow(ERP5TypeTestCase):
       self.assertEquals('show', response_dict['command'])
     self.assertEquals('Configure user accounts number', response_dict['next'])
     self.assertEquals('Previous', response_dict['previous'])
-    self.assertCurrentStep('Number of user account', response_dict)
+    self.assertCurrentStep('Number of user accounts', response_dict)
 
   def stepCheckOrganisationConfiguratorItem(self, sequence=None, sequence_list=None, **kw):
     """ Check if organisation was created fine """
@@ -181,7 +190,88 @@ class TestUNGConfiguratorWorkflow(ERP5TypeTestCase):
                       'Organisation Configurator Item')
     self.assertEquals(organisation_config_item.getDefaultEmailText(),
                       'me@example.com')
+
+  def stepSetupUserAccounNumberThree(self, sequence=None, sequence_list=None, **kw):
+    """ Create one more user account """
+    next_dict = dict(field_your_user_number="3")
+    sequence.edit(next_dict=next_dict)
+
+  def stepCheckConfigureMultipleUserAccountForm(self, sequence=None, sequence_list=None, **kw):
+    """ Check the multiple user account form """
+    response_dict = sequence.get("response_dict")
+    if 'command' in response_dict:
+      self.assertEquals('show', response_dict['command'])
+    self.assertEquals('Previous', response_dict['previous'])
+    self.assertEquals('Configure user accounts', response_dict['next'])
+    self.assertCurrentStep('Configuration of users', response_dict)
  
+  def stepSetupMultipleUserAccountThree(self, sequence=None, sequence_list=None, **kw):
+    """ Create multiple user account """
+    user_list = [
+      dict(
+        field_your_first_name='Person',
+        field_your_last_name='Creator',
+        field_your_reference="person_creator",
+        field_your_password='person_creator',
+        field_your_password_confirm='person_creator',
+        field_your_default_email_text='',
+        field_your_default_telephone_text='',
+      ), dict(
+        field_your_first_name='Person',
+        field_your_last_name='Assignee',
+        field_your_reference="person_assignee",
+        field_your_password='person_assignee',
+        field_your_password_confirm='person_assignee',
+        field_your_default_email_text='',
+        field_your_default_telephone_text='',
+      ), dict(
+        field_your_first_name='Person',
+        field_your_last_name='Assignor',
+        field_your_reference="person_assignor",
+        field_your_password='person_assignor',
+        field_your_password_confirm='person_assignor',
+        field_your_default_email_text='',
+        field_your_default_telephone_text='',
+      ),
+    ]
+    next_dict = {}
+    for user in user_list:
+      for k, v in user.items():
+        next_dict.setdefault(k, []).append(v)
+    sequence.edit(next_dict=next_dict)
+
+  def stepCheckConfigurePreferenceForm(self, sequence=None, sequence_list=None, **kw):
+    """ Check the multiple user account form """
+    response_dict = sequence.get("response_dict")
+    if 'command' in response_dict:
+      self.assertEquals('show', response_dict['command'])
+    self.assertEquals('Previous', response_dict['previous'])
+    self.assertEquals('Configure user accounts', response_dict['next'])
+    self.assertCurrentStep('Configuration of users', response_dict)
+
+  def stepCheckConfigurePreferenceForm(self, sequence=None, sequence_list=None, **kw):
+    """ Check the multiple user account form """
+    response_dict = sequence.get("response_dict")
+    if 'command' in response_dict:
+      self.assertEquals('show', response_dict['command'])
+    self.assertEquals('Previous', response_dict['previous'])
+    self.assertEquals('ERP5 Preferences', response_dict['next'])
+    self.assertCurrentStep('Configure ERP5 Preference', response_dict)
+
+  def stepSetupPreferenceConfigurationBrazil(self, sequence=None, sequence_list=None, **kw):
+    """ Setup the Brazil preference configuration """
+    next_dict = dict(field_your_preferred_date_order='dmy',
+                     field_your_lang='erp5_l10n_fr',)
+    sequence.edit(next_dict=next_dict)
+
+  def stepCheckConfigureInstallationForm(self, sequence=None, sequence_list=None, **kw):
+    """ Check the installation form """
+    response_dict = sequence.get("response_dict")
+    # configuration is finished. We are at the Install state.
+    self.assertEquals('show', response_dict['command'])
+    self.assertEquals('Previous', response_dict['previous'])
+    self.assertEquals('Install', response_dict['next'])
+
   def test_standard_workflow_brazil(self):
     """ Test the standard workflow with brazilian configuration """
     sequence_list = SequenceList()
