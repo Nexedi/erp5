@@ -76,6 +76,9 @@ bt5_installation_list = (\'erp5_simulation\',\n
                          \'erp5_ods_style\',\n
                          \'erp5_odt_style\',\n
                          \'erp5_ooo_import\',\n
+                         \'erp5_accounting_l10n_fr\',\n
+                         \'erp5_l10n_fr\',\n
+                         \'erp5_l10n_pt-BR\',\n
                          \'erp5_demo_maxma_sample\'\n
                         )\n
 \n
