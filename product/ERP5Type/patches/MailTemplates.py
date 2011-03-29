@@ -16,7 +16,7 @@ except ImportError:
   BaseMailTemplate = None
 
 from email.Header import make_header
-from email.utils import make_msgid
+from email.Utils import make_msgid
 
 if BaseMailTemplate is not None:
   def _process_utf8(self,kw):
