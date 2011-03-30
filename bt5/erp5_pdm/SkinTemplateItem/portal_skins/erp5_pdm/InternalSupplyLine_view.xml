@@ -80,9 +80,7 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>my_comment</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -124,6 +122,7 @@
                         <string>my_exclusive_discount_ratio</string>
                         <string>my_non_discountable_additional_price</string>
                         <string>my_surcharge_ratio</string>
+                        <string>my_comment</string>
                       </list>
                     </value>
                 </item>
