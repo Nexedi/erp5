@@ -67,6 +67,7 @@
                 <string>source_value</string>
                 <string>destination_value</string>
                 <string>quantity_step</string>
+                <string>quantity_step_list</string>
                 <string>priced_quantity</string>
                 <string>start_date</string>
                 <string>stop_date</string>
