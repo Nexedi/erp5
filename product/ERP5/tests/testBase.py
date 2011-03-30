@@ -1086,10 +1086,11 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
       def __init__(self, filename):
         self.filename = os.path.basename(filename)
         file.__init__(self, filename)
-    file_document = self.portal.portal_contributions.newContent(
-                                          portal_type='File',
-                                          file=DummyFile(__file__),
-                                          content_type='text/plain')
+    portal = self.getPortal()
+    organisation = portal.organisation_module.newContent(portal_type='Organisation')
+    file_document = organisation.newContent(portal_type='Embedded File',
+                                            file=DummyFile(__file__),
+                                            content_type='text/plain')
 
     # login as a member
     uf = self.portal.acl_users
