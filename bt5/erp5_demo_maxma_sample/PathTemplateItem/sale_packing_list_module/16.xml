@@ -23,11 +23,7 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
-                <string>Associate</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -47,11 +43,7 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
-                <string>Associate</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -100,6 +92,7 @@
                 <string>price_currency/currency_module/EUR</string>
                 <string>destination_section/organisation_module/9</string>
                 <string>destination_decision/person_module/11</string>
+                <string>specialise/sale_trade_condition_module/1</string>
               </tuple>
             </value>
         </item>
@@ -155,8 +148,8 @@
                 </tuple>
                 <state>
                   <tuple>
-                    <float>1277935200.0</float>
-                    <string>GMT+2</string>
+                    <float>1277953200.0</float>
+                    <string>GMT-3</string>
                   </tuple>
                 </state>
               </object>
@@ -172,8 +165,8 @@
                 </tuple>
                 <state>
                   <tuple>
-                    <float>1278712800.0</float>
-                    <string>GMT+2</string>
+                    <float>1278730800.0</float>
+                    <string>GMT-3</string>
                   </tuple>
                 </state>
               </object>
@@ -259,10 +252,7 @@
   </record>
   <record id="6" aka="AAAAAAAAAAY=">
     <pickle>
-      <tuple>
-        <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
-        <tuple/>
-      </tuple>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
     </pickle>
     <pickle>
       <tuple>
@@ -701,16 +691,169 @@
                 </value>
             </item>
           </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>calculate</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>causality_state</string> </key>
+                <value> <string>calculating</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="6.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1301509016.21</float>
+                        <string>GMT-3</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>converge</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>causality_state</string> </key>
+                <value> <string>solved</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="6.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1301509018.99</float>
+                        <string>GMT-3</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>calculate</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>causality_state</string> </key>
+                <value> <string>calculating</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="6.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1301509030.05</float>
+                        <string>GMT-3</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>converge</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>causality_state</string> </key>
+                <value> <string>solved</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="6.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1301509034.07</float>
+                        <string>GMT-3</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
         </list>
       </tuple>
     </pickle>
   </record>
   <record id="7" aka="AAAAAAAAAAc=">
     <pickle>
-      <tuple>
-        <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
-        <tuple/>
-      </tuple>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
     </pickle>
     <pickle>
       <tuple>
@@ -941,16 +1084,103 @@
                 </value>
             </item>
           </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>909.13463.3404.26982</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="7.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1301509016.23</float>
+                        <string>GMT-3</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>909.13463.3404.26982</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="7.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1301509016.32</float>
+                        <string>GMT-3</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
         </list>
       </tuple>
     </pickle>
   </record>
   <record id="8" aka="AAAAAAAAAAg=">
     <pickle>
-      <tuple>
-        <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
-        <tuple/>
-      </tuple>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
     </pickle>
     <pickle>
       <tuple>
@@ -1149,6 +1379,45 @@
                       <tuple>
                         <float>1299061779.64</float>
                         <string>GMT+1</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>calculate_packing</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>container_state</string> </key>
+                <value> <string>missing</string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="8.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1301509019.03</float>
+                        <string>GMT-3</string>
                       </tuple>
                     </state>
                   </object>

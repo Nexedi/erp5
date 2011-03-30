@@ -23,11 +23,7 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
-                <string>Associate</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -47,11 +43,7 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
-                <string>Associate</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -100,6 +92,7 @@
                 <string>price_currency/currency_module/EUR</string>
                 <string>destination_section/organisation_module/4</string>
                 <string>destination_decision/person_module/9</string>
+                <string>specialise/sale_trade_condition_module/1</string>
               </tuple>
             </value>
         </item>
@@ -259,29 +252,24 @@
   </record>
   <record id="6" aka="AAAAAAAAAAY=">
     <pickle>
-      <tuple>
-        <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
-        <tuple/>
-      </tuple>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
     </pickle>
     <pickle>
       <tuple>
-        <none/>
+        <persistent> <string encoding="base64">AAAAAAAAAAo=</string> </persistent>
         <list>
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value>
-                  <none/>
-                </value>
+                <value> <string>calculate</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>erp5testcase</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>causality_state</string> </key>
-                <value> <string>draft</string> </value>
+                <value> <string>calculating</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -303,86 +291,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1299061296.76</float>
-                        <string>GMT+1</string>
-                      </tuple>
-                    </state>
-                  </object>
-                </value>
-            </item>
-          </dictionary>
-          <dictionary>
-            <item>
-                <key> <string>action</string> </key>
-                <value> <string>start_building</string> </value>
-            </item>
-            <item>
-                <key> <string>actor</string> </key>
-                <value> <string>erp5testcase</string> </value>
-            </item>
-            <item>
-                <key> <string>causality_state</string> </key>
-                <value> <string>building</string> </value>
-            </item>
-            <item>
-                <key> <string>comment</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>error_message</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>time</string> </key>
-                <value>
-                  <object>
-                    <klass> <reference id="6.1"/> </klass>
-                    <tuple>
-                      <none/>
-                    </tuple>
-                    <state>
-                      <tuple>
-                        <float>1299061297.22</float>
-                        <string>GMT+1</string>
-                      </tuple>
-                    </state>
-                  </object>
-                </value>
-            </item>
-          </dictionary>
-          <dictionary>
-            <item>
-                <key> <string>action</string> </key>
-                <value> <string>start_building</string> </value>
-            </item>
-            <item>
-                <key> <string>actor</string> </key>
-                <value> <string>erp5testcase</string> </value>
-            </item>
-            <item>
-                <key> <string>causality_state</string> </key>
-                <value> <string>building</string> </value>
-            </item>
-            <item>
-                <key> <string>comment</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>error_message</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>time</string> </key>
-                <value>
-                  <object>
-                    <klass> <reference id="6.1"/> </klass>
-                    <tuple>
-                      <none/>
-                    </tuple>
-                    <state>
-                      <tuple>
-                        <float>1299061297.22</float>
-                        <string>GMT+1</string>
+                        <float>1301509198.63</float>
+                        <string>GMT-3</string>
                       </tuple>
                     </state>
                   </object>
@@ -396,7 +306,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>erp5testcase</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>causality_state</string> </key>
@@ -420,8 +330,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1299061368.34</float>
-                        <string>GMT+1</string>
+                        <float>1301509204.88</float>
+                        <string>GMT-3</string>
                       </tuple>
                     </state>
                   </object>
@@ -435,7 +345,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>erp5testcase</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>causality_state</string> </key>
@@ -459,281 +369,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1299074834.48</float>
-                        <string>GMT+1</string>
-                      </tuple>
-                    </state>
-                  </object>
-                </value>
-            </item>
-          </dictionary>
-          <dictionary>
-            <item>
-                <key> <string>action</string> </key>
-                <value> <string>solve_automatically</string> </value>
-            </item>
-            <item>
-                <key> <string>actor</string> </key>
-                <value> <string>erp5testcase</string> </value>
-            </item>
-            <item>
-                <key> <string>causality_state</string> </key>
-                <value> <string>solving</string> </value>
-            </item>
-            <item>
-                <key> <string>comment</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>error_message</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>time</string> </key>
-                <value>
-                  <object>
-                    <klass> <reference id="6.1"/> </klass>
-                    <tuple>
-                      <none/>
-                    </tuple>
-                    <state>
-                      <tuple>
-                        <float>1299074836.43</float>
-                        <string>GMT+1</string>
-                      </tuple>
-                    </state>
-                  </object>
-                </value>
-            </item>
-          </dictionary>
-          <dictionary>
-            <item>
-                <key> <string>action</string> </key>
-                <value> <string>diverge</string> </value>
-            </item>
-            <item>
-                <key> <string>actor</string> </key>
-                <value> <string>erp5testcase</string> </value>
-            </item>
-            <item>
-                <key> <string>causality_state</string> </key>
-                <value> <string>diverged</string> </value>
-            </item>
-            <item>
-                <key> <string>comment</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>error_message</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>time</string> </key>
-                <value>
-                  <object>
-                    <klass> <reference id="6.1"/> </klass>
-                    <tuple>
-                      <none/>
-                    </tuple>
-                    <state>
-                      <tuple>
-                        <float>1299074846.12</float>
-                        <string>GMT+1</string>
-                      </tuple>
-                    </state>
-                  </object>
-                </value>
-            </item>
-          </dictionary>
-          <dictionary>
-            <item>
-                <key> <string>action</string> </key>
-                <value> <string>calculate</string> </value>
-            </item>
-            <item>
-                <key> <string>actor</string> </key>
-                <value> <string>erp5testcase</string> </value>
-            </item>
-            <item>
-                <key> <string>causality_state</string> </key>
-                <value> <string>calculating</string> </value>
-            </item>
-            <item>
-                <key> <string>comment</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>error_message</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>time</string> </key>
-                <value>
-                  <object>
-                    <klass> <reference id="6.1"/> </klass>
-                    <tuple>
-                      <none/>
-                    </tuple>
-                    <state>
-                      <tuple>
-                        <float>1299169944.9</float>
-                        <string>GMT+1</string>
-                      </tuple>
-                    </state>
-                  </object>
-                </value>
-            </item>
-          </dictionary>
-          <dictionary>
-            <item>
-                <key> <string>action</string> </key>
-                <value> <string>solve_automatically</string> </value>
-            </item>
-            <item>
-                <key> <string>actor</string> </key>
-                <value> <string>erp5testcase</string> </value>
-            </item>
-            <item>
-                <key> <string>causality_state</string> </key>
-                <value> <string>solving</string> </value>
-            </item>
-            <item>
-                <key> <string>comment</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>error_message</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>time</string> </key>
-                <value>
-                  <object>
-                    <klass> <reference id="6.1"/> </klass>
-                    <tuple>
-                      <none/>
-                    </tuple>
-                    <state>
-                      <tuple>
-                        <float>1299169946.35</float>
-                        <string>GMT+1</string>
-                      </tuple>
-                    </state>
-                  </object>
-                </value>
-            </item>
-          </dictionary>
-          <dictionary>
-            <item>
-                <key> <string>action</string> </key>
-                <value> <string>diverge</string> </value>
-            </item>
-            <item>
-                <key> <string>actor</string> </key>
-                <value> <string>erp5testcase</string> </value>
-            </item>
-            <item>
-                <key> <string>causality_state</string> </key>
-                <value> <string>diverged</string> </value>
-            </item>
-            <item>
-                <key> <string>comment</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>error_message</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>time</string> </key>
-                <value>
-                  <object>
-                    <klass> <reference id="6.1"/> </klass>
-                    <tuple>
-                      <none/>
-                    </tuple>
-                    <state>
-                      <tuple>
-                        <float>1299169956.27</float>
-                        <string>GMT+1</string>
-                      </tuple>
-                    </state>
-                  </object>
-                </value>
-            </item>
-          </dictionary>
-          <dictionary>
-            <item>
-                <key> <string>action</string> </key>
-                <value> <string>solve_divergence_action</string> </value>
-            </item>
-            <item>
-                <key> <string>actor</string> </key>
-                <value> <string>erp5testcase</string> </value>
-            </item>
-            <item>
-                <key> <string>causality_state</string> </key>
-                <value> <string>diverged</string> </value>
-            </item>
-            <item>
-                <key> <string>comment</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>error_message</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>time</string> </key>
-                <value>
-                  <object>
-                    <klass> <reference id="6.1"/> </klass>
-                    <tuple>
-                      <none/>
-                    </tuple>
-                    <state>
-                      <tuple>
-                        <float>1299169995.51</float>
-                        <string>GMT+1</string>
-                      </tuple>
-                    </state>
-                  </object>
-                </value>
-            </item>
-          </dictionary>
-          <dictionary>
-            <item>
-                <key> <string>action</string> </key>
-                <value> <string>solve_divergence</string> </value>
-            </item>
-            <item>
-                <key> <string>actor</string> </key>
-                <value> <string>erp5testcase</string> </value>
-            </item>
-            <item>
-                <key> <string>causality_state</string> </key>
-                <value> <string>solving</string> </value>
-            </item>
-            <item>
-                <key> <string>comment</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>error_message</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>time</string> </key>
-                <value>
-                  <object>
-                    <klass> <reference id="6.1"/> </klass>
-                    <tuple>
-                      <none/>
-                    </tuple>
-                    <state>
-                      <tuple>
-                        <float>1299169995.62</float>
-                        <string>GMT+1</string>
+                        <float>1301511013.13</float>
+                        <string>GMT-3</string>
                       </tuple>
                     </state>
                   </object>
@@ -747,7 +384,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>erp5testcase</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>causality_state</string> </key>
@@ -771,125 +408,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1299170002.22</float>
-                        <string>GMT+1</string>
-                      </tuple>
-                    </state>
-                  </object>
-                </value>
-            </item>
-          </dictionary>
-          <dictionary>
-            <item>
-                <key> <string>action</string> </key>
-                <value> <string>calculate</string> </value>
-            </item>
-            <item>
-                <key> <string>actor</string> </key>
-                <value> <string>erp5testcase</string> </value>
-            </item>
-            <item>
-                <key> <string>causality_state</string> </key>
-                <value> <string>calculating</string> </value>
-            </item>
-            <item>
-                <key> <string>comment</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>error_message</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>time</string> </key>
-                <value>
-                  <object>
-                    <klass> <reference id="6.1"/> </klass>
-                    <tuple>
-                      <none/>
-                    </tuple>
-                    <state>
-                      <tuple>
-                        <float>1299170004.48</float>
-                        <string>GMT+1</string>
-                      </tuple>
-                    </state>
-                  </object>
-                </value>
-            </item>
-          </dictionary>
-          <dictionary>
-            <item>
-                <key> <string>action</string> </key>
-                <value> <string>converge</string> </value>
-            </item>
-            <item>
-                <key> <string>actor</string> </key>
-                <value> <string>erp5testcase</string> </value>
-            </item>
-            <item>
-                <key> <string>causality_state</string> </key>
-                <value> <string>solved</string> </value>
-            </item>
-            <item>
-                <key> <string>comment</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>error_message</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>time</string> </key>
-                <value>
-                  <object>
-                    <klass> <reference id="6.1"/> </klass>
-                    <tuple>
-                      <none/>
-                    </tuple>
-                    <state>
-                      <tuple>
-                        <float>1299170008.01</float>
-                        <string>GMT+1</string>
-                      </tuple>
-                    </state>
-                  </object>
-                </value>
-            </item>
-          </dictionary>
-          <dictionary>
-            <item>
-                <key> <string>action</string> </key>
-                <value> <string>converge</string> </value>
-            </item>
-            <item>
-                <key> <string>actor</string> </key>
-                <value> <string>erp5testcase</string> </value>
-            </item>
-            <item>
-                <key> <string>causality_state</string> </key>
-                <value> <string>solved</string> </value>
-            </item>
-            <item>
-                <key> <string>comment</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>error_message</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>time</string> </key>
-                <value>
-                  <object>
-                    <klass> <reference id="6.1"/> </klass>
-                    <tuple>
-                      <none/>
-                    </tuple>
-                    <state>
-                      <tuple>
-                        <float>1299170026.31</float>
-                        <string>GMT+1</string>
+                        <float>1301511016.72</float>
+                        <string>GMT-3</string>
                       </tuple>
                     </state>
                   </object>
@@ -1459,7 +979,7 @@
             <item>
                 <key> <string>comment</string> </key>
                 <value>
-                  <persistent> <string encoding="base64">AAAAAAAAAAo=</string> </persistent>
+                  <persistent> <string encoding="base64">AAAAAAAAAAs=</string> </persistent>
                 </value>
             </item>
             <item>
@@ -1649,6 +1169,646 @@
     </pickle>
   </record>
   <record id="10" aka="AAAAAAAAAAo=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>erp5testcase</string> </value>
+            </item>
+            <item>
+                <key> <string>causality_state</string> </key>
+                <value> <string>draft</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global id="10.1" name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1299061296.76</float>
+                        <string>GMT+1</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>start_building</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>erp5testcase</string> </value>
+            </item>
+            <item>
+                <key> <string>causality_state</string> </key>
+                <value> <string>building</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="10.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1299061297.22</float>
+                        <string>GMT+1</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>start_building</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>erp5testcase</string> </value>
+            </item>
+            <item>
+                <key> <string>causality_state</string> </key>
+                <value> <string>building</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="10.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1299061297.22</float>
+                        <string>GMT+1</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>converge</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>erp5testcase</string> </value>
+            </item>
+            <item>
+                <key> <string>causality_state</string> </key>
+                <value> <string>solved</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="10.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1299061368.34</float>
+                        <string>GMT+1</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>calculate</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>erp5testcase</string> </value>
+            </item>
+            <item>
+                <key> <string>causality_state</string> </key>
+                <value> <string>calculating</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="10.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1299074834.48</float>
+                        <string>GMT+1</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>solve_automatically</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>erp5testcase</string> </value>
+            </item>
+            <item>
+                <key> <string>causality_state</string> </key>
+                <value> <string>solving</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="10.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1299074836.43</float>
+                        <string>GMT+1</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>diverge</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>erp5testcase</string> </value>
+            </item>
+            <item>
+                <key> <string>causality_state</string> </key>
+                <value> <string>diverged</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="10.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1299074846.12</float>
+                        <string>GMT+1</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>calculate</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>erp5testcase</string> </value>
+            </item>
+            <item>
+                <key> <string>causality_state</string> </key>
+                <value> <string>calculating</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="10.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1299169944.9</float>
+                        <string>GMT+1</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>solve_automatically</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>erp5testcase</string> </value>
+            </item>
+            <item>
+                <key> <string>causality_state</string> </key>
+                <value> <string>solving</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="10.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1299169946.35</float>
+                        <string>GMT+1</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>diverge</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>erp5testcase</string> </value>
+            </item>
+            <item>
+                <key> <string>causality_state</string> </key>
+                <value> <string>diverged</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="10.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1299169956.27</float>
+                        <string>GMT+1</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>solve_divergence_action</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>erp5testcase</string> </value>
+            </item>
+            <item>
+                <key> <string>causality_state</string> </key>
+                <value> <string>diverged</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="10.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1299169995.51</float>
+                        <string>GMT+1</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>solve_divergence</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>erp5testcase</string> </value>
+            </item>
+            <item>
+                <key> <string>causality_state</string> </key>
+                <value> <string>solving</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="10.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1299169995.62</float>
+                        <string>GMT+1</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>converge</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>erp5testcase</string> </value>
+            </item>
+            <item>
+                <key> <string>causality_state</string> </key>
+                <value> <string>solved</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="10.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1299170002.22</float>
+                        <string>GMT+1</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>calculate</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>erp5testcase</string> </value>
+            </item>
+            <item>
+                <key> <string>causality_state</string> </key>
+                <value> <string>calculating</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="10.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1299170004.48</float>
+                        <string>GMT+1</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>converge</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>erp5testcase</string> </value>
+            </item>
+            <item>
+                <key> <string>causality_state</string> </key>
+                <value> <string>solved</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="10.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1299170008.01</float>
+                        <string>GMT+1</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>converge</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>erp5testcase</string> </value>
+            </item>
+            <item>
+                <key> <string>causality_state</string> </key>
+                <value> <string>solved</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="10.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1299170026.31</float>
+                        <string>GMT+1</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="11" aka="AAAAAAAAAAs=">
     <pickle>
       <tuple>
         <global name="Message" module="Products.ERP5Type.Message"/>

@@ -113,7 +113,7 @@
                 </tuple>
                 <state>
                   <tuple>
-                    <float>1262311200.0</float>
+                    <float>1262224800.0</float>
                     <string>GMT-2</string>
                   </tuple>
                 </state>
@@ -671,6 +671,51 @@
                     <state>
                       <tuple>
                         <float>1301507693.25</float>
+                        <string>GMT-3</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>909.20370.58346.26965</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="5.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1301510984.14</float>
                         <string>GMT-3</string>
                       </tuple>
                     </state>
