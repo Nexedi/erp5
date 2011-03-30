@@ -68,7 +68,7 @@
   for address in to_add_ip_dict_list:\n
     if to_delete_ip_id_list:\n
       id = to_delete_ip_id_list.pop()\n
-      address_document = getattr(partition, id)\n
+      address_document = getattr(document, id)\n
     else:\n
       kw = {\'portal_type\': \'Internet Protocol Address\'}\n
       if len(document.objectIds(portal_type=\'Internet Protocol Address\')):\n
