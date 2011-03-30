@@ -79,7 +79,9 @@
                 <string>p_variation_base_category_list</string>
                 <string>destination_account</string>
                 <string>destination_function</string>
+                <string>destination_function_title</string>
                 <string>destination_funding</string>
+                <string>destination_funding_title</string>
                 <string>min_delay</string>
                 <string>max_delay</string>
                 <string>min_flow</string>
