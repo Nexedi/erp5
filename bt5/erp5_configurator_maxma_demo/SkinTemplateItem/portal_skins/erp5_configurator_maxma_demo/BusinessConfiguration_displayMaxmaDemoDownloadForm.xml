@@ -64,7 +64,7 @@
                     <key> <string>Default</string> </key>
                     <value>
                       <list>
-                        <string>message</string>
+                        <string>your_message</string>
                       </list>
                     </value>
                 </item>
