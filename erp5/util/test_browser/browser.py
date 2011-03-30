@@ -72,17 +72,31 @@ def measurementMetaClass(prefix):
             method.func_name[1:]
 
         def innerSecond(self, *args, **kwargs):
+          """
+          Call L{%(name)s} method and return the time it took in seconds.
+
+          @param args: Positional arguments given to L{%(name)s}
+          @param kwargs: Keyword arguments given to L{%(name)s}
+          """
           method(self, *args, **kwargs)
           return self.lastRequestSeconds
 
         innerSecond.func_name = method_name_prefix + 'InSecond'
+        innerSecond.__doc__ = innerSecond.__doc__ %  {'name': method.func_name}
         dictionary[innerSecond.func_name] = innerSecond
 
         def innerPystone(self, *args, **kwargs):
+          """
+          Call L{%(name)s} method and return the time it took in pystones.
+
+          @param args: Positional arguments given to L{%(name)s}
+          @param kwargs: Keyword arguments given to L{%(name)s}
+          """
           method(self, *args, **kwargs)
           return self.lastRequestPystones
 
         innerPystone.func_name = method_name_prefix + 'InPystone'
+        innerPystone.__doc__ = innerPystone.__doc__ % {'name': method.func_name}
         dictionary[innerPystone.func_name] = innerPystone
 
       # Create time*InSecond and time*InPystone methods only for the
@@ -95,11 +109,15 @@ def measurementMetaClass(prefix):
       # defined on classes inheriting from zope.testbrowser.browser.Browser,
       # so create these properties for all other classes too
       if 'Browser' not in bases[0].__name__:
-        dictionary['lastRequestSeconds'] = property(
-          lambda self: self.browser.lastRequestSeconds)
+        time_method = lambda self: self.browser.lastRequestSeconds
+        time_method.func_name = 'lastRequestSeconds'
+        time_method.__doc__ = Browser.lastRequestSeconds.__doc__
+        dictionary['lastRequestSeconds'] = property(time_method)
 
-        dictionary['lastRequestPystones'] = property(
-          lambda self: self.browser.lastRequestPystones)
+        time_method = lambda self: self.browser.lastRequestPystones
+        time_method.func_name = 'lastRequestPystones'
+        time_method.__doc__ = Browser.lastRequestPystones.__doc__
+        dictionary['lastRequestPystones'] = property(time_method)
 
       return super(MeasurementMetaClass,
                    metacls).__new__(metacls, name, bases, dictionary)
