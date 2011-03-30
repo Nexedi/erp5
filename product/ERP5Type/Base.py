@@ -1529,6 +1529,7 @@ class Base( CopyContainer,
     """
     return self
 
+  security.declareProtected(Permissions.ManagePortal, 'getMountedObject')
   def getMountedObject(self):
       """
       If self is a mount-point, return the mounted object in its own storage
