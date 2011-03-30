@@ -24,6 +24,24 @@
             </value>
         </item>
         <item>
+            <key> <string>acquisition_base_category</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>acquisition_object_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>alt_accessor_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>categories</string> </key>
             <value>
               <tuple>
@@ -59,6 +77,8 @@
                 <string>destination_reference</string>
                 <string>p_variation_base_category_list</string>
                 <string>destination_account</string>
+                <string>destination_function</string>
+                <string>destination_funding</string>
                 <string>min_delay</string>
                 <string>max_delay</string>
                 <string>min_flow</string>
@@ -71,6 +91,12 @@
         <item>
             <key> <string>content_portal_type</string> </key>
             <value> <string>python: (\'Purchase Supply Line\',)</string> </value>
+        </item>
+        <item>
+            <key> <string>content_translation_acquired_property_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>description</string> </key>
