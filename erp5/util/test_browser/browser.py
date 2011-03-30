@@ -634,16 +634,13 @@ class ContextMainForm(MainForm):
     @type script_id: str
     """
     try:
-      if value:
-        value = '%s?workflow_action=%s' % (script_id, value)
-
-      self.submitSelect('select_action', 'Base_doAction:method', label, value)
+      self.submitSelect('select_action', 'Base_doAction:method', label,
+                        value and '%s?workflow_action=%s' % (script_id, value))
 
     except LookupError:
-      if value:
-        value = '%s?field_my_workflow_action=%s' % (script_id, value)
-
-      self.submitSelect('select_action', 'Base_doAction:method', label, value)
+      self.submitSelect('select_action', 'Base_doAction:method', label,
+                        value and '%s?field_my_workflow_action=%s' % (script_id,
+                                                                      value))
 
   def submitDialogCancel(self):
     """
