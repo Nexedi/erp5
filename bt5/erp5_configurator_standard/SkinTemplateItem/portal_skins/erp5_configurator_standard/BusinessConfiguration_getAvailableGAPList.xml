@@ -78,7 +78,10 @@ return [\n
        name=Base_translateString(\'Standard Luxembourgers Plan(Luxembourg)\'),\n
        root=\'gap/lu/standard\',\n
        bt5=\'erp5_accounting_l10n_lu\',),\n
-\n
+  dict(id=\'ru\',\n
+       name=Base_translateString(\'Standard Russian Plan (2000 edition)\'),\n
+       root=\'gap/ru/ru2000\',\n
+       bt5=\'erp5_accounting_l10n_ru\',),\n
 ]\n
 </string> </value>
         </item>
