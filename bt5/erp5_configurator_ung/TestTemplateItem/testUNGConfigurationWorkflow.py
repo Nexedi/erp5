@@ -219,9 +219,10 @@ class TestUNGConfiguratorWorkflow(ERP5TypeTestCase):
     self.assertCurrentStep('Configuration of users', response_dict)
 
   def stepCheckUserAccountNumberThree(self, sequence=None, sequence_list=None, **kw):
-    """ """
+    """ Check user amount """
     business_configuration = sequence.get("business_configuration")
-    organisation_config_save = business_configuration['3']
+    number_config_save = business_configuration['4']
+    self.asserEquals(self.number_config_save["user_number"], "3")
  
   def stepSetupMultipleUserAccountThree(self, sequence=None, sequence_list=None, **kw):
     """ Create multiple user account """
@@ -232,8 +233,7 @@ class TestUNGConfiguratorWorkflow(ERP5TypeTestCase):
         field_your_reference="person_creator",
         field_your_password='person_creator',
         field_your_password_confirm='person_creator',
-        field_your_default_email_
-text='test@test.com',
+        field_your_default_email_text='test@test.com',
         field_your_default_telephone_text='',
       ), dict(
         field_your_first_name='Person',
