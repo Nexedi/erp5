@@ -89,7 +89,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>erp5testcase3</string> </value>
+            <value> <string>demo</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -168,7 +168,7 @@
               <dictionary>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string>{SSHA}tqlH9cHvj5gnqNC99yn7Q304dFHDc8DRuxyd</string> </value>
+                    <value> <string>{SSHA}KBTyI6P5ShhtkStdBxPAZZtRMc1J7ZQO2vLC</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -215,10 +215,7 @@
   </record>
   <record id="7" aka="AAAAAAAAAAc=">
     <pickle>
-      <tuple>
-        <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
-        <tuple/>
-      </tuple>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
     </pickle>
     <pickle>
       <tuple>
@@ -578,6 +575,51 @@
                       <tuple>
                         <float>1299496763.44</float>
                         <string>GMT+1</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>909.17286.48989.6519</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="7.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1301442229.4</float>
+                        <string>GMT-3</string>
                       </tuple>
                     </state>
                   </object>
