@@ -19,7 +19,7 @@ def benchmarkAddPerson(result_dict):
   browser.mainForm.submitSelectModule(label='Persons')
 
   # Create a new person and record the time elapsed in seconds
-  result_dict.setdefault('Create new person', []).append(browser.mainForm.secondSubmitNew())
+  result_dict.setdefault('Create new person', []).append(browser.mainForm.timeSubmitNewInSecond())
 
   # Check whether it has been successfully created
   assert browser.getTransitionMessage() == 'Object created.'
@@ -29,14 +29,14 @@ def benchmarkAddPerson(result_dict):
   browser.mainForm.getControl(name='field_my_last_name').value = 'Bar'
 
   # Submit the changes, record the time elapsed in seconds
-  result_dict.setdefault('Save', []).append(browser.mainForm.secondSubmitSave())
+  result_dict.setdefault('Save', []).append(browser.mainForm.timeSubmitSaveInSecond())
 
   # Check whether the changes have been successfully updated
   assert browser.getTransitionMessage() == 'Data updated.'
 
   # Validate the person and record confirmation
   browser.mainForm.submitSelectWorkflow(label='Validate')
-  result_dict.setdefault('Validate', []).append(browser.mainForm.secondSubmitDialogConfirm())
+  result_dict.setdefault('Validate', []).append(browser.mainForm.timeSubmitDialogConfirmInSecond())
 
   # Check whether it has been successfully validated
   assert browser.getTransitionMessage() == 'Status changed.'

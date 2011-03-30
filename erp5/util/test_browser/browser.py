@@ -49,43 +49,44 @@ def measurementMetaClass(prefix):
   """
   class MeasurementMetaClass(type):
     """
-    Meta class to define automatically C{second*} and C{pystone*}
-    methods automatically according to given C{prefix}, and also to
-    define C{lastRequestSeconds} and C{lastRequestPystones} on other
-    classes besides of Browser.
+    Meta class to define automatically C{time*InSecond} and
+    C{time*InPystone} methods automatically according to given
+    C{prefix}, and also to define C{lastRequestSeconds} and
+    C{lastRequestPystones} on other classes besides of Browser.
     """
     def __new__(metacls, name, bases, dictionary):
       def applyMeasure(method):
         """
-        Inner function to add the C{second} and C{pystone} methods to
-        the dictionary of newly created class.
+        Inner function to add the C{time*InSecond} and C{time*InPystone}
+        methods to the dictionary of newly created class.
 
         For example, if the method name is C{submitSave} then
-        C{secondSubmitSave} and C{pystoneSubmitSave} will be added to
-        the newly created class.
+        C{timeSubmitSaveInSecond} and C{timeSubmitSaveInPystone} will
+        be added to the newly created class.
 
         @param method: Instance method to be called
         @type method: function
         """
         # Upper the first character
-        method_name_suffix = method.func_name[0].upper() + method.func_name[1:]
+        method_name_prefix = 'time' + method.func_name[0].upper() + \
+            method.func_name[1:]
 
         def innerSecond(self, *args, **kwargs):
           method(self, *args, **kwargs)
           return self.lastRequestSeconds
 
-        innerSecond.func_name = 'second' + method_name_suffix
+        innerSecond.func_name = method_name_prefix + 'InSecond'
         dictionary[innerSecond.func_name] = innerSecond
 
         def innerPystone(self, *args, **kwargs):
           method(self, *args, **kwargs)
           return self.lastRequestPystones
 
-        innerPystone.func_name = 'pystone' + method_name_suffix
+        innerPystone.func_name = method_name_prefix + 'InPystone'
         dictionary[innerPystone.func_name] = innerPystone
 
-      # Create second* and pystone* methods only for the methods
-      # prefixed by the given prefix
+      # Create time*InSecond and time*InPystone methods only for the
+      # methods prefixed by the given prefix
       for attribute_name, attribute in dictionary.items():
         if attribute_name.startswith(prefix) and callable(attribute):
           applyMeasure(attribute)
