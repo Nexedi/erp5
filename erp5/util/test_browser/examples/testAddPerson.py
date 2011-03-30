@@ -7,7 +7,7 @@ ITERATION = 20
 
 def benchmarkAddPerson(result_dict):
   """
-  Benchmark adding a person
+  Benchmark adding a person.
   """
   # Create a browser instance
   browser = Browser('http://localhost:18080/', 'erp5',
@@ -17,10 +17,10 @@ def benchmarkAddPerson(result_dict):
   browser.open()
 
   # Go to Persons module (person_module)
-  browser.mainForm.submitSelectModule(label='Persons')
+  browser.mainForm.submitSelectModule(value='/person_module')
 
   # Create a new person and record the time elapsed in seconds
-  result_dict.setdefault('Create new person', []).append(
+  result_dict.setdefault('Create', []).append(
     browser.mainForm.timeSubmitNewInSecond())
 
   # Check whether it has been successfully created
@@ -38,7 +38,7 @@ def benchmarkAddPerson(result_dict):
   assert browser.getTransitionMessage() == 'Data updated.'
 
   # Validate the person and record confirmation
-  browser.mainForm.submitSelectWorkflow(label='Validate')
+  browser.mainForm.submitSelectWorkflow(value='validate_action')
   result_dict.setdefault('Validate', []).append(
     browser.mainForm.timeSubmitDialogConfirmInSecond())
 
@@ -55,4 +55,4 @@ if __name__ == '__main__':
     counter += 1
 
   for title, time_list in result_dict.iteritems():
-    print "Average: %s: %.4fs" % (title, float(sum(time_list)) / ITERATION)
+    print "%s: %.4fs" % (title, float(sum(time_list)) / ITERATION)
