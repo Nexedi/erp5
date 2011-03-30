@@ -71,6 +71,7 @@ bt5_installation_list = (\'erp5_simulation\',\n
                          \'erp5_invoicing\',\n
                          \'erp5_configurator_standard_categories\',\n
                          \'erp5_trade_knowledge_pad\',\n
+                         \'erp5_simulation_test\',\n
                          \'erp5_crm_knowledge_pad\',\n
                          \'erp5_simplified_invoicing\',\n
                          \'erp5_ods_style\',\n
@@ -79,7 +80,6 @@ bt5_installation_list = (\'erp5_simulation\',\n
                          \'erp5_accounting_l10n_fr\',\n
                          \'erp5_l10n_fr\',\n
                          \'erp5_l10n_pt-BR\',\n
-                         \'erp5_demo_maxma_sample\'\n
                         )\n
 \n
 bt5_update_catalog = (\'erp5_ingestion_mysql_innodb_catalog\', )\n

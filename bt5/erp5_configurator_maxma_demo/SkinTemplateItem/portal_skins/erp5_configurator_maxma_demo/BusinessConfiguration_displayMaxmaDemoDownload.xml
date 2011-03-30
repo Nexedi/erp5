@@ -51,6 +51,15 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string># Nothing to do here\n
+configuration_save = context.restrictedTraverse(configuration_save_url)\n
+\n
+bt5_installation_list = (\'erp5_demo_maxma_sample\')\n
+\n
+for name in bt5_installation_list:\n
+  configuration_save.addConfigurationItem("Standard BT5 Configurator Item",\n
+                                          title=name, bt5_id=name,\n
+                                          update_catalog=0\n
+                                          )\n
 </string> </value>
         </item>
         <item>
