@@ -1,4 +1,8 @@
 2011-03-30 lucas
+* The mixin class called TestLiveConfiguratorWorkflowMixin has been moved to ERP5Configurator/tests/ConfiguratorTestMixin.py.
+* Added tests with Russian configuration.
+
+2011-03-30 lucas
 * Enabled russian language and accounting plan. (Thanks to Vera Kurpas for the contributions).
 
 2011-03-30 lucas
