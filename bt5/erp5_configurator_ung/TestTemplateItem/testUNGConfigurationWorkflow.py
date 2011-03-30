@@ -81,7 +81,6 @@ class TestUNGConfiguratorWorkflow(ERP5TypeTestCase):
      stepConfiguratorNext
      stepTic
      stepCheckConfigureMultipleUserAccountForm
-     stepCheckUserAccountNumberThree
      stepSetupMultipleUserAccountThree
      stepConfiguratorNext
      stepTic
@@ -217,12 +216,6 @@ class TestUNGConfiguratorWorkflow(ERP5TypeTestCase):
     self.assertEquals('Previous', response_dict['previous'])
     self.assertEquals('Configure user accounts', response_dict['next'])
     self.assertCurrentStep('Configuration of users', response_dict)
-
-  def stepCheckUserAccountNumberThree(self, sequence=None, sequence_list=None, **kw):
-    """ Check user amount """
-    business_configuration = sequence.get("business_configuration")
-    number_config_save = business_configuration['4']
-    self.asserEquals(self.number_config_save["user_number"], "3")
  
   def stepSetupMultipleUserAccountThree(self, sequence=None, sequence_list=None, **kw):
     """ Create multiple user account """
