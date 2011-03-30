@@ -34,15 +34,17 @@
 # class may be copied in the pickle of the container, and we can't access it
 # from __setstate__.
 
-import re
+import logging, re
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 from OFS.Folder import Folder as OFS_Folder
 from persistent import Persistent, wref
-from zLOG import LOG, PROBLEM, DEBUG, TRACE
 from ZODB.serialize import ObjectWriter, ObjectReader
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Base import Base, WorkflowMethod
+
+log = logging.getLogger('ERP5Type')
+log.trace = lambda *args, **kw: log.log(5, *args, **kw)
 
 isOldBTree = re.compile(r'BTrees\._(..)BTree\.(\1)BTree$').match
 
@@ -117,7 +119,7 @@ class PickleUpdater(ObjectReader, ObjectWriter, object):
       oid_set |= self.oid_set - migrated_oid_set
       self.oid_set = None
       if self.do_migrate:
-        LOG('PickleUpdater', DEBUG, 'migrate %r (%r)' % (obj, klass))
+        log.debug('PickleUpdater: migrate %r (%r)', obj, klass)
         self.setGhostState(obj, self.serialize(obj))
         obj._p_changed = 1
 
@@ -169,8 +171,7 @@ if 1:
     try:
       portal_type = value.get('portal_type') or klass.portal_type
     except AttributeError:
-      LOG('ERP5Type', PROBLEM,
-          "no portal type was found for %r (class %s)" % (self, klass))
+      log.warn("no portal type was found for %r (class %s)", self, klass)
       return Base__setstate__(self, value)
     if portal_type == 'Dummy Class Tool':
       return Base__setstate__(self, value)
@@ -181,7 +182,7 @@ if 1:
     assert self.__class__ is not newklass
     self.__class__ = newklass
     self.__setstate__(value)
-    LOG('Base.__setstate__', TRACE, "migrate %r" % self)
+    log.trace("Base.__setstate__: migrate %r", self)
 
   def migrateToPortalTypeClass(self, recursive=False):
     """Migrate persistently all referenced classes
