@@ -28,6 +28,10 @@ Internal Packing List Line | Internal Packing List Cell
 Internal Packing List Module | Internal Packing List
 Internal Packing List | Internal Packing List Line
 Internal Packing List | Payment Condition
+Internal Trade Condition Module | Internal Trade Condition
+Internal Trade Condition | Internal Supply Line
+Internal Trade Condition | Payment Condition
+Internal Trade Condition | Trade Model Line
 Inventory Line | Inventory Cell
 Inventory Module | Inventory
 Inventory | Inventory Line

@@ -8,6 +8,9 @@
  <portal_type id="Internal Packing List Module">
   <item>business_application</item>
  </portal_type>
+ <portal_type id="Internal Trade Condition Module">
+  <item>business_application</item>
+ </portal_type>
  <portal_type id="Inventory Module">
   <item>business_application</item>
  </portal_type>

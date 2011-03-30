@@ -40,6 +40,11 @@ Internal Packing List | payment_condition
 Internal Packing List | profile_view
 Internal Packing List | view
 Internal Packing List | view_stock
+Internal Trade Condition Module | view
+Internal Trade Condition | view
+Internal Trade Condition | view_payment
+Internal Trade Condition | view_profile
+Internal Trade Condition | view_trade_model_line_list
 Inventory Cell | view
 Inventory Line | inventory_view
 Inventory Line | price_view
