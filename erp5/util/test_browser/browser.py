@@ -461,13 +461,12 @@ class MainForm(Form):
     # to match the end of the option control value string because in
     # ERP5, the value could be URL (such as 'http://foo:81/erp5/logout')
     if value:
-      selected_item = None
       for item in select_control.options:
         if '?' not in value:
           item = item.split('?')[0]
 
         if item.endswith(value):
-          value = selected_item = item
+          value = item
 
     logging.debug("select_id='%s', label='%s', value='%s'" % \
                     (select_name, label, value))
