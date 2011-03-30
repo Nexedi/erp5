@@ -266,7 +266,7 @@ def _getVolatileMemcachedServerDict():
   """
   hostname = os.environ.get('volatile_memcached_server_hostname', 
                             'localhost')
-  port = os.environ.get('volatile_conversion_server_port', '11211')
+  port = os.environ.get('volatile_memcached_server_port', '11211')
   return dict(hostname=hostname, port=port)
 
 def _getPersistentMemcachedServerDict():
@@ -274,7 +274,7 @@ def _getPersistentMemcachedServerDict():
   """
   hostname = os.environ.get('persistent_memcached_server_hostname', 
                             'localhost')
-  port = os.environ.get('persistent_conversion_server_port', '12121')
+  port = os.environ.get('persistent_memcached_server_port', '12121')
   return dict(hostname=hostname, port=port)
 
 def profile_if_environ(environment_var_name):
