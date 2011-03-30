@@ -2,6 +2,7 @@ Account Configurator Item
 Accounting Period Configurator Item
 Business Configuration
 Business Configuration Module
+Business Process Configurator Item
 Catalog Keyword Key Configurator Item
 Categories Spreadsheet Configurator Item
 Category Configurator Item
@@ -20,6 +21,7 @@ Role Configurator Item
 Rule Configurator Item
 Service Configurator Item
 Site Property Configurator Item
+Solver Configurator Item
 Standard BT5 Configurator Item
 System Preference Configurator Item
 Trash Fake Site Configurator Item

@@ -6,6 +6,7 @@ Categories Spreadsheet Configurator Item | Embedded File
 Categories Spreadsheet Configurator Item | File
 Configuration Save | Account Configurator Item
 Configuration Save | Accounting Period Configurator Item
+Configuration Save | Business Process Configurator Item
 Configuration Save | Catalog Keyword Key Configurator Item
 Configuration Save | Categories Spreadsheet Configurator Item
 Configuration Save | Category Configurator Item
@@ -22,6 +23,7 @@ Configuration Save | Role Configurator Item
 Configuration Save | Rule Configurator Item
 Configuration Save | Service Configurator Item
 Configuration Save | Site Property Configurator Item
+Configuration Save | Solver Configurator Item
 Configuration Save | Standard BT5 Configurator Item
 Configuration Save | System Preference Configurator Item
 Configuration Save | Workflow Security Configurator Item
