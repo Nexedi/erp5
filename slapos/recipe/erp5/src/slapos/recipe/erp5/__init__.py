@@ -72,7 +72,8 @@ class Recipe(BaseSlapRecipe):
           certificate=ca_conf['login_certificate']))
     self.installERP5Site(user, password, zope_access, mysql_conf, 
              conversion_server_conf, memcached_conf, kumo_conf, self.site_id)
-    self.installTestRunner(ca_conf, mysql_conf, conversion_server_conf)
+    self.installTestRunner(ca_conf, mysql_conf, conversion_server_conf,
+                           memcached_conf, kumo_conf)
     self.linkBinary()
     self.setConnectionDict(dict(
       site_url=apache_conf['apache_login'],
@@ -153,7 +154,8 @@ class Recipe(BaseSlapRecipe):
     return dict(memcached_url='%s:%s' %
         (config['memcached_ip'], config['memcached_port']))
 
-  def installTestRunner(self, ca_conf, mysql_conf, conversion_server_conf):
+  def installTestRunner(self, ca_conf, mysql_conf, conversion_server_conf,
+                        memcached_conf, kumo_conf):
     """Installs bin/runTestSuite executable to run all tests using
        bin/runUnitTest"""
     # XXX: This method can be drastically simplified after #20110128-1ECA63
@@ -179,7 +181,11 @@ class Recipe(BaseSlapRecipe):
           '--conversion_server_hostname=%(conversion_server_ip)s' % \
                                                          conversion_server_conf,
           '--conversion_server_port=%(conversion_server_port)s' % \
-                                                         conversion_server_conf
+                                                         conversion_server_conf,
+          '--volatile_memcached_server_hostname=%(memcached_ip)s' % memcached_conf,
+          '--volatile_memcached_server_port=%(memcached_port)s' % memcached_conf,
+          '--persistent_memcached_server_hostname=%(kumo_gateway_ip)s' % kumo_conf,
+          '--persistent_memcached_server_port=%(kumo_gateway_port)s' % kumo_conf,
       ]
         )])[0]
     self.path_list.append(runUnitTest)
