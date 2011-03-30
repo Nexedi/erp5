@@ -1,4 +1,7 @@
+business_process_module/maxma_business_process
+business_process_module/maxma_business_process/**
 campaign_module/**
+currency_module/EUR
 event_module
 event_module/**
 inventory_module

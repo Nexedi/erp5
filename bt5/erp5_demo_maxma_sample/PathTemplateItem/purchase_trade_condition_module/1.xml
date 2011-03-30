@@ -85,6 +85,7 @@
                 <string>price_currency/currency_module/EUR</string>
                 <string>delivery_mode/air</string>
                 <string>incoterm/ddp</string>
+                <string>specialise/business_process_module/maxma_business_process</string>
               </tuple>
             </value>
         </item>
@@ -112,8 +113,8 @@
                 </tuple>
                 <state>
                   <tuple>
-                    <float>1262300400.0</float>
-                    <string>GMT+1</string>
+                    <float>1262311200.0</float>
+                    <string>GMT-2</string>
                   </tuple>
                 </state>
               </object>
@@ -129,8 +130,8 @@
                 </tuple>
                 <state>
                   <tuple>
-                    <float>1451430000.0</float>
-                    <string>GMT+1</string>
+                    <float>1451440800.0</float>
+                    <string>GMT-2</string>
                   </tuple>
                 </state>
               </object>
@@ -264,10 +265,7 @@
   </record>
   <record id="5" aka="AAAAAAAAAAU=">
     <pickle>
-      <tuple>
-        <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
-        <tuple/>
-      </tuple>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
     </pickle>
     <pickle>
       <tuple>
@@ -584,6 +582,96 @@
                       <tuple>
                         <float>1298301422.68</float>
                         <string>GMT+1</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>909.13463.3404.26982</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="5.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1301507216.76</float>
+                        <string>GMT-3</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>909.20362.62016.61730</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="5.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1301507693.25</float>
+                        <string>GMT-3</string>
                       </tuple>
                     </state>
                   </object>
