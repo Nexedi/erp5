@@ -98,6 +98,22 @@ Options:
                              Port number used to connect to conversion server
                              (Oood), the value will be stored at default preference.
                              By default 8008 is used.
+  --volatile_memcached_server_hostname=STRING
+                             Hostname used to connect to volatile memcached server,
+                             this value will stored on portal_memcached.
+                             By default localhost is used.
+  --volatile_memcached_server_port=STRING
+                             Port number used to connect to volatile memcached server,
+                             the value will be stored on portal_memcached.
+                             By default 11211 is used.
+  --persistent_memcached_server_hostname=STRING
+                             Hostname used to connect to persistent memcached server,
+                             this value will stored on portal_memcached.
+                             By default localhost is used.
+  --persistent_memcached_server_port=STRING
+                             Port number used to connect to persistent memcached server,
+                             the value will be stored on portal_memcached.
+                             By default 12121 is used.
   --random_activity_priority=[SEED]
                              Force activities to have a random priority, to make
                              random failures (due to bad activity dependencies)
@@ -608,6 +624,10 @@ def main(argument_list=None):
         "cmf_activity_sql_connection_string=",
         "conversion_server_port=", 
         "conversion_server_hostname=",
+        "volatile_memcached_server_port=", 
+        "volatile_memcached_server_hostname=",
+        "persistent_memcached_server_port=", 
+        "persistent_memcached_server_hostname=",
         "erp5_catalog_storage=",
         "save",
         "load",
@@ -694,6 +714,14 @@ def main(argument_list=None):
       os.environ["conversion_server_hostname"] = arg
     elif opt == "--conversion_server_port":
       os.environ["conversion_server_port"] = arg
+    elif opt == "--volatile_memcached_server_hostname":
+      os.environ["volatile_memcached_server_hostname"] = arg
+    elif opt == "--volatile_memcached_server_port":
+      os.environ["volatile_memcached_server_port"] = arg
+    elif opt == "--persistent_memcached_server_hostname":
+      os.environ["persistent_memcached_server_hostname"] = arg
+    elif opt == "--persistent_memcached_server_port":
+      os.environ["persistent_memcached_server_port"] = arg
     elif opt == "--live_instance":
       live_instance_path = arg or real_instance_home
       # following line is only for static files

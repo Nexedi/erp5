@@ -261,6 +261,21 @@ def _getConversionServerDict():
   return dict(hostname=conversion_server_hostname, 
               port=int(conversion_server_port))
 
+def _getVolatileMemcachedServerDict():
+  """Returns a dict with hostname and port for volatile memcached Server
+  """
+  hostname = os.environ.get('volatile_memcached_server_hostname', 
+                            'localhost')
+  port = os.environ.get('volatile_conversion_server_port', '11211')
+  return dict(hostname=hostname, port=port)
+
+def _getPersistentMemcachedServerDict():
+  """Returns a dict with hostname and port for persistent memcached Server
+  """
+  hostname = os.environ.get('persistent_memcached_server_hostname', 
+                            'localhost')
+  port = os.environ.get('persistent_conversion_server_port', '12121')
+  return dict(hostname=hostname, port=port)
 
 def profile_if_environ(environment_var_name):
     if int(os.environ.get(environment_var_name, 0)):
