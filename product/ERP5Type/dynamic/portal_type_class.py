@@ -183,11 +183,14 @@ def generatePortalTypeClass(site, portal_type_name):
     raise AttributeError('Document class is not defined on Portal Type %s' \
             % portal_type_name)
 
-  type_class_path = document_class_registry.get(type_class)
-  if type_class_path is None:
-    raise AttributeError('Document class %s has not been registered:' \
-                         ' cannot import it as base of Portal Type %s' \
-                         % (type_class, portal_type_name))
+  if '.' in type_class:
+    type_class_path = type_class
+  else:
+    type_class_path = document_class_registry.get(type_class)
+    if type_class_path is None:
+      raise AttributeError('Document class %s has not been registered:'
+                           ' cannot import it as base of Portal Type %s'
+                           % (type_class, portal_type_name))
 
   klass = _importClass(type_class_path)
 
@@ -338,6 +341,7 @@ def synchronizeDynamicModules(context, force=False):
       bootstrap = None
       from Products.ERP5Type.Tool.PropertySheetTool import PropertySheetTool
       from Products.ERP5Type.Tool.TypesTool import TypesTool
+      import erp5.portal_type
       for tool_class in TypesTool, PropertySheetTool:
         # if the instance has no property sheet tool, or incomplete
         # property sheets, we need to import some data to bootstrap
@@ -345,10 +349,6 @@ def synchronizeDynamicModules(context, force=False):
         tool_id = tool_class.id
         tool = getattr(portal, tool_id, None)
         if tool is None:
-          # Create a "non-migrated" (types) tool, so that
-          # ERP5Site.migrateToPortalTypeClass doesn't think there nothing to do.
-          # On the other hand, we must make sure TypesTool._bootstrap installs
-          # the needed portal types in order to migrate this bootstrap tool.
           tool = tool_class()
           try:
             portal._setObject(tool_id, tool, set_owner=False, suppress_events=True)
@@ -366,18 +366,16 @@ def synchronizeDynamicModules(context, force=False):
         try:
           os.chdir(bootstrap)
           tool._bootstrap()
+          tool.__class__ = getattr(erp5.portal_type, tool.portal_type)
         finally:
           os.chdir(cwd)
 
-      if bootstrap:
-        if not getattr(portal, '_v_bootstrapping', False):
-          LOG('ERP5Site', INFO, 'Transition successful, please update your'
-              ' business templates')
-        # XXX: if some portal types are missing, for instance
-        # if some Tools have no portal types, this is likely to fail with an
-        # error. On the other hand, we can't proceed without this change,
-        # and if we dont import the xml, the instance wont start.
-        portal.migrateToPortalTypeClass()
+      if bootstrap and not getattr(portal, '_v_bootstrapping', False):
+        from Products.ERP5Type.dynamic.persistent_migration import PickleUpdater
+        if PickleUpdater.get:
+          portal.migrateToPortalTypeClass()
+        LOG('ERP5Site', INFO, 'Transition successful, please update your'
+            ' business templates')
 
       _bootstrapped.add(portal.id)
 

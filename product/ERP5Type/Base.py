@@ -3578,25 +3578,6 @@ class Base( CopyContainer,
   def isItem(self):
     return self.portal_type in self.getPortalItemTypeList()
 
-  def _migrateToPortalTypeClass(self):
-    klass = self.__class__
-    portal_type = self.getPortalType()
-    if klass.__module__ not in ('erp5.portal_type', 'erp5.temp_portal_type'):
-      import erp5.portal_type
-      newklass = getattr(erp5.portal_type, portal_type)
-      assert klass != newklass
-      self.__class__ = newklass
-      self._p_changed = True
-      # this might look useless, but it is necessary to explicitely record
-      # the change in the parent container, because the class has changed
-      try:
-        parent = self.getParentValue()
-      except AttributeError:
-        return
-      id = self.getId()
-      parent._delOb(id)
-      parent._setOb(id, self)
-
   security.declareProtected(Permissions.DeletePortalContent,
                             'migratePortalType')
   def migratePortalType(self, portal_type):

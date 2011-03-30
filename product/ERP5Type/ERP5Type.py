@@ -723,7 +723,8 @@ class ERP5TypeInformation(XMLObject,
 
       This is used to update an existing site or to import a BT.
       """
-      from Products.ERP5Type.Document.ActionInformation import ActionInformation
+      import erp5.portal_type
+      ActionInformation = getattr(erp5.portal_type, 'Action Information')
       old_action = old_action.__getstate__()
       action_type = old_action.pop('category', None)
       action = ActionInformation(self.generateNewId())

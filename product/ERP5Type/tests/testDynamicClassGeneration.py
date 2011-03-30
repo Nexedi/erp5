@@ -28,9 +28,11 @@
 #
 ##############################################################################
 
+import gc
 import unittest
 import transaction
 
+from persistent import Persistent
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.backportUnittest import expectedFailure, skip
@@ -42,75 +44,101 @@ class TestPortalTypeClass(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     return 'erp5_base',
 
-  def testImportNonMigratedPerson(self):
+  def testMigrateOldObject(self):
     """
-    Import a .xml containing a Person created with an old
-    Products.ERP5Type.Document.Person.Person type
-    """
-    person_module = self.portal.person_module
-    self.importObjectFromFile(person_module, 'non_migrated_person.xml')
-    transaction.commit()
-
-    non_migrated_person = person_module.non_migrated_person
-    # check that object unpickling instanciated a new style object
-    person_class = self.portal.portal_types.getPortalTypeClass('Person')
-    self.assertEquals(non_migrated_person.__class__, person_class)
-
-  @expectedFailure
-  def testImportNonMigratedDocumentUsingContentClass(self):
-    """
-    Import a .xml containing a Base Type with old Document path
-    Products.ERP5Type.ERP5Type.ERP5TypeInformation
-
-    This Document class is different because it's a content_class,
-    i.e. it was not in Products.ERP5Type.Document.** but was
-    imported directly as such.
-    """
-    self.importObjectFromFile(self.portal, 'Category.xml')
-    transaction.commit()
-
-    non_migrated_type = self.portal.Category
-    # check that object unpickling instanciated a new style object
-    base_type_class = self.portal.portal_types.getPortalTypeClass('Base Type')
-    self.assertEquals(non_migrated_type.__class__, base_type_class)
-
-  def testMigrateOldObjectFromZODB(self):
-    """
-    Load an object with ERP5Type.Document.Person.Person from the ZODB
-    and check that migration works well
+    Check migration of persistent objects with old classes
+    like Products.ERP5(Type).Document.Person.Person
     """
     from Products.ERP5Type.Document.Person import Person
+    person_module = self.portal.person_module
+    connection = person_module._p_jar
+    newId = self.portal.person_module.generateNewId
 
-    # remove temporarily the migration
-    from Products.ERP5Type.Utils import PersistentMigrationMixin
-    PersistentMigrationMixin.migrate = 0
+    def unload(id):
+      oid = person_module._tree[id]._p_oid
+      person_module._tree._p_deactivate()
+      connection._cache.invalidate(oid)
+      gc.collect()
+      # make sure we manage to remove the object from memory
+      assert connection._cache.get(oid, None) is None
+      return oid
 
-    person_module = self.getPortal().person_module
-    obj_id = "this_object_is_old"
-    old_object = Person(obj_id)
-    person_module._setObject(obj_id, old_object)
-    old_object = person_module._getOb(obj_id)
+    def check(migrated):
+      klass = old_object.__class__
+      self.assertEqual(klass.__module__,
+        migrated and 'erp5.portal_type' or 'Products.ERP5.Document.Person')
+      self.assertEqual(klass.__name__, 'Person')
+      self.assertEqual(klass.__setstate__ is Persistent.__setstate__, migrated)
 
+    # Import a .xml containing a Person created with an old
+    # Products.ERP5Type.Document.Person.Person type
+    self.importObjectFromFile(person_module, 'non_migrated_person.xml')
     transaction.commit()
-    self.assertEquals(old_object.__class__.__module__, 'Products.ERP5Type.Document.Person')
-    self.assertEquals(old_object.__class__.__name__, 'Person')
+    unload('non_migrated_person')
+    old_object = person_module.non_migrated_person
+    # object unpickling should have instanciated a new style object directly
+    check(1)
 
-    self.assertTrue(hasattr(old_object.__class__, '__setstate__'))
-
-    # unload/deactivate the object
-    old_object._p_invalidate()
-
+    obj_id = newId()
+    person_module._setObject(obj_id, Person(obj_id))
+    transaction.commit()
+    unload(obj_id)
+    old_object = person_module[obj_id]
     # From now on, everything happens as if the object was a old, non-migrated
-    # object with an old Products.ERP5Type.Document.Person.Person
-
-    # now turn on migration
-    PersistentMigrationMixin.migrate = 1
-
+    # object with an old Products.ERP5(Type).Document.Person.Person
+    check(0)
     # reload the object
     old_object._p_activate()
+    check(1)
+    # automatic migration is not persistent
+    old_object = None
+    # (note we get back the object directly from its oid to make sure we test
+    # the class its pickle and not the one in its container)
+    old_object = connection.get(unload(obj_id))
+    check(0)
 
-    self.assertEquals(old_object.__class__.__module__, 'erp5.portal_type')
-    self.assertEquals(old_object.__class__.__name__, 'Person')
+    try:
+      from ZODB import __version__
+
+    except ImportError: # recent ZODB
+      # Test persistent migration
+      old_object.migrateToPortalTypeClass()
+      old_object = None
+      transaction.commit()
+      old_object = connection.get(unload(obj_id))
+      check(1)
+      # but the container still have the old class
+      old_object = None
+      unload(obj_id)
+      old_object = person_module[obj_id]
+      check(0)
+
+      # Test persistent migration of containers
+      obj_id = newId()
+      person_module._setObject(obj_id, Person(obj_id))
+      transaction.commit()
+      unload(obj_id)
+      person_module.migrateToPortalTypeClass()
+      transaction.commit()
+      unload(obj_id)
+      old_object = person_module[obj_id]
+      check(1)
+      # not recursive by default
+      old_object = None
+      old_object = connection.get(unload(obj_id))
+      check(0)
+
+      # Test recursive migration
+      old_object = None
+      unload(obj_id)
+      person_module.migrateToPortalTypeClass(True)
+      transaction.commit()
+      old_object = connection.get(unload(obj_id))
+      check(1)
+
+    else: # Zope 2.8
+      # compatibility code not implemented
+      self.assertRaises(AssertionError, old_object.migrateToPortalTypeClass)
 
   def testChangeMixin(self):
     """

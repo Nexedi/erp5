@@ -893,44 +893,6 @@ def setDefaultClassProperties(property_holder):
         )
       }
 
-class PersistentMigrationMixin(object):
-  """
-  All classes issued from ERP5Type.Document.XXX submodules
-  will gain with mixin as a base class.
-
-  It allows us to migrate ERP5Type.Document.XXX.YYY classes to
-  erp5.portal_type.ZZZ namespace
-
-  Note that migration can be disabled by setting the '_no_migration'
-  class attribute to a nonzero value, as all old objects in the system
-  should inherit from this mixin
-  """
-  _no_migration = 0
-
-  def __setstate__(self, value):
-    klass = self.__class__
-    if PersistentMigrationMixin._no_migration \
-        or klass.__module__ in ('erp5.portal_type', 'erp5.temp_portal_type'):
-      super(PersistentMigrationMixin, self).__setstate__(value)
-      return
-
-    portal_type = value.get('portal_type')
-    if portal_type is None:
-      portal_type = getattr(klass, 'portal_type', None)
-    if portal_type is None:
-      LOG('ERP5Type', PROBLEM,
-          "no portal type was found for %s (class %s)" \
-               % (self, klass))
-      super(PersistentMigrationMixin, self).__setstate__(value)
-    else:
-      # proceed with migration
-      import erp5.portal_type
-      newklass = getattr(erp5.portal_type, portal_type)
-      assert self.__class__ != newklass
-      self.__class__ = newklass
-      self.__setstate__(value)
-      LOG('ERP5Type', TRACE, "Migration for object %s" % self)
-
 from Globals import Persistent, PersistentMapping
 
 def importLocalDocument(class_id, path=None, class_path=None):
@@ -968,30 +930,8 @@ def importLocalDocument(class_id, path=None, class_path=None):
 
   ### Migration
   module_name = "Products.ERP5Type.Document.%s" % class_id
-
-  # Most of Document modules define a single class
-  # (ERP5Type.Document.Person.Person)
-  # but some (eek) need to act as module to find other documents,
-  # e.g. ERP5Type.Document.BusinessTemplate.SkinTemplateItem
-  #
-  def migrate_me_document_loader(document_name):
-    klass = getattr(module, document_name)
-    if issubclass(klass, (Persistent, PersistentMapping)):
-      setDefaultClassProperties(klass)
-      InitializeClass(klass)
-
-      class MigrateMe(PersistentMigrationMixin, klass):
-        pass
-      MigrateMe.__name__ = document_name
-      MigrateMe.__module__ = module_name
-      return MigrateMe
-    else:
-      return klass
-  from dynamic.dynamic_module import registerDynamicModule
-  document_module = registerDynamicModule(module_name,
-                                          migrate_me_document_loader)
-
-  setattr(Products.ERP5Type.Document, class_id, document_module)
+  sys.modules[module_name] = module
+  setattr(Products.ERP5Type.Document, class_id, module)
 
   ### newTempFoo
   from Products.ERP5Type.ERP5Type import ERP5TypeInformation

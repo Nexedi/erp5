@@ -92,35 +92,23 @@ class BaseTool (UniqueObject, Folder):
                 meta_types.append(meta_type)
         return meta_types
 
-    def _migrateToPortalTypeClass(self):
-      portal_type = self.getPortalType()
+    def _fixPortalTypeBeforeMigration(self, portal_type):
       # Tools are causing problems: they used to have no type_class, or wrong
       # type_class, or sometimes have no type definitions at all.
-      # Check that everything is alright before trying
-      # to migrate the tool:
+      # Fix type definition if possible before any migration.
       from Products.ERP5.ERP5Site import getSite
       types_tool = getSite().portal_types
       type_definition = getattr(types_tool, portal_type, None)
-      if type_definition is None:
-        LOG('BaseTool._migrateToPortalTypeClass', WARNING,
-            "No portal type definition was found for Tool '%s'"
-            " (class %s, portal_type '%s')"
-            % (self.getId(), self.__class__.__name__, portal_type))
-        return
-
-      type_class = type_definition.getTypeClass()
-      if type_class in ('Folder', None):
+      if type_definition is not None and \
+         type_definition.getTypeClass() in ('Folder', None):
         # wrong type_class, fix it manually:
         from Products.ERP5Type import document_class_registry
-        document_class_name = portal_type.replace(' ', '')
-        if document_class_name in document_class_registry:
-          type_definition.type_class = document_class_name
-        else:
-          LOG('BaseTool._migrateToPortalTypeClass', WARNING,
-              'No document class could be found for portal type %s'
+        try:
+          type_definition.type_class = document_class_registry[
+            portal_type.replace(' ', '')]
+        except KeyError:
+          LOG('BaseTool._migratePortalType', WARNING,
+              'No document class could be found for portal type %r'
               % portal_type)
-          return
-
-      return super(BaseTool, self)._migrateToPortalTypeClass()
 
 InitializeClass(BaseTool)

@@ -18,6 +18,7 @@ from zLOG import LOG, WARNING, BLATHER
 
 from portal_type_class import generatePortalTypeClass
 from accessor_holder import AccessorHolderType
+import persistent_migration
 
 # PersistentBroken can't be reused directly
 # because its « layout differs from 'GhostPortalType' »
@@ -183,6 +184,7 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
       for attr in cls.__dict__.keys():
         if attr not in ('__module__',
                         '__doc__',
+                        '__setstate__',
                         'workflow_method_registry',
                         '__isghost__',
                         'portal_type'):
@@ -305,6 +307,11 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
 
         for key, value in attribute_dict.iteritems():
           setattr(klass, key, value)
+
+        if getattr(klass.__setstate__, 'im_func', None) is \
+           persistent_migration.__setstate__:
+          # optimization to reduce overhead of compatibility code
+          klass.__setstate__ = persistent_migration.Base__setstate__
 
         for interface in interface_list:
           classImplements(klass, interface)

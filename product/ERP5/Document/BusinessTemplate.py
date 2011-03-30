@@ -58,7 +58,7 @@ from Products.ERP5Type.Utils import readLocalExtension, \
 from Products.ERP5Type.Utils import readLocalTest, \
                                     writeLocalTest, \
                                     removeLocalTest
-from Products.ERP5Type.Utils import convertToUpperCase, PersistentMigrationMixin
+from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
@@ -546,23 +546,6 @@ class BaseTemplateItem(Implicit, Persistent):
   def importFile(self, bta, **kw):
     bta.importFiles(item=self)
 
-  def migrateToPortalTypeClass(self, obj):
-    klass = obj.__class__
-    if klass.__module__ == 'erp5.portal_type':
-      return obj
-    portal_type = getattr(aq_base(obj), 'portal_type', None)
-    if portal_type is None:
-      portal_type = getattr(klass, 'portal_type', None)
-
-    if portal_type is None:
-      # ugh?
-      return obj
-    import erp5.portal_type
-    newklass = getattr(erp5.portal_type, portal_type)
-    assert klass != newklass
-    obj.__class__ = newklass
-    return obj
-
   def removeProperties(self, obj, export, keep_workflow_history=False):
     """
     Remove unneeded properties for export
@@ -590,8 +573,6 @@ class BaseTemplateItem(Implicit, Persistent):
         attr_set.update(('last_max_id_dict', 'last_id_dict'))
       elif classname == 'Types Tool' and klass.__module__ == 'erp5.portal_type':
         attr_set.add('type_provider_list')
-    else:
-      obj = self.migrateToPortalTypeClass(obj)
 
     for attr in obj.__dict__.keys():
       if attr in attr_set or attr.startswith('_cache_cookie_'):
@@ -840,12 +821,6 @@ class ObjectTemplateItem(BaseTemplateItem):
         else: # new object
           modified_object_list[path] = 'New', type_name
 
-        # if that's an old style class, use a portal type class instead
-        migrateme = getattr(obj, '_migrateToPortalTypeClass', None)
-        if migrateme is not None:
-          migrateme()
-        self._objects[path] = obj
-
       # update _p_jar property of objects cleaned by removeProperties
       transaction.savepoint(optimistic=True)
       for path, old_object in upgrade_list:
@@ -1054,14 +1029,6 @@ class ObjectTemplateItem(BaseTemplateItem):
 
           # install object
           obj = self._objects[path]
-          if isinstance(self, PortalTypeTemplateItem):
-            # if that's an old style class, use a portal type class instead
-            # XXX PortalTypeTemplateItem-specific
-            migrateme = getattr(obj, '_migrateToPortalTypeClass', None)
-            if migrateme is not None:
-              migrateme()
-              self._objects[path] = obj
-
           # XXX Following code make Python Scripts compile twice, because
           #     _getCopy returns a copy without the result of the compilation.
           #     A solution could be to add a specific _getCopy method to
@@ -1924,9 +1891,8 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
       if score is None:
         obj = self._objects[path]
         klass = obj.__class__
-        if klass.__module__.startswith('Products.ERP5Type.Document.'):
+        if klass.__module__ != 'erp5.portal_type':
           portal_type = obj.portal_type
-          obj._p_deactivate()
         else:
           portal_type = klass.__name__
         depend = path_dict.get(portal_type)
@@ -1938,11 +1904,7 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
           return 0, path
         cache[path] = score = depend and 1 + solveDependency(depend)[0] or 0
       return score, path
-    PersistentMigrationMixin._no_migration += 1
-    try:
-      object_key_list.sort(key=solveDependency)
-    finally:
-      PersistentMigrationMixin._no_migration -= 1
+    object_key_list.sort(key=solveDependency)
     return object_key_list
 
   # XXX : this method is kept temporarily, but can be removed once all bt5 are
@@ -2857,12 +2819,6 @@ class ActionTemplateItem(ObjectTemplateItem):
           if obj.getReference() in action_dict])
         for name, obj in action_dict.iteritems():
           imported_action = container._importOldAction(obj).aq_base
-
-          # if that's an old style class, use a portal type class instead
-          # XXX PortalTypeTemplateItem-specific
-          migrateme = getattr(imported_action, '_migrateToPortalTypeClass', None)
-          if migrateme is not None:
-            migrateme()
 
     else:
       BaseTemplateItem.install(self, context, trashbin, **kw)

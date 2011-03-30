@@ -128,7 +128,7 @@ class TypesTool(TypeProvider):
       'Standard Property',
       'Acquired Property',
       'Dummy Class Tool',
-      # the following ones are required by '_migrateToPortalTypeClass'
+      # XXX the following ones are required by '_migrateToPortalTypeClass'
       'Types Tool',
       'Property Sheet Tool',
       # the following ones are required to upgrade an existing site
@@ -386,11 +386,6 @@ class TypesTool(TypeProvider):
                                    # due to limitation of getToolByName
       trashbin = UnrestrictedMethod(trash_tool.newTrashBin)(self.id)
       trashbin._setOb(old_types_tool.id, old_types_tool)
-
-  def _migrateToPortalTypeClass(self):
-    for type_definition in self.objectValues():
-      type_definition._migrateToPortalTypeClass()
-    return super(TypesTool, self)._migrateToPortalTypeClass()
 
 # Compatibility code to access old "ERP5 Role Information" objects.
 OldRoleInformation = imp.new_module('Products.ERP5Type.RoleInformation')

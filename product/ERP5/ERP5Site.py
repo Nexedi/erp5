@@ -34,7 +34,6 @@ from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Cache import caching_instance_method
 from Products.ERP5Type.Cache import CachingMethod, CacheCookieMixin
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
-from Products.ERP5.Document.BusinessTemplate import BusinessTemplate
 from Products.ERP5Type.Log import log as unrestrictedLog
 from Products.CMFActivity.Errors import ActivityPendingError
 import ERP5Defaults
@@ -1433,44 +1432,24 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     if self.getERP5SiteGlobalId() in [None, '']:
       self.erp5_site_global_id = global_id
 
-  security.declareProtected(Permissions.ManagePortal, 'migrateToPortalTypeClass')
-  def migrateToPortalTypeClass(self, REQUEST=None):
-    """Compatibility code that allows migrating a site to portal type classes.
-    
-    We consider that a Site is migrated if its Types Tool is migrated
-    (it will always be migrated last)"""
-    types_tool = getattr(self, 'portal_types', None)
-    if types_tool is None:
-      # empty site
-      return
-    if types_tool.__class__.__module__ == 'erp5.portal_type':
-      # nothing to do, already migrated
-      if REQUEST is not None:
-        return REQUEST.RESPONSE.redirect(
-          '%s?portal_status_message=' \
-          'Nothing to do, already migrated.' % \
-          self.absolute_url())
-      return
-
-    # note that the site itself is not migrated (ERP5Site is not a portal type)
-    # only the tools and top level modules are.
-    # Normally, PersistentMigrationMixin should take care of the rest.
-    id_list = self.objectIds()
-
-    # make sure that Types Tool is migrated last
-    id_list.remove('portal_types')
-    id_list.append('portal_types')
-    for id in id_list:
-      method = getattr(self[id], '_migrateToPortalTypeClass', None)
-      if method is None:
-        continue
-      method()
-
-    if REQUEST is not None:
-      return REQUEST.RESPONSE.redirect(
-        '%s?portal_status_message=' \
-        'Successfully migrated tools and types to portal type classes.' % \
-        self.absolute_url())
+  security.declareProtected(Permissions.ManagePortal,
+                            'migrateToPortalTypeClass')
+  def migrateToPortalTypeClass(self):
+    from Products.ERP5Type.dynamic.persistent_migration import PickleUpdater
+    from Products.ERP5Type.Tool.BaseTool import BaseTool
+    PickleUpdater(self)
+    for tool in self.objectValues():
+      if isinstance(tool, BaseTool):
+        tool_id = tool.id
+        if tool_id != 'portal_property_sheets':
+          if tool_id in ('portal_categories', ):
+            tool = tool.activate()
+          tool.migrateToPortalTypeClass(tool_id not in (
+            'portal_activities', 'portal_simulation', 'portal_templates',
+            'portal_trash'))
+          if tool_id in ('portal_trash',):
+            for obj in tool.objectValues():
+              obj.migrateToPortalTypeClass()
 
 Globals.InitializeClass(ERP5Site)
 
