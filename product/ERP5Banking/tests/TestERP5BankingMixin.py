@@ -771,6 +771,30 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     # the erp5 site
     self.portal = self.getPortal()
 
+    # Make sure movement table does not exist
+    sql_connection = self.getSQLConnection()
+    sql_connection.manage_test("DROP TABLE IF EXISTS movement")
+    # Delete also all ZSQL Methods related to movement table
+    catalog = self.portal.portal_catalog.getSQLCatalog()
+    catalog.manage_delObjects(ids=["z0_drop_movement",
+                                   "z0_uncatalog_movement",
+                                   "z_catalog_movement_list",
+                                   "z_create_movement",
+                                   ])
+    # Update properties of catalog
+    sql_catalog_object_list = list(catalog.sql_catalog_object_list)
+    sql_uncatalog_object = list(catalog.sql_uncatalog_object)
+    sql_clear_catalog = list(catalog.sql_clear_catalog)
+
+    sql_catalog_object_list.remove("z_catalog_movement_list")
+    sql_uncatalog_object.remove("z0_uncatalog_movement")
+    sql_clear_catalog.remove("z0_drop_movement")
+    sql_clear_catalog.remove("z_create_movement")
+
+    catalog.sql_catalog_object_list = tuple(sql_catalog_object_list)
+    catalog.sql_uncatalog_object = tuple(sql_uncatalog_object)
+    catalog.sql_clear_catalog = tuple(sql_clear_catalog)
+
     # the default currency for the site
     if not self.portal.hasProperty('reference_currency_id'):
       self.portal.manage_addProperty('reference_currency_id', 'EUR', type='string')
