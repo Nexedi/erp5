@@ -620,7 +620,7 @@ class ContextMainForm(MainForm):
     self.submit(name='Folder_filter:method')
 
   def submitSelectWorkflow(self, label=None, value=None,
-                           script_id='BaseWorkflow_viewWorkflowActionDialog'):
+                           script_id='viewWorkflowActionDialog'):
     """
     Select and submit a workflow action, given either by its label
     (such as I{Create User}) or value (such as I{create_user_action}
