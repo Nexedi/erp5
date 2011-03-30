@@ -467,6 +467,7 @@ class MainForm(Form):
 
         if item.endswith(value):
           value = item
+          break
 
     logging.debug("select_id='%s', label='%s', value='%s'" % \
                     (select_name, label, value))
