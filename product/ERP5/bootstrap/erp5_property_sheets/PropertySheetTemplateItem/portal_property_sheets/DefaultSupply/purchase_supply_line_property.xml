@@ -65,7 +65,9 @@
                 <string>source_title</string>
                 <string>destination_title</string>
                 <string>source_value</string>
+                <string>source_value_list</string>
                 <string>destination_value</string>
+                <string>destination_value_list</string>
                 <string>quantity_step</string>
                 <string>quantity_step_list</string>
                 <string>priced_quantity</string>
