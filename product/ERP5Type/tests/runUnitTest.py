@@ -363,6 +363,11 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   cfg = App.config.getConfiguration()
   cfg.testinghome = instance_home
   cfg.instancehome = instance_home
+  try:
+    from Zope2.Startup.datatypes import DBTab
+    cfg.dbtab = DBTab({}, {})
+  except ImportError: # Zope 2.8
+    pass
   App.config.setConfiguration(cfg)
 
   if WIN:
@@ -456,6 +461,10 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
     def assertFalse():
       assert False
     layer.onsetup = assertFalse
+
+    from Products.ERP5Type.tests.utils import DbFactory
+    root_db_name, = cfg.dbtab.databases.keys()
+    DbFactory(root_db_name).addMountPoint('/')
 
   TestRunner = backportUnittest.TextTestRunner
 

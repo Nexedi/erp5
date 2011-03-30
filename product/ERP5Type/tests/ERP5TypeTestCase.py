@@ -100,6 +100,7 @@ ZopeTestCase.installProduct('PageTemplates', quiet=install_product_quiet)
 ZopeTestCase.installProduct('PythonScripts', quiet=install_product_quiet)
 ZopeTestCase.installProduct('ExternalMethod', quiet=install_product_quiet)
 ZopeTestCase.installProduct('Sessions', quiet=install_product_quiet)
+ZopeTestCase.installProduct('ZODBMountPoint', quiet=install_product_quiet)
 
 try:
   from Testing.ZopeTestCase.layer import onsetup

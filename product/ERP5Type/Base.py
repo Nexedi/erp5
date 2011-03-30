@@ -1529,6 +1529,17 @@ class Base( CopyContainer,
     """
     return self
 
+  def getMountedObject(self):
+      """
+      If self is a mount-point, return the mounted object in its own storage
+      """
+      from Products.ZODBMountPoint.MountedObject import getMountPoint
+      mount_point = getMountPoint(self)
+      if mount_point is not None:
+        connection = self._p_jar
+        assert mount_point._getMountedConnection(connection) is connection
+        return mount_point._traverseToMountedRoot(connection.root(), None)
+
   def asSQLExpression(self, strict_membership=0, table='category', base_category = None):
     """
       Any document can be used as a Category. It can therefore

@@ -35,7 +35,11 @@ import random
 import socket
 import sys
 import transaction
+import ZODB
 import zLOG
+from App.config import getConfiguration
+from ZConfig.matcher import SectionValue
+from Zope2.Startup.datatypes import ZopeDatabase
 import Products.ERP5Type
 from Products.MailHost.MailHost import MailHost
 from email import message_from_string
@@ -336,6 +340,34 @@ def createZServer(log=os.devnull, zserver_type='http'):
       if e[0] != errno.EADDRINUSE:
         raise
       hs.close()
+
+class DbFactory(ZopeDatabase):
+
+  def __init__(self, name, storage=None, **kw):
+    ZopeDatabase.__init__(self, SectionValue({'container_class': None,
+                                              'mount_points': [],
+                                             }, name, None))
+    if storage is not None:
+      self.open = lambda database_name, databases: ZODB.DB(storage,
+        database_name=database_name, databases=databases, **kw)
+    getConfiguration().dbtab.db_factories[name] = self
+
+  @staticmethod
+  def get(*args, **kw):
+    return getConfiguration().dbtab.getDatabaseFactory(*args, **kw)
+
+  def addMountPoint(self, *mount_points):
+    dbtab = getConfiguration().dbtab
+    self.config.mount_points += mount_points
+    for mount_point in self.getVirtualMountPaths():
+      dbtab.mount_paths[mount_point] = self.name
+
+  def close(self):
+    dbtab = getConfiguration().dbtab
+    for mount_point in self.getVirtualMountPaths():
+      del dbtab.mount_paths[mount_point]
+    del dbtab.db_factories[self.name]
+    dbtab.databases.pop(self.name).close()
 
 # decorators
 @simple_decorator
