@@ -27,6 +27,7 @@
 ##############################################################################
 
 import zope.interface
+from DateTime import DateTime
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
@@ -57,11 +58,27 @@ class SaleTradeConditionConfiguratorItem(ConfiguratorItemMixin, XMLObject):
 
   def build(self, business_configuration):
     portal = self.getPortalObject()
+    business_process_id = \
+       business_configuration.getGlobalConfigurationAttr('business_process_id')
+
+    organisation_id = \
+      business_configuration.getGlobalConfigurationAttr('organisation_id')
+
+    currency_id = \
+      business_configuration.getGlobalConfigurationAttr('currency_id')
+
     sale_trade_condition = portal.sale_trade_condition_module.netContent(
                                            portal_type="Sale Trade Condition",
                                            referece=self.getReference(),
-                                           title=self.getTitle())
+                                           title=self.getTitle(),
+                                           effective_date=DateTime() - 1,
+                                           expiration_date=DateTime() + 10 * 365)
 
-    ### XXX Create Business Paths and Business Links
+    sale_trade_condition.setSpecialise("business_process_module/%s" %\
+                      business_process_id)
+
+    sale_trade_condition.setSource("organisation_module/%s" % organisation_id)
+    sale_trade_condition.setSourceSection("organisation_module/%s" % organisation_id)
+    sale_trade_condition.setPriceCurrency("currency_module/%s" % currency_id)
 
     self.install(sale_trade_condition, business_configuration)
