@@ -337,8 +337,19 @@ class Browser(ExtendedTestBrowser):
                                                column_number,
                                                cell_element_index)
 
-    return self.getContextLink(url=self.etree.xpath(xpath_str).get('href'),
-                               *args, **kwargs)
+    # xpath() method always return a list even if there is only one element
+    element_list = self.etree.xpath(xpath_str)
+
+    try:
+      link_href = element_list[0].get('href')
+    except (IndexError, AttributeError):
+      link_href = None
+
+    if not link_href:
+      raise LookupError("Could not find link in listbox cell %dx%d (index=%d)" %\
+                          (line_number, column_number, cell_element_index))
+
+    return self.getContextLink(url=link_href, *args, **kwargs)
 
   def getListboxPosition(self,
                          text,
@@ -700,7 +711,18 @@ class ContextMainForm(MainForm):
          column_number,
          cell_element_index)
 
-    input_element = self.browser.etree.xpath(xpath_str)[0]
+    # xpath() method always return a list even if there is only one element
+    element_list = self.browser.etree.xpath(xpath_str)
+
+    try:
+      input_element = element_list[0]
+      input_name = input_element.get('name')
+    except (IndexError, AttributeError):
+      input_element = input_name = None
+
+    if input_element is None or not input_name:
+      raise LookupError("Could not find control in listbox cell %dx%d (index=%d)" %\
+                          (line_number, column_number, cell_element_index))
 
     control = self.getControl(name=input_element.get('name'), *args, **kwargs)
 
