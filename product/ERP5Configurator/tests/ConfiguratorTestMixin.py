@@ -29,6 +29,7 @@
 
 
 from DateTime import DateTime
+from AccessControl import Unauthorized
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import  _getConversionServerDict
@@ -1868,5 +1869,3 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
       self._loginAsUser(username)
       self.assertEquals(True,  \
                         checkPermission('Modify portal content', portal_contributions))
-
-
