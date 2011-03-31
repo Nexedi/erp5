@@ -314,9 +314,10 @@ class Browser(ExtendedTestBrowser):
   def getListboxLink(self, line_number, column_number, cell_element_index=1,
                      *args, **kwargs):
     """
-    Follow the link at the given position. In case there are several
-    links within a cell, C{cell_element_index} allows to select which
-    one to get (starting from 1).
+    Follow the link at the given position, excluding any link whose
+    class is hidden. In case there are several links within a cell,
+    C{cell_element_index} allows to select which one to get (starting
+    from 1).
 
     @param line_number: Line number of the link
     @type line_number: int
@@ -331,11 +332,12 @@ class Browser(ExtendedTestBrowser):
     @return: C{Link} at the given line and column number
     @rtype: L{zope.testbrowser.interfaces.ILink}
     """
-    xpath_str = '%s//tr[%d]//%s[%d]//a[%d]' % (self._listbox_table_xpath_str,
-                                               line_number,
-                                               line_number <= 2 and 'th' or 'td',
-                                               column_number,
-                                               cell_element_index)
+    xpath_str = '%s//tr[%d]//%s[%d]//a[not(contains(@class, "hidden"))][%d]' % \
+        (self._listbox_table_xpath_str,
+         line_number,
+         line_number <= 2 and 'th' or 'td',
+         column_number,
+         cell_element_index)
 
     # xpath() method always return a list even if there is only one element
     element_list = self.etree.xpath(xpath_str)
@@ -683,8 +685,9 @@ class ContextMainForm(MainForm):
                         *args, **kwargs):
     """
     Get the control located at line and column numbers (both starting
-    from 1). The position of a cell from a column or line number can
-    be obtained through calling
+    from 1), excluding hidden control and those whose class is hidden
+    too. The position of a cell from a column or line number can be
+    obtained through calling
     L{erp5.utils.test_browser.browser.Browser.getListboxPosition}.
 
     Also, there may be several elements within a cell, thus
@@ -704,7 +707,8 @@ class ContextMainForm(MainForm):
     @return: The control found at the given line and column numbers
     @rtype: L{zope.testbrowser.interfaces.IControl}
     """
-    xpath_str = '%s//tr[%d]//%s[%d]/input[%d]' % \
+    xpath_str = '%s//tr[%d]//%s[%d]/*[not(@type="hidden") and ' \
+        'not(contains(@class, "hidden"))][%d]' % \
         (self.browser._listbox_table_xpath_str,
          line_number,
          (line_number <= 2 and u'th' or u'td'),
