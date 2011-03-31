@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>return [ {\'int_index\': 4,\n
+          \'title\': \'pay\',\n
+          \'portal_type\': \'Business Link\',\n
+          \'deliverable\': 0,\n
+          \'id\': \'pay\',\n
+          \'categories\': (\'delivery_builder/portal_deliveries/payment_transaction_builder\',\n
+                         \'trade_phase/default/payment\',\n
+                         \'predecessor/trade_state/accounted\',\n
+                         \'successor/trade_state/paid\',\n
+                         \'source/account_module/bank\',\n
+                         \'destination/account_module/bank\')},\n
+         {\'default_reference\': \'TMP-ORDER\',\n
+          \'int_index\': 1,\n
+          \'title\': \'Order\',\n
+          \'portal_type\': \'Trade Model Path\',\n
+          \'id\': \'order_path\',\n
+          \'categories\': (\'incoterm/a\',\n
+                         \'trade_phase/default/order\',\n
+                         \'trade_date/trade_phase/default/order\')},\n
+         {\'default_reference\': \'TMP-INVOICE\',\n
+          \'int_index\': 3,\n
+          \'title\': \'Invoicing\',\n
+          \'portal_type\': \'Trade Model Path\',\n
+          \'payment_end_of_month\': 0,\n
+          \'id\': \'invoice_path\',\n
+          \'categories\': (\'trade_date/trade_phase/default/delivery\',\n
+                         \'trade_phase/default/invoicing\')},\n
+         {\'int_index\': 3,\n
+          \'title\': \'account\',\n
+          \'portal_type\': \'Business Link\',\n
+          \'deliverable\': 0,\n
+          \'completed_state\': (\'delivered\', \'started\', \'stopped\'),\n
+          \'frozen_state\': (\'delivered\', \'stopped\'),\n
+          \'id\': \'account\',\n
+          \'categories\': (\'delivery_builder/portal_deliveries/purchase_invoice_transaction_builder\',\n
+                         \'delivery_builder/portal_deliveries/sale_invoice_transaction_builder\',\n
+                         \'trade_phase/default/accounting\',\n
+                         \'predecessor/trade_state/invoiced\',\n
+                         \'successor/trade_state/accounted\')},\n
+         {\'int_index\': 2,\n
+          \'title\': \'invoice\',\n
+          \'portal_type\': \'Business Link\',\n
+          \'deliverable\': 0,\n
+          \'completed_state\': (\'delivered\', \'started\', \'stopped\'),\n
+          \'frozen_state\': (\'delivered\', \'stopped\'),\n
+          \'id\': \'invoice\',\n
+          \'categories\': (\'delivery_builder/portal_deliveries/sale_invoice_builder\',\n
+                         \'trade_phase/default/invoicing\',\n
+                         \'predecessor/trade_state/delivered\',\n
+                         \'successor/trade_state/invoiced\')},\n
+         {\'int_index\': 0,\n
+          \'title\': \'order\',\n
+          \'portal_type\': \'Business Link\',\n
+          \'deliverable\': 1,\n
+          \'completed_state\': (\'confirmed\',),\n
+          \'id\': \'order\',\n
+          \'categories\': (\'trade_phase/default/order\',\n
+                         \'successor/trade_state/ordered\')},\n
+         {\'int_index\': 1,\n
+          \'title\': \'deliver\',\n
+          \'portal_type\': \'Business Link\',\n
+          \'deliverable\': 1,\n
+          \'completed_state\': (\'delivered\', \'started\', \'stopped\'),\n
+          \'frozen_state\': (\'delivered\', \'stopped\'),\n
+          \'id\': \'deliver\',\n
+          \'categories\': (\'delivery_builder/portal_deliveries/sale_packing_list_builder\',\n
+                         \'trade_phase/default/delivery\',\n
+                         \'predecessor/trade_state/ordered\',\n
+                         \'successor/trade_state/delivered\'),\n
+          \'lead_time\': 10.0},\n
+         {\'default_reference\': \'TMP-ACCOUNTING\',\n
+          \'int_index\': 4,\n
+          \'title\': \'Accounting\',\n
+          \'portal_type\': \'Trade Model Path\',\n
+          \'payment_end_of_month\': 0,\n
+          \'test_method_id\': (\'isAccountingMovementType\',),\n
+          \'id\': \'13\',\n
+          \'categories\': (\'trade_phase/default/accounting\',\n
+                         \'trade_date/trade_phase/default/accounting\')},\n
+         {\'default_reference\': \'TMP-DELIVERY\',\n
+          \'int_index\': 2,\n
+          \'payment_term\': 10,\n
+          \'payment_additional_term\': 10,\n
+          \'portal_type\': \'Trade Model Path\',\n
+          \'payment_end_of_month\': 0,\n
+          \'wait_time\': 3.0,\n
+          \'title\': \'Delivery\',\n
+          \'id\': \'delivery_path\',\n
+          \'categories\': (\'trade_phase/default/delivery\',\n
+                         \'trade_date/trade_phase/default/order\',\n
+                         \'end_of/day\'),\n
+          \'lead_time\': 2.0}]\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERPSite_getConfiguratorBusinessProcessDict</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
