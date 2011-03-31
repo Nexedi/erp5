@@ -554,7 +554,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
     else:
       if not test_list:
         root_logger.handlers.append(loghandler.StreamHandler(sys.stderr))
-      _print('done (%.3fs)' % (time.time() - _start))
+      _print('done (%.3fs)\n' % (time.time() - _start))
       result = TestRunner(verbosity=verbosity).run(suite)
   finally:
     Storage.close()
