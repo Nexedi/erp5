@@ -56,6 +56,21 @@ group_id = context.getGlobalConfigurationAttr(\'group_id\')\n
 # setup Rules\n
 configuration_save.addConfigurationItem("Rule Configurator Item")\n
 \n
+# setup Business Process\n
+configuration_save.addConfigurationItem("Business Process Configurator Item",\n
+                                         title="General Business Process",\n
+                                         reference="erp5_default_business_process")\n
+\n
+# setup Sale Trade Condition\n
+configuration_save.addConfigurationItem("Sale Trade Condition Configurator Item",\n
+                                         title="General Sale Trade Condition",\n
+                                         reference="STC-General")\n
+\n
+# setup Purchase Trade Condition\n
+configuration_save.addConfigurationItem("Purchase Trade Condition Configurator Item",\n
+                                         title="General Purchase Trade Condition",\n
+                                         reference="PTC-General")\n
+\n
 # setup default security\n
 configuration_save.addConfigurationItem("Role Configurator Item", \n
                                         filename="portal_types_roles_standard.ods",\n
