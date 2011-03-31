@@ -269,6 +269,9 @@ class Image(TextConvertableMixin, File, OFSImage):
         data = aq_base(data)
         self.setConversion(data, mime=mime_type, format=format)
         return mime_type, data
+    if not (format and kw):
+      # User asked for original content
+      return self.getContentType(), self.getData()
     image_size = self.getSizeFromImageDisplay(kw.get('display'))
     # store all keys usefull to convert or resize an image
     # 'display' parameter can be discarded
