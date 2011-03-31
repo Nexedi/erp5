@@ -1,5 +1,3 @@
-# Patch to have dcron running as ordinary user and installable without root
-# requirement
 diff -ru dcron-4.4.org/chuser.c dcron-4.4/chuser.c
 --- dcron-4.4.org/chuser.c	2010-01-18 16:27:31.000000000 +0100
 +++ dcron-4.4/chuser.c	2011-03-31 16:39:52.000000000 +0200
@@ -52,6 +50,61 @@ diff -ru dcron-4.4.org/chuser.c dcron-4.4/chuser.c
 +  return getpwnam(user);
  }
  
+diff -ru dcron-4.4.org/crontab.c dcron-4.4/crontab.c
+--- dcron-4.4.org/crontab.c	2010-01-18 16:27:31.000000000 +0100
++++ dcron-4.4/crontab.c	2011-03-31 17:14:12.000000000 +0200
+@@ -316,9 +316,6 @@
+ 
+ 	close(filedes[0]);
+ 
+-	if (ChangeUser(user, NULL) < 0)
+-		exit(0);
+-
+ 	fd = open(file, O_RDONLY);
+ 	if (fd < 0) {
+ 		printlogf(0, "unable to open %s: %s", file, strerror(errno));
+@@ -344,8 +341,6 @@
+ 		const char *ptr;
+ 		char visual[SMALL_BUFFER];
+ 
+-		if (ChangeUser(user, TMPDIR) < 0)
+-			exit(0);
+ 		if ((ptr = getenv("EDITOR")) == NULL || strlen(ptr) >= sizeof(visual))
+ 			if ((ptr = getenv("VISUAL")) == NULL || strlen(ptr) >= sizeof(visual))
+ 				ptr = PATH_VI;
+diff -ru dcron-4.4.org/job.c dcron-4.4/job.c
+--- dcron-4.4.org/job.c	2010-01-18 16:27:31.000000000 +0100
++++ dcron-4.4/job.c	2011-03-31 17:14:23.000000000 +0200
+@@ -62,14 +62,6 @@
+ 		 * Change running state to the user in question
+ 		 */
+ 
+-		if (ChangeUser(file->cf_UserName, TempDir) < 0) {
+-			printlogf(LOG_ERR, "unable to ChangeUser (user %s %s)\n",
+-					file->cf_UserName,
+-					line->cl_Description
+-					);
+-			exit(0);
+-		}
+-
+ 		/* from this point we are unpriviledged */
+ 
+ 		if (DebugOpt)
+@@ -295,14 +287,6 @@
+ 		 * by the mailing and we already verified the mail file.
+ 		 */
+ 
+-		if (ChangeUser(file->cf_UserName, TempDir) < 0) {
+-			printlogf(LOG_ERR, "unable to ChangeUser to send mail (user %s %s)\n",
+-					file->cf_UserName,
+-					line->cl_Description
+-					);
+-			exit(0);
+-		}
+-
+ 		/* from this point we are unpriviledged */
+ 
+ 		/*
 diff -ru dcron-4.4.org/Makefile dcron-4.4/Makefile
 --- dcron-4.4.org/Makefile	2010-01-18 16:27:31.000000000 +0100
 +++ dcron-4.4/Makefile	2011-03-31 16:01:08.000000000 +0200
