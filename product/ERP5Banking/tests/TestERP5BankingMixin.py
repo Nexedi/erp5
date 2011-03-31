@@ -785,15 +785,18 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     sql_catalog_object_list = list(catalog.sql_catalog_object_list)
     sql_uncatalog_object = list(catalog.sql_uncatalog_object)
     sql_clear_catalog = list(catalog.sql_clear_catalog)
+    sql_search_tables = list(catalog.sql_search_tables)
 
     sql_catalog_object_list.remove("z_catalog_movement_list")
     sql_uncatalog_object.remove("z0_uncatalog_movement")
     sql_clear_catalog.remove("z0_drop_movement")
     sql_clear_catalog.remove("z_create_movement")
+    sql_search_tables.remove("movement")
 
     catalog.sql_catalog_object_list = tuple(sql_catalog_object_list)
     catalog.sql_uncatalog_object = tuple(sql_uncatalog_object)
     catalog.sql_clear_catalog = tuple(sql_clear_catalog)
+    catalog.sql_search_tables = tuple(sql_search_tables)
 
     # the default currency for the site
     if not self.portal.hasProperty('reference_currency_id'):
