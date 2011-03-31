@@ -739,11 +739,14 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     organisation_id = organisation_list[0].getId()
 
     # ui
-    self.assertEquals('dmy', preference_tool.getPreferredDateOrder())
+    # The default preferences are not disabled anymore, there is no reason to
+    # assert such properties.
+    #self.assertEquals('dmy', preference_tool.getPreferredDateOrder())
+    #self.assertTrue(preference_tool.getPreferredHtmlStyleAccessTab())
     self.assertEquals('ODT', preference_tool.getPreferredReportStyle())
     self.assertEquals('pdf', preference_tool.getPreferredReportFormat())
     self.assertEquals(10, preference_tool.getPreferredMoneyQuantityFieldWidth())
-    self.assertTrue(preference_tool.getPreferredHtmlStyleAccessTab())
+
     # on Business Configuration
     #self.assertEquals('localhost', preference_tool.getPreferredOoodocServerAddress())
     #self.assertEquals(8011, preference_tool.getPreferredOoodocServerPortNumber())
@@ -761,7 +764,7 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
                       'group/my_group')
     self.assertEquals('organisation_module/%s' % organisation_id,
                       preference_tool.getPreferredSection())
-    self.assertEquals(['delivered', 'stopped'],
+    self.assertSameSet(['delivered', 'stopped'],
                   preference_tool.getPreferredAccountingTransactionSimulationStateList())
 
     # trade

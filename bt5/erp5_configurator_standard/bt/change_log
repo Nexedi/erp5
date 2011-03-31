@@ -1,4 +1,7 @@
 2011-03-31 lucas
+* Since r44521 the default preferences from core are not disabled anymore., hence the preferences created by configurator has low priority.
+
+2011-03-31 lucas
 * Added a new script with business process informations.
 
 2011-03-30 lucas
