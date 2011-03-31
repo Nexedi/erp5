@@ -180,7 +180,7 @@ class CertificateAuthorityTool(BaseTool):
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getNewCertificate')
   def getNewCertificate(self, common_name):
-    """Returns certificate for passed common name, as dictionary of {key, certificate, serial, common_name}"""
+    """Returns certificate for passed common name, as dictionary of {key, certificate, id, common_name}"""
     self._checkCertificateAuthority()
     self._lockCertificateAuthority()
     try:
