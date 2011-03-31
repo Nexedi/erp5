@@ -66,22 +66,6 @@ class BaseTool (UniqueObject, Folder):
           id = self.__class__.id
         return Folder.__init__(self, id)
 
-    def _bootstrap(self, bt_name, item_name, content_id_list):
-      from Products.ERP5.Document.BusinessTemplate import quote
-      traverse = self.unrestrictedTraverse
-      path = os.path.join(bt_name, item_name, self.id)
-      for root, dirs, files in os.walk(path):
-        container_path = root.split(os.sep)[3:]
-        load = traverse(container_path)._importObjectFromFile
-        if container_path:
-          id_set = set(x[:-4] for x in files if x[-4:] == '.xml')
-        else:
-          id_set = set(quote(x) for x in content_id_list if not self.has_key(x))
-        dirs[:] = id_set.intersection(dirs)
-        for file in id_set:
-          load(os.path.join(root, file + '.xml'),
-               verify=False, set_owner=False, suppress_events=True)
-
     # Filter content (ZMI))
     def filtered_meta_types(self, user=None):
         # Filters the list of available meta types.

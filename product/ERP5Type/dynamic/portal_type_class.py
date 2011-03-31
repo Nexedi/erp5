@@ -338,10 +338,9 @@ def synchronizeDynamicModules(context, force=False):
   Base.aq_method_lock.acquire()
   try:
     if portal.id not in _bootstrapped:
-      bootstrap = None
+      migrate = False
       from Products.ERP5Type.Tool.PropertySheetTool import PropertySheetTool
       from Products.ERP5Type.Tool.TypesTool import TypesTool
-      import erp5.portal_type
       for tool_class in TypesTool, PropertySheetTool:
         # if the instance has no property sheet tool, or incomplete
         # property sheets, we need to import some data to bootstrap
@@ -355,22 +354,14 @@ def synchronizeDynamicModules(context, force=False):
           except TypeError:
             portal._setObject(tool_id, tool, set_owner=False)
           tool = getattr(portal, tool_id)
-        elif not tool._isBootstrapRequired():
+        elif tool._isBootstrapRequired():
+          migrate = True
+        else:
           continue
+        tool._bootstrap()
+        tool.__class__ = getattr(erp5.portal_type, tool.portal_type)
 
-        if not bootstrap:
-          LOG('ERP5Site', INFO, 'bootstrap %s...' % tool_id)
-          from Products.ERP5.ERP5Site import getBootstrapDirectory
-          bootstrap = getBootstrapDirectory()
-          cwd = os.getcwd()
-        try:
-          os.chdir(bootstrap)
-          tool._bootstrap()
-          tool.__class__ = getattr(erp5.portal_type, tool.portal_type)
-        finally:
-          os.chdir(cwd)
-
-      if bootstrap and not getattr(portal, '_v_bootstrapping', False):
+      if migrate:
         from Products.ERP5Type.dynamic.persistent_migration import PickleUpdater
         if PickleUpdater.get:
           portal.migrateToPortalTypeClass()

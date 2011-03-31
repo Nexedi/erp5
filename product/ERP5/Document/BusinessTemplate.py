@@ -4687,23 +4687,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
       if not force:
         self.checkDependencies()
 
-      from Products.ERP5.ERP5Site import ERP5Generator
-      generator_class = getattr(site, '_generator_class', ERP5Generator)
-      gen = generator_class()
-      # update activity tool first if necessary
-      if self.getTitle() == 'erp5_core':
-        if self.getTemplateUpdateTool():
-          gen.setupLastTools(site)
-        if not force and len(object_to_update) == 0:
-          # check if we have to update tools
-          if self.getTemplateUpdateTool():
-            LOG('Business Template', 0, 'Updating Tools')
-            gen.setup(site, 0, update=1)
-          if self.getTemplateUpdateBusinessTemplateWorkflow():
-            LOG('Business Template', 0, 'Updating Business Template Workflows')
-            gen.setupWorkflow(site)
-          return
-
       # always created a trash bin because we may to save object already present
       # but not in a previous business templates apart at creation of a new site
       if trash_tool is not None and (len(object_to_update) > 0 or len(self.portal_templates) > 2):
@@ -4752,18 +4735,11 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
 
       # update tools if necessary
-      if self.getTitle() == 'erp5_core':
-        if self.getTemplateUpdateTool():
-          LOG('Business Template', 0, 'Updating Tools')
-          gen.setup(site, 0, update=1)
-
-        # check if we have to update business template workflow
-        if self.getTemplateUpdateBusinessTemplateWorkflow():
-          LOG('Business Template', 0, 'Updating Business Template Workflows')
-          gen.setupWorkflow(site)
-          # XXX keep TM in case update of workflow doesn't work
-          #         self._v_txn = WorkflowUpdateTM()
-          #         self._v_txn.register(update=1, gen=gen, site=site)
+      if self.getTitle() == 'erp5_core' and self.getTemplateUpdateTool():
+        from Products.ERP5.ERP5Site import ERP5Generator
+        gen = getattr(site, '_generator_class', ERP5Generator)()
+        LOG('Business Template', 0, 'Updating Tools')
+        gen.setup(site, 0, update=1)
 
       # remove trashbin if empty
       if trashbin is not None:
@@ -5576,41 +5552,3 @@ Business Template is a set of definitions, such as skins, portal types and categ
 # a default class value to None
 for key in BusinessTemplate._item_name_list:
   setattr(BusinessTemplate, key, None)
-
-# Transaction Manager used for update of business template workflow
-# XXX update seems to works without it
-
-# from Shared.DC.ZRDB.TM import TM
-
-# class WorkflowUpdateTM(TM):
-
-#   _p_oid=_p_changed=_registered=None
-#   _update = 0
-
-#   def __init__(self, ):
-#     LOG('init TM', 0, '')
-
-#   def register(self, update=0, gen=None, site=None):
-#     LOG('register TM', 0, update)
-#     self._gen = gen
-#     self._site = site
-#     self._update = update
-#     self._register()
-
-#   def tpc_prepare(self, *d, **kw):
-#     LOG("tpc_prepare", 0, self._update)
-#     if self._update:
-#       # do it one time
-#       self._update = 0
-#       LOG('call update of wf', 0, '')
-#       self._gen.setupWorkflow(self._site)
-
-
-#   def _finish(self, **kw):
-#     LOG('finish TM', 0, '')
-#     pass
-
-#   def _abort(self, **kw):
-#     LOG('abort TM', 0, '')
-#     pass
-

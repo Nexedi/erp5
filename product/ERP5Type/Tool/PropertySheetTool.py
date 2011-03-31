@@ -60,8 +60,8 @@ class PropertySheetTool(BaseTool):
 
   def _bootstrap(self):
     bt_name = 'erp5_property_sheets'
-    super(PropertySheetTool, self)._bootstrap(bt_name,
-                                              'PropertySheetTemplateItem', (
+    from Products.ERP5.ERP5Site import ERP5Generator
+    ERP5Generator.bootstrap(self, bt_name, 'PropertySheetTemplateItem', (
       'BaseType',
       'BusinessTemplate',
       'Folder',

@@ -6,6 +6,8 @@ Base Category | dynamic_class_generation_interaction_workflow
 Base Category | edit_workflow
 Base Type | base_type_interaction_workflow
 Base Type | dynamic_class_generation_interaction_workflow
+Business Template | business_template_building_workflow
+Business Template | business_template_installation_workflow
 Category Existence Constraint | dynamic_class_generation_interaction_workflow
 Category Membership Arity Constraint | dynamic_class_generation_interaction_workflow
 Category Property | dynamic_class_generation_interaction_workflow

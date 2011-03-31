@@ -24,6 +24,10 @@
   <workflow>base_type_interaction_workflow, dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
+  <type>Business Template</type>
+  <workflow>business_template_building_workflow, business_template_installation_workflow</workflow>
+ </chain>
+ <chain>
   <type>Category</type>
   <workflow>edit_workflow</workflow>
  </chain>

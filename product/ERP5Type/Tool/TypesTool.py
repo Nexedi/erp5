@@ -123,7 +123,8 @@ class TypesTool(TypeProvider):
     return False
 
   def _bootstrap(self):
-    super(TypesTool, self)._bootstrap('erp5_core', 'PortalTypeTemplateItem', (
+    from Products.ERP5.ERP5Site import ERP5Generator
+    ERP5Generator.bootstrap(self, 'erp5_core', 'PortalTypeTemplateItem', (
       'Business Template',
       'Standard Property',
       'Acquired Property',

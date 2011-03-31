@@ -1617,25 +1617,38 @@ class ERP5Generator(PortalGenerator):
 
     return p
 
-  def setupLastTools(self, p, create_activities=True, **kw):
+  @classmethod
+  def bootstrap(cls, context, bt_name, item_name, content_id_list):
+    cwd = os.getcwd()
+    try:
+      os.chdir(getBootstrapBusinessTemplateUrl(bt_name))
+      from Products.ERP5.Document.BusinessTemplate import quote
+      traverse = context.unrestrictedTraverse
+      for root, dirs, files in os.walk(os.path.join(item_name, context.id)):
+        container_path = root.split(os.sep)[2:]
+        load = traverse(container_path)._importObjectFromFile
+        if container_path:
+          id_set = set(x[:-4] for x in files if x[-4:] == '.xml')
+        else:
+          id_set = set(quote(x) for x in content_id_list
+                                if not context.hasObject(x))
+        dirs[:] = id_set.intersection(dirs)
+        for file in id_set:
+          load(os.path.join(root, file + '.xml'),
+                verify=False, set_owner=False, suppress_events=True)
+    finally:
+      os.chdir(cwd)
+
+  def setupLastTools(self, p, **kw):
     """
     Set up finals tools
     We want to set the activity tool only at the end to
     make sure that we do not put un the queue the full reindexation
     """
-    # Add Activity Tool
-    if create_activities and not p.hasObject('portal_activities'):
-      addERP5Tool(p, 'portal_activities', 'Activity Tool')
-      # Initialize Activities
-      p.portal_activities.manageClearActivities(keep=0)
-
-    # Add several other tools, only at the end in order
-    # to make sure that they will be reindexed
     addERP5Tool(p, 'portal_rules', 'Rule Tool')
     addERP5Tool(p, 'portal_simulation', 'Simulation Tool')
     addERP5Tool(p, 'portal_deliveries', 'Delivery Tool')
     addERP5Tool(p, 'portal_orders', 'Order Tool')
-
 
   def setupTemplateTool(self, p, **kw):
     """
@@ -1883,23 +1896,12 @@ class ERP5Generator(PortalGenerator):
     """
     Set up workflows for business templates
     """
+    workflow_list = ['business_template_building_workflow',
+                     'business_template_installation_workflow']
     tool = p.portal_workflow
-    for wf_id in ('business_template_building_workflow',
-                  'business_template_installation_workflow'):
-      if wf_id in tool.objectIds():
-        tool.manage_delObjects([wf_id])
-    bootstrap_dir = getBootstrapDirectory()
-    business_template_building_workflow = os.path.join(
-                                 bootstrap_dir,
-                                 'business_template_building_workflow.xml')
-    tool._importObjectFromFile(business_template_building_workflow)
-    business_template_installation_workflow = os.path.join(
-                                 bootstrap_dir,
-                                 'business_template_installation_workflow.xml')
-    tool._importObjectFromFile(business_template_installation_workflow)
-    tool.setChainForPortalTypes( ( 'Business Template', ),
-                                 ( 'business_template_building_workflow',
-                                   'business_template_installation_workflow' ) )
+    tool.manage_delObjects(filter(tool.hasObject, workflow_list))
+    self.bootstrap(tool, 'erp5_core', 'WorkflowTemplateItem', workflow_list)
+    tool.setChainForPortalTypes(('Business Template',), workflow_list)
 
   def setupIndex(self, p, **kw):
     # Make sure all tools and folders have been indexed
@@ -2010,13 +2012,16 @@ class ERP5Generator(PortalGenerator):
     if not update:
       self.setupPermissions(p)
       self.setupDefaultSkins(p)
+      assert not p.hasObject('portal_activities')
+      addERP5Tool(p, 'portal_activities', 'Activity Tool')
+      # Initialize Activities
+      p.portal_activities.manageClearActivities(keep=0)
 
     if not p.hasObject('content_type_registry'):
       self.setupMimetypes(p)
-    if not update:
-      self.setupWorkflow(p)
 
     if not update:
+      self.setupWorkflow(p)
       self.setupERP5Core(p,**kw)
 
     # Make sure the cache is initialized

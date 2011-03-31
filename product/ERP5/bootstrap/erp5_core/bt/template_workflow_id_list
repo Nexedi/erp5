@@ -1,4 +1,6 @@
 base_type_interaction_workflow
+business_template_building_workflow
+business_template_installation_workflow
 distributed_ram_cache_interaction_workflow
 dynamic_class_generation_interaction_workflow
 edit_workflow

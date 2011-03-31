@@ -2888,16 +2888,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       catalog_ob_list = [x.getObject() for x in portal.portal_catalog(uid=cat.getUid())]
       self.failUnless(len(catalog_ob_list) > 0)
 
-  def stepSetUpdateWorkflowFlagInBusinessTemplate(self, sequence=None, sequence_list=None):
-    """
-    Set flag for update in Business Template
-    """
-    template_tool = self.getTemplateTool()
-    bt = sequence.get('current_bt')
-    self.assertEqual(bt.getTitle(),'erp5_core')
-    bt.edit(template_update_business_template_workflow=1)
-    self.assertEqual(bt.getTemplateUpdateBusinessTemplateWorkflow(), 1)
-
   def stepSetUpdateToolFlagInBusinessTemplate(self, sequence=None, sequence_list=None):
     """
     Set flag for update in Business Template
@@ -4881,7 +4871,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CopyCoreBusinessTemplate \
                        UseCopyCoreBusinessTemplate  \
                        ClearBusinessTemplateField \
-                       SetUpdateWorkflowFlagInBusinessTemplate \
                        AddPortalTypeToBusinessTemplate \
                        FillPortalTypesFields \
                        AddModuleToBusinessTemplate \
