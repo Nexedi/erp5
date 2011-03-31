@@ -64,4 +64,7 @@ class BusinessProcessConfiguratorItem(ConfiguratorItemMixin, XMLObject):
 
     ### XXX Create Business Paths and Business Links
 
+    business_configuration.setGlobalConfigurationAttr(\
+                  business_process_id=business_process.getId())
+
     self.install(business_process, business_configuration)
