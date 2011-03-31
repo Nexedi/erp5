@@ -308,14 +308,19 @@ class Browser(ExtendedTestBrowser):
 
   _listbox_table_xpath_str = '//table[contains(@class, "listbox-table")]'
 
-  def getListboxLink(self, line_number, column_number, *args, **kwargs):
+  def getListboxLink(self, line_number, column_number, cell_element_index=1,
+                     *args, **kwargs):
     """
-    Follow the link at the given position.
+    Follow the link at the given position. In case there are several
+    links within a cell, C{cell_element_index} allows to select which
+    one to get (starting from 1).
 
     @param line_number: Line number of the link
     @type line_number: int
     @param column_number: Column number of the link
     @type column_number: int
+    @param cell_element_index: Index of the link to be selected in the cell
+    @type cell_element_index: int
     @param args: positional arguments given to C{getContextLink}
     @type args: list
     @param kwargs: keyword arguments given to C{getContextLink}
@@ -323,10 +328,11 @@ class Browser(ExtendedTestBrowser):
     @return: C{Link} at the given line and column number
     @rtype: L{zope.testbrowser.interfaces.ILink}
     """
-    xpath_str = '%s//tr[%d]//%s[%d]//a[0]' % (self._listbox_table_xpath_str,
-                                              line_number,
-                                              line_number <= 2 and 'th' or 'td',
-                                              column_number)
+    xpath_str = '%s//tr[%d]//%s[%d]//a[%d]' % (self._listbox_table_xpath_str,
+                                               line_number,
+                                               line_number <= 2 and 'th' or 'td',
+                                               column_number,
+                                               cell_element_index)
 
     return self.getContextLink(url=self.etree.xpath(xpath_str).get('href'),
                                *args, **kwargs)
@@ -659,17 +665,24 @@ class ContextMainForm(MainForm):
     """
     self.submit(name='Base_callDialogMethod:method')
 
-  def getListboxControl(self, line_number, column_number, *args, **kwargs):
+  def getListboxControl(self, line_number, column_number, cell_element_index=1,
+                        *args, **kwargs):
     """
     Get the control located at line and column numbers (both starting
     from 1). The position of a cell from a column or line number can
     be obtained through calling
     L{erp5.utils.test_browser.browser.Browser.getListboxPosition}.
 
+    Also, there may be several elements within a cell, thus
+    C{cell_element_index} allows to select which one to get (starting
+    from 1).
+
     @param line_number: Line number of the field
     @type line_number: int
     @param column_number: Column number of the field
     @type column_number: int
+    @param cell_element_index: Index of the control to be selected in the cell
+    @type cell_element_index: int
     @param args: positional arguments given to the parent C{getControl}
     @type args: list
     @param kwargs: keyword arguments given to the parent C{getControl}
@@ -679,10 +692,12 @@ class ContextMainForm(MainForm):
 
     @todo: What if there is more than one field in a cell?
     """
-    xpath_str = '%s//tr[%d]//%s[%d]/input' % (self.browser._listbox_table_xpath_str,
-                                              line_number,
-                                              (line_number <= 2 and u'th' or u'td'),
-                                              column_number)
+    xpath_str = '%s//tr[%d]//%s[%d]/input[%d]' % \
+        (self.browser._listbox_table_xpath_str,
+         line_number,
+         (line_number <= 2 and u'th' or u'td'),
+         column_number,
+         cell_element_index)
 
     input_element = self.browser.etree.xpath(xpath_str)[0]
 
