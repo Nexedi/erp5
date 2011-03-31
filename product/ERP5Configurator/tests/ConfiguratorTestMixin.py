@@ -334,8 +334,10 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
             account_business_configuration_item.getFinancialSection())
 
     # title is translated here
-    self.assertEquals('Capital',
-            account_business_configuration_item.getTitle())
+    title = account_business_configuration_item.getTitle()
+    self.assertTrue(title in ('Capital',
+        '\xd0\xa3\xd1\x81\xd1\x82\xd0\xb0\xd0\xb2\xd0\xbd\xd1\x8b\xd0\xb9 ' \
+                  '\xd0\xba\xd0\xb0\xd0\xbf\xd0\xb8\xd1\x82\xd0\xb0\xd0\xbb'))
 
     # 4. An accounting period configuration item
     accounting_period_configuration_item = \
