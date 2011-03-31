@@ -1,5 +1,5 @@
 campaign_module/**
-knowledge_pad_module/5
+portal_preferences/default_configurator_preference
 event_module
 event_module/**
 service_module/**

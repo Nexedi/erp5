@@ -6,7 +6,6 @@ event_module
 event_module/**
 inventory_module
 inventory_module/**
-knowledge_pad_module/5
 organisation_module
 organisation_module/**
 person_module
@@ -14,6 +13,8 @@ person_module/**
 portal_categories/group/my_group
 portal_categories/product_line/coin
 portal_categories/product_line/coin/**
+portal_preferences/3
+portal_preferences/default_configurator_preference
 portal_simulation/**
 product_module
 product_module/**
