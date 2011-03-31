@@ -11,7 +11,6 @@ organisation_module
 organisation_module/**
 person_module
 person_module/**
-portal_rules/**
 portal_simulation/**
 product_module
 product_module/**
