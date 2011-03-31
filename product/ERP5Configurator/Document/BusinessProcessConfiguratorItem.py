@@ -52,9 +52,16 @@ class BusinessProcessConfiguratorItem(ConfiguratorItemMixin, XMLObject):
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.XMLObject
                     , PropertySheet.CategoryCore
-                    , PropertySheet.DublinCore )
+                    , PropertySheet.DublinCore
+                    )
 
   def build(self, business_configuration):
     portal = self.getPortalObject()
-    raise NotImplemented
-#   self.install(rule, business_configuration)
+    business_process = portal.business_process_module.netContent(
+                                           portal_type="Business Process",
+                                           referece=self.getReference(),
+                                           title=self.getTitle())
+
+    ### XXX Create Business Paths and Business Links
+
+    self.install(business_process, business_configuration)
