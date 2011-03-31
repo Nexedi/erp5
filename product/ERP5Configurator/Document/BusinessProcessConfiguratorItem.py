@@ -59,7 +59,7 @@ class BusinessProcessConfiguratorItem(ConfiguratorItemMixin, XMLObject):
     portal = self.getPortalObject()
     business_process = portal.business_process_module.newContent(
                                            portal_type="Business Process",
-                                           referece=self.getReference(),
+                                           reference=self.getReference(),
                                            title=self.getTitle())
 
 
