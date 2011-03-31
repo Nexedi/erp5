@@ -324,11 +324,10 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       format = format_list[0]
       is_html = 1
     elif format in ('txt', 'text', 'text-content'):
-      format_list = self.getTargetFormatList()
       # if possible, we try to get utf8 text. ('enc.txt' will encode to utf8)
-      if 'enc.txt' in format_list:
+      if 'enc.txt' in allowed_format_list:
         format = 'enc.txt'
-      elif format not in format_list:
+      elif format not in allowed_format_list:
         #Text conversion is not supported by oood, do it in other way
         if not self.hasConversion(format=original_format):
           #Do real conversion for text
