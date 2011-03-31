@@ -974,7 +974,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
             _start = time.time()
             # Add user and log in
             if not quiet:
-              ZopeTestCase._print('\nAdding ERP5TypeTestCase user ... \n')
+              ZopeTestCase._print('Adding ERP5TypeTestCase user ...\n')
             uf = app.acl_users
             uf._doAddUser('ERP5TypeTestCase', '', ['Manager', 'Member', 'Assignee',
                           'Assignor', 'Author', 'Auditor', 'Associate'], [])
