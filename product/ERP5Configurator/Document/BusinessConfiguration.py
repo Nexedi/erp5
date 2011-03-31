@@ -383,7 +383,8 @@ class BusinessConfiguration(Item):
       actions and Configurator requets
     """
     kw = dict(tag="start", 
-              after_method_id="recursiveImmediateReindexObject")
+              after_method_id=["recursiveImmediateReindexObject",
+                               'immediateReindexObject'])
     start = time.time()
     LOG("CONFIGURATOR", INFO, 
         'Build process started for %s' % self.getRelativeUrl())
@@ -403,7 +404,9 @@ class BusinessConfiguration(Item):
                                                              time.time() - start))
 
     if execute_after_setup_script:
-      kw["after_method_id"] = ["buildItem", 'recursiveImmediateReindexObject']
+      kw["after_method_id"] = ["buildItem", 'immediateReindexObject', \
+                               "recursiveImmediateReindexObject"]
+
       self.activate(**kw).ERP5Site_afterConfigurationSetup()
       LOG("Business Configuration", INFO,
           "After setup script called (force) for %s : %s" %
