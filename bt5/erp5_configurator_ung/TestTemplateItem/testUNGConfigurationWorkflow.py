@@ -87,6 +87,7 @@ class TestUNGConfiguratorWorkflow(ERP5TypeTestCase):
      stepConfiguratorNext
      stepTic
      stepCheckConfigureWebSiteForm
+     stepCheckPreferenceConfigurationBrazil
      stepSetupWebSiteConfiguration
      stepConfiguratorNext
      stepTic
@@ -284,8 +285,19 @@ class TestUNGConfiguratorWorkflow(ERP5TypeTestCase):
     self.assertEquals('Previous', response_dict['previous'])
     self.assertEquals('Configure Web Site', response_dict['next'])
 
+  def stepCheckPreferenceConfigurationBrazil(self, sequence=None, sequence_list=None, **kw):
+    """ Check if organisation was created fine """
+    business_configuration = sequence.get("business_configuration")
+    person_config_save = business_configuration["5"]
+    person_config_item = person_config_save["1"]
+    self.assertEquals(person_config_item.getReference(), "person_creator")
+    person_config_item = person_config_save["2"]
+    self.assertEquals(person_config_item.getReference(), "person_assignee")
+    person_config_item = person_config_save["3"]
+    self.assertEquals(person_config_item.getReference(), "person_assignor")
+
   def stepSetupWebSiteConfiguration(self, sequence=None, sequence_list=None, **kw):
-    """ """
+    """ Setup the language of Web Site """
     next_dict = dict(your_default_available_language="pt-BR")
     sequence.edit(next_dict=next_dict)
 
