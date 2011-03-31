@@ -37,6 +37,7 @@ class TestMaxmaDemoConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
   """
   # The list of standard business templates that the configurator should force
   # to install
+  user_reference = "demo"
   standard_bt5_list = ('erp5_simulation',
                        'erp5_dhtml_style',
                        'erp5_jquery',
@@ -75,7 +76,8 @@ class TestMaxmaDemoConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
         'erp5_configurator',
         'erp5_configurator_maxma_demo',)
 
-  def stepCreateBusinessConfiguration(self,  sequence=None, sequence_list=None, **kw):
+  def stepCreateBusinessConfiguration(self, sequence=None,\
+                   sequence_list=None, **kw):
     """ Create one Business Configuration """
     module = self.portal.business_configuration_module
     business_configuration = module.newContent(
@@ -85,7 +87,8 @@ class TestMaxmaDemoConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     sequence.edit(business_configuration=business_configuration,
                   next_dict=next_dict)
 
-  def stepCheckConfigureInstallationForm(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckConfigureInstallationForm(self, sequence=None,\
+                    sequence_list=None, **kw):
     """ Check the installation form """
     response_dict = sequence.get("response_dict")
     # configuration is finished. We are at the Install state.
@@ -99,7 +102,29 @@ class TestMaxmaDemoConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
                                     ['file:///home/rafael/erp5/express/bt5'])
     business_configuration = sequence.get("business_configuration")
     self.setBusinessConfigurationWorkflow(business_configuration,
-                                   "workflow_module/maxma_demo_configuration_workflow")
+                          "workflow_module/maxma_demo_configuration_workflow")
+
+
+  def stepSetMaxmaDemoWorkflow(self, sequence=None, sequence_list=None, **kw):
+    """ Check if objects are placed into the appropriate state """
+ 
+    # Check Gadgets
+    for gadget in self.portal.portal_gadgets.searchFolder():
+      self.assertEquals('public', gadget.getValidationState(),
+                        "%s is not public but %s" % (gadget.getRelativeUrl(), 
+                                                     gadget.getValidationState()))
+      gadget.Base_checkConsistency()
+ 
+    # Check if demo user is working.
+    user = self.portal.portal_catalog.getResultValue(portal_type="Person",
+    reference=self.user_reference)
+
+    self.assertNotEquals(user.Person_getAvailableAssignmentValueList(), [])
+    self.assertEquals(user.getTitle(), "Jack Vale")
+    self.assertEquals(user.getValidationState(), "validated")
+    self.assertEquals(user.getSubordination(), 
+                          'organisation_module/myorganisation')
+    self.assertEquals(user.getSubordinationTitle(), "Maxma Co")
 
   ### STEPS
   DEFAULT_SEQUENCE_LIST = """
@@ -118,16 +143,67 @@ class TestMaxmaDemoConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
       stepStartConfigurationInstallation
       stepTic
       stepCheckInstanceIsConfigured%(country)s
+      stepCheckMaxmaDemoSampleObjectList
+      stepTic
+      stepViewAddGadget
+      stepViewEventModule
+      stepAddEvent
+      stepSentEventWorkflow
+      stepViewAccountModule
+      stepAddAccountModule
+      stepViewAccount
+      stepCopyPasteAccount
+      stepViewEntityModules
+      stepAddEntityModules
+      stepCopyAndPastePerson
+      stepCopyAndPasteOrganisation
+      stepEntityWorkflow
+      stepViewCreatedPersons
+      stepViewCreatedOrganisations
+      stepViewCreatedAssignemnts
+      stepAddAccoutingPeriod
+      stepValidatedAccountingPeriods
+      stepViewBankAccount
+      stepViewCreditCard
+      stepValidateAndModifyBankAccount
+      stepValidateAndModifyCreditCard
+      stepAddPaymentNodeInPerson
+      stepAddPaymentNodeInOrganisation
+      stepCopyAndPasteBankAccountInPerson
+      stepCopyAndPasteBankAccountInOrganisation
+      stepViewAccountingTransactionModule
+      stepAddAccountingTransactionModule
+      stepCopyAndPasteAccountingTransactions
+      stepTic
+      stepAccountingTransaction
+      stepTic
+      stepSaleInvoiceTransaction
+      stepTic
+      stepPurchaseInvoiceTransaction
+      stepTic
+      stepPaymentTransaction
+      stepTic
+      stepBalanceTransaction
+      stepTic
+      stepAccountingTransaction_getCausalityGroupedAccountingTransactionList
+      stepAddAssignments
+      stepAssignmentTI
+      stepEditAssignments
+      stepViewAcessAddPurchaseTradeCondition
+      stepViewAccessAddSaleTradeCondition
+      stepViewAccessAddSaleOrder
+      stepViewAccessAddSalePackingList
+      stepViewAccessPurchaseOrder
+      stepPurchasePackingList
       """
 
   def test_maxma_demo_workflow(self):
     """ Test the consulting workflow configuration"""
+    self.all_username_list = ["demo"]
     sequence_list = SequenceList()
     sequence_string = self.DEFAULT_SEQUENCE_LIST % dict(country='France')
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
-
-
 
 import unittest
 def test_suite():
