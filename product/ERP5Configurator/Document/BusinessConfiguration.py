@@ -375,14 +375,15 @@ class BusinessConfiguration(Item):
 
   ############# Instance and Business Configuration ########################
   security.declareProtected(Permissions.ModifyPortalContent, 'buildConfiguration')
-  def buildConfiguration(self):
+  def buildConfiguration(self, execute_after_setup_script=1):
     """ 
       Build list of business templates according to already saved 
       Configuration Saves (i.e. user input).
       This is the actual implementation which can be used from workflow 
       actions and Configurator requets
     """
-    kw = dict(tag="start")
+    kw = dict(tag="start", 
+              after_method_id="recursiveImmediateReindexObject")
     start = time.time()
     LOG("CONFIGURATOR", INFO, 
         'Build process started for %s' % self.getRelativeUrl())
@@ -400,6 +401,13 @@ class BusinessConfiguration(Item):
     LOG('CONFIGURATOR', INFO, 
         'Build process started for %s ended after %.02fs' % (self.getRelativeUrl(),
                                                              time.time() - start))
+
+    if execute_after_setup_script:
+      kw["after_method_id"] = ["buildItem", 'recursiveImmediateReindexObject']
+      self.activate(**kw).ERP5Site_afterConfigurationSetup()
+      LOG("Business Configuration", INFO,
+          "After setup script called (force) for %s : %s" %
+                    (self.getRelativeUrl(), self.getSpecialise()))
 
   security.declareProtected(Permissions.ModifyPortalContent, 'resetBusinessConfiguration')
   def resetBusinessConfiguration(self):
@@ -429,34 +437,3 @@ class BusinessConfiguration(Item):
         .getRepositoryBusinessTemplateList():
       bt5_title_list.append(bt5.getTitle())
     return bt5_title in bt5_title_list
-
-  security.declareProtected(Permissions.ModifyPortalContent, 'installConfiguration')
-  def installConfiguration(self, execute_after_setup_script=1):
-    """ 
-      Install in remote instance already built list of business templates 
-      which are saved in the Business Configuration.
-    """
-    kw = dict(tag="install_start")
-    portal = self.getPortalObject()
-    for bt_file in self.contentValues(portal_type="File"):
-      # Only install business templates which are not the one created by 
-      # Configuration.
-      if bt_file.getTitle("").replace(".bt5", "") != self.getSpecialiseTitle():
-        bt5_io = StringIO(str(bt_file.getData()))
-        LOG("Business Configuration", INFO, 
-            "Import of bt5 file (%s - %s)" % \
-                                      (bt_file.getId(), bt_file.getTitle()))
-
-        bc = portal.portal_templates.importFile(import_file=bt5_io,
-                                         batch_mode=1)
-        bc.activate(**kw).install()
-        kw["after_tag"] = kw["tag"]
-        kw["tag"] = bt_file.getTitle()
-
-    if execute_after_setup_script:
-      kw["after_method_id"] = ["buildItem", 'recursiveReindexObject']
-      self.activate(**kw).ERP5Site_afterConfigurationSetup()
-      LOG("Business Configuration", INFO,
-          "After setup script called (force) for %s : %s" %
-                    (self.getRelativeUrl(), self.getSpecialise()))
-
