@@ -348,17 +348,19 @@ class Browser(ExtendedTestBrowser):
     # Require either column_number or line_number to be given
     onlyOne([column_number, line_number], '"column_number" and "line_number"')
 
-    cell_type = line_number <= 2 and 'th' or 'td'
-
+    # Get all cells in the column (if column_number is given and
+    # including header columns) or line (if line_number is given)
     if column_number:
-      column_or_line_xpath_str = '//tr//%s[%d]' % (cell_type, column_number)
-    else:
-      column_or_line_xpath_str = '//tr[%d]//%s' % (line_number, cell_type)
+      xpath_str_fmt = self._listbox_table_xpath_str + '//tr//%%s[%d]' % \
+          column_number
 
-    # Get all cells in the column (if column_number is given) or line
-    # (if line_number is given)
-    cell_list = self.etree.xpath(self._listbox_table_xpath_str + \
-                                   column_or_line_xpath_str)
+      column_or_line_xpath_str = "%s | %s" % (xpath_str_fmt % 'th',
+                                              xpath_str_fmt % 'td')
+    else:
+      column_or_line_xpath_str = self._listbox_table_xpath_str + '//tr[%d]//%s' %\
+          (line_number, line_number <= 2 and 'th' or 'td')
+
+    cell_list = self.etree.xpath(column_or_line_xpath_str)
 
     # Iterate over the cells list until one the children content
     # matches the expected text
