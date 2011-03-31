@@ -33,7 +33,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 
 from tempfile import mktemp
 import os
-from Products.DCWorkflowGraph.config import bin_search_path, DOT_EXE
+from Products.DCWorkflowGraph.config import DOT_EXE
 from Products.DCWorkflowGraph.DCWorkflowGraph import bin_search
 
 from Globals import PersistentMapping
