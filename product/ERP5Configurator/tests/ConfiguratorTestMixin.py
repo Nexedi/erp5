@@ -97,7 +97,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     # information to know if a business template is a standard business
     # template or a custom one
     self.portal.portal_templates.updateRepositoryBusinessTemplateList(
-                           ['http://www.erp5.org/dists/snapshot/bt5/'])
+                                ['file:///home/rafael/erp5/express/bt5'])
 
     # it is required by SecurityTestCase
     self.workflow_tool = self.portal.portal_workflow
@@ -573,4 +573,1300 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     business_configuration = sequence.get("business_configuration")
     self.portal.portal_configurator.startInstallation(
          business_configuration, REQUEST=self.portal.REQUEST)
+
+
+  ###################################
+  ## Test Configurator Security
+  ###################################
+  def stepViewAddGadget(self, sequence=None, sequence_list=None, **kw):
+    """
+       Test if gadget system is working.
+    """
+    for user_id in self.all_username_list:
+      self._loginAsUser(user_id)
+      knowledge_pad_module = self.portal.knowledge_pad_module
+      knowledge_pad = knowledge_pad_module.newContent(portal_type='Knowledge Pad')
+      self.failUnlessUserCanViewDocument(user_id, knowledge_pad)
+      self.failUnlessUserCanAccessDocument(user_id, knowledge_pad)
+      # only in visible state we can add Gadgets (i.e. Knowledge Boxes)
+      knowledge_pad.visible()
+      knowledge_box = knowledge_pad.newContent(portal_type='Knowledge Box')
+      self.failUnlessUserCanViewDocument(user_id, knowledge_box)
+      self.failUnlessUserCanAccessDocument(user_id, knowledge_box)
+
+  def stepViewEventModule(self, sequence=None, sequence_list=None, **kw):
+    """ Everybody can view events. """
+    for username in self.all_username_list:
+      self.failUnlessUserCanViewDocument(username, self.portal.event_module)
+      self.failUnlessUserCanAccessDocument(username, self.portal.event_module)
+
+  def stepAddEvent(self, sequence=None, sequence_list=None, **kw):
+    """ Everybody can add events. """
+    for username in self.all_username_list:
+      self.failUnlessUserCanAddDocument(username, self.portal.event_module)
+      for event_type in ('Visit', 'Web Message', 'Letter', 'Note',
+                         'Phone Call', 'Mail Message', 'Fax Message'):
+        self._loginAsUser(username)
+        event = self.portal.event_module.newContent(portal_type=event_type)
+        self.failUnlessUserCanViewDocument(username, event)
+        self.failUnlessUserCanAccessDocument(username, event)
+
+  def stepSentEventWorkflow(self, sequence=None, sequence_list=None, **kw):
+    for event_type in ('Visit', 'Web Message', 'Letter', 'Note',
+                       'Phone Call', 'Mail Message', 'Fax Message'):
+      event = self.portal.event_module.newContent(portal_type=event_type)
+      # in draft state, we can view & modify
+      for username in self.all_username_list:
+        self.failUnlessUserCanAccessDocument(username, event)
+        self.failUnlessUserCanViewDocument(username, event)
+        self.failUnlessUserCanModifyDocument(username, event)
+
+      # everybody can cancel from draft
+      for username in self.all_username_list:
+        self.failUnlessUserCanPassWorkflowTransition(
+                    username, 'cancel_action', event)
+
+      # everybody can submit
+      for username in self.all_username_list:
+        self.failUnlessUserCanPassWorkflowTransition(
+                    username, 'plan_action', event)
+
+      event.plan()
+      self.assertEquals('planned', event.getSimulationState())
+
+      # everybody can request or post a submitted event
+      for username in self.all_username_list:
+        self.failUnlessUserCanPassWorkflowTransition(
+                    username, 'order_action', event)
+        self.failUnlessUserCanPassWorkflowTransition(
+                    username, 'start_action', event)
+
+      event.start()
+      self.assertEquals('started', event.getSimulationState())
+
+      # everybody can deliver a posted event
+      for username in self.all_username_list:
+        self.failUnlessUserCanPassWorkflowTransition(
+                    username, 'deliver_action', event)
+      event.deliver()
+      self.assertEquals('delivered', event.getSimulationState())
+
+  ## Accounts {{{
+  def stepViewAccountModule(self, sequence=None, sequence_list=None, **kw):
+    """ everybody can view and access account module. """
+    for username in self.all_username_list:
+      self.failUnlessUserCanViewDocument(username,
+                              self.portal.account_module)
+      self.failUnlessUserCanAccessDocument(username,
+                              self.portal.account_module)
+
+  def stepAddAccountModule(self, sequence=None, sequence_list=None, **kw):
+    """ only accountants can add accounts. """
+    for username in self.accountant_username_list:
+      self.failUnlessUserCanAddDocument(username,
+                    self.portal.account_module)
+    if self.restricted_security:
+      for username in (self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanAddDocument(username,
+                      self.portal.account_module)
+
+  def stepViewAccount(self, sequence=None, sequence_list=None, **kw):
+    account = self.portal.account_module.newContent(
+                                      portal_type='Account')
+    # in draft state,
+    self.assertEquals('draft', account.getValidationState())
+    # everybody can see
+    for username in self.all_username_list:
+      self.failUnlessUserCanViewDocument(username, account)
+      self.failUnlessUserCanAccessDocument(username, account)
+
+    # only accountants can modify
+    for username in self.accountant_username_list:
+      self.failUnlessUserCanModifyDocument(username, account)
+    if self.restricted_security:
+      for username in (self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanModifyDocument(username, account)
+
+    # only accountants can validate
+    for username in self.accountant_username_list:
+      self.failUnlessUserCanPassWorkflowTransition(
+                  username, 'validate_action', account)
+    if self.restricted_security:
+      for username in (self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanPassWorkflowTransition(
+                    username, 'validate_action', account)
+
+    account.validate()
+    self.assertEquals('validated', account.getValidationState())
+    # in validated state, every body can view, but *nobody* can modify
+    for username in self.all_username_list:
+      self.failUnlessUserCanViewDocument(username, account)
+      self.failUnlessUserCanAccessDocument(username, account)
+      self.failIfUserCanModifyDocument(username, account)
+
+    # only accountants can invalidate
+    for username in self.accountant_username_list:
+      self.failUnlessUserCanPassWorkflowTransition(
+                  username, 'invalidate_action', account)
+    if self.restricted_security:
+      for username in (self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanPassWorkflowTransition(
+                  username, 'invalidate_action', account)
+
+    account.invalidate()
+    self.assertEquals('invalidated', account.getValidationState())
+    # back in invalidated state, everybody can view
+    for username in self.all_username_list:
+      self.failUnlessUserCanViewDocument(username, account)
+      self.failUnlessUserCanAccessDocument(username, account)
+    # only accountants can modify
+    for username in self.accountant_username_list:
+      self.failUnlessUserCanModifyDocument(username, account)
+    if self.restricted_security:
+      for username in (self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanModifyDocument(username, account)
+
+    account.delete()
+    # nobody can view delete object, but we can still access, for safety
+    for username in self.all_username_list:
+      self.failIfUserCanViewDocument(username, account)
+
+  def stepCopyPasteAccount(self, sequence=None, sequence_list=None, **kw):
+    # tests copy / pasting accounts from account module
+    account = self.portal.account_module.newContent(
+                                      portal_type='Account')
+    # in draft state,
+    self.assertEquals('draft', account.getValidationState())
+
+    # everybody can see
+    for username in self.all_username_list:
+      self.failUnlessUserCanViewDocument(username, account)
+      self.failUnlessUserCanAccessDocument(username, account)
+
+  def stepViewEntityModules(self, sequence=None, sequence_list=None, **kw):
+    # Everybody can view entities.
+    for username in self.all_username_list:
+      for module in [self.portal.person_module,
+                     self.portal.organisation_module]:
+        self.failUnlessUserCanViewDocument(username, module)
+        self.failUnlessUserCanAccessDocument(username, module)
+
+  def stepAddEntityModules(self, sequence=None, sequence_list=None, **kw):
+    # Everybody can add entities.
+    for username in self.all_username_list:
+      for module in [self.portal.person_module,
+                     self.portal.organisation_module]:
+        self.failUnlessUserCanAddDocument(username, module)
+
+  def stepCopyAndPastePerson(self, sequence=None, sequence_list=None, **kw):
+    # copy & paste in person module
+    person = self.portal.person_module.newContent(
+                                    portal_type='Person')
+
+    for username in self.all_username_list:
+      self._loginAsUser(username)
+      person.Base_createCloneDocument()
+
+  def stepCopyAndPasteOrganisation(self, sequence=None, sequence_list=None, **kw):
+    # copy & paste in organisation module
+    organisation = self.portal.organisation_module.newContent(
+                                    portal_type='Organisation')
+    for username in self.all_username_list:
+      self._loginAsUser(username)
+      organisation.Base_createCloneDocument()
+
+  def stepEntityWorkflow(self, sequence=None, sequence_list=None, **kw):
+    for module in [self.portal.person_module,
+                   self.portal.organisation_module]:
+      entity = module.newContent()
+      # in draft state, we can view, modify & add
+      for username in self.all_username_list:
+        self.failUnlessUserCanAccessDocument(username, entity)
+        self.failUnlessUserCanViewDocument(username, entity)
+        self.failUnlessUserCanModifyDocument(username, entity)
+        self.failUnlessUserCanAddDocument(username, entity)
+
+      # everybody can validate
+      for username in self.all_username_list:
+        self.failUnlessUserCanPassWorkflowTransition(
+                    username, 'validate_action', entity)
+      entity.validate()
+      self.assertEquals('validated', entity.getValidationState())
+
+      # in validated state, we can still modify
+      for username in self.all_username_list:
+        self.failUnlessUserCanAccessDocument(username, entity)
+        self.failUnlessUserCanViewDocument(username, entity)
+        self.failUnlessUserCanModifyDocument(username, entity)
+        self.failUnlessUserCanAddDocument(username, entity)
+
+      # and invalidate
+      for username in self.all_username_list:
+        self.failUnlessUserCanPassWorkflowTransition(
+                    username, 'invalidate_action', entity)
+
+  def stepViewCreatedPersons(self, sequence=None, sequence_list=None, **kw):
+    self.login(user_name='test_configurator_user')
+    business_configuration = sequence.get('business_configuration')
+    person_list = self.getBusinessConfigurationObjectList(business_configuration, 'Person')
+    self.assertNotEquals(0, len(person_list))
+
+    for entity in person_list:
+      for username in self.all_username_list:
+        self.failUnlessUserCanAccessDocument(username, entity)
+        self.failUnlessUserCanViewDocument(username, entity)
+
+  def stepViewCreatedOrganisations(self, sequence=None, sequence_list=None, **kw):
+    self.login(user_name='test_configurator_user')
+    business_configuration = sequence.get('business_configuration')
+    organisation_list = self.getBusinessConfigurationObjectList(business_configuration, 'Organisation')
+    self.assertNotEquals(0, len(organisation_list))
+
+    for entity in organisation_list:
+      for username in self.all_username_list:
+        self.failUnlessUserCanAccessDocument(username, entity)
+        self.failUnlessUserCanViewDocument(username, entity)
+
+  def stepViewCreatedAssignemnts(self, sequence=None, sequence_list=None, **kw):
+    self.login(user_name='test_configurator_user')
+    business_configuration = sequence.get('business_configuration')
+    person_list = self.getBusinessConfigurationObjectList(business_configuration, 'Person')
+    self.assertNotEquals(0, len(person_list))
+
+    for person in person_list:
+      found_one = 0
+      for assignment in person.contentValues(portal_type='Assignment'):
+        found_one = 1
+        for username in self.all_username_list:
+          self.failUnlessUserCanAccessDocument(username, assignment)
+          self.failUnlessUserCanViewDocument(username, assignment)
+      self.assertTrue(found_one, 'No assignment found in %s' % person)
+
+  # }}}
+
+  ## Accounting Periods {{{
+  def stepAddAccoutingPeriod(self, sequence=None, sequence_list=None, **kw):
+    # Everybody can add accounting periods.
+    organisation = self.portal.organisation_module.newContent(
+                          portal_type='Organisation')
+    for username in self.all_username_list:
+      self._loginAsUser(username)
+      self.assertTrue('Accounting Period' in
+            organisation.getVisibleAllowedContentTypeList())
+
+  def stepValidatedAccountingPeriods(self, sequence=None, sequence_list=None, **kw):
+    organisation = self.portal.organisation_module.newContent(
+                          portal_type='Organisation',
+                          price_currency_value=self.portal.currency_module.EUR,
+                          group='my_group')
+    accounting_period = organisation.newContent(
+                          portal_type='Accounting Period',
+                          start_date=DateTime(2001, 01, 01),
+                          stop_date=DateTime(2002, 12, 31))
+    self.assertEquals(accounting_period.getSimulationState(), 'draft')
+
+    # accountants can modify the period
+    for username in self.accountant_username_list:
+      self.failUnlessUserCanModifyDocument(username, accounting_period)
+    # accountants can cancel the period
+    for username in self.accountant_username_list:
+      self.failUnlessUserCanPassWorkflowTransition(
+          username, 'cancel_action', accounting_period)
+    # accountants can start the period
+    for username in self.accountant_username_list:
+      self.failUnlessUserCanPassWorkflowTransition(
+          username, 'start_action', accounting_period)
+
+    # once the period is started, nobody can modify
+    accounting_period.start()
+    self.assertEquals('started', accounting_period.getSimulationState())
+    for username in self.accountant_username_list:
+      self.failIfUserCanModifyDocument(username, accounting_period)
+    # accountants can still cancel the period
+    for username in self.accountant_username_list:
+      self.failUnlessUserCanPassWorkflowTransition(
+          username, 'cancel_action', accounting_period)
+    # accountants can stop the period
+    for username in self.accountant_username_list:
+      self.failUnlessUserCanPassWorkflowTransition(
+          username, 'stop_action', accounting_period)
+    # and reopen it
+    accounting_period.stop()
+    self.assertEquals('stopped', accounting_period.getSimulationState())
+    for username in self.accountant_username_list:
+      self.failUnlessUserCanPassWorkflowTransition(
+          username, 'restart_action', accounting_period)
+    # but only accounting manager can close it
+    self.failUnlessUserCanPassWorkflowTransition(
+          self.accounting_manager_reference, 'deliver_action', accounting_period)
+    if self.restricted_security:
+      self.failIfUserCanPassWorkflowTransition(
+          self.accounting_agent_reference, 'deliver_action', accounting_period)
+
+  # }}}
+
+  ## Payment Nodes (Bank Account & Credit Cards) {{{
+  def stepViewBankAccount(self, sequence=None, sequence_list=None, **kw):
+    # Everybody can view bank accounts.
+    entity = self.portal.organisation_module.newContent(
+                                               portal_type='Organisation')
+    bank_account = entity.newContent(portal_type='Bank Account')
+    # everybody can view in draft ...
+    self.assertEquals('draft', bank_account.getValidationState())
+    for username in self.all_username_list:
+      self.failUnlessUserCanViewDocument(username, bank_account)
+      self.failUnlessUserCanAccessDocument(username, bank_account)
+    # ... and validated states
+    bank_account.validate()
+    self.assertEquals('validated', bank_account.getValidationState())
+    for username in self.all_username_list:
+      self.failUnlessUserCanViewDocument(username, bank_account)
+      self.failUnlessUserCanAccessDocument(username, bank_account)
+
+  def stepViewCreditCard(self, sequence=None, sequence_list=None, **kw):
+    # Everybody can view credit cards
+    entity = self.portal.organisation_module.newContent(
+                                               portal_type='Organisation')
+    ext_payment = entity.newContent(portal_type='Credit Card')
+    # every body can view in draft ...
+    self.assertEquals('draft', ext_payment.getValidationState())
+    for username in self.all_username_list:
+      self.failUnlessUserCanViewDocument(username, ext_payment)
+      self.failUnlessUserCanAccessDocument(username, ext_payment)
+    # ... and validated states
+    ext_payment.validate()
+    self.assertEquals('validated', ext_payment.getValidationState())
+    for username in self.all_username_list:
+      self.failUnlessUserCanViewDocument(username, ext_payment)
+      self.failUnlessUserCanAccessDocument(username, ext_payment)
+
+  def stepValidateAndModifyBankAccount(self, sequence=None, sequence_list=None, **kw):
+    # Every body can modify Bank Accounts
+    entity = self.portal.organisation_module.newContent(
+                                               portal_type='Organisation')
+    bank_account = entity.newContent(portal_type='Bank Account')
+    # draft
+    for username in self.all_username_list:
+      self.failUnlessUserCanModifyDocument(username, bank_account)
+    for username in self.all_username_list:
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                'validate_action', bank_account)
+    # validated
+    bank_account.validate()
+    self.assertEquals('validated', bank_account.getValidationState())
+    for username in self.all_username_list:
+      self.failUnlessUserCanModifyDocument(username, bank_account)
+    for username in self.all_username_list:
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                'invalidate_action', bank_account)
+    # invalidated
+    bank_account.invalidate()
+    self.assertEquals('invalidated', bank_account.getValidationState())
+    for username in self.all_username_list:
+      self.failUnlessUserCanModifyDocument(username, bank_account)
+    for username in self.all_username_list:
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                'validate_action', bank_account)
+
+  def stepValidateAndModifyCreditCard(self, sequence=None, sequence_list=None, **kw):
+    # Every body can modify Credit Card
+    entity = self.portal.organisation_module.newContent(
+                                               portal_type='Organisation')
+    credit_card = entity.newContent(portal_type='Credit Card')
+    # draft
+    for username in self.all_username_list:
+      self.failUnlessUserCanModifyDocument(username, credit_card)
+    for username in self.all_username_list:
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                'validate_action', credit_card)
+    # validated
+    credit_card.validate()
+    self.assertEquals('validated', credit_card.getValidationState())
+    for username in self.all_username_list:
+      self.failUnlessUserCanModifyDocument(username, credit_card)
+    for username in self.all_username_list:
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                'invalidate_action', credit_card)
+    # invalidated
+    credit_card.invalidate()
+    self.assertEquals('invalidated', credit_card.getValidationState())
+    for username in self.all_username_list:
+      self.failUnlessUserCanModifyDocument(username, credit_card)
+    for username in self.all_username_list:
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                'validate_action', credit_card)
+
+  def stepAddPaymentNodeInPerson(self, sequence=None, sequence_list=None, **kw):
+    person = self.portal.person_module.newContent(portal_type='Person')
+    for username in self.all_username_list:
+      self._loginAsUser(username)
+      self.failUnlessUserCanAddDocument(username, person)
+      self.failUnless('Bank Account' in
+                    person.getVisibleAllowedContentTypeList())
+      self.failUnless('Credit Card' in
+                    person.getVisibleAllowedContentTypeList())
+    # when the entity is validated, we can still add some payment nodes
+    person.validate()
+    self.portal.portal_caches.clearAllCache()
+    for username in self.all_username_list:
+      self._loginAsUser(username)
+      self.failUnlessUserCanAddDocument(username, person)
+      self.failUnless('Bank Account' in
+                    person.getVisibleAllowedContentTypeList())
+      self.failUnless('Credit Card' in
+                    person.getVisibleAllowedContentTypeList())
+
+  def stepAddPaymentNodeInOrganisation(self, sequence=None, sequence_list=None, **kw):
+    org = self.portal.organisation_module.newContent(
+                                    portal_type='Organisation')
+    for username in self.all_username_list:
+      self._loginAsUser(username)
+      self.failUnlessUserCanAddDocument(username, org)
+      self.failUnless('Bank Account' in
+                    org.getVisibleAllowedContentTypeList())
+      self.failUnless('Credit Card' in
+                    org.getVisibleAllowedContentTypeList())
+    # when the entity is validated, we can still add some payment nodes
+    org.validate()
+    self.portal.portal_caches.clearAllCache()
+    for username in self.all_username_list:
+      self._loginAsUser(username)
+      self.failUnlessUserCanAddDocument(username, org)
+      self.failUnless('Bank Account' in
+                    org.getVisibleAllowedContentTypeList())
+      self.failUnless('Credit Card' in
+                    org.getVisibleAllowedContentTypeList())
+
+  def stepCopyAndPasteBankAccountInPerson(self, sequence=None, sequence_list=None, **kw):
+    # everybody can cp bank accounts in persons
+    person = self.portal.organisation_module.newContent(
+                                    portal_type='Organisation')
+    bank_account = person.newContent(
+                              portal_type='Bank Account')
+    for username in self.all_username_list:
+      self._loginAsUser(username)
+      bank_account.Base_createCloneDocument()
+
+  def stepCopyAndPasteBankAccountInOrganisation(self, sequence=None, sequence_list=None, **kw):
+    # everybody can cp bank accounts in organisation
+    organisation = self.portal.organisation_module.newContent(
+                                    portal_type='Organisation')
+    bank_account = organisation.newContent(
+                              portal_type='Bank Account')
+    for username in self.all_username_list:
+      self._loginAsUser(username)
+      bank_account.Base_createCloneDocument()
+
+  # }}}
+
+  ## Accounting Module {{{
+  def stepViewAccountingTransactionModule(self, sequence=None, sequence_list=None, **kw):
+    for username in self.all_username_list:
+      self.failUnlessUserCanViewDocument(username,
+              self.portal.accounting_module)
+      self.failUnlessUserCanAccessDocument(username,
+              self.portal.accounting_module)
+
+  def stepAddAccountingTransactionModule(self, sequence=None, sequence_list=None, **kw):
+    # Anyone can adds accounting transactions
+    for username in self.all_username_list:
+      self.failUnlessUserCanAddDocument(username,
+              self.portal.accounting_module)
+
+  def stepCopyAndPasteAccountingTransactions(self, sequence=None, sequence_list=None, **kw):
+    # Anyone can copy and paste accounting transaction.
+    for portal_type in self._getAccountingTransactionTypeList():
+      if portal_type != 'Balance Transaction':
+        transaction = self.portal.accounting_module.newContent(
+                                        portal_type=portal_type)
+        for username in self.all_username_list:
+          self._loginAsUser(username)
+          transaction.Base_createCloneDocument()
+
+  def _getAccountingTransactionTypeList(self):
+    module = self.portal.accounting_module
+    return [ti for ti in module.getVisibleAllowedContentTypeList()
+               if ti not in ('Balance Transaction', )]
+
+  def stepAccountingTransaction(self, sequence=None, sequence_list=None, **kw):
+    transaction = self.portal.accounting_module.newContent(
+                      portal_type='Accounting Transaction',
+                      start_date=DateTime(2001, 01, 01),
+                      stop_date=DateTime(2001, 01, 01))
+    self.assertEquals('draft', transaction.getSimulationState())
+    for username in self.all_username_list:
+      self.assertUserCanViewDocument(username, transaction)
+      self.assertUserCanAccessDocument(username, transaction)
+    if self.restricted_security:
+      for username in (self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanModifyDocument(username, transaction)
+    for username in self.accountant_username_list:
+      self.failUnlessUserCanModifyDocument(username, transaction)
+      self.failUnlessUserCanAddDocument(username, transaction)
+    if self.restricted_security:
+      for username in (self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanPassWorkflowTransition(username,
+                                                 'cancel_action',
+                                                 transaction)
+        self.failIfUserCanPassWorkflowTransition(username,
+                                                 'plan_action',
+                                                 transaction)
+        self.failIfUserCanPassWorkflowTransition(username,
+                                                 'confirm_action',
+                                                 transaction)
+        self.failIfUserCanPassWorkflowTransition(username,
+                                                 'start_action',
+                                                 transaction)
+        self.failIfUserCanPassWorkflowTransition(username,
+                                                 'stop_action',
+                                                 transaction)
+    for username in self.accountant_username_list:
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                                               'cancel_action',
+                                               transaction)
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                                               'plan_action',
+                                               transaction)
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                                               'confirm_action',
+                                               transaction)
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                                               'stop_action',
+                                               transaction)
+      # TODO
+      ### self.failUnlessUserCanPassWorkflowTransition(username,
+      ###                                          'delete_action',
+      ###                                          transaction)
+
+    # (skip some states)
+    transaction.start()
+    self.assertEquals('started', transaction.getSimulationState())
+    self.stepTic()
+
+    for username in self.all_username_list:
+      # everybody can view
+      self.assertUserCanViewDocument(username, transaction)
+      self.assertUserCanAccessDocument(username, transaction)
+
+    # only accountant can modify
+    if self.restricted_security:
+      for username in  (self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanModifyDocument(username, transaction)
+        self.failIfUserCanAddDocument(username, transaction)
+
+    if self.restricted_security:
+      # only accountant can "stop"
+      for username in (self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanPassWorkflowTransition(username,
+                                                 'stop_action',
+                                                 transaction)
+        self.failIfUserCanPassWorkflowTransition(username,
+                                                 'deliver_action',
+                                                 transaction)
+    for username in self.accountant_username_list:
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                                               'stop_action',
+                                               transaction)
+
+    transaction.stop()
+    self.assertEquals('stopped', transaction.getSimulationState())
+    for username in self.all_username_list:
+      # everybody can view
+      self.assertUserCanViewDocument(username, transaction)
+      self.assertUserCanAccessDocument(username, transaction)
+      # nobody can modify
+      self.failIfUserCanModifyDocument(username, transaction)
+      self.failIfUserCanAddDocument(username, transaction)
+
+    if self.restricted_security:
+      for username in (self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanPassWorkflowTransition(username,
+                                                 'restart_action',
+                                                 transaction)
+        self.failIfUserCanPassWorkflowTransition(username,
+                                                 'deliver_action',
+                                                 transaction)
+        self.failIfUserCanPassWorkflowTransition(username,
+                                                 'cancel_action',
+                                                 transaction)
+
+    for username in self.accountant_username_list:
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                                               'restart_action',
+                                               transaction)
+    # in started state, we can modify again, and go back to stopped state
+    transaction.restart()
+    self.assertEquals('started', transaction.getSimulationState())
+    self.stepTic()
+
+    for username in self.accountant_username_list:
+      self.failUnlessUserCanModifyDocument(username, transaction)
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                                                  'stop_action',
+                                                  transaction)
+
+    # go back to stopped state
+    transaction.stop()
+    self.assertEquals('stopped', transaction.getSimulationState())
+
+    # only accounting_manager can validate
+    self.failUnlessUserCanPassWorkflowTransition(self.accounting_manager_reference,
+                                            'deliver_action',
+                                             transaction)
+    if self.restricted_security:
+      self.failIfUserCanPassWorkflowTransition(self.accounting_agent_reference,
+                                              'deliver_action',
+                                               transaction)
+
+  def stepSaleInvoiceTransaction(self, sequence=None, sequence_list=None, **kw):
+    transaction = self.portal.accounting_module.newContent(
+                      portal_type='Sale Invoice Transaction',
+                      start_date=DateTime(2001, 01, 01),
+                      stop_date=DateTime(2001, 01, 01))
+    self.assertEquals('draft', transaction.getSimulationState())
+    for username in self.all_username_list:
+      self.assertUserCanViewDocument(username, transaction)
+      self.assertUserCanAccessDocument(username, transaction)
+    if self.restricted_security:
+      for username in (self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanModifyDocument(username, transaction)
+    for username in self.accountant_username_list:
+      self.failUnlessUserCanModifyDocument(username, transaction)
+      self.failUnlessUserCanAddDocument(username, transaction)
+    if self.restricted_security:
+      for username in (self.all_username_list - self.accountant_username_list -
+                       self.sales_and_purchase_username_list):
+        self.failIfUserCanPassWorkflowTransition(username,
+                                                 'cancel_action',
+                                                 transaction)
+        self.failIfUserCanPassWorkflowTransition(username,
+                                                 'plan_action',
+                                                 transaction)
+        self.failIfUserCanPassWorkflowTransition(username,
+                                                 'confirm_action',
+                                                 transaction)
+        self.failIfUserCanPassWorkflowTransition(username,
+                                                 'stop_action',
+                                                 transaction)
+
+    for username in self.sales_and_purchase_username_list:
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                                                   'cancel_action',
+                                                    transaction)
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                                                   'plan_action',
+                                                    transaction)
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                                                   'confirm_action',
+                                                    transaction)
+
+    for username in self.accountant_username_list:
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                                               'cancel_action',
+                                               transaction)
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                                               'plan_action',
+                                               transaction)
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                                               'confirm_action',
+                                               transaction)
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                                               'stop_action',
+                                               transaction)
+      # TODO
+      ### self.failUnlessUserCanPassWorkflowTransition(username,
+      ###                                          'delete_action',
+      ###                                          transaction)
+
+    # (skip some states)
+    transaction.start()
+    self.assertEquals('started', transaction.getSimulationState())
+    self.stepTic()
+
+    for username in self.all_username_list:
+      # everybody can view
+      self.assertUserCanViewDocument(username, transaction)
+      self.assertUserCanAccessDocument(username, transaction)
+
+    # only accountant can modify
+    if self.restricted_security:
+      for username in (self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanModifyDocument(username, transaction)
+        self.failIfUserCanAddDocument(username, transaction)
+
+    if self.restricted_security:
+      # only accountant can "stop"
+      for username in (self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanPassWorkflowTransition(username,
+                                                 'stop_action',
+                                                 transaction)
+        self.failIfUserCanPassWorkflowTransition(username,
+                                                 'deliver_action',
+                                                 transaction)
+    for username in self.accountant_username_list:
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                                               'stop_action',
+                                               transaction)
+
+    transaction.stop()
+    self.assertEquals('stopped', transaction.getSimulationState())
+    for username in self.all_username_list:
+      # everybody can view
+      self.assertUserCanViewDocument(username, transaction)
+      self.assertUserCanAccessDocument(username, transaction)
+      # nobody can modify
+      self.failIfUserCanModifyDocument(username, transaction)
+      self.failIfUserCanAddDocument(username, transaction)
+
+    if self.restricted_security:
+      for username in (self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanPassWorkflowTransition(username,
+                                                 'restart_action',
+                                                 transaction)
+        self.failIfUserCanPassWorkflowTransition(username,
+                                                 'deliver_action',
+                                                 transaction)
+        self.failIfUserCanPassWorkflowTransition(username,
+                                                 'cancel_action',
+                                                 transaction)
+
+    for username in self.accountant_username_list:
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                                               'restart_action',
+                                               transaction)
+    # in started state, we can modify again, and go back to stopped state
+    transaction.restart()
+    self.assertEquals('started', transaction.getSimulationState())
+    self.stepTic()
+
+    for username in self.accountant_username_list:
+      self.failUnlessUserCanModifyDocument(username, transaction)
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                                                  'stop_action',
+                                                  transaction)
+
+    # go back to stopped state
+    transaction.stop()
+    self.assertEquals('stopped', transaction.getSimulationState())
+
+    # only accounting_manager can validate
+    self.failUnlessUserCanPassWorkflowTransition(self.accounting_manager_reference,
+                                            'deliver_action',
+                                             transaction)
+    if self.restricted_security:
+      self.failIfUserCanPassWorkflowTransition(self.accounting_agent_reference,
+                                              'deliver_action',
+                                               transaction)
+
+
+  def stepPurchaseInvoiceTransaction(self, sequence=None, sequence_list=None, **kw):
+    transaction = self.portal.accounting_module.newContent(
+                      portal_type='Purchase Invoice Transaction',
+                      start_date=DateTime(2001, 01, 01),
+                      stop_date=DateTime(2001, 01, 01))
+    self.assertEquals('draft', transaction.getSimulationState())
+    for username in self.all_username_list:
+      self.assertUserCanViewDocument(username, transaction)
+      self.assertUserCanAccessDocument(username, transaction)
+    if self.restricted_security:
+      for username in (self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanModifyDocument(username, transaction)
+    for username in self.accountant_username_list:
+      self.failUnlessUserCanModifyDocument(username, transaction)
+      self.failUnlessUserCanAddDocument(username, transaction)
+    if self.restricted_security:
+      for username in (self.all_username_list - self.accountant_username_list -
+                       self.sales_and_purchase_username_list):
+        self.failIfUserCanPassWorkflowTransition(username,
+                                                 'cancel_action',
+                                                 transaction)
+        self.failIfUserCanPassWorkflowTransition(username,
+                                                 'plan_action',
+                                                 transaction)
+        self.failIfUserCanPassWorkflowTransition(username,
+                                                 'confirm_action',
+                                                 transaction)
+        self.failIfUserCanPassWorkflowTransition(username,
+                                                 'stop_action',
+                                                 transaction)
+
+    for username in self.sales_and_purchase_username_list:
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                                                   'cancel_action',
+                                                    transaction)
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                                                   'plan_action',
+                                                    transaction)
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                                                   'confirm_action',
+                                                    transaction)
+      # XXX would require to go to confirmed state first
+      # self.failIfUserCanPassWorkflowTransition(username,
+      #                                         'start_action',
+      #                                         transaction)
+
+
+    for username in self.accountant_username_list:
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                                               'cancel_action',
+                                               transaction)
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                                               'plan_action',
+                                               transaction)
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                                               'confirm_action',
+                                               transaction)
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                                               'stop_action',
+                                               transaction)
+      # TODO
+      ### self.failUnlessUserCanPassWorkflowTransition(username,
+      ###                                          'delete_action',
+      ###                                          transaction)
+
+    # (skip some states)
+    transaction.start()
+    self.assertEquals('started', transaction.getSimulationState())
+    self.stepTic()
+
+    for username in self.all_username_list:
+      # everybody can view
+      self.assertUserCanViewDocument(username, transaction)
+      self.assertUserCanAccessDocument(username, transaction)
+
+    # only accountant can modify
+    if self.restricted_security:
+      for username in (self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanModifyDocument(username, transaction)
+        self.failIfUserCanAddDocument(username, transaction)
+
+    if self.restricted_security:
+      # only accountant can "stop"
+      for username in (self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanPassWorkflowTransition(username,
+                                                 'stop_action',
+                                                 transaction)
+        self.failIfUserCanPassWorkflowTransition(username,
+                                                 'deliver_action',
+                                                 transaction)
+    for username in self.accountant_username_list:
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                                               'stop_action',
+                                               transaction)
+
+    transaction.stop()
+    self.assertEquals('stopped', transaction.getSimulationState())
+    for username in self.all_username_list:
+      # everybody can view
+      self.assertUserCanViewDocument(username, transaction)
+      self.assertUserCanAccessDocument(username, transaction)
+      # nobody can modify
+      self.failIfUserCanModifyDocument(username, transaction)
+      self.failIfUserCanAddDocument(username, transaction)
+
+    if self.restricted_security:
+      for username in (self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanPassWorkflowTransition(username,
+                                                 'restart_action',
+                                                 transaction)
+        self.failIfUserCanPassWorkflowTransition(username,
+                                                 'deliver_action',
+                                                 transaction)
+        self.failIfUserCanPassWorkflowTransition(username,
+                                                 'cancel_action',
+                                                 transaction)
+
+    for username in self.accountant_username_list:
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                                               'restart_action',
+                                               transaction)
+    # in started state, we can modify again, and go back to stopped state
+    transaction.restart()
+    self.assertEquals('started', transaction.getSimulationState())
+    self.stepTic()
+
+    for username in self.accountant_username_list:
+      self.failUnlessUserCanModifyDocument(username, transaction)
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                                                  'stop_action',
+                                                  transaction)
+
+    # go back to stopped state
+    transaction.stop()
+    self.assertEquals('stopped', transaction.getSimulationState())
+
+    # only accounting_manager can validate
+    self.failUnlessUserCanPassWorkflowTransition(self.accounting_manager_reference,
+                                            'deliver_action',
+                                             transaction)
+    if self.restricted_security:
+      self.failIfUserCanPassWorkflowTransition(self.accounting_agent_reference,
+                                              'deliver_action',
+                                               transaction)
+
+  def stepPaymentTransaction(self, sequence=None, sequence_list=None, **kw):
+    transaction = self.portal.accounting_module.newContent(
+                      portal_type='Payment Transaction',
+                      start_date=DateTime(2001, 01, 01),
+                      stop_date=DateTime(2001, 01, 01))
+    self.assertEquals('draft', transaction.getSimulationState())
+    for username in self.all_username_list:
+      self.assertUserCanViewDocument(username, transaction)
+      self.assertUserCanAccessDocument(username, transaction)
+    if self.restricted_security:
+      for username in (self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanModifyDocument(username, transaction)
+    for username in self.accountant_username_list:
+      self.failUnlessUserCanModifyDocument(username, transaction)
+      self.failUnlessUserCanAddDocument(username, transaction)
+    if self.restricted_security:
+      for username in (self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanPassWorkflowTransition(username,
+                                                 'cancel_action',
+                                                 transaction)
+        self.failIfUserCanPassWorkflowTransition(username,
+                                                 'plan_action',
+                                                 transaction)
+        self.failIfUserCanPassWorkflowTransition(username,
+                                                 'confirm_action',
+                                                 transaction)
+        self.failIfUserCanPassWorkflowTransition(username,
+                                                 'start_action',
+                                                 transaction)
+        self.failIfUserCanPassWorkflowTransition(username,
+                                                 'stop_action',
+                                                 transaction)
+    for username in self.accountant_username_list:
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                                               'cancel_action',
+                                               transaction)
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                                               'plan_action',
+                                               transaction)
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                                               'confirm_action',
+                                               transaction)
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                                               'stop_action',
+                                               transaction)
+      # TODO
+      ### self.failUnlessUserCanPassWorkflowTransition(username,
+      ###                                          'delete_action',
+      ###                                          transaction)
+
+    # (skip some states)
+    transaction.start()
+    self.assertEquals('started', transaction.getSimulationState())
+    self.stepTic()
+
+    for username in self.all_username_list:
+      # everybody can view
+      self.assertUserCanViewDocument(username, transaction)
+      self.assertUserCanAccessDocument(username, transaction)
+
+    # only accountant can modify
+    if self.restricted_security:
+      for username in (self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanModifyDocument(username, transaction)
+        self.failIfUserCanAddDocument(username, transaction)
+
+    # only accountant can "stop"
+    if self.restricted_security:
+      for username in (self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanPassWorkflowTransition(username,
+                                                 'stop_action',
+                                                 transaction)
+        self.failIfUserCanPassWorkflowTransition(username,
+                                                 'deliver_action',
+                                                 transaction)
+    for username in self.accountant_username_list:
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                                               'stop_action',
+                                               transaction)
+
+    transaction.stop()
+    self.assertEquals('stopped', transaction.getSimulationState())
+    for username in self.all_username_list:
+      # everybody can view
+      self.assertUserCanViewDocument(username, transaction)
+      self.assertUserCanAccessDocument(username, transaction)
+      # nobody can modify
+      self.failIfUserCanModifyDocument(username, transaction)
+      self.failIfUserCanAddDocument(username, transaction)
+
+    if self.restricted_security:
+      for username in (self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanPassWorkflowTransition(username,
+                                                 'restart_action',
+                                                 transaction)
+        self.failIfUserCanPassWorkflowTransition(username,
+                                                 'deliver_action',
+                                                 transaction)
+        self.failIfUserCanPassWorkflowTransition(username,
+                                                 'cancel_action',
+                                                 transaction)
+
+    for username in self.accountant_username_list:
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                                               'restart_action',
+                                               transaction)
+    # in started state, we can modify again, and go back to stopped state
+    transaction.restart()
+    self.assertEquals('started', transaction.getSimulationState())
+    self.stepTic()
+
+    for username in self.accountant_username_list:
+      self.failUnlessUserCanModifyDocument(username, transaction)
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                                                  'stop_action',
+                                                  transaction)
+
+    # go back to stopped state
+    transaction.stop()
+    self.assertEquals('stopped', transaction.getSimulationState())
+
+    # only accounting_manager can validate
+    self.failUnlessUserCanPassWorkflowTransition(self.accounting_manager_reference,
+                                            'deliver_action',
+                                             transaction)
+    if self.restricted_security:
+      self.failIfUserCanPassWorkflowTransition(self.accounting_agent_reference,
+                                              'deliver_action',
+                                               transaction)
+
+  def stepBalanceTransaction(self, sequence=None, sequence_list=None, **kw):
+    # Balance Transaction must be viewable by users (creation & validation is
+    # done from unrestricted code, so no problem)
+    balance_transaction = self.portal.accounting_module.newContent(
+                      portal_type='Balance Transaction')
+    for username in self.all_username_list:
+      self.assertUserCanViewDocument(username, balance_transaction)
+      self.assertUserCanAccessDocument(username, balance_transaction)
+
+  def stepAccountingTransaction_getCausalityGroupedAccountingTransactionList(
+      self, sequence=None, sequence_list=None, **kw):
+    self._loginAsUser(self.accounting_manager_reference)
+    accounting_transaction_x_related_to_a = self.portal.\
+                                    accounting_module.newContent(
+                                    portal_type='Accounting Transaction',
+                                    start_date=DateTime(2010, 06, 01),
+                                    stop_date=DateTime(2010, 06, 01))
+
+    accounting_transaction_y_related_to_a = self.portal.\
+                                    accounting_module.newContent(
+                                    portal_type='Accounting Transaction',
+                                    start_date=DateTime(2010, 06, 01),
+                                    stop_date=DateTime(2010, 06, 01))
+
+    accounting_transaction_a = self.portal.accounting_module.newContent(
+                                    portal_type='Accounting Transaction',
+                                    start_date=DateTime(2010, 06, 01),
+                                    stop_date=DateTime(2010, 06, 01))
+  
+    accounting_transaction_b = self.portal.accounting_module.newContent(
+                                    portal_type='Accounting Transaction',
+                                    start_date=DateTime(2010, 06, 01),
+                                    stop_date=DateTime(2010, 06, 01))
+  
+    accounting_transaction_c = self.portal.accounting_module.newContent(
+                                   portal_type='Accounting Transaction',
+                                   start_date=DateTime(2010, 06, 01),
+                                   stop_date=DateTime(2010, 06, 01))
+    
+    accounting_transaction_x_related_to_a.setCausalityValue(\
+                                                   accounting_transaction_a)
+
+    accounting_transaction_y_related_to_a.setCausalityValue(\
+                                                   accounting_transaction_a)
+
+
+    accounting_transaction_a.setCausalityValueList([accounting_transaction_b,
+                                                    accounting_transaction_c])
+    self.stepTic()
+  
+    accounting_transaction_list = accounting_transaction_a.\
+          AccountingTransaction_getCausalityGroupedAccountingTransactionList()
+    
+    self.assertEquals(5, len(accounting_transaction_list))
+  
+    self.assertTrue(accounting_transaction_a in accounting_transaction_list)
+    self.assertTrue(accounting_transaction_b in accounting_transaction_list)
+    self.assertTrue(accounting_transaction_c in accounting_transaction_list)
+    self.assertTrue(accounting_transaction_x_related_to_a in \
+                                                accounting_transaction_list)
+    self.assertTrue(accounting_transaction_y_related_to_a in \
+                                                accounting_transaction_list)
+  
+    accounting_transaction_x_related_to_a.delete()
+    accounting_transaction_y_related_to_a.cancel()
+    self.stepTic()
+ 
+    accounting_transaction_list = accounting_transaction_a.\
+          AccountingTransaction_getCausalityGroupedAccountingTransactionList()
+  
+    self.assertEquals(3, len(accounting_transaction_list))
+  
+    self.assertFalse(accounting_transaction_x_related_to_a in \
+                                                accounting_transaction_list)
+    self.assertFalse(accounting_transaction_y_related_to_a in \
+                                                accounting_transaction_list)
+
+  # }}}
+
+  ## Assignments / Login and Password {{{
+  def stepAddAssignments(self, sequence=None, sequence_list=None, **kw):
+    # for now, anybody can add assignements
+    person = self.portal.person_module.newContent(portal_type='Person')
+    for username in self.all_username_list:
+      self._loginAsUser(username)
+      self.failUnless('Assignment' in
+                  person.getVisibleAllowedContentTypeList())
+      self.failUnlessUserCanAddDocument(username, person)
+
+  def stepAssignmentTI(self, sequence=None, sequence_list=None, **kw):
+    ti = self.getTypesTool().getTypeInfo('Assignment')
+    self.assertNotEquals(None, ti)
+    # Acquire local roles on Assignment ? no
+    self.failIf(ti.getProperty('type_acquire_local_role', 1))
+
+  def stepEditAssignments(self, sequence=None, sequence_list=None, **kw):
+    # everybody can open assignments in express
+    person = self.portal.person_module.newContent(portal_type='Person')
+    assignment = person.newContent(portal_type='Assignment')
+    for username in self.all_username_list:
+      self.failUnlessUserCanModifyDocument(username, assignment)
+      self.failUnlessUserCanPassWorkflowTransition(username,
+                                                   'open_action',
+                                                   assignment)
+  # }}}
+
+  # {{{ Trade
+  def stepViewAcessAddPurchaseTradeCondition(self, sequence=None, sequence_list=None, **kw):
+    module = self.portal.purchase_trade_condition_module
+    for username in self.all_username_list:
+      self.assertUserCanViewDocument(username, module)
+      self.assertUserCanAccessDocument(username, module)
+    for username in self.sales_and_purchase_username_list:
+      self.assertUserCanAddDocument(username, module)
+      self._loginAsUser(username)
+      tc = module.newContent(portal_type='Purchase Trade Condition')
+      self.assertUserCanViewDocument(username, tc)
+      self.failUnlessUserCanPassWorkflowTransition(
+                    username, 'validate_action', tc)
+      self.portal.portal_workflow.doActionFor(tc, 'validate_action')
+      self.failUnlessUserCanPassWorkflowTransition(
+                    username, 'invalidate_action', tc)
+
+  def stepViewAccessAddSaleTradeCondition(self, sequence=None, sequence_list=None, **kw):
+    module = self.portal.sale_trade_condition_module
+    for username in self.all_username_list:
+      self.assertUserCanViewDocument(username, module)
+      self.assertUserCanAccessDocument(username, module)
+    for username in self.sales_and_purchase_username_list:
+      self.assertUserCanAddDocument(username, module)
+      self._loginAsUser(username)
+      tc = module.newContent(portal_type='Sale Trade Condition')
+      self.assertUserCanViewDocument(username, tc)
+      self.failUnlessUserCanPassWorkflowTransition(
+                    username, 'validate_action', tc)
+      self.portal.portal_workflow.doActionFor(tc, 'validate_action')
+      self.failUnlessUserCanPassWorkflowTransition(
+                    username, 'invalidate_action', tc)
+
+  def stepViewAccessAddSaleOrder(self, sequence=None, sequence_list=None, **kw):
+    module = self.portal.sale_order_module
+    for username in self.all_username_list:
+      self.assertUserCanViewDocument(username, module)
+      self.assertUserCanAccessDocument(username, module)
+    for username in self.sales_and_purchase_username_list:
+      self.assertUserCanAddDocument(username, module)
+      self._loginAsUser(username)
+      order = module.newContent(portal_type='Sale Order')
+      self.assertUserCanViewDocument(username, order)
+      self.failUnlessUserCanPassWorkflowTransition(
+                    username, 'plan_action', order)
+      self.failUnlessUserCanPassWorkflowTransition(
+                    username, 'confirm_action', order)
+      self.failUnlessUserCanPassWorkflowTransition(
+                    username, 'cancel_action', order)
+
+      order.confirm()
+      self.assertEquals('confirmed', order.getSimulationState())
+      self.assertUserCanViewDocument(username, order)
+      self.failIfUserCanModifyDocument(username, order)
+
+
+  def stepViewAccessAddSalePackingList(self, sequence=None, sequence_list=None, **kw):
+    module = self.portal.sale_packing_list_module
+    for username in self.all_username_list:
+      self.assertUserCanViewDocument(username, module)
+      self.assertUserCanAccessDocument(username, module)
+    for username in self.sales_and_purchase_username_list:
+      self.assertUserCanAddDocument(username, module)
+      self._loginAsUser(username)
+      pl = module.newContent(portal_type='Sale Packing List')
+      self.assertUserCanViewDocument(username, pl)
+      self.failUnlessUserCanPassWorkflowTransition(
+                    username, 'confirm_action', pl)
+
+  def stepViewAccessPurchaseOrder(self, sequence=None, sequence_list=None, **kw):
+    module = self.portal.purchase_order_module
+    for username in self.all_username_list:
+      self.assertUserCanViewDocument(username, module)
+      self.assertUserCanAccessDocument(username, module)
+    for username in self.sales_and_purchase_username_list:
+      self.assertUserCanAddDocument(username, module)
+      self._loginAsUser(username)
+      order = module.newContent(portal_type='Purchase Order')
+      self.assertUserCanViewDocument(username, order)
+      self.failUnlessUserCanPassWorkflowTransition(
+                    username, 'plan_action', order)
+      self.failUnlessUserCanPassWorkflowTransition(
+                    username, 'confirm_action', order)
+      self.failUnlessUserCanPassWorkflowTransition(
+                    username, 'cancel_action', order)
+
+      order.confirm()
+      self.assertEquals('confirmed', order.getSimulationState())
+      self.assertUserCanViewDocument(username, order)
+      self.failIfUserCanModifyDocument(username, order)
+
+  def stepPurchasePackingList(self, sequence=None, sequence_list=None, **kw):
+    module = self.portal.purchase_packing_list_module
+    for username in self.all_username_list:
+      self.assertUserCanViewDocument(username, module)
+      self.assertUserCanAccessDocument(username, module)
+    for username in self.sales_and_purchase_username_list:
+      self.assertUserCanAddDocument(username, module)
+      self._loginAsUser(username)
+      pl = module.newContent(portal_type='Purchase Packing List')
+      self.assertUserCanViewDocument(username, pl)
+      self.failUnlessUserCanPassWorkflowTransition(
+                    username, 'confirm_action', pl)
+
+  # }}}
+  # web
+  def stepWebSiteModule(self, sequence=None, sequence_list=None, **kw):
+    """Anonymous should not be able to access web_site_module."""
+    web_site_module = self.portal.web_site_module
+    checkPermission = self.portal.portal_membership.checkPermission
+    # switch to Anonymous user
+    self.logout()
+    self.assertEquals(None, checkPermission('View', web_site_module))
+    self.assertEquals(None, checkPermission('Access Contents Information',web_site_module))
+    self.assertRaises(Unauthorized,  web_site_module)
+
+  # DMS
+  def stepPortalContributionsTool(self, sequence=None, sequence_list=None, **kw):
+    """
+      TioLive user should be able to contribute from this tool
+      (i.e. has Manage portal content).
+    """
+    portal_contributions = self.portal.portal_contributions
+    checkPermission = self.portal.portal_membership.checkPermission
+    for username in self.all_username_list:
+      self._loginAsUser(username)
+      self.assertEquals(True,  \
+                        checkPermission('Modify portal content', portal_contributions))
+
 
