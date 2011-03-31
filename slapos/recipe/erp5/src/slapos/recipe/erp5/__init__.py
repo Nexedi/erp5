@@ -139,7 +139,9 @@ class Recipe(BaseSlapRecipe):
 
     return dict(
       kumo_address = '%s:%s' % (config['kumo_gateway_ip'],
-        config['kumo_gateway_port'])
+        config['kumo_gateway_port']),
+      kumo_gateway_ip=config['kumo_gateway_ip'],
+      kumo_gateway_port=config['kumo_gateway_port'],
     )
 
   def installMemcached(self, ip, port):
@@ -152,7 +154,9 @@ class Recipe(BaseSlapRecipe):
       self.substituteTemplate(self.getTemplateFilename('memcached.in'),
         config)))
     return dict(memcached_url='%s:%s' %
-        (config['memcached_ip'], config['memcached_port']))
+        (config['memcached_ip'], config['memcached_port']),
+        memcached_ip=config['memcached_ip'],
+        memcached_port=config['memcached_ip'])
 
   def installTestRunner(self, ca_conf, mysql_conf, conversion_server_conf,
                         memcached_conf, kumo_conf):
