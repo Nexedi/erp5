@@ -68,7 +68,7 @@ class BusinessProcessConfiguratorItem(ConfiguratorItemMixin, XMLObject):
 
     # Create Business Paths and Business Links
     business_process_list = portal.ERPSite_getConfiguratorBusinessProcessList()
-    for property_dict in business_process_list.iteritems():
+    for property_dict in business_process_list:
         business_process.newContent(**property_dict)
 
 
