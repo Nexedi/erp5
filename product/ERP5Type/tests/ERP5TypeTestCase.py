@@ -1322,8 +1322,8 @@ def optimize():
   # We will probably disable reindexing for other types later
   full_indexing_set = set(os.environ.get('enable_full_indexing', '').split(','))
   if not 'portal_types' in full_indexing_set:
-    from Products.ERP5Type.Document.ActionInformation import ActionInformation
-    from Products.ERP5Type.Document.RoleInformation import RoleInformation
+    from Products.ERP5Type.Core.ActionInformation import ActionInformation
+    from Products.ERP5Type.Core.RoleInformation import RoleInformation
     ActionInformation.isIndexable = RoleInformation.isIndexable = \
       ConstantGetter('isIndexable', value=False)
   if not 'portal_property_sheets' in full_indexing_set:
