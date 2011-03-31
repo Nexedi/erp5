@@ -751,7 +751,7 @@ class ContextLink(Link):
   Class defining convenient methods for context-dependent links of
   ERP5.
   """
-  __metaclass__ = measurementMetaClass(prefix='submit')
+  __metaclass__ = measurementMetaClass(prefix='click')
 
   def clickFirst(self):
     """
