@@ -353,7 +353,7 @@ class ERP5TypeInformation(XMLObject,
     security.declarePublic('constructInstance')
     def constructInstance(self, container, id, created_by_builder=0,
                           temp_object=0, compute_local_role=None,
-                          notify_workflow=True, *args, **kw ):
+                          notify_workflow=True, **kw):
       """
       Build a "bare" instance of the appropriate type in
       'container', using 'id' as its id.
@@ -396,12 +396,12 @@ class ERP5TypeInformation(XMLObject,
         if getattr(aq_base(ob), 'uid', None) is None:
           ob.uid = portal.portal_catalog.newUid()
 
-      if kw:
-        ob._edit(force_update=1, **kw)
-
       # Portal type has to be set before setting other attributes
       # in order to initialize aq_dynamic
       ob.portal_type = self.getId()
+
+      if kw:
+        ob._edit(force_update=1, **kw)
 
       if compute_local_role:
         # Do not reindex object because it's already done by manage_afterAdd
@@ -420,7 +420,7 @@ class ERP5TypeInformation(XMLObject,
         if init_script:
           # Acquire the init script in the context of this object
           kw['created_by_builder'] = created_by_builder
-          getattr(ob, init_script)(*args, **kw)
+          getattr(ob, init_script)()
 
       return ob
 

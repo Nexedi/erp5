@@ -112,9 +112,7 @@ class FolderMixIn(ExtensionClass.Base):
 
   security.declarePublic('newContent')
   def newContent(self, id=None, portal_type=None, id_group=None,
-          default=None, method=None, container=None, created_by_builder=0,
-          activate_kw=None, is_indexable=None, temp_object=0, reindex_kw=None,
-          compute_local_role=None, notify_workflow=True,  **kw):
+          default=None, method=None, container=None, temp_object=0, **kw):
     """Creates a new content.
     This method is public, since TypeInformation.constructInstance will perform
     the security check.
@@ -157,21 +155,10 @@ class FolderMixIn(ExtensionClass.Base):
     new_instance = type_info.constructInstance(
                            container=container,
                            id=new_id,
-                           created_by_builder=created_by_builder,
                            temp_object=temp_object or temp_container,
-                           activate_kw=activate_kw,
-                           reindex_kw=reindex_kw,
-                           is_indexable=is_indexable,
-                           compute_local_role=compute_local_role,
-                           notify_workflow=notify_workflow,
-                           ) # **kw) removed due to CMF bug
-      # TODO :the **kw makes it impossible to create content not based on
-      # ERP5TypeInformation, because factory method often do not support
-      # keywords arguments.
+                           **kw)
     if temp_container:
       container._setObject(new_id, new_instance.aq_base)
-    if kw:
-      new_instance._edit(force_update=1, **kw)
     return new_instance
 
   security.declareProtected(
