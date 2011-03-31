@@ -83,11 +83,11 @@ class TestUNGConfiguratorWorkflow(ERP5TypeTestCase):
      stepConfiguratorNext
      stepTic
      stepCheckConfigurePreferenceForm
+     stepCheckMultipleUserAccountThree
      stepSetupPreferenceConfigurationBrazil
      stepConfiguratorNext
      stepTic
      stepCheckConfigureWebSiteForm
-     stepCheckPreferenceConfigurationBrazil
      stepSetupWebSiteConfiguration
      stepConfiguratorNext
      stepTic
@@ -285,19 +285,19 @@ class TestUNGConfiguratorWorkflow(ERP5TypeTestCase):
     self.assertEquals('Previous', response_dict['previous'])
     self.assertEquals('Configure Web Site', response_dict['next'])
 
-  def stepCheckPreferenceConfigurationBrazil(self, sequence=None, sequence_list=None, **kw):
-    """ Check if organisation was created fine """
-    business_configuration = sequence.get("business_configuration")
-    person_config_save = business_configuration["5"]
-    person_config_item = person_config_save["1"]
-    self.assertEquals(person_config_item.getReference(), "person_creator")
-    person_config_item = person_config_save["2"]
-    self.assertEquals(person_config_item.getReference(), "person_assignee")
-    person_config_item = person_config_save["3"]
-    self.assertEquals(person_config_item.getReference(), "person_assignor")
+  def stepCheckMultipleUserAccountThree(self, sequence=None, sequence_list=None, **kw):		 
+     """ Check if the users were created correctly """		 
+     business_configuration = sequence.get("business_configuration")		 
+     person_config_save = business_configuration["5"]		 
+     person_config_item = person_config_save["1"]		 
+     self.assertEquals(person_config_item.getReference(), "person_creator")		 
+     person_config_item = person_config_save["2"]		 
+     self.assertEquals(person_config_item.getReference(), "person_assignee")		 
+     person_config_item = person_config_save["3"]		 
+     self.assertEquals(person_config_item.getReference(), "person_assignor")
 
   def stepSetupWebSiteConfiguration(self, sequence=None, sequence_list=None, **kw):
-    """ Setup the language of Web Site """
+    """ """
     next_dict = dict(your_default_available_language="pt-BR")
     sequence.edit(next_dict=next_dict)
 
@@ -325,13 +325,39 @@ class TestUNGConfiguratorWorkflow(ERP5TypeTestCase):
 
   def stepCheckUNGWebSiteAfterInstallation(self, sequence=None, sequence_list=None, **kw):
     """ Check if UNG Web Site is published and your language"""
-    self.assertEquals(self.portal.web_site_module.ung.getValidationState(),
+    ung_web_site = self.portal.web_site_module.ung
+    portal_catalog = self.portal.portal_catalog
+    self.assertEquals(ung_web_site.getValidationState(),
                       "published")
-    self.assertEquals(self.portal.web_site_module.ung.getDefaultAvailableLanguage(),
+    self.assertEquals(ung_web_site.getDefaultAvailableLanguage(),
                       "pt-BR")
+    person = portal_catalog.getResultValue(portal_type="Person",
+                                           reference="person_creator")
+    self.assertEquals(person.getValidationState(), 'validated')
+    self.assertEquals(person.getFirstName(), 'Person')
+    self.assertEquals(person.getLastName(), 'Creator')
+    assignment = person.contentValues(portal_type="Assignment")[0]
+    self.assertEquals(assignment.getValidationState(), "open")
+    self.assertEquals(assignment.getFunction(), "function/ung_user")
+    person = portal_catalog.getResultValue(portal_type="Person",
+                                           reference="person_assignee")
+    self.assertEquals(person.getValidationState(), 'validated')
+    self.assertEquals(person.getFirstName(), 'Person')
+    self.assertEquals(person.getLastName(), 'Assignee')
+    assignment = person.contentValues(portal_type="Assignment")[0]
+    self.assertEquals(assignment.getValidationState(), "open")
+    self.assertEquals(assignment.getFunction(), "function/ung_user")
+    person = portal_catalog.getResultValue(portal_type="Person",
+                                           reference="person_assignor")
+    self.assertEquals(person.getValidationState(), 'validated')
+    self.assertEquals(person.getFirstName(), 'Person')
+    self.assertEquals(person.getLastName(), 'Assignor')
+    assignment = person.contentValues(portal_type="Assignment")[0]
+    self.assertEquals(assignment.getValidationState(), "open")
+    self.assertEquals(assignment.getFunction(), "function/ung_user")
 
-  def test_standard_workflow_brazil(self):
-    """ Test the standard workflow with brazilian configuration """
+  def test_ung_workflow_brazil(self):
+    """ Test the ung workflow with brazilian language """
     sequence_list = SequenceList()
     sequence_list.addSequenceString(self.DEFAULT_SEQUENCE_LIST)
     sequence_list.play(self)
