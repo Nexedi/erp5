@@ -50,55 +50,45 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery, NegatedQuery\n
+            <value> <string># As Open Sale Order codebase is unstable Assignor proxied role script is introduced\n
+# to cleanup finialised Open Sale Order Line\n
 \n
-current_delivery = state_change[\'object\']\n
-portal = current_delivery.getPortalObject()\n
+if REQUEST is not None:\n
+  # protect against direct HTTP access, XML-RPC will still work\n
+  raise ValueError(\'Not available\')\n
+from Products.ZSQLCatalog.SQLCatalog import NegatedQuery, Query\n
 \n
-destroy_service_relative_url = portal.portal_preferences.getPreferredInstanceCleanupResource()\n
-\n
-sale_packing_list_line_list = current_delivery.contentValues(portal_type="Sale Packing List Line")\n
-assert len(sale_packing_list_line_list) == 1\n
-current_delivery_line = sale_packing_list_line_list[0]\n
-if current_delivery_line.getResource() != destroy_service_relative_url:\n
-  return\n
-\n
-computer_partition = current_delivery_line.getAggregateValue(portal_type=["Computer Partition", "Slave Partition"])\n
-if computer_partition is None:\n
-  raise ValueError("Sale Packing List Line \'%s\' should have a computer partition aggregated" % current_delivery_line.getRelativeUrl())\n
-else:\n
-  # Mark computer partition as free\n
-  # This method should be always callable in this step to prevent having 2 packing list related to the same computer partition\n
-  computer_partition.markFree()\n
-\n
-# Deliver all SPL related to this software instance\n
-software_instance = current_delivery_line.getAggregateValue(portal_type="Software Instance")\n
+portal = context.getPortalObject()\n
+all_delivered = True\n
 for sale_packing_list_line in portal.portal_catalog(\n
   portal_type="Sale Packing List Line", \n
-  default_aggregate_uid=software_instance.getUid(),\n
+  default_aggregate_uid=context.getUid(),\n
   simulation_state=NegatedQuery(Query(simulation_state="delivered")),\n
   ):\n
-  sale_packing_list = sale_packing_list_line.getParentValue()\n
-  if sale_packing_list.getPortalObject().portal_workflow.isTransitionPossible(sale_packing_list, \'start\'):\n
-    sale_packing_list.start()\n
-  if sale_packing_list.getPortalObject().portal_workflow.isTransitionPossible(sale_packing_list, \'stop\'):\n
-    sale_packing_list.stop()\n
-  if sale_packing_list.getPortalObject().portal_workflow.isTransitionPossible(sale_packing_list, \'deliver\'):\n
-    sale_packing_list.deliver()\n
-  if sale_packing_list.getSimulationState() != \'delivered\':\n
-    raise ValueError(\'It was not possible to deliver %r during destruction of %r\' (sale_packing_list.getRelativeUrl(), software_instance.getRelativeUrl()))\n
-# Remove unused open sale order line\n
-subscription_item = sale_packing_list_line.getAggregateValue(portal_type="Hosting Subscription")\n
-subscription_item.HostingSubscription_removeRelatedOpenSaleOrderLine()\n
+  if sale_packing_list_line.getSimulationState() != \'delivered\':\n
+    all_delivered = False\n
+if all_delivered:\n
+  open_order_line = context.getAggregateRelatedValue(portal_type="Open Sale Order Line")\n
+  if open_order_line is not None:\n
+    # XXX: Mahybe system shall *NOT* work without Open Sale Orders\n
+    open_order_line.getParentValue().manage_delObjects(open_order_line.getId())\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
+            <value> <string>REQUEST=None</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SalePackingList_markComputerPartitionFree</string> </value>
+            <value> <string>HostingSubscription_removeRelatedOpenSaleOrderLine</string> </value>
         </item>
       </dictionary>
     </pickle>
