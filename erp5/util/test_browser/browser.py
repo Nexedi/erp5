@@ -261,39 +261,6 @@ class Browser(ExtendedTestBrowser):
     self._main_form = ContextMainForm(self, form)
     return self._main_form
 
-  def getContextLink(self, text=None, url=None, id=None, index=0):
-    """
-    Get an ERP5 link (see L{zope.testbrowser.interfaces.IBrowser}).
-
-    @todo: Patch zope.testbrowser to allow the class to be given
-           rather than duplicating the code
-    """
-    if id is not None:
-      def predicate(link):
-        return dict(link.attrs).get('id') == id
-      args = {'predicate': predicate}
-    else:
-      from zope.testbrowser.browser import RegexType
-      import re
-
-      if isinstance(text, RegexType):
-        text_regex = text
-      elif text is not None:
-        text_regex = re.compile(re.escape(text), re.DOTALL)
-      else:
-        text_regex = None
-
-      if isinstance(url, RegexType):
-        url_regex = url
-      elif url is not None:
-        url_regex = re.compile(re.escape(url), re.DOTALL)
-      else:
-        url_regex = None
-      args = {'text_regex': text_regex, 'url_regex': url_regex}
-
-    args['nr'] = index
-    return ContextLink(self.mech_browser.find_link(**args), self)
-
   def getTransitionMessage(self):
     """
     Parses the current page and returns the value of the portal_status
@@ -325,9 +292,9 @@ class Browser(ExtendedTestBrowser):
     @type column_number: int
     @param cell_element_index: Index of the link to be selected in the cell
     @type cell_element_index: int
-    @param args: positional arguments given to C{getContextLink}
+    @param args: positional arguments given to C{getLink}
     @type args: list
-    @param kwargs: keyword arguments given to C{getContextLink}
+    @param kwargs: keyword arguments given to C{getLink}
     @type kwargs: dict
     @return: C{Link} at the given line and column number
     @rtype: L{zope.testbrowser.interfaces.ILink}
@@ -354,7 +321,7 @@ class Browser(ExtendedTestBrowser):
       raise LookupError("Could not find link in listbox cell %dx%d (index=%d)" %\
                           (line_number, column_number, cell_element_index))
 
-    return self.getContextLink(url=link_href, *args, **kwargs)
+    return self.getLink(url=link_href, *args, **kwargs)
 
   def getListboxPosition(self,
                          text,
@@ -742,37 +709,3 @@ class ContextMainForm(MainForm):
       control = control.getControl(value=input_element.get('value'))
 
     return control
-
-
-from zope.testbrowser.browser import Link
-
-class ContextLink(Link):
-  """
-  Class defining convenient methods for context-dependent links of
-  ERP5.
-  """
-  __metaclass__ = measurementMetaClass(prefix='click')
-
-  def clickFirst(self):
-    """
-    Go to the first page.
-    """
-    self.getLink(url='/viewFirst').click()
-
-  def clickPrevious(self):
-    """
-    Go to the previous page.
-    """
-    self.getLink(url='/viewPrevious').click()
-
-  def clickNext(self):
-    """
-    Go to the next page.
-    """
-    self.getLink(url='/viewNext').click()
-
-  def clickLast(self):
-    """
-    Go to the last page.
-    """
-    self.getLink(url='/viewLast').click()
