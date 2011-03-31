@@ -67,7 +67,7 @@ class SaleTradeConditionConfiguratorItem(ConfiguratorItemMixin, XMLObject):
     currency_id = \
       business_configuration.getGlobalConfigurationAttr('currency_id')
 
-    sale_trade_condition = portal.sale_trade_condition_module.netContent(
+    sale_trade_condition = portal.sale_trade_condition_module.newContent(
                                            portal_type="Sale Trade Condition",
                                            referece=self.getReference(),
                                            title=self.getTitle(),
