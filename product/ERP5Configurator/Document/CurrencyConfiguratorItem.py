@@ -58,8 +58,8 @@ class CurrencyConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.Reference )
 
   def build(self, business_configuration):
-    portal = self.getPortalObject()
-    currency_module = portal._getOb('currency_module')
+    currency_module = self.getPortalObject().currency_module
+
     title = self.getTitle()
     reference = self.getReference()
     base_unit_quantity = self.getBaseUnitQuantity()
@@ -72,5 +72,7 @@ class CurrencyConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                                           title = title,
                                           reference = reference,
                                           base_unit_quantity = base_unit_quantity)
+
+    business_configuration.setGlobalConfigurationAttr(currency_id=currency.getId())
     ## add to customer template
     self.install(currency, business_configuration)
