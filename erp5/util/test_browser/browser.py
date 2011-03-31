@@ -325,7 +325,7 @@ class Browser(ExtendedTestBrowser):
     """
     xpath_str = '%s//tr[%d]//%s[%d]//a[0]' % (self._listbox_table_xpath_str,
                                               line_number,
-                                              line_number == 1 and 'th' or 'td',
+                                              line_number <= 2 and 'th' or 'td',
                                               column_number)
 
     return self.getContextLink(url=self.etree.xpath(xpath_str).get('href'),
@@ -356,7 +356,7 @@ class Browser(ExtendedTestBrowser):
     # Require either column_number or line_number to be given
     onlyOne([column_number, line_number], '"column_number" and "line_number"')
 
-    cell_type = line_number == 1 and 'th' or 'td'
+    cell_type = line_number <= 2 and 'th' or 'td'
 
     if column_number:
       column_or_line_xpath_str = '//tr//%s[%d]' % (cell_type, column_number)
@@ -681,7 +681,7 @@ class ContextMainForm(MainForm):
     """
     xpath_str = '%s//tr[%d]//%s[%d]/input' % (self.browser._listbox_table_xpath_str,
                                               line_number,
-                                              (line_number == 1 and u'th' or u'td'),
+                                              (line_number <= 2 and u'th' or u'td'),
                                               column_number)
 
     input_element = self.browser.etree.xpath(xpath_str)[0]
