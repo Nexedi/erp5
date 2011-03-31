@@ -65,9 +65,7 @@ class TestUNGConfiguratorWorkflow(ERP5TypeTestCase):
 
   DEFAULT_SEQUENCE_LIST = """
      stepCreateBusinessConfiguration
-     stepTic
      stepSetUNGWorkflow
-     stepTic
      stepConfiguratorNext
      stepTic
      stepCheckBT5ConfiguratorItem
