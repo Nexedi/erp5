@@ -291,6 +291,23 @@ class Browser(ExtendedTestBrowser):
     args['nr'] = index
     return ContextLink(self.mech_browser.find_link(**args), self)
 
+  def getTransitionMessage(self):
+    """
+    Parses the current page and returns the value of the portal_status
+    message.
+
+    @return: The transition message
+    @rtype: str
+
+    @raise LookupError: Not found
+    """
+    try:
+      return self.etree.xpath('//div[@id="transition_message"]')[0].text
+    except IndexError:
+      raise LookupError("Cannot find div with ID 'transition_message'")
+
+  _listbox_table_xpath_str = '//table[contains(@class, "listbox-table")]'
+
   def getListboxLink(self, line_number, column_number, *args, **kwargs):
     """
     Follow the link at the given position.
@@ -313,23 +330,6 @@ class Browser(ExtendedTestBrowser):
 
     return self.getContextLink(url=self.etree.xpath(xpath_str).get('href'),
                                *args, **kwargs)
-
-  def getTransitionMessage(self):
-    """
-    Parses the current page and returns the value of the portal_status
-    message.
-
-    @return: The transition message
-    @rtype: str
-
-    @raise LookupError: Not found
-    """
-    try:
-      return self.etree.xpath('//div[@id="transition_message"]')[0].text
-    except IndexError:
-      raise LookupError("Cannot find div with ID 'transition_message'")
-
-  _listbox_table_xpath_str = '//table[contains(@class, "listbox-table")]'
 
   def getListboxPosition(self,
                          text,
