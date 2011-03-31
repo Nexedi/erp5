@@ -137,94 +137,12 @@ software_instance.edit(\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>
         <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>state_change</string>
-                            <string>_getitem_</string>
-                            <string>software_instance</string>
-                            <string>_getattr_</string>
-                            <string>portal</string>
-                            <string>kwargs</string>
-                            <string>software_release_url_string</string>
-                            <string>requested_partition_reference</string>
-                            <string>shared</string>
-                            <string>software_type</string>
-                            <string>instance_xml</string>
-                            <string>filter_kw</string>
-                            <string>predecessor_software_instance</string>
-                            <string>None</string>
-                            <string>root_software_instance</string>
-                            <string>tag</string>
-                            <string>request_software_instance</string>
-                            <string>NotImplementedError</string>
-                            <string>module</string>
-                            <string>_apply_</string>
-                            <string>context</string>
-                            <string>sale_packing_list_line</string>
-                            <string>hosting_subscription_uid</string>
-                            <string>ValueError</string>
-                            <string>predecessor_uid_list</string>
-                            <string>predecessor_list</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>SoftwareInstance_requestSoftwareInstance</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

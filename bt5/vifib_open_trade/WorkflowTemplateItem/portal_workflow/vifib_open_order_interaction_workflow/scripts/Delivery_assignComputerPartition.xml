@@ -70,6 +70,7 @@ for order_line in order.getMovementList():\n
       query_kw = {\n
         \'software_release_url\': software_release.getUrlString(),\n
         \'portal_type\': \'Computer Partition\',\n
+#         \'relative_url\': \'computer_module/20110126-E2AE/%\',\n
         \'free_for_request\': 1,\n
       }\n
 \n
@@ -96,84 +97,12 @@ for order_line in order.getMovementList():\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change, **kw</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>state_change</string>
-                            <string>kw</string>
-                            <string>_getitem_</string>
-                            <string>order</string>
-                            <string>_getattr_</string>
-                            <string>portal</string>
-                            <string>setup_service_relative_url</string>
-                            <string>isTransitionPossible</string>
-                            <string>_getiter_</string>
-                            <string>order_line</string>
-                            <string>computer_partition</string>
-                            <string>None</string>
-                            <string>software_release</string>
-                            <string>software_instance</string>
-                            <string>query_kw</string>
-                            <string>_apply_</string>
-                            <string>result_count</string>
-                            <string>max</string>
-                            <string>offset</string>
-                            <string>random</string>
-                            <string>computer_partition_candidate</string>
-                            <string>ValueError</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Delivery_assignComputerPartition</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

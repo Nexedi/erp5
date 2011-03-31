@@ -175,101 +175,12 @@ else:\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>
         <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>state_change</string>
-                            <string>DateTime</string>
-                            <string>_getitem_</string>
-                            <string>person</string>
-                            <string>_getattr_</string>
-                            <string>portal</string>
-                            <string>kwargs</string>
-                            <string>software_release_url_string</string>
-                            <string>software_title</string>
-                            <string>software_type</string>
-                            <string>instance_xml</string>
-                            <string>sale_order_portal_type</string>
-                            <string>sale_order_line_portal_type</string>
-                            <string>software_instance_portal_type</string>
-                            <string>hosting_subscription_portal_type</string>
-                            <string>seller</string>
-                            <string>currency</string>
-                            <string>tag</string>
-                            <string>request_software_instance</string>
-                            <string>None</string>
-                            <string>context</string>
-                            <string>hosting_subscription_reference</string>
-                            <string>NotImplementedError</string>
-                            <string>setup_service_relative_url</string>
-                            <string>_apply_</string>
-                            <string>software_instance</string>
-                            <string>subscription</string>
-                            <string>software_release_document</string>
-                            <string>sale_order</string>
-                            <string>sale_order_line</string>
-                            <string>open_order</string>
-                            <string>person_slap_interface_state</string>
-                            <string>open_order_url</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Person_requestSoftwareInstance</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

@@ -105,88 +105,12 @@ if all_delivered:\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>state_change</string>
-                            <string>Products.ZSQLCatalog.SQLCatalog</string>
-                            <string>Query</string>
-                            <string>ComplexQuery</string>
-                            <string>NegatedQuery</string>
-                            <string>_getitem_</string>
-                            <string>current_delivery</string>
-                            <string>_getattr_</string>
-                            <string>portal</string>
-                            <string>destroy_service_relative_url</string>
-                            <string>sale_packing_list_line_list</string>
-                            <string>len</string>
-                            <string>AssertionError</string>
-                            <string>current_delivery_line</string>
-                            <string>computer_partition</string>
-                            <string>None</string>
-                            <string>ValueError</string>
-                            <string>software_instance</string>
-                            <string>_getiter_</string>
-                            <string>sale_packing_list_line</string>
-                            <string>sale_packing_list</string>
-                            <string>subscription_item</string>
-                            <string>True</string>
-                            <string>all_delivered</string>
-                            <string>False</string>
-                            <string>open_order_line</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>SalePackingList_markComputerPartitionFree</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

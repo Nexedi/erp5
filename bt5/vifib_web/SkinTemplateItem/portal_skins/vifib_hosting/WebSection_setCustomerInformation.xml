@@ -92,82 +92,12 @@ return context.getWebSiteValue().Base_redirect(keep_items={\'portal_status_messa
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>career_subordination_title,default_address_street_address,default_address_zip_code,default_address_city,default_telephone_text,first_name,last_name,default_email_text,**kw</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>8</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>career_subordination_title</string>
-                            <string>default_address_street_address</string>
-                            <string>default_address_zip_code</string>
-                            <string>default_address_city</string>
-                            <string>default_telephone_text</string>
-                            <string>first_name</string>
-                            <string>last_name</string>
-                            <string>default_email_text</string>
-                            <string>kw</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal</string>
-                            <string>person</string>
-                            <string>session</string>
-                            <string>params</string>
-                            <string>_getitem_</string>
-                            <string>instance_software_release_uid</string>
-                            <string>service_title</string>
-                            <string>software_release</string>
-                            <string>message</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>WebSection_setCustomerInformation</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

@@ -7,49 +7,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_arg</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="Args" module="Shared.DC.ZRDB.Aqueduct"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>_data</string> </key>
-                        <value>
-                          <dictionary>
-                            <item>
-                                <key> <string>SoftwareInstance_getRootSoftwareInstanceUid</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                            <item>
-                                <key> <string>uid</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                          </dictionary>
-                        </value>
-                    </item>
-                    <item>
-                        <key> <string>_keys</string> </key>
-                        <value>
-                          <list>
-                            <string>uid</string>
-                            <string>SoftwareInstance_getRootSoftwareInstanceUid</string>
-                          </list>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
             <key> <string>allow_simple_one_argument_traversal</string> </key>
             <value>
               <none/>
@@ -131,81 +88,6 @@ VALUES\n
 
 
 ]]></string> </value>
-        </item>
-        <item>
-            <key> <string>template</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="__newobj__" module="copy_reg"/>
-                </klass>
-                <tuple>
-                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
-                </tuple>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>__name__</string> </key>
-                        <value> <string encoding="cdata"><![CDATA[
-
-<string>
-
-]]></string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_vars</string> </key>
-                        <value>
-                          <dictionary/>
-                        </value>
-                    </item>
-                    <item>
-                        <key> <string>globals</string> </key>
-                        <value>
-                          <dictionary/>
-                        </value>
-                    </item>
-                    <item>
-                        <key> <string>raw</string> </key>
-                        <value> <string encoding="cdata"><![CDATA[
-
-DELETE FROM\n
-  software_instance_tree\n
-WHERE\n
-<dtml-in uid>\n
-  uid=<dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
-</dtml-in>\n
-;\n
-\n
-<dtml-var "\'\\0\'">\n
-\n
-<dtml-let row_list="[]">\n
-  <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
-    <dtml-call expr="row_list.append([\n
-                uid[loop_item],\n
-                SoftwareInstance_getRootSoftwareInstanceUid[loop_item]])">\n
-  </dtml-in>\n
-\n
-  <dtml-if "row_list">\n
-INSERT INTO\n
-  software_instance_tree\n
-VALUES\n
-    <dtml-in prefix="row" expr="row_list">\n
-(\n
-  <dtml-sqlvar expr="row_item[0]" type="int">,\n
-  <dtml-sqlvar expr="row_item[1]" type="int">\n
-)\n
-<dtml-if sequence-end><dtml-else>,</dtml-if>\n
-    </dtml-in>\n
-  </dtml-if>\n
-</dtml-let>\n
-
-
-]]></string> </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
         </item>
         <item>
             <key> <string>title</string> </key>

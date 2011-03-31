@@ -86,12 +86,6 @@ return context.Base_redirect("", keep_items=dict(portal_status_message=portal_st
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>dialog_id, first_name, last_name, address_city, address_street_address, address_zip_code, default_birthplace_address_city, default_email_text, internet_service_provider, start_date, telephone_text, **kw</string> </value>
         </item>
@@ -105,71 +99,8 @@ return context.Base_redirect("", keep_items=dict(portal_status_message=portal_st
             </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>11</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>dialog_id</string>
-                            <string>first_name</string>
-                            <string>last_name</string>
-                            <string>address_city</string>
-                            <string>address_street_address</string>
-                            <string>address_zip_code</string>
-                            <string>default_birthplace_address_city</string>
-                            <string>default_email_text</string>
-                            <string>internet_service_provider</string>
-                            <string>start_date</string>
-                            <string>telephone_text</string>
-                            <string>kw</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>module</string>
-                            <string>_getitem_</string>
-                            <string>fiber_request</string>
-                            <string>portal_status_message</string>
-                            <string>dict</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>WebSection_newFreeFiberRequest</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>
