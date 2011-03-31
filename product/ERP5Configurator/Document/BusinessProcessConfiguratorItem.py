@@ -57,7 +57,7 @@ class BusinessProcessConfiguratorItem(ConfiguratorItemMixin, XMLObject):
 
   def build(self, business_configuration):
     portal = self.getPortalObject()
-    business_process = portal.business_process_module.netContent(
+    business_process = portal.business_process_module.newContent(
                                            portal_type="Business Process",
                                            referece=self.getReference(),
                                            title=self.getTitle())
