@@ -2,7 +2,7 @@
 
 ##############################################################################
 #
-# Copyright (c) 2011 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2011 Nexedi SA and Contributors. All Rights Reserved.
 #                    Arnaud Fontaine <arnaud.fontaine@nexedi.com>
 #
 # First version: ERP5Mechanize from Vincent Pelletier <vincent@nexedi.com>
@@ -757,7 +757,7 @@ class ContextLink(Link):
     """
     Go to the first page.
     """
-    self.getLink(url='/viewFirst')
+    self.getLink(url='/viewFirst').click()
 
   def clickPrevious(self):
     """
