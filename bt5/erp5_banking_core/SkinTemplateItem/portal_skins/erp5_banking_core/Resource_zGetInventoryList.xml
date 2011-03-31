@@ -27,6 +27,7 @@ where_expression\r\n
 order_by_expression\r\n
 group_by_expression\r\n
 selection_domain\r\n
+select_expression\r\n
 selection_report\r\n
 ignore_variation\r\n
 standardize\r\n
@@ -39,9 +40,11 @@ output_simulation_state:list\r\n
 precision\r\n
 inventory_list\r\n
 statistic\r\n
+convert_quantity_result\r\n
+quantity_unit_uid\r\n
 stock_table_id=stock\r\n
-node_index\r\n
-payment_index</string> </value>
+transformed_uid\r\n
+transformed_variation_text</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -83,12 +86,26 @@ payment_index</string> </value>
 
 SELECT\n
 <dtml-if expr="precision is not None">\n
-  SUM(ROUND(<dtml-var stock_table_id>.quantity, <dtml-var precision>)) AS inventory,\n
-  SUM(ROUND(<dtml-var stock_table_id>.quantity, <dtml-var precision>)) AS total_quantity,\n
+  SUM(ROUND(<dtml-var stock_table_id>.quantity\n
+    <dtml-if transformed_uid> * transformation.quantity</dtml-if>, <dtml-var precision>)) AS inventory,\n
+  SUM(ROUND(<dtml-var stock_table_id>.quantity\n
+    <dtml-if transformed_uid> * transformation.quantity</dtml-if>, <dtml-var precision>)) AS total_quantity,\n
+  <dtml-if convert_quantity_result>\n
+    SUM(ROUND(<dtml-var stock_table_id>.quantity * measure.quantity\n
+      <dtml-if quantity_unit_uid> / quantity_unit_conversion.quantity</dtml-if>\n
+      <dtml-if transformed_uid> * transformation.quantity</dtml-if>, <dtml-var precision>))\n
+    AS converted_quantity,\n
+  </dtml-if>\n
   SUM(ROUND(<dtml-var stock_table_id>.total_price, <dtml-var precision>)) AS total_price\n
 <dtml-else>\n
-  SUM(<dtml-var stock_table_id>.quantity) AS inventory,\n
-  SUM(<dtml-var stock_table_id>.quantity) AS total_quantity,\n
+  SUM(<dtml-var stock_table_id>.quantity <dtml-if transformed_uid> * transformation.quantity</dtml-if>) AS inventory,\n
+  SUM(<dtml-var stock_table_id>.quantity <dtml-if transformed_uid> * transformation.quantity</dtml-if>) AS total_quantity,\n
+  <dtml-if convert_quantity_result>\n
+    ROUND(SUM(<dtml-var stock_table_id>.quantity * measure.quantity\n
+      <dtml-if quantity_unit_uid> / quantity_unit_conversion.quantity</dtml-if>\n
+      <dtml-if transformed_uid> * transformation.quantity</dtml-if>), 12)\n
+    AS converted_quantity,\n
+  </dtml-if>\n
   SUM(<dtml-var stock_table_id>.total_price) AS total_price\n
 </dtml-if>\n
 <dtml-if inventory_list>\n
@@ -100,16 +117,22 @@ SELECT\n
   section.relative_url AS section_relative_url,\n
   resource.title AS resource_title,\n
   resource.relative_url AS resource_relative_url,\n
+<dtml-if transformed_uid>\n
+  transformed_resource.title AS transformed_resource_title,\n
+  transformed_resource.relative_url AS transformed_resource_relative_url,\n
+  transformation.transformed_uid AS transformed_resource_uid,\n
+  transformation.transformed_variation_text AS transformed_variation_text,\n
+</dtml-if>\n
+  <dtml-var stock_table_id>.resource_uid AS resource_uid,\n
   <dtml-var stock_table_id>.variation_text AS variation_text,\n
   <dtml-var stock_table_id>.sub_variation_text AS sub_variation_text,\n
-  <dtml-var stock_table_id>.resource_uid AS resource_uid,\n
   <dtml-var stock_table_id>.uid AS stock_uid,\n
   <dtml-var stock_table_id>.date as date,\n
   <dtml-var stock_table_id>.simulation_state as simulation_state,\n
   <dtml-var stock_table_id>.mirror_section_uid as mirror_section_uid,\n
   <dtml-var stock_table_id>.payment_uid as payment_uid,\n
   <dtml-var stock_table_id>.mirror_node_uid as mirror_node_uid,\n
-  <dtml-if expr="stock_table_id == \'stock\'"> \n
+  <dtml-if expr="stock_table_id == \'stock\'">\n
     <dtml-var stock_table_id>.explanation_uid as explanation_uid,\n
   </dtml-if>\n
   catalog.path as path\n
@@ -127,29 +150,47 @@ SELECT\n
   COUNT(DISTINCT <dtml-var stock_table_id>.uid) AS stock_uid,\n
   MAX(<dtml-var stock_table_id>.date) AS date\n
 </dtml-if>\n
-\n
+<dtml-if select_expression>, <dtml-var select_expression></dtml-if>\n
 \n
 FROM\n
-  <dtml-var stock_table_id> <dtml-if node_index> use index(node_resource_variation_state_date)</dtml-if><dtml-if payment_index>use index(resource_payment_state_date)</dtml-if>\n
-  <dtml-if section_filtered> INNER <dtml-else> LEFT </dtml-if>  \n
+  catalog, <dtml-var stock_table_id>\n
+  <dtml-if section_filtered> INNER <dtml-else> LEFT </dtml-if>\n
        JOIN catalog AS section ON (section.uid = <dtml-var stock_table_id>.section_uid)\n
-<dtml-in prefix="table" expr="from_table_list"> \n
-  <dtml-if expr="table_key != stock_table_id">\n
+<dtml-if quantity_unit_uid>\n
+  LEFT JOIN quantity_unit_conversion ON\n
+    (quantity_unit_conversion.resource_uid = <dtml-var stock_table_id>.resource_uid\n
+    AND quantity_unit_conversion.quantity_unit_uid = <dtml-sqlvar quantity_unit_uid type=int>)\n
+</dtml-if>\n
+<dtml-in prefix="table" expr="from_table_list">\n
+  <dtml-if expr="table_key not in (\'catalog\', stock_table_id)">\n
   , <dtml-var table_item> AS <dtml-var table_key>\n
   </dtml-if>\n
 </dtml-in>\n
   <dtml-if selection_domain>, <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_domain)"> </dtml-if>\n
   <dtml-if selection_report>, <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_report)"> </dtml-if>\n
-  , catalog as node, catalog as resource\n
+  , catalog as node, catalog as resource <dtml-if transformed_uid>, transformation, catalog as transformed_resource</dtml-if>\n
 \n
 WHERE\n
-  1 = 1\n
+  <dtml-var stock_table_id>.uid = catalog.uid\n
 <dtml-if where_expression>\n
   AND <dtml-var where_expression>\n
 </dtml-if>\n
 \n
   AND node.uid = <dtml-var stock_table_id>.node_uid\n
+\n
+<dtml-if transformed_uid>\n
+  AND transformation.uid = <dtml-var stock_table_id>.resource_uid\n
+  AND resource.uid = transformation.uid\n
+  AND <dtml-var stock_table_id>.variation_text = transformation.variation_text\n
+\n
+  AND transformed_resource.uid = transformation.transformed_uid\n
+  AND <dtml-sqltest transformed_uid column="transformation.transformed_uid" type=int multiple>\n
+  <dtml-if transformed_variation_text>\n
+  AND <dtml-sqltest transformed_variation_text column="transformation.transformed_variation_text" type=string>\n
+  </dtml-if>\n
+<dtml-else>\n
   AND resource.uid = <dtml-var stock_table_id>.resource_uid\n
+</dtml-if>\n
 \n
 <dtml-if omit_simulation>\n
   AND catalog.portal_type != \'Simulation Movement\'\n
@@ -161,8 +202,15 @@ WHERE\n
 <dtml-if selection_report>\n
   AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_report, strict_membership=1)">\n
 </dtml-if>\n
+\n
+<dtml-if convert_quantity_result>\n
+  AND concat(<dtml-var stock_table_id>.variation_text,\'\\n\') REGEXP measure.variation\n
+</dtml-if>\n
+\n
+\n
 <dtml-if group_by_expression>\n
 GROUP BY\n
+    <dtml-if transformed_uid>transformation.transformed_uid,</dtml-if>\n
     <dtml-var group_by_expression>\n
 </dtml-if>\n
 <dtml-if order_by_expression>\n

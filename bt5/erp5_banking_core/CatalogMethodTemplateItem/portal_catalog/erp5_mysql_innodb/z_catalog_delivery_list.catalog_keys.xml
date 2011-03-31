@@ -6,8 +6,6 @@
   <value>1</value>
  </item>
  <item key="_filter_expression_archive" type="str">
-  <value>python: isDelivery or here.getPortalType()=='Checkbook'</value>
- </item>
- <item key="_filter_type_archive" type="tuple">
+  <value>python: context.isDelivery() or context.getPortalType()=='Checkbook'</value>
  </item>
 </catalog_method>
