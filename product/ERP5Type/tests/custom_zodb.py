@@ -30,7 +30,7 @@ except KeyError:
   activity_node = (zeo_client or 'zeo_server' in os.environ) and 1 or None
 
 data_fs_path = os.environ.get('erp5_tests_data_fs_path',
-                              os.path.join(instance_home, 'Data.fs'))
+                              os.path.join(instance_home, 'var', 'Data.fs'))
 load = int(os.environ.get('erp5_load_data_fs', 0))
 save = int(os.environ.get('erp5_save_data_fs', 0))
 save_mysql = int(os.environ.get('erp5_dump_sql') or not zeo_client) or None
