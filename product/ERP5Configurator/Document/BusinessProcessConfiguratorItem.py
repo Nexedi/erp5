@@ -62,9 +62,14 @@ class BusinessProcessConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                                            referece=self.getReference(),
                                            title=self.getTitle())
 
-    ### XXX Create Business Paths and Business Links
 
     business_configuration.setGlobalConfigurationAttr(\
                   business_process_id=business_process.getId())
+
+    # Create Business Paths and Business Links
+    business_process_list = portal.ERPSite_getConfiguratorBusinessProcessList()
+    for property_dict in business_process_list.iteritems():
+        business_process.newContent(**property_dict)
+
 
     self.install(business_process, business_configuration)
