@@ -1,0 +1,1079 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Invoice Root Simulation Rule" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Delete_objects_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_count</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>default_reference</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>content_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>lines</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_mt_index</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_tree</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>trade_phase/default/invoicing</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_list</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>divergence_provider</string> </key>
+                      <value> <int>0</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>variation_tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>matching_provider</string> </key>
+                      <value> <int>0</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>portal_type</string> </key>
+                      <value> <string>Variation Divergence Tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>quantity</string> </key>
+                      <value> <int>0</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>tested_property</string> </key>
+                      <value>
+                        <tuple>
+                          <string>variation_category_list</string>
+                          <string>variation_property_dict</string>
+                        </tuple>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>title</string> </key>
+                      <value> <string>variation divergence tester</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>divergence_provider</string> </key>
+                      <value> <int>0</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>use_tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>portal_type</string> </key>
+                      <value> <string>Category Membership Divergence Tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>tested_property</string> </key>
+                      <value>
+                        <tuple>
+                          <string>use</string>
+                        </tuple>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>title</string> </key>
+                      <value> <string>use divergence tester</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>stop_date_tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>portal_type</string> </key>
+                      <value> <string>DateTime Divergence Tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>quantity</string> </key>
+                      <value> <int>0</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>tested_property</string> </key>
+                      <value>
+                        <tuple>
+                          <string>stop_date</string>
+                        </tuple>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>title</string> </key>
+                      <value> <string>stop_date divergence tester</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>start_date_tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>portal_type</string> </key>
+                      <value> <string>DateTime Divergence Tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>quantity</string> </key>
+                      <value> <int>0</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>tested_property</string> </key>
+                      <value>
+                        <tuple>
+                          <string>start_date</string>
+                        </tuple>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>title</string> </key>
+                      <value> <string>start_date divergence tester</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>specialise_tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>portal_type</string> </key>
+                      <value> <string>Specialise Divergence Tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>title</string> </key>
+                      <value> <string>Business Process must be consistent to make good prevision</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>source_tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>portal_type</string> </key>
+                      <value> <string>Category Membership Divergence Tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>tested_property</string> </key>
+                      <value>
+                        <tuple>
+                          <string>source</string>
+                        </tuple>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>title</string> </key>
+                      <value> <string>source divergence tester</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>source_section_tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>portal_type</string> </key>
+                      <value> <string>Category Membership Divergence Tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>tested_property</string> </key>
+                      <value>
+                        <tuple>
+                          <string>source_section</string>
+                        </tuple>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>title</string> </key>
+                      <value> <string>source_section divergence tester</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>source_project_tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>portal_type</string> </key>
+                      <value> <string>Category Membership Divergence Tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>tested_property</string> </key>
+                      <value>
+                        <tuple>
+                          <string>source_project</string>
+                        </tuple>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>title</string> </key>
+                      <value> <string>source_project divergence tester</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>source_payment_tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>portal_type</string> </key>
+                      <value> <string>Category Membership Divergence Tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>tested_property</string> </key>
+                      <value>
+                        <tuple>
+                          <string>source_payment</string>
+                        </tuple>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>title</string> </key>
+                      <value> <string>source_payment divergence tester</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>source_function_tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>portal_type</string> </key>
+                      <value> <string>Category Membership Divergence Tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>tested_property</string> </key>
+                      <value>
+                        <tuple>
+                          <string>source_function</string>
+                        </tuple>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>title</string> </key>
+                      <value> <string>source_function divergence tester</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>source_decision_tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>portal_type</string> </key>
+                      <value> <string>Category Membership Divergence Tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>tested_property</string> </key>
+                      <value>
+                        <tuple>
+                          <string>source_decision</string>
+                        </tuple>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>title</string> </key>
+                      <value> <string>source_decision divergence tester</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>source_administration_tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>portal_type</string> </key>
+                      <value> <string>Category Membership Divergence Tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>tested_property</string> </key>
+                      <value>
+                        <tuple>
+                          <string>source_administration</string>
+                        </tuple>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>title</string> </key>
+                      <value> <string>source_administration divergence tester</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>source_account_tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>portal_type</string> </key>
+                      <value> <string>Category Membership Divergence Tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>tested_property</string> </key>
+                      <value>
+                        <tuple>
+                          <string>source_account</string>
+                        </tuple>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>title</string> </key>
+                      <value> <string>source_account divergence tester</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>resource_tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>portal_type</string> </key>
+                      <value> <string>Category Membership Divergence Tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>tested_property</string> </key>
+                      <value>
+                        <tuple>
+                          <string>resource</string>
+                        </tuple>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>title</string> </key>
+                      <value> <string>resource divergence tester</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>quantity_tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>portal_type</string> </key>
+                      <value> <string>Net Converted Quantity Divergence Tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>quantity_range_max</string> </key>
+                      <value> <int>0</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>quantity_range_min</string> </key>
+                      <value> <int>0</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>tested_property</string> </key>
+                      <value>
+                        <tuple>
+                          <string>quantity</string>
+                          <string>quantity_unit</string>
+                        </tuple>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>title</string> </key>
+                      <value> <string>quantity divergence tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>use_delivery_ratio</string> </key>
+                      <value> <int>1</int> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>divergence_provider</string> </key>
+                      <value> <int>0</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>price_tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>portal_type</string> </key>
+                      <value> <string>Float Divergence Tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>quantity_range_max</string> </key>
+                      <value> <int>0</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>quantity_range_min</string> </key>
+                      <value> <int>0</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>tested_property</string> </key>
+                      <value>
+                        <tuple>
+                          <string>price</string>
+                        </tuple>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>title</string> </key>
+                      <value> <string>price divergence tester</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>divergence_provider</string> </key>
+                      <value> <int>1</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>price_currency_tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>portal_type</string> </key>
+                      <value> <string>Category Membership Divergence Tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>tested_property</string> </key>
+                      <value>
+                        <tuple>
+                          <string>price_currency</string>
+                        </tuple>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>title</string> </key>
+                      <value> <string>price_currency divergence tester</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>divergence_provider</string> </key>
+                      <value> <int>0</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>incoterm_tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>portal_type</string> </key>
+                      <value> <string>Category Membership Divergence Tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>tested_property</string> </key>
+                      <value>
+                        <tuple>
+                          <string>incoterm</string>
+                        </tuple>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>title</string> </key>
+                      <value> <string>incoterm divergence tester</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>destination_tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>portal_type</string> </key>
+                      <value> <string>Category Membership Divergence Tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>tested_property</string> </key>
+                      <value>
+                        <tuple>
+                          <string>destination</string>
+                        </tuple>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>title</string> </key>
+                      <value> <string>destination divergence tester</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>destination_section_tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>portal_type</string> </key>
+                      <value> <string>Category Membership Divergence Tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>tested_property</string> </key>
+                      <value>
+                        <tuple>
+                          <string>destination_section</string>
+                        </tuple>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>title</string> </key>
+                      <value> <string>destination_section divergence tester</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>destination_project_tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>portal_type</string> </key>
+                      <value> <string>Category Membership Divergence Tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>tested_property</string> </key>
+                      <value>
+                        <tuple>
+                          <string>destination_project</string>
+                        </tuple>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>title</string> </key>
+                      <value> <string>destination_project divergence tester</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>destination_payment_tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>portal_type</string> </key>
+                      <value> <string>Category Membership Divergence Tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>tested_property</string> </key>
+                      <value>
+                        <tuple>
+                          <string>destination_payment</string>
+                        </tuple>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>title</string> </key>
+                      <value> <string>destination_payment divergence tester</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>destination_function_tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>portal_type</string> </key>
+                      <value> <string>Category Membership Divergence Tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>tested_property</string> </key>
+                      <value>
+                        <tuple>
+                          <string>destination_function</string>
+                        </tuple>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>title</string> </key>
+                      <value> <string>destination_function divergence tester</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>destination_decision_tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>portal_type</string> </key>
+                      <value> <string>Category Membership Divergence Tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>tested_property</string> </key>
+                      <value>
+                        <tuple>
+                          <string>destination_decision</string>
+                        </tuple>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>title</string> </key>
+                      <value> <string>destination_decision divergence tester</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>destination_administration_tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>portal_type</string> </key>
+                      <value> <string>Category Membership Divergence Tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>tested_property</string> </key>
+                      <value>
+                        <tuple>
+                          <string>destination_administration</string>
+                        </tuple>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>title</string> </key>
+                      <value> <string>destination_administration divergence tester</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>destination_account_tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>portal_type</string> </key>
+                      <value> <string>Category Membership Divergence Tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>tested_property</string> </key>
+                      <value>
+                        <tuple>
+                          <string>destination_account</string>
+                        </tuple>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>title</string> </key>
+                      <value> <string>destination_account divergence tester</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>description_tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>portal_type</string> </key>
+                      <value> <string>String Divergence Tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>tested_property</string> </key>
+                      <value>
+                        <tuple>
+                          <string>description</string>
+                        </tuple>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>title</string> </key>
+                      <value> <string>description divergence tester</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>divergence_provider</string> </key>
+                      <value> <int>0</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>delivery_tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>matching_provider</string> </key>
+                      <value> <int>1</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>portal_type</string> </key>
+                      <value> <string>Category Membership Divergence Tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>tested_property</string> </key>
+                      <value>
+                        <tuple>
+                          <string>delivery</string>
+                        </tuple>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>title</string> </key>
+                      <value> <string>delivery divergence tester</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>divergence_provider</string> </key>
+                      <value> <int>1</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>base_contribution_tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>portal_type</string> </key>
+                      <value> <string>Category Membership Divergence Tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>tested_property</string> </key>
+                      <value>
+                        <tuple>
+                          <string>base_contribution</string>
+                        </tuple>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>title</string> </key>
+                      <value> <string>base_contribution divergence tester</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>divergence_provider</string> </key>
+                      <value> <int>0</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>base_application_tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>matching_provider</string> </key>
+                      <value> <int>0</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>portal_type</string> </key>
+                      <value> <string>Category Membership Divergence Tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>tested_property</string> </key>
+                      <value>
+                        <tuple>
+                          <string>base_application</string>
+                        </tuple>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>title</string> </key>
+                      <value> <string>base_application divergence tester</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>aggregate_tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>portal_type</string> </key>
+                      <value> <string>Category Membership Divergence Tester</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>tested_property</string> </key>
+                      <value>
+                        <tuple>
+                          <string>aggregate</string>
+                        </tuple>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>title</string> </key>
+                      <value> <string>aggregate divergence tester</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>default_invoice_rule</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>8</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Invoice Root Simulation Rule</string> </value>
+        </item>
+        <item>
+            <key> <string>test_method_id</string> </key>
+            <value>
+              <tuple>
+                <string>Rule_testFalse</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Default Invoice Root Simulation Rule</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Length" module="BTrees.Length"/>
+    </pickle>
+    <pickle> <int>0</int> </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>rule_validation_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="6" aka="AAAAAAAAAAY=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1300726606.09</float>
+                        <string>GMT-3</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="7" aka="AAAAAAAAAAc=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global id="7.1" name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1300726606.09</float>
+                        <string>GMT-3</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>draft</string> </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>validate</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="7.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1300726629.6</float>
+                        <string>GMT-3</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>validated</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+</ZopeData>
