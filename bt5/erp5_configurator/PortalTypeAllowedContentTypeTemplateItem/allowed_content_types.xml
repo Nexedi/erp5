@@ -27,8 +27,10 @@
   <item>Portal Type Configurator Item</item>
   <item>Portal Type Roles Spreadsheet Configurator Item</item>
   <item>Preference Configurator Item</item>
+  <item>Purchase Trade Condition Configurator Item</item>
   <item>Role Configurator Item</item>
   <item>Rule Configurator Item</item>
+  <item>Sale Trade Condition Configurator Item</item>
   <item>Service Configurator Item</item>
   <item>Site Property Configurator Item</item>
   <item>Solver Configurator Item</item>
