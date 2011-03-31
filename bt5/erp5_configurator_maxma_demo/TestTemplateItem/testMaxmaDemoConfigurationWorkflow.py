@@ -105,16 +105,48 @@ class TestMaxmaDemoConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
                           "workflow_module/maxma_demo_configuration_workflow")
 
 
-  def stepSetMaxmaDemoWorkflow(self, sequence=None, sequence_list=None, **kw):
+  def stepViewCreatedPersons(self, sequence=None, sequence_list=None, **kw):
+    self.login(user_name='test_configurator_user')
+    person_list = self.portal.person_module.searchFolder()
+    self.assertNotEquals(0, len(person_list))
+
+    for entity in person_list:
+      for username in self.all_username_list:
+        self.failUnlessUserCanAccessDocument(username, entity)
+        self.failUnlessUserCanViewDocument(username, entity)
+
+  def stepViewCreatedOrganisations(self, sequence=None, sequence_list=None, **kw):
+    self.login(user_name='test_configurator_user')
+    organisation_list = self.portal.organisation_module.searchFolder()
+    self.assertNotEquals(0, len(organisation_list))
+
+    for entity in organisation_list:
+      for username in self.all_username_list:
+        self.failUnlessUserCanAccessDocument(username, entity)
+        self.failUnlessUserCanViewDocument(username, entity)
+
+  def stepViewCreatedAssignemnts(self, sequence=None, sequence_list=None, **kw):
+    self.login(user_name='test_configurator_user')
+    person_list = self.portal_person_module.searchFolder()
+    self.assertNotEquals(0, len(person_list))
+
+    for person in person_list:
+      for assignment in person.contentValues(portal_type='Assignment'):
+        for username in self.all_username_list:
+          self.failUnlessUserCanAccessDocument(username, assignment)
+          self.failUnlessUserCanViewDocument(username, assignment)
+
+
+  def stepCheckMaxmaDemoSampleObjectList(self, sequence=None, sequence_list=None, **kw):
     """ Check if objects are placed into the appropriate state """
- 
+
     # Check Gadgets
     for gadget in self.portal.portal_gadgets.searchFolder():
       self.assertEquals('public', gadget.getValidationState(),
                         "%s is not public but %s" % (gadget.getRelativeUrl(), 
                                                      gadget.getValidationState()))
       gadget.Base_checkConsistency()
- 
+
     # Check if demo user is working.
     user = self.portal.portal_catalog.getResultValue(portal_type="Person",
     reference=self.user_reference)
@@ -200,6 +232,11 @@ class TestMaxmaDemoConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
   def test_maxma_demo_workflow(self):
     """ Test the consulting workflow configuration"""
     self.all_username_list = ["demo"]
+    self.accountant_username_list = self.all_username_list
+    self.sales_and_purchase_username_list = self.all_username_list
+    self.warehouse_username_list = self.all_username_list
+    self.simple_username_list = self.all_username_list
+    self.restricted_security = 0
     sequence_list = SequenceList()
     sequence_string = self.DEFAULT_SEQUENCE_LIST % dict(country='France')
     sequence_list.addSequenceString(sequence_string)
