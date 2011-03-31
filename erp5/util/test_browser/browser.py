@@ -273,6 +273,9 @@ class Browser(ExtendedTestBrowser):
         return dict(link.attrs).get('id') == id
       args = {'predicate': predicate}
     else:
+      from zope.testbrowser.browser import RegexType
+      import re
+
       if isinstance(text, RegexType):
         text_regex = text
       elif text is not None:
@@ -689,8 +692,6 @@ class ContextMainForm(MainForm):
     @type kwargs: dict
     @return: The control found at the given line and column numbers
     @rtype: L{zope.testbrowser.interfaces.IControl}
-
-    @todo: What if there is more than one field in a cell?
     """
     xpath_str = '%s//tr[%d]//%s[%d]/input[%d]' % \
         (self.browser._listbox_table_xpath_str,
