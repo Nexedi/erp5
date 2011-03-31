@@ -150,7 +150,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERPSite_getConfiguratorBusinessProcessDict</string> </value>
+            <value> <string>ERPSite_getConfiguratorBusinessProcessList</string> </value>
         </item>
       </dictionary>
     </pickle>
