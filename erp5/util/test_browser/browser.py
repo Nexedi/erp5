@@ -306,7 +306,7 @@ class Browser(ExtendedTestBrowser):
     @return: C{Link} at the given line and column number
     @rtype: L{zope.testbrowser.interfaces.ILink}
     """
-    xpath_str = '%s//tr[%d]//%s[%d]//a[0]' % (self.browser._listbox_table_xpath_str,
+    xpath_str = '%s//tr[%d]//%s[%d]//a[0]' % (self._listbox_table_xpath_str,
                                               line_number,
                                               line_number == 1 and 'th' or 'td',
                                               column_number)
