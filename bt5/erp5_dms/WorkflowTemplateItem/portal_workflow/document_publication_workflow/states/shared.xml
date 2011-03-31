@@ -50,7 +50,10 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <global name="PersistentMapping" module="Persistence.mapping"/>
+      <tuple>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
+      </tuple>
     </pickle>
     <pickle>
       <dictionary>
@@ -65,7 +68,6 @@
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Associate</string>
-                        <string>Auditor</string>
                         <string>Manager</string>
                         <string>Owner</string>
                       </tuple>
@@ -104,7 +106,6 @@
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Associate</string>
-                        <string>Auditor</string>
                         <string>Manager</string>
                         <string>Owner</string>
                       </tuple>
