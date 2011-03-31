@@ -11,6 +11,9 @@ organisation_module
 organisation_module/**
 person_module
 person_module/**
+portal_categories/group/my_group
+portal_categories/product_line/coin
+portal_categories/product_line/coin/**
 portal_simulation/**
 product_module
 product_module/**
@@ -28,3 +31,5 @@ sale_packing_list_module
 sale_packing_list_module/**
 sale_trade_condition_module
 sale_trade_condition_module/**
+service_module
+service_module/**
