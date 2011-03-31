@@ -52,6 +52,8 @@ class Recipe(BaseSlapRecipe):
   def _install(self):
     self.path_list = []
     self.requirements, self.ws = self.egg.working_set([__name__])
+    # self.cron_d is a directory, where cron jobs can be registered
+    self.cron_d = self.installCrond()
     ca_conf = self.installCertificateAuthority()
     memcached_conf = self.installMemcached(ip=self.getLocalIPv4Address(),
         port=11000)
@@ -193,6 +195,22 @@ class Recipe(BaseSlapRecipe):
       ]
         )])[0]
     self.path_list.append(runUnitTest)
+
+  def installCrond(self):
+    timestamps = self.createDataDirectory('cronstamps')
+    cron_d = os.path.join(self.var_directory, 'cron.d')
+    crontabs = os.path.join(self.var_directory, 'crontabs')
+    logfile = os.path.join(self.log_directory, 'cron.log')
+    self._createDirectory(cron_d)
+    self._createDirectory(crontabs)
+    wrapper = zc.buildout.easy_install.scripts([('crond',
+      __name__ + '.execute', 'execute')], self.ws, sys.executable,
+      self.wrapper_directory, arguments=[
+        self.options['dcrond_binary'].strip(), '-s', cron_d, '-c', crontabs,
+        '-t', timestamps, '-L', logfile, '-f', '-l', '10']
+      )[0]
+    self.path_list.append(wrapper)
+    return cron_d
 
   def installCertificateAuthority(self, ca_country_code='XX',
       ca_email='xx@example.com', ca_state='State', ca_city='City',
