@@ -300,25 +300,26 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
     is_html = 0
     requires_pdf_first = 0
     original_format = format
+    allowed_format_list = self.getTargetFormatList()
     if format == 'base-data':
       return self.getBaseContentType(), str(self.getBaseData())
     if format == 'pdf':
-      format_list = [x for x in self.getTargetFormatList()
+      format_list = [x for x in allowed_format_list
                                           if x.endswith('pdf')]
       format = format_list[0]
     elif format in VALID_IMAGE_FORMAT_LIST:
-      format_list = [x for x in self.getTargetFormatList()
+      format_list = [x for x in allowed_format_list
                                           if x.endswith(format)]
       if len(format_list):
         format = format_list[0]
       else:
         # We must fist make a PDF which will be used to produce an image out of it
         requires_pdf_first = 1
-        format_list = [x for x in self.getTargetFormatList()
+        format_list = [x for x in allowed_format_list
                                           if x.endswith('pdf')]
         format = format_list[0]
     elif format == 'html':
-      format_list = [x for x in self.getTargetFormatList()
+      format_list = [x for x in allowed_format_list
                               if x.startswith('html') or x.endswith('html')]
       format = format_list[0]
       is_html = 1
