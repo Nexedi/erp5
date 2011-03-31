@@ -331,6 +331,9 @@ class Browser(ExtendedTestBrowser):
     @type kwargs: dict
     @return: C{Link} at the given line and column number
     @rtype: L{zope.testbrowser.interfaces.ILink}
+
+    @raise LookupError: No link could be found at the given position
+                        and cell indexes
     """
     xpath_str = '%s//tr[%d]//%s[%d]//a[not(contains(@class, "hidden"))][%d]' % \
         (self._listbox_table_xpath_str,
@@ -706,6 +709,9 @@ class ContextMainForm(MainForm):
     @type kwargs: dict
     @return: The control found at the given line and column numbers
     @rtype: L{zope.testbrowser.interfaces.IControl}
+
+    @raise LookupError: No control could be found at the given
+                        position and cell indexes
     """
     xpath_str = '%s//tr[%d]//%s[%d]/*[not(@type="hidden") and ' \
         'not(contains(@class, "hidden"))][%d]' % \
