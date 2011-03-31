@@ -98,7 +98,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     # information to know if a business template is a standard business
     # template or a custom one
     self.portal.portal_templates.updateRepositoryBusinessTemplateList(
-                                ['file:///home/rafael/erp5/express/bt5'])
+                                    ['http://www.erp5.org/dists/snapshot/bt5/'])
 
     # it is required by SecurityTestCase
     self.workflow_tool = self.portal.portal_workflow
