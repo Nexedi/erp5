@@ -58,13 +58,15 @@ class ServiceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
   def build(self, business_configuration):
     portal = self.getPortalObject()
     module = portal.service_module
+    # XXX Maybe this approach efficient and scalable.
+    object_id_list = module.objectIds()
     for service_id, service_title in self.getServiceList():
-      # XXX FIXME We cannot define service_id like this, 
-      # because it cause conflict when configurator is
-      # used twice.
-      document = module.newContent(portal_type='Service',
-                                   #id=service_id,
+      if service_id not in object_id_list:
+        document = module.newContent(portal_type='Service',
+                                   id=service_id,
                                    title=service_title,
                                    )
+      else:
+        document = module[service_id]
       ## add to customer template
       self.install(document, business_configuration)
