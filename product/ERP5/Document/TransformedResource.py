@@ -82,10 +82,10 @@ class TransformedResource(AmountGeneratorLine):
       return result
 
     def getMappedValueBaseCategoryList(self):
-      result = self._baseGetMappedValueBaseCategoryList()
+      result = list(self._baseGetMappedValueBaseCategoryList())
       if not result:
         if not self.hasCellContent(base_id='variation'):
-          result = self.getVariationRangeBaseCategoryList() # The current resource variation
+          result = list(self.getVariationRangeBaseCategoryList()) # The current resource variation
         if 'trade_phase' not in result:
           result.append('trade_phase')
       return result
