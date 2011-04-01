@@ -261,6 +261,23 @@ class Browser(ExtendedTestBrowser):
     self._main_form = ContextMainForm(self, form)
     return self._main_form
 
+  def getLink(self, url=None, *args, **kwargs):
+    """
+    Override original C{getLink} allowing to not consider the HTTP
+    query string unless it is explicitly given.
+
+    @param url: URL to look for
+    @type url: str
+    @param args: Positional arguments given to original C{getLink}
+    @type args: list
+    @param kwargs: Keyword arguments given to original C{getLink}
+    @type kwargs: dict
+    """
+    if url and '?' not in url:
+      url += '?'
+
+    return super(Browser, self).getLink(url=url, *args, **kwargs)
+
   def getTransitionMessage(self):
     """
     Parses the current page and returns the value of the portal_status
