@@ -488,7 +488,12 @@ class MainForm(Form):
 
   def submitLogin(self):
     """
-    Log into ERP5 using the username and password provided in the browser.
+    Log into ERP5 using the username and password provided in the
+    browser. It is assumed that the current page is the login page (by
+    calling C{open('login_form')} beforehand).
+
+    This method should rarely be used by scripts as login is already
+    performed upon instanciation of Browser class.
 
     @raise LoginError: Login failed
 
