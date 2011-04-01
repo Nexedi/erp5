@@ -442,7 +442,7 @@ class Browser(ExtendedTestBrowser):
     @rtype: int
     """
     activity_counter = self.mech_browser.open_novisit(
-      'portal_activities/countMessage').read()
+      self._erp5_base_url + 'portal_activities/countMessage').read()
 
     return activity_counter and int(activity_counter) or 0
 
