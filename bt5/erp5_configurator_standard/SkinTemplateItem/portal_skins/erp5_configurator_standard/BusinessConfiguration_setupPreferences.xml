@@ -52,16 +52,12 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-# XXX-Luke: Beware, I will modify this script *very* much\n
-portal = context.getPortalObject()\n
-\n
 configuration_save_url = kw.get(\'configuration_save_url\', None)\n
 preferred_event_sender_email = kw.get(\'preferred_event_sender_email\', \'\')\n
 preferred_date_order = kw.get(\'preferred_date_order\', None)\n
 preferred_language_list = kw.get(\'lang\', [])\n
 \n
 configuration_save = context.restrictedTraverse(configuration_save_url)\n
-business_configuration = configuration_save.getParent()\n
 \n
 # if preferred email is not specified used previously saved company email.\n
 company_email = context.getGlobalConfigurationAttr(\'company_email\')\n
@@ -122,7 +118,7 @@ service_list = (\n
   (\'event_other\', \'Other event\'),\n
   )\n
 configuration_save.addConfigurationItem("Service Configurator Item",\n
-                                        service_list=service_list)\n
+                                        configuration_list=service_list)\n
 \n
 # configure preferences\n
 prefs = dict(\n
@@ -215,11 +211,7 @@ system_prefs = dict(\n
   preferred_client_role_list = [\'client\'],\n
   preferred_sale_use_list = [\'trade/sale\'],\n
   preferred_purchase_use_list = [\'trade/purchase\'],\n
-  preferred_packing_use_list = [\'trade/container\'],\n
-  # Express preferences\n
-  preferred_express_subscription_status = 1,\n
-  preferred_express_configuration_status = 1,\n
-  preferred_express_after_setup_script_id = \'ERP5Generator_afterSetup\')\n
+  preferred_packing_use_list = [\'trade/container\'])\n
 \n
 configuration_save.addConfigurationItem(\n
     \'System Preference Configurator Item\',\n
@@ -228,7 +220,6 @@ configuration_save.addConfigurationItem(\n
     \'preference",\n
     title="Default Configurator System Site Preference",\n
     **system_prefs)\n
-\n
 \n
 # preferred_languages\n
 for bt5_id in preferred_language_list:\n
