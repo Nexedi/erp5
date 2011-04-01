@@ -45,7 +45,6 @@ CashContainer
 CashCurrency
 CashDeliveryLine
 CatalogPreference
-CategoriesSpreadsheetConfiguratorItem
 CategoryCore
 CategoryExistenceConstraint
 CategoryMembershipArityConstraint
@@ -55,7 +54,6 @@ Codification
 Comment
 Computer
 Configurable
-ConfigurationItem
 ConfiguratorItemSpreadsheet
 Container
 ContentExistenceConstraint
@@ -124,7 +122,6 @@ Periodicity
 PeriodicityTerm
 Person
 PortalTest
-PortalTypeRolesSpreadsheetConfiguratorItem
 Predicate
 Preference
 Price
