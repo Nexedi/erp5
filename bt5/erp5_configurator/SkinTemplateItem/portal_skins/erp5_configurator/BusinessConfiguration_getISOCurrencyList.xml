@@ -55,7 +55,7 @@ result = []\n
 if empty_first_element==True:\n
   result = [[\'\', \'\'],]\n
 \n
-filename = "currency_list.ods"\n
+filename = "standard_currency_list.ods"\n
 cachedMethod = CachingMethod(context.ConfigurationTemplate_readOOCalcFile, \n
                              script.getId(),\n
                              cache_factory="erp5_content_long")\n

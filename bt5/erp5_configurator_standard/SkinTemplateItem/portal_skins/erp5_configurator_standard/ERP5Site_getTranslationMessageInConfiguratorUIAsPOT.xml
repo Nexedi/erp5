@@ -170,8 +170,8 @@ for i in python_script_list:\n
 #\n
 # Currency List\n
 #\n
-for row in context.ConfigurationTemplate_readOOCalcFile(\'currency_list.ods\'):\n
-  add_message(row[\'currency\'], portal_url.getRelativeContentURL(context.portal_skins.erp5_generator[\'currency_list.ods\']))\n
+for row in context.ConfigurationTemplate_readOOCalcFile(\'standard_currency_list.ods\'):\n
+  add_message(row[\'currency\'], portal_url.getRelativeContentURL(context.portal_skins.erp5_generator[\'standard_currency_list.ods\']))\n
 \n
 \n
 #\n
