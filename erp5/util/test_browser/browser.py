@@ -639,7 +639,7 @@ class ContextMainForm(MainForm):
     """
     self.submitSelect('select_jump', 'Base_doJump:method', label, value)
 
-  def submitAction(self, label=None, value=None):
+  def submitSelectAction(self, label=None, value=None):
     """
     Select and submit an action, given either by its label (such as
     I{Add Person}) or value (such as I{add} and I{add Person}). See
