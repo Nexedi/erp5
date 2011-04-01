@@ -1597,8 +1597,13 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     ti = self.getTypeInfo()
     url = self.getPortalObject().portal_url()
     if ti is None:
-      return '%s/misc_/OFSP/dtmldoc.gif' % url
-    return '%s/%s' % (url, ti.getTypeIcon())
+      icon = 'misc_/OFSP/dtmldoc.gif'
+    try:
+      icon = ti.getTypeIcon()
+    except AttributeError:
+      # do not fail in case of accessor is not available
+      pass
+    return '%s/%s' % (url, icon)
 
 # We browse all used class from btree and hbtree and set not implemented
 # class if one method defined on a class is not defined on other, thus if
