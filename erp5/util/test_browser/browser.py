@@ -541,8 +541,7 @@ class MainForm(Form):
     """
     Perform logout.
     """
-    self.submitFavourite('select_favorite', 'Base_doFavorite:method',
-                         name='logout')
+    self.submitSelectFavourite(value='/logout')
 
 class ContextMainForm(MainForm):
   """
