@@ -354,6 +354,9 @@ class TestUNGConfiguratorWorkflow(ERP5TypeTestCase):
     assignment = person.contentValues(portal_type="Assignment")[0]
     self.assertEquals(assignment.getValidationState(), "open")
     self.assertEquals(assignment.getFunction(), "function/ung_user")
+    system_preference = portal_catalog.getResultValue(portal_type="System Preference")
+    self.assertEquals(system_preference.getPreferredOoodocServerPortNumber(), 8011)
+    self.assertEquals(system_preference.getPreferredOoodocServerAddress(), "localhost")
 
   def test_ung_workflow_brazil(self):
     """ Test the ung workflow with brazilian language """
