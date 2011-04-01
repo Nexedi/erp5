@@ -61,7 +61,7 @@ class CategoriesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.XMLObject
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore
-                    , PropertySheet.ConfiguratorItemSpreadsheet
+                    , PropertySheet.ConfiguratorItem
                     )
 
   def build(self, business_configuration):
