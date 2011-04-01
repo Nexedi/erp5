@@ -732,6 +732,12 @@ class ContextMainForm(MainForm):
     """
     self.submit(name='Folder_filter:method')
 
+  def submitAction(self):
+    """
+    Select/unselect objects.
+    """
+    self.submit(name='Base_doSelect:method')
+
   def submitSelectWorkflow(self, label=None, value=None,
                            script_id='viewWorkflowActionDialog'):
     """
