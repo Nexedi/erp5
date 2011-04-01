@@ -1,4 +1,7 @@
 2011-04-01 lucas
+* Added tests to check Business Process and Solvers after the configuration.
+
+2011-04-01 lucas
 * Updated script to add the Solver Configuration Item objects.
 
 2011-04-01 lucas

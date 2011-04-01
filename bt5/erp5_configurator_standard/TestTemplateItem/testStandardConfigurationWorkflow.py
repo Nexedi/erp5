@@ -928,6 +928,84 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
       for rule in result:
         self.assertEquals('validated', rule.getValidationState())
 
+  def stepCheckBusinessProcess(self, sequence=None, sequence_list=None, **kw):
+    """
+      Check if Business Process object has been created.
+    """
+    business_configuration = sequence.get('business_configuration')
+    business_process_list = \
+               self.getBusinessConfigurationObjectList(business_configuration,
+                                                            'Business Process')
+    self.assertEquals(len(business_process_list), 1)
+    
+    business_process = business_process_list[0]
+    self.assertEquals("General Business Process", business_process.getTitle())
+    self.assertEquals("erp5_default_business_process",
+                                               business_process.getReference())
+
+    object_property_list = \
+                       self.portal.ERPSite_getConfiguratorBusinessProcessList()
+    for property_dict in object_property_list:
+      object_id = property_dict.get("id", None)
+      object = getattr(business_process, object_id, None) 
+      self.assertNotEquals(None, object)
+      for k, v in property_dict.iteritems():
+        self.assertEquals(object.showDict().get(k), v)
+
+
+  def stepCheckSolver(self, sequence=None, sequence_list=None, **kw):
+    """
+      Check if Solver objects have been created.
+    """
+    business_configuration = self.portal.restrictedTraverse("business_configuration_module/60") #sequence.get('business_configuration')
+    solver_list = \
+               self.getBusinessConfigurationObjectList(business_configuration,
+                                                                'Solver Type')
+    self.assertEquals(len(solver_list), 10)
+
+    solver_property_dict = \
+          business_configuration.BusinessConfiguration_getSolverPropertyDict()
+    for solver_object in solver_list:
+      solver_object_id = solver_object.getId()
+      solver_object_property_dict = solver_property_dict.get(solver_object_id)
+      solver_object_content_list = \
+                               solver_object_property_dict.pop('content_list')
+      for k, v in solver_object_property_dict.iteritems():
+        # During the creation of the object such properties must be used:
+        # type_factory_method_id_property and type_factory_method_id_property.
+        # But when you've check the object properties after creation, it is
+        # shown a simplier name.
+        if k == 'type_factory_method_id':
+          property_name = 'factory'
+        elif k == 'type_acquire_local_role':
+          property_name = 'acquire_local_roles'
+        elif k == 'type_group_list':
+          property_name = 'group_list'
+        else:
+          property_name = k
+        self.assertEquals(solver_object.showDict().get(property_name), v)
+
+      for property_dict in solver_object_content_list:
+        object = getattr(solver_object, property_dict.get('id'), None)
+        self.assertNotEquals(None, object)
+        for k, v in property_dict.iteritems():
+          if k == 'action_permission':
+            self.assertEquals('View', object.getActionPermission())
+            continue
+          elif k == 'action':
+            self.assertEquals(v, object.getActionText())
+            continue
+          elif k == 'visible':
+            self.assertEquals(v, object.getVisible())
+            continue
+          elif k == 'float_index':
+            self.assertEquals(v, object.getFloatIndex())
+            continue
+          else:
+            property_name = k
+
+          self.assertEquals(object.showDict().get(property_name), v)
+
   @expectedFailure
   def stepCheckQuantityConversion(self, sequence=None, sequence_list=None, **kw):
     resource = self.portal.product_module.newContent(
@@ -1076,6 +1154,8 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
       stepCheckOrganisationSite
       stepCheckAccountingPeriod
       stepCheckRuleValidation
+      stepCheckBusinessProcess
+      stepCheckSolver
       """
     # XXX (lucas): expected failure, it must be fixed in ERP5 core.
     #sequence_string += """
@@ -1210,7 +1290,6 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     sequence_string = self.DEFAULT_SEQUENCE_LIST % dict(country='Russia')
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
-
    
 #  def exportConfiguratorBusinessTemplate(self):
 #    """ """
