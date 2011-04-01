@@ -344,6 +344,8 @@ $().ready(function(){\n
     modal: true,\n
     buttons: {\n
       "Save": function(){\n
+        var save_button = $("button.save");\n
+        save_button.html() == "Save" ? save_button.html("Saving...") : null;\n
         var new_title = $("input#name.title").attr("value");\n
         var new_reference = $("input#reference.reference").attr("value");\n
         var new_short_title = $("input#short_title.short_title").attr("value");\n
@@ -360,7 +362,7 @@ $().ready(function(){\n
         setObjectPropertyValue("setIntIndex", new_int_index, "value");\n
         setObjectPropertyValue("WebPage_setSubjectList", new_subject_list, "value");   \n
         $("#edit_document").dialog("close");\n
-        $("button.save").click();\n
+        save_button.click();\n
       },\n
       Cancel: function() {\n
         $(this).dialog("close");\n
