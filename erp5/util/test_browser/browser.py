@@ -105,6 +105,14 @@ def measurementMetaClass(prefix):
         if attribute_name.startswith(prefix) and callable(attribute):
           applyMeasure(attribute)
 
+      # And also create these methods by looking at the bases
+      for attribute_name in dir(bases[0]):
+        if attribute_name not in dictionary and \
+           attribute_name.startswith(prefix):
+          attribute = getattr(bases[0], attribute_name)
+          if callable(attribute):
+            applyMeasure(attribute)
+
       # lastRequestSeconds and lastRequestPystones properties are only
       # defined on classes inheriting from zope.testbrowser.browser.Browser,
       # so create these properties for all other classes too
@@ -261,7 +269,8 @@ class Browser(ExtendedTestBrowser):
     self._main_form = ContextMainForm(self, form)
     return self._main_form
 
-  def getLink(self, url=None, class_attribute=None, *args, **kwargs):
+  def getLink(self, text=None, url=None, id=None, index=0,
+              class_attribute=None):
     """
     Override original C{getLink} allowing to not consider the HTTP
     query string unless it is explicitly given.
@@ -293,7 +302,31 @@ class Browser(ExtendedTestBrowser):
     elif url and '?' not in url:
       url += '?'
 
-    return super(Browser, self).getLink(url=url, *args, **kwargs)
+    if id is not None:
+      def predicate(link):
+        return dict(link.attrs).get('id') == id
+      args = {'predicate': predicate}
+    else:
+      import re
+      from zope.testbrowser.browser import RegexType
+
+      if isinstance(text, RegexType):
+        text_regex = text
+      elif text is not None:
+        text_regex = re.compile(re.escape(text), re.DOTALL)
+      else:
+        text_regex = None
+
+      if isinstance(url, RegexType):
+        url_regex = url
+      elif url is not None:
+        url_regex = re.compile(re.escape(url), re.DOTALL)
+      else:
+        url_regex = None
+      args = {'text_regex': text_regex, 'url_regex': url_regex}
+
+    args['nr'] = index
+    return LinkWithTime(self.mech_browser.find_link(**args), self)
 
   def getImportExportLink(self):
     """
@@ -843,3 +876,13 @@ class ContextMainForm(MainForm):
       control = control.getControl(value=input_element.get('value'))
 
     return control
+
+
+from zope.testbrowser.browser import Link
+
+class LinkWithTime(Link):
+  """
+  Only define to add timeClick*InSecond() and timeClick*InPystone()
+  methods
+  """
+  __metaclass__ = measurementMetaClass(prefix='click')
