@@ -1,0 +1,265 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>return {\'Accept Solver\': {\'type_acquire_local_role\': 1,\n
+                   \'configuration_form_id\': \'Solver_viewConfigurationFormBox\',\n
+                   \'content_list\': [{\'action\': \'string:${object_url}/Solver_viewConfiguration\',\n
+                                     \'action_permission\': \'View\',\n
+                                     \'categories\': (\'action_type/object_view\',),\n
+                                     \'float_index\': 2.0,\n
+                                     \'id\': \'1\',\n
+                                     \'portal_type\': \'Action Information\',\n
+                                     \'reference\': \'configuration\',\n
+                                     \'title\': \'Configuration\',\n
+                                     \'visible_property\': 1},\n
+                                    {\'action\': \'string:${object_url}/TargetSolver_view\',\n
+                                     \'action_permission\': \'View\',\n
+                                     \'categories\': (\'action_type/object_view\',),\n
+                                     \'float_index\': 1.0,\n
+                                     \'id\': \'2\',\n
+                                     \'portal_type\': \'Action Information\',\n
+                                     \'reference\': \'view\',\n
+                                     \'title\': \'View\',\n
+                                     \'visible_property\': 1}],\n
+                   \'description\': \'The Accept Solver solves the divergence by accepting the decision and updating a simulation movement.\',\n
+                   \'type_factory_method_id\': \'addAcceptSolver\',\n
+                   \'type_group_list\': (\'target_solver\',),\n
+                   \'id\': \'Accept Solver\',\n
+                   \'line_exclusive\': 0,\n
+                   \'line_groupable\': 0,\n
+                   \'solver_action_title\': \'Accept new value\'},\n
+ \'Adopt Solver\': {\'type_acquire_local_role\': 1,\n
+                  \'configuration_form_id\': \'Solver_viewConfigurationFormBox\',\n
+                  \'content_list\': [{\'action\': \'string:${object_url}/Solver_viewConfiguration\',\n
+                                    \'action_permission\': \'View\',\n
+                                    \'categories\': (\'action_type/object_view\',),\n
+                                    \'float_index\': 2.0,\n
+                                    \'id\': \'1\',\n
+                                    \'portal_type\': \'Action Information\',\n
+                                    \'reference\': \'configuration\',\n
+                                    \'title\': \'Configuration\',\n
+                                    \'visible_property\': 1},\n
+                                   {\'action\': \'string:${object_url}/TargetSolver_view\',\n
+                                    \'action_permission\': \'View\',\n
+                                    \'categories\': (\'action_type/object_view\',),\n
+                                    \'float_index\': 1.0,\n
+                                    \'id\': \'2\',\n
+                                    \'portal_type\': \'Action Information\',\n
+                                    \'reference\': \'view\',\n
+                                    \'title\': \'View\',\n
+                                    \'visible_property\': 1}],\n
+                  \'description\': \'The adoption solver resets the value of the delivery movement to the total of the values of related simulations. It eventually updates the delivery_ratio in the simulations.\',\n
+                  \'type_factory_method_id\': \'addAdoptSolver\',\n
+                  \'type_group_list\': (\'target_solver\',),\n
+                  \'id\': \'Adopt Solver\',\n
+                  \'solver_action_title\': \'Replace value\'},\n
+ \'FIFO Delivery Solver\': {\'type_acquire_local_role\': 1,\n
+                          \'content_list\': [],\n
+                          \'description\': \'The FIFO solver reduces delivered quantity by reducing the quantity of simulation movements from the last order.\',\n
+                          \'type_factory_method_id\': \'addFIFODeliverySolver\',\n
+                          \'type_group_list\': (\'delivery_solver\',),\n
+                          \'id\': \'FIFO Delivery Solver\',\n
+                          \'solver_action_title\': \'First In, First Out\'},\n
+ \'LIFO Delivery Solver\': {\'type_acquire_local_role\': 1,\n
+                          \'content_list\': [],\n
+                          \'description\': \'The LIFO solver reduces delivered quantity by reducing the quantity of simulation movements from the last order.\',\n
+                          \'type_factory_method_id\': \'addLIFODeliverySolver\',\n
+                          \'type_group_list\': (\'delivery_solver\',),\n
+                          \'id\': \'LIFO Delivery Solver\',\n
+                          \'solver_action_title\': \'Last In, First Out\'},\n
+ \'Minimise Price Delivery Solver\': {\'type_acquire_local_role\': 1,\n
+                                    \'content_list\': [],\n
+                                    \'description\': \'The Minimise Price solver reduces delivered quantity by reducing the quantity of simulation movements from the last order.\',\n
+                                    \'type_factory_method_id\': \'addMinimisePriceDeliverySolver\',\n
+                                    \'type_group_list\': (\'delivery_solver\',),\n
+                                    \'id\': \'Minimise Price Delivery Solver\',\n
+                                    \'solver_action_title\': \'Minimise Price\'},\n
+ \'Production Reduction Solver\': {\'content_list\': [],\n
+                                 \'description\': \'Production Reduction Solver is only a placeholder for now. (it will need its own class later)\',\n
+                                 \'id\': \'Production Reduction Solver\'},\n
+ \'Quantity Cancel Solver\': {\'type_acquire_local_role\': 1,\n
+                            \'configuration_form_id\': \'Solver_viewConfigurationFormBox\',\n
+                            \'content_list\': [{\'action\': \'string:${object_url}/Solver_viewConfiguration\',\n
+                                              \'action_permission\': \'View\',\n
+                                              \'categories\': (\'action_type/object_view\',),\n
+                                              \'float_index\': 2.0,\n
+                                              \'id\': \'1\',\n
+                                              \'portal_type\': \'Action Information\',\n
+                                              \'reference\': \'configuration\',\n
+                                              \'title\': \'Configuration\',\n
+                                              \'visible_property\': 1},\n
+                                             {\'action\': \'string:${object_url}/TargetSolver_view\',\n
+                                              \'action_permission\': \'View\',\n
+                                              \'categories\': (\'action_type/object_view\',),\n
+                                              \'float_index\': 1.0,\n
+                                              \'id\': \'2\',\n
+                                              \'portal_type\': \'Action Information\',\n
+                                              \'reference\': \'view\',\n
+                                              \'title\': \'View\',\n
+                                              \'visible_property\': 1}],\n
+                            \'description\': \'The Quantity Cancel Solver is used to cancel the delivery of part of a shipment and prevent any further expand on the parent to generate changes. (as long the expanded quantity does not change)\',\n
+                            \'type_factory_method_id\': \'addQuantityCancelSolver\',\n
+                            \'type_group_list\': (\'target_solver\',),\n
+                            \'id\': \'Quantity Cancel Solver\',\n
+                            \'line_exclusive\': 0,\n
+                            \'line_groupable\': 0,\n
+                            \'solver_action_title\': \'Cancel Quantity\'},\n
+ \'Quantity Split Solver\': {\'type_acquire_local_role\': 1,\n
+                           \'automatic_solver\': 0,\n
+                           \'categories\': (\'delivery_solver/portal_solvers/FIFO Delivery Solver\',\n
+                                          \'delivery_solver/portal_solvers/LIFO Delivery Solver\',\n
+                                          \'delivery_solver/portal_solvers/Minimise Price Delivery Solver\'),\n
+                           \'configuration_form_id\': \'QuantitySplitSolver_viewConfigurationFormBox\',\n
+                           \'configuration_groupable\': 0,\n
+                           \'content_list\': [{\'action\': \'string:${object_url}/Solver_viewConfiguration\',\n
+                                             \'action_permission\': \'View\',\n
+                                             \'categories\': (\'action_type/object_view\',),\n
+                                             \'float_index\': 2.0,\n
+                                             \'id\': \'1\',\n
+                                             \'portal_type\': \'Action Information\',\n
+                                             \'reference\': \'configuration\',\n
+                                             \'title\': \'Configuration\',\n
+                                             \'visible_property\': 1},\n
+                                            {\'action\': \'string:${object_url}/TargetSolver_view\',\n
+                                             \'action_permission\': \'View\',\n
+                                             \'categories\': (\'action_type/object_view\',),\n
+                                             \'float_index\': 1.0,\n
+                                             \'id\': \'2\',\n
+                                             \'portal_type\': \'Action Information\',\n
+                                             \'reference\': \'view\',\n
+                                             \'title\': \'View\',\n
+                                             \'visible_property\': 1}],\n
+                           \'description\': \'The Quantity Split Solver splits a simulation movement into multiple simulation movements in order to defer the delivery of remaining quantities.\',\n
+                           \'type_factory_method_id\': \'addQuantitySplitSolver\',\n
+                           \'type_group_list\': (\'target_solver\',),\n
+                           \'id\': \'Quantity Split Solver\',\n
+                           \'line_exclusive\': 0,\n
+                           \'line_groupable\': 0,\n
+                           \'process_exclusive\': 0,\n
+                           \'solver_action_title\': \'Split and Differ\'},\n
+ \'Trade Model Solver\': {\'type_acquire_local_role\': 1,\n
+                        \'categories\': (\'conflicting_solver/portal_solvers/Accept Solver\',),\n
+                        \'configuration_form_id\': \'Solver_viewConfigurationFormBox\',\n
+                        \'configuration_groupable\': 0,\n
+                        \'content_list\': [{\'action\': \'string:${object_url}/Solver_viewConfiguration\',\n
+                                          \'action_permission\': \'View\',\n
+                                          \'categories\': (\'action_type/object_view\',),\n
+                                          \'float_index\': 2.0,\n
+                                          \'id\': \'1\',\n
+                                          \'portal_type\': \'Action Information\',\n
+                                          \'reference\': \'configuration\',\n
+                                          \'title\': \'Configuration\',\n
+                                          \'visible_property\': 1},\n
+                                         {\'action\': \'string:${object_url}/TargetSolver_view\',\n
+                                          \'action_permission\': \'View\',\n
+                                          \'categories\': (\'action_type/object_view\',),\n
+                                          \'float_index\': 1.0,\n
+                                          \'id\': \'2\',\n
+                                          \'portal_type\': \'Action Information\',\n
+                                          \'reference\': \'view\',\n
+                                          \'title\': \'View\',\n
+                                          \'visible_property\': 1}],\n
+                        \'description\': \'The Trade Model Solver solves the divergence by accepting the decision and updating a simulation movement, and also updates trade model related movements.\',\n
+                        \'type_factory_method_id\': \'addTradeModelSolver\',\n
+                        \'type_group_list\': (\'target_solver\',),\n
+                        \'id\': \'Trade Model Solver\',\n
+                        \'line_exclusive\': 0,\n
+                        \'line_groupable\': 0,\n
+                        \'process_exclusive\': 0,\n
+                        \'solver_action_title\': \'Accept values from Invoice Line and recalculate Trade Model related Invoice Lines\',\n
+                        \'tested_property\': (\'quantity\',)},\n
+ \'Unify Solver\': {\'type_acquire_local_role\': 1,\n
+                  \'automatic_solver\': 0,\n
+                  \'configuration_form_id\': \'UnifySolver_viewConfigurationFormBox\',\n
+                  \'configuration_groupable\': 0,\n
+                  \'configuration_property_list_dict_method_id\': \'UnifySolver_getConfigurationPropertyListDict\',\n
+                  \'content_list\': [{\'action\': \'string:${object_url}/Solver_viewConfiguration\',\n
+                                    \'action_permission\': \'View\',\n
+                                    \'categories\': (\'action_type/object_view\',),\n
+                                    \'float_index\': 2.0,\n
+                                    \'id\': \'1\',\n
+                                    \'portal_type\': \'Action Information\',\n
+                                    \'reference\': \'configuration\',\n
+                                    \'title\': \'Configuration\',\n
+                                    \'visible_property\': 1},\n
+                                   {\'action\': \'string:${object_url}/TargetSolver_view\',\n
+                                    \'action_permission\': \'View\',\n
+                                    \'categories\': (\'action_type/object_view\',),\n
+                                    \'float_index\': 1.0,\n
+                                    \'id\': \'2\',\n
+                                    \'portal_type\': \'Action Information\',\n
+                                    \'reference\': \'view\',\n
+                                    \'title\': \'View\',\n
+                                    \'visible_property\': 1}],\n
+                  \'default_configuration_property_dict_method_id\': \'UnifySolver_getDefaultConfigurationPropertyDict\',\n
+                  \'description\': \'The Unify Solver solves the divergence by unifying the value with a selected one and updating a simulation movement.\',\n
+                  \'type_factory_method_id\': \'addUnifySolver\',\n
+                  \'type_group_list\': (\'target_solver\',),\n
+                  \'id\': \'Unify Solver\',\n
+                  \'line_exclusive\': 0,\n
+                  \'line_groupable\': 0,\n
+                  \'process_exclusive\': 0,\n
+                  \'solver_action_title\': \'Unify value\'}}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>BusinessConfiguration_getSolverPropertyDict</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
