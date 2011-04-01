@@ -142,7 +142,6 @@ class TestUNGConfiguratorWorkflow(ERP5TypeTestCase):
     next_dict = sequence.get("next_dict")
     response_dict = self.portal.portal_configurator._next(
                             business_configuration, next_dict)
-
     sequence.edit(response_dict=response_dict)
 
   def setBusinessConfigurationWorkflow(self, business_configuration, workflow):
@@ -297,7 +296,7 @@ class TestUNGConfiguratorWorkflow(ERP5TypeTestCase):
      self.assertEquals(person_config_item.getReference(), "person_assignor")
 
   def stepSetupWebSiteConfiguration(self, sequence=None, sequence_list=None, **kw):
-    """ """
+    """ Setup Web Site """
     next_dict = dict(your_default_available_language="pt-BR")
     sequence.edit(next_dict=next_dict)
 
