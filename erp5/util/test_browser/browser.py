@@ -152,7 +152,8 @@ class Browser(ExtendedTestBrowser):
                username,
                password,
                log_filename=None,
-               is_debug=False):
+               is_debug=False,
+               is_legacy_listbox=False):
     """
     Create a browser object, allowing to log in right away with the
     given username and password. The base URL must contain an I{/} at
@@ -169,6 +170,8 @@ class Browser(ExtendedTestBrowser):
     @type log_filename: str
     @param is_debug: Enable or disable debugging (disable by default)
     @type is_debug: bool
+    @param is_legacy_listbox: Use legacy listbox
+    @type is_legacy_listbox: bool
     """
     # Meaningful to re-create the MainForm class every time the page
     # has been changed
@@ -190,6 +193,8 @@ class Browser(ExtendedTestBrowser):
       logging.basicConfig(filename=log_filename, level=logging_level)
     else:
       logging.basicConfig(stream=sys.stdout, level=logging_level)
+
+    self._is_legacy_listbox = is_legacy_listbox
 
     super(Browser, self).__init__()
 
@@ -373,7 +378,7 @@ class Browser(ExtendedTestBrowser):
       '//table'
 
   def getListboxLink(self, line_number, column_number, cell_element_index=1,
-                     is_legacy=False, *args, **kwargs):
+                     *args, **kwargs):
     """
     Follow the link at the given position, excluding any link whose
     class is hidden. In case there are several links within a cell,
@@ -396,7 +401,7 @@ class Browser(ExtendedTestBrowser):
     @raise LookupError: No link could be found at the given position
                         and cell indexes
     """
-    if is_legacy:
+    if self._is_legacy_listbox:
       listbox_basic_xpath_str = self._legacy_listbox_table_xpath_str
     else:
       listbox_basic_xpath_str = self._listbox_table_xpath_str
@@ -407,12 +412,12 @@ class Browser(ExtendedTestBrowser):
     if line_number <= 2:
       relative_line_number = line_number
 
-      if is_legacy:
+      if self._is_legacy_listbox:
         column_type = 'td'
       else:
         column_type = 'th'
     else:
-      if is_legacy:
+      if self._is_legacy_listbox:
         relative_line_number = line_number
       else:
         relative_line_number = line_number - 2
@@ -444,8 +449,7 @@ class Browser(ExtendedTestBrowser):
                          text,
                          column_number=None,
                          line_number=None,
-                         strict=False,
-                         is_legacy=False):
+                         strict=False):
     """
     Returns the position number of the first line containing given
     text in given column or line number (starting from 1).
@@ -466,7 +470,7 @@ class Browser(ExtendedTestBrowser):
     # Require either column_number or line_number to be given
     onlyOne([column_number, line_number], '"column_number" and "line_number"')
 
-    if is_legacy:
+    if self._is_legacy_listbox:
       listbox_basic_xpath_str = self._legacy_listbox_table_xpath_str
     else:
       listbox_basic_xpath_str = self._listbox_table_xpath_str
@@ -477,7 +481,7 @@ class Browser(ExtendedTestBrowser):
       xpath_str_fmt = listbox_basic_xpath_str + '//tr//%%s[%d]' % \
           column_number
 
-      if is_legacy:
+      if self._is_legacy_listbox:
         column_or_line_xpath_str = xpath_str_fmt % 'td'
       else:
         column_or_line_xpath_str = "%s | %s" % (xpath_str_fmt % 'th',
@@ -493,12 +497,12 @@ class Browser(ExtendedTestBrowser):
       if line_number <= 2:
         relative_line_number = line_number
 
-        if is_legacy:
+        if self._is_legacy_listbox:
           column_type = 'td'
         else:
           column_type = 'th'
       else:
-        if is_legacy:
+        if self._is_legacy_listbox:
           relative_line_number = line_number
         else:
           relative_line_number = line_number - 2
@@ -848,7 +852,7 @@ class ContextMainForm(MainForm):
     self.submit(name='Base_callDialogMethod:method')
 
   def getListboxControl(self, line_number, column_number, cell_element_index=1,
-                        is_legacy=False, *args, **kwargs):
+                        *args, **kwargs):
     """
     Get the control located at line and column numbers (both starting
     from 1), excluding hidden control and those whose class is hidden
@@ -876,7 +880,7 @@ class ContextMainForm(MainForm):
     @raise LookupError: No control could be found at the given
                         position and cell indexes
     """
-    if is_legacy:
+    if self.browser._is_legacy_listbox:
       listbox_basic_xpath_str = self.browser._legacy_listbox_table_xpath_str
     else:
       listbox_basic_xpath_str = self.browser._listbox_table_xpath_str
@@ -884,12 +888,12 @@ class ContextMainForm(MainForm):
     if line_number <= 2:
       relative_line_number = line_number
 
-      if is_legacy:
+      if self.browser._is_legacy_listbox:
         column_type = 'td'
       else:
         column_type = 'th'
     else:
-      if is_legacy:
+      if self.browser._is_legacy_listbox:
         relative_line_number = line_number
       else:
         relative_line_number = line_number - 2
