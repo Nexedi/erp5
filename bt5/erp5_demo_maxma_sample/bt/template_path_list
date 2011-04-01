@@ -13,6 +13,8 @@ person_module/**
 portal_categories/group/my_group
 portal_categories/product_line/coin
 portal_categories/product_line/coin/**
+portal_preferences/default_configurator_preference
+portal_preferences/default_configurator_system_preference
 portal_simulation/**
 product_module
 product_module/**

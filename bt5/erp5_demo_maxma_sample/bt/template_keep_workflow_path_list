@@ -1,5 +1,4 @@
 campaign_module/**
-portal_preferences/default_configurator_preference
 event_module
 event_module/**
 service_module/**
