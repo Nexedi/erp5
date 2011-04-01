@@ -53,14 +53,14 @@ class ServiceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.XMLObject
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore
-                    , PropertySheet.ServiceConfiguratorItem )
+                    , PropertySheet.ConfiguratorItem )
 
   def build(self, business_configuration):
     portal = self.getPortalObject()
     module = portal.service_module
     # XXX Maybe this approach efficient and scalable.
     object_id_list = module.objectIds()
-    for service_id, service_title in self.getServiceList():
+    for service_id, service_title in self.getConfigurationList():
       if service_id not in object_id_list:
         document = module.newContent(portal_type='Service',
                                    id=service_id,
