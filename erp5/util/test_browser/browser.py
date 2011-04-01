@@ -261,22 +261,63 @@ class Browser(ExtendedTestBrowser):
     self._main_form = ContextMainForm(self, form)
     return self._main_form
 
-  def getLink(self, url=None, *args, **kwargs):
+  def getLink(self, url=None, class_attribute=None, *args, **kwargs):
     """
     Override original C{getLink} allowing to not consider the HTTP
     query string unless it is explicitly given.
 
-    @param url: URL to look for
-    @type url: str
+    Also, allows to select a link by its class attribute, which
+    basically look for the first element whose C{attribute} is
+    C{class_attribute} then call C{getLink} with the element C{href}.
+
+    @param class_attribute: Get the link with this class
+    @type class_attribute: str
     @param args: Positional arguments given to original C{getLink}
     @type args: list
     @param kwargs: Keyword arguments given to original C{getLink}
     @type kwargs: dict
     """
-    if url and '?' not in url:
+    if class_attribute:
+      element_list = self.etree.xpath('//a[contains(@class, "%s")]' % \
+                                        class_attribute)
+
+      try:
+        url = element_list[0].get('href')
+      except (IndexError, AttributeError):
+        url = None
+
+      if not url:
+        raise LookupError("Could not find any link whose class is '%s'" % \
+                            class_attribute)
+
+    elif url and '?' not in url:
       url += '?'
 
     return super(Browser, self).getLink(url=url, *args, **kwargs)
+
+  def getImportExportLink(self):
+    """
+    Get Import/Export link. Use the class attribute rather than the
+    name as the latter is dependent on the context.
+
+    @return: The link whose class is C{report}
+    @rtype: Link
+
+    @todo: Should perhaps be a ContextBrowser class?
+    """
+    return self.getLink(class_attribute='import_export')
+
+  def getFastInputLink(self):
+    """
+    Get Fast Input link. Use the class attribute rather than the name
+    as the latter is dependent on the context.
+
+    @return: The link whose class is C{fast_input}
+    @rtype: Link
+
+    @todo: Should perhaps be a ContextBrowser class?
+    """
+    return self.getLink(class_attribute='fast_input')
 
   def getTransitionMessage(self):
     """
@@ -450,7 +491,8 @@ class MainForm(Form):
         name = None
 
       if not name:
-        raise LookupError("Could not find any '%s' element" % class_attribute)
+        raise LookupError("Could not find any button whose class is '%s'" % \
+                            class_attribute)
 
     if label is None and name is None:
       super(MainForm, self).submit(label=label, name=name, *args, **kwargs)
