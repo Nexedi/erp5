@@ -50,8 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># Nothing to do here\n
-configuration_save = context.restrictedTraverse(configuration_save_url)\n
+            <value> <string>configuration_save = context.restrictedTraverse(configuration_save_url)\n
 \n
 bt5_installation_list = (\'erp5_demo_maxma_sample\',)\n
 \n
