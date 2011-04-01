@@ -435,14 +435,16 @@ class Browser(ExtendedTestBrowser):
 
   def getRemainingActivityCounter(self):
     """
-    Return the number of remaining activities
+    Return the number of remaining activities, but do not visit the
+    URL so it does not interfere with next calls.
 
     @return: The number of remaining activities
     @rtype: int
     """
-    self.open('portal_activities/countMessage')
-    return self.contents and int(self.contents) or 0
+    activity_counter = self.mech_browser.open_novisit(
+      'portal_activities/countMessage').read()
 
+    return activity_counter and int(activity_counter) or 0
 
 from zope.testbrowser.browser import Form, ListControl
 
