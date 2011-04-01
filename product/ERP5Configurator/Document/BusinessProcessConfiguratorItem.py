@@ -53,6 +53,7 @@ class BusinessProcessConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.XMLObject
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore
+                    , PropertySheet.Reference
                     )
 
   def build(self, business_configuration):
