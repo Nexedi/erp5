@@ -57,16 +57,11 @@ class ServiceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
 
   def build(self, business_configuration):
     portal = self.getPortalObject()
-    module = portal.service_module
-    # XXX Maybe this approach efficient and scalable.
-    object_id_list = module.objectIds()
     for service_id, service_title in self.getConfigurationList():
-      if service_id not in object_id_list:
-        document = module.newContent(portal_type='Service',
+      document = getattr(portal.service_module, service_id, None)
+      if document is None:
+        document = portal.service_module.newContent(portal_type='Service',
                                    id=service_id,
-                                   title=service_title,
-                                   )
-      else:
-        document = module[service_id]
+                                   title=service_title)
       ## add to customer template
       self.install(document, business_configuration)
