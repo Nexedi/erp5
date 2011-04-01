@@ -419,13 +419,38 @@ class MainForm(Form):
   """
   __metaclass__ = measurementMetaClass(prefix='submit')
 
-  def submit(self, label=None, name=None, index=None, *args, **kwargs):
+  def submit(self, label=None, name=None, class_attribute=None, index=None,
+             *args, **kwargs):
     """
     Overriden for logging purpose, and for specifying a default index
     to 0 if not set, thus avoiding AmbiguityError being raised (in
-    ERP5 there may be several submit fields with the same name)
+    ERP5 there may be several submit fields with the same name).
+
+    Also, allows to select a submit by its class attribute, which
+    basically look for the first element whose C{attribute} is
+    C{class_attribute} then call C{submit} with the element C{name}.
+
+    @param class_attribute: Submit according to the class attribute
+    @type class_attribute: str
+
+    @raise LookupError: Could not find any element matching the given
+                        class attribute name, if class_attribute
+                        parameter is given.
     """
-    logging.debug("Submitting (name='%s', label='%s')" % (name, label))
+    logging.debug("Submitting (name='%s', label='%s', class='%s')" % \
+                    (name, label, class_attribute))
+
+    if class_attribute:
+      element_list = self.browser.etree.xpath('//*[contains(@class, "%s")]' % \
+                                                class_attribute)
+
+      try:
+        name = element_list[0].get('name')
+      except (IndexError, AttributeError):
+        name = None
+
+      if not name:
+        raise LookupError("Could not find any '%s' element" % class_attribute)
 
     if label is None and name is None:
       super(MainForm, self).submit(label=label, name=name, *args, **kwargs)
@@ -600,9 +625,17 @@ class ContextMainForm(MainForm):
 
   def submitPrint(self):
     """
-    Print the previously selected objects.
+    Print the previously selected objects. Use the class attribute
+    rather than the name as the latter is dependent on the context.
     """
-    self.submit(name='Folder_print:method')
+    self.submit(class_attribute='print')
+
+  def submitReport(self):
+    """
+    Create a report. Use the class attribute rather than the name as
+    the latter is dependent on the context.
+    """
+    self.submit(class_attribute='report')
 
   def submitNew(self):
     """
