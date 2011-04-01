@@ -369,8 +369,11 @@ class Browser(ExtendedTestBrowser):
 
   _listbox_table_xpath_str = '//table[contains(@class, "listbox-table")]'
 
+  _legacy_listbox_table_xpath_str = '//div[contains(@class, "listbox")]'\
+      '//table'
+
   def getListboxLink(self, line_number, column_number, cell_element_index=1,
-                     *args, **kwargs):
+                     is_legacy=False, *args, **kwargs):
     """
     Follow the link at the given position, excluding any link whose
     class is hidden. In case there are several links within a cell,
@@ -393,18 +396,31 @@ class Browser(ExtendedTestBrowser):
     @raise LookupError: No link could be found at the given position
                         and cell indexes
     """
+    if is_legacy:
+      listbox_basic_xpath_str = self._legacy_listbox_table_xpath_str
+    else:
+      listbox_basic_xpath_str = self._listbox_table_xpath_str
+
     # With XPATH, the position is context-dependent, therefore, as
     # there the cells are either within a <thead> or <tbody>, the line
     # number must be shifted by the number of header lines (namely 2)
     if line_number <= 2:
       relative_line_number = line_number
-      column_type = 'th'
+
+      if is_legacy:
+        column_type = 'td'
+      else:
+        column_type = 'th'
     else:
-      relative_line_number = line_number - 2
+      if is_legacy:
+        relative_line_number = line_number
+      else:
+        relative_line_number = line_number - 2
+
       column_type = 'td'
 
     xpath_str = '%s//tr[%d]//%s[%d]//a[not(contains(@class, "hidden"))][%d]' % \
-        (self._listbox_table_xpath_str,
+        (listbox_basic_xpath_str,
          relative_line_number,
          column_type,
          column_number,
@@ -428,7 +444,8 @@ class Browser(ExtendedTestBrowser):
                          text,
                          column_number=None,
                          line_number=None,
-                         strict=False):
+                         strict=False,
+                         is_legacy=False):
     """
     Returns the position number of the first line containing given
     text in given column or line number (starting from 1).
@@ -449,27 +466,46 @@ class Browser(ExtendedTestBrowser):
     # Require either column_number or line_number to be given
     onlyOne([column_number, line_number], '"column_number" and "line_number"')
 
+    if is_legacy:
+      listbox_basic_xpath_str = self._legacy_listbox_table_xpath_str
+    else:
+      listbox_basic_xpath_str = self._listbox_table_xpath_str
+
     # Get all cells in the column (if column_number is given and
     # including header columns) or line (if line_number is given)
     if column_number:
-      xpath_str_fmt = self._listbox_table_xpath_str + '//tr//%%s[%d]' % \
+      xpath_str_fmt = listbox_basic_xpath_str + '//tr//%%s[%d]' % \
           column_number
 
-      column_or_line_xpath_str = "%s | %s" % (xpath_str_fmt % 'th',
-                                              xpath_str_fmt % 'td')
+      if is_legacy:
+        column_or_line_xpath_str = xpath_str_fmt % 'td'
+      else:
+        column_or_line_xpath_str = "%s | %s" % (xpath_str_fmt % 'th',
+                                                xpath_str_fmt % 'td')
+
     else:
+      listbox_basic_xpath_str = self._listbox_table_xpath_str
+
       # With XPATH, the position is context-dependent, therefore, as
       # there the cells are either within a <thead> or <tbody>, the
       # line number must be shifted by the number of header lines
       # (namely 2)
       if line_number <= 2:
         relative_line_number = line_number
-        column_type = 'th'
+
+        if is_legacy:
+          column_type = 'td'
+        else:
+          column_type = 'th'
       else:
-        relative_line_number = line_number - 2
+        if is_legacy:
+          relative_line_number = line_number
+        else:
+          relative_line_number = line_number - 2
+
         column_type = 'td'
 
-      column_or_line_xpath_str = self._listbox_table_xpath_str + '//tr[%d]//%s' %\
+      column_or_line_xpath_str = listbox_basic_xpath_str + '//tr[%d]//%s' %\
           (relative_line_number, column_type)
 
     cell_list = self.etree.xpath(column_or_line_xpath_str)
@@ -812,7 +848,7 @@ class ContextMainForm(MainForm):
     self.submit(name='Base_callDialogMethod:method')
 
   def getListboxControl(self, line_number, column_number, cell_element_index=1,
-                        *args, **kwargs):
+                        is_legacy=False, *args, **kwargs):
     """
     Get the control located at line and column numbers (both starting
     from 1), excluding hidden control and those whose class is hidden
@@ -840,16 +876,29 @@ class ContextMainForm(MainForm):
     @raise LookupError: No control could be found at the given
                         position and cell indexes
     """
+    if is_legacy:
+      listbox_basic_xpath_str = self.browser._legacy_listbox_table_xpath_str
+    else:
+      listbox_basic_xpath_str = self.browser._listbox_table_xpath_str
+
     if line_number <= 2:
       relative_line_number = line_number
-      column_type = 'th'
+
+      if is_legacy:
+        column_type = 'td'
+      else:
+        column_type = 'th'
     else:
-      relative_line_number = line_number - 2
+      if is_legacy:
+        relative_line_number = line_number
+      else:
+        relative_line_number = line_number - 2
+
       column_type = 'td'
 
     xpath_str = '%s//tr[%d]//%s[%d]/*[not(@type="hidden") and ' \
         'not(contains(@class, "hidden"))][%d]' % \
-        (self.browser._listbox_table_xpath_str,
+        (listbox_basic_xpath_str,
          relative_line_number,
          column_type,
          column_number,
