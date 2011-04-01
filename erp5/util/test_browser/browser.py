@@ -217,7 +217,7 @@ class Browser(ExtendedTestBrowser):
     @rtype: str
     """
     for cookie in self.cookies:
-      if name == cookie.name:
+      if cookie_name == cookie.name:
         return cookie.value
 
     return default
