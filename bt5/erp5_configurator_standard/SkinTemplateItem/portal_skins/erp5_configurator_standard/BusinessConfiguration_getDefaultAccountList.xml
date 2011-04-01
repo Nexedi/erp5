@@ -54,7 +54,7 @@
 \n
 cachedMethod = CachingMethod(context.ConfigurationTemplate_readOOCalcFile, script.getId())\n
 result = {}\n
-filename = "default_accounts_express.ods"\n
+filename = "standard_default_accounts.ods"\n
 object_list = cachedMethod(filename)\n
 \n
 for item in object_list:\n
