@@ -534,7 +534,7 @@ class MainForm(Form):
     @param search_text: Text to search
     @type search_text: str
     """
-    self.getControl('field_your_search_text').value = search_text
+    self.getControl(name='field_your_search_text').value = search_text
     self.submit(name='ERP5Site_viewQuickSearchResultList:method')
 
   def submitLogout(self):
