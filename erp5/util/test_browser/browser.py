@@ -360,10 +360,20 @@ class Browser(ExtendedTestBrowser):
     @raise LookupError: No link could be found at the given position
                         and cell indexes
     """
+    # With XPATH, the position is context-dependent, therefore, as
+    # there the cells are either within a <thead> or <tbody>, the line
+    # number must be shifted by the number of header lines (namely 2)
+    if line_number <= 2:
+      relative_line_number = line_number
+      column_type = 'th'
+    else:
+      relative_line_number = line_number - 2
+      column_type = 'td'
+
     xpath_str = '%s//tr[%d]//%s[%d]//a[not(contains(@class, "hidden"))][%d]' % \
         (self._listbox_table_xpath_str,
-         line_number,
-         line_number <= 2 and 'th' or 'td',
+         relative_line_number,
+         column_type,
          column_number,
          cell_element_index)
 
@@ -415,8 +425,19 @@ class Browser(ExtendedTestBrowser):
       column_or_line_xpath_str = "%s | %s" % (xpath_str_fmt % 'th',
                                               xpath_str_fmt % 'td')
     else:
+      # With XPATH, the position is context-dependent, therefore, as
+      # there the cells are either within a <thead> or <tbody>, the
+      # line number must be shifted by the number of header lines
+      # (namely 2)
+      if line_number <= 2:
+        relative_line_number = line_number
+        column_type = 'th'
+      else:
+        relative_line_number = line_number - 2
+        column_type = 'td'
+
       column_or_line_xpath_str = self._listbox_table_xpath_str + '//tr[%d]//%s' %\
-          (line_number, line_number <= 2 and 'th' or 'td')
+          (relative_line_number, column_type)
 
     cell_list = self.etree.xpath(column_or_line_xpath_str)
 
@@ -780,11 +801,18 @@ class ContextMainForm(MainForm):
     @raise LookupError: No control could be found at the given
                         position and cell indexes
     """
+    if line_number <= 2:
+      relative_line_number = line_number
+      column_type = 'th'
+    else:
+      relative_line_number = line_number - 2
+      column_type = 'td'
+
     xpath_str = '%s//tr[%d]//%s[%d]/*[not(@type="hidden") and ' \
         'not(contains(@class, "hidden"))][%d]' % \
         (self.browser._listbox_table_xpath_str,
-         line_number,
-         (line_number <= 2 and u'th' or u'td'),
+         relative_line_number,
+         column_type,
          column_number,
          cell_element_index)
 
