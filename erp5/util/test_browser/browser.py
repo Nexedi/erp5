@@ -205,20 +205,20 @@ class Browser(ExtendedTestBrowser):
     logging.info("Opening url: " + absolute_url)
     super(Browser, self).open(absolute_url, data)
 
-  def getCookieValue(self, cookie_name, default=None):
+  def getCookieValue(self, name, default=None):
     """
     Get the cookie value of the given cookie name.
 
-    @param cookie_name: Name of the cookie
-    @type cookie_name: str
+    @param name: Name of the cookie
+    @type name: str
     @param default: Fallback value if the cookie was not found
     @type default: str
     @return: Cookie value
     @rtype: str
     """
-    for cookie in self.cookies:
-      if cookie_name == cookie.name:
-        return cookie.value
+    for cookie_name, cookie_value in self.cookies.iteritems():
+      if name == cookie_name:
+        return cookie_value
 
     return default
 
