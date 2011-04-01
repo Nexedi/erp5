@@ -78,6 +78,8 @@ class SystemPreferenceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
              'preferred_document_classification',
              'preferred_synchronous_metadata_discovery',
              'preferred_redirect_to_document',
+             'preferred_ooodoc_server_address',
+             'preferred_ooodoc_server_port_number',
              # PDM
              'preferred_product_individual_variation_base_category_list',
              'preferred_component_individual_variation_base_category_list',
