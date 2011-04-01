@@ -1,0 +1,258 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="System Preference" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Authenticated</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Member</string>
+                <string>Owner</string>
+                <string>Reviewer</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Delete_objects_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Authenticated</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Member</string>
+                <string>Owner</string>
+                <string>Reviewer</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>The default system parameters for the site are set on this \'    \'preference</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>default_configurator_system_preference</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>System Preference</string> </value>
+        </item>
+        <item>
+            <key> <string>preferred_campaign_resource</string> </key>
+            <value>
+              <tuple>
+                <string>service_module/marketing_campaign</string>
+                <string>service_module/marketing_survey</string>
+                <string>service_module/marketing_purchases</string>
+                <string>service_module/marketing_sales</string>
+                <string>service_module/marketing_other</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>preferred_client_role</string> </key>
+            <value>
+              <tuple>
+                <string>role/supplier</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>preferred_component_individual_variation_base_category</string> </key>
+            <value>
+              <tuple>
+                <string>variation</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>preferred_document_classification</string> </key>
+            <value> <string>collaborative/team</string> </value>
+        </item>
+        <item>
+            <key> <string>preferred_document_file_name_regular_expression</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(?P<node_reference>[a-zA-Z0-9_-]+)-(?P<local_reference>[a-zA-Z0-9_.]+)-(?P<version>[0-9a-zA-Z.]+)-(?P<language>[a-z]{2})[^-]*?
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>preferred_document_reference_regular_expression</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(?P<reference>[a-zA-Z0-9-_.]+-[a-zA-Z0-9-_.]+)(|-(?P<version>[0-9a-zA-Z.]+))(|-(?P<language>[a-z]{2})[^-]*)?
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>preferred_event_assessment_form_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>preferred_event_resource</string> </key>
+            <value>
+              <tuple>
+                <string>service_module/event_complaint</string>
+                <string>service_module/event_announcement</string>
+                <string>service_module/event_inquiry</string>
+                <string>service_module/event_advertisement</string>
+                <string>service_module/event_spam</string>
+                <string>service_module/event_information</string>
+                <string>service_module/event_other</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>preferred_event_sender_email</string> </key>
+            <value>
+              <tuple>
+                <string>erp5@example.com</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>preferred_meeting_resource</string> </key>
+            <value>
+              <tuple>
+                <string>service_module/organisation_conference</string>
+                <string>service_module/organisation_partnership</string>
+                <string>service_module/organisation_purchases</string>
+                <string>service_module/organisation_project</string>
+                <string>service_module/organisation_sales</string>
+                <string>service_module/organisation_other</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>preferred_packing_use</string> </key>
+            <value>
+              <tuple>
+                <string>use/trade/container</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>preferred_product_individual_variation_base_category</string> </key>
+            <value>
+              <tuple>
+                <string>variation</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>preferred_purchase_use</string> </key>
+            <value>
+              <tuple>
+                <string>use/trade/container</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>preferred_redirect_to_document</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>preferred_sale_opportunity_resource</string> </key>
+            <value>
+              <tuple>
+                <string>service_module/product</string>
+                <string>service_module/service</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>preferred_sale_use</string> </key>
+            <value>
+              <tuple>
+                <string>use/trade/sale</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>preferred_service_individual_variation_base_category</string> </key>
+            <value>
+              <tuple>
+                <string>variation</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>preferred_supplier_role</string> </key>
+            <value>
+              <tuple>
+                <string>role/supplier</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>preferred_support_request_resource</string> </key>
+            <value>
+              <tuple>
+                <string>service_module/support_administrative</string>
+                <string>service_module/support_financial</string>
+                <string>service_module/support_it</string>
+                <string>service_module/support_other</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>preferred_synchronous_metadata_discovery</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>priority</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Default Configurator System Site Preference</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

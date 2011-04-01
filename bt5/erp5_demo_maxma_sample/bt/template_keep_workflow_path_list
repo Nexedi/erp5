@@ -19,6 +19,7 @@ purchase_packing_list_module
 purchase_packing_list_module/**
 purchase_trade_condition_module
 purchase_trade_condition_module/**
+portal_preferences/3
 sale_opportunity_module
 sale_opportunity_module/**
 sale_order_module
