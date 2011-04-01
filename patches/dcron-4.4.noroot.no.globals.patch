@@ -1,3 +1,4 @@
+# Patch for making dcron usable without root user, as a local service
 diff -ru dcron-4.4.org/chuser.c dcron-4.4/chuser.c
 --- dcron-4.4.org/chuser.c	2010-01-18 16:27:31.000000000 +0100
 +++ dcron-4.4/chuser.c	2011-04-01 11:19:19.000000000 +0200
