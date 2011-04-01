@@ -133,6 +133,10 @@
                           <string>Birth Date</string>
                         </tuple>
                         <tuple>
+                          <string>price_currency_reference</string>
+                          <string>Accounting Currency</string>
+                        </tuple>
+                        <tuple>
                           <string>creation_date</string>
                           <string>Creation Date</string>
                         </tuple>
@@ -269,6 +273,10 @@
                         <tuple>
                           <string>vat_code</string>
                           <string>VAT Code</string>
+                        </tuple>
+                        <tuple>
+                          <string>price_currency_reference</string>
+                          <string>Accounting Currency</string>
                         </tuple>
                         <tuple>
                           <string>creation_date</string>
