@@ -96,8 +96,6 @@ class TestMaxmaDemoConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
 
   def stepSetMaxmaDemoWorkflow(self, sequence=None, sequence_list=None, **kw):
     """ Set Consulting Workflow into Business Configuration """
-    self.portal.portal_templates.updateRepositoryBusinessTemplateList(
-                                    ['file:///home/rafael/erp5/express/bt5'])
     business_configuration = sequence.get("business_configuration")
     self.setBusinessConfigurationWorkflow(business_configuration,
                           "workflow_module/maxma_demo_configuration_workflow")
