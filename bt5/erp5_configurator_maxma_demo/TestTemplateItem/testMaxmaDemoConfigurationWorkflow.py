@@ -1,8 +1,6 @@
 ##############################################################################
-# Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2011 Nexedi SA and Contributors. All Rights Reserved.
 #                     Rafael Monnerat <rafael@nexedi.com>
-#                     Ivan Tyagov <ivan@nexedi.com>
-#                     Lucas Carvalho <lucas@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
