@@ -300,9 +300,9 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
     self.portal.portal_configurator.startInstallation(
          business_configuration, REQUEST=self.portal.REQUEST)
 
-  def stepCheckUNGWebSiteAfterInstallation(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckSystemPreferenceAfterInstallation(self, sequence=None, sequence_list=None, **kw):
     """ Check System Preference"""
-    system_preference = portal_catalog.getResultValue(portal_type="System Preference")
+    system_preference = self.portal.portal_catalog.getResultValue(portal_type="System Preference")
     self.assertEquals(system_preference.getPreferredOoodocServerPortNumber(), 8011)
     self.assertEquals(system_preference.getPreferredOoodocServerAddress(), "localhost")
 
