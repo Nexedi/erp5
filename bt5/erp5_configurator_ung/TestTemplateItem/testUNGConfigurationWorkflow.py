@@ -1,6 +1,6 @@
 ##############################################################################
 # Copyright (c) 2011 Nexedi SA and Contributors. All Rights Reserved.
-#                     Gabriel M. Monnerat <gabriel@tiolive.com>
+#           Gabriel M. Monnerat <gabriel@tiolive.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -79,7 +79,7 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
      stepConfiguratorNext
      stepTic
      stepCheckConfigureMultipleUserAccountForm
-     stepSetupMultipleUserAccountThree%(country)s
+     stepSetupMultipleUserAccountThree
      stepConfiguratorNext
      stepTic
      stepCheckConfigurePreferenceForm
@@ -99,6 +99,7 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
      stepStartConfigurationInstallation
      stepTic
      stepCheckUNGWebSiteAfterInstallation
+     stepCheckSystemPreferenceAfterInstallation
   """
 
   def getBusinessTemplateList(self):
@@ -113,14 +114,14 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
     self.portal.portal_templates.updateRepositoryBusinessTemplateList(
                            ['http://www.erp5.org/dists/snapshot/bt5/'])
 
-  def stepCreateBusinessConfiguration(self,  sequence=None, sequence_list=None, **kw):
+  def stepCreateBusinessConfiguration(self, sequence=None, sequence_list=None, **kw):
     """ Create one Business Configuration """
     module = self.portal.business_configuration_module
     business_configuration = module.newContent(
                                portal_type="Business Configuration",
                                title='Test Configurator UNG Workflow')
     next_dict = {}
-    sequence.edit(business_configuration=business_configuration, 
+    sequence.edit(business_configuration=business_configuration,
                   next_dict=next_dict)
 
   def stepSetUNGWorkflow(self, sequence=None, sequence_list=None, **kw):
@@ -214,7 +215,7 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
     self.assertEquals('Previous', response_dict['previous'])
     self.assertEquals('Configure user accounts', response_dict['next'])
     self.assertCurrentStep('Configuration of users', response_dict)
- 
+
   def _stepSetupMultipleUserAccountThree(self, sequence, user_list):
     """ Generic step to create multiple user account """
     next_dict = {}
@@ -223,38 +224,102 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
         next_dict.setdefault(k, []).append(v)
     sequence.edit(next_dict=next_dict)
 
-  def stepSetupMultipleUserAccountThreeBrazil(self, sequence=None, sequence_list=None, **kw):
-    """ Create multiple user account """
-    user_list = [
-      dict(
-        field_your_first_name='Person',
-        field_your_last_name='Creator',
-        field_your_reference="person_creator",
-        field_your_password='person_creator',
-        field_your_password_confirm='person_creator',
-        field_your_default_email_text='test@test.com',
-        field_your_default_telephone_text='',
-      ), dict(
-        field_your_first_name='Person',
-        field_your_last_name='Assignee',
-        field_your_reference="person_assignee",
-        field_your_password='person_assignee',
-        field_your_password_confirm='person_assignee',
-        field_your_default_email_text='test@test.com',
-        field_your_default_telephone_text='',
-      ), dict(
-        field_your_first_name='Person',
-        field_your_last_name='Assignor',
-        field_your_reference="person_assignor",
-        field_your_password='person_assignor',
-        field_your_password_confirm='person_assignor',
-        field_your_default_email_text='test@test.com',
-        field_your_default_telephone_text='',
-      ),
-    ]
-    self._stepSetupMultipleUserAccountThree(sequence, user_list)
+  def stepCheckConfigurePreferenceForm(self, sequence=None, sequence_list=None, **kw):
+    """ Check the multiple user account form """
+    response_dict = sequence.get("response_dict")
+    if 'command' in response_dict:
+      self.assertEquals('show', response_dict['command'])
+    self.assertEquals('Previous', response_dict['previous'])
+    self.assertEquals('Configure ERP5 Preferences', response_dict['next'])
+    self.assertCurrentStep('ERP5 preferences', response_dict)
 
-  def stepSetupMultipleUserAccountThreeFrance(self, sequence=None, sequence_list=None, **kw):
+  def stepSetupPreferenceConfigurationBrazil(self, sequence=None, sequence_list=None, **kw):
+    """ Setup the Brazil preference configuration """
+    next_dict = dict(field_your_preferred_date_order='dmy',
+                     field_your_lang='erp5_l10n_fr',
+                     field_your_preferred_event_sender_email="test@test.com",
+                     default_field_your_lang=1)
+    sequence.edit(next_dict=next_dict)
+
+  def stepSetupPreferenceConfigurationFrance(self, sequence=None, sequence_list=None, **kw):
+    """ Setup the Brazil preference configuration """
+    next_dict = dict(field_your_preferred_date_order='ymd',
+                     field_your_lang='erp5_l10n_pt-BR',
+                     field_your_preferred_event_sender_email="test@test.com",
+                     default_field_your_lang=1)
+    sequence.edit(next_dict=next_dict)
+
+  def stepCheckConfigureWebSiteForm(self, sequence=None, sequence_list=None, **kw):
+    """ Check the installation form """
+    response_dict = sequence.get("response_dict")
+    self.assertEquals('show', response_dict['command'])
+    self.assertEquals('Previous', response_dict['previous'])
+    self.assertEquals('Configure Web Site', response_dict['next'])
+
+  def stepCheckMultipleUserAccountThreeBrazil(self, sequence=None, sequence_list=None, **kw):
+     """ Check if the users were created correctly """
+     business_configuration = sequence.get("business_configuration")
+     person_config_save = business_configuration["5"]
+     person_config_item = person_config_save["1"]
+     self.assertEquals(person_config_item.getReference(), "person_creator")
+     person_config_item = person_config_save["2"]
+     self.assertEquals(person_config_item.getReference(), "person_assignee")
+     person_config_item = person_config_save["3"]
+     self.assertEquals(person_config_item.getReference(), "person_assignor")
+
+  def stepCheckMultipleUserAccountThreeFrance(self, sequence=None, sequence_list=None, **kw):
+     """ Check if the users were created correctly """
+     business_configuration = sequence.get("business_configuration")
+     person_config_save = business_configuration["5"]
+     person_config_item = person_config_save["1"]
+     self.assertEquals(person_config_item.getReference(), "french_creator")
+     person_config_item = person_config_save["2"]
+     self.assertEquals(person_config_item.getReference(), "french_assignee")
+     person_config_item = person_config_save["3"]
+     self.assertEquals(person_config_item.getReference(), "french_assignor")
+
+  def stepCheckConfigureInstallationForm(self, sequence=None, sequence_list=None, **kw):
+    """ Check the installation form """
+    response_dict = sequence.get("response_dict")
+    self.assertEquals('show', response_dict['command'])
+    self.assertEquals('Previous', response_dict['previous'])
+    self.assertEquals('Install', response_dict['next'])
+
+  def stepSetupInstallConfiguration(self, sequence=None, sequence_list=None, **kw):
+    """ Install the Configuration """
+    sequence.edit(next_dict={})
+
+  def stepCheckInstallConfiguration(self, sequence=None, sequence_list=None, **kw):
+    """ Check the installation of the configuration """
+    response_dict = sequence.get("response_dict")
+    self.assertEquals('install', response_dict['command'])
+
+  def stepStartConfigurationInstallation(self, sequence=None, sequence_list=None, **kw):
+    """ Starts the installation """
+    business_configuration = sequence.get("business_configuration")
+    self.portal.portal_configurator.startInstallation(
+         business_configuration, REQUEST=self.portal.REQUEST)
+
+  def stepCheckUNGWebSiteAfterInstallation(self, sequence=None, sequence_list=None, **kw):
+    """ Check System Preference"""
+    system_preference = portal_catalog.getResultValue(portal_type="System Preference")
+    self.assertEquals(system_preference.getPreferredOoodocServerPortNumber(), 8011)
+    self.assertEquals(system_preference.getPreferredOoodocServerAddress(), "localhost")
+
+
+class TestUNGConfiguratorWorkflowFranceLanguage(TestUNGConfiguratorWorkflowMixin):
+  """
+    Test UNG Configuration Workflow
+  """
+
+  def test_ung_workflow_france(self):
+    """ Test the ung workflow with french language """
+    sequence_list = SequenceList()
+    sequence_string = self.DEFAULT_SEQUENCE_LIST % dict(country='France')
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def stepSetupMultipleUserAccountThree(self, sequence=None, sequence_list=None, **kw):
     """ Create multiple user account """
     user_list = [
       dict(
@@ -284,97 +349,6 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
       ),
     ]
     self._stepSetupMultipleUserAccountThree(sequence, user_list)
-
-  def stepCheckConfigurePreferenceForm(self, sequence=None, sequence_list=None, **kw):
-    """ Check the multiple user account form """
-    response_dict = sequence.get("response_dict")
-    if 'command' in response_dict:
-      self.assertEquals('show', response_dict['command'])
-    self.assertEquals('Previous', response_dict['previous'])
-    self.assertEquals('Configure ERP5 Preferences', response_dict['next'])
-    self.assertCurrentStep('ERP5 preferences', response_dict)
-
-  def stepSetupPreferenceConfigurationBrazil(self, sequence=None, sequence_list=None, **kw):
-    """ Setup the Brazil preference configuration """
-    next_dict = dict(field_your_preferred_date_order='dmy',
-                     field_your_lang='erp5_l10n_fr',
-                     field_your_preferred_event_sender_email="test@test.com",
-                     default_field_your_lang=1)
-    sequence.edit(next_dict=next_dict)
-
-  def stepSetupPreferenceConfigurationFrance(self, sequence=None, sequence_list=None, **kw):
-    """ Setup the Brazil preference configuration """
-    next_dict = dict(field_your_preferred_date_order='ymd',
-                     field_your_lang='erp5_l10n_pt-BR',
-                     field_your_preferred_event_sender_email="test@test.com",
-                     default_field_your_lang=1)
-    sequence.edit(next_dict=next_dict)
-
-
-  def stepCheckConfigureWebSiteForm(self, sequence=None, sequence_list=None, **kw):
-    """ Check the installation form """
-    response_dict = sequence.get("response_dict")
-    # configuration is finished. We are at the Install state.
-    self.assertEquals('show', response_dict['command'])
-    self.assertEquals('Previous', response_dict['previous'])
-    self.assertEquals('Configure Web Site', response_dict['next'])
-
-  def stepCheckMultipleUserAccountThreeBrazil(self, sequence=None, sequence_list=None, **kw):		 
-     """ Check if the users were created correctly """		 
-     business_configuration = sequence.get("business_configuration")		 
-     person_config_save = business_configuration["5"]		 
-     person_config_item = person_config_save["1"]		 
-     self.assertEquals(person_config_item.getReference(), "person_creator")		 
-     person_config_item = person_config_save["2"]		 
-     self.assertEquals(person_config_item.getReference(), "person_assignee")		 
-     person_config_item = person_config_save["3"]		 
-     self.assertEquals(person_config_item.getReference(), "person_assignor")
-
-  def stepCheckMultipleUserAccountThreeFrance(self, sequence=None, sequence_list=None, **kw):		 
-     """ Check if the users were created correctly """		 
-     business_configuration = sequence.get("business_configuration")		 
-     person_config_save = business_configuration["5"]		 
-     person_config_item = person_config_save["1"]		 
-     self.assertEquals(person_config_item.getReference(), "french_creator")		 
-     person_config_item = person_config_save["2"]		 
-     self.assertEquals(person_config_item.getReference(), "french_assignee")		 
-     person_config_item = person_config_save["3"]		 
-     self.assertEquals(person_config_item.getReference(), "french_assignor")
-
-  def stepCheckConfigureInstallationForm(self, sequence=None, sequence_list=None, **kw):
-    """ Check the installation form """
-    response_dict = sequence.get("response_dict")
-    self.assertEquals('show', response_dict['command'])
-    self.assertEquals('Previous', response_dict['previous'])
-    self.assertEquals('Install', response_dict['next'])
-
-  def stepSetupInstallConfiguration(self, sequence=None, sequence_list=None, **kw):
-    """ Install the Configuration """
-    sequence.edit(next_dict={})
-
-  def stepCheckInstallConfiguration(self, sequence=None, sequence_list=None, **kw):
-    """ Check the installation of the configuration """
-    response_dict = sequence.get("response_dict")
-    self.assertEquals('install', response_dict['command'])
-
-  def stepStartConfigurationInstallation(self, sequence=None, sequence_list=None, **kw):
-    """ Starts the installation """
-    business_configuration = sequence.get("business_configuration")
-    self.portal.portal_configurator.startInstallation(
-         business_configuration, REQUEST=self.portal.REQUEST)
-
-
-class TestUNGConfiguratorWorkflowFranceLanguage(TestUNGConfiguratorWorkflowMixin):
-  """
-    Test UNG Configuration Workflow
-  """
-
-  def test_ung_workflow_france(self):
-    """ Test the ung workflow with french language """
-    sequence_list = SequenceList()
-    sequence_string = self.DEFAULT_SEQUENCE_LIST % dict(country='France')
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
 
   def stepSetupWebSiteConfiguration(self, sequence=None, sequence_list=None, **kw):
     """ Setup Web Site """
@@ -413,9 +387,6 @@ class TestUNGConfiguratorWorkflowFranceLanguage(TestUNGConfiguratorWorkflowMixin
     assignment = person.contentValues(portal_type="Assignment")[0]
     self.assertEquals(assignment.getValidationState(), "open")
     self.assertEquals(assignment.getFunction(), "function/ung_user")
-    system_preference = portal_catalog.getResultValue(portal_type="System Preference")
-    self.assertEquals(system_preference.getPreferredOoodocServerPortNumber(), 8011)
-    self.assertEquals(system_preference.getPreferredOoodocServerAddress(), "localhost")
 
 class TestUNGConfiguratorWorkflowBrazilLanguage(TestUNGConfiguratorWorkflowMixin):
   """
@@ -433,6 +404,37 @@ class TestUNGConfiguratorWorkflowBrazilLanguage(TestUNGConfiguratorWorkflowMixin
     """ Setup Web Site """
     next_dict = dict(your_default_available_language="pt-BR")
     sequence.edit(next_dict=next_dict)
+
+  def stepSetupMultipleUserAccountThree(self, sequence=None, sequence_list=None, **kw):
+    """ Create multiple user account """
+    user_list = [
+      dict(
+        field_your_first_name='Person',
+        field_your_last_name='Creator',
+        field_your_reference="person_creator",
+        field_your_password='person_creator',
+        field_your_password_confirm='person_creator',
+        field_your_default_email_text='test@test.com',
+        field_your_default_telephone_text='',
+      ), dict(
+        field_your_first_name='Person',
+        field_your_last_name='Assignee',
+        field_your_reference="person_assignee",
+        field_your_password='person_assignee',
+        field_your_password_confirm='person_assignee',
+        field_your_default_email_text='test@test.com',
+        field_your_default_telephone_text='',
+      ), dict(
+        field_your_first_name='Person',
+        field_your_last_name='Assignor',
+        field_your_reference="person_assignor",
+        field_your_password='person_assignor',
+        field_your_password_confirm='person_assignor',
+        field_your_default_email_text='test@test.com',
+        field_your_default_telephone_text='',
+      ),
+    ]
+    self._stepSetupMultipleUserAccountThree(sequence, user_list)
 
   def stepCheckUNGWebSiteAfterInstallation(self, sequence=None, sequence_list=None, **kw):
     """ Check if UNG Web Site is published and your language"""
@@ -466,6 +468,3 @@ class TestUNGConfiguratorWorkflowBrazilLanguage(TestUNGConfiguratorWorkflowMixin
     assignment = person.contentValues(portal_type="Assignment")[0]
     self.assertEquals(assignment.getValidationState(), "open")
     self.assertEquals(assignment.getFunction(), "function/ung_user")
-    system_preference = portal_catalog.getResultValue(portal_type="System Preference")
-    self.assertEquals(system_preference.getPreferredOoodocServerPortNumber(), 8011)
-    self.assertEquals(system_preference.getPreferredOoodocServerAddress(), "localhost")
