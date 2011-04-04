@@ -957,7 +957,7 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     """
       Check if Solver objects have been created.
     """
-    business_configuration = self.portal.restrictedTraverse("business_configuration_module/60") #sequence.get('business_configuration')
+    business_configuration = sequence.get('business_configuration')
     solver_list = \
                self.getBusinessConfigurationObjectList(business_configuration,
                                                                 'Solver Type')
