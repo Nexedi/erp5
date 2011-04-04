@@ -90,7 +90,7 @@ class MovementGeneratorMixin:
       - implement rounding appropriately (True or False seems
         simplistic)
     """
-    # Default implementation bellow can be overriden by subclasses
+    # Default implementation below can be overriden by subclasses
     # however it should be generic enough not to be overriden
     # by most classes
     # Results will be appended to result
