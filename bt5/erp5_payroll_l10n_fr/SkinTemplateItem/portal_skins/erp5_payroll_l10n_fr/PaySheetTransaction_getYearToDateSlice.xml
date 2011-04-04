@@ -70,31 +70,16 @@ search_params = {\n
 }\n
 \n
 paysheet_list = [r.getObject() for r in accounting_module.searchFolder(**search_params)]\n
-\n
+paysheet_list.append(context)\n
 yearly_slice_amount = 0\n
-# get the slice value for this paysheet :\n
-model = context.getSpecialiseValue().getEffectiveModel(\\\n
-    start_date=context.getStartDate(),\n
-    stop_date=context.getStopDate())\n
-slice = model.getCell(slice_path, paysheet=context)\n
-\n
-if slice is None:\n
-  return 0.0\n
-\n
-plafond_max = slice.getQuantityRangeMax()\n
-plafond_min = slice.getQuantityRangeMin()\n
-\n
-gross_salary = context.PaySheetTransaction_getMovementTotalPriceFromCategory(\\\n
-    base_contribution=\'base_contribution/base_amount/payroll/report/salary/gross\',\n
-    contribution_share=\'contribution_share/employee\')\n
-\n
-if gross_salary < plafond_max:\n
-  slice_amount = gross_salary - plafond_min\n
-else:\n
-  slice_amount = plafond_max - plafond_min\n
-yearly_slice_amount += slice_amount\n
 \n
 for paysheet in paysheet_list :\n
+  gross_salary=paysheet.PaySheetTransaction_getMovementTotalPriceFromCategory(\\\n
+        base_contribution=\'base_contribution/base_amount/payroll/report/salary/gross\',\n
+        contribution_share=\'contribution_share/employee\')\n
+  if slice_path is None:\n
+    yearly_slice_amount += gross_salary\n
+    continue\n
   model = paysheet.getSpecialiseValue().getEffectiveModel(\\\n
       start_date=paysheet.getStartDate(),\n
       stop_date=paysheet.getStopDate())\n
@@ -104,9 +89,6 @@ for paysheet in paysheet_list :\n
       return 0.0\n
     plafond_max = slice.getQuantityRangeMax()\n
     plafond_min = slice.getQuantityRangeMin()\n
-    gross_salary=paysheet.PaySheetTransaction_getMovementTotalPriceFromCategory(\\\n
-        base_contribution=\'base_contribution/base_amount/payroll/report/salary/gross\',\n
-        contribution_share=\'contribution_share/employee\')\n
     slice_amount = 0\n
     if gross_salary < plafond_max:\n
       slice_amount = gross_salary - plafond_min\n
