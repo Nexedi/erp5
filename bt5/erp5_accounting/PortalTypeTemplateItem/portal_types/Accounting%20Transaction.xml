@@ -53,8 +53,8 @@
             <key> <string>group_list</string> </key>
             <value>
               <tuple>
-                <string>delivery</string>
                 <string>accounting_transaction</string>
+                <string>delivery</string>
               </tuple>
             </value>
         </item>
@@ -68,7 +68,26 @@
         </item>
         <item>
             <key> <string>permission</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>searchable_text_property_id</string> </key>
+            <value>
+              <tuple>
+                <string>title</string>
+                <string>description</string>
+                <string>comment</string>
+                <string>reference</string>
+                <string>source_reference</string>
+                <string>destination_reference</string>
+                <string>source_section_title</string>
+                <string>destination_section_title</string>
+                <string>start_date</string>
+                <string>stop_date</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -77,6 +96,18 @@
         <item>
             <key> <string>type_class</string> </key>
             <value> <string>AccountingTransaction</string> </value>
+        </item>
+        <item>
+            <key> <string>type_interface</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_mixin</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
       </dictionary>
     </pickle>

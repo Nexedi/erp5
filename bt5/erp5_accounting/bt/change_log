@@ -1,3 +1,6 @@
+2011-04-04 Kazuhiko
+* configure searchable text property ids for Accounting Period, Accounting Transaction, Balance Transaction, Internal Invoice Transaction, Payment Transaction, Purchase Invoice Transaction and Sale Invoice Transaction.
+
 2010-09-08 yo
 * Forgot to add .append. Sorry.
 
