@@ -1104,7 +1104,7 @@ form#create-user table tbody tr:last-child td {\n
 }\n
 \n
 select[name="field_your_language"] {\n
-  background: none repeat scroll 0 0 #FFF;\n
+  background-color: transparent;\n
   border: 0 none;\n
 }\n
 \n
