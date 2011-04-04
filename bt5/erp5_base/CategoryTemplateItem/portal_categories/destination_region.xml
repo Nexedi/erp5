@@ -48,9 +48,7 @@
         <item>
             <key> <string>acquisition_object_id</string> </key>
             <value>
-              <tuple>
-                <string>A virtual Category which allows to access the region of destination value of a Movement as if it were a category.</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -83,9 +81,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>A virtual Category which allows to access the region of destination value of a Movement as if it were a category.</string> </value>
         </item>
         <item>
             <key> <string>fallback_base_category</string> </key>
