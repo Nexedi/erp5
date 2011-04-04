@@ -57,7 +57,7 @@ class ServiceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
 
   def build(self, business_configuration):
     portal = self.getPortalObject()
-    for service_id, service_title in self.getConfigurationList():
+    for service_id, service_title in iter(self.getConfigurationListList()):
       document = getattr(portal.service_module, service_id, None)
       if document is None:
         document = portal.service_module.newContent(portal_type='Service',
