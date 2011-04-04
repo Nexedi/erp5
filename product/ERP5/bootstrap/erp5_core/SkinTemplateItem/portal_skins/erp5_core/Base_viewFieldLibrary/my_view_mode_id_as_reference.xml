@@ -18,7 +18,9 @@
         <item>
             <key> <string>delegated_message_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>external_validator_failed</string>
+              </list>
             </value>
         </item>
         <item>
@@ -28,7 +30,12 @@
         <item>
             <key> <string>message_values</string> </key>
             <value>
-              <dictionary/>
+              <dictionary>
+                <item>
+                    <key> <string>external_validator_failed</string> </key>
+                    <value> <string>The provided id must have the right suffix for its type.</string> </value>
+                </item>
+              </dictionary>
             </value>
         </item>
         <item>
