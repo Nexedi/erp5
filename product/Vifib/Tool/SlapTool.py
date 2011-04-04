@@ -389,7 +389,7 @@ class SlapTool(BaseTool):
         elif movement.getSimulationState() == 'stopped':
           slap_partition._requested_state = 'stopped'
         elif movement.getSimulationState() == 'delivered':
-          pass
+          slap_partition._requested_state = 'destroyed'
         else:
           raise NotImplementedError, "Unexpected state %s" % \
                                      movement.getSimulationState()
