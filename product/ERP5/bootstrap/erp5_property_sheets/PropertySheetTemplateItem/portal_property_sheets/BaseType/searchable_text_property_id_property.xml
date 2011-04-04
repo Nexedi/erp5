@@ -59,7 +59,7 @@
         </item>
         <item>
             <key> <string>property_default</string> </key>
-            <value> <string>python: [\'title\', \'description\', \'id\', \'reference\', \'short_title\']</string> </value>
+            <value> <string>python: [\'title\', \'description\', \'reference\', \'short_title\']</string> </value>
         </item>
       </dictionary>
     </pickle>

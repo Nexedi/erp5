@@ -1,2 +1,5 @@
+2011-04-24 Kazuhiko
+* remove 'id' from BaseType/searchable_text_property_id_property's default.
+
 2011-02-24 Kazuhiko
 * make the default of 'language' property an empty string instead of None, so that we can make a query like language in ('en', '').
