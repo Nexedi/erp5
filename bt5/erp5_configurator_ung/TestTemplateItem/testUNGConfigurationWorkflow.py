@@ -64,6 +64,7 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
                        'erp5_web_ung_role')
 
   DEFAULT_SEQUENCE_LIST = """
+     stepSetupConversionServer
      stepCreateBusinessConfiguration
      stepSetUNGWorkflow
      stepConfiguratorNext
@@ -113,6 +114,13 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
   def afterSetUp(self):
     self.portal.portal_templates.updateRepositoryBusinessTemplateList(
                            ['http://www.erp5.org/dists/snapshot/bt5/'])
+
+  def stepSetupConversionServer(self, sequence=None, sequence_list=None, **kw):
+    """ Setup conversion server in portal_preference """
+    preference = self.portal.portal_preferences.newContent(portal_type="System Preference")
+    preference.setPreferredOoodocServerAddress("localhost")
+    preference.setPreferredOoodocServerPortNumber(8011)
+    preference.enable()
 
   def stepCreateBusinessConfiguration(self, sequence=None, sequence_list=None, **kw):
     """ Create one Business Configuration """

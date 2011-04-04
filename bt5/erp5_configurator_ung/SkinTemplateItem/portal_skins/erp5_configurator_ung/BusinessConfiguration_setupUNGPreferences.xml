@@ -103,9 +103,7 @@ system_prefs = dict(\n
       \'-_.]+-[a-zA-Z0-9-_.]+)(|-(?P<version>[0-9a-zA-Z.]+))(|-(?P<language>[a\'\n
       \'-z]{2})[^-]*)?\',\n
   preferred_synchronous_metadata_discovery = True,\n
-  preferred_redirect_to_document = True,\n
-  preferred_ooodoc_server_address = "localhost",\n
-  preferred_ooodoc_server_port_number = 8011)\n
+  preferred_redirect_to_document = True)\n
 \n
 configuration_save.addConfigurationItem(\'System Preference Configurator Item\',\n
     object_id = \'default_configurator_system_preference\',\n
