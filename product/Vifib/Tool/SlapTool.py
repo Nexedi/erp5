@@ -415,7 +415,6 @@ class SlapTool(BaseTool):
 
       elif movement.getResource() == \
               portal_preferences.getPreferredInstanceCleanupResource():
-
         if movement.getSimulationState() in ('confirmed', 'started', 'stopped'):
           slap_partition._need_modification = 1
 
@@ -721,25 +720,14 @@ class SlapTool(BaseTool):
       service = portal.restrictedTraverse(service_relative_url)
       service_uid_list.append(service.getUid())
 
-    # Get associated software release
-    state_list = []
-    state_list.extend(portal.getPortalCurrentInventoryStateList())
-    state_list.extend(portal.getPortalReservedInventoryStateList())
-    state_list.extend(portal.getPortalTransitInventoryStateList())
-
     # Use getTrackingList
-    catalog_result = portal.portal_catalog(
+    return portal.portal_catalog.getResultValue(
       portal_type='Sale Packing List Line',
-      simulation_state=state_list,
       aggregate_relative_url=computer_partition_document.getRelativeUrl(),
       default_resource_uid=service_uid_list,
       sort_on=(('movement.start_date', 'DESC'),),
       limit=1,
     )
-    if len(catalog_result):
-      return catalog_result[0].getObject()
-    else:
-      return None
 
   def _reportComputerUsage(self, computer, usage):
     """Stores usage report of a computer."""
