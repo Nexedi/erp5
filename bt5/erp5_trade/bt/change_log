@@ -1,3 +1,6 @@
+2011-04-04 yusei
+* Fix tales expression on property "enabled" of my_view_mode_payment_date. This field cannot be displayed.
+
 2011-03-30 nicolas
 * Add internal trade conditions
 
