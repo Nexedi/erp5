@@ -1006,6 +1006,97 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
 
           self.assertEquals(object.showDict().get(property_name), v)
 
+  def stepCheckSaleTradeCondition(self, sequence=None, sequence_list=None, **kw):
+    """
+      Check if Sale Trade Condition object has been created.
+    """
+    business_configuration = sequence.get('business_configuration')
+    sale_trade_condition_list = \
+                self.getBusinessConfigurationObjectList(business_configuration,
+                                                        'Sale Trade Condition')
+    self.assertEquals(len(sale_trade_condition_list), 1)
+    sale_trade_condition = sale_trade_condition_list[0]
+
+    self.assertEquals("General Sale Trade Condition",
+                                              sale_trade_condition.getTitle())
+    self.assertEquals("STC-General", sale_trade_condition.getReference())
+
+    self.assertNotEquals(None, sale_trade_condition.getEffectiveDate())
+    self.assertNotEquals(None, sale_trade_condition.getExpirationDate())
+
+    # Check relation with Business Process
+    business_process_list = \
+               self.getBusinessConfigurationObjectList(business_configuration,
+                                                            'Business Process')
+    self.assertEquals(len(business_process_list), 1)
+    business_process = business_process_list[0]
+    self.assertEquals(business_process,
+                                    sale_trade_condition.getSpecialiseValue())
+
+    # Check relation with Organisation
+    organisation_list = \
+                self.getBusinessConfigurationObjectList(business_configuration,
+                                                                'Organisation')
+    organisation = organisation_list[0]
+
+    self.assertEquals(organisation, sale_trade_condition.getSourceValue())
+    self.assertEquals(organisation,
+                                  sale_trade_condition.getSourceSectionValue())
+
+    # Check relation with Currency
+    currency_list = \
+                self.getBusinessConfigurationObjectList(business_configuration,
+                                                                    'Currency')
+    currency = currency_list[0]
+    self.assertEquals(currency.getRelativeUrl(),
+                                       sale_trade_condition.getPriceCurrency())
+
+  def stepCheckPurchaseTradeCondition(self, sequence=None, sequence_list=None, **kw):
+    """
+      Check if Purchase Trade Condition object has been created.
+    """
+    business_configuration = sequence.get('business_configuration')
+    purchase_trade_condition_list = \
+                self.getBusinessConfigurationObjectList(business_configuration,
+                                                        'Purchase Trade Condition')
+    self.assertEquals(len(purchase_trade_condition_list), 1)
+    purchase_trade_condition = purchase_trade_condition_list[0]
+
+    self.assertEquals("General Purchase Trade Condition",
+                                              purchase_trade_condition.getTitle())
+    self.assertEquals("PTC-General", purchase_trade_condition.getReference())
+
+    self.assertNotEquals(None, purchase_trade_condition.getEffectiveDate())
+    self.assertNotEquals(None, purchase_trade_condition.getExpirationDate())
+
+    # Check relation with Business Process
+    business_process_list = \
+               self.getBusinessConfigurationObjectList(business_configuration,
+                                                            'Business Process')
+    self.assertEquals(len(business_process_list), 1)
+    business_process = business_process_list[0]
+    self.assertEquals(business_process,
+                                    purchase_trade_condition.getSpecialiseValue())
+
+    # Check relation with Organisation
+    organisation_list = \
+                self.getBusinessConfigurationObjectList(business_configuration,
+                                                                'Organisation')
+    organisation = organisation_list[0]
+
+    self.assertEquals(organisation,
+                               purchase_trade_condition.getDestinationValue())
+    self.assertEquals(organisation,
+                        purchase_trade_condition.getDestinationSectionValue())
+
+    # Check relation with Currency
+    currency_list = \
+                self.getBusinessConfigurationObjectList(business_configuration,
+                                                                    'Currency')
+    currency = currency_list[0]
+    self.assertEquals(currency.getRelativeUrl(),
+                                       purchase_trade_condition.getPriceCurrency())
+
   @expectedFailure
   def stepCheckQuantityConversion(self, sequence=None, sequence_list=None, **kw):
     resource = self.portal.product_module.newContent(
@@ -1156,6 +1247,8 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
       stepCheckRuleValidation
       stepCheckBusinessProcess
       stepCheckSolver
+      stepCheckSaleTradeCondition
+      stepCheckPurchaseTradeCondition
       """
     # XXX (lucas): expected failure, it must be fixed in ERP5 core.
     #sequence_string += """
