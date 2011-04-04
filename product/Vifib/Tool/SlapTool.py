@@ -407,6 +407,8 @@ class SlapTool(BaseTool):
           slap_partition._need_modification = 1
         elif movement.getSimulationState() == 'delivered':
           slap_partition._requested_state = 'stopped'
+        elif movement.getSimulationState() == 'cancelled':
+          slap_partition._requested_state = 'destroyed'
         else:
           raise NotImplementedError, "Unexpected state %s" % \
                                      movement.getSimulationState()
