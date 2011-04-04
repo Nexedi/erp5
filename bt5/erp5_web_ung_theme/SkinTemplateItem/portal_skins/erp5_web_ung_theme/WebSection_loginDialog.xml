@@ -76,7 +76,7 @@
                      <input type="submit" \n
                             name="logged_in:method"\n
                             class="submit" \n
-                            value="Name" i18n:translate="" i18n:domain="ui">\n
+                            value="Login" i18n:translate="" i18n:domain="ui">\n
                    </td>\n
                  </table>\n
                </td>\n

@@ -111,6 +111,7 @@
                     <key> <string>navigation navigation-right</string> </key>
                     <value>
                       <list>
+                        <string>your_language</string>
                         <string>your_login_box</string>
                       </list>
                     </value>

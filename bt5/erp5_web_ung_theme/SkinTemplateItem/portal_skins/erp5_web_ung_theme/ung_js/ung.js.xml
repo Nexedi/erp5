@@ -34,6 +34,15 @@ function getCurrentObjectUrl(){\n
   return window.location.href.split("?")[0];\n
 }\n
 \n
+function changeLanguage(language){\n
+  $.ajax({\n
+     url: "setDefaultAvailableLanguage?value=" + language,\n
+     async: false,\n
+     success: function(){\n
+       window.location.reload();\n
+     },\n
+  });\n
+}\n
 function getWebEditorName(){\n
   currentUrlSplitted = window.location.href.split("?")[0].split("/");\n
   return currentUrlSplitted[currentUrlSplitted.length-1];\n

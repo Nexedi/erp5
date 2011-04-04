@@ -1101,6 +1101,15 @@ form#create-user table tbody tr:last-child td {\n
   text-decoration: underline;\n
   font-size: 8pt;\n
   cursor: pointer;\n
+}\n
+\n
+select[name="field_your_language"] {\n
+  background: none repeat scroll 0 0 #FFF;\n
+  border: 0 none;\n
+}\n
+\n
+div.navigation-right fieldset.widget div {\n
+  float: left;\n
 }
 
 ]]></string> </value>

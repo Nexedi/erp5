@@ -1,3 +1,6 @@
+2011-04-04 gabriel
+* Add field to change the language of Web Site
+
 2011-02-10 gabriel
 * Add script ERP5Site_loadEmailThreadData to load the data of selected email. This script is used to open one email in the current page.
 * Refactor ERP5Site_createNewEmailThread to do not create a new email if  it already exist one Email Thread created.
