@@ -40,6 +40,8 @@ import zope.interface
 
 from zLOG import LOG
 
+_marker = object()
+
 class BusinessProcess(Path, XMLObject):
   """The BusinessProcess class is a container class which is used
   to describe business processes in the area of trade, payroll
@@ -195,7 +197,7 @@ class BusinessProcess(Path, XMLObject):
   # IBusinessLinkProcess implementation
   security.declareProtected(Permissions.AccessContentsInformation, 'getBusinessLinkValueList')
   def getBusinessLinkValueList(self, trade_phase=None, context=None,
-                               predecessor=None, successor=None, **kw):
+                               predecessor=_marker, successor=_marker, **kw):
     """Returns all Business Links of the current BusinessProcess which
     are matching the given trade_phase and the optional context.
 
@@ -223,9 +225,11 @@ class BusinessProcess(Path, XMLObject):
     # First, collect business links which can be applicable to a given context.
     business_link_list = []
     for business_link in original_business_link_list:
-      if predecessor is not None and business_link.getPredecessor() != predecessor:
+      if (predecessor is not _marker and
+          business_link.getPredecessor() != predecessor):
         continue # Filter our business link which predecessor does not match
-      if successor is not None and business_link.getSuccessor() != successor:
+      if (successor is not _marker and
+          business_link.getSuccessor() != successor):
         continue # Filter our business link which successor does not match
       if trade_phase is not None and not trade_phase.intersection(
                                    business_link.getTradePhaseList()):
