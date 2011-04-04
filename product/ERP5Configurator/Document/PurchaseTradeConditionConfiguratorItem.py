@@ -69,7 +69,7 @@ class PurchaseTradeConditionConfiguratorItem(ConfiguratorItemMixin, XMLObject):
 
     purchase_trade_condition = portal.purchase_trade_condition_module.newContent(
                                            portal_type="Purchase Trade Condition",
-                                           referece=self.getReference(),
+                                           reference=self.getReference(),
                                            title=self.getTitle(),
                                            effective_date=DateTime() - 1,
                                            expiration_date=DateTime() + 10 * 365)
