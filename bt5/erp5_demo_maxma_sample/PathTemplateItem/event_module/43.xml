@@ -80,9 +80,9 @@
             <value>
               <tuple>
                 <string>resource/service_module/event_information</string>
-                <string>source/person_module/6</string>
                 <string>destination/person_module/11</string>
                 <string>follow_up/campaign_module/1</string>
+                <string>source/person_module/3</string>
               </tuple>
             </value>
         </item>
@@ -124,8 +124,8 @@
                 </tuple>
                 <state>
                   <tuple>
-                    <float>1295868480.0</float>
-                    <string>GMT+1</string>
+                    <float>1295879280.0</float>
+                    <string>GMT-2</string>
                   </tuple>
                 </state>
               </object>
@@ -177,10 +177,7 @@
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <tuple>
-        <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
-        <tuple/>
-      </tuple>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
     </pickle>
     <pickle>
       <tuple>
@@ -216,7 +213,7 @@
                 <value>
                   <object>
                     <klass>
-                      <global name="DateTime" module="DateTime.DateTime"/>
+                      <global id="3.1" name="DateTime" module="DateTime.DateTime"/>
                     </klass>
                     <tuple>
                       <none/>
@@ -225,6 +222,51 @@
                       <tuple>
                         <float>1299512613.05</float>
                         <string>GMT+1</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>909.22126.11454.59477</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="3.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1301934238.71</float>
+                        <string>GMT-3</string>
                       </tuple>
                     </state>
                   </object>
