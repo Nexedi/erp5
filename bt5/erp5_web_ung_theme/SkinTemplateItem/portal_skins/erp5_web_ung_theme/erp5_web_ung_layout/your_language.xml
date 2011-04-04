@@ -288,7 +288,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>True</string> </value>
+            <value> <string>python: True</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -301,7 +301,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>True</string> </value>
+            <value> <string>python: True</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -314,7 +314,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:map(lambda x: (x, x), here.Localizer.get_supported_languages())</string> </value>
+            <value> <string>python:map(lambda x: (x,x), here.Localizer.get_supported_languages())</string> </value>
         </item>
       </dictionary>
     </pickle>
