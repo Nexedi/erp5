@@ -55,10 +55,6 @@
 translateString = context.Base_translateString\n
 specialise_value = context.getSpecialiseValue()\n
 \n
-#XXX `model` is not used.\n
-model = None\n
-if specialise_value is not None:\n
-  model = specialise_value.getEffectiveModel(start_date=context.getStartDate(), stop_date=context.getStopDate())\n
 \n
 def getFieldAsString(field):\n
   return \', \'.join(getFieldAsLineList(field))\n
@@ -232,6 +228,7 @@ if destination_administration is None:\n
 if destination_administration is None:\n
   destination_administration = EmptyOrganisation()\n
 \n
+social_organisation = getSocialOrganisationValue()\n
 \n
 data_dict = {\n
   \'source_section_title\': source_section.getProperty(\'corporate_name\') or\\\n
@@ -355,10 +352,10 @@ data_dict = {\n
       context.getDestinationSectionValue().getProperty(\'activity_code\') or \'\'),\n
   \'destination_section_social_codeid\': getSocialCodeId(context.getDestinationSection() and\n
       context.getDestinationSectionValue().getProperty(\'social_code\') or \'\'),\n
-  \'destination_section_social_company_title\' : getSocialOrganisationValue() is not None and getSocialOrganisationValue().getTitle() or \'\',\n
-  \'destination_section_social_address\': getSocialOrganisationValue() is not None and getOneLineAddress(\\\n
-                                            getSocialOrganisationValue().getDefaultAddressText(),\n
-                                            getSocialOrganisationValue().getDefaultAddressRegionTitle()) or \'\',\n
+  \'destination_section_social_company_title\' : social_organisation is not None and social_organisation.getTitle() or \'\',\n
+  \'destination_section_social_address\': social_organisation is not None and getOneLineAddress(\\\n
+                                            social_organisation.getDefaultAddressText(),\n
+                                            social_organisation.getDefaultAddressRegionTitle()) or \'\',\n
   \'destination_administration_title\':\\\n
     destination_administration.getProperty(\'corporate_name\') or \\\n
                                 destination_administration.getTitle(),\n

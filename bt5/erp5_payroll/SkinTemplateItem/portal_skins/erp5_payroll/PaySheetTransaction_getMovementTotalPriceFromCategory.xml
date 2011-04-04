@@ -55,17 +55,26 @@
   category_list parameter is in variation_category_list of the PaySheet line \n
   and wich has a base_contribution in the base_contribution_list\n
 \'\'\'\n
+if excluded_reference_list is None:\n
+  excluded_reference_list = []\n
 \n
 total_price = 0\n
 movement_list = context.getMovementList(portal_type=(\'Pay Sheet Line\', \'Pay Sheet Cell\'))\n
 for movement in movement_list:\n
-  if base_contribution is not None and movement.isMemberOf(base_contribution):\n
+  # Reference must be checked on line\n
+  if "Cell" in movement.getPortalType():\n
+    line = movement.getParentValue()\n
+  else:\n
+    line = movement\n
+  if line.getReference() in excluded_reference_list:\n
+    continue\n
+  if base_contribution is not None and movement.isMemberOf(base_contribution) or no_base_contribution:\n
 \n
     # base_contribution is mandatory, but not contribution_share. If contribution_share is\n
     # given, search with it, if not, care only about base_contribution\n
     if contribution_share is not None and movement.isMemberOf(contribution_share):\n
       total_price += movement.getTotalPrice()\n
-    elif contribution_share is None or len(movement.getContributionShareList()) == 0:\n
+    elif include_empty_contribution and (contribution_share is None or len(movement.getContributionShareList()) == 0):\n
       total_price += movement.getTotalPrice()\n
 \n
 \n
@@ -78,7 +87,7 @@ return amount\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>base_contribution=None, contribution_share=None</string> </value>
+            <value> <string>base_contribution=None, contribution_share=None, no_base_contribution=False, include_empty_contribution=True, excluded_reference_list=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

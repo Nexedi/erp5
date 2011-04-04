@@ -56,6 +56,9 @@
   the start_date of this current paysheet. Return 0.0 if there is no amount.\n
 \'\'\'\n
 \n
+# XXX-Aurel : this script is currently not working as paysheet transaction line/cell\n
+# are not in stock table due to the lack of source/destination definition\n
+\n
 if paysheet is None:\n
     paysheet = context\n
 \n
