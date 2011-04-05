@@ -36,7 +36,7 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<tal:block tal:define="current_language python: here.getAvailableLanguage()">\n
+<tal:block tal:define="current_language python: here.getWebSiteValue().getAvailableLanguage()">\n
 <div id="select_language">\n
   <li>\n
     <span id="available_language" tal:content="python: current_language">Current Language</span>\n
