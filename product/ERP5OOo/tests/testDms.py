@@ -1480,7 +1480,7 @@ class TestDocument(TestDocumentMixin):
     # Continue the test with image resizing support
     image_display = 'large'
     # Add url parameters
-    html_content = '<p><img src="%s?display=%s&quality=75"/></p>' % \
+    html_content = '<p><img src="%s?format=jpeg&amp;display=%s&amp;quality=75"/></p>' % \
                                               (image_reference, image_display)
     web_page.edit(text_content=html_content)
     mime_type, odt_archive = web_page.convert('odt')
