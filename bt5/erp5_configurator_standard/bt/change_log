@@ -1,4 +1,7 @@
-2011-04-01 lucas
+2011-04-04 lucas
+* Added a new test to check if simulation is working as expected.
+
+2011-04-04 lucas
 * Added new tests to check Purchase Trade Condition and Sale Trande Condition.
 
 2011-04-01 lucas

@@ -1165,6 +1165,95 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     self.assertEquals(True,
                       'InventoryConstraint' in inventory.getTypePropertySheetList())
 
+
+  def stepCheckSaleOrderSimulation(self, sequence=None, sequence_list=None, **kw):
+    """
+      After the configuration we need to make sure that Simulation for
+      Sale Order is working as expected.
+    """
+    # stepCreateSaleOrders
+    portal = self.getPortal()
+    module = portal.sale_order_module
+    business_configuration = sequence.get('business_configuration')
+    sale_trade_condition = \
+                self.getBusinessConfigurationObjectList(business_configuration,
+                                                     'Sale Trade Condition')[0]
+    business_process = \
+                self.getBusinessConfigurationObjectList(business_configuration,
+                                                         'Business Process')[0]
+
+    destination_decision = portal.portal_catalog.getResultValue(
+                                       portal_type='Person',
+                                       reference=self.sales_manager_reference)
+    destination_administration = portal.portal_catalog.getResultValue(
+                                     portal_type='Person', 
+                                     reference=self.purchase_manager_reference)
+    resource = portal.product_module.newContent(portal_type='Product',
+                                quantity_unit='unit/piece',
+                                individual_variation_base_category='variation',
+                                base_contribution='base_amount/taxable')
+    self.stepTic()
+    resource.validate()
+    self.stepTic()
+
+    start_date = sale_trade_condition.getEffectiveDate() + 1
+    stop_date = sale_trade_condition.getExpirationDate() - 1
+    order = module.newContent(
+       portal_type='Sale Order',
+       specialise=(sale_trade_condition.getRelativeUrl(),),
+       destination_decision=destination_decision.getRelativeUrl(),
+       destination_administration=destination_administration.getRelativeUrl(),
+       start_date=start_date,
+       stop_date=stop_date)
+    self.stepTic()
+
+    # Set the rest through the trade condition.
+    order.SaleOrder_applySaleTradeCondition()
+    self.stepTic()
+
+    order.newContent(portal_type='Sale Order Line',
+                     resource=resource.getRelativeUrl(),
+                     quantity=1.0)
+    self.stepTic()
+
+    # stepPlanSaleOrders
+    self.assertEquals(order.getSimulationState(), 'draft')
+    order.plan()
+    self.stepTic()
+    self.assertEquals(order.getSimulationState(), 'planned')
+
+    # stepOrderSaleOrders
+    order.order()
+    self.stepTic()
+    self.assertEquals(order.getSimulationState(), 'ordered')
+
+    # stepConfirmSaleOrders
+    order.confirm()
+    self.stepTic()
+    self.assertEquals(order.getSimulationState(), 'confirmed')
+
+    # stepCheckSaleOrderSimulation
+    causality_list = order.getCausalityRelatedValueList(portal_type='Applied Rule')
+    self.assertEquals(len(causality_list), 1)
+    applied_rule = causality_list[0]
+    self.assertEquals(applied_rule.getPortalType(), 'Applied Rule')
+    rule = applied_rule.getSpecialiseValue()
+    self.assertNotEquals(rule, None)
+    self.assertEquals(rule.getReference(), 'default_order_rule')
+    self.assertEquals(applied_rule.objectCount(), 1)
+
+    simulation_movement = applied_rule.objectValues()[0]
+    self.assertEquals(simulation_movement.getPortalType(),
+                                                      'Simulation Movement')
+    self.assertEquals(simulation_movement.getQuantity(), 1.0)
+    self.assertEquals(simulation_movement.getResourceValue(), resource)
+
+    self.assertNotEquals(simulation_movement.getCausality(), None)
+    self.assertEquals(simulation_movement.getDestinationDecisionValue(),
+                                                       destination_decision)
+    self.assertEquals(simulation_movement.getDestinationAdministrationValue(),
+                                                 destination_administration)
+
   def test_security_standard_workflow_france(self):
     """ Test the after configuration script """
     sequence_list = SequenceList()
@@ -1249,6 +1338,7 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
       stepCheckSolver
       stepCheckSaleTradeCondition
       stepCheckPurchaseTradeCondition
+      stepCheckSaleOrderSimulation
       """
     # XXX (lucas): expected failure, it must be fixed in ERP5 core.
     #sequence_string += """
