@@ -28,7 +28,9 @@
         </item>
         <item>
             <key> <string>raw</string> </key>
-            <value> <string>div.main-right {\n
+            <value> <string encoding="cdata"><![CDATA[
+
+div.main-right {\n
   border-left: 0px !important;\n
   width: 85.6% !important;\n
 }\n
@@ -151,19 +153,19 @@ div#faddbtn.fbutton span.addcal:hover {\n
 }\n
 \n
 div#faddbtn.fbutton span.addcal {\n
-  background: url("http://localhost:18080/erp5/ung_images/button_background.png") repeat scroll 0 0 transparent;\n
+  background: url(\'<dtml-var expr="portal_url()">/ung_images/button_background.png\') repeat scroll 0 0 transparent;\n
   border: 1px solid #BBBBBB;\n
   padding: 2px 4px;\n
   background-color: #EDF1D5;\n
 }\n
 \n
 input#bbit-cal-quickAddBTN {\n
-  background: url("http://localhost:18080/erp5/ung_images/button_background.png") repeat scroll 0 0 transparent;\n
+  background: url(\'<dtml-var expr="portal_url()">/ung_images/button_background.png\') repeat scroll 0 0 transparent;\n
   border: 1px solid #BBBBBB;\n
 }\n
 \n
 div.header-left fieldset.widget div.field input[type="submit"] {\n
-  background: url("http://localhost:18080/erp5/ung_images/button_background.png") repeat scroll 0 0 transparent;\n
+  background: url(\'<dtml-var expr="portal_url()">/ung_images/button_background.png\') repeat scroll 0 0 transparent;\n
   border: 1px solid #BBBBBB;\n
   padding-top: 1px;\n
   position: relative;\n
@@ -271,7 +273,7 @@ div#display-datetime.fbutton:hover, span#text-datetime:hover {\n
 }\n
 \n
 input#bbit-cal-quickAddBTN {\n
-  background: url("http://localhost:18080/erp5/ung_images/button_background.png") repeat scroll 0 0 transparent;\n
+  background: url(\'<dtml-var expr="portal_url()">/ung_images/button_background.png\') repeat scroll 0 0 transparent;\n
   border: 1px solid #BBBBBB;\n
 }\n
 \n
@@ -287,7 +289,9 @@ td.cb-value select {\n
 a.calendar {\n
   color: #000;\n
   text-decoration: none;\n
-}</string> </value>
+}
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
