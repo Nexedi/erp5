@@ -568,7 +568,8 @@ class ERP5TypeInformation(XMLObject,
       ec = createExpressionContext(ob)
       other_action = None
       for action in self.getActionList():
-        if action['id'] == view or action['category'].endswith('_' + view):
+        if action['id'] == view or (action['category'] is not None and
+                                    action['category'].endswith('_' + view)):
           if action.test(ec):
             break
         elif other_action is None:
