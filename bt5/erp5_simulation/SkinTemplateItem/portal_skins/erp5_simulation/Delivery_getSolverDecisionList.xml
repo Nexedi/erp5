@@ -60,8 +60,6 @@ for i in solver_list:\n
     solver_process = i\n
     break\n
 \n
-if not  context.getPortalObject().portal_solver_processes.isDivergent(context):\n
-  return []\n
 \n
 if solver_process is None:\n
   solver_process = context.getPortalObject().portal_solver_processes.newSolverProcess(context)\n
