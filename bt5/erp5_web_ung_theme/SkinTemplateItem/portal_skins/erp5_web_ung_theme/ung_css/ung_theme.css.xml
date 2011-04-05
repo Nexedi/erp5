@@ -450,6 +450,10 @@ div.toolbar button, div.gadget-action input#upload {\n
   color:#8e8e8e;\n
   margin-top:-5px;\n
 }\n
+\n
+div#select_language {\n
+  color: #20C;\n
+}\n
 .menu_create_object, div#select_language {\n
   font-family: arial,sans-serif;\n
   font-size:14px;\n
