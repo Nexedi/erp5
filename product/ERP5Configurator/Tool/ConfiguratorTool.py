@@ -481,9 +481,7 @@ class ConfiguratorTool(BaseTool):
       self.REQUEST.set(key, value)
 
     bc = self.restrictedTraverse(business_configuration)
-    # XXX FIXME we just have to build once.
     bc.build()
-    bc.install()
 
     finalize_method = getattr(self, 'ConfiguratorTool_finalizeInstallation', None)
     if finalize_method is not None and callable(finalize_method):

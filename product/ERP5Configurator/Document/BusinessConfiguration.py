@@ -382,7 +382,7 @@ class BusinessConfiguration(Item):
       This is the actual implementation which can be used from workflow 
       actions and Configurator requets
     """
-    kw = dict(tag="start", 
+    kw = dict(tag="start_configuration_%s" % self.getId(), 
               after_method_id=["recursiveImmediateReindexObject",
                                'immediateReindexObject'])
     start = time.time()
@@ -404,6 +404,7 @@ class BusinessConfiguration(Item):
                                                              time.time() - start))
 
     if execute_after_setup_script:
+      kw["tag"] = "final_configuration_step_%s" % self.getId()
       kw["after_method_id"] = ["build", 'immediateReindexObject', \
                                "recursiveImmediateReindexObject"]
 
@@ -411,6 +412,9 @@ class BusinessConfiguration(Item):
       LOG("Business Configuration", INFO,
           "After setup script called (force) for %s : %s" %
                     (self.getRelativeUrl(), self.getSpecialise()))
+
+    if self.portal_workflow.isTransitionPossible(self, 'install'):
+      self.activate(after_tag=kw["tag"]).install()
 
   security.declareProtected(Permissions.ModifyPortalContent, 'resetBusinessConfiguration')
   def resetBusinessConfiguration(self):
