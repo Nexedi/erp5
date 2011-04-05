@@ -69,7 +69,7 @@ if ung_web_site is not None and isTransitionPossible(ung_web_site, \'publish\', 
     ung_web_site.publish()\n
 \n
 language = context.getGlobalConfigurationAttr("default_available_language")\n
-context.log(language)\n
+\n
 ung_web_site.setDefaultAvailableLanguage(language)\n
 for web_section in ung_web_site.contentValues(portal_types=\'Web Section\'):\n
   if isTransitionPossible(web_section, \'publish\', None):\n

@@ -64,7 +64,6 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
                        'erp5_web_ung_role')
 
   DEFAULT_SEQUENCE_LIST = """
-     stepSetupConversionServer
      stepCreateBusinessConfiguration
      stepSetUNGWorkflow
      stepConfiguratorNext
@@ -101,6 +100,8 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
      stepTic
      stepCheckUNGWebSiteAfterInstallation
      stepCheckSystemPreferenceAfterInstallation
+     stepCheckUserPreferenceAfterInstallation
+     stepTic
   """
 
   def getBusinessTemplateList(self):
@@ -114,13 +115,13 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
   def afterSetUp(self):
     self.portal.portal_templates.updateRepositoryBusinessTemplateList(
                            ['http://www.erp5.org/dists/snapshot/bt5/'])
-
-  def stepSetupConversionServer(self, sequence=None, sequence_list=None, **kw):
-    """ Setup conversion server in portal_preference """
-    preference = self.portal.portal_preferences.newContent(portal_type="System Preference")
-    preference.setPreferredOoodocServerAddress("localhost")
-    preference.setPreferredOoodocServerPortNumber(8011)
-    preference.enable()
+    if not self.portal.portal_catalog.getResultValue(portal_types="System Preference",
+                                                     title="global_system_preference"):
+      preference = self.portal.portal_preferences.newContent(portal_type="System Preference")
+      preference.setTitle("global_system_preference")
+      preference.setPreferredOoodocServerAddress("localhost")
+      preference.setPreferredOoodocServerPortNumber(8011)
+      preference.enable()
 
   def stepCreateBusinessConfiguration(self, sequence=None, sequence_list=None, **kw):
     """ Create one Business Configuration """
@@ -310,10 +311,26 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
 
   def stepCheckSystemPreferenceAfterInstallation(self, sequence=None, sequence_list=None, **kw):
     """ Check System Preference"""
+    import ipdb;ipdb.set_trace()
     system_preference = self.portal.portal_catalog.getResultValue(portal_type="System Preference")
     self.assertEquals(system_preference.getPreferredOoodocServerPortNumber(), 8011)
     self.assertEquals(system_preference.getPreferredOoodocServerAddress(), "localhost")
 
+  def stepCheckUserPreferenceAfterInstallation(self, sequence=None, sequence_list=None, **kw):
+    """ Check System Preference"""
+    portal_catalog = portal.portal_catalog
+    preference = portal_catalog.getResultValue(portal_type="Preference",
+                                               reference='Preference for Person Assignor')
+    self.assertEquals(preference.getPreferenceState(), "enabled")
+    preference = portal_catalog.getResultValue(portal_type="Preference",
+                                               title='Preference for Person Assignee')
+    self.assertEquals(preference.getPreferenceState(), "enabled")
+    preference = portal_catalog.getResultValue(portal_type="Preference",
+                                               title='Preference for Person Creator')
+    self.assertEquals(preference.getPreferenceState(), "enabled")
+    preference = portal_catalog.getResultValue(portal_type="Preference",
+                                               id='ung_reference')
+    self.assertEquals(preference.getPreferenceState(), "enabled")
 
 class TestUNGConfiguratorWorkflowFranceLanguage(TestUNGConfiguratorWorkflowMixin):
   """
@@ -396,6 +413,7 @@ class TestUNGConfiguratorWorkflowFranceLanguage(TestUNGConfiguratorWorkflowMixin
     self.assertEquals(assignment.getValidationState(), "open")
     self.assertEquals(assignment.getFunction(), "function/ung_user")
 
+
 class TestUNGConfiguratorWorkflowBrazilLanguage(TestUNGConfiguratorWorkflowMixin):
   """
     Test UNG Configuration Workflow
@@ -445,7 +463,7 @@ class TestUNGConfiguratorWorkflowBrazilLanguage(TestUNGConfiguratorWorkflowMixin
     self._stepSetupMultipleUserAccountThree(sequence, user_list)
 
   def stepCheckUNGWebSiteAfterInstallation(self, sequence=None, sequence_list=None, **kw):
-    """ Check if UNG Web Site is published and your language"""
+    """ Check if UNG Web Site is published and your language """
     ung_web_site = self.portal.web_site_module.ung
     portal_catalog = self.portal.portal_catalog
     self.assertEquals(ung_web_site.getValidationState(),
