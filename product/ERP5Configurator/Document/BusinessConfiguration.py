@@ -409,9 +409,6 @@ class BusinessConfiguration(Item):
                                "recursiveImmediateReindexObject"]
 
       self.activate(**kw).ERP5Site_afterConfigurationSetup()
-      LOG("Business Configuration", INFO,
-          "After setup script called (force) for %s : %s" %
-                    (self.getRelativeUrl(), self.getSpecialise()))
 
     if self.portal_workflow.isTransitionPossible(self, 'install'):
       self.activate(after_tag=kw["tag"]).install()
