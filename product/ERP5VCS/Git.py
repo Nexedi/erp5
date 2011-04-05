@@ -271,7 +271,7 @@ class Git(WorkingCopy):
                              GIT_AUTHOR_EMAIL=email, GIT_COMMITTER_EMAIL=email)
     else:
       env = None
-    self.git(*args, env=env)
+    self.git(env=env, *args)
     self.clean()
     try:
       if push:
