@@ -73,7 +73,7 @@ configuration_save.addConfigurationItem("Purchase Trade Condition Configurator I
 \n
 # setup default security\n
 configuration_save.addConfigurationItem("Role Configurator Item", \n
-                                        filename="portal_types_roles_standard.ods",\n
+                                        filename="standard_portal_types_roles.ods",\n
                                         group_id = \'group/%s\' %group_id)\n
 \n
 # setup Solvers\n
