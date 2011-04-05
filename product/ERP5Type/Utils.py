@@ -79,11 +79,13 @@ def simple_decorator(decorator):
     g.__name__ = f.__name__
     g.__doc__ = f.__doc__
     g.__dict__.update(f.__dict__)
+    g._original = f # for tab_completion navigation in IPython
     return g
   # Now a few lines needed to make simple_decorator itself
   # be a well-behaved decorator.
   new_decorator.__name__ = decorator.__name__
   new_decorator.__doc__ = decorator.__doc__
+  new_decorator._original = decorator # for tab_completion navigation in IPython
   new_decorator.__dict__.update(decorator.__dict__)
   return new_decorator
 
