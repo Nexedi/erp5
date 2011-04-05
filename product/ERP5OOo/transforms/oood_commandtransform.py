@@ -124,17 +124,18 @@ class OOOdCommandTransform(commandtransform):
                                      'mimetypes_registry').lookup(content_type)
 
           format = image_parameter_dict.pop('format', None)
-          for mimetype_object in mimetype_list:
-            if mimetype_object.extensions:
-              format = mimetype_object.extensions[0]
-              break
-            elif mimetype_object.globs:
-              format = mimetype_object.globs.strip('*.')
-              break
+          if not format:
+            for mimetype_object in mimetype_list:
+              if mimetype_object.extensions:
+                format = mimetype_object.extensions[0]
+                break
+              elif mimetype_object.globs:
+                format = mimetype_object.globs.strip('*.')
+                break
           if getattr(image, 'meta_type', None) == 'ERP5 Image':
             #ERP5 API
             # resize image according parameters
-            mime, image_data = image.convert(None, **image_parameter_dict)
+            mime, image_data = image.convert(format, **image_parameter_dict)
             image = OFSImage(image.getId(), image.getTitle(), image_data)
 
           # image should be OFSImage
