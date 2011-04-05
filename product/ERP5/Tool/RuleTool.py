@@ -99,7 +99,13 @@ class RuleTool(BaseTool):
       domain_tool = getToolByName(self.getPortalObject(), "portal_domains")
 
       if tested_base_category_list is None:
-        tested_base_category_list = []
+        # get all base categories currently stored in the movement
+        #
+        # XXX isn't there a method for this already?
+        # movement.getBaseCategoryList() returns ALL possible
+        # categories, not only those that are set on the object
+        tested_base_category_list = [category.split('/', 1)[0] 
+                                     for category in movement.categories]
 
       rule_list = domain_tool.searchPredicateList(context=movement,
           tested_base_category_list=tested_base_category_list,
