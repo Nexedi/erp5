@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-import os, subprocess
+import os, re, subprocess
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 from DateTime import DateTime
@@ -236,15 +236,15 @@ class Git(WorkingCopy):
     portal = self.getPortalObject()
     author = portal.portal_preferences.getPreferredGitAuthor()
     if author:
-      author = author.strip()
+      author = re.match(r'\s*([^<>]+?)\s+<(\S+)>\s*$', author)
       if author:
-        return author
+        return author.groups()
     #try:
     #  author = portal.ERP5Site_getAuthenticatedMemberPersonValue()
     #  name = author.getTitle()
     #  email = author.getDefaultEmailText()
     #  if name and email:
-    #    return '%s <%s>' % (name, email)
+    #    return name, email
     #except AttributeError:
     #  pass
 
@@ -263,11 +263,15 @@ class Git(WorkingCopy):
     selected_set.update(removed)
     # remove directories from selected_set
     selected_set.intersection_update(self._patch_with_raw()[0])
-    args = ['commit', '-m', changelog, '--']
+    args = ['commit', '-m', changelog, '--'] + list(selected_set)
     author = self.getAuthor()
     if author:
-      args[1:1] = '--author', author
-    self.git(*(args + list(selected_set)))
+      name, email = author
+      env = dict(os.environ, GIT_AUTHOR_NAME=name, GIT_COMMITTER_NAME=name,
+                             GIT_AUTHOR_EMAIL=email, GIT_COMMITTER_EMAIL=email)
+    else:
+      env = None
+    self.git(*args, env=env)
     self.clean()
     try:
       if push:
