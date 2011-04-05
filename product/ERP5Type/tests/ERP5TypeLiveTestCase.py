@@ -160,7 +160,10 @@ class ERP5TypeTestReLoader(ERP5TypeTestLoader):
         return super(ERP5TypeTestReLoader, self).loadTestsFromModule(module)
 
     def loadTestsFromTestCase(self, testCaseClass):
-        testModule = reload(sys.modules[testCaseClass.__module__])
+        testModule = sys.modules[testCaseClass.__module__]
+        if not(testCaseClass is ERP5TypeTestCase):
+          # do not reload ERP5TypeTestCase because we patch it
+          testModule = reload(testModule)
         testCaseClass = getattr(testModule, testCaseClass.__name__)
         return super(ERP5TypeTestReLoader,
                      self).loadTestsFromTestCase(testCaseClass)
