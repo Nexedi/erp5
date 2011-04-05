@@ -482,8 +482,3 @@ class ConfiguratorTool(BaseTool):
 
     bc = self.restrictedTraverse(business_configuration)
     bc.build()
-
-    finalize_method = getattr(self, 'ConfiguratorTool_finalizeInstallation', None)
-    if finalize_method is not None and callable(finalize_method):
-      finalize_method(business_configuration = bc,
-                      **request_restore_dict)
