@@ -176,7 +176,10 @@ if 1:
     if portal_type == 'Dummy Class Tool':
       return Base__setstate__(self, value)
     # proceed with migration
-    self._fixPortalTypeBeforeMigration(portal_type)
+    try:
+      self._fixPortalTypeBeforeMigration(portal_type)
+    except IndexError: # getSite raised
+      return Base__setstate__(self, value)
     import erp5.portal_type
     newklass = getattr(erp5.portal_type, portal_type)
     assert self.__class__ is not newklass
