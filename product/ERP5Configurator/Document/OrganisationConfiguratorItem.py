@@ -55,7 +55,7 @@ class OrganisationConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.DublinCore
                     , PropertySheet.Organisation )
 
-  def build(self, business_configuration):
+  def _build(self, business_configuration):
     """ Setup organisation. """
     portal = self.getPortalObject()
     organisation = portal.organisation_module.newContent(portal_type="Organisation")

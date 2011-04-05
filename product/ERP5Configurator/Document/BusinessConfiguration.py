@@ -394,7 +394,7 @@ class BusinessConfiguration(Item):
       configuration_item_list = [x for x in configuration_save.contentValues()]
       configuration_item_list.sort(lambda x, y: cmp(x.getIntId(), y.getIntId()))
       for configurator_item in configuration_item_list:
-        configurator_item.activate(**kw).buildItem(self.getRelativeUrl())
+        configurator_item.activate(**kw).build(self.getRelativeUrl())
         kw["after_tag"] = kw["tag"]
         kw["tag"] = "configurator_item_%s_%s" % (configurator_item.getId(),
                                                  configurator_item.getUid())
@@ -404,7 +404,7 @@ class BusinessConfiguration(Item):
                                                              time.time() - start))
 
     if execute_after_setup_script:
-      kw["after_method_id"] = ["buildItem", 'immediateReindexObject', \
+      kw["after_method_id"] = ["build", 'immediateReindexObject', \
                                "recursiveImmediateReindexObject"]
 
       self.activate(**kw).ERP5Site_afterConfigurationSetup()

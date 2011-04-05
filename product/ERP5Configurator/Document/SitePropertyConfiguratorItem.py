@@ -55,7 +55,7 @@ class SitePropertyConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.DublinCore
                     , PropertySheet.ConfiguratorItem )
 
-  def build(self, business_configuration):
+  def _build(self, business_configuration):
     portal = self.getPortalObject()
     id_list = []
     for id, value, prop_type in self.getConfigurationList():

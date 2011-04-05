@@ -55,7 +55,7 @@ class AccountConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.DublinCore
                     , PropertySheet.Account )
 
-  def build(self, business_configuration):
+  def _build(self, business_configuration):
     portal = self.getPortalObject()
     account_module = portal.account_module
 

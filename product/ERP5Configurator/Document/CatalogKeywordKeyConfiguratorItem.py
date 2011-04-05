@@ -55,7 +55,7 @@ class CatalogKeywordKeyConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore )
 
-  def build(self, business_configuration):
+  def _build(self, business_configuration):
     portal = self.getPortalObject()
     catalog = portal.portal_catalog.getSQLCatalog()
     key_list = list(catalog.getProperty('sql_catalog_keyword_search_keys', ()))

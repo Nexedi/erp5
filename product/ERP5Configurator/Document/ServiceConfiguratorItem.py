@@ -55,7 +55,7 @@ class ServiceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.DublinCore
                     , PropertySheet.ConfiguratorItem )
 
-  def build(self, business_configuration):
+  def _build(self, business_configuration):
     portal = self.getPortalObject()
     for service_id, service_title in iter(self.getConfigurationListList()):
       document = getattr(portal.service_module, service_id, None)

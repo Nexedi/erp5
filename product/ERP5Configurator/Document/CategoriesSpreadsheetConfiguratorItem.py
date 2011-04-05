@@ -64,7 +64,7 @@ class CategoriesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.ConfiguratorItem
                     )
 
-  def build(self, business_configuration):
+  def _build(self, business_configuration):
     portal = self.getPortalObject()
     ctool = portal.portal_categories
 

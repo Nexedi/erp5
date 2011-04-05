@@ -59,7 +59,7 @@ class StandardBT5ConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.StandardBT5ConfiguratorItem
                     )
 
-  def build(self, business_configuration):
+  def _build(self, business_configuration):
     bt5_id = self.getBt5Id()
     portal = self.getPortalObject()
     template_tool = getToolByName(portal, 'portal_templates')

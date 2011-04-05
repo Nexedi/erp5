@@ -94,7 +94,7 @@ class SystemPreferenceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
              )
 
 
-  def build(self, business_configuration):
+  def _build(self, business_configuration):
     portal = self.getPortalObject()
     portal_preferences = portal.portal_preferences
     preference = portal_preferences._getOb(self.object_id, None)

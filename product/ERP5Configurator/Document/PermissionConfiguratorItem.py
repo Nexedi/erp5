@@ -54,7 +54,7 @@ class PermissionConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore )
 
-  def build(self, business_configuration):
+  def _build(self, business_configuration):
     template_module_id_list = []
     module_permissions_map = {}
     sheets_dict = business_configuration.ConfigurationTemplate_readOOCalcFile(\

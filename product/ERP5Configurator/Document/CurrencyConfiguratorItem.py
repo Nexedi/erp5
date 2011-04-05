@@ -57,7 +57,7 @@ class CurrencyConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.Resource
                     , PropertySheet.Reference )
 
-  def build(self, business_configuration):
+  def _build(self, business_configuration):
     currency_module = self.getPortalObject().currency_module
 
     title = self.getTitle()

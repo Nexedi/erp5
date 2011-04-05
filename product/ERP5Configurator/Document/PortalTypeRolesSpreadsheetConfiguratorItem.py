@@ -38,7 +38,7 @@ class PortalTypeRolesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObjec
                     , PropertySheet.ConfiguratorItem
                     )
 
-  def build(self, business_configuration):
+  def _build(self, business_configuration):
     portal = self.getPortalObject()
     self._readSpreadSheet()
     for type_name, role_list in self._spreadsheet_cache.items():

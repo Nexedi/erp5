@@ -56,7 +56,7 @@ class BusinessProcessConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.Reference
                     )
 
-  def build(self, business_configuration):
+  def _build(self, business_configuration):
     portal = self.getPortalObject()
     business_process = portal.business_process_module.newContent(
                                            portal_type="Business Process",

@@ -57,7 +57,7 @@ class SaleTradeConditionConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.Reference
                     )
 
-  def build(self, business_configuration):
+  def _build(self, business_configuration):
     portal = self.getPortalObject()
     business_process_id = \
        business_configuration.getGlobalConfigurationAttr('business_process_id')

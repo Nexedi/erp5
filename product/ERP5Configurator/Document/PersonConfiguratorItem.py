@@ -59,7 +59,7 @@ class PersonConfiguratorItem(XMLObject, ConfiguratorItemMixin):
                     , PropertySheet.Person 
                     , PropertySheet.Login)
 
-  def build(self, business_configuration):
+  def _build(self, business_configuration):
     portal = self.getPortalObject()
     person = portal.person_module.newContent(portal_type="Person")
     group_id = getattr(aq_base(self), 'group_id', None)

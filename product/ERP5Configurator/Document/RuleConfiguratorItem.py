@@ -54,7 +54,7 @@ class RuleConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore )
 
-  def build(self, business_configuration):
+  def _build(self, business_configuration):
     portal = self.getPortalObject()
     simulation_rule_dict = portal.ERPSite_getConfiguratorSimulationRuleDict()
     for key, value in simulation_rule_dict.iteritems():
