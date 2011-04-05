@@ -98,6 +98,9 @@ class RuleTool(BaseTool):
       """
       domain_tool = getToolByName(self.getPortalObject(), "portal_domains")
 
+      if tested_base_category_list is None:
+        tested_base_category_list = []
+
       rule_list = domain_tool.searchPredicateList(context=movement,
           tested_base_category_list=tested_base_category_list,
           portal_type=self.getPortalRuleTypeList(),
