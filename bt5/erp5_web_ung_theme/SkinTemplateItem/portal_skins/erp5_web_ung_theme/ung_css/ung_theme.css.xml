@@ -447,12 +447,14 @@ div.toolbar button, div.gadget-action input#upload {\n
 }\n
 \n
 .menu_create_object {\n
+  color:#8e8e8e;\n
+  margin-top:-5px;\n
+}\n
+.menu_create_object, div#select_language {\n
   font-family: arial,sans-serif;\n
   font-size:14px;\n
-  color:#8e8e8e;\n
   list-style:none outside none;\n
   white-space:nowrap;\n
-  margin-top:-5px;\n
 }\n
 .menu_create_object img {\n
   border:0px;  \n
@@ -470,13 +472,19 @@ div.toolbar button, div.gadget-action input#upload {\n
   -moz-border-radius: 4px;\n
 }\n
 \n
-.menu_create_object ul {\n
-  height:43px;\n
+.menu_create_object ul, div#select_language ul {\n
   list-style:none;\n
   margin:0;\n
   padding:0;\n
 }\n
 \n
+span#available_language {\n
+  text-decoration: underline;\n
+}\n
+div#select_language li span {\n
+  text-color: #20C;\n
+  cursor: pointer;\n
+}\n
 .menu_create_object li {\n
   float:left;\n
   margin-left: 0.5em;\n
@@ -485,21 +493,21 @@ div.toolbar button, div.gadget-action input#upload {\n
   text-decoration:none;\n
 }\n
 \n
-.menu_create_object li a {\n
+.menu_create_object li a, div#select_language li a {\n
   display:block;\n
   text-decoration:none;\n
 }\n
 \n
-.menu_create_object li a:hover {\n
+.menu_create_object li a:hover, div#select_language li a:hover {\n
   color:#000000;\n
   text-decoration:none;\n
 }\n
 \n
-.menu_create_object li:hover ul {\n
+.menu_create_object li:hover ul, div#select_language li:hover ul {\n
   display:block;\n
 }\n
 \n
-.menu_create_object li li {\n
+.menu_create_object li li, div#select_language li li {\n
   display:block;\n
   float:none;\n
   margin-left:0;\n
@@ -509,19 +517,30 @@ div.toolbar button, div.gadget-action input#upload {\n
   clear:left;\n
 }\n
 \n
+div#select_language li ul {\n
+  width:70px;\n
+}\n
+\n
+div#select_language li ul {\n
+  border-bottom: 1px solid #C9D7F1;\n
+  border-left: 1px solid #C9D7F1;\n
+  border-right: 1px solid #C9D7F1;\n
+}\n
+\n
 .menu_create_object li ul {\n
+  border:1px solid #D1D1D1;\n
+}\n
+.menu_create_object li ul, div#select_language li ul {\n
   display:none;\n
   height:auto;\n
   filter:alpha(opacity=95);\n
   position:absolute;\n
   z-index:200;\n
-  border:1px solid #D1D1D1;\n
+  height: 75px;\n
   background:none repeat scroll 0 0 #FFFFFF;\n
-  height:84px;\n
-  width:131px;\n
 }\n
 \n
-.menu_create_object li ul a {\n
+.menu_create_object li ul a, div#select_language li ul a {\n
   display:block;\n
   font-size:14px;\n
   font-style:normal;\n
@@ -540,7 +559,7 @@ div.gadget-column input#upload {\n
   top:0.5em;\n
 }\n
 \n
-.menu_create_object li li:hover {\n
+.menu_create_object li li:hover, div#select_language li li:hover {\n
   background-color: #DAE6F6;\n
 }\n
 \n
