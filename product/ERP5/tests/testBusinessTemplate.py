@@ -7392,6 +7392,11 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
   def stepCheckDocumentRemoved(self, sequence=None, **kw):
     self.failIf(os.path.exists(sequence['document_path']))
 
+  def stepCheckDocumentPropertySheetSameName(self, sequence=None, **kw):
+    self.assertEqual(sequence['ps_title'], sequence['document_title'])
+    self.assertEqual(os.path.basename(sequence['document_path']),
+        os.path.basename(sequence['ps_path']))
+
   def test_BusinessTemplateWithDocument(self):
     sequence_list = SequenceList()
     sequence_string = '\
@@ -7426,6 +7431,77 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
                        CheckDocumentRemoved \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def stepRemovePropertySheetFromBusinessTemplate(self, sequence=None, **kw):
+    """
+    Add Property Sheet to Business Template
+    """
+    sequence['current_bt'].edit(template_property_sheet_id_list=[sequence['ps_title']])
+
+  def test_BusinessTemplateWithDocumentPropertySheetRemoved(self):
+    """Checks that if Business Template defines Document and PropertySheet
+    Document is not removed"""
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreateDocument \
+                       CreatePropertySheet \
+                       CheckDocumentPropertySheetSameName \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddDocumentToBusinessTemplate \
+                       AddPropertySheetToBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveDocument \
+                       RemovePropertySheet \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckNoTrashBin \
+                       CheckDocumentExists \
+                       CheckPropertySheetExists \
+                       \
+                       CopyBusinessTemplate \
+                       Tic \
+                       \
+                       RemovePropertySheetFromBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallBusinessTemplate \
+                       Tic \
+                       \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckPropertySheetRemoved \
+                       CheckDocumentExists \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
