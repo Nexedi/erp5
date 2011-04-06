@@ -86,6 +86,8 @@ class TestInvoiceMixin(TestPackingListMixin):
   @UnrestrictedMethod
   def createCategories(self):
     """Create the categories for our test. """
+    # pull in the TestOrderMixin categories first
+    super(TestInvoiceMixin, self).createCategories()
     for cat_string in self.getNeededCategoryList() :
       base_cat = cat_string.split("/")[0]
       path = self.getPortal().portal_categories[base_cat]
