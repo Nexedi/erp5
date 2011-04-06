@@ -6271,7 +6271,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        ImportBusinessTemplate \
                        Tic \
                        UseImportBusinessTemplate \
-                       InstallWithoutForceBusinessTemplate \
+                       InstallBusinessTemplate \
                        Tic \
                        CheckAnotherWorkflowChain \
                        CheckWorkflowChainExists \
