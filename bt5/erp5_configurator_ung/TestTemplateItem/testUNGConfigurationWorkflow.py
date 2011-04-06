@@ -97,7 +97,7 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
      stepCheckUNGWebSiteAfterInstallation
      stepCheckSystemPreferenceAfterInstallation
      stepCheckUserPreferenceAfterInstallation
-     stepTic
+     stepCheckWebSiteRoles
   """
 
   def getBusinessTemplateList(self):
@@ -311,7 +311,7 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
     """ Check System Preference"""
     portal_catalog = self.portal.portal_catalog
     preference = portal_catalog.getResultValue(portal_type="Preference",
-                                               reference='Preference for Person Assignor')
+                                               title='Preference for Person Assignor')
     self.assertEquals(preference.getPreferenceState(), "enabled")
     preference = portal_catalog.getResultValue(portal_type="Preference",
                                                title='Preference for Person Assignee')
@@ -319,9 +319,36 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
     preference = portal_catalog.getResultValue(portal_type="Preference",
                                                title='Preference for Person Creator')
     self.assertEquals(preference.getPreferenceState(), "enabled")
-    preference = portal_catalog.getResultValue(portal_type="Preference",
-                                               id='ung_reference')
-    self.assertEquals(preference.getPreferenceState(), "enabled")
+    ung_preference = self.portal.portal_preferences.ung_preference
+    self.assertEquals(ung_preference.getPreferenceState(), "global")
+  
+  def _stepCheckWebSiteRoles(self):
+    """ Check permission of Web Site with normal user """
+    self.portal.web_page_module.ERP5Site_createNewWebDocument("web_page_template")
+    self.stepTic()
+    result_list = self.portal.web_site_module.ungWebSection_getWebPageObjectList()
+    self.assertEquals(len(result_list), 1)
+    self.assertEquals(result_list[0].getTitle(), "Web Page")
+    new_object = self.portal.web_page_module.newContent(portal_type="Web Page")
+    new_object.edit(title="New")
+    new_object = self.portal.web_page_module.newContent(portal_type="Web Table")
+    new_object.edit(title="New")
+    new_object = self.portal.web_page_module.newContent(portal_type="Web Illustration")
+    new_object.edit(title="New")
+    self.stepTic()
+    kw = {"portal_type": "Web Page", "title": "New"}
+    result_list = self.portal.web_site_module.ung.WebSection_getWebPageObjectList(**kw)
+    self.assertEquals(len(result_list), 1)
+    self.assertEquals(result_list[0].getPortalType(), "Web Page")
+    kw["portal_type"] = "Web Illustration"
+    result_list = self.portal.web_site_module.ung.WebSection_getWebPageObjectList(**kw)
+    self.assertEquals(len(result_list), 1)
+    self.assertEquals(result_list[0].getPortalType(), "Web Illustration")
+    kw["portal_type"] = "Web Table"
+    result_list = self.portal.web_site_module.ung.WebSection_getWebPageObjectList(**kw)
+    self.assertEquals(len(result_list), 1)
+    self.assertEquals(result_list[0].getPortalType(), "Web Table")
+ 
 
 class TestUNGConfiguratorWorkflowFranceLanguage(TestUNGConfiguratorWorkflowMixin):
   """
@@ -404,6 +431,11 @@ class TestUNGConfiguratorWorkflowFranceLanguage(TestUNGConfiguratorWorkflowMixin
     self.assertEquals(assignment.getValidationState(), "open")
     self.assertEquals(assignment.getFunction(), "function/ung_user")
 
+  def stepCheckWebSiteRoles(self, sequence=None, sequence_list=None, **kw):
+    """ Check permission of Web Site with normal user """
+    self.login("french_assignor")
+    self._stepCheckWebSiteRoles()
+
 
 class TestUNGConfiguratorWorkflowBrazilLanguage(TestUNGConfiguratorWorkflowMixin):
   """
@@ -485,3 +517,9 @@ class TestUNGConfiguratorWorkflowBrazilLanguage(TestUNGConfiguratorWorkflowMixin
     assignment = person.contentValues(portal_type="Assignment")[0]
     self.assertEquals(assignment.getValidationState(), "open")
     self.assertEquals(assignment.getFunction(), "function/ung_user")
+
+  def stepCheckWebSiteRoles(self, sequence=None, sequence_list=None, **kw):
+    """ Check permission of Web Site with normal user """
+    self.login("person_assignor")
+    self._stepCheckWebSiteRoles(self)
+

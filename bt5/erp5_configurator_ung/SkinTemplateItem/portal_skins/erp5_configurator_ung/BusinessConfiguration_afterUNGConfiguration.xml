@@ -58,7 +58,7 @@ portal_preferences = portal.portal_preferences\n
 business_template = context.getSpecialiseValue()\n
 isTransitionPossible = portal.portal_workflow.isTransitionPossible\n
 \n
-# enable erp5 preference\n
+# enable ung preference\n
 ung_preference = getattr(portal.portal_preferences, \'ung_preference\', None)\n
 if ung_preference is not None and isTransitionPossible(ung_preference, \'enable\'):\n
   ung_preference.enable()\n
@@ -75,21 +75,17 @@ for web_section in ung_web_site.contentValues(portal_types=\'Web Section\'):\n
   if isTransitionPossible(web_section, \'publish\', None):\n
     web_section.publish()\n
 \n
-if business_template is not None:\n
-  # update role settings for modules which exists already\n
-  for portal_type in business_template.getTemplatePortalTypeRolesList():\n
-    module_list = portal.contentValues(\n
-                    filter=dict(portal_type=portal_type))\n
+bt5 = portal.portal_catalog.getResultValue(portal_type="Business Template",\n
+                                           title="erp5_web_ung_role")\n
+\n
+if bt5 is not None:\n
+  for portal_type in bt5.getTemplatePortalTypeRolesList():\n
+    module_list = portal.contentValues(filter=dict(portal_type=portal_type))\n
     for module in module_list:\n
       module.updateLocalRolesOnSecurityGroups()\n
       context.log("Updated Role Mappings for: %s(%s) " % (module.getTitle(), module.getPortalType()))\n
 \n
-  for preference_to_enable in business_template.getTemplatePreferenceList():\n
-    preference = getattr(portal_preferences, preference_to_enable, None)\n
-    if preference is not None:\n
-      if isTransitionPossible(preference, \'enable\'):\n
-        preference.enable()\n
-\n
+if business_template is not None:\n
   # update path items. FIXME: local roles should be exported by business template instead\n
   for path in business_template.getTemplatePathList():\n
     obj = portal.restrictedTraverse(path, None)\n
@@ -115,36 +111,15 @@ if business_template is not None:\n
             assignment.updateLocalRolesOnSecurityGroups()\n
             context.log("\\tOpen (assignment): ", assignment.getRelativeUrl())\n
 \n
-  for gadget in context.portal_gadgets.objectValues():\n
-    if gadget.getValidationState() == \'invisible\':\n
-      gadget.visible()\n
-      gadget.public()\n
+for gadget in context.portal_gadgets.objectValues():\n
+  if gadget.getValidationState() == \'invisible\':\n
+    gadget.visible()\n
+    gadget.public()\n
 \n
-# update security settings for default preference # XXX why ???\n
-default_configurator_preference = getattr(portal_preferences,\n
-                                          \'default_configurator_preference\', None)\n
-if default_configurator_preference is not None:\n
-  default_configurator_preference.updateLocalRolesOnSecurityGroups()\n
-\n
-# set manually in \'Module Properties\' respective business_application category\n
-# XXX This should be part of Configuration Item probably, but as access_tab is\n
-# going to be deprecated, make sure it still requires set business application\n
-# info modules.\n
-module_business_application_map = {\'base\': (\'organisation_module\',\n
-                                            \'person_module\',),\n
-                                   \'crm\': (\'event_module\',),\n
-                                   \'dms\': (\'document_module\',\n
-                                           \'image_module\',\n
-                                           \'document_ingestion_module\',\n
-                                           \'web_page_module\',),\n
-                                   }\n
-\n
-for business_application_category_id, module_ids in module_business_application_map.items():\n
-  for module_id in module_ids:\n
-    module = getattr(portal, module_id, None)\n
-    if module is not None:\n
-      module.edit(business_application = business_application_category_id)\n
-\n
+# XXX - check if is possible add this configuration in bt5\n
+portal.knowledge_pad_module.manage_permission(\'Add portal content\',\n
+                                              roles=[\'Assignor\', "Manager", "Authenticated", "Author"],\n
+                                              acquire=0)\n
 context.log("Indexing translations")\n
 portal.ERP5Site_updateTranslationTable()\n
 \n
