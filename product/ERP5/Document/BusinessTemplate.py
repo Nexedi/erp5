@@ -2019,6 +2019,12 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
   def install(self, context, trashbin, **kw):
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
+    installed_bt = kw.get('installed_bt')
+    if installed_bt is not None:
+      previous_portal_type_workflow_chain_list = list(installed_bt\
+          .getTemplatePortalTypeWorkflowChainList())
+    else:
+      previous_portal_type_workflow_chain_list = []
     # We now need to setup the list of workflows corresponding to
     # each portal type
     (default_chain, chain_dict) = getChainByType(context)
@@ -2049,6 +2055,26 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
           old_chain_workflow_id_set = set(old_chain_list)
           # get new workflow id list
           workflow_id_list = self._objects[path]
+          # fetch list of new workflows which shall be added to chains
+          addative_workflow_id_list = [q.lstrip('+') for q in workflow_id_list\
+              if not q.startswith('-') and not q.startswith('=')]
+          for previous_line in [q for q in \
+              previous_portal_type_workflow_chain_list \
+              if q.startswith(portal_type)]:
+            previous_portal_type, previous_workflow_id = previous_line.split(
+                '|')
+            previous_portal_type = previous_portal_type.strip()
+            previous_workflow_id = previous_workflow_id.strip()
+            if not previous_workflow_id.startswith('-') \
+                and not previous_workflow_id.startswith('='):
+              # else: nothing can be done if previously workflow was removed
+              # or replaced as this requires introspection on global system
+              previous_workflow_id = previous_workflow_id.lstrip('+')
+              if previous_workflow_id not in addative_workflow_id_list:
+                # In previous Business Template workflow was chained with
+                # portal type, but current Business Template cancels this
+                # so it shall be removed
+                workflow_id_list.append('-%s' % previous_workflow_id)
           for wf_id in workflow_id_list:
             if wf_id[0] == '-':
               # remove wf id if already present
