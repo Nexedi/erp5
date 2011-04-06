@@ -5966,22 +5966,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertSameSet(cbt['Geek Object'],
                        ('geek_workflow', 'custom_geek_workflow'))
 
-  def stepCheckAnotherWorkflowChain(self, sequence=None,
-                                     sequence_list=None, **kw):
-    """
-    Check original workflow chain
-    """
-    present = 0
-    pw = self.getWorkflowTool()
-    cbt = pw._chains_by_type
-    if cbt is not None:
-      for id, wf_ids in cbt.items():
-        if id == "Geek Object":
-          present = 1
-    self.assertEqual(present, 1)
-    self.assertSameSet(cbt['Geek Object'],
-                       ('geek_workflow', 'custom_another_workflow'))
-
   def stepCheckOriginalWorkflowChain(self, sequence=None,
                                      sequence_list=None, **kw):
     """
@@ -6192,8 +6176,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """Check that chains are correctly removed during update
     
     When previous business template defined that object is associated
-    with workflows A, B, C and that new one says that only A and C
-    associations are required check that after installing only A and C
+    with workflows A, B, C and that new one says that only A and B
+    associations are required check that after installing only A and B
     will be on workflow chains."""
     sequence_list = SequenceList()
     sequence_string = '\
@@ -6273,7 +6257,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        UseImportBusinessTemplate \
                        InstallBusinessTemplate \
                        Tic \
-                       CheckAnotherWorkflowChain \
+                       CheckWorkflowChain \
                        CheckWorkflowChainExists \
                        '
     sequence_list.addSequenceString(sequence_string)
