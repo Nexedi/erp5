@@ -5877,28 +5877,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertNotEqual(new_bt, newer_bt)
     self.assertEqual(newer_bt.getRevision(), second_revision)
 
-  def stepCreateCustomAnotherWorkflow(self, sequence=None, sequence_list=None, **kw):
-    """
-    Create a custom workflow
-    """
-    wf_id = 'custom_another_geek_workflow'
-    pw = self.getWorkflowTool()
-    addWorkflowByType(pw, WORKFLOW_TYPE, wf_id)
-    workflow = pw._getOb(wf_id, None)
-    self.failUnless(workflow is not None)
-    sequence.edit(workflow_id=workflow.getId())
-    cbt = pw._chains_by_type
-    props = {}
-    if cbt is not None:
-      for id, wf_ids in cbt.items():
-        props['chain_%s' % id] = ','.join(wf_ids)
-    key = 'chain_Geek Object'
-    if props.has_key(key):
-      props[key] = '%s,%s' % (props[key], wf_id)
-    else:
-      props[key] = wf_id
-    pw.manage_changeWorkflows('', props=props)
-
   def stepCreateCustomWorkflow(self, sequence=None, sequence_list=None, **kw):
     """
     Create a custom workflow
@@ -5934,22 +5912,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                   version='1.0',
                   description='custom bt for unit_test')
     sequence.edit(export_bt=template)
-
-  def stepCheckCustomAnotherWorkflowChain(self, sequence=None, sequence_list=None, **kw):
-    """
-    Check custom workflow chain
-    """
-    present = 0
-    pw = self.getWorkflowTool()
-    cbt = pw._chains_by_type
-    if cbt is not None:
-      for id, wf_ids in cbt.items():
-        if id == "Geek Object":
-          present = 1
-    self.assertEqual(present, 1)
-    self.assertSameSet(cbt['Geek Object'],
-                       ('geek_workflow', 'custom_geek_workflow',
-                         'custom_another_geek_workflow'))
 
   def stepCheckCustomWorkflowChain(self, sequence=None, sequence_list=None, **kw):
     """
@@ -6176,9 +6138,9 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """Check that chains are correctly removed during update
     
     When previous business template defined that object is associated
-    with workflows A, B, C and that new one says that only A and B
-    associations are required check that after installing only A and B
-    will be on workflow chains."""
+    with workflows A, B and that new one says that only A association
+    is required check that after installing only A will be on workflow
+    chains."""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
@@ -6214,8 +6176,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        \
                        CreateCustomWorkflow \
                        CheckCustomWorkflowChain \
-                       AddWorkflowToBusinessTemplate \
-                       AddWorkflowChainToBusinessTemplate \
+                       AppendWorkflowToBusinessTemplate \
+                       AppendWorkflowChainToBusinessTemplate \
                        BuildBusinessTemplate \
                        SaveBusinessTemplate \
                        RemoveWorkflow \
@@ -6231,22 +6193,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        \
                        CopyBusinessTemplate \
                        Tic \
-                       CreateCustomAnotherWorkflow \
-                       CheckCustomAnotherWorkflowChain \
-                       AppendWorkflowToBusinessTemplate \
-                       AppendWorkflowChainToBusinessTemplate \
-                       BuildBusinessTemplate \
-                       SaveBusinessTemplate \
-                       RemoveWorkflow \
-                       CheckCustomWorkflowChain \
-                       RemoveBusinessTemplate \
-                       RemoveAllTrashBins \
-                       ImportBusinessTemplate \
-                       UseImportBusinessTemplate \
-                       InstallBusinessTemplate \
-                       Tic \
-                       \
-                       CheckCustomAnotherWorkflowChain \
                        \
                        RemoveWorkflowFromBusinessTemplate \
                        RemoveWorkflowChainFromBusinessTemplate \
@@ -6258,7 +6204,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        UseImportBusinessTemplate \
                        InstallBusinessTemplate \
                        Tic \
-                       CheckCustomWorkflowChain \
+                       CheckOriginalWorkflowChain \
                        CheckWorkflowChainExists \
                        '
     sequence_list.addSequenceString(sequence_string)
