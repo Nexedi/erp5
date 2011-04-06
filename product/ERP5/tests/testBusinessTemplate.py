@@ -1435,6 +1435,17 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
           present = 1
     self.assertEqual(present, 1)
 
+  def stepAppendWorkflowToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+    """
+    Add workflow to business template
+    """
+    bt = sequence.get('current_bt', None)
+    self.failUnless(bt is not None)
+    wf_ids = list(bt.getTemplateWorkflowIdList())
+    wf_ids.append(sequence.get('workflow_id', ''))
+    self.assertEqual(len(wf_ids), 2)
+    bt.edit(template_workflow_id_list=wf_ids)
+
   def stepAddWorkflowToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
     """
     Add workflow to business template
@@ -1445,6 +1456,16 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     wf_ids.append(sequence.get('workflow_id', ''))
     self.assertEqual(len(wf_ids), 1)
     bt.edit(template_workflow_id_list=wf_ids)
+
+  def stepAppendWorkflowChainToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+    """
+    Add workflow to business template
+    """
+    bt = sequence.get('current_bt', None)
+    self.failUnless(bt is not None)
+    wf_chain_ids = list(bt.getTemplatePortalTypeWorkflowChainList())
+    wf_chain_ids.append('Geek Object | %s' % sequence.get('workflow_id', ''))
+    bt.edit(template_portal_type_workflow_chain_list=wf_chain_ids)
 
   def stepAddWorkflowChainToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
     """
@@ -5856,6 +5877,28 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertNotEqual(new_bt, newer_bt)
     self.assertEqual(newer_bt.getRevision(), second_revision)
 
+  def stepCreateCustomAnotherWorkflow(self, sequence=None, sequence_list=None, **kw):
+    """
+    Create a custom workflow
+    """
+    wf_id = 'custom_another_geek_workflow'
+    pw = self.getWorkflowTool()
+    addWorkflowByType(pw, WORKFLOW_TYPE, wf_id)
+    workflow = pw._getOb(wf_id, None)
+    self.failUnless(workflow is not None)
+    sequence.edit(workflow_id=workflow.getId())
+    cbt = pw._chains_by_type
+    props = {}
+    if cbt is not None:
+      for id, wf_ids in cbt.items():
+        props['chain_%s' % id] = ','.join(wf_ids)
+    key = 'chain_Geek Object'
+    if props.has_key(key):
+      props[key] = '%s,%s' % (props[key], wf_id)
+    else:
+      props[key] = wf_id
+    pw.manage_changeWorkflows('', props=props)
+
   def stepCreateCustomWorkflow(self, sequence=None, sequence_list=None, **kw):
     """
     Create a custom workflow
@@ -5892,6 +5935,22 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                   description='custom bt for unit_test')
     sequence.edit(export_bt=template)
 
+  def stepCheckCustomAnotherWorkflowChain(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check custom workflow chain
+    """
+    present = 0
+    pw = self.getWorkflowTool()
+    cbt = pw._chains_by_type
+    if cbt is not None:
+      for id, wf_ids in cbt.items():
+        if id == "Geek Object":
+          present = 1
+    self.assertEqual(present, 1)
+    self.assertSameSet(cbt['Geek Object'],
+                       ('geek_workflow', 'custom_geek_workflow',
+                         'custom_another_geek_workflow'))
+
   def stepCheckCustomWorkflowChain(self, sequence=None, sequence_list=None, **kw):
     """
     Check custom workflow chain
@@ -5906,6 +5965,22 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(present, 1)
     self.assertSameSet(cbt['Geek Object'],
                        ('geek_workflow', 'custom_geek_workflow'))
+
+  def stepCheckAnotherWorkflowChain(self, sequence=None,
+                                     sequence_list=None, **kw):
+    """
+    Check original workflow chain
+    """
+    present = 0
+    pw = self.getWorkflowTool()
+    cbt = pw._chains_by_type
+    if cbt is not None:
+      for id, wf_ids in cbt.items():
+        if id == "Geek Object":
+          present = 1
+    self.assertEqual(present, 1)
+    self.assertSameSet(cbt['Geek Object'],
+                       ('geek_workflow', 'custom_another_workflow'))
 
   def stepCheckOriginalWorkflowChain(self, sequence=None,
                                      sequence_list=None, **kw):
@@ -6112,6 +6187,97 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
+
+  def test_35a_UpdatePartialWorkflowChainWithRemove(self):
+    """Check that chains are correctly removed during update
+    
+    When previous business template defined that object is associated
+    with workflows A, B, C and that new one says that only A and C
+    associations are required check that after installing only A and C
+    will be on workflow chains."""
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreatePortalType \
+                       CreateWorkflow \
+                       CheckOriginalWorkflowChain \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddWorkflowToBusinessTemplate \
+                       AddWorkflowChainToBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveWorkflow \
+                       CheckEmptyWorkflowChain \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallBusinessTemplate \
+                       CheckOriginalWorkflowChain \
+                       Tic \
+                       \
+                       CreateCustomWorkflow \
+                       CheckCustomWorkflowChain \
+                       CreateCustomBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddWorkflowToBusinessTemplate \
+                       AddWorkflowChainToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       SaveBusinessTemplate \
+                       RemoveWorkflow \
+                       CheckOriginalWorkflowChain \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       InstallBusinessTemplate \
+                       Tic \
+                       \
+                       CheckCustomWorkflowChain \
+                       \
+                       CopyBusinessTemplate \
+                       Tic \
+                       CreateCustomAnotherWorkflow \
+                       CheckCustomAnotherWorkflowChain \
+                       AppendWorkflowToBusinessTemplate \
+                       AppendWorkflowChainToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       SaveBusinessTemplate \
+                       RemoveWorkflow \
+                       CheckCustomWorkflowChain \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       InstallBusinessTemplate \
+                       Tic \
+                       \
+                       CheckCustomAnotherWorkflowChain \
+                       \
+                       RemoveWorkflowFromBusinessTemplate \
+                       RemoveWorkflowChainFromBusinessTemplate \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       SaveBusinessTemplate \
+                       ImportBusinessTemplate \
+                       Tic \
+                       UseImportBusinessTemplate \
+                       InstallWithoutForceBusinessTemplate \
+                       Tic \
+                       CheckAnotherWorkflowChain \
+                       CheckWorkflowChainExists \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
 
   def stepCreatePortalTypeRole(self, sequence=None, sequence_list=None, **kw):
     """
