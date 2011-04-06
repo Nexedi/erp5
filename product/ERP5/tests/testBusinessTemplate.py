@@ -6209,10 +6209,11 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckOriginalWorkflowChain \
                        Tic \
                        \
+                       CopyBusinessTemplate \
+                       Tic \
+                       \
                        CreateCustomWorkflow \
                        CheckCustomWorkflowChain \
-                       CreateCustomBusinessTemplate \
-                       UseExportBusinessTemplate \
                        AddWorkflowToBusinessTemplate \
                        AddWorkflowChainToBusinessTemplate \
                        BuildBusinessTemplate \
