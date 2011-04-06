@@ -68,7 +68,7 @@ def PropertyManager_getProperty(self, id, d=None, evaluate=1,
         econtext = createExpressionContext(self)
         return expression(econtext)
     elif property_type:
-      return getattr(self, id)
+      return getattr(self, id, d)
     return d
 
 def PropertyManager_getPropertyType(self, id, local_properties=False):

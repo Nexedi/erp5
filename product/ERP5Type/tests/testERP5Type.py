@@ -66,7 +66,8 @@ class PropertySheetTestCase(ERP5TypeTestCase):
     """Clean up """
     ttool = self.getTypesTool()
     # remove all property sheet we added to type informations
-    for ti_name, psheet_list in self._added_property_sheets.items():
+    for ti_name, psheet_list in getattr(self, '_added_property_sheets',
+                                   {}).items():
       ti = ttool.getTypeInfo(ti_name)
       property_sheet_set = set(ti.getTypePropertySheetList())
       for psheet in psheet_list:
@@ -136,6 +137,8 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
 
     def beforeTearDown(self):
       transaction.abort()
+      # THIS IS UGLY, WE MUST REMOVE AS SOON AS POSSIBLE, NOT COMPATIBLE
+      # WITH LIVE TEST
       for module in [ self.getPersonModule(),
                       self.getOrganisationModule(),
                       self.getCategoryTool().region ]:
@@ -3074,6 +3077,15 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
           non_unique_property_id_list.append(property_id)
         property_id_dict[property_id] = 1
       self.assertEqual([], non_unique_property_id_list)
+
+    def testLocalProperties(self):
+      portal = self.getPortalObject()
+      person = portal.person_module.newContent(portal_type='Person')
+      person.edit(foo_property='bar')
+      self.assertEquals('bar', person.getProperty('foo_property'))
+      del person.__dict__['foo_property']
+      self.assertEquals(None, person.getProperty('foo_property'))
+      self.assertEquals(None, person.getProperty('foobar_property'))
 
 class TestAccessControl(ERP5TypeTestCase):
   # Isolate test in a dedicaced class in order not to break other tests
