@@ -7506,6 +7506,51 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  def test_BusinessTemplateWithPropertySheetMigrationWithDocument(self):
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreatePropertySheet \
+                       CreateDocument \
+                       CheckDocumentPropertySheetSameName \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddPropertySheetToBusinessTemplate \
+                       AddDocumentToBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemovePropertySheet \
+                       RemoveDocument \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckNoTrashBin \
+                       CheckSkinsLayers \
+                       CheckPropertySheetMigration \
+                       CheckPropertySheetRemoved \
+                       CheckDocumentExists \
+                       UninstallBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckMigratedPropertySheetRemoved \
+                       CheckDocumentRemoved \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestBusinessTemplate))
