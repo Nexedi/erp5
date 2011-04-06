@@ -2059,9 +2059,8 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
               old_chain_workflow_id_set = set()
               old_chain_workflow_id_set.add(wf_id[1:])
             # then either '+' or nothing, add wf id to the list
-            elif wf_id[0] == '+':
-              old_chain_workflow_id_set.add(wf_id[1:])
             else:
+              wf_id.lstrip('+')
               old_chain_workflow_id_set.add(wf_id)
             # create the new chain
             chain_dict[chain_key] = list(old_chain_workflow_id_set)
