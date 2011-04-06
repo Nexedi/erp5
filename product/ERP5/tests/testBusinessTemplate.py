@@ -7360,6 +7360,76 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     new_bt5_obj.build()
     template_tool.export(new_bt5_obj)
 
+  def stepCreateDocument(self, sequence=None, **kw):
+    document_title = 'UnitTest'
+    document_data = """class UnitTest:
+  meta_type = 'ERP5 Unit Test'
+  portal_type = 'Unit Test'"""
+    cfg = getConfiguration()
+    file_path = os.path.join(cfg.instancehome, 'Document', document_title+'.py')
+    if os.path.exists(file_path):
+      os.remove(file_path)
+    f = file(file_path, 'w')
+    f.write(document_data)
+    f.close()
+    self.failUnless(os.path.exists(file_path))
+    sequence.edit(document_title=document_title, document_path=file_path,
+        document_data=document_data)
+
+  def stepAddDocumentToBusinessTemplate(self, sequence=None, **kw):
+    bt = sequence['current_bt']
+    bt.edit(template_document_id_list=[sequence['document_title']])
+
+  def stepRemoveDocument(self, sequence=None, **kw):
+    document_title = sequence['document_title']
+    document_path = sequence['document_path']
+    os.remove(document_path)
+    self.failIf(os.path.exists(document_path))
+
+  def stepCheckDocumentExists(self, sequence=None, **kw):
+    self.failIf(not os.path.exists(sequence['document_path']))
+
+  def stepCheckDocumentRemoved(self, sequence=None, **kw):
+    self.failIf(os.path.exists(sequence['document_path']))
+
+  def test_BusinessTemplateWithDocument(self):
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreateDocument \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddDocumentToBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveDocument \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckNoTrashBin \
+                       CheckSkinsLayers \
+                       CheckDocumentExists \
+                       UninstallBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckDocumentRemoved \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestBusinessTemplate))
