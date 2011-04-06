@@ -272,7 +272,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(x[\'name\'], x[\'id\']) for x in context.BusinessConfiguration_getUNGAvailableL10NBusinessTemplateList()] + [(context.Base_translateString(\'English\'), "en"),]</string> </value>
+            <value> <string>python: [(v[\'name\'], k) for k,v in context.BusinessConfiguration_getUNGAvailableL10NBusinessTemplateList().items()] + [(context.Base_translateString(\'English\'), "en"),]</string> </value>
         </item>
       </dictionary>
     </pickle>

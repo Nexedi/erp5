@@ -56,7 +56,9 @@ portal = context.getPortalObject()\n
 configuration_save_url = kw.get(\'configuration_save_url\', None)\n
 preferred_event_sender_email = kw.get(\'preferred_event_sender_email\', \'\')\n
 preferred_date_order = kw.get(\'preferred_date_order\', None)\n
-preferred_language_list = kw.get(\'lang\', [])\n
+default_available_language = kw.get(\'default_available_language\', \'en\')\n
+\n
+context.setGlobalConfigurationAttr(default_available_language=default_available_language)\n
 \n
 configuration_save = context.restrictedTraverse(configuration_save_url)\n
 business_configuration = configuration_save.getParent()\n
@@ -112,10 +114,12 @@ configuration_save.addConfigurationItem(\'System Preference Configurator Item\',
     title="Default Configurator System Site Preference",\n
     **system_prefs)\n
 \n
-# preferred_languages\n
-for bt5_id in preferred_language_list:\n
-  configuration_save.addConfigurationItem("Standard BT5 Configurator Item",\n
-                                          bt5_id=bt5_id)\n
+if default_available_language and default_available_language != "en":\n
+  language_dict = context.BusinessConfiguration_getUNGAvailableL10NBusinessTemplateList()\n
+  bt5 = language_dict.get(default_available_language)\n
+  if bt5:\n
+    configuration_save.addConfigurationItem("Standard BT5 Configurator Item",\n
+                                             bt5_id=bt5.get("bt5"))\n
 
 
 ]]></string> </value>

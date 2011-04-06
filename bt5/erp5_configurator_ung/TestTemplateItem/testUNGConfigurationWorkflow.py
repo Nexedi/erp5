@@ -87,10 +87,6 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
      stepSetupPreferenceConfiguration%(country)s
      stepConfiguratorNext
      stepTic
-     stepCheckConfigureWebSiteForm
-     stepSetupWebSiteConfiguration
-     stepConfiguratorNext
-     stepTic
      stepCheckConfigureInstallationForm
      stepSetupInstallConfiguration
      stepConfiguratorNext
@@ -115,13 +111,11 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
   def afterSetUp(self):
     self.portal.portal_templates.updateRepositoryBusinessTemplateList(
                            ['http://www.erp5.org/dists/snapshot/bt5/'])
-    if not self.portal.portal_catalog.getResultValue(portal_types="System Preference",
-                                                     title="global_system_preference"):
-      preference = self.portal.portal_preferences.newContent(portal_type="System Preference")
-      preference.setTitle("global_system_preference")
-      preference.setPreferredOoodocServerAddress("localhost")
-      preference.setPreferredOoodocServerPortNumber(8011)
-      preference.enable()
+    preference = self.portal.portal_preferences.newContent(portal_type="System Preference")
+    preference.setTitle("global_system_preference")
+    preference.setPreferredOoodocServerAddress("localhost")
+    preference.setPreferredOoodocServerPortNumber(8011)
+    preference.enable()
 
   def stepCreateBusinessConfiguration(self, sequence=None, sequence_list=None, **kw):
     """ Create one Business Configuration """
@@ -240,20 +234,20 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
       self.assertEquals('show', response_dict['command'])
     self.assertEquals('Previous', response_dict['previous'])
     self.assertEquals('Configure ERP5 Preferences', response_dict['next'])
-    self.assertCurrentStep('ERP5 preferences', response_dict)
+    self.assertCurrentStep('UNG Preferences', response_dict)
 
   def stepSetupPreferenceConfigurationBrazil(self, sequence=None, sequence_list=None, **kw):
     """ Setup the Brazil preference configuration """
     next_dict = dict(field_your_preferred_date_order='dmy',
-                     field_your_lang='erp5_l10n_fr',
+                     field_your_default_available_language='pt-BR',
                      field_your_preferred_event_sender_email="test@test.com",
                      default_field_your_lang=1)
     sequence.edit(next_dict=next_dict)
 
   def stepSetupPreferenceConfigurationFrance(self, sequence=None, sequence_list=None, **kw):
-    """ Setup the Brazil preference configuration """
+    """ Setup the France preference configuration """
     next_dict = dict(field_your_preferred_date_order='ymd',
-                     field_your_lang='erp5_l10n_pt-BR',
+                     field_your_default_available_language='fr',
                      field_your_preferred_event_sender_email="test@test.com",
                      default_field_your_lang=1)
     sequence.edit(next_dict=next_dict)
@@ -263,7 +257,7 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
     response_dict = sequence.get("response_dict")
     self.assertEquals('show', response_dict['command'])
     self.assertEquals('Previous', response_dict['previous'])
-    self.assertEquals('Configure Web Site', response_dict['next'])
+    self.assertEquals('Install', response_dict['next'])
 
   def stepCheckMultipleUserAccountThreeBrazil(self, sequence=None, sequence_list=None, **kw):
      """ Check if the users were created correctly """
@@ -291,8 +285,6 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
     """ Check the installation form """
     response_dict = sequence.get("response_dict")
     self.assertEquals('show', response_dict['command'])
-    self.assertEquals('Previous', response_dict['previous'])
-    self.assertEquals('Install', response_dict['next'])
 
   def stepSetupInstallConfiguration(self, sequence=None, sequence_list=None, **kw):
     """ Install the Configuration """
@@ -311,14 +303,13 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
 
   def stepCheckSystemPreferenceAfterInstallation(self, sequence=None, sequence_list=None, **kw):
     """ Check System Preference"""
-    import ipdb;ipdb.set_trace()
     system_preference = self.portal.portal_catalog.getResultValue(portal_type="System Preference")
     self.assertEquals(system_preference.getPreferredOoodocServerPortNumber(), 8011)
     self.assertEquals(system_preference.getPreferredOoodocServerAddress(), "localhost")
 
   def stepCheckUserPreferenceAfterInstallation(self, sequence=None, sequence_list=None, **kw):
     """ Check System Preference"""
-    portal_catalog = portal.portal_catalog
+    portal_catalog = self.portal.portal_catalog
     preference = portal_catalog.getResultValue(portal_type="Preference",
                                                reference='Preference for Person Assignor')
     self.assertEquals(preference.getPreferenceState(), "enabled")

@@ -52,20 +52,12 @@
             <key> <string>_body</string> </key>
             <value> <string>Base_translateString = context.Base_translateString\n
 \n
-return [\n
-  dict(id=\'fr\',\n
-       name=Base_translateString(\'French\'),\n
-       bt5=\'erp5_l10n_fr\',),\n
-  dict(id=\'pl\',\n
-       name=Base_translateString(\'Polish\'),\n
-       bt5=\'erp5_l10n_pl_PL\',),\n
-  dict(id=\'pt-BR\',\n
-       name=Base_translateString(\'Portuguese / Brazil\'),\n
-       bt5=\'erp5_l10n_pt-BR\',),\n
-  dict(id=\'ko\',\n
-       name=Base_translateString(\'Korean\'),\n
-       bt5=\'erp5_l10n_ko\',),\n
-]\n
+return {\n
+        \'fr\':dict(name=Base_translateString(\'French\'),bt5=\'erp5_l10n_fr\'),\n
+        \'pl\':dict(name=Base_translateString(\'Polish\'),bt5=\'erp5_l10n_pl_PL\'),\n
+        \'pt-BR\':dict(name=Base_translateString(\'Portuguese / Brazil\'),bt5=\'erp5_l10n_pt-BR\'),\n
+        \'ko\':dict(name=Base_translateString(\'Korean\'),bt5=\'erp5_l10n_ko\'),\n
+       }\n
 </string> </value>
         </item>
         <item>
