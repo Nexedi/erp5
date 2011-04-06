@@ -6257,7 +6257,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        UseImportBusinessTemplate \
                        InstallBusinessTemplate \
                        Tic \
-                       CheckWorkflowChain \
+                       CheckCustomWorkflowChain \
                        CheckWorkflowChainExists \
                        '
     sequence_list.addSequenceString(sequence_string)
