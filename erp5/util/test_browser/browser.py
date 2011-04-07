@@ -166,7 +166,7 @@ class Browser(ExtendedTestBrowser):
     @param username: Username to be used to log into ERP5
     @type username: str
     @param password: Password to be used to log into ERP5
-    @param log_filename: Log filename (stdout if none given)
+    @param log_filename: Log filename (stderr if none given)
     @type log_filename: str
     @param is_debug: Enable or disable debugging (disable by default)
     @type is_debug: bool
@@ -192,7 +192,7 @@ class Browser(ExtendedTestBrowser):
     if log_filename:
       logging.basicConfig(filename=log_filename, level=logging_level)
     else:
-      logging.basicConfig(stream=sys.stdout, level=logging_level)
+      logging.basicConfig(stream=sys.stderr, level=logging_level)
 
     self._logger = logging.getLogger('erp5.utils.test_browser')
     self._is_legacy_listbox = is_legacy_listbox
