@@ -4238,9 +4238,12 @@ class LocalRolesTemplateItem(BaseTemplateItem):
       keys = self._objects.keys()
     for roles_path in keys:
       path = roles_path.split('/')[1:]
-      obj = p.unrestrictedTraverse(path)
-      setattr(obj, '__ac_local_roles__', {})
-      obj.reindexObject()
+      # if document does not exists anymore longer,
+      # there is no needs to fail
+      obj = p.unrestrictedTraverse(path, None)
+      if obj is not None:
+        setattr(obj, '__ac_local_roles__', {})
+        obj.reindexObject()
 
 class BusinessTemplate(XMLObject):
     """
