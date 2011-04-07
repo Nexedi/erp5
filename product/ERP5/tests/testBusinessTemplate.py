@@ -7442,11 +7442,14 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     Add Property Sheet to Business Template
     """
-    sequence['current_bt'].edit(template_property_sheet_id_list=[sequence['ps_title']])
+    sequence['current_bt'].edit(template_property_sheet_id_list=[])
 
   def test_BusinessTemplateWithDocumentPropertySheetRemoved(self):
     """Checks that if Business Template defines Document and PropertySheet
-    Document is not removed"""
+    Document is not removed
+    
+    This test uses simulation of pre-property sheet migration to have non unique
+    paths to remove"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateDocument \
@@ -7474,7 +7477,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckDocumentExists \
                        CheckPropertySheetExists \
                        \
-                       CopyBusinessTemplate \
+                       SimulateAndCopyPrePropertySheetMigrationBusinessTemplate \
                        Tic \
                        \
                        RemovePropertySheetFromBusinessTemplate \
@@ -7484,7 +7487,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        UseImportBusinessTemplate \
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
-                       InstallBusinessTemplate \
+                       InstallWithoutForceBusinessTemplate \
                        Tic \
                        \
                        CheckInstalledInstallationState \
