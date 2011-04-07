@@ -7551,6 +7551,107 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  def stepCreateAllPropertySheetsFromFilesystem(self, sequence=None, **kw):
+    self.portal.portal_property_sheets.createAllPropertySheetsFromFilesystem()
+
+  def stepRemovePropertySheetZodbOnly(self, sequence=None, **kw):
+    """
+    Remove Property Sheet, but only from ZODB
+    """
+    self.portal.portal_property_sheets.manage_delObjects([sequence['ps_title']])
+
+  def stepCheckDraftBuildingState(self, sequence=None, **kw):
+    self.assertEquals(sequence['current_bt'].getBuildingState(), 'draft')
+
+  def stepSimulateAndCopyPrePropertySheetMigrationBusinessTemplate(self, sequence=None, **kw):
+    portal = self.getPortalObject()
+    template_tool = portal.portal_templates
+    current_bt = sequence['current_bt']
+    cb_data = template_tool.manage_copyObjects([current_bt.getId()])
+    copied, = template_tool.manage_pasteObjects(cb_data)
+    current = current_bt._property_sheet_item._objects.copy()
+    current_bt._property_sheet_item._objects = PersistentMapping()
+    for k,v in current.iteritems():
+      k = k.lstrip('portal_property_sheets/')
+      current_bt._property_sheet_item._objects[k] = v
+    sequence.edit(current_bt=template_tool._getOb(copied['new_id']))
+
+  def test_BusinessTemplateWithDocumentPropertySheetMigrated(self):
+    """Checks that if Business Template defines Document and PropertySheet
+    Document is not removed after Property Sheet was migrated and Business Template
+    was updated"""
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreateDocument \
+                       CreatePropertySheet \
+                       CheckDocumentPropertySheetSameName \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddDocumentToBusinessTemplate \
+                       AddPropertySheetToBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveDocument \
+                       RemovePropertySheet \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckNoTrashBin \
+                       CheckDocumentExists \
+                       CheckPropertySheetExists \
+                       \
+                       SimulateAndCopyPrePropertySheetMigrationBusinessTemplate \
+                       Tic \
+                       \
+                       CreateAllPropertySheetsFromFilesystem \
+                       Tic \
+                       CheckPropertySheetRemoved \
+                       CheckPropertySheetMigration \
+                       \
+                       CheckDraftBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveBusinessTemplate \
+                       Tic \
+                       CreatePropertySheet \
+                       RemovePropertySheetZodbOnly \
+                       Tic \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallWithoutForceBusinessTemplate \
+                       Tic \
+                       \
+                       CheckPropertySheetMigration \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckDocumentExists \
+                       CheckPropertySheetRemoved \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestBusinessTemplate))
