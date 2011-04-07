@@ -194,6 +194,7 @@ class Browser(ExtendedTestBrowser):
     else:
       logging.basicConfig(stream=sys.stdout, level=logging_level)
 
+    self._logger = logging.getLogger('erp5.utils.test_browser')
     self._is_legacy_listbox = is_legacy_listbox
 
     super(Browser, self).__init__()
@@ -215,7 +216,7 @@ class Browser(ExtendedTestBrowser):
     # ERP5 base URL
     absolute_url = urljoin(self._erp5_base_url, url_or_path)
 
-    logging.info("Opening url: " + absolute_url)
+    self._logger.info("Opening url: " + absolute_url)
     super(Browser, self).open(absolute_url, data)
 
   def getCookieValue(self, name, default=None):
@@ -574,8 +575,9 @@ class MainForm(Form):
                         class attribute name, if class_attribute
                         parameter is given.
     """
-    logging.debug("Submitting (name='%s', label='%s', class='%s')" % \
-                    (name, label, class_attribute))
+    self.browser._logger.debug(
+      "Submitting (name='%s', label='%s', class='%s')" % (name, label,
+                                                          class_attribute))
 
     if class_attribute:
       element_list = self.browser.etree.xpath('//*[contains(@class, "%s")]' % \
@@ -643,8 +645,8 @@ class MainForm(Form):
           value = item
           break
 
-    logging.debug("select_id='%s', label='%s', value='%s'" % \
-                    (select_name, label, value))
+    self.browser._logger.debug("select_id='%s', label='%s', value='%s'" % \
+                                 (select_name, label, value))
 
     select_control.getControl(label=label, value=value).selected = True
     self.submit(name=submit_name)
@@ -663,8 +665,8 @@ class MainForm(Form):
     @todo: Use information sent back as headers rather than looking
            into the page content?
     """
-    logging.debug("Logging in: username='%s', password='%s'" % \
-                    (self.browser._username, self.browser._password))
+    self.browser._logger.debug("Logging in: username='%s', password='%s'" % \
+                                 (self.browser._username, self.browser._password))
 
     self.getControl(name='__ac_name').value = self.browser._username
     self.getControl(name='__ac_password').value = self.browser._password
