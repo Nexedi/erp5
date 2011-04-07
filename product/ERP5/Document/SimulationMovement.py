@@ -282,6 +282,55 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
           tv[key] = None # disallow further calls to 'calculate'
         transaction.get().addBeforeCommitHook(before_commit)
 
+  security.declarePrivate('_getSuccessorTradePhaseList')
+  def _getSuccessorTradePhaseList(self):
+    """
+    Get the list of future trade_phase categories from this simulation
+    movement according to the related business process
+    """
+    # XXX-Leo this method could be smaller if (one or more of):
+    #  * Simulation Movements had trade_state instead of trade_phase categories,
+    #  * .asComposedDocument() also included the causality Business Link,
+    #  * BusinessLink objects had a '.getSucessorTradePhaseList' method (accepting
+    #      a context parameter for predicate checking).
+    #  * .getBusinessLinkValueList() accepted a predecessor_link parameter,
+    #  * some of the work below was done by a Business Process method,
+    portal = self.getPortalObject()
+    business_process = self.asComposedDocument()
+    business_link_type_list = portal.getPortalBusinessLinkTypeList()
+    business_link = self.getCausalityValue(portal_type=business_link_type_list)
+    if business_link is None:
+      # XXX-Leo we could just return self.getTradePhaseList() for
+      # backward compatibility
+      from Products.ERP5Type.Errors import SimulationError
+      raise SimulationError('No Business Link Causality for %r. Cannot enumerate successor trade_phases')
+    # from this Business Process, get the Business Links which
+    # predecessor state match the successor state of our Business Link
+    # causality
+    successor_trade_state = business_link.getSuccessor()
+    successor_link_list = business_process.getBusinessLinkValueList(
+      context=self,
+      predecessor=successor_trade_state)
+    successor_trade_phase_list = [link.getTradePhase()
+                                  for link in successor_link_list]
+
+    return successor_trade_phase_list
+
+  security.declarePrivate('_getApplicableRuleList')
+  def _getApplicableRuleList(self):
+    """ Search rules that match this movement, but with future trade phases
+    """
+    portal_rules = self.getPortalObject().portal_rules
+    successor_trade_phase_list = self._getSuccessorTradePhaseList()
+    context = self.asContext()
+    context.edit(trade_phase_list=successor_trade_phase_list)
+    # XXX-Leo: According to JP, the 'version' search below is wrong and
+    # should be replaced by a check that there are not two rules with the
+    # same reference that can be returned.
+    return portal_rules.searchRuleList(context,
+                                       sort_on='version',
+                                       sort_order='descending')
+
   security.declareProtected(Permissions.ModifyPortalContent, 'expand')
   def expand(self, **kw):
     """
@@ -294,8 +343,6 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     a delivery,
     finally, apply new rules if no rule with the same type is already applied.
     """
-    portal_rules = getToolByName(self.getPortalObject(), 'portal_rules')
-
     tv = getTransactionalVariable()
     cache = tv.setdefault(TREE_DELIVERED_CACHE_KEY, {})
     cache_enabled = cache.get(TREE_DELIVERED_CACHE_ENABLED, 0)
@@ -306,10 +353,11 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
 
     applied_rule_dict = {}
     applicable_rule_dict = {}
-    for rule in portal_rules.searchRuleList(self, sort_on='version',
-        sort_order='descending'):
+    for rule in self._getApplicableRuleList():
       reference = rule.getReference()
       if reference:
+        # XXX-Leo: We should complain loudly if there is more than one
+        # applicable rule per reference. It indicates a configuration error.
         applicable_rule_dict.setdefault(reference, rule)
 
     for applied_rule in list(self.objectValues()):
