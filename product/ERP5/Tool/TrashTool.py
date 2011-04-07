@@ -137,8 +137,7 @@ class TrashTool(BaseTool):
         obj = self.unrestrictedTraverse(object_path)
       if obj is not None:
         for subobject_id in list(obj.objectIds()):
-          subobject_path = object_path + [subobject_id]
-          subobject = self.unrestrictedTraverse(subobject_path)
+          subobject = obj.unrestrictedTraverse(subobject_id)
           subobject_copy = subobject._p_jar.exportFile(subobject._p_oid)
           subobjects_dict[subobject_id] = subobject_copy
           if save: # remove subobjecs from backup object
