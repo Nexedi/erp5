@@ -43,7 +43,7 @@
     <img src="web_site_module/ung/ung_images/arrow_20C.png">\n
     <ul>\n
       <tal:block tal:repeat="language python: filter(lambda x: x != current_language, here.Localizer.get_supported_languages())">\n
-        <li><span onClick="changeLanguage(this.innerHTML)" tal:content="language">Language</span></li>\n
+        <li><span tal:attributes="id language" onClick="changeLanguage(this.innerHTML)" tal:content="language">Language</span></li>\n
       </tal:block>\n
     </ul>\n
   </li>\n

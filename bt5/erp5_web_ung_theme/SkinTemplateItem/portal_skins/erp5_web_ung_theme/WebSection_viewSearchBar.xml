@@ -65,8 +65,6 @@
     <div id="more_property">\n
      <label for="short_title">Short Title:</label>\n
      <input type="text" class="short_title" id="short_title" name="short_title" value=""><br>\n
-     <label for="reference">Reference:</label>\n
-     <input type="text" class="reference" id="reference" name="reference" value=""><br>\n
      <label for="version">Version:</label>\n
      <input type="text" class="version" id="version" name="version" value=""><br>\n
      <label for="language">Language:</label>\n

@@ -357,7 +357,6 @@ $().ready(function(){\n
         var save_button = $("button.save");\n
         save_button.html() == "Save" ? save_button.html("Saving...") : null;\n
         var new_title = $("input#name.title").attr("value");\n
-        var new_reference = $("input#reference.reference").attr("value");\n
         var new_short_title = $("input#short_title.short_title").attr("value");\n
         var new_language = $("input#language.language").attr("value");\n
         var new_version = $("input#version.version").attr("value");\n
@@ -365,7 +364,6 @@ $().ready(function(){\n
         var new_subject_list = $("textarea#keyword_list").attr("value").replace(/\\n+/g, ",");\n
         displayDocumentTitle(new_title);\n
         setObjectPropertyValue("setTitle", new_title, "value");\n
-        setObjectPropertyValue("setReference", new_reference, "value");\n
         setObjectPropertyValue("setShortTitle", new_short_title, "value");\n
         setObjectPropertyValue("setLanguage", new_language, "language");\n
         setObjectPropertyValue("setVersion", new_version, "value");\n
@@ -441,10 +439,10 @@ $().ready(function(){\n
     .click(function(){\n
       $("div#more_property").show();\n
       $("p#hide_properties").show();\n
-      $("div#edit_document fieldset").animate({"height": "214px"}, "slow");\n
+      $("div#edit_document fieldset").animate({"height": "186px"}, "slow");\n
       $("div.ui-dialog").animate({"top": "50px"}, "slow")\n
-                        .animate({"height": "274px"}, "slow");\n
-      $("div#edit_document").animate({"height": "205px"}, "slow");\n
+                        .animate({"height": "255px"}, "slow");\n
+      $("div#edit_document").animate({"height": "183px"}, "slow");\n
       $("div#edit_document fieldset input").css("margin", "0")\n
                                            .css("width", "60%");\n
       $("div#edit_document fieldset label").css("float", "left")\n
