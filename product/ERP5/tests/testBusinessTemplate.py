@@ -83,13 +83,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
   def getTitle(self):
     return "Business Template"
 
-  def enableActivityTool(self):
-    """
-    You can override this.
-    Return if we should create (1) or not (0) an activity tool.
-    """
-    return 1
-
   ## Ignore errors from PortalTransforms (e.g. missing binaries)
 
   def _catch_log_errors(self):
@@ -210,12 +203,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
         property_sheet_tool.manage_delObjects([property_sheet])
     transaction.commit()
     self._ignore_log_errors()
-
-  def login(self):
-    uf = self.getPortal().acl_users
-    uf._doAddUser('seb', '', ['Manager'], [])
-    user = uf.getUserById('seb').__of__(uf)
-    newSecurityManager(None, user)
 
   def getBusinessTemplate(self,title):
     """
