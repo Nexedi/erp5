@@ -85,11 +85,6 @@
         <td></td>\n
       </tr>\n
       <tr>\n
-        <td>verifyText</td>\n
-        <td>//label[@for="reference"]</td>\n
-        <td>Reference:</td>\n
-      </tr>\n
-      <tr>\n
         <td>click</td>\n
         <td>//span[@class="ui-icon ui-icon-closethick"]</td>\n
         <td></td>\n
@@ -331,6 +326,31 @@
         <td>verifyValue</td>\n
         <td>//input[@id="name"]</td>\n
         <td>Add a Big Title to Test the abbreviation</td>\n
+      </tr>\n
+      <tr>\n
+        <td>openAndWait</td>\n
+        <td>${ung_url}</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//div[@id="select_language"]/li/ul/li/span[@id="fr"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyTextPresent</td>\n
+        <td>Aide</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//div[@id="select_language"]/li/ul/li/span[@id="en"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyTextPresent</td>\n
+        <td>Help</td>\n
+        <td></td>\n
       </tr>\n
     </tbody>\n
   </table>\n
