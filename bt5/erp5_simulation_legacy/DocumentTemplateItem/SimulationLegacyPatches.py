@@ -143,4 +143,15 @@ def patch():
 
   SimulationMovement.isBuildable = isBuildable
 
+  def _getApplicableRuleList(self):
+    """ Search rules that match this movement, but don't try to look up
+        successor trade_phases
+    """
+    portal_rules = self.getPortalObject().portal_rules
+    return portal_rules.searchRuleList(self,
+                                       sort_on='version',
+                                       sort_order='descending')
+
+  SimulationMovement._getApplicableRuleList = _getApplicableRuleList
+
 patch()
