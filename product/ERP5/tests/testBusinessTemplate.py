@@ -7453,44 +7453,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def test_BusinessTemplateWithPropertySheetMigrationWithDocument(self):
-    sequence_list = SequenceList()
-    sequence_string = '\
-                       CreatePropertySheet \
-                       CreateDocument \
-                       CheckDocumentPropertySheetSameName \
-                       CreateNewBusinessTemplate \
-                       UseExportBusinessTemplate \
-                       AddPropertySheetToBusinessTemplate \
-                       AddDocumentToBusinessTemplate \
-                       CheckModifiedBuildingState \
-                       ' + self.save_current_business_template_sequence_string + '\
-                       RemovePropertySheet \
-                       RemoveDocument \
-                       RemoveBusinessTemplate \
-                       RemoveAllTrashBins \
-                       ImportBusinessTemplate \
-                       UseImportBusinessTemplate \
-                       CheckBuiltBuildingState \
-                       CheckNotInstalledInstallationState \
-                       InstallBusinessTemplate \
-                       Tic \
-                       CheckInstalledInstallationState \
-                       CheckBuiltBuildingState \
-                       CheckNoTrashBin \
-                       CheckSkinsLayers \
-                       CheckPropertySheetMigration \
-                       CheckPropertySheetRemoved \
-                       CheckDocumentExists \
-                       UninstallBusinessTemplate \
-                       CheckBuiltBuildingState \
-                       CheckNotInstalledInstallationState \
-                       CheckMigratedPropertySheetRemoved \
-                       CheckDocumentRemoved \
-                       '
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
-
   def stepCreateAllPropertySheetsFromFilesystem(self, sequence=None, **kw):
     self.portal.portal_property_sheets.createAllPropertySheetsFromFilesystem()
 
