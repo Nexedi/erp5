@@ -75,7 +75,7 @@ IDEAS:\n
                          tal:attributes="type python:\'text/css\'">\n
                   </style>\n
                 </tal:block>\n
-                <tal:block tal:define="dummy python: css_list.extend(field.get_css_list(REQUEST=request))" />\n
+                <tal:block tal:define="dummy python: css_list.extend(field.get_css_list(REQUEST=request) + [\'wizard.css\'])" />\n
                 <tal:block tal:define="dummy python: js_list.extend(field.get_javascript_list(REQUEST=request))" />\n
               </tal:block>\n
             </tal:block>\n
