@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<table>\n
+  <tbody>\n
+    <tal:block define="business_configuration_list python: here.ConfiguratorTool_getAvailableBusinessConfigurationList()">\n
+\n
+      <div tal:condition="python: not business_configuration_list">\n
+        <h3 i18n:translate="" i18n:domain="ui"> There is no Business Configuration Available. </h3>\n
+      </div>\n
+\n
+      <tal:block condition="business_configuration_list">\n
+        <tal:block repeat="business_configuration_tuple business_configuration_list">\n
+          <tr>\n
+            <tal:block repeat="bc business_configuration_tuple">\n
+              <tal:block define="bc_id python: bc.getId();\n
+                                 bc_title python: bc.getTitle();\n
+                                 bc_description python: bc.getDescription();\n
+                                 bc_absolute_url python: bc.absolute_url();\n
+                                 bc_default_image python: bc.getDefaultImageValue();\n
+                                 bc_default_image_absolute_url python: bc.getDefaultImageAbsoluteUrl();">\n
+                <td>\n
+                  <div tal:attributes="id python: \'business_configuration_%s\' % bc_id;\n
+                                       class string:box;">\n
+\n
+                    <a tal:attributes="href bc_absolute_url" tal:content="python: bc_title" />\n
+\n
+                    <a tal:condition="bc_default_image" tal:attributes="href bc_absolute_url">\n
+                      <img tal:attributes="src python: \'%s?format=png\' % bc_default_image_absolute_url" />\n
+                    </a>\n
+\n
+                    <span tal:condition="bc_description"\n
+                          tal:content="python: \'%s ...\' % bc_description[:80]" />\n
+\n
+                    <button id="dialog_submit_button"\n
+                            accesskey="V"\n
+                            tal:attributes="value python: bc.getRelativeUrl()"\n
+                            type="submit"\n
+                            name="Base_callDialogMethod:method">Configure</button>\n
+                  </div>\n
+                </td>\n
+              </tal:block>\n
+            </tal:block>\n
+          </tr>\n
+        </tal:block>\n
+\n
+      </tal:block>\n
+    </tal:block>\n
+  </tbody>\n
+</table>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ConfiguratorTool_displayBusinessConfigurationList</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

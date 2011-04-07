@@ -1,4 +1,7 @@
 2011-04-07 lucas
+* Added the page template of new user interface  which must replace the old your_business_configuration list field.
+
+2011-04-07 lucas
 * Added CSS file which must be used to customize the new user interface.
 
 2011-04-07 lucas
