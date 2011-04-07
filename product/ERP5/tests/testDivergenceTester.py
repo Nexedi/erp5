@@ -55,9 +55,6 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     return self.getRule(reference='default_delivering_rule',
                         validation_state="validated")
 
-  def afterSetUp(self):
-    self.validateRules()
-
   def beforeTearDown(self):
     transaction.abort()
     portal_rules = self.portal.portal_rules
