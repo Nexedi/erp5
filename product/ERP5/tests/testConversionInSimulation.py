@@ -102,6 +102,7 @@ class TestConversionInSimulation(AccountingTestCase):
     _(category_tool.trade_phase, ['default'])
     _(category_tool.trade_phase.default,
       ['accounting', 'delivery', 'invoicing', 'discount', 'tax', 'payment'])
+    _(category_tool.product_line, ['apparel'])
 
   def _solveDivergence(self, obj, property, decision, group='line'):
     """
@@ -139,6 +140,10 @@ class TestConversionInSimulation(AccountingTestCase):
         currency.manage_delObjects([x.getId() for x in
                 currency.objectValues(
                   portal_type='Currency Exchange Line')])
+    if getattr(self, 'business_process', None) is not None:
+      self.business_process.getParentValue()._delObject(
+        self.business_process.getId()
+      )
     transaction.commit()
     self.tic()
     super(TestConversionInSimulation, self).beforeTearDown()
@@ -158,6 +163,8 @@ class TestConversionInSimulation(AccountingTestCase):
       need to be installed to run the test on.
     """
     return ('erp5_base',
+            # XXX erp5_core is still not clean. Remove when not needed
+            'erp5_core_proxy_field_legacy',
             'erp5_pdm',
             'erp5_simulation',
             'erp5_trade',
