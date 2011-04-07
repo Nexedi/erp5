@@ -108,6 +108,7 @@ class TestConversionInSimulation(AccountingTestCase):
 	    'incoterm/%s' % self.cpt_incoterm,
             'quantity_unit/%s' % self.unit_piece_quantity_unit,
             'quantity_unit/%s' % self.mass_quantity_unit,
+            'product_line/apparel',
         )
 
   def _solveDivergence(self, obj, property, decision, group='line'):
