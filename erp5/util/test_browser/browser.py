@@ -196,12 +196,11 @@ class Browser(ExtendedTestBrowser):
 
     self._logger = logging.getLogger('erp5.utils.test_browser')
     self._is_legacy_listbox = is_legacy_listbox
+    self._is_logged_in = False
 
     super(Browser, self).__init__()
 
-    # Open login page, then login with the given username and password
-    self.open('login_form')
-    self.mainForm.submitLogin()
+    self.login()
 
   def open(self, url_or_path=None, data=None):
     """
@@ -218,6 +217,27 @@ class Browser(ExtendedTestBrowser):
 
     self._logger.info("Opening url: " + absolute_url)
     super(Browser, self).open(absolute_url, data)
+
+  def login(self, force=False):
+    """
+    Log in only if not already logged in unless explicitely specified
+    to do so.
+
+    @param force: Log in even if already logged in
+    @type force: bool
+    """
+    if force or not self._is_logged_in:
+      try:
+        url_before_login = self.url
+      except:
+        url_before_login = None
+
+      self.open('login_form')
+      self.mainForm.submitLogin()
+
+      # Go back to the page before trying to log in if any URL, or to
+      # the homepage otherwise
+      self.open(url_before_login)
 
   def getCookieValue(self, name, default=None):
     """
@@ -674,6 +694,8 @@ class MainForm(Form):
 
     if 'Logged In as' not in self.browser.contents:
       raise LoginError
+
+    self.browser._is_logged_in = True
 
   def submitSelectFavourite(self, label=None, value=None):
     """
