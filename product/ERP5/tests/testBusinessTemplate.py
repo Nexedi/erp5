@@ -7399,7 +7399,11 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     sequence['current_bt'].edit(template_test_id_list=[])
 
-  business_template_with_document_test = '\
+  def test_BusinessTemplateWithDocumentTestRemoved(self):
+    """Checks that if Business Template defines Document and Test
+    Document is not removed"""
+    sequence_list = SequenceList()
+    sequence_string = '\
                        CreateDocument \
                        CreateTest \
                        CheckDocumentTestSameName \
@@ -7408,7 +7412,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        AddDocumentToBusinessTemplate \
                        AddTestToBusinessTemplate \
                        CheckModifiedBuildingState \
-                       ' + save_current_business_template_sequence_string + '\
+                       ' + self.save_current_business_template_sequence_string + '\
                        RemoveDocument \
                        RemoveTest \
                        RemoveBusinessTemplate \
@@ -7416,13 +7420,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        ImportBusinessTemplate \
                        UseImportBusinessTemplate \
                        CheckBuiltBuildingState \
-                       CheckNotInstalledInstallationState'
-
-  def test_BusinessTemplateWithDocumentTestRemoved(self):
-    """Checks that if Business Template defines Document and Test
-    Document is not removed"""
-    sequence_list = SequenceList()
-    sequence_string = self.business_template_with_document_test + '\
+                       CheckNotInstalledInstallationState \
                        InstallBusinessTemplate \
                        Tic \
                        CheckInstalledInstallationState \
@@ -7449,20 +7447,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckTestRemoved \
                        CheckDocumentExists \
                        '
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
-
-  def stepCheckDocumenTestPreinstall(self, sequence=None, **kw):
-    bt = sequence['current_bt']
-    self.assertEqual(
-        {'UnitTest': ['New', 'Test']}, {'UnitTest': ['New', 'Document']}
-        )
-
-  def test_BusinessTemplateWithDocumentTestPreinstallCheck(self):
-    sequence_list = SequenceList()
-    sequence_string = self.business_template_with_document_test + '\
-                      CheckDocumenTestPreinstall \
-        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
