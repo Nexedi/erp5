@@ -1,4 +1,7 @@
 2011-04-07 lucas
+* The ConfiguratorTool_getAvailableBusinessConfigurationList must return a list of tuples following the appropriated order, such list is used to render the business configuration in the new user interface.
+
+2011-04-07 lucas
 * Removed obsolete Start button.
 
 2011-04-07 lucas

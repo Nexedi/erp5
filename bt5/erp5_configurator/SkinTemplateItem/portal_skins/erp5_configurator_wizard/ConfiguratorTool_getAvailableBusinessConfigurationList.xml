@@ -51,19 +51,22 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
- We should exclude configurations which already used. A workflow \n
- could help on this situation.\n
+ Returns a list of tuple with max three business configuration for each tuple.\n
+ The business configurations without Resource and with the state of the related workflow\n
+ equals to \'End\' are just ignored.\n
 """\n
-\n
 bc_list = context.business_configuration_module.searchFolder(portal_type="Business Configuration")\n
-result_list = []\n
-for business_configuration in bc_list:\n
-  if None not in [business_configuration.getResource()]:\n
-    title = business_configuration.getTitle()\n
-    relative_url = business_configuration.getRelativeUrl()\n
-    result_list.append((title, relative_url))\n
+bc_list = [bc for bc in bc_list if bc.getResource() is not None and bc.getCurrentStateTitle() not in ("End",)]\n
 \n
-return result_list\n
+bc_tuple_list = []\n
+index = 0\n
+while True:\n
+  part = bc_list[index:index+3]\n
+  if not part:\n
+    return bc_tuple_list\n
+  else:\n
+    bc_tuple_list.append(tuple(part))\n
+    index+=3\n
 </string> </value>
         </item>
         <item>
