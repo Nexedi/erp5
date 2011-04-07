@@ -1,4 +1,7 @@
 2011-04-07 lucas
+* Replaced the your_business_configuration list field for an editor field, which must render the new business configuration list.
+
+2011-04-07 lucas
 * Added the page template of new user interface  which must replace the old your_business_configuration list field.
 
 2011-04-07 lucas
