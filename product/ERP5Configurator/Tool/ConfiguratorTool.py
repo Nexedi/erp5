@@ -145,7 +145,7 @@ class ConfiguratorTool(BaseTool):
   def login(self, REQUEST):
     """ Login client and show next form. """
     password = REQUEST.get('field_my_ac_key', '')
-    bc = REQUEST.get('field_your_business_configuration')
+    bc = REQUEST.get('Base_callDialogMethod')
     if self._isCorrectConfigurationKey(password, bc):
       # set user preferred configuration language
       user_preferred_language = REQUEST.get(
