@@ -34,7 +34,7 @@ from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.ERP5 import _dtmldir
 from Products.ERP5.Document.BusinessTemplate import getChainByType
-from zLOG import LOG
+from zLOG import LOG, WARNING
 from DateTime import DateTime
 from Acquisition import aq_base
 
@@ -143,6 +143,11 @@ class TrashTool(BaseTool):
           subobjects_dict[subobject_id] = subobject_copy
           if save: # remove subobjecs from backup object
             obj._delObject(subobject_id)
+            if subobject_id in obj.objectIds():
+              LOG('Products.ERP5.Tool.TrashTool', WARNING,
+                  'Cleaning corrupted BTreeFolder2 object at %r.' % \
+                                                       (subobject_path,))
+              obj._cleanup()
     return subobjects_dict
 
   def newTrashBin(self, bt_title='trash', bt=None):
