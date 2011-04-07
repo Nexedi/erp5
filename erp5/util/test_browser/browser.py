@@ -188,7 +188,7 @@ class Browser(ExtendedTestBrowser):
     self._password = password
 
     # Only display WARNING message if debugging is not enabled
-    logging_level = level=(is_debug and logging.DEBUG or logging.WARNING)
+    logging_level = is_debug and logging.DEBUG or logging.WARNING
     if log_filename:
       logging.basicConfig(filename=log_filename, level=logging_level)
     else:
