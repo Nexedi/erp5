@@ -326,7 +326,7 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
     """ Check permission of Web Site with normal user """
     self.portal.web_page_module.ERP5Site_createNewWebDocument("web_page_template")
     self.stepTic()
-    result_list = self.portal.web_site_module.ungWebSection_getWebPageObjectList()
+    result_list = self.portal.web_site_module.ung.WebSection_getWebPageObjectList()
     self.assertEquals(len(result_list), 1)
     self.assertEquals(result_list[0].getTitle(), "Web Page")
     new_object = self.portal.web_page_module.newContent(portal_type="Web Page")
