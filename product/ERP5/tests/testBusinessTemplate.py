@@ -7275,6 +7275,36 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
   def stepCheckDocumentRemoved(self, sequence=None, **kw):
     self.failIf(os.path.exists(sequence['document_path']))
 
+  def stepCreateTest(self, sequence=None, **kw):
+    test_title = 'UnitTest'
+    test_data = """class UnitTest:
+  pass"""
+    cfg = getConfiguration()
+    file_path = os.path.join(cfg.instancehome, 'tests', test_title+'.py')
+    if os.path.exists(file_path):
+      os.remove(file_path)
+    f = file(file_path, 'w')
+    f.write(test_data)
+    f.close()
+    self.failUnless(os.path.exists(file_path))
+    sequence.edit(test_title=test_title, test_path=file_path,
+        test_data=test_data)
+
+  def stepAddTestToBusinessTemplate(self, sequence=None, **kw):
+    bt = sequence['current_bt']
+    bt.edit(template_test_id_list=[sequence['test_title']])
+
+  def stepRemoveTest(self, sequence=None, **kw):
+    test_path = sequence['test_path']
+    os.remove(test_path)
+    self.failIf(os.path.exists(test_path))
+
+  def stepCheckTestExists(self, sequence=None, **kw):
+    self.failIf(not os.path.exists(sequence['test_path']))
+
+  def stepCheckTestRemoved(self, sequence=None, **kw):
+    self.failIf(os.path.exists(sequence['test_path']))
+
   def stepCheckDocumentPropertySheetSameName(self, sequence=None, **kw):
     self.assertEqual(sequence['ps_title'], sequence['document_title'])
     self.assertEqual(os.path.basename(sequence['document_path']),
@@ -7317,6 +7347,37 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
                        CheckDocumentRemoved \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_BusinessTemplateWithTest(self):
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreateTest \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddTestToBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       ' + self.save_current_business_template_sequence_string + '\
+                       RemoveTest \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckNoTrashBin \
+                       CheckSkinsLayers \
+                       CheckTestExists \
+                       UninstallBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckTestRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
@@ -7505,6 +7566,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
+
 
 def test_suite():
   suite = unittest.TestSuite()
