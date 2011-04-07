@@ -33,7 +33,6 @@ import transaction
 
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from AccessControl.SecurityManagement import newSecurityManager
 from Acquisition import aq_base
 from OFS.SimpleItem import SimpleItem
 from zLOG import LOG
