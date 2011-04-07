@@ -308,13 +308,13 @@
         <td>Add a Big Title to Test the abbreviation</td>\n
       </tr>\n
       <tr>\n
-        <td>clickAndWait</td>\n
-        <td>//div[@class="ui-dialog-buttonset"]/button[1]/span</td>\n
+        <td>setTimeout</td>\n
+        <td>30000</td>\n
         <td></td>\n
       </tr>\n
       <tr>\n
-        <td>setTimeout</td>\n
-        <td>30000</td>\n
+        <td>clickAndWait</td>\n
+        <td>//div[@class="ui-dialog-buttonset"]/button[1]/span</td>\n
         <td></td>\n
       </tr>\n
       <tr>\n
