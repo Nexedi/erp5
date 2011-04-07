@@ -7310,6 +7310,11 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(os.path.basename(sequence['document_path']),
         os.path.basename(sequence['ps_path']))
 
+  def stepCheckDocumentTestSameName(self, sequence=None, **kw):
+    self.assertEqual(sequence['test_title'], sequence['document_title'])
+    self.assertEqual(os.path.basename(sequence['document_path']),
+        os.path.basename(sequence['test_path']))
+
   save_current_business_template_sequence_string = '\
                        CheckNotInstalledInstallationState \
                        BuildBusinessTemplate \
@@ -7388,8 +7393,14 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     sequence['current_bt'].edit(template_property_sheet_id_list=[])
 
-  def test_BusinessTemplateWithDocumentPropertySheetRemoved(self):
-    """Checks that if Business Template defines Document and PropertySheet
+  def stepRemoveTestFromBusinessTemplate(self, sequence=None, **kw):
+    """
+    Add Property Sheet to Business Template
+    """
+    sequence['current_bt'].edit(template_test_id_list=[])
+
+  def test_BusinessTemplateWithDocumentTestRemoved(self):
+    """Checks that if Business Template defines Document and Test
     Document is not removed
     
     This test uses simulation of pre-property sheet migration to have non unique
@@ -7397,16 +7408,16 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateDocument \
-                       CreatePropertySheet \
-                       CheckDocumentPropertySheetSameName \
+                       CreateTest \
+                       CheckDocumentTestSameName \
                        CreateNewBusinessTemplate \
                        UseExportBusinessTemplate \
                        AddDocumentToBusinessTemplate \
-                       AddPropertySheetToBusinessTemplate \
+                       AddTestToBusinessTemplate \
                        CheckModifiedBuildingState \
                        ' + self.save_current_business_template_sequence_string + '\
                        RemoveDocument \
-                       RemovePropertySheet \
+                       RemoveTest \
                        RemoveBusinessTemplate \
                        RemoveAllTrashBins \
                        ImportBusinessTemplate \
@@ -7419,12 +7430,12 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckBuiltBuildingState \
                        CheckNoTrashBin \
                        CheckDocumentExists \
-                       CheckPropertySheetExists \
+                       CheckTestExists \
                        \
-                       SimulateAndCopyPrePropertySheetMigrationBusinessTemplate \
+                       CopyBusinessTemplate \
                        Tic \
                        \
-                       RemovePropertySheetFromBusinessTemplate \
+                       RemoveTestFromBusinessTemplate \
                        CheckModifiedBuildingState \
                        ' + self.save_current_business_template_sequence_string + '\
                        ImportBusinessTemplate \
@@ -7436,7 +7447,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
-                       CheckPropertySheetRemoved \
+                       CheckTestRemoved \
                        CheckDocumentExists \
                        '
     sequence_list.addSequenceString(sequence_string)
