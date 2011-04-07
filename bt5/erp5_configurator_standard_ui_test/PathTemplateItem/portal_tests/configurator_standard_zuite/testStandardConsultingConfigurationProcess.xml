@@ -40,12 +40,12 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">\n
 <head>\n
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
-<title>Configuration Standard Consulting</title>\n
+<title>Standard Consulting Configuration</title>\n
 </head>\n
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">Standard Configuration</td></tr>\n
+<tr><td rowspan="1" colspan="3">Standard Consulting Configuration</td></tr>\n
 </thead><tbody>\n
 \n
 <span metal:use-macro="container/Zuite_viewConfiguratorTestMacroLibrary/macros/init_test_environment" />\n
@@ -127,7 +127,8 @@
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//input[@name="Base_callDialogMethod:method"]</td>\n
+  <td tal:content="python: \'//button[@value=\\\'business_configuration_module/%s\\\']\' %\n
+                           here.Zuite_getConfigurationTestDict()[\'business_configuration_id\']"></td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -142,13 +143,9 @@
         here.Zuite_getConfigurationTestDict()[\'configuration_key\']"></td>\n
 </tr>\n
 <tr>\n
-  <td>select</td>\n
-  <td>//select[@name="field_your_business_configuration"]</td>\n
-  <td>STANDARD_CONFIGURATOR_TEST</td>\n
-</tr>\n
-<tr>\n
   <td>clickAndWait</td>\n
-  <td>//input[@name="Base_callDialogMethod:method"]</td>\n
+  <td tal:content="python: \'//button[@value=\\\'business_configuration_module/%s\\\']\' %\n
+                           here.Zuite_getConfigurationTestDict()[\'business_configuration_id\']"></td>\n
   <td></td>\n
 </tr>\n
 \n

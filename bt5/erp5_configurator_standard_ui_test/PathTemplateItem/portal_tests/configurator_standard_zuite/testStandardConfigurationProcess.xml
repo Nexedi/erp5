@@ -127,7 +127,8 @@
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//input[@name="Base_callDialogMethod:method"]</td>\n
+  <td tal:content="python: \'//button[@value=\\\'business_configuration_module/%s\\\']\' %\n
+                           here.Zuite_getConfigurationTestDict()[\'business_configuration_id\']"></td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -142,13 +143,9 @@
         here.Zuite_getConfigurationTestDict()[\'configuration_key\']"></td>\n
 </tr>\n
 <tr>\n
-  <td>select</td>\n
-  <td>//select[@name="field_your_business_configuration"]</td>\n
-  <td>STANDARD_CONFIGURATOR_TEST</td>\n
-</tr>\n
-<tr>\n
   <td>clickAndWait</td>\n
-  <td>//input[@name="Base_callDialogMethod:method"]</td>\n
+  <td tal:content="python: \'//button[@value=\\\'business_configuration_module/%s\\\']\' %\n
+                           here.Zuite_getConfigurationTestDict()[\'business_configuration_id\']"></td>\n
   <td></td>\n
 </tr>\n
 \n
@@ -658,7 +655,8 @@ Wait for activities</span>\n
   <td></td>\n
 </tr>\n
 \n
-</tbody></table>\n
+</tbody>\n
+</table>\n
 </body>\n
 </html>
 
