@@ -1,4 +1,7 @@
 2011-04-07 lucas
+* Kept the Configuration Tool consistency, the name of the button element must be field_your_business_configuration. Then the action name must be handled by the form instead of the button.
+
+2011-04-07 lucas
 * The ConfiguratorTool_getAvailableBusinessConfigurationList must return a list of tuples following the appropriated order, such list is used to render the business configuration in the new user interface.
 
 2011-04-07 lucas

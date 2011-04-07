@@ -67,11 +67,11 @@
                     <span tal:condition="bc_description"\n
                           tal:content="python: \'%s ...\' % bc_description[:80]" />\n
 \n
-                    <button id="dialog_submit_button"\n
+                    <button id="dialog-submit-button"\n
                             accesskey="V"\n
                             tal:attributes="value python: bc.getRelativeUrl()"\n
                             type="submit"\n
-                            name="Base_callDialogMethod:method">Configure</button>\n
+                            name="field_your_business_configuration">Configure</button>\n
                   </div>\n
                 </td>\n
               </tal:block>\n
