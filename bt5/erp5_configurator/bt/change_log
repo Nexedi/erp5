@@ -1,4 +1,7 @@
 2011-04-07 lucas
+* Added new fields to allow to add default image in Business Configuration.
+
+2011-04-07 lucas
 * Added Embedded File as allowed content type of Business Configuration
 
 2011-04-07 lucas
