@@ -7401,10 +7401,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
 
   def test_BusinessTemplateWithDocumentTestRemoved(self):
     """Checks that if Business Template defines Document and Test
-    Document is not removed
-    
-    This test uses simulation of pre-property sheet migration to have non unique
-    paths to remove"""
+    Document is not removed"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateDocument \
