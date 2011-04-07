@@ -1,4 +1,7 @@
 2011-04-07 lucas
+* Removed useless properties from Zuite_getConfigurationTestDict.
+
+2011-04-07 lucas
 * Updated the test to work with the new user interface.
 
 2010-01-07 rafael
