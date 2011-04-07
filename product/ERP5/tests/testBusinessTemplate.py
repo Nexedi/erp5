@@ -43,7 +43,6 @@ from urllib import pathname2url
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.CMFCore.Expression import Expression
 from Products.ERP5Type.tests.utils import LogInterceptor
-from Products.ERP5Type.Tool.TypesTool import TypeProvider
 from Products.ERP5Type.Workflow import addWorkflowByType
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
 import shutil
@@ -53,9 +52,6 @@ import random
 import string
 import tempfile
 import glob
-
-from MethodObject import Method
-from Persistence import Persistent
 
 WORKFLOW_TYPE = 'erp5_workflow'
 
@@ -123,7 +119,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
   def afterSetUp(self):
     self.login()
     portal = self.getPortal()
-    catalog_tool = self.getCatalogTool()
     # create the fake catalog table
     sql_connection = self.getSQLConnection()
     sql = 'create table if not exists `fake_catalog` (`toto` BIGINT)'
@@ -136,7 +131,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
         'any' in content_type_registry.predicate_ids):
       content_type_registry.removePredicate('any')
       transaction.commit()
-    pw = self.getWorkflowTool()
 
   def beforeTearDown(self):
     """Remove objects created in tests."""
@@ -588,7 +582,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     pt = self.getTypeTool()
     object_id = sequence.get('object_ptype_id')
-    module_id = sequence.get('module_ptype_id')
     object_type = pt._getOb(object_id, None)
     self.failUnless(object_type is None)
 
@@ -1020,15 +1013,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       ps.manage_skinLayers(skinpath = tuple(selection), skinname = skin_name, add_skin = 1)
 
 
-  def stepRemoveFileFromSkinFolder(self, sequence=None, sequence_list=None, **kw):
-    """
-    Remove file from Skin folder
-    """
-    ps = self.getSkinsTool()
-    skin_id = sequence.get('skin_folder_id')
-    skin_folder = ps._getOb(skin_id, None)
-    # TODO
-
   def stepCheckSkinFolderExists(self, sequence=None,sequence_list=None, **kw):
     """
     Check presence of skin folder
@@ -1133,7 +1117,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
       Add Content Type Registry to Business template
     """
-    bc_id = sequence.get('bc_id')
     bt = sequence.get('current_bt')
     path = 'content_type_registry'
     bt.edit(template_path_list=[path])
@@ -2496,7 +2479,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     ps_title = sequence.get('ps_title', None)
     ps_path = sequence.get('ps_path', None)
-    ps_data = sequence.get('ps_data', None)
     self.failUnless(ps_path is not None)
     # Property Sheet will not be installed in file sytem
     self.failIf(os.path.exists(ps_path))
@@ -2545,7 +2527,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     ps_title = sequence.get('ps_title', None)
     ps_path = sequence.get('ps_path', None)
-    ps_data = sequence.get('ps_data_u', None)
     self.failUnless(ps_path is not None)
     # Property Sheet will not be installed in file sytem
     self.failIf(os.path.exists(ps_path))
@@ -2898,7 +2879,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     Check that after a build, not unindex has been done
     """
     bc_id = sequence.get('bc_id')
-    bt = sequence.get('current_bt')
     path = 'portal_categories/'+bc_id
     category_id_list = sequence.get('category_id_list')
     portal = self.getPortal()
@@ -2913,7 +2893,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     Set flag for update in Business Template
     """
-    template_tool = self.getTemplateTool()
     bt = sequence.get('current_bt')
     self.assertEqual(bt.getTitle(),'erp5_core')
     bt.edit(template_update_tool=1)
@@ -5452,7 +5431,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
   def stepCheckSkinSelectionAdded(self, sequence=None, **kw):
     ps = self.getSkinsTool()
     skin_id = sequence.get('skin_folder_id')
-    skin_paths = ps.getSkinPaths()
     # a new skin selection is added
     self.assertTrue('Foo' in ps.getSkinSelections())
     # and it contains good layers
@@ -5469,7 +5447,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     ps = self.getSkinsTool()
     skin_id = sequence.get('skin_folder_id')
     static_skin_id = sequence.get('static_skin_folder_id')
-    skin_paths = ps.getSkinPaths()
     # a new skin selection is added
     self.assertTrue('Foo' in ps.getSkinSelections())
     # and it contains good layers
@@ -7381,7 +7358,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     bt.edit(template_document_id_list=[sequence['document_title']])
 
   def stepRemoveDocument(self, sequence=None, **kw):
-    document_title = sequence['document_title']
     document_path = sequence['document_path']
     os.remove(document_path)
     self.failIf(os.path.exists(document_path))
