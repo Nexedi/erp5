@@ -521,5 +521,5 @@ class TestUNGConfiguratorWorkflowBrazilLanguage(TestUNGConfiguratorWorkflowMixin
   def stepCheckWebSiteRoles(self, sequence=None, sequence_list=None, **kw):
     """ Check permission of Web Site with normal user """
     self.login("person_assignor")
-    self._stepCheckWebSiteRoles(self)
+    self._stepCheckWebSiteRoles()
 
