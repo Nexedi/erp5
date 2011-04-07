@@ -1,3 +1,9 @@
+2011-04-07 lucas
+* Added Embedded File as allowed content type of Business Configuration
+
+2011-04-07 lucas
+* Update XML format of PortalTypeTemplateItem.
+
 2011-04-01 lucas
 * Renamed currency_list.ods to standard_currency_list.ods
 

@@ -1,6 +1,7 @@
 <allowed_content_type_list>
  <portal_type id="Business Configuration">
   <item>Configuration Save</item>
+  <item>Embedded File</item>
   <item>File</item>
   <item>Link</item>
  </portal_type>
