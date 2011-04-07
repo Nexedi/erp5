@@ -7412,10 +7412,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CreateDocument \
                        CreateNewBusinessTemplate \
                        UseExportBusinessTemplate \
-                       ' + self.save_current_business_template_sequence_string + '\
                        AddDocumentToBusinessTemplate \
                        CheckModifiedBuildingState \
                        CheckNotInstalledInstallationState \
+                       ' + self.save_current_business_template_sequence_string + '\
                        RemoveDocument \
                        RemoveBusinessTemplate \
                        RemoveAllTrashBins \
@@ -7423,6 +7423,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        UseImportBusinessTemplate \
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
+                       Tic Pdb \
                        InstallBusinessTemplate \
                        Tic \
                        CheckInstalledInstallationState \
