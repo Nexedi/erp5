@@ -7397,21 +7397,24 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(os.path.basename(sequence['document_path']),
         os.path.basename(sequence['ps_path']))
 
-  def test_BusinessTemplateWithDocument(self):
-    sequence_list = SequenceList()
-    sequence_string = '\
-                       CreateDocument \
-                       CreateNewBusinessTemplate \
-                       UseExportBusinessTemplate \
-                       AddDocumentToBusinessTemplate \
-                       CheckModifiedBuildingState \
-                       CheckNotInstalledInstallationState \
+  save_current_business_template_sequence_string = '\
                        BuildBusinessTemplate \
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
                        CheckObjectPropertiesInBusinessTemplate \
                        SaveBusinessTemplate \
                        CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+  '
+  def test_BusinessTemplateWithDocument(self):
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreateDocument \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       ' + self.save_current_business_template_sequence_string + '\
+                       AddDocumentToBusinessTemplate \
+                       CheckModifiedBuildingState \
                        CheckNotInstalledInstallationState \
                        RemoveDocument \
                        RemoveBusinessTemplate \
@@ -7455,13 +7458,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        AddPropertySheetToBusinessTemplate \
                        CheckModifiedBuildingState \
                        CheckNotInstalledInstallationState \
-                       BuildBusinessTemplate \
-                       CheckBuiltBuildingState \
-                       CheckNotInstalledInstallationState \
-                       CheckObjectPropertiesInBusinessTemplate \
-                       SaveBusinessTemplate \
-                       CheckBuiltBuildingState \
-                       CheckNotInstalledInstallationState \
+                       ' + self.save_current_business_template_sequence_string + '\
                        RemoveDocument \
                        RemovePropertySheet \
                        RemoveBusinessTemplate \
@@ -7484,13 +7481,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        RemovePropertySheetFromBusinessTemplate \
                        CheckModifiedBuildingState \
                        CheckNotInstalledInstallationState \
-                       BuildBusinessTemplate \
-                       CheckBuiltBuildingState \
-                       CheckNotInstalledInstallationState \
-                       CheckObjectPropertiesInBusinessTemplate \
-                       SaveBusinessTemplate \
-                       CheckBuiltBuildingState \
-                       CheckNotInstalledInstallationState \
+                       ' + self.save_current_business_template_sequence_string + '\
                        ImportBusinessTemplate \
                        UseImportBusinessTemplate \
                        CheckBuiltBuildingState \
@@ -7518,13 +7509,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        AddDocumentToBusinessTemplate \
                        CheckModifiedBuildingState \
                        CheckNotInstalledInstallationState \
-                       BuildBusinessTemplate \
-                       CheckBuiltBuildingState \
-                       CheckNotInstalledInstallationState \
-                       CheckObjectPropertiesInBusinessTemplate \
-                       SaveBusinessTemplate \
-                       CheckBuiltBuildingState \
-                       CheckNotInstalledInstallationState \
+                       ' + self.save_current_business_template_sequence_string + '\
                        RemovePropertySheet \
                        RemoveDocument \
                        RemoveBusinessTemplate \
@@ -7591,13 +7576,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        AddPropertySheetToBusinessTemplate \
                        CheckModifiedBuildingState \
                        CheckNotInstalledInstallationState \
-                       BuildBusinessTemplate \
-                       CheckBuiltBuildingState \
-                       CheckNotInstalledInstallationState \
-                       CheckObjectPropertiesInBusinessTemplate \
-                       SaveBusinessTemplate \
-                       CheckBuiltBuildingState \
-                       CheckNotInstalledInstallationState \
+                       ' + self.save_current_business_template_sequence_string + '\
                        RemoveDocument \
                        RemovePropertySheet \
                        RemoveBusinessTemplate \
@@ -7624,13 +7603,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        \
                        CheckDraftBuildingState \
                        CheckNotInstalledInstallationState \
-                       BuildBusinessTemplate \
-                       CheckBuiltBuildingState \
-                       CheckNotInstalledInstallationState \
-                       CheckObjectPropertiesInBusinessTemplate \
-                       SaveBusinessTemplate \
-                       CheckBuiltBuildingState \
-                       CheckNotInstalledInstallationState \
+                       ' + self.save_current_business_template_sequence_string + '\
                        RemoveBusinessTemplate \
                        Tic \
                        CreatePropertySheet \
