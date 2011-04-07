@@ -1849,13 +1849,14 @@ class AssertGhostscript(AssertSoftwareMixin):
 class AssertFontconfig(AssertSoftwareMixin):
   core_lib_list = [
       'libc',
-      'libexpat',
       'libfreetype',
+      'libm',
+      'libxml2',
       'libz',
       ]
   core_rpath_list = [
       'freetype',
-      'libexpat',
+      'libxml2',
       'zlib',
       ]
 
