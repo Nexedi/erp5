@@ -68,6 +68,7 @@ class BusinessConfiguration(Item):
                     , PropertySheet.BusinessConfiguration
                     , PropertySheet.Comment
                     , PropertySheet.Version
+                    , PropertySheet.DefaultImage
                     )
 
   security.declareProtected(Permissions.View, 'isInitialConfigurationState')
