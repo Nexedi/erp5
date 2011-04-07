@@ -65,6 +65,11 @@ class TestDivergenceTester(testLegacySimulationPackingList.TestPackingListMixin,
     """
     self.logMessage("Bootstrap the site by creating required " \
                     "order, simulation, ...")
+    # These next calls were originally in TestOrderMixin.afterSetUp(), but we need
+    # them here for the bootstrap Sequence to work correctly
+    self.createCategories()
+    self.validateRules()
+    self.setUpPreferences()
     # Create a clean packing list
     sequence_string = ' \
           stepCreateOrganisation1 \
