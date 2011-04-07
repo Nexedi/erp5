@@ -98,6 +98,8 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
      stepCheckSystemPreferenceAfterInstallation
      stepCheckUserPreferenceAfterInstallation
      stepCheckWebSiteRoles
+     stepCheckKnowledgePadRole
+     stepCheckCreateNewEvent
   """
 
   def getBusinessTemplateList(self):
@@ -348,6 +350,47 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
     result_list = self.portal.web_site_module.ung.WebSection_getWebPageObjectList(**kw)
     self.assertEquals(len(result_list), 1)
     self.assertEquals(result_list[0].getPortalType(), "Web Table")
+
+  def _stepCheckKnowledgePadRole(self):
+    """ Check if Knowledge Pad is configured correctly """
+    pad = self.portal.knowledge_pad_module.newContent(portal_type="Knowledge Pad")
+    pad.edit(publication_section_value=self.portal.web_site_module.ung)
+    pad.visible()
+    self.stepTic()
+    gadget = self.portal.portal_gadgets.searchFolder()[0]
+    gadget_id = gadget.getId()
+    self.portal.web_site_module.ung.WebSection_addGadget(gadget_id)
+    self.stepTic()
+    box_list = pad.contentValues()
+    self.assertEquals(len(box_list), 1)
+    knowledge_box = box_list[0]
+    self.assertEquals(pad.getPublicationSection(), 'web_site_module/ung')
+    self.assertTrue(knowledge_box.getSpecialiseValue().getId() == gadget_id)
+
+  def _stepCheckCreateNewEvent(self):
+    """ """
+    portal = self.portal
+    event_dict = dict(portal_type="Note",
+                      title="Buy Phone",
+                      event_text_content="testUNG Sample",
+                      start_date_hour=11,
+                      start_date_minute=12,
+                      start_date_day=12,
+                      start_date_month=02,
+                      start_date_year=2011,
+                      stop_date_hour=12,
+                      stop_date_minute=12,
+                      stop_date_day=13,
+                      stop_date_month=02,
+                      stop_date_year=2011)
+    portal.REQUEST.form.update(event_dict)
+    portal.event_module.EventModule_createNewEvent()
+    self.stepTic()
+    event = portal.portal_catalog.getResultValue(portal_type="Note")
+    self.assertEquals(event.getDescription(), "testUNG Sample")
+    start_date = event.getStartDate()
+    self.assertEquals(start_date.month(), 2)
+    self.assertEquals(start_date.minute(), 12)
  
 
 class TestUNGConfiguratorWorkflowFranceLanguage(TestUNGConfiguratorWorkflowMixin):
@@ -436,6 +479,14 @@ class TestUNGConfiguratorWorkflowFranceLanguage(TestUNGConfiguratorWorkflowMixin
     self.login("french_assignor")
     self._stepCheckWebSiteRoles()
 
+  def stepCheckKnowledgePadRole(self, sequence=None, sequence_list=None, **kw):
+    self.login("french_creator")
+    self._stepCheckKnowledgePadRole()
+
+  def stepCheckCreateNewEvent(self, sequence=None, sequence_list=None, **kw):
+    self.login("french_assignee")
+    self._stepCheckCreateNewEvent()
+
 
 class TestUNGConfiguratorWorkflowBrazilLanguage(TestUNGConfiguratorWorkflowMixin):
   """
@@ -523,3 +574,10 @@ class TestUNGConfiguratorWorkflowBrazilLanguage(TestUNGConfiguratorWorkflowMixin
     self.login("person_assignor")
     self._stepCheckWebSiteRoles()
 
+  def stepCheckKnowledgePadRole(self, sequence=None, sequence_list=None, **kw):
+    self.login("person_creator")
+    self._stepCheckKnowledgePadRole()
+
+  def stepCheckCreateNewEvent(self, sequence=None, sequence_list=None, **kw):
+    self.login("person_assignee")
+    self._stepCheckCreateNewEvent()
