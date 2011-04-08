@@ -81,6 +81,10 @@ bt5 = portal.portal_catalog.getResultValue(portal_type="Business Template",\n
 if bt5 is not None:\n
   for portal_type in bt5.getTemplatePortalTypeRolesList():\n
     module_list = portal.contentValues(filter=dict(portal_type=portal_type))\n
+    portal_type_object = portal.portal_catalog.getResultValue(portal_type="Base Type",\n
+                                                              id=portal_type)\n
+    portal_type_object.updateRoleMapping()\n
+    context.log("Updated Role Mappings for: %s " % (portal_type_object.getId()))\n
     for module in module_list:\n
       module.updateLocalRolesOnSecurityGroups()\n
       context.log("Updated Role Mappings for: %s(%s) " % (module.getTitle(), module.getPortalType()))\n
