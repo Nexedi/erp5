@@ -155,6 +155,8 @@ class TestBPMMixin(ERP5TypeTestCase):
   def createBusinessLink(self, business_process=None, **kw):
     if business_process is None:
       business_process = self.createBusinessProcess()
+    if kw.get('reference'):
+      kw.setdefault('id', kw['reference'])
     business_link = business_process.newContent(
       portal_type=self.business_link_portal_type, **kw)
     return business_link
@@ -163,6 +165,8 @@ class TestBPMMixin(ERP5TypeTestCase):
                            criterion_property_dict={}, **kw):
     if business_process is None:
       business_process = self.createBusinessProcess()
+    if kw.get('reference') and not kw.get('id'):
+      kw.setdefault('id', kw['reference'] + '_path')
     trade_model_path = business_process.newContent(
       portal_type=self.trade_model_path_portal_type, **kw)
     if criterion_property_dict:
