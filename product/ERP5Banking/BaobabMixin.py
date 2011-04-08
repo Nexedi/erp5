@@ -28,6 +28,7 @@
 
 import ExtensionClass
 from AccessControl import ClassSecurityInfo
+from Acquisition import aq_base
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Accessor.Base import Method, func_code
 from Products.ERP5Type.Utils import convertToMixedCase, convertToUpperCase
@@ -108,6 +109,11 @@ class BaobabMixin(ExtensionClass.Base):
   """
   security = ClassSecurityInfo()
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            "getTitle")
+  def getTitle(self, default=''):
+    return getattr(aq_base(self), 'title', default)
+    
 for category in ('source', 'destination',
                  'source_section', 'destination_section',
                  'source_payment', 'destination_payment',
