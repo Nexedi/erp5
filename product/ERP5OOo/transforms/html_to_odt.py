@@ -44,6 +44,10 @@ class HTMLToOdt:
                                   'content': 'text/html; charset=utf-8'})
     orig = html.tostring(html_node, encoding='utf-8', method='xml')
 
+    # workaround a Bug in LibreOffice HTML import filter.
+    # https://bugs.freedesktop.org/show_bug.cgi?id=36080
+    orig = orig.replace('<title/>', '<title></title>')
+    import pdb;pdb.set_trace()
     doc = OOOdCommandTransform(context, filename, orig, self.inputs[0])
     odt = doc.convertTo('odt')
     if cache is not None:

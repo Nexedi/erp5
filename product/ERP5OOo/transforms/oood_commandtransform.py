@@ -12,6 +12,7 @@ from zLOG import LOG
 from Products.ERP5OOo.OOoUtils import OOoBuilder
 import re
 from lxml import etree
+from lxml import html
 from lxml.etree import ParseError, Element
 
 from urllib import unquote
@@ -193,8 +194,9 @@ class OOOdCommandTransform(commandtransform):
           parent_node.append(style_node)
           style_node.attrib.update({'type': 'text/css'})
           parent_node.remove(css_link_tag)
-    return etree.tostring(xml_doc, encoding='utf-8',
-                          xml_declaration=False, pretty_print=False, )
+    xml_output = html.tostring(xml_doc, encoding='utf-8', method='xml')
+    xml_output = xml_output.replace('<title/>', '<title></title>')
+    return xml_output
 
   def convertTo(self, format):
     server_proxy = OOoServerProxy(self.context)
