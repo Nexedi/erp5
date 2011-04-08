@@ -303,7 +303,8 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
       # XXX-Leo we could just return self.getTradePhaseList() for
       # backward compatibility
       from Products.ERP5Type.Errors import SimulationError
-      raise SimulationError('No Business Link Causality for %r. Cannot enumerate successor trade_phases')
+      raise SimulationError('No Business Link Causality for %r. Cannot enumerate successor trade_phases.' % 
+                            (self,))
     # from this Business Process, get the Business Links which
     # predecessor state match the successor state of our Business Link
     # causality
