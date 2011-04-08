@@ -1133,6 +1133,10 @@ select[name="field_your_language"] {\n
 \n
 div.navigation-right fieldset.widget div {\n
   float: left;\n
+}\n
+\n
+span.date-format {\n
+  font-style: italic;\n
 }
 
 ]]></string> </value>

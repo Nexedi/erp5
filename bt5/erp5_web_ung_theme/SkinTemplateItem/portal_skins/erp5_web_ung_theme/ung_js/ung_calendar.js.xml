@@ -248,7 +248,7 @@ $(document).ready(function() {     \n
   });\n
   $("div#new_event_dialog").dialog({\n
     autoOpen: false,\n
-    height: 228,\n
+    height: 248,\n
     width: 410,\n
     modal: true,\n
   });\n

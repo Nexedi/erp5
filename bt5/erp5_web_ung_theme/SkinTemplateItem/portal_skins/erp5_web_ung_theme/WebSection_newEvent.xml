@@ -64,6 +64,8 @@
         &nbsp;&nbsp;&nbsp;\n
         <input class="start_date_field" name="start_date_hour" value="" maxlength="2" type="text" size="2">:\n
         <input class="start_date_field" name="start_date_minute" value="" maxlength="2" type="text" size="2">\n
+        <br/>\n
+        <span class="date-format">MM dd yyyy HH:mm</span>\n
       </td>\n
     </tr>\n
     <tr>\n
@@ -75,6 +77,8 @@
         &nbsp;&nbsp;&nbsp;\n
         <input class="stop_date_field" name="stop_date_hour" value="" maxlength="2" type="text" size="2">:\n
         <input class="stop_date_field" name="stop_date_minute" value="" maxlength="2" type="text" size="2">\n
+        <br/>\n
+        <span class="date-format">MM dd yyyy HH:mm</span>\n
       </td>\n
     </tr>\n
     <tr>\n
