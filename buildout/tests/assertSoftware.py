@@ -1638,7 +1638,6 @@ class AssertImagemagick(AssertSoftwareMixin):
       'libbz2',
       'libc',
       'libdl',
-      'libexpat',
       'libfontconfig',
       'libfreetype',
       'libjasper',
@@ -1649,6 +1648,7 @@ class AssertImagemagick(AssertSoftwareMixin):
       'libpng15',
       'libpthread',
       'libtiff',
+      'libxml2',
       'libz',
       ]
 
@@ -1658,11 +1658,11 @@ class AssertImagemagick(AssertSoftwareMixin):
       'freetype',
       'jasper',
       'jbigkit',
-      'libexpat',
       'libjpeg',
       'libpng',
       'libtiff',
       'libtool',
+      'libxml2',
       'zlib',
       ]
 
@@ -2174,7 +2174,6 @@ class AssertGraphviz(AssertSoftwareMixin):
       'libc',
       'libcdt',
       'libdl',
-      'libexpat',
       'libfontconfig',
       'libfreetype',
       'libgvc',
@@ -2183,13 +2182,14 @@ class AssertGraphviz(AssertSoftwareMixin):
       'libpathplan',
       'libpng15',
       'libxdot',
+      'libxml2',
       'libz',
       ], [
       'fontconfig',
       'freetype',
       'graphviz',
-      'libexpat',
       'libpng',
+      'libxml2',
       'zlib',
       ])
 
