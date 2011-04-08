@@ -67,33 +67,33 @@ function Edit(data){\n
     title: "Update Event",\n
     buttons: {\n
       "Save": function(){\n
-         data = $("form#create_new_event").serializeArray();\n
-         var dataHash = {};\n
-         for (var i=0; i<data.length; i++)\n
-           dataHash[data[i].name] = data[i].value;\n
-         start_date = dataHash.start_date_month + "/" + \n
-                      dataHash.start_date_day + "/" + \n
-                      dataHash.start_date_year + " " + \n
-                      dataHash.start_date_hour + ":" + \n
-                      dataHash.start_date_minute;\n
+        data = $("form#create_new_event").serializeArray();\n
+        var dataHash = {};\n
+        for (var i=0; i<data.length; i++)\n
+          dataHash[data[i].name] = data[i].value;\n
+        start_date = dataHash.start_date_month + "/" + \n
+                    dataHash.start_date_day + "/" + \n
+                    dataHash.start_date_year + " " + \n
+                    dataHash.start_date_hour + ":" + \n
+                    dataHash.start_date_minute;\n
+  \n
+        stop_date = dataHash.stop_date_month + "/" + \n
+                    dataHash.stop_date_day + "/" + \n
+                    dataHash.stop_date_year + " " + \n
+                    dataHash.stop_date_hour + ":" + \n
+                    dataHash.stop_date_minute;\n
 \n
-         stop_date = dataHash.stop_date_month + "/" + \n
-                     dataHash.stop_date_day + "/" + \n
-                     dataHash.stop_date_year + " " + \n
-                     dataHash.stop_date_hour + ":" + \n
-                     dataHash.stop_date_minute;\n
+        var paramList = [{name : \'CalendarEndTime\', \'value\': stop_date},\n
+                         {name : \'CalendarStartTime\', \'value\': start_date},\n
+                         {name : \'title\', \'value\': dataHash.title},\n
+                         {name : \'request_type\', \'value\': \'update\'},\n
+                         {name : \'event_id\', \'value\': $("input#event_id").attr("value")},\n
+                         {name : \'event_text_content\', \'value\': dataHash.event_text_content}]\n
 \n
-         var paramList = [{name : \'CalendarEndTime\', \'value\': stop_date},\n
-                          {name : \'CalendarStartTime\', \'value\': start_date},\n
-                          {name : \'title\', \'value\': dataHash.title},\n
-                          {name : \'request_type\', \'value\': \'update\'},\n
-                          {name : \'event_id\', \'value\': $("input#event_id").attr("value")},\n
-                          {name : \'event_text_content\', \'value\': dataHash.event_text_content}]\n
-\n
-         $.post("Base_updateCalendarEventList", paramList, function(){\n
-           $("div#new_event_dialog").dialog("close");\n
-           $("div#showreflashbtn.fbutton").click();\n
-         });\n
+        $.post("Base_updateCalendarEventList", paramList, function(){\n
+                $("div#new_event_dialog").dialog("close");\n
+                $("div#showreflashbtn.fbutton").click();\n
+        });\n
       },\n
     },\n
   });\n
@@ -125,8 +125,17 @@ function View(data){\n
   });\n
   alert(str);\n
 }\n
+\n
 function Delete(data, callback){\n
   hiConfirm("Are You Sure to Delete this Event", \'Confirm\', function(r){ r && callback(0);});\n
+}\n
+\n
+function createNewEvent(){\n
+  $.post("EventModule_createNewEvent",\n
+    $("form#create_new_event").serialize(), function(){\n
+      $("div#new_event_dialog").dialog("close");\n
+      $("div#showreflashbtn.fbutton").click();\n
+  });\n
 }\n
 \n
 function createFieldToInsertOnDialog(){\n
@@ -145,11 +154,11 @@ function createFieldToInsertOnDialog(){\n
          "</select></td>"\n
 }\n
 \n
-i18n.xgcalendar.content = "Title"\n
-i18n.xgcalendar.location = "Event Id"\n
-i18n.xgcalendar.participant = "Event Type"\n
-i18n.xgcalendar.repeat_event = "Description"\n
-i18n.xgcalendar.event = "Title"\n
+i18n.xgcalendar.content = "Title";\n
+i18n.xgcalendar.location = "Event Id";\n
+i18n.xgcalendar.participant = "Event Type";\n
+i18n.xgcalendar.repeat_event = "Description";\n
+i18n.xgcalendar.event = "Title";\n
 \n
 $(document).ready(function() {     \n
   var DATA_FEED_URL = "Base_updateCalendarEventList";\n
@@ -212,19 +221,6 @@ $(document).ready(function() {     \n
   });          \n
   //Add a new event\n
   $("span.addcal").click(function() {\n
-    $("div#new_event_dialog").dialog({\n
-      title: "Create New Event",\n
-      buttons: {\n
-        "Create": function(){\n
-          $.post("EventModule_createNewEvent",\n
-            $("form#create_new_event").serialize(),\n
-            function(){\n
-              $("div#new_event_dialog").dialog("close");\n
-              $("div#showreflashbtn.fbutton").click();\n
-          });\n
-        }\n
-      },\n
-    });\n
     var url ="WebSection_newEvent";\n
     var date = new Date();\n
     $("div#new_event_dialog").load(url, {}, function(){\n
@@ -252,11 +248,11 @@ $(document).ready(function() {     \n
   });\n
   $("div#new_event_dialog").dialog({\n
     autoOpen: false,\n
-    height: 258,\n
+    height: 228,\n
     width: 410,\n
     modal: true,\n
   });\n
-  $( "#datepicker" ).datepicker({\n
+  $("#datepicker").datepicker({\n
     onSelect: function(dateText, inst){\n
       var dateList = dateText.split("/");\n
       var month = dateList[0] - 1;\n
@@ -345,6 +341,16 @@ $(document).ready(function() {     \n
   });\n
   $("img[alt=\'calendar_logo_box\']").click(function(){\n
     window.location.reload();\n
+  });\n
+});\n
+\n
+$("div#new_event_dialog").ready(function(){\n
+  $("div#new_event_dialog").dialog({\n
+    title: "Create New Event",\n
+    autoOpen: false,\n
+    buttons: {\n
+      "Create": createNewEvent,\n
+      },\n
   });\n
 });\n
 \n
