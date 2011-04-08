@@ -131,8 +131,13 @@
       </tr>\n
       <tr>\n
         <td>type</td>\n
-        <td>//input[@name="stop_date_year"]</td>\n
-        <td>2020</td>\n
+        <td>//input[@name="start_date_hour"]</td>\n
+        <td tal:content="python: DateTime().hour() + 1">hour</td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//input[@name="stop_date_hour"]</td>\n
+        <td tal:content="python: DateTime().hour() + 1">hour</td>\n
       </tr>\n
       <tr>\n
         <td>click</td>\n
