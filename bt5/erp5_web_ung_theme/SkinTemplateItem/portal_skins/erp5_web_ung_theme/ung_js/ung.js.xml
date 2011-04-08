@@ -102,7 +102,6 @@ function checkConversion(){\n
         setTimeout(window.location.href = window.location.href.match("^http.*\\/ung")[0], 3000);\n
         break;\n
       default:\n
-        console.log("converted");\n
         setTimeout(checkConversion(), 1500); \n
         break;\n
      }\n
