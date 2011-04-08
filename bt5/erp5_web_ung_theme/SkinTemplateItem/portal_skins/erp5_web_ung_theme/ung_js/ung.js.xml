@@ -338,14 +338,6 @@ $().ready(function(){\n
       });\n
     };\n
     $("div.action_menu li ul").css("height", $("div.action_menu li ul li").length * 25.3 + "px");\n
-    if ($("a[name=\'document_state\']").text() == "Shared"){\n
-      reference = $.ajax({\n
-                         url: \'getReference\',\n
-                         async: false,\n
-                  }).responseText;\n
-      keyUrl = location.href.split("web_page_module")[0] + "?key=" + reference;\n
-      $("div.header-right fieldset.widget a#sharing_url").text(keyUrl);\n
-    };\n
   };\n
   $("#edit_document").dialog({\n
     autoOpen: false,\n

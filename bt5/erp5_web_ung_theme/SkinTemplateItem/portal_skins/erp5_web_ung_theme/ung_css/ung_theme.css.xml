@@ -925,7 +925,7 @@ div.header-right fieldset.widget {\n
   height: 29px;\n
 }\n
 \n
-div.header-right fieldset.widget a#sharing_url {\n
+div.header-right fieldset.widget span#sharing_url {\n
   padding-top: 2px;\n
   font-size: 11px;\n
 }\n

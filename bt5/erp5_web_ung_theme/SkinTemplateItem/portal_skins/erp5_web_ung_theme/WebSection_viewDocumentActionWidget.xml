@@ -47,12 +47,11 @@
           class="save" type="submit"\n
           i18n:translate="" i18n:domain="ui">Save</button>\n
   <div class="action_menu">\n
-    <tal:block tal:define="portal_path here/absolute_url;\n
-                           url_suffix python: \'/ERP5Site_createNewWebDocument?select_action=\'">\n
+    <tal:block tal:define="url_suffix python: \'/ERP5Site_createNewWebDocument?select_action=\'">\n
       <li>\n
         <a id="change_state">\n
           <span i18n:translate="" i18n:domain="ui">Change State</span>\n
-          <img tal:attributes="src python: portal_path + \'/ung_images/arrow.png\'">\n
+          <img tal:attributes="src python: here.absolute_url() + \'/ung_images/arrow.png\'">\n
         </a>\n
         <ul>\n
           <tal:block tal:repeat="action actions/workflow">\n
@@ -66,7 +65,9 @@
       </li>\n
     </tal:block>\n
   </div>\n
-  <a id=\'sharing_url\'></a>\n
+  <tal:block tal:condition="python: here.getValidationState() == \'shared\'">\n
+   <span id="sharing_url" tal:content="python: here.getWebSiteValue().absolute_url() + \'?key=\' + here.getReference()">Key</span>\n
+  </tal:block>\n
 </tal:block>
 
 ]]></unicode> </value>
