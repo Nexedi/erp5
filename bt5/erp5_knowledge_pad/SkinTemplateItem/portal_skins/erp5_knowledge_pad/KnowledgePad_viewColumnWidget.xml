@@ -72,7 +72,7 @@
     <!-- Render gadget as hidden one -->\n
     <div tal:condition="not: is_gadget_visible"\n
          tal:attributes="id box_dom_id"\n
-         class="block invisible"></div>\n
+         class="block invisible-gadget"></div>\n
 \n
     <!-- Show only public gadgets -->\n
     <div class="block" \n
