@@ -469,8 +469,32 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     taxed = self.createProductTaxed()
     discounted = self.createProductDiscounted()
     taxed_discounted = self.createProductDiscountedTaxed()
+    business_process = self.createBusinessProcess(
+      business_link_list = [
+        dict(reference='discount',
+             trade_phase='default/discount',
+             predecessor='trade_state/invoiced',
+             # should successor be trade_state/discounted? There is no
+             # such trade_state category
+             successor='trade_state/accounted',
+        ),
+        dict(reference='tax',
+             trade_phase='default/tax',
+             predecessor='trade_state/invoiced',
+             # should successor be trade_state/taxed? There IS such a
+             # trade_state category, but the rule that wants to match
+             # the Simulation Movement that has this link as causality
+             # is default_invoice_transaction_rule, the same as for
+             # default/discount, so I'll use the same successor as
+             # above. Besides, we'd have to create a new business_link
+             # just to get back to accounted, and match it with (or
+             # create a new) a portal_rule.
+             successor='trade_state/accounted',
+        ),
+      ],
+    ) 
     trade_condition = self.createTradeCondition(
-      self.createBusinessProcess(), (
+      business_process, (
       dict(price=self.default_discount_ratio,
            base_application='base_amount/discount',
            base_contribution='base_amount/tax',
