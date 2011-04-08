@@ -39,16 +39,11 @@
 <form id="create_new_event">\n
   <label i18n:translate="" i18n:domain="ui">Event Type</label>\n
   <select name="portal_type">\n
-    <option i18n:translate="" i18n:domain="ui">Acknowledgement</option>\n
-    <option i18n:translate="" i18n:domain="ui">Fax Message</option>\n
-    <option i18n:translate="" i18n:domain="ui">Letter</option>\n
-    <option i18n:translate="" i18n:domain="ui">Mail Message</option>\n
-    <option i18n:translate="" i18n:domain="ui">Note</option>\n
-    <option i18n:translate="" i18n:domain="ui">Phone Call</option>\n
-    <option i18n:translate="" i18n:domain="ui">Short Message</option>\n
-    <option i18n:translate="" i18n:domain="ui">Site Message</option>\n
-    <option i18n:translate="" i18n:domain="ui">Visit</option>\n
-    <option i18n:translate="" i18n:domain="ui">Web Message</option>\n
+  <tal:block tal:repeat="type python: [\'Acknowledgement\', \'Fax Message\', \'Letter\',\n
+                                       \'Mail Message\', \'Note\',\'Phone Call\', \n
+                                       \'Short Message\',\'Site Message\', \'Visit\', \'Web Message\']">\n
+    <option i18n:translate="" i18n:domain="ui" tal:content="type">Portal Type</option>\n
+  </tal:block>\n
   </select>\n
   <p>\n
   <label i18n:translate="" i18n:domain="ui">Title</label>:\n
