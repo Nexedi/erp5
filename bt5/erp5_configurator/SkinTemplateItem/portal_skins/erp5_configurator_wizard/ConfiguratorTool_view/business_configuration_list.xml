@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_business_configuration</string> </value>
+            <value> <string>business_configuration_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
