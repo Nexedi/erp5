@@ -47,9 +47,15 @@
     </tr>\n
     <tr>\n
       <td>openAndWait</td>\n
+      <td>${base_url}/ERP5Site_createUNGUser</td>\n
+      <td></td>\n
+    </tr>\n
+    <tr>\n
+      <td>openAndWait</td>\n
       <td>${base_url}/ERP5Site_cleanUpUNGTestEnvironment</td>\n
       <td></td>\n
     </tr>\n
+    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities"/>\n
     <tr>\n
       <td>openAndWait</td>\n
       <td>${ung_url}/WebSite_logout</td>\n
@@ -58,25 +64,25 @@
   </tal:block>\n
   <tal:block metal:define-macro="login">\n
     <tr>\n
-        <td>openAndWait</td>\n
-        <td>${ung_url}/WebSite_logout</td>\n
-        <td></td>\n
-      </tr>\n
-      <tr>\n
-        <td>type</td>\n
-        <td>__ac_name</td>\n
-        <td>zope</td>\n
-      </tr>\n
-      <tr>\n
-        <td>type</td>\n
-        <td>__ac_password</td>\n
-        <td>zope</td>\n
-      </tr>\n
-      <tr>\n
-        <td>clickAndWait</td>\n
-        <td>//input[@type="submit"]</td>\n
-        <td></td>\n
-      </tr>\n
+      <td>openAndWait</td>\n
+      <td>${ung_url}/WebSite_logout</td>\n
+      <td></td>\n
+    </tr>\n
+    <tr>\n
+      <td>type</td>\n
+      <td>__ac_name</td>\n
+      <td>test_user</td>\n
+    </tr>\n
+    <tr>\n
+      <td>type</td>\n
+      <td>__ac_password</td>\n
+      <td>test_user</td>\n
+    </tr>\n
+    <tr>\n
+      <td>clickAndWait</td>\n
+      <td>//input[@type="submit"]</td>\n
+      <td></td>\n
+    </tr>\n
   </tal:block>\n
   <tal:block metal:define-macro="create-user">\n
     <tr>\n
