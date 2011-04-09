@@ -36,7 +36,7 @@ except ImportError:
   # on Zope 2.12, though we should try to see if it works on 2.8 as well
   import zLOG, sys
   zLOG.LOG('Products.ERP5Type.Messages',
-      zLOG.ERROR,
+      zLOG.INFO,
       'Products.PageTemplates.GlobalTranslationService has been removed. '
       'Using alternative implementation',)
   import zope.i18n
