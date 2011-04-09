@@ -352,6 +352,36 @@
         <td>Help</td>\n
         <td></td>\n
       </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//input[@id="upload"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>select</td>\n
+        <td>//select[@name="portal_type"]</td>\n
+        <td>Web Table</td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//input[@id="submit_document"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//input[@id="submit_document"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//span[@id=\'no-input-file\']</td>\n
+        <td>Please input a file</td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyTextPresent</td>\n
+        <td>Loading...</td>\n
+        <td></td>\n
+      </tr>\n
     </tbody>\n
   </table>\n
 </body>\n
