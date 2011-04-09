@@ -474,7 +474,13 @@ $().ready(function(){\n
       }\n
       $("div#preference_dialog").dialog("open");\n
     });\n
-  $("button.ui-button, span.ui-icon").click(function(){$("p#hide_properties").click()});\n
+  $("button.ui-button, span.ui-icon").click(function(){$("p#hide_properties").click()}); \n
+  $("input#submit_document").click(function(event){\n
+    if (document.getElementById("upload-file").value == ""){\n
+      event.preventDefault();\n
+      $("span#no-input-file").show();\n
+    }\n
+  });\n
   $("a[name=\'document_title\']")\n
     .click(function(){\n
       $("div#more_property").hide();\n

@@ -71,7 +71,7 @@
     <div id="upload_document" title="Upload Document" i18n:translate="" i18n:domain="ui">\n
       <form action="WebSection_uploadDocument" method="post" enctype="multipart/form-data">\n
         <fieldset id="file_box">\n
-          <input type="file" size="30" name="file">\n
+          <input id="upload-file" type="file" size="30" name="file">\n
           <select name="portal_type">\n
             <option value="Web Page" i18n:translate="" i18n:domain="ui">Web Page</option>\n
             <option value="Web Illustration" i18n:translate="" i18n:domain="ui">Web Illustration</option>\n
@@ -79,6 +79,7 @@
           </select>\n
           <br />\n
           <input type="submit" id="submit_document" value="Submit" i18n:translate="" i18n:domain="ui">\n
+          <span id="no-input-file">Please input a file</span>\n
         </fieldset>\n
       </form> \n
     </div>\n
