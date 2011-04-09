@@ -1594,15 +1594,15 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
         Patched, as ERP5 Type does not provide getExprContext which is used in
         CMF 2.2
     """
+    icon = 'misc_/OFSP/dtmldoc.gif'
     ti = self.getTypeInfo()
     url = self.getPortalObject().portal_url()
-    if ti is None:
-      icon = 'misc_/OFSP/dtmldoc.gif'
-    try:
-      icon = ti.getTypeIcon()
-    except AttributeError:
-      # do not fail in case of accessor is not available
-      pass
+    if ti is not None:
+      try:
+        icon = ti.getTypeIcon()
+      except AttributeError:
+        # do not fail in case of accessor is not available
+        pass
     return '%s/%s' % (url, icon)
 
 # We browse all used class from btree and hbtree and set not implemented
