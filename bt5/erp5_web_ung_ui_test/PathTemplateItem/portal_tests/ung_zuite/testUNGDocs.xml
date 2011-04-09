@@ -243,7 +243,7 @@
       </tr>\n
       <tr>\n
         <td>verifyText</td>\n
-        <td>//table[@class="listbox your_listbox your_listbox-table"]/tbody/tr/td[4]/a</td>\n
+        <td>//table/tbody/tr[1]/td[4]</td>\n
         <td>Deleted</td>\n
       </tr>\n
       <tr>\n
