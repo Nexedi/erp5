@@ -630,7 +630,6 @@ button.save {\n
   background-image:url(\'<dtml-var expr="portal_url()">/ung_images/button_background.png\');\n
   border:1px solid #D1D1D1;\n
   height:21px;\n
-  width:62px;\n
   color:#333333;\n
 }\n
 \n
