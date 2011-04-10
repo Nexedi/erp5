@@ -511,7 +511,13 @@ div#select_language li span {\n
   display:block;\n
 }\n
 \n
-.menu_create_object li li, div#select_language li li {\n
+div#select_language li li {\n
+  background:none repeat scroll 0 0 #FFFFFF;\n
+  border-left: 1px solid #C9D7F1;\n
+  border-right: 1px solid #C9D7F1;\n
+}\n
+\n
+.menu_create_object li li,  {\n
   display:block;\n
   float:none;\n
   margin-left:0;\n
@@ -525,11 +531,6 @@ div#select_language li ul {\n
   width:70px;\n
 }\n
 \n
-div#select_language li ul {\n
-  border-bottom: 1px solid #C9D7F1;\n
-  border-left: 1px solid #C9D7F1;\n
-  border-right: 1px solid #C9D7F1;\n
-}\n
 \n
 .menu_create_object li ul {\n
   border:1px solid #D1D1D1;\n
@@ -540,8 +541,6 @@ div#select_language li ul {\n
   filter:alpha(opacity=95);\n
   position:absolute;\n
   z-index:200;\n
-  height: 75px;\n
-  background:none repeat scroll 0 0 #FFFFFF;\n
 }\n
 \n
 .menu_create_object li ul a, div#select_language li ul a {\n
@@ -764,7 +763,7 @@ div.listbox-number-of-records{\n
   font-size: 12px;\n
   margin-right: 12em;\n
   margin-top: -18px;\n
-  width: 28%;\n
+  min-width: 30%;\n
 }\n
 \n
 div.listbox-navigation button.listbox_last_page,\n
