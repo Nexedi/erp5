@@ -3214,57 +3214,16 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals(
         99, skin_folder.getProperty('business_template_skin_layer_priority'))
 
-  def stepCreateTest(self, sequence=None, **kw):
-    test_title = 'UnitTest'
-    test_data = """class UnitTest:
-  pass"""
-    cfg = getConfiguration()
-    file_path = os.path.join(cfg.instancehome, 'tests', test_title+'.py')
-    if os.path.exists(file_path):
-      os.remove(file_path)
-    f = file(file_path, 'w')
-    f.write(test_data)
-    f.close()
-    self.failUnless(os.path.exists(file_path))
-    sequence.edit(test_title=test_title, test_path=file_path,
-        test_data=test_data)
-
-  def stepAddTestToBusinessTemplate(self, sequence=None, **kw):
-    bt = sequence['current_bt']
-    bt.edit(template_test_id_list=[sequence['test_title']])
-
-  def stepRemoveTest(self, sequence=None, **kw):
-    test_path = sequence['test_path']
-    os.remove(test_path)
-    self.failIf(os.path.exists(test_path))
-
-  def stepCheckTestExists(self, sequence=None, **kw):
-    self.failIf(not os.path.exists(sequence['test_path']))
-
-  def stepCheckTestRemoved(self, sequence=None, **kw):
-    self.failIf(os.path.exists(sequence['test_path']))
-
   def stepCheckDocumentPropertySheetSameName(self, sequence=None, **kw):
     self.assertEqual(sequence['ps_title'], sequence['document_title'])
     self.assertEqual(os.path.basename(sequence['document_path']),
         os.path.basename(sequence['ps_path']))
-
-  def stepCheckDocumentTestSameName(self, sequence=None, **kw):
-    self.assertEqual(sequence['test_title'], sequence['document_title'])
-    self.assertEqual(os.path.basename(sequence['document_path']),
-        os.path.basename(sequence['test_path']))
 
   def stepRemovePropertySheetFromBusinessTemplate(self, sequence=None, **kw):
     """
     Add Property Sheet to Business Template
     """
     sequence['current_bt'].edit(template_property_sheet_id_list=[])
-
-  def stepRemoveTestFromBusinessTemplate(self, sequence=None, **kw):
-    """
-    Add Property Sheet to Business Template
-    """
-    sequence['current_bt'].edit(template_test_id_list=[])
 
   def stepCreateAllPropertySheetsFromFilesystem(self, sequence=None, **kw):
     self.portal.portal_property_sheets.createAllPropertySheetsFromFilesystem()
@@ -7091,6 +7050,47 @@ class TestTestTemplateItem(TestDocumentTemplateItem):
     pass"""
   document_base_path = os.path.join(getConfiguration().instancehome, 'tests')
   template_property = 'template_test_id_list'
+
+  def stepCreateTest(self, sequence=None, **kw):
+    test_title = 'UnitTest'
+    test_data = """class UnitTest:
+  pass"""
+    cfg = getConfiguration()
+    file_path = os.path.join(cfg.instancehome, 'tests', test_title+'.py')
+    if os.path.exists(file_path):
+      os.remove(file_path)
+    f = file(file_path, 'w')
+    f.write(test_data)
+    f.close()
+    self.failUnless(os.path.exists(file_path))
+    sequence.edit(test_title=test_title, test_path=file_path,
+        test_data=test_data)
+
+  def stepAddTestToBusinessTemplate(self, sequence=None, **kw):
+    bt = sequence['current_bt']
+    bt.edit(template_test_id_list=[sequence['test_title']])
+
+  def stepRemoveTest(self, sequence=None, **kw):
+    test_path = sequence['test_path']
+    os.remove(test_path)
+    self.failIf(os.path.exists(test_path))
+
+  def stepCheckTestExists(self, sequence=None, **kw):
+    self.failIf(not os.path.exists(sequence['test_path']))
+
+  def stepCheckTestRemoved(self, sequence=None, **kw):
+    self.failIf(os.path.exists(sequence['test_path']))
+
+  def stepCheckDocumentTestSameName(self, sequence=None, **kw):
+    self.assertEqual(sequence['test_title'], sequence['document_title'])
+    self.assertEqual(os.path.basename(sequence['document_path']),
+        os.path.basename(sequence['test_path']))
+
+  def stepRemoveTestFromBusinessTemplate(self, sequence=None, **kw):
+    """
+    Add Property Sheet to Business Template
+    """
+    sequence['current_bt'].edit(template_test_id_list=[])
 
   def test_BusinessTemplateWithDocumentTestRemoved(self):
     """Checks that if Business Template defines Document and Test
