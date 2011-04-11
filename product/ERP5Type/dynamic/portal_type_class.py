@@ -365,6 +365,7 @@ def synchronizeDynamicModules(context, force=False):
         from Products.ERP5Type.dynamic.persistent_migration import PickleUpdater
         if PickleUpdater.get:
           portal.migrateToPortalTypeClass()
+        portal.portal_skins.changeSkin(None)
         LOG('ERP5Site', INFO, 'Transition successful, please update your'
             ' business templates')
 
