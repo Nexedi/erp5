@@ -57,27 +57,11 @@ from Products.PortalTransforms.Transform import Transform
 Transform_tr_init = Transform._tr_init
 Transform_manage_beforeDelete = Transform.manage_beforeDelete
 
-class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
-  """
-    Test these operations:
-
-    - Create a template
-
-    - Install a template
-
-    - Uninstall a template
-
-    - Upgrade a template
-  """
-
+class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
   def getBusinessTemplateList(self):
     return ('erp5_base',
             'erp5_csv_style',
             )
-
-  def getTitle(self):
-    return "Business Template"
-
   ## Ignore errors from PortalTransforms (e.g. missing binaries)
 
   def _catch_log_errors(self):
@@ -2890,6 +2874,568 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                   description='bt for unit_test')
     sequence.edit(dependency_bt=template)
 
+  def stepSetSkinFolderRegistredSelections(self, sequence=None, **kw):
+    ps = self.getSkinsTool()
+    skin_id = sequence.get('skin_folder_id')
+    skin_folder = ps._getOb(skin_id, None)
+    skin_folder._setProperty(
+          'business_template_registered_skin_selections', ('Foo',),
+          type='tokens')
+
+  def stepSetSkinFolderRegistredSelections2(self, sequence=None, **kw):
+    ps = self.getSkinsTool()
+    skin_id = sequence.get('skin_folder_id')
+    skin_folder = ps._getOb(skin_id, None)
+    skin_folder._updateProperty(
+          'business_template_registered_skin_selections', ('Foo', 'Bar',))
+
+  def stepCreateSkinSelection(self, sequence=None, **kw):
+    ps = self.getSkinsTool()
+    ps.manage_skinLayers(skinpath=('erp5_core',), skinname='Foo', add_skin=1)
+
+  def stepSetStaticSkinFolderRegistredSelections(self, sequence=None, **kw):
+    ps = self.getSkinsTool()
+    skin_id = sequence.get('static_skin_folder_id')
+    skin_folder = ps._getOb(skin_id, None)
+    skin_folder._setProperty(
+          'business_template_registered_skin_selections', ('Foo',),
+          type='tokens')
+    selection = ps.getSkinPath('Foo')
+    selection = selection.split(',')
+    if skin_id not in selection:
+      selection.append(skin_id)
+      ps.manage_skinLayers(skinpath=tuple(selection),
+                           skinname='Foo', add_skin=1)
+
+  def stepCheckSkinSelectionAdded(self, sequence=None, **kw):
+    ps = self.getSkinsTool()
+    skin_id = sequence.get('skin_folder_id')
+    # a new skin selection is added
+    self.assertTrue('Foo' in ps.getSkinSelections())
+    # and it contains good layers
+    layers = ps.getSkinPath('Foo').split(',')
+    self.assertTrue(skin_id in layers, layers)
+    self.assertTrue('erp5_core' in layers, layers)
+    self.assertFalse('erp5_xhtml_style' in layers, layers)
+    skin_folder = ps._getOb(skin_id, None)
+    skin_selection_list = skin_folder.getProperty(
+        'business_template_registered_skin_selections', ())
+    self.assertTrue('Foo' in skin_selection_list)
+
+  def stepCheckStaticSkinSelection(self, sequence=None, **kw):
+    ps = self.getSkinsTool()
+    skin_id = sequence.get('skin_folder_id')
+    static_skin_id = sequence.get('static_skin_folder_id')
+    # a new skin selection is added
+    self.assertTrue('Foo' in ps.getSkinSelections())
+    # and it contains good layers
+    layers = ps.getSkinPath('Foo').split(',')
+    self.assertTrue(skin_id in layers, layers)
+    self.assertTrue('erp5_core' in layers, layers)
+    self.assertFalse('erp5_xhtml_style' in layers, layers)
+    self.assertTrue(static_skin_id in layers, layers)
+
+  def stepCreateCustomWorkflow(self, sequence=None, **kw):
+    """
+    Create a custom workflow
+    """
+    wf_id = 'custom_geek_workflow'
+    pw = self.getWorkflowTool()
+    addWorkflowByType(pw, WORKFLOW_TYPE, wf_id)
+    workflow = pw._getOb(wf_id, None)
+    self.failUnless(workflow is not None)
+    sequence.edit(workflow_id=workflow.getId())
+    cbt = pw._chains_by_type
+    props = {}
+    if cbt is not None:
+      for id, wf_ids in cbt.items():
+        props['chain_%s' % id] = ','.join(wf_ids)
+    key = 'chain_Geek Object'
+    if props.has_key(key):
+      props[key] = '%s,%s' % (props[key], wf_id)
+    else:
+      props[key] = wf_id
+    pw.manage_changeWorkflows('', props=props)
+
+  def stepCreateCustomBusinessTemplate(self, sequence=None, **kw):
+    """
+    Create a custom Business Template
+    """
+    pt = self.getTemplateTool()
+    template = pt.newContent(portal_type='Business Template')
+    self.failUnless(template.getBuildingState() == 'draft')
+    self.failUnless(template.getInstallationState() == 'not_installed')
+    template.edit(title='custom geek template',
+                  version='1.0',
+                  description='custom bt for unit_test')
+    sequence.edit(export_bt=template)
+
+  def stepCheckCustomWorkflowChain(self, sequence=None, **kw):
+    """
+    Check custom workflow chain
+    """
+    present = 0
+    pw = self.getWorkflowTool()
+    cbt = pw._chains_by_type
+    if cbt is not None:
+      for id, wf_ids in cbt.items():
+        if id == "Geek Object":
+          present = 1
+    self.assertEqual(present, 1)
+    self.assertSameSet(cbt['Geek Object'],
+                       ('geek_workflow', 'custom_geek_workflow'))
+
+  def stepCheckOriginalWorkflowChain(self, sequence=None, **kw):
+    """
+    Check original workflow chain
+    """
+    present = 0
+    pw = self.getWorkflowTool()
+    cbt = pw._chains_by_type
+    if cbt is not None:
+      for id, wf_ids in cbt.items():
+        if id == "Geek Object":
+          present = 1
+    self.assertEqual(present, 1)
+    self.assertSameSet(cbt['Geek Object'],
+                       ('geek_workflow', ))
+
+  def stepCheckEmptyWorkflowChain(self, sequence=None, **kw):
+    """
+    Check that workflow chain is empty
+    """
+    present = 0
+    pw = self.getWorkflowTool()
+    cbt = pw._chains_by_type
+    if cbt is not None:
+      for id, wf_ids in cbt.items():
+        if id == "Geek Object":
+          present = 1
+          break
+    if present:
+      self.assertEqual(0, len(wf_ids))
+
+  def stepCopyBusinessTemplate(self, sequence=None, **kw):
+    """
+    Copy business template
+    """
+    portal = self.getPortalObject()
+    template_tool = portal.portal_templates
+    import_bt = sequence.get('current_bt')
+    cb_data = template_tool.manage_copyObjects([import_bt.getId()])
+    copied, = template_tool.manage_pasteObjects(cb_data)
+    sequence.edit(current_bt=template_tool._getOb(copied['new_id']))
+
+  def stepRemoveWorkflowFromBusinessTemplate(self, sequence=None, **kw):
+    """
+    Remove workflow to business template
+    """
+    bt = sequence.get('current_bt', None)
+    self.failUnless(bt is not None)
+    current_twi = list(bt.getTemplateWorkflowIdList())
+    current_twi.remove(sequence.get('workflow_id', ''))
+    bt.edit(template_workflow_id_list=current_twi)
+
+  def stepRemoveWorkflowChainFromBusinessTemplate(self, sequence=None, **kw):
+    """
+    Remove workflow chain to business template
+    """
+    bt = sequence.get('current_bt', None)
+    self.failUnless(bt is not None)
+    workflow_id = sequence.get('workflow_id', '')
+    new_value = []
+    workflow_chain_list = list(bt.getTemplatePortalTypeWorkflowChainList())
+    for workflow_chain in workflow_chain_list:
+      portal_type, wkflow_id = workflow_chain.split(' | ')
+      if wkflow_id != workflow_id:
+        new_value.append(workflow_chain)
+    bt.edit(template_portal_type_workflow_chain_list=new_value)
+
+  def stepCreatePortalTypeRole(self, sequence=None, **kw):
+    """
+    Create portal type role
+    """
+    pt = self.getTypeTool()
+    object_id = sequence.get('object_ptype_id')
+    object_pt = pt._getOb(object_id)
+    object_pt.newContent(portal_type='Role Information',
+      title='Geek Role Definition',
+      description='A definition with non ascii chars éàè',
+      role_name_list=('geek_role_definition',),
+      role_category_list=('group/g1','function/f1'),
+      role_base_category_script_id='Base Category Script',
+      role_base_category_list=('group','site'))
+
+    sequence.edit(portal_type_role='geek_role_definition')
+
+  def stepAddPortalTypeRolesToBusinessTemplate(self, sequence=None, **kw):
+    """
+    Add type role to business template
+    """
+    bt = sequence.get('current_bt', None)
+    self.failUnless(bt is not None)
+    ptype_ids = []
+    ptype_ids.append(sequence.get('object_ptype_id', ''))
+    ptype_ids.append(sequence.get('module_ptype_id', ''))
+    self.assertEqual(len(ptype_ids), 2)
+    bt.edit(template_portal_type_roles_list=ptype_ids)
+
+  def stepCheckPortalTypeRoleExists(self, sequence=None, **kw):
+    """
+    Cehck that portal type role exist
+    """
+    pt = self.getTypeTool()
+    object_id = sequence.get('object_ptype_id')
+    role, = pt[object_id].getRoleInformationList()
+    self.assertEqual('Geek Role Definition', role.getTitle())
+    self.assertEqual(['geek_role_definition'], role.getRoleNameList())
+    self.assertEqual('A definition with non ascii chars éàè', role.getDescription())
+    self.assertEqual(['group/g1','function/f1'], role.getRoleCategoryList())
+    self.assertEqual(['group','site'], role.getRoleBaseCategoryList())
+    self.assertEqual('Base Category Script', role.getRoleBaseCategoryScriptId())
+
+  def stepModifyPortalType(self, sequence=None, **kw):
+    """
+    Modify Portal Type
+    """
+    pt = self.getTypeTool()
+    object_type = pt._getOb('Geek Object', None)
+    object_type.title = 'Modified %s' % object_type.title
+
+  def stepUnmodifyPortalType(self, sequence=None, **kw):
+    """
+    Unmodify Portal Type
+    """
+    pt = self.getTypeTool()
+    object_type = pt._getOb('Geek Object', None)
+    object_type.title = object_type.title[len('Modified '):]
+
+  def stepCheckModifiedPortalTypeExists(self, sequence=None, **kw):
+    """
+    Check presence of modified portal type
+    """
+    self.stepCheckPortalTypeExists(sequence=sequence, **kw)
+    pt = self.getTypeTool()
+    object_id = sequence.get('object_ptype_id')
+    object_type = pt._getOb(object_id, None)
+    self.failUnless(object_type.title.startswith('Modified '))
+
+  def stepCreateFakeZODBScript(self, sequence=None, **kw):
+    """Create a Script inside portal_skins
+    """
+    grain_of_sand = ''.join([random.choice(string.ascii_letters) for i in xrange(10)])
+    python_script_id = 'ERP5Site_dummyScriptWhichRandomId%s' % grain_of_sand
+    skin_folder_id = 'custom'
+    if getattr(self.portal.portal_skins, skin_folder_id, None) is None:
+        self.portal.portal_skins.manage_addProduct['OFSP'].manage_addFolder(skin_folder_id)
+    skin_folder = self.portal.portal_skins[skin_folder_id]
+    skin_folder.manage_addProduct['PythonScripts'].manage_addPythonScript(
+                                                                 id=python_script_id)
+    sequence.set('python_script_id', python_script_id)
+    sequence.set('skin_folder_id', skin_folder_id)
+
+  def stepAddCustomSkinFolderToBusinessTemplate(self, sequence=None, **kw):
+    """
+    Add types to business template
+    """
+    bt = sequence.get('current_bt', None)
+    self.failUnless(bt is not None)
+    template_skin_id_list = list(bt.getProperty('template_skin_id_list'))
+    template_skin_id_list.append('custom')
+    bt.edit(template_skin_id_list=template_skin_id_list)
+
+  def stepCheckFakeScriptIsDeleted(self, sequence=None, **kw):
+    """Check that script inside ZODB is deleted by BT reinstallation
+    """
+    python_script_id = sequence.get('python_script_id')
+    skin_folder_id = sequence.get('skin_folder_id')
+    folder = self.portal.portal_skins[skin_folder_id]
+    self.assertTrue(python_script_id not in folder.objectIds())
+
+  def stepSetOldSitePropertyValue(self, sequence=None, **kw):
+    """Set the old value to a site property."""
+    sequence.set('site_property_value', 'old')
+
+  def stepSetNewSitePropertyValue(self, sequence=None, **kw):
+    """Set the new value to a site property."""
+    sequence.set('site_property_value', 'new')
+
+  def stepCreateSiteProperty(self, sequence=None, **kw):
+    """Create a site property."""
+    portal = self.getPortal()
+    portal._setProperty('a_property', sequence.get('site_property_value'))
+
+  def stepModifySiteProperty(self, sequence=None, **kw):
+    """Modify a site property."""
+    portal = self.getPortal()
+    portal._updateProperty('a_property', sequence.get('site_property_value'))
+
+  def stepCheckSiteProperty(self, sequence=None, **kw):
+    """Check a site property."""
+    portal = self.getPortal()
+    self.assertEquals(portal.getProperty('a_property'),
+                      sequence.get('site_property_value'))
+
+  def stepCheckSitePropertyRemoved(self, sequence=None, **kw):
+    """Check if a site property is removed."""
+    portal = self.getPortal()
+    self.failIf(portal.hasProperty('a_property'))
+
+  def stepAddSitePropertyToBusinessTemplate(self, sequence=None, **kw):
+    """Add a site property into a business template."""
+    bt = sequence.get('current_bt', None)
+    self.failUnless(bt is not None)
+    bt.edit(template_site_property_id_list=('a_property',))
+
+  def stepCheckSkinSelectionRemoved(self, sequence=None, **kw):
+    """
+    Check that a skin selection has been removed.
+    """
+    self.assertTrue('Foo' not in self.portal.portal_skins.getSkinSelections())
+
+  def stepCheckSkinSelectionNotRemoved(self, sequence=None, **kw):
+    """
+    Check that a skin selection has not been removed.
+    """
+    self.assertTrue('Foo' in self.portal.portal_skins.getSkinSelections())
+
+  def stepUserDisableSkinSelectionRegistration(self, sequence=None, **kw):
+    """
+    Simulate User disabling skin registration from UI.
+    """
+    self.app.REQUEST.set('your_register_skin_selection', 0)
+
+  def stepUserSelectSkinToBeChanged(self, sequence=None, **kw):
+    """
+    User selects skin to be changed from UI.
+    """
+    select_skin_to_be_changed_list = self.portal.portal_skins.getSkinSelections()[:1]
+    select_skin_not_to_be_changed_list = self.portal.portal_skins.getSkinSelections()[1:]
+    sequence.edit(select_skin_to_be_changed_list = select_skin_to_be_changed_list, \
+                  select_skin_not_to_be_changed_list = select_skin_not_to_be_changed_list)
+    self.app.REQUEST.set('your_skin_layer_list', select_skin_to_be_changed_list)
+
+  def stepCheckUserSelectedSkinToBeChanged(self, sequence=None, **kw):
+    """
+    Check that only selected to be changed skins are affected.
+    """
+    skin_folder_id = sequence.get('skin_folder_id')
+    select_skin_to_be_changed_list = sequence.get('select_skin_to_be_changed_list')
+    select_skin_not_to_be_changed_list = sequence.get('select_skin_not_to_be_changed_list')
+    for skin_name in select_skin_to_be_changed_list:
+      self.assertTrue(skin_folder_id in self.portal.portal_skins.getSkinPath(skin_name))
+    for skin_name in select_skin_not_to_be_changed_list:
+      self.assertTrue(skin_folder_id not in self.portal.portal_skins.getSkinPath(skin_name))
+
+  def stepCheckSkinFolderPriorityOn(self, sequence=None, **kw):
+    """
+    Check skin folder priority
+    """
+    ps = self.portal.portal_skins
+    for skin in ps.getSkinSelections():
+      self.assertEquals('erp5_core', ps.getSkinPath(skin).split(',')[0])
+      self.assertEquals('erp5_geek', ps.getSkinPath(skin).split(',')[1])
+
+  def stepCheckSkinFolderPriorityOff(self, sequence=None, **kw):
+    """
+    Check skin folder priority off
+    """
+    ps = self.portal.portal_skins
+    for skin in ps.getSkinSelections():
+      self.assertEquals('erp5_geek', ps.getSkinPath(skin).split(',')[0])
+      self.assertEquals('erp5_core', ps.getSkinPath(skin).split(',')[1])
+
+  def stepUserDisableSkinFolderPriority(self, sequence=None, **kw):
+    """
+    User chooses skin folder priority off from UI
+    """
+    self.app.REQUEST.set('your_reorder_skin_selection', 0)
+
+  def stepSetExistingSkinFolderPriority(self, sequence=None, **kw):
+    """
+    Set exisitng skin priority for test
+    """
+    skin_folder = self.portal.portal_skins['erp5_core']
+    if not skin_folder.hasProperty('business_template_skin_layer_priority'):
+      skin_folder.manage_addProperty('business_template_skin_layer_priority', \
+                                     10000.0, 'float')
+
+  def stepSetBusinessTemplateSkinFolderPriority(self, sequence=None, **kw):
+    """
+    Set skin folder priority.
+    """
+    skin_folder_id = sequence.get('skin_folder_id')
+    skin_folder = self.portal.portal_skins[skin_folder_id]
+    skin_folder.manage_addProperty('business_template_skin_layer_priority', 9999.0, 'float')
+
+  def stepModifySkinFolder(self, sequence=None, **kw):
+    """
+    Modify the skin folder
+    """
+    ps = self.getSkinsTool()
+    skin_id = sequence.get('skin_folder_id')
+    skin_folder = ps._getOb(skin_id, None)
+    skin_folder._setProperty(
+                    'business_template_skin_layer_priority',
+                    99, type='float')
+    # Make sure it is really set.
+    self.assertEquals(
+        99, skin_folder.getProperty('business_template_skin_layer_priority'))
+
+  def stepUnmodifySkinFolder(self, sequence=None, **kw):
+    ps = self.getSkinsTool()
+    skin_id = sequence.get('skin_folder_id')
+    skin_folder = ps._getOb(skin_id, None)
+    skin_folder._delProperty('business_template_skin_layer_priority')
+    self.assertEquals(
+        None, skin_folder.getProperty('business_template_skin_layer_priority'))
+
+  def stepCheckModifiedSkinFolderExists(self, sequence=None, **kw):
+    """
+    Check modified skin folder
+    """
+    ps = self.getSkinsTool()
+    skin_id = sequence.get('skin_folder_id')
+    skin_folder = ps._getOb(skin_id, None)
+    self.assertEquals(
+        99, skin_folder.getProperty('business_template_skin_layer_priority'))
+
+  def stepCreateDocument(self, sequence=None, **kw):
+    document_title = 'UnitTest'
+    document_data = """class UnitTest:
+  meta_type = 'ERP5 Unit Test'
+  portal_type = 'Unit Test'"""
+    cfg = getConfiguration()
+    file_path = os.path.join(cfg.instancehome, 'Document', document_title+'.py')
+    if os.path.exists(file_path):
+      os.remove(file_path)
+    f = file(file_path, 'w')
+    f.write(document_data)
+    f.close()
+    self.failUnless(os.path.exists(file_path))
+    sequence.edit(document_title=document_title, document_path=file_path,
+        document_data=document_data)
+
+  def stepAddDocumentToBusinessTemplate(self, sequence=None, **kw):
+    bt = sequence['current_bt']
+    bt.edit(template_document_id_list=[sequence['document_title']])
+
+  def stepRemoveDocument(self, sequence=None, **kw):
+    document_path = sequence['document_path']
+    os.remove(document_path)
+    self.failIf(os.path.exists(document_path))
+
+  def stepCheckDocumentExists(self, sequence=None, **kw):
+    self.failIf(not os.path.exists(sequence['document_path']))
+
+  def stepCheckDocumentRemoved(self, sequence=None, **kw):
+    self.failIf(os.path.exists(sequence['document_path']))
+
+  def stepCreateTest(self, sequence=None, **kw):
+    test_title = 'UnitTest'
+    test_data = """class UnitTest:
+  pass"""
+    cfg = getConfiguration()
+    file_path = os.path.join(cfg.instancehome, 'tests', test_title+'.py')
+    if os.path.exists(file_path):
+      os.remove(file_path)
+    f = file(file_path, 'w')
+    f.write(test_data)
+    f.close()
+    self.failUnless(os.path.exists(file_path))
+    sequence.edit(test_title=test_title, test_path=file_path,
+        test_data=test_data)
+
+  def stepAddTestToBusinessTemplate(self, sequence=None, **kw):
+    bt = sequence['current_bt']
+    bt.edit(template_test_id_list=[sequence['test_title']])
+
+  def stepRemoveTest(self, sequence=None, **kw):
+    test_path = sequence['test_path']
+    os.remove(test_path)
+    self.failIf(os.path.exists(test_path))
+
+  def stepCheckTestExists(self, sequence=None, **kw):
+    self.failIf(not os.path.exists(sequence['test_path']))
+
+  def stepCheckTestRemoved(self, sequence=None, **kw):
+    self.failIf(os.path.exists(sequence['test_path']))
+
+  def stepCheckDocumentPropertySheetSameName(self, sequence=None, **kw):
+    self.assertEqual(sequence['ps_title'], sequence['document_title'])
+    self.assertEqual(os.path.basename(sequence['document_path']),
+        os.path.basename(sequence['ps_path']))
+
+  def stepCheckDocumentTestSameName(self, sequence=None, **kw):
+    self.assertEqual(sequence['test_title'], sequence['document_title'])
+    self.assertEqual(os.path.basename(sequence['document_path']),
+        os.path.basename(sequence['test_path']))
+
+  save_current_business_template_sequence_string = '\
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+  '
+
+  def stepRemovePropertySheetFromBusinessTemplate(self, sequence=None, **kw):
+    """
+    Add Property Sheet to Business Template
+    """
+    sequence['current_bt'].edit(template_property_sheet_id_list=[])
+
+  def stepRemoveTestFromBusinessTemplate(self, sequence=None, **kw):
+    """
+    Add Property Sheet to Business Template
+    """
+    sequence['current_bt'].edit(template_test_id_list=[])
+
+  def stepCreateAllPropertySheetsFromFilesystem(self, sequence=None, **kw):
+    self.portal.portal_property_sheets.createAllPropertySheetsFromFilesystem()
+
+  def stepRemovePropertySheetZodbOnly(self, sequence=None, **kw):
+    """
+    Remove Property Sheet, but only from ZODB
+    """
+    self.portal.portal_property_sheets.manage_delObjects([sequence['ps_title']])
+
+  def stepCheckDraftBuildingState(self, sequence=None, **kw):
+    self.assertEquals(sequence['current_bt'].getBuildingState(), 'draft')
+
+  def stepSimulateAndCopyPrePropertySheetMigrationBusinessTemplate(self, sequence=None, **kw):
+    portal = self.getPortalObject()
+    template_tool = portal.portal_templates
+    current_bt = sequence['current_bt']
+    cb_data = template_tool.manage_copyObjects([current_bt.getId()])
+    copied, = template_tool.manage_pasteObjects(cb_data)
+    current = current_bt._property_sheet_item._objects.copy()
+    current_bt._property_sheet_item._objects = PersistentMapping()
+    for k,v in current.iteritems():
+      k = k.lstrip('portal_property_sheets/')
+      current_bt._property_sheet_item._objects[k] = v
+    sequence.edit(current_bt=template_tool._getOb(copied['new_id']))
+
+
+class TestBusinessTemplate(BusinessTemplateMixin):
+  """
+    Test these operations:
+
+    - Create a template
+
+    - Install a template
+
+    - Uninstall a template
+
+    - Upgrade a template
+  """
+
+  def getTitle(self):
+    return "Business Template"
+
   # tests
   def test_Title(self):
     """Tests the Title of the Template Tool."""
@@ -5059,67 +5605,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def stepSetSkinFolderRegistredSelections(self, sequence=None, **kw):
-    ps = self.getSkinsTool()
-    skin_id = sequence.get('skin_folder_id')
-    skin_folder = ps._getOb(skin_id, None)
-    skin_folder._setProperty(
-          'business_template_registered_skin_selections', ('Foo',),
-          type='tokens')
-
-  def stepSetSkinFolderRegistredSelections2(self, sequence=None, **kw):
-    ps = self.getSkinsTool()
-    skin_id = sequence.get('skin_folder_id')
-    skin_folder = ps._getOb(skin_id, None)
-    skin_folder._updateProperty(
-          'business_template_registered_skin_selections', ('Foo', 'Bar',))
-
-  def stepCreateSkinSelection(self, sequence=None, **kw):
-    ps = self.getSkinsTool()
-    ps.manage_skinLayers(skinpath=('erp5_core',), skinname='Foo', add_skin=1)
-
-  def stepSetStaticSkinFolderRegistredSelections(self, sequence=None, **kw):
-    ps = self.getSkinsTool()
-    skin_id = sequence.get('static_skin_folder_id')
-    skin_folder = ps._getOb(skin_id, None)
-    skin_folder._setProperty(
-          'business_template_registered_skin_selections', ('Foo',),
-          type='tokens')
-    selection = ps.getSkinPath('Foo')
-    selection = selection.split(',')
-    if skin_id not in selection:
-      selection.append(skin_id)
-      ps.manage_skinLayers(skinpath=tuple(selection),
-                           skinname='Foo', add_skin=1)
-
-  def stepCheckSkinSelectionAdded(self, sequence=None, **kw):
-    ps = self.getSkinsTool()
-    skin_id = sequence.get('skin_folder_id')
-    # a new skin selection is added
-    self.assertTrue('Foo' in ps.getSkinSelections())
-    # and it contains good layers
-    layers = ps.getSkinPath('Foo').split(',')
-    self.assertTrue(skin_id in layers, layers)
-    self.assertTrue('erp5_core' in layers, layers)
-    self.assertFalse('erp5_xhtml_style' in layers, layers)
-    skin_folder = ps._getOb(skin_id, None)
-    skin_selection_list = skin_folder.getProperty(
-        'business_template_registered_skin_selections', ())
-    self.assertTrue('Foo' in skin_selection_list)
-
-  def stepCheckStaticSkinSelection(self, sequence=None, **kw):
-    ps = self.getSkinsTool()
-    skin_id = sequence.get('skin_folder_id')
-    static_skin_id = sequence.get('static_skin_folder_id')
-    # a new skin selection is added
-    self.assertTrue('Foo' in ps.getSkinSelections())
-    # and it contains good layers
-    layers = ps.getSkinPath('Foo').split(',')
-    self.assertTrue(skin_id in layers, layers)
-    self.assertTrue('erp5_core' in layers, layers)
-    self.assertFalse('erp5_xhtml_style' in layers, layers)
-    self.assertTrue(static_skin_id in layers, layers)
-
   def test_33_BusinessTemplateWithNewSkinSelection(self):
     """Test Business Template With New Skin Selection"""
     sequence_list = SequenceList()
@@ -5501,86 +5986,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertNotEqual(new_bt, newer_bt)
     self.assertEqual(newer_bt.getRevision(), second_revision)
 
-  def stepCreateCustomWorkflow(self, sequence=None, **kw):
-    """
-    Create a custom workflow
-    """
-    wf_id = 'custom_geek_workflow'
-    pw = self.getWorkflowTool()
-    addWorkflowByType(pw, WORKFLOW_TYPE, wf_id)
-    workflow = pw._getOb(wf_id, None)
-    self.failUnless(workflow is not None)
-    sequence.edit(workflow_id=workflow.getId())
-    cbt = pw._chains_by_type
-    props = {}
-    if cbt is not None:
-      for id, wf_ids in cbt.items():
-        props['chain_%s' % id] = ','.join(wf_ids)
-    key = 'chain_Geek Object'
-    if props.has_key(key):
-      props[key] = '%s,%s' % (props[key], wf_id)
-    else:
-      props[key] = wf_id
-    pw.manage_changeWorkflows('', props=props)
-
-  def stepCreateCustomBusinessTemplate(self, sequence=None, **kw):
-    """
-    Create a custom Business Template
-    """
-    pt = self.getTemplateTool()
-    template = pt.newContent(portal_type='Business Template')
-    self.failUnless(template.getBuildingState() == 'draft')
-    self.failUnless(template.getInstallationState() == 'not_installed')
-    template.edit(title='custom geek template',
-                  version='1.0',
-                  description='custom bt for unit_test')
-    sequence.edit(export_bt=template)
-
-  def stepCheckCustomWorkflowChain(self, sequence=None, **kw):
-    """
-    Check custom workflow chain
-    """
-    present = 0
-    pw = self.getWorkflowTool()
-    cbt = pw._chains_by_type
-    if cbt is not None:
-      for id, wf_ids in cbt.items():
-        if id == "Geek Object":
-          present = 1
-    self.assertEqual(present, 1)
-    self.assertSameSet(cbt['Geek Object'],
-                       ('geek_workflow', 'custom_geek_workflow'))
-
-  def stepCheckOriginalWorkflowChain(self, sequence=None, **kw):
-    """
-    Check original workflow chain
-    """
-    present = 0
-    pw = self.getWorkflowTool()
-    cbt = pw._chains_by_type
-    if cbt is not None:
-      for id, wf_ids in cbt.items():
-        if id == "Geek Object":
-          present = 1
-    self.assertEqual(present, 1)
-    self.assertSameSet(cbt['Geek Object'],
-                       ('geek_workflow', ))
-
-  def stepCheckEmptyWorkflowChain(self, sequence=None, **kw):
-    """
-    Check that workflow chain is empty
-    """
-    present = 0
-    pw = self.getWorkflowTool()
-    cbt = pw._chains_by_type
-    if cbt is not None:
-      for id, wf_ids in cbt.items():
-        if id == "Geek Object":
-          present = 1
-          break
-    if present:
-      self.assertEqual(0, len(wf_ids))
-
   def test_34_RemovePartialWorkflowChain(self):
     """Test Remove Chain"""
     sequence_list = SequenceList()
@@ -5639,42 +6044,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
-
-  def stepCopyBusinessTemplate(self, sequence=None, **kw):
-    """
-    Copy business template
-    """
-    portal = self.getPortalObject()
-    template_tool = portal.portal_templates
-    import_bt = sequence.get('current_bt')
-    cb_data = template_tool.manage_copyObjects([import_bt.getId()])
-    copied, = template_tool.manage_pasteObjects(cb_data)
-    sequence.edit(current_bt=template_tool._getOb(copied['new_id']))
-
-  def stepRemoveWorkflowFromBusinessTemplate(self, sequence=None, **kw):
-    """
-    Remove workflow to business template
-    """
-    bt = sequence.get('current_bt', None)
-    self.failUnless(bt is not None)
-    current_twi = list(bt.getTemplateWorkflowIdList())
-    current_twi.remove(sequence.get('workflow_id', ''))
-    bt.edit(template_workflow_id_list=current_twi)
-
-  def stepRemoveWorkflowChainFromBusinessTemplate(self, sequence=None, **kw):
-    """
-    Remove workflow chain to business template
-    """
-    bt = sequence.get('current_bt', None)
-    self.failUnless(bt is not None)
-    workflow_id = sequence.get('workflow_id', '')
-    new_value = []
-    workflow_chain_list = list(bt.getTemplatePortalTypeWorkflowChainList())
-    for workflow_chain in workflow_chain_list:
-      portal_type, wkflow_id = workflow_chain.split(' | ')
-      if wkflow_id != workflow_id:
-        new_value.append(workflow_chain)
-    bt.edit(template_portal_type_workflow_chain_list=new_value)
 
   def test_35_UpdatePartialWorkflowChain(self):
     """Test Update Workflow Chain"""
@@ -5821,49 +6190,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def stepCreatePortalTypeRole(self, sequence=None, **kw):
-    """
-    Create portal type role
-    """
-    pt = self.getTypeTool()
-    object_id = sequence.get('object_ptype_id')
-    object_pt = pt._getOb(object_id)
-    object_pt.newContent(portal_type='Role Information',
-      title='Geek Role Definition',
-      description='A definition with non ascii chars éàè',
-      role_name_list=('geek_role_definition',),
-      role_category_list=('group/g1','function/f1'),
-      role_base_category_script_id='Base Category Script',
-      role_base_category_list=('group','site'))
-
-    sequence.edit(portal_type_role='geek_role_definition')
-
-  def stepAddPortalTypeRolesToBusinessTemplate(self, sequence=None, **kw):
-    """
-    Add type role to business template
-    """
-    bt = sequence.get('current_bt', None)
-    self.failUnless(bt is not None)
-    ptype_ids = []
-    ptype_ids.append(sequence.get('object_ptype_id', ''))
-    ptype_ids.append(sequence.get('module_ptype_id', ''))
-    self.assertEqual(len(ptype_ids), 2)
-    bt.edit(template_portal_type_roles_list=ptype_ids)
-
-  def stepCheckPortalTypeRoleExists(self, sequence=None, **kw):
-    """
-    Cehck that portal type role exist
-    """
-    pt = self.getTypeTool()
-    object_id = sequence.get('object_ptype_id')
-    role, = pt[object_id].getRoleInformationList()
-    self.assertEqual('Geek Role Definition', role.getTitle())
-    self.assertEqual(['geek_role_definition'], role.getRoleNameList())
-    self.assertEqual('A definition with non ascii chars éàè', role.getDescription())
-    self.assertEqual(['group/g1','function/f1'], role.getRoleCategoryList())
-    self.assertEqual(['group','site'], role.getRoleBaseCategoryList())
-    self.assertEqual('Base Category Script', role.getRoleBaseCategoryScriptId())
-
   def test_36_CheckPortalTypeRoles(self):
     """Test Portal Type Roles"""
     sequence_list = SequenceList()
@@ -5903,32 +6229,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
-
-  def stepModifyPortalType(self, sequence=None, **kw):
-    """
-    Modify Portal Type
-    """
-    pt = self.getTypeTool()
-    object_type = pt._getOb('Geek Object', None)
-    object_type.title = 'Modified %s' % object_type.title
-
-  def stepUnmodifyPortalType(self, sequence=None, **kw):
-    """
-    Unmodify Portal Type
-    """
-    pt = self.getTypeTool()
-    object_type = pt._getOb('Geek Object', None)
-    object_type.title = object_type.title[len('Modified '):]
-
-  def stepCheckModifiedPortalTypeExists(self, sequence=None, **kw):
-    """
-    Check presence of modified portal type
-    """
-    self.stepCheckPortalTypeExists(sequence=sequence, **kw)
-    pt = self.getTypeTool()
-    object_id = sequence.get('object_ptype_id')
-    object_type = pt._getOb(object_id, None)
-    self.failUnless(object_type.title.startswith('Modified '))
 
   def test_37_UpdatePortalType(self):
     """Test Update Portal Type"""
@@ -5982,38 +6282,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def stepCreateFakeZODBScript(self, sequence=None, **kw):
-    """Create a Script inside portal_skins
-    """
-    grain_of_sand = ''.join([random.choice(string.ascii_letters) for i in xrange(10)])
-    python_script_id = 'ERP5Site_dummyScriptWhichRandomId%s' % grain_of_sand
-    skin_folder_id = 'custom'
-    if getattr(self.portal.portal_skins, skin_folder_id, None) is None:
-        self.portal.portal_skins.manage_addProduct['OFSP'].manage_addFolder(skin_folder_id)
-    skin_folder = self.portal.portal_skins[skin_folder_id]
-    skin_folder.manage_addProduct['PythonScripts'].manage_addPythonScript(
-                                                                 id=python_script_id)
-    sequence.set('python_script_id', python_script_id)
-    sequence.set('skin_folder_id', skin_folder_id)
-
-  def stepAddCustomSkinFolderToBusinessTemplate(self, sequence=None, **kw):
-    """
-    Add types to business template
-    """
-    bt = sequence.get('current_bt', None)
-    self.failUnless(bt is not None)
-    template_skin_id_list = list(bt.getProperty('template_skin_id_list'))
-    template_skin_id_list.append('custom')
-    bt.edit(template_skin_id_list=template_skin_id_list)
-
-  def stepCheckFakeScriptIsDeleted(self, sequence=None, **kw):
-    """Check that script inside ZODB is deleted by BT reinstallation
-    """
-    python_script_id = sequence.get('python_script_id')
-    skin_folder_id = sequence.get('skin_folder_id')
-    folder = self.portal.portal_skins[skin_folder_id]
-    self.assertTrue(python_script_id not in folder.objectIds())
-
   def test_38_CheckReinstallation(self):
     """Test Reinstallation"""
     sequence_list = SequenceList()
@@ -6046,122 +6314,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
-
-  def stepSetOldSitePropertyValue(self, sequence=None, **kw):
-    """Set the old value to a site property."""
-    sequence.set('site_property_value', 'old')
-
-  def stepSetNewSitePropertyValue(self, sequence=None, **kw):
-    """Set the new value to a site property."""
-    sequence.set('site_property_value', 'new')
-
-  def stepCreateSiteProperty(self, sequence=None, **kw):
-    """Create a site property."""
-    portal = self.getPortal()
-    portal._setProperty('a_property', sequence.get('site_property_value'))
-
-  def stepModifySiteProperty(self, sequence=None, **kw):
-    """Modify a site property."""
-    portal = self.getPortal()
-    portal._updateProperty('a_property', sequence.get('site_property_value'))
-
-  def stepCheckSiteProperty(self, sequence=None, **kw):
-    """Check a site property."""
-    portal = self.getPortal()
-    self.assertEquals(portal.getProperty('a_property'),
-                      sequence.get('site_property_value'))
-
-  def stepCheckSitePropertyRemoved(self, sequence=None, **kw):
-    """Check if a site property is removed."""
-    portal = self.getPortal()
-    self.failIf(portal.hasProperty('a_property'))
-
-  def stepAddSitePropertyToBusinessTemplate(self, sequence=None, **kw):
-    """Add a site property into a business template."""
-    bt = sequence.get('current_bt', None)
-    self.failUnless(bt is not None)
-    bt.edit(template_site_property_id_list=('a_property',))
-
-  def stepCheckSkinSelectionRemoved(self, sequence=None, **kw):
-    """
-    Check that a skin selection has been removed.
-    """
-    self.assertTrue('Foo' not in self.portal.portal_skins.getSkinSelections())
-
-  def stepCheckSkinSelectionNotRemoved(self, sequence=None, **kw):
-    """
-    Check that a skin selection has not been removed.
-    """
-    self.assertTrue('Foo' in self.portal.portal_skins.getSkinSelections())
-
-  def stepUserDisableSkinSelectionRegistration(self, sequence=None, **kw):
-    """
-    Simulate User disabling skin registration from UI.
-    """
-    self.app.REQUEST.set('your_register_skin_selection', 0)
-
-  def stepUserSelectSkinToBeChanged(self, sequence=None, **kw):
-    """
-    User selects skin to be changed from UI.
-    """
-    select_skin_to_be_changed_list = self.portal.portal_skins.getSkinSelections()[:1]
-    select_skin_not_to_be_changed_list = self.portal.portal_skins.getSkinSelections()[1:]
-    sequence.edit(select_skin_to_be_changed_list = select_skin_to_be_changed_list, \
-                  select_skin_not_to_be_changed_list = select_skin_not_to_be_changed_list)
-    self.app.REQUEST.set('your_skin_layer_list', select_skin_to_be_changed_list)
-
-  def stepCheckUserSelectedSkinToBeChanged(self, sequence=None, **kw):
-    """
-    Check that only selected to be changed skins are affected.
-    """
-    skin_folder_id = sequence.get('skin_folder_id')
-    select_skin_to_be_changed_list = sequence.get('select_skin_to_be_changed_list')
-    select_skin_not_to_be_changed_list = sequence.get('select_skin_not_to_be_changed_list')
-    for skin_name in select_skin_to_be_changed_list:
-      self.assertTrue(skin_folder_id in self.portal.portal_skins.getSkinPath(skin_name))
-    for skin_name in select_skin_not_to_be_changed_list:
-      self.assertTrue(skin_folder_id not in self.portal.portal_skins.getSkinPath(skin_name))
-
-  def stepCheckSkinFolderPriorityOn(self, sequence=None, **kw):
-    """
-    Check skin folder priority
-    """
-    ps = self.portal.portal_skins
-    for skin in ps.getSkinSelections():
-      self.assertEquals('erp5_core', ps.getSkinPath(skin).split(',')[0])
-      self.assertEquals('erp5_geek', ps.getSkinPath(skin).split(',')[1])
-
-  def stepCheckSkinFolderPriorityOff(self, sequence=None, **kw):
-    """
-    Check skin folder priority off
-    """
-    ps = self.portal.portal_skins
-    for skin in ps.getSkinSelections():
-      self.assertEquals('erp5_geek', ps.getSkinPath(skin).split(',')[0])
-      self.assertEquals('erp5_core', ps.getSkinPath(skin).split(',')[1])
-
-  def stepUserDisableSkinFolderPriority(self, sequence=None, **kw):
-    """
-    User chooses skin folder priority off from UI
-    """
-    self.app.REQUEST.set('your_reorder_skin_selection', 0)
-
-  def stepSetExistingSkinFolderPriority(self, sequence=None, **kw):
-    """
-    Set exisitng skin priority for test
-    """
-    skin_folder = self.portal.portal_skins['erp5_core']
-    if not skin_folder.hasProperty('business_template_skin_layer_priority'):
-      skin_folder.manage_addProperty('business_template_skin_layer_priority', \
-                                     10000.0, 'float')
-
-  def stepSetBusinessTemplateSkinFolderPriority(self, sequence=None, **kw):
-    """
-    Set skin folder priority.
-    """
-    skin_folder_id = sequence.get('skin_folder_id')
-    skin_folder = self.portal.portal_skins[skin_folder_id]
-    skin_folder.manage_addProperty('business_template_skin_layer_priority', 9999.0, 'float')
 
   def test_39_CheckSiteProperties(self):
     """Test Site Properties"""
@@ -6377,38 +6529,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
-
-  def stepModifySkinFolder(self, sequence=None, **kw):
-    """
-    Modify the skin folder
-    """
-    ps = self.getSkinsTool()
-    skin_id = sequence.get('skin_folder_id')
-    skin_folder = ps._getOb(skin_id, None)
-    skin_folder._setProperty(
-                    'business_template_skin_layer_priority',
-                    99, type='float')
-    # Make sure it is really set.
-    self.assertEquals(
-        99, skin_folder.getProperty('business_template_skin_layer_priority'))
-
-  def stepUnmodifySkinFolder(self, sequence=None, **kw):
-    ps = self.getSkinsTool()
-    skin_id = sequence.get('skin_folder_id')
-    skin_folder = ps._getOb(skin_id, None)
-    skin_folder._delProperty('business_template_skin_layer_priority')
-    self.assertEquals(
-        None, skin_folder.getProperty('business_template_skin_layer_priority'))
-
-  def stepCheckModifiedSkinFolderExists(self, sequence=None, **kw):
-    """
-    Check modified skin folder
-    """
-    ps = self.getSkinsTool()
-    skin_id = sequence.get('skin_folder_id')
-    skin_folder = ps._getOb(skin_id, None)
-    self.assertEquals(
-        99, skin_folder.getProperty('business_template_skin_layer_priority'))
 
   def test_163_UpdateSkinFolderWithRegisteredSkinSelection(self):
     """Test Update Skin Folder"""
@@ -6897,118 +7017,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     new_bt5_obj.build()
     template_tool.export(new_bt5_obj)
 
-  def stepCreateDocument(self, sequence=None, **kw):
-    document_title = 'UnitTest'
-    document_data = """class UnitTest:
-  meta_type = 'ERP5 Unit Test'
-  portal_type = 'Unit Test'"""
-    cfg = getConfiguration()
-    file_path = os.path.join(cfg.instancehome, 'Document', document_title+'.py')
-    if os.path.exists(file_path):
-      os.remove(file_path)
-    f = file(file_path, 'w')
-    f.write(document_data)
-    f.close()
-    self.failUnless(os.path.exists(file_path))
-    sequence.edit(document_title=document_title, document_path=file_path,
-        document_data=document_data)
-
-  def stepAddDocumentToBusinessTemplate(self, sequence=None, **kw):
-    bt = sequence['current_bt']
-    bt.edit(template_document_id_list=[sequence['document_title']])
-
-  def stepRemoveDocument(self, sequence=None, **kw):
-    document_path = sequence['document_path']
-    os.remove(document_path)
-    self.failIf(os.path.exists(document_path))
-
-  def stepCheckDocumentExists(self, sequence=None, **kw):
-    self.failIf(not os.path.exists(sequence['document_path']))
-
-  def stepCheckDocumentRemoved(self, sequence=None, **kw):
-    self.failIf(os.path.exists(sequence['document_path']))
-
-  def stepCreateTest(self, sequence=None, **kw):
-    test_title = 'UnitTest'
-    test_data = """class UnitTest:
-  pass"""
-    cfg = getConfiguration()
-    file_path = os.path.join(cfg.instancehome, 'tests', test_title+'.py')
-    if os.path.exists(file_path):
-      os.remove(file_path)
-    f = file(file_path, 'w')
-    f.write(test_data)
-    f.close()
-    self.failUnless(os.path.exists(file_path))
-    sequence.edit(test_title=test_title, test_path=file_path,
-        test_data=test_data)
-
-  def stepAddTestToBusinessTemplate(self, sequence=None, **kw):
-    bt = sequence['current_bt']
-    bt.edit(template_test_id_list=[sequence['test_title']])
-
-  def stepRemoveTest(self, sequence=None, **kw):
-    test_path = sequence['test_path']
-    os.remove(test_path)
-    self.failIf(os.path.exists(test_path))
-
-  def stepCheckTestExists(self, sequence=None, **kw):
-    self.failIf(not os.path.exists(sequence['test_path']))
-
-  def stepCheckTestRemoved(self, sequence=None, **kw):
-    self.failIf(os.path.exists(sequence['test_path']))
-
-  def stepCheckDocumentPropertySheetSameName(self, sequence=None, **kw):
-    self.assertEqual(sequence['ps_title'], sequence['document_title'])
-    self.assertEqual(os.path.basename(sequence['document_path']),
-        os.path.basename(sequence['ps_path']))
-
-  def stepCheckDocumentTestSameName(self, sequence=None, **kw):
-    self.assertEqual(sequence['test_title'], sequence['document_title'])
-    self.assertEqual(os.path.basename(sequence['document_path']),
-        os.path.basename(sequence['test_path']))
-
-  save_current_business_template_sequence_string = '\
-                       CheckNotInstalledInstallationState \
-                       BuildBusinessTemplate \
-                       CheckBuiltBuildingState \
-                       CheckNotInstalledInstallationState \
-                       CheckObjectPropertiesInBusinessTemplate \
-                       SaveBusinessTemplate \
-                       CheckBuiltBuildingState \
-                       CheckNotInstalledInstallationState \
-  '
-  def test_BusinessTemplateWithDocument(self):
-    sequence_list = SequenceList()
-    sequence_string = '\
-                       CreateDocument \
-                       CreateNewBusinessTemplate \
-                       UseExportBusinessTemplate \
-                       AddDocumentToBusinessTemplate \
-                       CheckModifiedBuildingState \
-                       ' + self.save_current_business_template_sequence_string + '\
-                       RemoveDocument \
-                       RemoveBusinessTemplate \
-                       RemoveAllTrashBins \
-                       ImportBusinessTemplate \
-                       UseImportBusinessTemplate \
-                       CheckBuiltBuildingState \
-                       CheckNotInstalledInstallationState \
-                       InstallBusinessTemplate \
-                       Tic \
-                       CheckInstalledInstallationState \
-                       CheckBuiltBuildingState \
-                       CheckNoTrashBin \
-                       CheckSkinsLayers \
-                       CheckDocumentExists \
-                       UninstallBusinessTemplate \
-                       CheckBuiltBuildingState \
-                       CheckNotInstalledInstallationState \
-                       CheckDocumentRemoved \
-                       '
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
-
   def test_BusinessTemplateWithTest(self):
     sequence_list = SequenceList()
     sequence_string = '\
@@ -7039,18 +7047,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
-
-  def stepRemovePropertySheetFromBusinessTemplate(self, sequence=None, **kw):
-    """
-    Add Property Sheet to Business Template
-    """
-    sequence['current_bt'].edit(template_property_sheet_id_list=[])
-
-  def stepRemoveTestFromBusinessTemplate(self, sequence=None, **kw):
-    """
-    Add Property Sheet to Business Template
-    """
-    sequence['current_bt'].edit(template_test_id_list=[])
 
   def test_BusinessTemplateWithDocumentTestRemoved(self):
     """Checks that if Business Template defines Document and Test
@@ -7102,31 +7098,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
-
-  def stepCreateAllPropertySheetsFromFilesystem(self, sequence=None, **kw):
-    self.portal.portal_property_sheets.createAllPropertySheetsFromFilesystem()
-
-  def stepRemovePropertySheetZodbOnly(self, sequence=None, **kw):
-    """
-    Remove Property Sheet, but only from ZODB
-    """
-    self.portal.portal_property_sheets.manage_delObjects([sequence['ps_title']])
-
-  def stepCheckDraftBuildingState(self, sequence=None, **kw):
-    self.assertEquals(sequence['current_bt'].getBuildingState(), 'draft')
-
-  def stepSimulateAndCopyPrePropertySheetMigrationBusinessTemplate(self, sequence=None, **kw):
-    portal = self.getPortalObject()
-    template_tool = portal.portal_templates
-    current_bt = sequence['current_bt']
-    cb_data = template_tool.manage_copyObjects([current_bt.getId()])
-    copied, = template_tool.manage_pasteObjects(cb_data)
-    current = current_bt._property_sheet_item._objects.copy()
-    current_bt._property_sheet_item._objects = PersistentMapping()
-    for k,v in current.iteritems():
-      k = k.lstrip('portal_property_sheets/')
-      current_bt._property_sheet_item._objects[k] = v
-    sequence.edit(current_bt=template_tool._getOb(copied['new_id']))
 
   def test_BusinessTemplateWithDocumentPropertySheetMigrated(self):
     """Checks that if Business Template defines Document and PropertySheet
@@ -7190,8 +7161,125 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+class TestDocumentTemplateItem(BusinessTemplateMixin):
+  def test_BusinessTemplateWithDocument(self):
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreateDocument \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddDocumentToBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveDocument \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckNoTrashBin \
+                       CheckSkinsLayers \
+                       CheckDocumentExists \
+                       UninstallBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckDocumentRemoved \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_BusinessTemplateUpdateWithDocument(self):
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreateDocument \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddDocumentToBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveDocument \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckNoTrashBin \
+                       CheckSkinsLayers \
+                       CheckDocumentExists \
+                       RemoveDocument \
+                       CreateUpdatedDocument \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddDocumentToBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CreateDocument \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckUpdatedDocumentExists \
+                       UninstallBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckDocumentRemoved \
+                       CheckWorkflowChainRemoved \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+class TestConstraintTemplateItem(TestDocumentTemplateItem):
+  def test(self):
+    raise NotImplemenetedError
+
+class TestExtensionTemplateItem(TestDocumentTemplateItem):
+  def test(self):
+    raise NotImplemenetedError
+
+class TestTestTemplateItem(TestDocumentTemplateItem):
+  def test(self):
+    raise NotImplemenetedError
 
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestBusinessTemplate))
+  suite.addTest(unittest.makeSuite(TestConstraintTemplateItem))
+  suite.addTest(unittest.makeSuite(TestDocumentTemplateItem))
+  suite.addTest(unittest.makeSuite(TestExtensionTemplateItem))
+  suite.addTest(unittest.makeSuite(TestTestTemplateItem))
   return suite
