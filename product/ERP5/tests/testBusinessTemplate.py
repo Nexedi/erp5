@@ -7074,7 +7074,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        UseImportBusinessTemplate \
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
-                       InstallBusinessTemplate \
+                       InstallWithoutForceBusinessTemplate \
                        Tic \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
