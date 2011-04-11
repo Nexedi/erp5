@@ -3337,6 +3337,16 @@ class DocumentTemplateItem(BaseTemplateItem):
   local_file_importer_name = staticmethod(importLocalDocument)
   local_file_remover_name = staticmethod(removeLocalDocument)
 
+  def _getKey(self, path):
+    """Magical method to generate dynamic unique path"""
+    return '/'.join((self.getTemplateTypeName(), path))
+
+  def _getPath(self, key):
+    """Magical method to extract real path"""
+    if '/' in key:
+      return key.split('/')[1]
+    return key
+
   def build(self, context, **kw):
     BaseTemplateItem.build(self, context, **kw)
     for key in self._archive.iterkeys():
@@ -3359,17 +3369,20 @@ class DocumentTemplateItem(BaseTemplateItem):
           new_obj_code = self._objects[path]
           old_obj_code = installed_item._objects[path]
           if new_obj_code != old_obj_code:
+            # Note: Magical way to have unique paths
             modified_object_list.update(
-                {path : ['Modified', self.__class__.__name__[:-12]]})
+                {self._getKey(path) : ['Modified', self.__class__.__name__[:-12]]})
         else: # new object
+          # Note: Magical way to have unique paths
           modified_object_list.update(
-                {path : ['New', self.__class__.__name__[:-12]]})
+                {self._getKey(path) : ['New', self.__class__.__name__[:-12]]})
           # get removed object
       old_keys = installed_item._objects.keys()
       for path in old_keys:
         if path not in new_keys:
+          # Note: Magical way to have unique paths
           modified_object_list.update(
-                {path : ['Removed', self.__class__.__name__[:-12]]})
+                {self._getKey(path) : ['Removed', self.__class__.__name__[:-12]]})
     return modified_object_list
 
   def _resetDynamicModules(self):
@@ -3422,6 +3435,16 @@ class DocumentTemplateItem(BaseTemplateItem):
         self.local_file_writer_name(id, text, create=1)
         if self.local_file_importer_name is not None:
           self.local_file_importer_name(id)
+
+  def remove(self, context, **kw):
+    """Conversion of magically uniqued paths to real ones"""
+    remove_object_dict = kw.get('remove_object_dict', {})
+    new_remove_dict = dict()
+    for k,v in remove_object_dict.iteritems():
+      if k.startswith(self.getTemplateTypeName()+'/'):
+        new_remove_dict[self._getPath(k)] = v
+    kw['remove_object_dict'] = new_remove_dict
+    BaseTemplateItem.remove(self, context, **kw)
 
   def uninstall(self, context, **kw):
     object_path = kw.get('object_path', None)
@@ -3666,6 +3689,27 @@ class PropertySheetTemplateItem(DocumentTemplateItem,
       # Skip meaningless backup of the object as it has just been
       # migrated
       update_parameter_dict[key] = 'migrate'
+
+  def remove(self, context, **kw):
+    """Conversion of magically uniqued paths to real ones"""
+    remove_object_dict = kw.get('remove_object_dict', {})
+    new_remove_dict = dict()
+    for k,v in remove_object_dict.iteritems():
+      if k.startswith(self.getTemplateTypeName()+'/'):
+        new_remove_dict[self._getPath(k)] = v
+    kw['remove_object_dict'] = new_remove_dict
+    ObjectTemplateItem.remove(self, context, **kw)
+
+  def preinstall(self, *args, **kwargs):
+    preinstall_dict = ObjectTemplateItem.preinstall(self, *args, **kwargs)
+    new_preinstall_dict = dict()
+    for k, v in preinstall_dict.iteritems():
+      if not k.startswith('portal_property_sheets/'):
+        # Magical way to have unique path in case of not yet migrated property
+        # sheets available on preinstall list
+        k = self._getKey(k)
+      new_preinstall_dict[k] = v
+    return new_preinstall_dict
 
   def install(self, context, **kw):
     if not self._perform_migration:
