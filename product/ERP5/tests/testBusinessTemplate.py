@@ -3300,37 +3300,6 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals(
         99, skin_folder.getProperty('business_template_skin_layer_priority'))
 
-  def stepCreateDocument(self, sequence=None, **kw):
-    document_title = 'UnitTest'
-    document_data = """class UnitTest:
-  meta_type = 'ERP5 Unit Test'
-  portal_type = 'Unit Test'"""
-    cfg = getConfiguration()
-    file_path = os.path.join(cfg.instancehome, 'Document', document_title+'.py')
-    if os.path.exists(file_path):
-      os.remove(file_path)
-    f = file(file_path, 'w')
-    f.write(document_data)
-    f.close()
-    self.failUnless(os.path.exists(file_path))
-    sequence.edit(document_title=document_title, document_path=file_path,
-        document_data=document_data)
-
-  def stepAddDocumentToBusinessTemplate(self, sequence=None, **kw):
-    bt = sequence['current_bt']
-    bt.edit(template_document_id_list=[sequence['document_title']])
-
-  def stepRemoveDocument(self, sequence=None, **kw):
-    document_path = sequence['document_path']
-    os.remove(document_path)
-    self.failIf(os.path.exists(document_path))
-
-  def stepCheckDocumentExists(self, sequence=None, **kw):
-    self.failIf(not os.path.exists(sequence['document_path']))
-
-  def stepCheckDocumentRemoved(self, sequence=None, **kw):
-    self.failIf(os.path.exists(sequence['document_path']))
-
   def stepCreateTest(self, sequence=None, **kw):
     test_title = 'UnitTest'
     test_data = """class UnitTest:
@@ -7048,120 +7017,63 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def test_BusinessTemplateWithDocumentTestRemoved(self):
-    """Checks that if Business Template defines Document and Test
-    Document is not removed"""
-    sequence_list = SequenceList()
-    sequence_string = '\
-                       CreateDocument \
-                       CreateTest \
-                       CheckDocumentTestSameName \
-                       CreateNewBusinessTemplate \
-                       UseExportBusinessTemplate \
-                       AddDocumentToBusinessTemplate \
-                       AddTestToBusinessTemplate \
-                       CheckModifiedBuildingState \
-                       ' + self.save_current_business_template_sequence_string + '\
-                       RemoveDocument \
-                       RemoveTest \
-                       RemoveBusinessTemplate \
-                       RemoveAllTrashBins \
-                       ImportBusinessTemplate \
-                       UseImportBusinessTemplate \
-                       CheckBuiltBuildingState \
-                       CheckNotInstalledInstallationState \
-                       InstallWithoutForceBusinessTemplate \
-                       Tic \
-                       CheckInstalledInstallationState \
-                       CheckBuiltBuildingState \
-                       CheckNoTrashBin \
-                       CheckDocumentExists \
-                       CheckTestExists \
-                       \
-                       CopyBusinessTemplate \
-                       Tic \
-                       \
-                       RemoveTestFromBusinessTemplate \
-                       CheckModifiedBuildingState \
-                       ' + self.save_current_business_template_sequence_string + '\
-                       ImportBusinessTemplate \
-                       UseImportBusinessTemplate \
-                       CheckBuiltBuildingState \
-                       CheckNotInstalledInstallationState \
-                       InstallWithoutForceBusinessTemplate \
-                       Tic \
-                       \
-                       CheckInstalledInstallationState \
-                       CheckBuiltBuildingState \
-                       CheckTestRemoved \
-                       CheckDocumentExists \
-                       '
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
-
-  def test_BusinessTemplateWithDocumentPropertySheetMigrated(self):
-    """Checks that if Business Template defines Document and PropertySheet
-    Document is not removed after Property Sheet was migrated and Business Template
-    was updated"""
-    sequence_list = SequenceList()
-    sequence_string = '\
-                       CreateDocument \
-                       CreatePropertySheet \
-                       CheckDocumentPropertySheetSameName \
-                       CreateNewBusinessTemplate \
-                       UseExportBusinessTemplate \
-                       AddDocumentToBusinessTemplate \
-                       AddPropertySheetToBusinessTemplate \
-                       CheckModifiedBuildingState \
-                       ' + self.save_current_business_template_sequence_string + '\
-                       RemoveDocument \
-                       RemovePropertySheet \
-                       RemoveBusinessTemplate \
-                       RemoveAllTrashBins \
-                       ImportBusinessTemplate \
-                       UseImportBusinessTemplate \
-                       CheckBuiltBuildingState \
-                       CheckNotInstalledInstallationState \
-                       InstallBusinessTemplate \
-                       Tic \
-                       CheckInstalledInstallationState \
-                       CheckBuiltBuildingState \
-                       CheckNoTrashBin \
-                       CheckDocumentExists \
-                       CheckPropertySheetExists \
-                       \
-                       SimulateAndCopyPrePropertySheetMigrationBusinessTemplate \
-                       Tic \
-                       \
-                       CreateAllPropertySheetsFromFilesystem \
-                       Tic \
-                       CheckPropertySheetRemoved \
-                       CheckPropertySheetMigration \
-                       \
-                       CheckDraftBuildingState \
-                       ' + self.save_current_business_template_sequence_string + '\
-                       RemoveBusinessTemplate \
-                       Tic \
-                       CreatePropertySheet \
-                       RemovePropertySheetZodbOnly \
-                       Tic \
-                       ImportBusinessTemplate \
-                       UseImportBusinessTemplate \
-                       CheckBuiltBuildingState \
-                       CheckNotInstalledInstallationState \
-                       InstallWithoutForceBusinessTemplate \
-                       Tic \
-                       \
-                       CheckPropertySheetMigration \
-                       CheckInstalledInstallationState \
-                       CheckBuiltBuildingState \
-                       CheckDocumentExists \
-                       CheckPropertySheetRemoved \
-                       '
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
-
 class TestDocumentTemplateItem(BusinessTemplateMixin):
+  document_title = 'UnitTest'
+  document_data = """class UnitTest:
+  meta_type = 'ERP5 Unit Test'
+  portal_type = 'Unit Test'"""
+  document_data_updated = """class UnitTest:
+  meta_type = 'ERP5 Unit Test'
+  portal_type = 'Unit Test'
+  def updated(self):
+    pass"""
+  document_base_path = os.path.join(getConfiguration().instancehome, 'Document')
+  template_property = 'template_document_id_list'
+
+  def stepCreateDocument(self, sequence=None, **kw):
+    file_path = os.path.join(self.document_base_path, self.document_title+'.py')
+    if os.path.exists(file_path):
+      os.remove(file_path)
+    f = file(file_path, 'w')
+    f.write(self.document_data)
+    f.close()
+    self.failUnless(os.path.exists(file_path))
+    sequence.edit(document_title=self.document_title, document_path=file_path,
+        document_data=self.document_data)
+
+  def stepCreateUpdatedDocument(self, sequence=None, **kw):
+    file_path = os.path.join(self.document_base_path, self.document_title+'.py')
+    if os.path.exists(file_path):
+      os.remove(file_path)
+    f = file(file_path, 'w')
+    f.write(self.document_data_updated)
+    f.close()
+    self.failUnless(os.path.exists(file_path))
+    sequence.edit(document_title=self.document_title, document_path=file_path,
+        document_data_updated=self.document_data_updated)
+
+  def stepAddDocumentToBusinessTemplate(self, sequence=None, **kw):
+    bt = sequence['current_bt']
+    bt.edit(**{self.template_property: [sequence['document_title']]})
+
+  def stepRemoveDocument(self, sequence=None, **kw):
+    document_path = sequence['document_path']
+    os.remove(document_path)
+    self.failIf(os.path.exists(document_path))
+
+  def stepCheckDocumentExists(self, sequence=None, **kw):
+    self.failIf(not os.path.exists(sequence['document_path']))
+    self.assertEqual(file(sequence['document_path']).read(),
+        sequence['document_data'])
+
+  def stepCheckUpdatedDocumentExists(self, sequence=None, **kw):
+    self.failIf(not os.path.exists(sequence['document_path']))
+    self.assertEqual(file(sequence['document_path']).read(),
+        sequence['document_data_updated'])
+
+  def stepCheckDocumentRemoved(self, sequence=None, **kw):
+    self.failIf(os.path.exists(sequence['document_path']))
+
   def test_BusinessTemplateWithDocument(self):
     sequence_list = SequenceList()
     sequence_string = '\
@@ -7258,7 +7170,68 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
                        CheckDocumentRemoved \
-                       CheckWorkflowChainRemoved \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_BusinessTemplateWithDocumentPropertySheetMigrated(self):
+    """Checks that if Business Template defines Document and PropertySheet
+    Document is not removed after Property Sheet was migrated and Business Template
+    was updated"""
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreateDocument \
+                       CreatePropertySheet \
+                       CheckDocumentPropertySheetSameName \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddDocumentToBusinessTemplate \
+                       AddPropertySheetToBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       ' + self.save_current_business_template_sequence_string + '\
+                       RemoveDocument \
+                       RemovePropertySheet \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckNoTrashBin \
+                       CheckDocumentExists \
+                       CheckPropertySheetExists \
+                       \
+                       SimulateAndCopyPrePropertySheetMigrationBusinessTemplate \
+                       Tic \
+                       \
+                       CreateAllPropertySheetsFromFilesystem \
+                       Tic \
+                       CheckPropertySheetRemoved \
+                       CheckPropertySheetMigration \
+                       \
+                       CheckDraftBuildingState \
+                       ' + self.save_current_business_template_sequence_string + '\
+                       RemoveBusinessTemplate \
+                       Tic \
+                       CreatePropertySheet \
+                       RemovePropertySheetZodbOnly \
+                       Tic \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallWithoutForceBusinessTemplate \
+                       Tic \
+                       \
+                       CheckPropertySheetMigration \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckDocumentExists \
+                       CheckPropertySheetRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
@@ -7272,8 +7245,56 @@ class TestExtensionTemplateItem(TestDocumentTemplateItem):
     raise NotImplemenetedError
 
 class TestTestTemplateItem(TestDocumentTemplateItem):
-  def test(self):
-    raise NotImplemenetedError
+  def test_BusinessTemplateWithDocumentTestRemoved(self):
+    """Checks that if Business Template defines Document and Test
+    Document is not removed"""
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreateDocument \
+                       CreateTest \
+                       CheckDocumentTestSameName \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddDocumentToBusinessTemplate \
+                       AddTestToBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       ' + self.save_current_business_template_sequence_string + '\
+                       RemoveDocument \
+                       RemoveTest \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallWithoutForceBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckNoTrashBin \
+                       CheckDocumentExists \
+                       CheckTestExists \
+                       \
+                       CopyBusinessTemplate \
+                       Tic \
+                       \
+                       RemoveTestFromBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       ' + self.save_current_business_template_sequence_string + '\
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallWithoutForceBusinessTemplate \
+                       Tic \
+                       \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckTestRemoved \
+                       CheckDocumentExists \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
 
 def test_suite():
   suite = unittest.TestSuite()
