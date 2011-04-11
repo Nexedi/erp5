@@ -309,10 +309,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertNotEquals(len(bt.preinstall()), 0)
 
   def stepCheckCatalogPreinstallReturnCatalogMethod(self, sequence=None, **kw):
-    """
-    In case of upgrade preinstall call must return at least one element
-    which is marked as new/updated/removed
-    """
     bt = sequence.get('current_bt', None)
     self.assertEquals(bt.preinstall(), {'portal_catalog/erp5_mysql_innodb/z_fake_method': ['Modified', 'CatalogMethod']})
 
@@ -497,9 +493,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(object_type is None)
 
   def stepRemoveFirstAction(self, sequence=None, **kw):
-    """
-    Remove PortalType
-    """
     pt = self.getTypeTool()
     object_id = sequence.get('object_ptype_id')
     action_id = sequence.get('first_action_id')
@@ -846,7 +839,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sequence.edit(group_dict=group_dict, field_id=field.getId())
 
   def stepModifyFormTitle(self, sequence=None):
-    """Add a field to an ERP5 Form."""
     ps = self.getSkinsTool()
     skin_folder = ps._getOb('erp5_geek', None)
     self.assertNotEquals(skin_folder, None)
@@ -867,7 +859,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                   form_title=form_title)
 
   def stepRevertFormTitle(self, sequence=None):
-    """Add a field to an ERP5 Form."""
     ps = self.getSkinsTool()
     skin_folder = ps._getOb('erp5_geek', None)
     self.assertNotEquals(skin_folder, None)
@@ -877,7 +868,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     form.title = form_title
 
   def stepCheckFormTitle(self, sequence=None):
-    """Add a field to an ERP5 Form."""
     ps = self.getSkinsTool()
     skin_folder = ps._getOb('erp5_geek', None)
     self.assertNotEquals(skin_folder, None)
@@ -1008,9 +998,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     bt.edit(template_skin_id_list=[skin_id])
 
   def stepAddAnotherSkinFolderToBusinessTemplate(self, sequence=None, **kw):
-    """
-    Add skin folder to business template
-    """
     bt = sequence.get('current_bt', None)
     self.failUnless(bt is not None)
     skin_id = sequence.get('another_skin_folder_id', '')
@@ -1108,9 +1095,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     bt.edit(template_base_category_list=[bc_id,])
 
   def stepAddBaseCategoryAsPathToBusinessTemplate(self, sequence=None, **kw):
-    """
-    Add Base category to Business template
-    """
     bc_id = sequence.get('bc_id')
     bt = sequence.get('current_bt')
     path = 'portal_categories/'+bc_id
@@ -1215,9 +1199,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       self.failUnless(category is None)
 
   def stepRemoveCategories(self, sequence=None, **kw):
-    """
-    Check presence of categories
-    """
     bc_id = sequence.get('bc_id')
     pc = self.getCategoryTool()
     base_category = pc._getOb(bc_id, None)
@@ -1277,9 +1258,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     bt.edit(template_path_list=[path])
 
   def stepCheckSubCategoriesExists(self, sequence=None, **kw):
-    """
-    Check presence of categories
-    """
     bc_id = sequence.get('bc_id')
     pc = self.getCategoryTool()
     base_category = pc._getOb(bc_id, None)
@@ -1383,9 +1361,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(present, 1)
 
   def stepAppendWorkflowToBusinessTemplate(self, sequence=None, **kw):
-    """
-    Add workflow to business template
-    """
     bt = sequence.get('current_bt', None)
     self.failUnless(bt is not None)
     wf_ids = list(bt.getTemplateWorkflowIdList())
@@ -1405,9 +1380,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     bt.edit(template_workflow_id_list=wf_ids)
 
   def stepAppendWorkflowChainToBusinessTemplate(self, sequence=None, **kw):
-    """
-    Add workflow to business template
-    """
     bt = sequence.get('current_bt', None)
     self.failUnless(bt is not None)
     wf_chain_ids = list(bt.getTemplatePortalTypeWorkflowChainList())
@@ -1415,18 +1387,12 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     bt.edit(template_portal_type_workflow_chain_list=wf_chain_ids)
 
   def stepAddWorkflowChainToBusinessTemplate(self, sequence=None, **kw):
-    """
-    Add workflow to business template
-    """
     bt = sequence.get('current_bt', None)
     self.failUnless(bt is not None)
     wf_chain_ids = ['Geek Object | %s' % sequence.get('workflow_id', '')]
     bt.edit(template_portal_type_workflow_chain_list=wf_chain_ids)
 
   def stepAddRemovedWorkflowChainToBusinessTemplate(self, sequence=None, **kw):
-    """
-    Add workflow to business template
-    """
     bt = sequence.get('current_bt', None)
     self.failUnless(bt is not None)
     wf_chain_ids = ['Geek Object | -%s' % sequence.get('workflow_id', '')]
@@ -1609,9 +1575,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
 
 
   def stepCreateUpdateCatalogMethod(self, sequence=None, **kw):
-    """
-    Create ZSQL Method into catalog
-    """
     pc = self.getCatalogTool()
     catalog = pc.getSQLCatalog()
     self.failUnless(catalog is not None)
@@ -1638,9 +1601,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     catalog.filter_dict[method_id]['type'] = []
 
   def stepCreateNewCatalogMethod(self, sequence=None, **kw):
-    """
-    Create ZSQL Method into catalog
-    """
     pc = self.getCatalogTool()
     catalog = pc.getSQLCatalog()
     method_id = "z_another_fake_method"
@@ -1657,9 +1617,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     catalog.sql_uncatalog_object = tuple(sql_uncatalog_object)
 
   def stepChangePreviousCatalogMethod(self, sequence=None, **kw):
-    """
-    Create ZSQL Method into catalog
-    """
     pc = self.getCatalogTool()
     catalog = pc.getSQLCatalog()
     method_id = sequence.get('zsql_method_id')
@@ -1669,9 +1626,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals(previous_method.title,'toto')
 
   def stepCheckCatalogMethodChangeKept(self, sequence=None, **kw):
-    """
-    Create ZSQL Method into catalog
-    """
     pc = self.getCatalogTool()
     catalog = pc.getSQLCatalog()
     method_id = sequence.get('zsql_method_id')
@@ -1738,9 +1692,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(filter_dict['type'], ())
 
   def stepCheckUpdatedCatalogMethodExists(self, sequence=None, **kw):
-    """
-    Check presence of ZSQL Method in catalog
-    """
     pc = self.getCatalogTool()
     catalog = pc.getSQLCatalog()
     self.failUnless(catalog is not None)
@@ -2324,9 +2275,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals(module.__ac_local_roles__, new_local_roles)
 
   def stepCheckModuleLocalRolesInCatalogBeforeUpdate(self, sequence=None, **kw):
-    """
-    Check presence of local roles
-    """
     p = self.getPortal()
     module_id = sequence.get('module_id')
     module = p._getOb(module_id, None)
@@ -2338,9 +2286,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sequence.edit(local_roles_catalog_result=result)
 
   def stepCheckModuleLocalRolesInCatalogAfterUpdate(self, sequence=None, **kw):
-    """
-    Check presence of local roles
-    """
     p = self.getPortal()
     module_id = sequence.get('module_id')
     before_update_local_roles = sequence.get('local_roles_catalog_result')
@@ -2546,9 +2491,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(data, ct_data)
 
   def stepCheckConstraintRemoved(self, sequence=None, sequencer_list=None, **kw):
-    """
-    Check presence of Constraint
-    """
     ct_path = sequence.get('ct_path', None)
     self.failUnless(ct_path is not None)
     self.failIf(os.path.exists(ct_path))
@@ -2610,15 +2552,12 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
 
   def stepInstallBusinessTemplate(self, sequence=None, **kw):
     """
-    Install importzed business template
+    Install imported business template
     """
     import_bt = sequence.get('import_bt')
     import_bt.install(force=1)
 
   def stepReinstallBusinessTemplate(self, sequence=None, **kw):
-    """
-    Install importzed business template
-    """
     import_bt = sequence.get('current_bt')
     listbox_object_list = import_bt.BusinessTemplate_getModifiedObject()
     install_kw = {}
@@ -2627,24 +2566,16 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     import_bt.reinstall(object_to_update=install_kw)
 
   def stepCheckBeforeReinstall(self, sequence=None, **kw):
-    """
-    """
     import_bt = sequence.get('current_bt')
     diff_list = import_bt.BusinessTemplate_getModifiedObject()
     self.assertTrue('portal_types/Geek Object/become_geek'
                     in [line.object_id for line in diff_list])
 
   def stepInstallCurrentBusinessTemplate(self, sequence=None, **kw):
-    """
-    Install importzed business template
-    """
     import_bt = sequence.get('current_bt')
     import_bt.install(force=1)
 
   def stepInstallWithoutForceBusinessTemplate(self, sequence=None, **kw):
-    """
-    Install importzed business template
-    """
     import_bt = sequence.get('import_bt')
     object_list = import_bt.preinstall()
     install_object_dict = {}
@@ -2663,9 +2594,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                       update_catalog=1)
 
   def stepInstallWithRemoveCheckedBusinessTemplate(self, sequence=None, **kw):
-    """
-    Install importzed business template
-    """
     import_bt = sequence.get('import_bt')
     object_list = import_bt.preinstall()
     install_object_dict = {}
@@ -2684,9 +2612,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                       update_catalog=1)
 
   def stepInstallDuplicatedBusinessTemplate(self, sequence=None, **kw):
-    """
-    Install importzed business template
-    """
     import_bt = sequence.get('import_bt')
     pt_id = sequence.get('object_ptype_id')
     object_to_update = {
@@ -2694,9 +2619,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     import_bt.install(object_to_update=object_to_update)
 
   def stepPartialCatalogMethodInstall(self, sequence=None, **kw):
-    """
-    Install importzed business template
-    """
     import_bt = sequence.get('import_bt')
     pc = self.getCatalogTool()
     catalog_id = pc.getSQLCatalog().id
@@ -2746,17 +2668,11 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
         previous_bt=sequence.get('current_bt'))
 
   def stepBuildBusinessTemplateFail(self, sequence=None, **kw):
-    """
-    Build Business Template
-    """
     template = sequence.get('current_bt')
     self.assertRaises(AttributeError,
                       template.build)
 
   def stepCheckBuildWithBadPortalTypeFailed(self, sequence=None, **kw):
-    """
-    Build Business Template
-    """
     template = sequence.get('current_bt')
     self.assertRaises(ValueError,
                       template.build)
@@ -2875,9 +2791,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     bt.uninstall()
 
   def stepUninstallPreviousBusinessTemplate(self, sequence=None, **kw):
-    """
-    Uninstall current Business Template
-    """
     bt = sequence.get('previous_bt')
     bt.uninstall()
 
@@ -2906,17 +2819,11 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     bt.edit(**prop_dict)
 
   def stepRemoveSimulationTool(self, sequence=None, **kw):
-    """
-    Remove Trash Tool from site
-    """
     p = self.getPortal()
     p.manage_delObjects(['portal_simulation'])
     self.failUnless(p._getOb('portal_simulation', None) is None)
 
   def stepCheckSimulationToolExists(self, sequence=None, **kw):
-    """
-    Check presence of trash tool
-    """
     self.failUnless(self.getSimulationTool() is not None)
 
   def stepCheckSubobjectsNotIncluded(self, sequence=None, **kw):
@@ -2977,9 +2884,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     bt.setDependencyList(['dependency_bt',])
 
   def stepCreateDependencyBusinessTemplate(self, sequence=None, **kw):
-    """
-      Create a new Business Template
-    """
     pt = self.getTemplateTool()
     template = pt.newContent(portal_type='Business Template')
     self.failUnless(template.getBuildingState() == 'draft')
@@ -6687,9 +6591,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
         99, skin_folder.getProperty('business_template_skin_layer_priority'))
 
   def stepUnmodifySkinFolder(self, sequence=None, **kw):
-    """
-    Modify the skin folder
-    """
     ps = self.getSkinsTool()
     skin_id = sequence.get('skin_folder_id')
     skin_folder = ps._getOb(skin_id, None)
