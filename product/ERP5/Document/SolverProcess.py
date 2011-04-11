@@ -163,12 +163,12 @@ class SolverProcess(XMLObject, ActiveProcess):
     # Fourth, build target solvers
     for solver, solver_key_dict in grouped_solver_dict.items():
       for solver_key, solver_movement_dict in solver_key_dict.items():
-         solver_instance = self.newContent(portal_type=solver.getId())
-         solver_instance._setDeliveryValueList(solver_movement_dict.keys())
-         for movement, configuration_list in solver_movement_dict.iteritems():
-           for configuration_mapping in configuration_list:
-             if len(configuration_mapping):
-               solver_instance.updateConfiguration(**dict(configuration_mapping))
+        solver_instance = self.newContent(portal_type=solver.getId())
+        solver_instance._setDeliveryValueList(solver_movement_dict.keys())
+        for movement, configuration_list in solver_movement_dict.iteritems():
+          for configuration_mapping in configuration_list:
+            if len(configuration_mapping):
+              solver_instance.updateConfiguration(**dict(configuration_mapping))
 
     # Return empty list of conflicts
     return []
