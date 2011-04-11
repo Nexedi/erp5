@@ -31,11 +31,9 @@ import unittest
 import logging
 import transaction
 
-from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Acquisition import aq_base
 from OFS.SimpleItem import SimpleItem
-from zLOG import LOG
 from App.config import getConfiguration
 from Products.ERP5Type.tests.Sequence import SequenceList
 from urllib import pathname2url
@@ -71,7 +69,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
 
     - Upgrade a template
   """
-  quiet = 1
 
   def getBusinessTemplateList(self):
     return ('erp5_base',
@@ -2898,11 +2895,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """Tests the Title of the Template Tool."""
     self.assertEquals('Template Tool', self.getTemplateTool().Title())
 
-  def test_01_checkNewSite(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Check New Site'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_01_checkNewSite(self):
+    """Test Check New Site"""
     sequence_list = SequenceList()
     sequence_string = '\
                        UseCoreBusinessTemplate  \
@@ -2912,14 +2906,11 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckSkinsLayers \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   # test of portal types
-  def test_02_BusinessTemplateWithPortalTypes(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Business Template With Portal Types'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_02_BusinessTemplateWithPortalTypes(self):
+    """Test Business Template With Portal Types"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
@@ -2982,13 +2973,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckPortalTypeRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_021_BusinessTemplateWithPortalTypesAndWrongValues(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Business Template With Portal Types and Bad Values'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_021_BusinessTemplateWithPortalTypesAndWrongValues(self):
+    """Test Business Template With Portal Types and Bad Values"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
@@ -3005,14 +2993,11 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        RemoveAllTrashBins \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   # test of skins
-  def test_03_BusinessTemplateWithSkins(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Business Template With Skin Folder'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_03_BusinessTemplateWithSkins(self):
+    """Test Business Template With Skin Folder"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateSkinFolder \
@@ -3048,14 +3033,11 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckSkinFolderRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   # test of workflow
-  def test_04_BusinessTemplateWithWorkflow(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Business Template With Workflow'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_04_BusinessTemplateWithWorkflow(self):
+    """Test Business Template With Workflow"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
@@ -3093,13 +3075,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckWorkflowRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_041_BusinessTemplateWithWorkflowRemoved(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Business Template With Remove Of Workflow'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_041_BusinessTemplateWithWorkflowRemoved(self):
+    """Test Business Template With Remove Of Workflow"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
@@ -3161,13 +3140,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        SaveWorkflowChain \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_042_BusinessTemplateWithWorkflowRemoved(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Business Template With Remove Of Workflow'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_042_BusinessTemplateWithWorkflowRemoved(self):
+    """Test Business Template With Remove Of Workflow"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
@@ -3229,13 +3205,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        SaveWorkflowChain \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_043_BusinessTemplateWithWorkflowChainRemoved(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Business Template With Remove Of Workflow Chain'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_043_BusinessTemplateWithWorkflowChainRemoved(self):
+    """Test Business Template With Remove Of Workflow Chain"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
@@ -3297,14 +3270,11 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckWorkflowChainRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   # test of module
-  def test_05_BusinessTemplateWithModule(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Business Template With Module'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_05_BusinessTemplateWithModule(self):
+    """Test Business Template With Module"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
@@ -3348,14 +3318,11 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckPortalTypeRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   # test of categories
-  def test_06_BusinessTemplateWithBaseCategory(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Business Template With Base Category'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_06_BusinessTemplateWithBaseCategory(self):
+    """Test Business Template With Base Category"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateBaseCategory \
@@ -3406,13 +3373,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckBaseCategoryRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_06_BusinessTemplateReInstallWithBaseCategory(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Business Template reinstall after removing Base Category'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_06_BusinessTemplateReInstallWithBaseCategory(self):
+    """Test Business Template reinstall after removing Base Category"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateBaseCategory \
@@ -3436,14 +3400,11 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckPreinstallReturnSomething \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   # test of actions
-  def test_07_BusinessTemplateWithOneAction(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Business Template With One Action'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_07_BusinessTemplateWithOneAction(self):
+    """Test Business Template With One Action"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
@@ -3482,13 +3443,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckPortalTypeRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_07_BusinessTemplateWithEmptyAction(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Business Template Upgrade With Empty Action'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_07_BusinessTemplateWithEmptyAction(self):
+    """Test Business Template Upgrade With Empty Action"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
@@ -3526,13 +3484,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckPortalTypeRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_08_BusinessTemplateWithTwoActions(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Business Template With Two Actions'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_08_BusinessTemplateWithTwoActions(self):
+    """Test Business Template With Two Actions"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
@@ -3574,13 +3529,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        RemovePortalType \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_09_BusinessTemplateWithPath(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Business Template With A Simple Path'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_09_BusinessTemplateWithPath(self):
+    """Test Business Template With A Simple Path"""
     sequence_list = SequenceList()
     # a simple path
     sequence_string = '\
@@ -3617,13 +3569,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckBaseCategoryRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_091_BusinessTemplateDoNotUnindexObject(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Business Template Do Not Unindex Object At Build'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_091_BusinessTemplateDoNotUnindexObject(self):
+    """Test Business Template Do Not Unindex Object At Build"""
     sequence_list = SequenceList()
     # a simple path
     sequence_string = '\
@@ -3646,13 +3595,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        '
 
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_10_BusinessTemplateWithPathAndJoker1(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Business Template With Path And Joker *'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_10_BusinessTemplateWithPathAndJoker1(self):
+    """Test Business Template With Path And Joker *"""
     sequence_list = SequenceList()
     # path with subobjects
     sequence_string = '\
@@ -3691,13 +3637,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        RemoveBaseCategory \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_101_BusinessTemplateUninstallWithPathAndJoker1Removed(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Business Template Uninstall With Path And Joker * Removed'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_101_BusinessTemplateUninstallWithPathAndJoker1Removed(self):
+    """Test Business Template Uninstall With Path And Joker * Removed"""
     sequence_list = SequenceList()
     # path with subobjects
     sequence_string = '\
@@ -3737,13 +3680,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        RemoveBaseCategory \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_11_BusinessTemplateWithPathAndJoker2(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Business Template With Path And Joker **'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_11_BusinessTemplateWithPathAndJoker2(self):
+    """Test Business Template With Path And Joker **"""
     sequence_list = SequenceList()
     # path with subobject recursively
     sequence_string = '\
@@ -3784,10 +3724,11 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        RemoveBaseCategory \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_111_BusinessTemplateWithContentTypeRegistry(self, quiet=quiet):
-    """
+  def test_111_BusinessTemplateWithContentTypeRegistry(self):
+    """Test Business Template With Content Type Registry As Path
+
       Test if content_type_registry is propertly exported and installed within
       business template (as path).
       This test shows that there is a slight issue - when the bt that brought
@@ -3796,10 +3737,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       The sequence string does not do CheckNoTrashBin after installing
       template because there is the old registry (I think) and it is ok.
     """
-    if not quiet:
-      message = 'Test Business Template With Content Type Registry As Path'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
     sequence_list = SequenceList()
     # a simple path
     sequence_string = '\
@@ -3836,13 +3773,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckNotInstalledInstallationState \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_12_BusinessTemplateWithCatalogMethod(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Business Template With Catalog Method, Related Key, Result Key And Table'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_12_BusinessTemplateWithCatalogMethod(self):
+    """Test Business Template With Catalog Method, Related Key, Result Key And Table"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateCatalogMethod \
@@ -3885,13 +3819,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckCatalogMethodRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_121_BusinessTemplateWithUpdateOfCatalogMethod(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Business Template Update With Catalog Method, Related Key, Result Key And Table'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_121_BusinessTemplateWithUpdateOfCatalogMethod(self):
+    """Test Business Template Update With Catalog Method, Related Key, Result Key And Table"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateCatalogMethod \
@@ -3966,13 +3897,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckCatalogMethodRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_122_BusinessTemplateWithRemoveCatalogMethod(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Business Template remove a Catalog Method'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_122_BusinessTemplateWithRemoveCatalogMethod(self):
+    """Test Business Template remove a Catalog Method"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateCatalogMethod \
@@ -4016,13 +3944,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckCatalogMethodRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_13_BusinessTemplateWithRole(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Business Template With Role'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_13_BusinessTemplateWithRole(self):
+    """Test Business Template With Role"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateRole \
@@ -4058,13 +3983,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckRoleRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_14_BusinessTemplateWithLocalRoles(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Business Template With Local Roles'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_14_BusinessTemplateWithLocalRoles(self):
+    """Test Business Template With Local Roles"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
@@ -4108,13 +4030,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        RemovePortalType \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_15_BusinessTemplateWithPropertySheet(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Business Template With Property Sheet'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_15_BusinessTemplateWithPropertySheet(self):
+    """Test Business Template With Property Sheet"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePropertySheet \
@@ -4150,14 +4069,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckPropertySheetRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_151_BusinessTemplateWithPropertySheetMigration(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Business Template With Property Sheet Migration'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
-
+  def test_151_BusinessTemplateWithPropertySheetMigration(self):
+    """Test Business Template With Property Sheet Migration"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePropertySheet \
@@ -4194,13 +4109,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckMigratedPropertySheetRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_155_BusinessTemplateUpdateWithPropertySheet(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Business Template With Property Sheet'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_155_BusinessTemplateUpdateWithPropertySheet(self):
+    """Test Business Template With Property Sheet"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePropertySheet \
@@ -4261,13 +4173,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckWorkflowChainRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_156_BusinessTemplateWithConstraint(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Business Template With Constraint'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_156_BusinessTemplateWithConstraint(self):
+    """Test Business Template With Constraint"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateConstraint \
@@ -4303,13 +4212,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckConstraintRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_157_BusinessTemplateUpdateWithConstraint(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Business Template With Constraint'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_157_BusinessTemplateUpdateWithConstraint(self):
+    """Test Business Template With Constraint"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateConstraint \
@@ -4370,13 +4276,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckWorkflowChainRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_16_BusinessTemplateWithAllItems(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Business Template With All Items'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_16_BusinessTemplateWithAllItems(self):
+    """Test Business Template With All Items"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
@@ -4467,13 +4370,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckSkinsLayers \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_17_SubobjectsAfterUpgradOfBusinessTemplate(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Upgrade Of Business Template Keeps Subobjects'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_17_SubobjectsAfterUpgradOfBusinessTemplate(self):
+    """Test Upgrade Of Business Template Keeps Subobjects"""
     sequence_list = SequenceList()
     # check if subobjects in module and catalog still remains after an update
     sequence_string = '\
@@ -4544,13 +4444,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckSkinsLayers \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_18_upgradeBusinessTemplateWithAllItems(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Upgrade Business Template With All Items'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_18_upgradeBusinessTemplateWithAllItems(self):
+    """Test Upgrade Business Template With All Items"""
     sequence_list = SequenceList()
     # by default action is backup, so everything will be replace
     sequence_string = '\
@@ -4668,14 +4565,11 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        RemoveAllTrashBins \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   # test specific to erp5_core
-  def test_19_checkUpdateBusinessTemplateWorkflow(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Check Update of Business Template Workflows is working'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_19_checkUpdateBusinessTemplateWorkflow(self):
+    """Test Check Update of Business Template Workflows is working"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
@@ -4753,13 +4647,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        RemovePropertySheetFromZODB \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_20_checkUpdateTool(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Check Update of Tool is working'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_20_checkUpdateTool(self):
+    """Test Check Update of Tool is working"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
@@ -4849,13 +4740,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        RemovePropertySheetFromZODB \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_21_CategoryIncludeSubobjects(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Category includes subobjects'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_21_CategoryIncludeSubobjects(self):
+    """Test Category includes subobjects"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateBaseCategory \
@@ -4870,14 +4758,11 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckSubobjectsNotIncluded \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   # test of portal types
-  def test_22_RevisionNumberIsIncremented(self, quiet=quiet):
-    if not quiet:
-      message = 'Test is revision number is incremented with the bt is built'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_22_RevisionNumberIsIncremented(self):
+    """Test is revision number is incremented with the bt is built"""
     sequence_list = SequenceList()
     sequence_string = '\
     		       CreatePortalType \
@@ -4893,13 +4778,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
 		       RemovePortalType \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_23_CheckNoDependencies(self, quiet=quiet):
-    if not quiet:
-      message = 'Test if a new Business Template has no dependencies'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_23_CheckNoDependencies(self):
+    """Test if a new Business Template has no dependencies"""
     sequence_list = SequenceList()
     sequence_string = '\
     		       CreatePortalType \
@@ -4910,13 +4792,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
 		       RemovePortalType \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_24_CheckMissingDependency(self, quiet=quiet):
-    if not quiet:
-      message = 'Test if a exception is raised when a dependency is missing'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_24_CheckMissingDependency(self):
+    """Test if a exception is raised when a dependency is missing"""
     sequence_list = SequenceList()
     sequence_string = '\
     		       CreatePortalType \
@@ -4928,13 +4807,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
 		       RemovePortalType \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_25_CheckNoMissingDependency(self, quiet=quiet):
-    if not quiet:
-      message = 'Test if the dependency problem is fixed when the dependency is installed'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_25_CheckNoMissingDependency(self):
+    """Test if the dependency problem is fixed when the dependency is installed"""
     sequence_list = SequenceList()
     sequence_string = '\
     		       CreatePortalType \
@@ -4965,14 +4841,11 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        RemoveBusinessTemplate \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   # test of skins
-  def test_26_ImportWithDoubleSlashes(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Importing Business Template With Double Slashes'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_26_ImportWithDoubleSlashes(self):
+    """Test Importing Business Template With Double Slashes"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateSkinFolder \
@@ -5009,13 +4882,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckSkinFolderRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_27_CheckInstallWithBackup(self, quiet=quiet):
-    if not quiet:
-      message = 'Test if backup works during installation of a bt with subfolder in skin folder'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_27_CheckInstallWithBackup(self):
+    """Test if backup works during installation of a bt with subfolder in skin folder"""
     sequence_list = SequenceList()
     sequence_string = '\
     		       CreatePortalType \
@@ -5038,13 +4908,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        RemoveBusinessTemplate \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_28_CheckBuildWithUnexistingPath(self, quiet=quiet):
-    if not quiet:
-      message = 'Test if build fails when one of the paths does not exist'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_28_CheckBuildWithUnexistingPath(self):
+    """Test if build fails when one of the paths does not exist"""
     sequence_list = SequenceList()
     sequence_string = '\
     		       CreatePortalType \
@@ -5056,13 +4923,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        RemovePortalType \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_29_CheckUninstallRemovedSkinFolder(self, quiet=quiet):
-    if not quiet:
-      message = 'Test if uninstall works even when the skin folder has already been removed from the site'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_29_CheckUninstallRemovedSkinFolder(self):
+    """Test if uninstall works even when the skin folder has already been removed from the site"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
@@ -5083,14 +4947,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        RemoveBusinessTemplate \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_30_CheckInstalledCatalogProperties(self, quiet=quiet):
-    if not quiet:
-      message = 'Test if installing some new catalog properties overwrites '\
-                'existing ones'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_30_CheckInstalledCatalogProperties(self):
+    """Test if installing some new catalog properties overwrites existing ones"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateCatalogMethod \
@@ -5112,13 +4972,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        RemoveCatalogLocalConfiguration \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_31_BusinessTemplateWithCatalogMethod(self, quiet=quiet):
-    if not quiet:
-      message = 'Test that we keep local changes if we specify a list of objects to update'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_31_BusinessTemplateWithCatalogMethod(self):
+    """Test that we keep local changes if we specify a list of objects to update"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateCatalogMethod \
@@ -5154,13 +5011,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        RemoveKeysAndTable \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_32_BusinessTemplateWithDuplicatedPortalTypes(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Business Template With Duplicated Portal Types'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_32_BusinessTemplateWithDuplicatedPortalTypes(self):
+    """Test Business Template With Duplicated Portal Types"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
@@ -5203,7 +5057,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        UninstallPreviousBusinessTemplate \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   def stepSetSkinFolderRegistredSelections(self, sequence=None, **kw):
     ps = self.getSkinsTool()
@@ -5266,11 +5120,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertFalse('erp5_xhtml_style' in layers, layers)
     self.assertTrue(static_skin_id in layers, layers)
 
-  def test_33_BusinessTemplateWithNewSkinSelection(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Business Template With New Skin Selection'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_33_BusinessTemplateWithNewSkinSelection(self):
+    """Test Business Template With New Skin Selection"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateSkinFolder \
@@ -5291,13 +5142,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckSkinSelectionAdded \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_34_UpgradeForm(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Upgrade Form'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_34_UpgradeForm(self):
+    """Test Upgrade Form"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateSkinFolder \
@@ -5334,13 +5182,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckFormGroups \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_34_UpgradeFormAttribute(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Upgrade Form'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_34_UpgradeFormAttribute(self):
+    """Test Upgrade Form"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateSkinFolder \
@@ -5375,20 +5220,17 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckFormGroups \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_34_RemoveForm(self, quiet=quiet):
-    """
+  def test_34_RemoveForm(self):
+    """Test Upgrade Form
+
     - Add a form into the skin folders of erp5_geek and erp5_nerd
     - Remove the form from erp5_geek
     - Check that the form is removed from erp5_geek
     - Check that the form is not removed from erp5_nerd
     - Check that the title field is not removed from erp5_nerd
     """
-    if not quiet:
-      message = 'Test Upgrade Form'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateSkinFolder \
@@ -5432,7 +5274,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckTrashBin \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   def test_getInstalledBusinessTemplate(self):
     self.assertNotEquals(None, self.getPortal()\
@@ -5739,11 +5581,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     if present:
       self.assertEqual(0, len(wf_ids))
 
-  def test_34_RemovePartialWorkflowChain(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Remove Chain'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_34_RemovePartialWorkflowChain(self):
+    """Test Remove Chain"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
@@ -5799,7 +5638,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckWorkflowChainExists \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   def stepCopyBusinessTemplate(self, sequence=None, **kw):
     """
@@ -5837,11 +5676,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
         new_value.append(workflow_chain)
     bt.edit(template_portal_type_workflow_chain_list=new_value)
 
-  def test_35_UpdatePartialWorkflowChain(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Update Workflow Chain'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_35_UpdatePartialWorkflowChain(self):
+    """Test Update Workflow Chain"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
@@ -5907,7 +5743,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckWorkflowChainExists \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   def test_35a_UpdatePartialWorkflowChainWithRemove(self):
     """Check that chains are correctly removed during update
@@ -6028,11 +5864,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(['group','site'], role.getRoleBaseCategoryList())
     self.assertEqual('Base Category Script', role.getRoleBaseCategoryScriptId())
 
-  def test_36_CheckPortalTypeRoles(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Portal Type Roles'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_36_CheckPortalTypeRoles(self):
+    """Test Portal Type Roles"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
@@ -6069,7 +5902,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckPortalTypeRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   def stepModifyPortalType(self, sequence=None, **kw):
     """
@@ -6097,11 +5930,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     object_type = pt._getOb(object_id, None)
     self.failUnless(object_type.title.startswith('Modified '))
 
-  def test_37_UpdatePortalType(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Update Portal Type'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_37_UpdatePortalType(self):
+    """Test Update Portal Type"""
     sequence_list = SequenceList()
 
     sequence_string = '\
@@ -6150,7 +5980,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckPortalTypeRoleExists \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   def stepCreateFakeZODBScript(self, sequence=None, **kw):
     """Create a Script inside portal_skins
@@ -6184,11 +6014,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     folder = self.portal.portal_skins[skin_folder_id]
     self.assertTrue(python_script_id not in folder.objectIds())
 
-  def test_38_CheckReinstallation(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Reinstallation'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_38_CheckReinstallation(self):
+    """Test Reinstallation"""
     sequence_list = SequenceList()
 
     sequence_string = '\
@@ -6218,7 +6045,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckFakeScriptIsDeleted \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   def stepSetOldSitePropertyValue(self, sequence=None, **kw):
     """Set the old value to a site property."""
@@ -6336,11 +6163,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     skin_folder = self.portal.portal_skins[skin_folder_id]
     skin_folder.manage_addProperty('business_template_skin_layer_priority', 9999.0, 'float')
 
-  def test_39_CheckSiteProperties(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Site Properties'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_39_CheckSiteProperties(self):
+    """Test Site Properties"""
     sequence_list = SequenceList()
     sequence_string = '\
                        SetOldSitePropertyValue \
@@ -6377,12 +6201,12 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckSitePropertyRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   # test of uid
-  def test_40_BusinessTemplateUidOfCategoriesUnchanged(self, quiet=quiet):
-    """
-      Test that the uids of categories are unchanged during their reinstall
+  def test_40_BusinessTemplateUidOfCategoriesUnchanged(self):
+    """Test that the uids of categories are unchanged during their reinstall
+
       Add sub categories with the title 'toto' and save their uid in a dict
       Create business template with the sub categories in path_template_list
       The sub categories title are changed in 'foo'
@@ -6390,10 +6214,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       Check the old sub categories with' toto' as title
       And check if the uid of sub categories is unchanged
     """
-    if not quiet:
-      message = 'Test that the uids of categories are unchanged during their reinstall'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateBaseCategory \
@@ -6422,13 +6242,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        UninstallBusinessTemplate \
                       '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_158_BusinessTemplateSkinSelectionRemove(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Business Template Uninstall With Skin Selection'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_158_BusinessTemplateSkinSelectionRemove(self):
+    """Test Business Template Uninstall With Skin Selection"""
     sequence_list = SequenceList()
     sequence_string = 'CreateSkinFolder \
                        SetSkinFolderRegistredSelections \
@@ -6448,13 +6265,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckSkinSelectionRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_158_BusinessTemplateSkinSelectionRemoveOnlyIfUnused(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Business Template Uninstall With an used Skin Selection'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_158_BusinessTemplateSkinSelectionRemoveOnlyIfUnused(self):
+    """Test Business Template Uninstall With an used Skin Selection"""
     sequence_list = SequenceList()
     sequence_string = 'CreateSkinFolder \
                        CreateStaticSkinFolder \
@@ -6477,13 +6291,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckSkinSelectionNotRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_159_BusinessTemplateNotRegisterSkin(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Business Template will not register existing Skin'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_159_BusinessTemplateNotRegisterSkin(self):
+    """Test Business Template will not register existing Skin"""
     sequence_list = SequenceList()
     sequence_string = 'CreateSkinFolder \
                        SetSkinFolderRegistredSelections \
@@ -6502,13 +6313,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckSkinSelectionRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_160_BusinessTemplateChangeOnlySelectedSkin(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Business Template will change only selected skins'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_160_BusinessTemplateChangeOnlySelectedSkin(self):
+    """Test Business Template will change only selected skins"""
     sequence_list = SequenceList()
     sequence_string = 'CreateSkinFolder \
                        CreateNewBusinessTemplate \
@@ -6525,13 +6333,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckUserSelectedSkinToBeChanged \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_161_BusinessTemplateCheckSkinPriorityOrderingEnabled(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Business Template will reorder skins path in Skin'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_161_BusinessTemplateCheckSkinPriorityOrderingEnabled(self):
+    """Test Business Template will reorder skins path in Skin"""
     sequence_list = SequenceList()
     sequence_string = 'CreateSkinFolder \
                        SetBusinessTemplateSkinFolderPriority \
@@ -6549,13 +6354,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckSkinFolderPriorityOn \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_162_BusinessTemplateCheckSkinPriorityOrderingDisabled(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Business Template will not reorder skins path in Skin'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_162_BusinessTemplateCheckSkinPriorityOrderingDisabled(self):
+    """Test Business Template will not reorder skins path in Skin"""
     sequence_list = SequenceList()
     sequence_string = 'CreateSkinFolder \
                        SetBusinessTemplateSkinFolderPriority \
@@ -6574,7 +6376,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckSkinFolderPriorityOff \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   def stepModifySkinFolder(self, sequence=None, **kw):
     """
@@ -6608,12 +6410,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals(
         99, skin_folder.getProperty('business_template_skin_layer_priority'))
 
-  def test_163_UpdateSkinFolderWithRegisteredSkinSelection(
-                                  self, quiet=quiet):
-    if not quiet:
-      message = 'Test Update Skin Folder'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_163_UpdateSkinFolderWithRegisteredSkinSelection(self):
+    """Test Update Skin Folder"""
     sequence_list = SequenceList()
     sequence_list.addSequenceString("""
       CreateSkinFolder
@@ -6661,14 +6459,11 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       InstallCurrentBusinessTemplate
       Tic
     """)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   @expectedFailure
-  def test_164_checkCopyBuild(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Check basic copy and build is working'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_164_checkCopyBuild(self):
+    """Test Check basic copy and build is working"""
     sequence_list = SequenceList()
     sequence_list.addSequenceString("""
       UseCoreBusinessTemplate
@@ -6677,13 +6472,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       CheckOriginalAndCopyBusinessTemplate
       Tic
     """)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_165_checkCopyBuildInstall(self, quiet=quiet):
-    if not quiet:
-      message = 'Test Check basic copy, build and installation is working'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_165_checkCopyBuildInstall(self):
+    """Test Check basic copy, build and installation is working"""
     sequence_list = SequenceList()
     sequence_list.addSequenceString("""
       UseCoreBusinessTemplate
@@ -6692,7 +6484,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       InstallCopyCoreBusinessTemplate
       Tic
     """)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   def test_167_InstanceAndRelatedClassDefinedInSameBT(self):
     # This test does too much since we don't modify objects anymore during
