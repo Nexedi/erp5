@@ -517,9 +517,8 @@ div#select_language li li {\n
   border-right: 1px solid #C9D7F1;\n
 }\n
 \n
-.menu_create_object li li,  {\n
+.menu_create_object li li, {\n
   display:block;\n
-  float:none;\n
   margin-left:0;\n
 }\n
 \n
@@ -531,9 +530,9 @@ div#select_language li ul {\n
   width:70px;\n
 }\n
 \n
-\n
 .menu_create_object li ul {\n
   border:1px solid #D1D1D1;\n
+  background-color: #FFF;\n
 }\n
 .menu_create_object li ul, div#select_language li ul {\n
   display:none;\n
@@ -1135,6 +1134,11 @@ div.navigation-right fieldset.widget div {\n
 \n
 span.date-format {\n
   font-style: italic;\n
+}\n
+\n
+span#no-input-file {\n
+  display: none;\n
+  color: #f61717;\n
 }
 
 ]]></string> </value>

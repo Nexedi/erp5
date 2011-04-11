@@ -93,6 +93,7 @@ function checkConversion(){\n
      status = jQuery.parseJSON(data);\n
      switch (status) {\n
       case "converted":\n
+        $("a#loading_message").text("Opening your Document...");\n
         clearTimeout();\n
         setTimeout(updateWebPage(), 1000);      \n
         break;\n
