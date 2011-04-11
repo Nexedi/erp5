@@ -175,7 +175,9 @@ class LocalRoleAssignorMixIn(object):
 
     def _importRole(self, role_property_dict):
       """Import a role from a BT or from an old portal type"""
-      role = self.newContent(portal_type='Role Information')
+      import erp5
+      RoleInformation = getattr(erp5.portal_type, 'Role Information')
+      role = RoleInformation(self.generateNewId())
       for k, v in role_property_dict.iteritems():
         if k == 'condition':
           if isinstance(v, Expression):
@@ -193,7 +195,7 @@ class LocalRoleAssignorMixIn(object):
           k = 'role_base_category_script_id'
         setattr(role, k, v)
       role.uid = None
-      return role
+      return self[self._setObject(role.id, role, set_owner=0)]
 
 class ERP5TypeInformation(XMLObject,
                           FactoryTypeInformation,
