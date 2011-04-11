@@ -1,4 +1,7 @@
 2011-04-08 lucas
+*  Fixed expression once the last step of configuration there is no form object.
+
+2011-04-08 lucas
 * The field your_business_configuration has been renamed to fix a bug when the key was invalid, the list of business configuration wasn't being rendered.
 
 2011-04-07 lucas
