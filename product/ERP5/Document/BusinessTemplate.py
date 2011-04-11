@@ -1070,6 +1070,8 @@ class ObjectTemplateItem(BaseTemplateItem):
           obj.manage_afterClone(obj)
           if workflow_history is not None:
             setattr(obj, 'workflow_history', workflow_history)
+            for workflow_id in workflow_history.keys():
+              obj.updateRoleMappingsFor(workflow_id)
           del obj.isIndexable
           if getattr(aq_base(obj), 'reindexObject', None) is not None:
             obj.reindexObject()
