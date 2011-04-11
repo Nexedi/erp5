@@ -3340,17 +3340,6 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(os.path.basename(sequence['document_path']),
         os.path.basename(sequence['test_path']))
 
-  save_current_business_template_sequence_string = '\
-                       CheckNotInstalledInstallationState \
-                       BuildBusinessTemplate \
-                       CheckBuiltBuildingState \
-                       CheckNotInstalledInstallationState \
-                       CheckObjectPropertiesInBusinessTemplate \
-                       SaveBusinessTemplate \
-                       CheckBuiltBuildingState \
-                       CheckNotInstalledInstallationState \
-  '
-
   def stepRemovePropertySheetFromBusinessTemplate(self, sequence=None, **kw):
     """
     Add Property Sheet to Business Template
@@ -6994,7 +6983,14 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                        UseExportBusinessTemplate \
                        AddTestToBusinessTemplate \
                        CheckModifiedBuildingState \
-                       ' + self.save_current_business_template_sequence_string + '\
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
                        RemoveTest \
                        RemoveBusinessTemplate \
                        RemoveAllTrashBins \
@@ -7188,7 +7184,14 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
                        AddDocumentToBusinessTemplate \
                        AddPropertySheetToBusinessTemplate \
                        CheckModifiedBuildingState \
-                       ' + self.save_current_business_template_sequence_string + '\
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
                        RemoveDocument \
                        RemovePropertySheet \
                        RemoveBusinessTemplate \
@@ -7214,7 +7217,14 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
                        CheckPropertySheetMigration \
                        \
                        CheckDraftBuildingState \
-                       ' + self.save_current_business_template_sequence_string + '\
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
                        RemoveBusinessTemplate \
                        Tic \
                        CreatePropertySheet \
@@ -7258,7 +7268,14 @@ class TestTestTemplateItem(TestDocumentTemplateItem):
                        AddDocumentToBusinessTemplate \
                        AddTestToBusinessTemplate \
                        CheckModifiedBuildingState \
-                       ' + self.save_current_business_template_sequence_string + '\
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
                        RemoveDocument \
                        RemoveTest \
                        RemoveBusinessTemplate \
@@ -7280,7 +7297,14 @@ class TestTestTemplateItem(TestDocumentTemplateItem):
                        \
                        RemoveTestFromBusinessTemplate \
                        CheckModifiedBuildingState \
-                       ' + self.save_current_business_template_sequence_string + '\
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
                        ImportBusinessTemplate \
                        UseImportBusinessTemplate \
                        CheckBuiltBuildingState \
