@@ -7247,17 +7247,45 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
     sequence_list.play(self)
 
 class TestConstraintTemplateItem(TestDocumentTemplateItem):
-  def test(self):
-    raise NotImplemenetedError
+  document_title = 'UnitTest'
+  document_data = ' \nclass UnitTest: \n  """ \n  Fake constraint for unit test \n \
+    """ \n  _properties = ( \n  ) \n  _categories = ( \n  ) \n\n'
+  document_data_updated = ' \nclass UnitTest2: \n  """ \n  Second Fake constraint for unit test \n \
+    """ \n  _properties = ( \n  ) \n  _categories = ( \n  ) \n\n'
+  document_base_path = os.path.join(getConfiguration().instancehome, 'Constraint')
+  template_property = 'template_constraint_id_list'
 
 class TestExtensionTemplateItem(TestDocumentTemplateItem):
-  def test(self):
-    raise NotImplemenetedError
+  document_title = 'UnitTest'
+  document_data = """class UnitTest:
+  meta_type = 'ERP5 Unit Test'
+  portal_type = 'Unit Test'"""
+  document_data_updated = """class UnitTest:
+  meta_type = 'ERP5 Unit Test'
+  portal_type = 'Unit Test'
+  def updated(self):
+    pass"""
+  document_base_path = os.path.join(getConfiguration().instancehome, 'Extensions')
+  template_property = 'template_extension_id_list'
 
 class TestTestTemplateItem(TestDocumentTemplateItem):
+  document_title = 'UnitTest'
+  document_data = """class UnitTest:
+  meta_type = 'ERP5 Unit Test'
+  portal_type = 'Unit Test'"""
+  document_data_updated = """class UnitTest:
+  meta_type = 'ERP5 Unit Test'
+  portal_type = 'Unit Test'
+  def updated(self):
+    pass"""
+  document_base_path = os.path.join(getConfiguration().instancehome, 'tests')
+  template_property = 'template_test_id_list'
+
   def test_BusinessTemplateWithDocumentTestRemoved(self):
     """Checks that if Business Template defines Document and Test
     Document is not removed"""
+    self.document_base_path = os.path.join(getConfiguration().instancehome, 'Document')
+    self.template_property = 'template_document_id_list'
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateDocument \
