@@ -53,10 +53,12 @@
             <value> <string>Base_translateString = context.Base_translateString\n
 \n
 return {\n
-        \'fr\':dict(name=Base_translateString(\'French\'),bt5=\'erp5_l10n_fr\'),\n
-        \'pl\':dict(name=Base_translateString(\'Polish\'),bt5=\'erp5_l10n_pl_PL\'),\n
-        \'pt-BR\':dict(name=Base_translateString(\'Portuguese / Brazil\'),bt5=\'erp5_l10n_pt-BR\'),\n
-        \'ko\':dict(name=Base_translateString(\'Korean\'),bt5=\'erp5_l10n_ko\'),\n
+        \'fr\':dict(name=Base_translateString(\'French\'), bt5=\'erp5_l10n_fr\'),\n
+        \'pl\':dict(name=Base_translateString(\'Polish\'), bt5=\'erp5_l10n_pl_PL\'),\n
+        \'pt-BR\':dict(name=Base_translateString(\'Portuguese / Brazil\'), bt5=\'erp5_l10n_pt-BR\'),\n
+        \'ko\':dict(name=Base_translateString(\'Korean\'), bt5=\'erp5_l10n_ko\'),\n
+        \'ja\':dict(name=Base_translateString(\'Japanese\'), bt5=\'erp5_l10n_ja\'),\n
+        \'ru\':dict(name=Base_translateString(\'Russian\'), bt5=\'erp5_l10n_ru\'),\n
        }\n
 </string> </value>
         </item>
