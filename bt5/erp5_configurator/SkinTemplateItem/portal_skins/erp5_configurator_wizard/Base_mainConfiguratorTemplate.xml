@@ -53,14 +53,6 @@
                           form_title python: current_state_info[\'title\'];\n
                           form_description python: current_state_info[\'description\']">\n
 \n
-  <div id="logged_in_as">\n
-    <tal:block tal:condition="not: here/portal_membership/isAnonymousUser">\n
-     <span i18n:translate="" \n
-          i18n:domain="ui">Hello</span>, \n
-      <span tal:replace="python:here.portal_membership.getAuthenticatedMember().getUserName()" />\n
-    </tal:block>\n
-  </div>\n
-\n
   <h2 i18n:translate=""\n
       i18n:domain="ui"\n
       tal:content="form_title"/>\n
