@@ -155,6 +155,16 @@
         <td>//a[@name="document_title"]</td>\n
         <td>Web Table</td>\n
       </tr>\n
+        <tr>\n
+          <td>verifyElementPresent</td>\n
+          <td>//td[@id=\'0_table0_cell_c0_r1\']</td>\n
+          <td></td>\n
+        </tr>\n
+        <tr>\n
+          <td>verifyElementPresent</td>\n
+          <td>//td[@id=\'0_table0_cell_c1_r1\']</td>\n
+          <td></td>\n
+        </tr>\n
       <tr>\n
         <td>verifyText</td>\n
         <td>//td[@id="jSheetTitle_0"]</td>\n
@@ -352,66 +362,128 @@
         <td>Help</td>\n
         <td></td>\n
       </tr>\n
+      <tal:block tal:repeat="index python:range(2)">\n
+        <tr>\n
+          <td>clickAndWait</td>\n
+          <td>//a[@class="ung_docs"]</td>\n
+          <td></td>\n
+        </tr>\n
+        <tr>\n
+          <td>click</td>\n
+          <td>//input[@id="upload"]</td>\n
+          <td></td>\n
+        </tr>\n
+        <tr>\n
+          <td>select</td>\n
+          <td>//select[@name="portal_type"]</td>\n
+          <td>Web Table</td>\n
+        </tr>\n
+        <tr>\n
+          <td>click</td>\n
+          <td>//input[@id="submit_document"]</td>\n
+          <td></td>\n
+        </tr>\n
+        <tr>\n
+          <td>verifyText</td>\n
+          <td>//span[@id=\'no-input-file\']</td>\n
+          <td>Please input a file</td>\n
+        </tr>\n
+        <tr>\n
+          <td>verifyTextPresent</td>\n
+          <td>Loading...</td>\n
+          <td></td>\n
+        </tr>\n
+        <tr>\n
+          <td>verifyElementPresent</td>\n
+          <td>//input[@id="upload-file"]</td>\n
+          <td></td>\n
+        </tr>\n
+        <tr>\n
+          <td>type</td>\n
+          <td>//input[@id="upload-file"]</td>\n
+          <td tal:content="python: here.Zuite_getFilenameLocation(\'tiolive-ERP5.Freedom.TioLive.Spreadsheet-001-en.ods\')"></td>\n
+        </tr>\n
+        <tr>\n
+          <td>clickAndWait</td>\n
+          <td>//input[@id="submit_document"]</td>\n
+          <td></td>\n
+        </tr>\n
+        <tr>\n
+          <td>waitForCondition</td>\n
+          <td>selenium.isTextPresent("Opening")</td>\n
+          <td>30000</td>\n
+        </tr>\n
+        <tr>\n
+          <td>waitForPageToLoad</td>\n
+          <td>30000</td>\n
+          <td></td>\n
+        </tr>\n
+        <tr>\n
+          <td>waitForCondition</td>\n
+          <td>selenium.isElementPresent("//a[@name=\'document_title\']")</td>\n
+          <td>30000</td>\n
+        </tr>\n
+        <tr>\n
+          <td>verifyTextPresent</td>\n
+          <td>TioLive Spreadsheet</td>\n
+          <td></td>\n
+        </tr>\n
+        <tr>\n
+          <td>verifyAttribute</td>\n
+          <td>//td[@id=\'0_table0_cell_c0_r1\']@sdval</td>\n
+          <td>1</td>\n
+        </tr>\n
+        <tr>\n
+          <td>verifyAttribute</td>\n
+          <td>//td[@id=\'0_table0_cell_c1_r1\']@sdval</td>\n
+          <td>2</td>\n
+        </tr>\n
+      </tal:block>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//a[@class="ung_docs"]</td>\n
+        <td></td>\n
+      </tr>\n
       <tr>\n
         <td>click</td>\n
         <td>//input[@id="upload"]</td>\n
-        <td></td>\n
+         <td></td>\n
       </tr>\n
       <tr>\n
         <td>select</td>\n
         <td>//select[@name="portal_type"]</td>\n
-        <td>Web Table</td>\n
+        <td>Web Page</td>\n
       </tr>\n
-      <tr>\n
-        <td>click</td>\n
-        <td>//input[@id="submit_document"]</td>\n
-        <td></td>\n
-      </tr>\n
-      <tr>\n
-        <td>verifyText</td>\n
-        <td>//span[@id=\'no-input-file\']</td>\n
-        <td>Please input a file</td>\n
-      </tr>\n
-      <tr>\n
-        <td>verifyTextPresent</td>\n
-        <td>Loading...</td>\n
-        <td></td>\n
-      </tr>\n
-      <tr>\n
-        <td>verifyElementPresent</td>\n
-        <td>//input[@id="upload-file"]</td>\n
-        <td></td>\n
-      </tr>\n
-      <tr>\n
-        <td>type</td>\n
-        <td>//input[@id="upload-file"]</td>\n
-        <td tal:content="python: here.Zuite_getFilenameLocation(\'tiolive-ERP5.Freedom.TioLive.Spreadsheet-001-en.ods\')"></td>\n
-      </tr>\n
-      <tr>\n
-        <td>clickAndWait</td>\n
-        <td>//input[@id="submit_document"]</td>\n
-        <td></td>\n
-      </tr>\n
-      <tr>\n
-        <td>waitForCondition</td>\n
-        <td>selenium.isTextPresent("Opening")</td>\n
-        <td>30000</td>\n
-      </tr>\n
-      <tr>\n
-        <td>waitForPageToLoad</td>\n
-        <td>30000</td>\n
-        <td></td>\n
-      </tr>\n
-      <tr>\n
-        <td>waitForCondition</td>\n
-        <td>selenium.isElementPresent("//a[@name=\'document_title\']")</td>\n
-        <td>30000</td>\n
-      </tr>\n
-      <tr>\n
-        <td>verifyTextPresent</td>\n
-        <td>TioLive Spreadsheet</td>\n
-        <td></td>\n
-      </tr>\n
+        <tr>\n
+          <td>type</td>\n
+          <td>//input[@id="upload-file"]</td>\n
+          <td tal:content="python: here.Zuite_getFilenameLocation(\'tiolive-ERP5.Freedom.TioLive.Spreadsheet-001-en.ods\')"></td>\n
+        </tr>\n
+        <tr>\n
+          <td>clickAndWait</td>\n
+          <td>//input[@id="submit_document"]</td>\n
+          <td></td>\n
+        </tr>\n
+        <tr>\n
+          <td>waitForCondition</td>\n
+          <td>selenium.isTextPresent("Opening")</td>\n
+          <td>30000</td>\n
+        </tr>\n
+        <tr>\n
+          <td>waitForPageToLoad</td>\n
+          <td>30000</td>\n
+          <td></td>\n
+        </tr>\n
+        <tr>\n
+          <td>waitForCondition</td>\n
+          <td>selenium.isElementPresent("//a[@name=\'document_title\']")</td>\n
+          <td>30000</td>\n
+        </tr>\n
+        <tr>\n
+          <td>verifyTextPresent</td>\n
+          <td>TioLive Spreadsheet</td>\n
+          <td></td>\n
+        </tr>\n
     </tbody>\n
   </table>\n
 </body>\n
