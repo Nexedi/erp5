@@ -67,32 +67,9 @@
             </value>
         </item>
         <item>
-            <key> <string>_global_configuration_attributes</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-            </value>
-        </item>
-        <item>
-            <key> <string>_local_properties</string> </key>
-            <value>
-              <tuple>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>file</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>_mt_index</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
             </value>
         </item>
         <item>
@@ -104,15 +81,15 @@
         <item>
             <key> <string>_tree</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
             </value>
         </item>
         <item>
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>resource/workflow_module/erp5_standard_workflow</string>
-                <string>current_state/workflow_module/erp5_standard_workflow/8</string>
+                <string>resource/workflow_module/erp5_consulting_workflow</string>
+                <string>current_state/workflow_module/erp5_consulting_workflow/29</string>
               </tuple>
             </value>
         </item>
@@ -128,19 +105,15 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Standard Business Configuration provides a generic configuration of ERP5 for Small and Medium Business.</string> </value>
-        </item>
-        <item>
-            <key> <string>file</string> </key>
-            <value> <string>38631.png</string> </value>
+            <value> <string>Used by consultants to provides a flexible configuration of ERP5 for Small and Medium Business.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>default_standard_configuration</string> </value>
+            <value> <string>default_consulting_standard_configuration</string> </value>
         </item>
         <item>
             <key> <string>last_id</string> </key>
-            <value> <string>3</string> </value>
+            <value> <string>2</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -148,11 +121,11 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Small And Medium Business</string> </value>
+            <value> <string>ERP5 Consulting</string> </value>
         </item>
         <item>
             <key> <string>user_interface_description_file_id</string> </key>
-            <value> <string>basic_configuration_ui_description.ods</string> </value>
+            <value> <string>basic_consultant_configuration_ui_description.ods</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -171,41 +144,13 @@
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <global name="PersistentMapping" module="Persistence.mapping"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>data</string> </key>
-            <value>
-              <dictionary>
-                <item>
-                    <key> <string>company_email</string> </key>
-                    <value> <string>LUCAS@nexedi.com</string> </value>
-                </item>
-                <item>
-                    <key> <string>group_id</string> </key>
-                    <value> <string>my_group</string> </value>
-                </item>
-                <item>
-                    <key> <string>organisation_configurator_item</string> </key>
-                    <value> <string>business_configuration_module/default_standard_configuration/3/1</string> </value>
-                </item>
-              </dictionary>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
-    <pickle>
       <global name="OOBTree" module="BTrees.OOBTree"/>
     </pickle>
     <pickle>
       <none/>
     </pickle>
   </record>
-  <record id="5" aka="AAAAAAAAAAU=">
+  <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <global name="OOBTree" module="BTrees.OOBTree"/>
     </pickle>

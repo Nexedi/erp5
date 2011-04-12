@@ -1,3 +1,9 @@
+2011-04-12 lucas
+* Added default image on default_standard_configuration and a better description.
+
+2011-04-12 lucas
+* Added new business configuration for consulting workflow.
+
 2011-04-04 lucas
 * Added a new test to check if simulation is working as expected.
 
