@@ -145,7 +145,7 @@ class TrashTool(BaseTool):
             if subobject_id in obj.objectIds():
               LOG('Products.ERP5.Tool.TrashTool', WARNING,
                   'Cleaning corrupted BTreeFolder2 object at %r.' % \
-                                                       (subobject_path,))
+                                                       (subobject.getRelativeUrl(),))
               obj._cleanup()
     return subobjects_dict
 
