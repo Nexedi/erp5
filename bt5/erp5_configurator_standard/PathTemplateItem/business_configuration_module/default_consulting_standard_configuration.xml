@@ -67,6 +67,33 @@
             </value>
         </item>
         <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>modification_date</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>date</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>creation_date</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>date</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>_mt_index</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
@@ -89,7 +116,6 @@
             <value>
               <tuple>
                 <string>resource/workflow_module/erp5_consulting_workflow</string>
-                <string>current_state/workflow_module/erp5_consulting_workflow/29</string>
               </tuple>
             </value>
         </item>
@@ -104,6 +130,25 @@
             <value> <string>BusinessConfiguration_afterConfiguration</string> </value>
         </item>
         <item>
+            <key> <string>creation_date</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global id="1.1" name="DateTime" module="DateTime.DateTime"/>
+                </klass>
+                <tuple>
+                  <none/>
+                </tuple>
+                <state>
+                  <tuple>
+                    <float>1302490800.0</float>
+                    <string>GMT-3</string>
+                  </tuple>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value> <string>Used by consultants to provides a flexible configuration of ERP5 for Small and Medium Business.</string> </value>
         </item>
@@ -112,8 +157,31 @@
             <value> <string>default_consulting_standard_configuration</string> </value>
         </item>
         <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>last_id</string> </key>
             <value> <string>2</string> </value>
+        </item>
+        <item>
+            <key> <string>modification_date</string> </key>
+            <value>
+              <object>
+                <klass> <reference id="1.1"/> </klass>
+                <tuple>
+                  <none/>
+                </tuple>
+                <state>
+                  <tuple>
+                    <float>1302577200.0</float>
+                    <string>GMT-3</string>
+                  </tuple>
+                </state>
+              </object>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
