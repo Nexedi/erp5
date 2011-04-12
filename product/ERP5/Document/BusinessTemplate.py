@@ -3541,10 +3541,18 @@ class PropertySheetTemplateItem(DocumentTemplateItem,
     """
     def inner(self, *args, **kw):
       if self._is_already_migrated(getattr(self, object_dict_name).keys()):
-        return getattr(ObjectTemplateItem, method_name)(self, *args, **kw)
+        result = getattr(ObjectTemplateItem, method_name)(self, *args, **kw)
       else:
-        return getattr(DocumentTemplateItem, method_name)(self, *args, **kw)
-
+        result = getattr(DocumentTemplateItem, method_name)(self, *args, **kw)
+      if method_name == 'preinstall':
+        old_result = result.copy()
+        for k, v in old_result.iteritems():
+          if not k.startswith('portal_property_sheets/'):
+            # Magical way to have unique path in case of not yet migrated property
+            # sheets available on preinstall list
+            k = self._getKey(k)
+          result[k] = v
+      return result
     return inner
 
   export = _filesystemCompatibilityWrapper('export', '_objects')
@@ -3699,17 +3707,6 @@ class PropertySheetTemplateItem(DocumentTemplateItem,
         new_remove_dict[self._getPath(k)] = v
     kw['remove_object_dict'] = new_remove_dict
     ObjectTemplateItem.remove(self, context, **kw)
-
-  def preinstall(self, *args, **kwargs):
-    preinstall_dict = ObjectTemplateItem.preinstall(self, *args, **kwargs)
-    new_preinstall_dict = dict()
-    for k, v in preinstall_dict.iteritems():
-      if not k.startswith('portal_property_sheets/'):
-        # Magical way to have unique path in case of not yet migrated property
-        # sheets available on preinstall list
-        k = self._getKey(k)
-      new_preinstall_dict[k] = v
-    return new_preinstall_dict
 
   def install(self, context, **kw):
     if not self._perform_migration:
