@@ -1065,13 +1065,39 @@ class ObjectTemplateItem(BaseTemplateItem):
           # useless because we will already reindex every created object, so
           # we avoid duplication of reindexation
           obj.isIndexable = ConstantGetter('isIndexable', value=False)
-          # keep workflow history if exists
-          workflow_history = getattr(obj, 'workflow_history', None)
-          obj.manage_afterClone(obj)
-          if workflow_history is not None:
-            setattr(obj, 'workflow_history', workflow_history)
-            for workflow_id in workflow_history.keys():
-              obj.updateRoleMappingsFor(workflow_id)
+          # START:part of ERP5Type.CopySupport.manage_afterClone
+          # * reset uid
+          # * reset owner
+          # * do not reset workflow
+          # * do not call recursively
+          # * do not call type-based afterClone script
+          #
+          # Change uid attribute so that Catalog thinks object was not yet catalogued
+          aq_base(obj).uid = portal.portal_catalog.newUid()
+          # Give the Owner local role to the current user, zope only does this if no
+          # local role has been defined on the object, which breaks ERP5Security
+          if getattr(aq_base(obj), '__ac_local_roles__', None) is not None:
+            user=getSecurityManager().getUser()
+            if user is not None:
+              userid=user.getId()
+              if userid is not None:
+                #remove previous owners
+                local_role_dict = obj.__ac_local_roles__
+                removable_role_key_list = []
+                for key, value in local_role_dict.items():
+                  if 'Owner' in value:
+                    value.remove('Owner')
+                  if len(value) == 0:
+                    removable_role_key_list.append(key)
+                # there is no need to keep emptied keys after cloning, it makes
+                # unstable local roles -- if object is cloned it can be different when
+                # after being just added
+                for key in removable_role_key_list:
+                  local_role_dict.pop(key)
+                #add new owner
+                l=local_role_dict.setdefault(userid, [])
+                l.append('Owner')
+          # END:part of ERP5Type.CopySupport.manage_afterClone
           del obj.isIndexable
           if getattr(aq_base(obj), 'reindexObject', None) is not None:
             obj.reindexObject()
