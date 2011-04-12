@@ -67,7 +67,7 @@ function Edit(data){\n
     title: "Update Event",\n
     buttons: {\n
       "Save": function(){\n
-        data = $("form#create_new_event").serializeArray();\n
+        var data = $("form#create_new_event").serializeArray();\n
         var dataHash = {};\n
         for (var i=0; i<data.length; i++)\n
           dataHash[data[i].name] = data[i].value;\n
@@ -84,6 +84,7 @@ function Edit(data){\n
                     dataHash.stop_date_minute;\n
 \n
         var paramList = [{name : \'CalendarEndTime\', \'value\': stop_date},\n
+                         {name : \'event_portal_type\', \'value\': dataHash.portal_type},\n
                          {name : \'CalendarStartTime\', \'value\': start_date},\n
                          {name : \'title\', \'value\': dataHash.title},\n
                          {name : \'request_type\', \'value\': \'update\'},\n

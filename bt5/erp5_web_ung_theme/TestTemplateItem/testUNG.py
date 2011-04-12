@@ -41,12 +41,12 @@ class TestUNG(ERP5TypeTestCase):
     return "UNG Tests"
 
   def getBusinessTemplateList(self):
-    return ('erp5_base',
+    return ('erp5_ingestion_mysql_innodb_catalog',
+            'erp5_base',
+            'erp5_jquery',
             'erp5_web',
-            'erp5_ingestion_mysql_innodb_catalog',
             'erp5_core_proxy_field_legacy',
             'erp5_ingestion',
-            'erp5_jquery',
             'erp5_jquery_ui',
             'erp5_dms',
             'erp5_crm',
@@ -268,14 +268,56 @@ class TestUNG(ERP5TypeTestCase):
     self.portal.Base_updateCalendarEventList("update")
     self.stepTic()
     self.assertEquals(web_message.getTitle(), "Buy Coffee")
-    self.portal.REQUEST.form.clear()
-    form_dict = dict(title=web_message.getTitle(),
-                     id=web_message.getId())
+    form_dict["event_portal_type"] = "Note"
     self.portal.REQUEST.form.update(form_dict)
-    self.portal.Base_updateCalendarEventList("remove")
+    self.portal.Base_updateCalendarEventList("update")
     self.stepTic()
     web_message = self.portal.portal_catalog.getResultValue(portal_type="Web Message")
     self.assertEquals(web_message, None)
+    note = self.portal.portal_catalog.getResultValue(portal_type="Note")
+    self.assertEquals(note.getTitle(), "Buy Coffee")
+    self.portal.REQUEST.form.clear()
+    form_dict = dict(title=note.getTitle(),
+                     id=note.getId())
+    self.portal.REQUEST.form.update(form_dict)
+    self.portal.Base_updateCalendarEventList("remove")
+    self.stepTic()
+    note = self.portal.portal_catalog.getResultValue(portal_type="Note",
+                                                     title="Buy Coffee")
+    self.assertEquals(note, None)
+    self.portal.REQUEST.form.clear()
+    start_date = DateTime()
+    end_date = DateTime() + 1
+    form_dict = dict(CalendarStartTime=start_date.strftime("%m/%d/%Y %H:%M"),
+                     CalendarEndTime=end_date.strftime("%m/%d/%Y %H:%M"),
+                     CalendarTitle="Another Sample",
+                     portal_type="Letter")
+    self.portal.REQUEST.form.update(form_dict)
+    self.portal.Base_updateCalendarEventList("add")
+    self.stepTic()
+    letter = self.portal.portal_catalog.getResultValue(portal_type="Letter",
+                                                       title="Another Sample")
+    self.assertEquals(letter.getPortalType(), "Letter")
+    self.assertEquals(letter.getTitle(), "Another Sample")
+    self.assertEquals(letter.getStartDate().hour(), start_date.hour())
+    self.assertEquals(letter.getStartDate().day(), start_date.day())
+    self.assertEquals(letter.getStopDate().hour(), end_date.hour())
+    self.assertEquals(letter.getStopDate().day(), end_date.day())
+    self.portal.REQUEST.form.clear()
+    form_dict = dict(title="Change only the Title of Sample",
+                     event_id=letter.getId())
+    self.portal.REQUEST.form.update(form_dict)
+    self.portal.Base_updateCalendarEventList("update")
+    self.stepTic()
+    letter = self.portal.portal_catalog.getResultValue(portal_type="Letter",
+                                                       title="Another Sample")
+    self.assertEquals(letter, None)
+    letter = self.portal.portal_catalog.getResultValue(portal_type="Letter",
+                                                       title="Change only the Title of Sample")
+    self.assertEquals(letter.getStartDate().hour(), start_date.hour())
+    self.assertEquals(letter.getStartDate().day(), start_date.day())
+    self.assertEquals(letter.getStopDate().hour(), end_date.hour())
+    self.assertEquals(letter.getStopDate().day(), end_date.day())
   
   def testERPSite_createUNGUser(self):
     """Test if script creates an user correctly"""

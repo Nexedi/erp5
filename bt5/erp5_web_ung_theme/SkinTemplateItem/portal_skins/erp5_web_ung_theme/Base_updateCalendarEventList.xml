@@ -60,6 +60,8 @@ from DateTime import DateTime\n
 import random\n
 \n
 def convertToERP5DateTime(date):\n
+  if not date:\n
+    return None\n
   date, hour = date.split()\n
   month, day, year = date.split("/")\n
   return DateTime("%s/%s/%s %s" % (month, day, year, hour))\n
@@ -116,7 +118,8 @@ if request_type == "list":\n
 \n
 elif request_type == "remove":\n
   title = form.get("title")\n
-  catalog_object = portal.portal_catalog.getResultValue(portal_type=portal_type_list, title=title)\n
+  catalog_object = portal.portal_catalog.getResultValue(portal_type=portal_type_list,\n
+                                                        title=title)\n
   event = context.restrictedTraverse(catalog_object.getPath())\n
   portal.event_module.deleteContent(event.getId())\n
   return dumps({"IsSuccess": True})\n
@@ -132,12 +135,25 @@ elif request_type == "update":\n
   catalog_object = portal.portal_catalog.getResultValue(portal_type=portal_type_list,\n
                                                         id=event_id)\n
   event = context.restrictedTraverse(catalog_object.getPath())\n
-  if title and event.getTitle() != title:\n
-    event.setTitle(title)\n
-  if text_content and event.getDescription() != text_content:\n
-    event.setDescription(text_content)\n
-  event.setStartDate(start_date)\n
-  event.setStopDate(end_date)\n
+  event_portal_type = form.get(\'event_portal_type\')\n
+  if event.getPortalType() != event_portal_type and event_portal_type in portal_type_list:\n
+    new_event = portal.event_module.newContent(portal_type=event_portal_type)\n
+    new_event.edit(start_date=start_date,\n
+                   end_date=end_date,\n
+                   title=title,\n
+                   description=text_content)\n
+    portal.event_module.deleteContent(event.getId())\n
+  else:\n
+    kw = {}\n
+    if title and event.getTitle() != title:\n
+      kw["title"] = title\n
+    if text_content and event.getDescription() != text_content:\n
+      kw["description"] = text_content\n
+    if start_date is not None:\n
+      kw["start_date"] = start_date\n
+    if end_date is not None:\n
+      kw["stop_date"] = end_date\n
+    event.edit(**kw)\n
   return dumps({"IsSuccess": True})\n
 \n
 elif request_type == "add":\n
