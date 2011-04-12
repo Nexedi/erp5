@@ -194,7 +194,8 @@ class OOOdCommandTransform(commandtransform):
           parent_node.append(style_node)
           style_node.attrib.update({'type': 'text/css'})
           parent_node.remove(css_link_tag)
-    xml_output = html.tostring(xml_doc, encoding='utf-8', method='xml')
+    xml_output = html.tostring(xml_doc, encoding='utf-8', method='xml',
+                               include_meta_content_type=True)
     xml_output = xml_output.replace('<title/>', '<title></title>')
     return xml_output
 
