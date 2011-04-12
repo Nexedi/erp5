@@ -128,9 +128,10 @@ class TestTradeModelLineMixin(TestBPMMixin, UserDict):
   def createBusinessProcess(self, business_link_list=(), **kw):
     business_process = super(TestTradeModelLineMixin,
         self).createBusinessProcess(**kw)
-    for business_link in business_link_list:
-      link = self.createBusinessLink(business_process, **business_link)
-      self['business_link/' + link.getTradePhaseId()] = link
+    if self.business_link_portal_type is not None:
+      for business_link in business_link_list:
+        link = self.createBusinessLink(business_process, **business_link)
+        self['business_link/' + link.getTradePhaseId()] = link
     return business_process
 
   @save_result_as('trade_condition')
