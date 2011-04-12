@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts02202866.83</string> </value>
+            <value> <string>ts02634727.61</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -44,7 +44,7 @@
   overflow: hidden; /* Clear floats */\n
 }\n
 \n
-.box a, a:hover {\n
+.box span#business-configuration-title, span#business-configuration-title:hover {\n
   display: block;\n
   background-color: transparent;\n
   width: 100%;\n
@@ -61,7 +61,7 @@
 \n
 }\n
 \n
-.box a:hover {\n
+.box span:hover {\n
   background-color: transparent;\n
 }\n
 \n
@@ -81,7 +81,7 @@
   border: 2px solid #d4e8ec;\n
 }\n
 \n
-.box span {\n
+.box span#span-business-configuration-description {\n
   background-color: transparent;\n
   font-size: 10px;\n
   float: left;\n
@@ -90,7 +90,7 @@
 \n
 .box button {\n
   display: block;\n
-  margin-top: 80px;\n
+  margin-top: 65px;\n
   margin-left: auto;\n
   margin-right: auto;\n
 \n
@@ -133,7 +133,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>2127</int> </value>
+            <value> <int>2234</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

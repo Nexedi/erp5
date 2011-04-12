@@ -58,13 +58,14 @@
                   <div tal:attributes="id python: \'business_configuration_%s\' % bc_id;\n
                                        class string:box;">\n
 \n
-                    <a tal:attributes="href bc_absolute_url" tal:content="python: bc_title" />\n
+                    <span tal:attributes="id string:business-configuration-title" tal:content="bc_title" />\n
 \n
-                    <a tal:condition="bc_default_image" tal:attributes="href bc_absolute_url">\n
-                      <img tal:attributes="src python: \'%s?format=png\' % bc_default_image_absolute_url" />\n
-                    </a>\n
+                    <img tal:condition="bc_default_image"\n
+                         tal:attributes="src python: \'%s?format=png\' % bc_default_image_absolute_url" />\n
 \n
                     <span tal:condition="bc_description"\n
+                          tal:attributes="id string:span-business-configuration-description;\n
+                                          title bc_description;"\n
                           tal:content="python: \'%s ...\' % bc_description[:80]" />\n
 \n
                     <button id="dialog-submit-button"\n
