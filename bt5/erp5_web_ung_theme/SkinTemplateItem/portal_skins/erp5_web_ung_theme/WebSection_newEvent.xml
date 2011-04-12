@@ -36,7 +36,7 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<form id="create_new_event" action="javascript:createNewEvent()">\n
+<form id="create_new_event" onkeypress="submitEventOnEvent(event)">\n
   <table>\n
    <tbody>\n
      <tr>\n

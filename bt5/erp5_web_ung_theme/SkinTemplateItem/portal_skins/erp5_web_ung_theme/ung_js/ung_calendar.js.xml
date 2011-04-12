@@ -131,6 +131,19 @@ function Delete(data, callback){\n
   hiConfirm("Are You Sure to Delete this Event", \'Confirm\', function(r){ r && callback(0);});\n
 }\n
 \n
+function submitEventOnEvent(event){\n
+  var keynum;\n
+  if(window.event){\n
+    keynum = event.keyCode;\n
+  }\n
+  else if(event.which){\n
+    keynum = event.which;\n
+  }\n
+  if (keynum == 13){\n
+    createNewEvent();\n
+  }  \n
+}\n
+\n
 function createNewEvent(){\n
   $.post("EventModule_createNewEvent",\n
     $("form#create_new_event").serialize(), function(){\n
