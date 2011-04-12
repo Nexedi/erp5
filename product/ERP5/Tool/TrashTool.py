@@ -33,7 +33,6 @@ from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.ERP5 import _dtmldir
-from Products.ERP5.Document.BusinessTemplate import getChainByType
 from zLOG import LOG, WARNING
 from DateTime import DateTime
 from Acquisition import aq_base
