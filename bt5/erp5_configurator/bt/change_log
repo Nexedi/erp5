@@ -1,3 +1,6 @@
+2011-04-12 lucas
+* Fixed an issue where wizard.css should be imported only once.
+
 2011-04-08 lucas
 *  Fixed expression once the last step of configuration there is no form object.
 
