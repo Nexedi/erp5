@@ -168,11 +168,102 @@
       <tr>\n
         <td>waitForCondition</td>\n
         <td>selenium.isElementPresent(\'//td[@id="event-date"]\')</td>\n
+        <td>4000</td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyElementPresent</td>\n
+        <td>//td[@id="event-date"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>openAndWait</td>\n
+        <td>${ung_url}/calendar</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//span[@class="addcal"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>waitForCondition</td>\n
+        <td>selenium.isElementPresent("portal_type")</td>\n
+        <td>10000</td>\n
+      </tr>\n
+      <tr>\n
+        <td>select</td>\n
+        <td>//select[@name="portal_type"]</td>\n
+        <td>Note</td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//input[@name="title"]</td>\n
+        <td>My Second Event</td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//textarea[@name="event_text_content"]</td>\n
+        <td>Second Event</td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//input[@name="start_date_hour"]</td>\n
+        <td tal:content="python: DateTime().hour() + 1">hour</td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//input[@name="stop_date_hour"]</td>\n
+        <td tal:content="python: DateTime().hour() + 1">hour</td>\n
+      </tr>\n
+      <tr>\n
+        <td>keyPress</td>\n
+        <td>//input[@name="stop_date_hour"]</td>\n
+        <td>\\13</td>\n
+      </tr>\n
+      <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities"/>\n
+      <tr>\n
+        <td>openAndWait</td>\n
+        <td>${ung_url}/calendar</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//input[@name=\'searchable-text\']</td>\n
+        <td>My Second Event</td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//input[@id=\'submit-search\']</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>waitForCondition</td>\n
+        <td>selenium.isElementPresent(\'//td[@id="event-date"]\')</td>\n
         <td>2000</td>\n
       </tr>\n
       <tr>\n
         <td>verifyElementPresent</td>\n
         <td>//td[@id="event-date"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>openAndWait</td>\n
+        <td>${ung_url}/calendar</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//input[@name=\'searchable-text\']</td>\n
+        <td>My Second Event</td>\n
+      </tr>\n
+      <tr>\n
+        <td>keyPress</td>\n
+        <td>//input[@name=\'searchable-text\']</td>\n
+        <td>\\13</td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyTextNotPresent</td>\n
+        <td>No Results</td>\n
         <td></td>\n
       </tr>\n
     </tbody>\n
