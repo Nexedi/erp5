@@ -314,20 +314,15 @@ ul.breadcrumb li {\n
   color:#686868;\n
 }\n
 \n
-div.breadcrumb{\n
-  float:left;\n
+div.breadcrumb,\n
+div.language-selection {\n
   width: auto;\n
 }\n
-\n
-div.language-selection{\n
-  float:right;\n
-  width: auto;\n
-}\n
-\n
 \n
 ul.widget_management_box,\n
 ul.language_box{\n
   float:right;\n
+  width:auto;\n
   margin:0;\n
   padding: 0;\n
   position: relative;\n
@@ -1315,7 +1310,7 @@ button.formbt > span{\n
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
-            <value> <string>iso-8859-15</string> </value>
+            <value> <string>utf-8</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
