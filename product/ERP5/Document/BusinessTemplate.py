@@ -775,7 +775,7 @@ class ObjectTemplateItem(BaseTemplateItem):
       p.CharacterDataHandler=F.handle_data
       p.StartElementHandler=F.unknown_starttag
       p.EndElementHandler=F.unknown_endtag
-      r=p.Parse(data)
+      p.Parse(data)
 
       try:
         cache_database.db[key] = outfile.getvalue()
@@ -1262,7 +1262,7 @@ class ObjectTemplateItem(BaseTemplateItem):
       object_id = relative_url.split('/')[-1]
       try:
         container = self.unrestrictedResolveValue(portal, container_path)
-        object = container._getOb(object_id) # We force access to the object to be sure
+        container._getOb(object_id) # We force access to the object to be sure
                                         # that appropriate exception is thrown
                                         # in case object is already backup and/or removed
         if trash and trashbin is not None:
@@ -1691,7 +1691,7 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
         'business_template_registered_skin_selections', [])
       current_selection_set = set(current_selection_list)
 
-      skin_selection_list = workflow_id = self._objects[skin_folder_id]
+      skin_selection_list = self._objects[skin_folder_id]
       if isinstance(skin_selection_list, str):
         skin_selection_list = skin_selection_list.replace(',', ' ').split(' ')
       for skin_selection in skin_selection_list:
@@ -1718,7 +1718,6 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
     modified_object_list = {}
     if context.getTemplateFormatVersion() == 1:
       new_keys = self._objects.keys()
-      new_dict = PersistentMapping()
       for path in new_keys:
         if installed_item._objects.has_key(path):
           # compare object to see it there is changes
@@ -1967,7 +1966,6 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
     # if nothing or +, chain is added to the existing one
     # if - chain is removed from the exisiting one
     # if = chain replaced the existing one
-    p = context.getPortalObject()
     (default_chain, chain_dict) = getChainByType(context)
     for key in self._archive.keys():
       wflist = key.split(' | ')
@@ -2251,7 +2249,6 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
   def preinstall(self, context, installed_item, **kw):
     modified_object_list = {}
     if context.getTemplateFormatVersion() == 1:
-      portal = context.getPortalObject()
       new_key_list = self._objects.keys()
       new_dict = PersistentMapping()
       # fix key if necessary in installed bt for diff
@@ -2845,7 +2842,7 @@ class ActionTemplateItem(ObjectTemplateItem):
           for obj in container.getActionInformationList()
           if obj.getReference() in action_dict])
         for name, obj in action_dict.iteritems():
-          imported_action = container._importOldAction(obj).aq_base
+          container._importOldAction(obj).aq_base
 
     else:
       BaseTemplateItem.install(self, context, trashbin, **kw)
@@ -3178,7 +3175,6 @@ class ModuleTemplateItem(BaseTemplateItem):
       mapping['id'] = module.getId()
       mapping['title'] = module.getTitle()
       mapping['portal_type'] = module.getPortalType()
-      permission_list = []
       mapping['permission_list'] = module.showPermissions()
       mapping['category_list'] = module.getCategoryList()
       self._objects[module_id] = mapping
@@ -4897,7 +4893,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
           delattr(self, attr)
       # Secondly, make attributes empty.
       for item_name in self._item_name_list:
-        item = setattr(self, item_name, None)
+        setattr(self, item_name, None)
 
     clean = WorkflowMethod(_clean)
 
@@ -5465,7 +5461,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
       bt_portal_type_roles_list =  list(getattr(self, 'template_portal_type_roles', []) or [])
       bt_wf_chain_list = list(getattr(self, 'template_portal_type_workflow_chain', []) or [])
 
-      p = self.getPortalObject()
       for id in bt_portal_types_id_list:
         portal_type = ttool.getTypeInfo(id)
         if portal_type is None:
