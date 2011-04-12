@@ -57,6 +57,9 @@
   specification of an upgrader.\n
 """\n
 \n
+# Prevent unintended use of this script, as it would otherwise trigger an upgrade without possible site-specific settings.\n
+raise Exception(\'This script is only an example. Copy, paste & customise it for your needs.\')\n
+\n
 # Alarm dict is used to enable/disable upgrade alarms.\n
 \n
 ALARM_DICT = {\n
