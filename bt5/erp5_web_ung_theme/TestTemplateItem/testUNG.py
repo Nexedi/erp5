@@ -27,7 +27,11 @@
 ##############################################################################
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import FileUpload
+from Products.ERP5Type.tests.ERP5TypeTestCase import  _getConversionServerDict
 from DateTime import DateTime
+import os.path
+import Products.ERP5.tests
 import re
 import json
 
@@ -72,6 +76,14 @@ class TestUNG(ERP5TypeTestCase):
   def afterSetUp(self):
     """Clean up form"""
     self.portal.REQUEST.form.clear()
+
+  def getDocumentPath(self):
+    """ It returns a full path of document """
+    folder_path = os.path.dirname(Products.ERP5.tests.__file__)
+    filename = "tiolive-ERP5.Freedom.TioLive.Spreadsheet-001-en.ods"
+    return os.path.join(folder_path,
+                        "test_data",
+                        filename), filename
 
   def assertCreateDocumentUsingTemplate(self, template, **kw):
     web_page_module = self.portal.web_page_module
@@ -419,3 +431,25 @@ class TestUNG(ERP5TypeTestCase):
     result_list = self.portal.web_site_module.ung.WebSection_getWebPageObjectList(**kw)
     self.assertEquals(len(result_list), 1)
     self.assertEquals(result_list[0].getPortalType(), "Web Table")
+
+  def testWebPage_updateWebDocument(self):
+    """ """
+    portal = self.portal
+    portal_preferences = portal.portal_preferences
+    web_page_module = portal.web_page_module
+    portal_contributions = portal.portal_contributions
+    system_preference = portal_preferences.newContent(portal_type='System Preference')
+    conversion_dict = _getConversionServerDict()
+    system_preference.setPreferredOoodocServerAddress(conversion_dict["hostname"])
+    system_preference.setPreferredOoodocServerPortNumber(conversion_dict["port"])
+    system_preference.enable()
+    self.stepTic()
+    document_path, filename = self.getDocumentPath()
+    file = FileUpload(document_path, filename)
+    document = portal_contributions.newContent(file=file)
+    web_page = web_page_module.newContent(portal_type="Web Page")
+    self.stepTic()
+    web_page.WebPage_updateWebDocument(document.getPath())
+    self.stepTic()
+    self.assertTrue(re.search("\>tiolive\<", web_page.getTextContent()) is not None)
+    self.assertEquals(web_page.getTitle(), document.getTitle())

@@ -55,27 +55,22 @@
 catalog_object = context.portal_catalog.getResultValue(path=document_path)\n
 document = context.restrictedTraverse(catalog_object.getPath())\n
 \n
-catalog_object = context.portal_catalog.getResultValue(path=webpage_path)\n
-webpage_document = context.restrictedTraverse(catalog_object.getPath())\n
+context.setTextContent(document.asStrippedHTML())\n
+context.setTitle(document.getTitle())\n
 \n
-webpage_document.setTextContent(document.asStrippedHTML())\n
-webpage_document.setTitle(document.getTitle())\n
-\n
-if document.getTitle() != webpage_document.getTitle() or document.getId() == webpage_document.getTitle():\n
-  print dumps(dict(status=400))\n
-  return printed\n
+if document.getTitle() != context.getTitle() or document.getId() == context.getTitle():\n
+  return dumps(dict(status=400))\n
  \n
-print dumps(dict(status=200))\n
-return printed\n
+return dumps(dict(status=200))\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>document_path, webpage_path</string> </value>
+            <value> <string>document_path</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_updateWebDocument</string> </value>
+            <value> <string>WebPage_updateWebDocument</string> </value>
         </item>
       </dictionary>
     </pickle>

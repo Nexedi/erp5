@@ -72,9 +72,8 @@ function showNotImplementedMessage(tag){\n
 \n
 function updateWebPage(){\n
   var parameterList = getUrlParameterList();\n
-  url = "Base_updateWebDocument?document_path=" + \n
-         parameterList.document_path + \n
-         "&webpage_path=" + parameterList.webpage_path;\n
+  url = "WebPage_updateWebDocument?document_path=" + \n
+         parameterList.document_path;\n
   $.get(url, {}, function(data, textStatus, XMLHttpRequest){\n
     response = jQuery.parseJSON(data);\n
     if (response.status != 200){\n
