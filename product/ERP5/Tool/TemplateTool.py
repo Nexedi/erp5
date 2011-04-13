@@ -1220,9 +1220,15 @@ class TemplateTool (BaseTool):
                                          after_triggered_bt5_id_list=[],
                                          update_catalog=0,
                                          reinstall=False,
-                                         active_process=None):
+                                         active_process=None,
+                                         force_keep_list=[]):
       """ 
         This method download and install a bt5, from a URL.
+
+        keep_original_list can be used to make paths not touched at all
+
+        force_keep_list can be used to force path to be modified or removed
+        even if template system proposes not touching it
       """
       if active_process is None:
         installed_dict = {}
@@ -1265,8 +1271,7 @@ class TemplateTool (BaseTool):
         for listbox_line in listbox_object_list:
           item = listbox_line.object_id
           state = listbox_line.object_state
-          removed = state.startswith('Removed')
-          if removed:
+          if state.startswith('Removed'):
             # The following condition could not be used to automatically decide
             # if an item must be kept or not. For example, this would not work
             # for items installed by PortalTypeWorkflowChainTemplateItem.
@@ -1275,11 +1280,28 @@ class TemplateTool (BaseTool):
               maybe_moved and ' (moved to %s ?)' % maybe_moved))
           else:
             installed_dict[item] = bt_title
-          # if a bt5 item is removed we may still want to keep it
-          if ((removed or state in ('Modified', 'New'))
-              and item in keep_original_list):
+          # Calculate keep logic, by following the default
+          keep = False
+          in_force_keep_list = True
+          if state in ('Modified but should be kept',
+              'Removed but should be kept') and item not in force_keep_list:
+            # For actions which suggest that item shall be kept and item is not
+            # explicitely forced, keep the default -- do nothing
+            keep = True
+            in_force_keep_list = False
+
+          in_keep_original_list = False
+          if item in keep_original_list:
+            # If item is forced to be untouched, do not touch it
+            keep = True
+            in_keep_original_list = True
+
+          if in_force_keep_list and in_keep_original_list:
+            log('Item %r is in force_keep_list and keep_original_list, as '
+                'keep_original_list has precedence item is NOT MODIFIED' % item)
+
+          if keep == True:
             install_kw[item] = 'nothing'
-            log("Keep %r" % item)
           else:
             install_kw[item] = listbox_line.choice_item_list[0][1]
 
