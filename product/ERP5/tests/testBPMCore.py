@@ -297,13 +297,16 @@ class TestBPMDummyDeliveryMovementMixin(TestBPMMixin):
       setattr(self, property_name, document)
       return document
 
+    simulation_movement_kw = {
+       'specialise': self.business_process.getRelativeUrl()}
     def constructSimulationTree(applied_rule, prefix=None):
       document = setTestClassProperty(prefix, 'simulation_movement',
         applied_rule.newContent(
         portal_type = 'Simulation Movement',
         delivery_value = order_line,
         trade_phase='default/order',
-        causality_value_list=[self.order_link, self.order_path]
+        causality_value_list=[self.order_link, self.order_path],
+        **simulation_movement_kw
         ))
 
       if simulation_depth > 1:
@@ -316,7 +319,8 @@ class TestBPMDummyDeliveryMovementMixin(TestBPMMixin):
           document.newContent(
           portal_type='Simulation Movement',
           trade_phase='default/delivery',
-          causality_value_list=[self.delivery_link, self.delivery_path]))
+          causality_value_list=[self.delivery_link, self.delivery_path],
+          **simulation_movement_kw))
 
         if simulation_depth > 2:
 
@@ -329,7 +333,8 @@ class TestBPMDummyDeliveryMovementMixin(TestBPMMixin):
               document.newContent(
               portal_type='Simulation Movement',
               trade_phase='default/invoicing',
-              causality_value_list=[self.invoice_link, self.invoice_path]))
+              causality_value_list=[self.invoice_link, self.invoice_path],
+              **simulation_movement_kw))
 
     constructSimulationTree(self.applied_rule)
     if dummy_split:
