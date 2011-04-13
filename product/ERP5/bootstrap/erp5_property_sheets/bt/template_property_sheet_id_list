@@ -48,6 +48,7 @@ CatalogPreference
 CategoryCore
 CategoryExistenceConstraint
 CategoryMembershipArityConstraint
+CategoryMembershipStateConstraint
 CategoryRelatedMembershipArityConstraint
 Chain
 Codification
