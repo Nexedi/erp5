@@ -1,3 +1,6 @@
+2011-04-13 lucas
+* The 'Hello' text is not displayed anymore.
+
 2011-04-07 lucas
 * Removed useless properties from Zuite_getConfigurationTestDict.
 
