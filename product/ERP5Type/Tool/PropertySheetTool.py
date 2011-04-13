@@ -33,6 +33,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Accessor import Translation
+from Products.ERP5Type.UnrestrictedMethod import unrestricted_apply
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Core.PropertySheet import PropertySheet as PropertySheetDocument
 from zExceptions import BadRequest
@@ -74,12 +75,16 @@ class PropertySheetTool(BaseTool):
       'SQLIdGenerator',
     ))
     def install():
-      template_tool = self.getPortalObject().portal_templates
+      from ZPublisher.BaseRequest import RequestContainer
+      portal = self.getPortalObject()
+      # BusinessTemplate.install needs a request
+      template_tool = portal.aq_base.__of__(portal.aq_parent.__of__(
+        RequestContainer(REQUEST=get_request()))).portal_templates
       if template_tool.getInstalledBusinessTemplate(bt_name) is None:
         from Products.ERP5.ERP5Site import getBootstrapBusinessTemplateUrl
         url = getBootstrapBusinessTemplateUrl(bt_name)
-        template_tool.download(url).activate().install()
-    transaction.get().addBeforeCommitHook(install)
+        template_tool.download(url).install()
+    transaction.get().addBeforeCommitHook(unrestricted_apply, (install,))
 
   security.declarePublic('getTranslationDomainNameList')
   def getTranslationDomainNameList(self):
