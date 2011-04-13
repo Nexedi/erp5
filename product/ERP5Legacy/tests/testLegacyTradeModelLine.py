@@ -51,7 +51,7 @@ TestTradeModelLineMixin.getAggregatedAmountList = getAggregatedAmountList
 ##
 
 TestTradeModelLine.trade_model_path_portal_type = None
-TestTradeModelLine.business_link_portal_type = None
+TestTradeModelLineMixin.business_link_portal_type = None
 
 for name in list(TestTradeModelLine.__dict__):
   if '_NewSimulation_' in name:
