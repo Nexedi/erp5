@@ -1215,13 +1215,13 @@ class TemplateTool (BaseTool):
     security.declareProtected(Permissions.ManagePortal,
             'updateBusinessTemplateFromUrl')
     def updateBusinessTemplateFromUrl(self, download_url, id=None,
-                                         keep_original_list=[],
-                                         before_triggered_bt5_id_list=[],
-                                         after_triggered_bt5_id_list=[],
+                                         keep_original_list=None,
+                                         before_triggered_bt5_id_list=None,
+                                         after_triggered_bt5_id_list=None,
                                          update_catalog=0,
                                          reinstall=False,
                                          active_process=None,
-                                         force_keep_list=[]):
+                                         force_keep_list=None):
       """ 
         This method download and install a bt5, from a URL.
 
@@ -1230,6 +1230,14 @@ class TemplateTool (BaseTool):
         force_keep_list can be used to force path to be modified or removed
         even if template system proposes not touching it
       """
+      if keep_original_list is None:
+        keep_original_list = []
+      if before_triggered_bt5_id_list is None:
+        before_triggered_bt5_id_list = []
+      if after_triggered_bt5_id_list is None:
+        after_triggered_bt5_id_list = []
+      if force_keep_list is None:
+        force_keep_list = []
       if active_process is None:
         installed_dict = {}
         def log(msg):
