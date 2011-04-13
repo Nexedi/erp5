@@ -76,6 +76,7 @@ class PropertySheetTool(BaseTool):
     ))
     def install():
       from ZPublisher.BaseRequest import RequestContainer
+      from Products.ERP5Type.Globals import get_request
       portal = self.getPortalObject()
       # BusinessTemplate.install needs a request
       template_tool = portal.aq_base.__of__(portal.aq_parent.__of__(
