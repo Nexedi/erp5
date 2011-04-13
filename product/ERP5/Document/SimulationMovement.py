@@ -666,14 +666,16 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     ## XXX Code below following line has been moved to BusinessPath (cf r37116)
     #return len(business_path.filterBuildableMovementList([self])) == 1
 
-    predecessor_state = business_link.getPredecessorValue()
+    predecessor_state = business_link.getPredecessor()
     if predecessor_state is None:
       # first one, can be built
       return True # XXX-JPS wrong cause root is marked
 
     # movement is not built, and corresponding business path
     # has predecessors: check movements related to those predecessors!
-    predecessor_path_list = predecessor_state.getSuccessorRelatedValueList()
+    composed_document = self.asComposedDocument()
+    predecessor_link_list = composed_document.getBusinessLinkValueList(
+            successor=predecessor_state)
 
     def isBuiltAndCompleted(simulation, path):
       return simulation.getCausalityValue() is not None and \
@@ -692,7 +694,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
       current = current.getParentValue().getParentValue()
 
     remaining_path_set = set()
-    for path in predecessor_path_list:
+    for path in predecessor_link_list:
       related_simulation = causality_dict.get(path.getRelativeUrl())
       if related_simulation is None:
         remaining_path_set.add(path)
@@ -708,6 +710,9 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     # in 90% of cases, Business Path goes downward and this is enough
     if not remaining_path_set:
       return True
+
+    # XXX(Seb) All the code below is not tested and not documented.
+    # Documentation must be written, the code must be reviewed or dropped
 
     # But sometimes we have to dig deeper
 
