@@ -1,45 +1,29 @@
-Accounting Cancellation Line | print
 Accounting Cancellation Line | view
-Accounting Cancellation Module | print_pdf
 Accounting Cancellation Module | view
-Accounting Cancellation | print
 Accounting Cancellation | view
-Accounting Date Module | print_pdf
 Accounting Date Module | view
 Accounting Date | remaining_operations
 Accounting Date | view
 Bank Account | transactions
 Bank Account | transactions_manager
 Bank Account | view
-Banking Operation Line | print
 Banking Operation Line | view
 Banknote | view
 Cash Delivery Cell | view
-Cash Delivery Line | print
 Cash Delivery Line | view
-Check Model Type Variation | print
 Check Model Type Variation | view
-Check Model | print
 Check Model | view
 Check Module | view
 Check Operation Line | agents
-Check Operation Line | print
 Check Operation Line | view
-Check | print
 Check | view
-Checkbook Model Check Amount Variation | print
 Checkbook Model Check Amount Variation | view
-Checkbook Model Module | print_pdf
 Checkbook Model Module | view
-Checkbook Model | print
 Checkbook Model | view
-Checkbook Module | print_pdf
 Checkbook Module | view
 Checkbook | create_check_list
-Checkbook | print
 Checkbook | view
 Coin | view
-Counter Date Module | print_pdf
 Counter Date Module | view
 Counter Date | counter_stock
 Counter Date | remaining_operations
@@ -48,7 +32,6 @@ Counter Module | container_report
 Counter Module | vault_report
 Counter Module | view
 Counter | view
-Currency Cash Module | print_pdf
 Currency Cash Module | view
 Currency Exchange Cell | view
 Currency Exchange Line | view
