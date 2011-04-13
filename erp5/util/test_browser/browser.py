@@ -215,7 +215,7 @@ class Browser(ExtendedTestBrowser):
     # ERP5 base URL
     absolute_url = urljoin(self._erp5_base_url, url_or_path)
 
-    self._logger.info("Opening url: " + absolute_url)
+    self._logger.debug("Opening url: " + absolute_url)
     super(Browser, self).open(absolute_url, data)
 
   def login(self, force=False):
