@@ -403,8 +403,8 @@ class TestTradeModelLine(TestTradeModelLineMixin):
         if total_price:
           sm = result_dict.pop(use)
           self.assertEqual(str(sm.getTotalPrice()), str(total_price))
-          self.assertEqual(2, len(sm.getCausalityValueList()))
-          self.assertEqual(0, len(sm.getCausalityValueList(
+          self.assertEqual(3, len(sm.getCausalityValueList()))
+          self.assertEqual(1, len(sm.getCausalityValueList(
             portal_type=self.business_link_portal_type)))
           self.assertEqual(1, len(sm.getCausalityValueList(
             portal_type=self.trade_model_path_portal_type)))
@@ -543,7 +543,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
                        order['taxed_discounted']):
         self.checkComposition(movement, [trade_condition], {
           self.trade_model_path_portal_type: 11,
-          self.business_link_portal_type: 5,
+          self.business_link_portal_type: 7,
           "Trade Model Line": 2})
 
       self.checkAggregatedAmountList(order)
