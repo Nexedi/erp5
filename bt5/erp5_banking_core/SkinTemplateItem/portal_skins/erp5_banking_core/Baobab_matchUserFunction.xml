@@ -51,9 +51,6 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>allow = False\n
-\n
-#context.log(\'group_list\',group_list)\n
-\n
 def match(criterion_list, reference_list):\n
   for criterion in criterion_list:\n
     if criterion in reference_list:\n
@@ -63,22 +60,21 @@ def match(criterion_list, reference_list):\n
 if not allow and role_list is not None:\n
   from AccessControl import getSecurityManager\n
   roles = getSecurityManager().getUser().getRoles()\n
-  #context.log(\'roles\',roles)\n
   allow = match(roles, role_list)\n
 \n
-if not allow and group_list is not None:\n
+if not allow and function_list is not None or group_list is not None:\n
+  if function_list is None:\n
+    function_list = []\n
+  if group_list is not None:\n
+    function_list.extend(context.Baobab_getFunctionList(group_list=group_list))\n
   user_function_list = context.Baobab_getUserAssignedFunctionList()\n
-  function_list = context.Baobab_getFunctionList(group_list=group_list)\n
-  #context.log(\'user_function_list\',user_function_list)\n
-  #context.log(\'function_list\',function_list)\n
   allow = match(user_function_list, function_list)\n
-#context.log(\'allow\',allow)\n
 return allow\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>group_list=None, role_list=None</string> </value>
+            <value> <string>group_list=None, role_list=None, function_list=None</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
