@@ -3570,6 +3570,7 @@ class PropertySheetTemplateItem(DocumentTemplateItem,
         old_result = result.copy()
         for k, v in old_result.iteritems():
           if not k.startswith('portal_property_sheets/'):
+            result.pop(k)
             # Magical way to have unique path in case of not yet migrated property
             # sheets available on preinstall list
             k = self._getKey(k)
