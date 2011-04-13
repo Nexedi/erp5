@@ -231,7 +231,7 @@
                 </item>
                 <item>
                     <key> <string>size</string> </key>
-                    <value> <int>5</int> </value>
+                    <value> <int>20</int> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
@@ -263,7 +263,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(x.getId(), x.getTitle()) for x in context.portal_types.contentValues(sort_on=((\'title\',),))]</string> </value>
+            <value> <string>python: [(x.getId(), x.getId()) for x in context.portal_types.contentValues(sort_on=((\'id\',),))]</string> </value>
         </item>
       </dictionary>
     </pickle>
