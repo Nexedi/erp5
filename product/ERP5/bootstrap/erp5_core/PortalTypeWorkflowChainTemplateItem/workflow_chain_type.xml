@@ -40,6 +40,10 @@
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
+  <type>Category Membership State Constraint</type>
+  <workflow>dynamic_class_generation_interaction_workflow</workflow>
+ </chain>
+ <chain>
   <type>Category Property</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>

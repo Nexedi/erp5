@@ -68,6 +68,7 @@
   <item>Attribute Equality Constraint</item>
   <item>Category Existence Constraint</item>
   <item>Category Membership Arity Constraint</item>
+  <item>Category Membership State Constraint</item>
   <item>Category Property</item>
   <item>Category Related Membership Arity Constraint</item>
   <item>Content Existence Constraint</item>
