@@ -48,22 +48,7 @@
       <tr><td rowspan="1" colspan="3" tal:content="template/getId"/></tr>\n
     </thead><tbody>\n
       <tal:block metal:use-macro="here/Zuite_CommonTemplateForUNG/macros/init" />\n
-      <tal:block metal:use-macro="here/Zuite_CommonTemplateForUNG/macros/create-user" />\n
-      <tr>\n
-        <td>type</td>\n
-        <td>__ac_name</td>\n
-        <td>ung_user</td>\n
-      </tr>\n
-      <tr>\n
-        <td>type</td>\n
-        <td>__ac_password</td>\n
-        <td>1234</td>\n
-      </tr>\n
-      <tr>\n
-        <td>clickAndWait</td>\n
-        <td>//input[@type="submit"]</td>\n
-        <td></td>\n
-      </tr>\n
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForUNG/macros/login" />\n
       <tr>\n
         <td>openAndWait</td>\n
         <td>${ung_url}/ERP5Site_createNewWebDocument?template=web_page_template</td>\n
@@ -83,11 +68,6 @@
         <td>click</td>\n
         <td>//p[@id="more_properties"]</td>\n
         <td></td>\n
-      </tr>\n
-      <tr>\n
-        <td>type</td>\n
-        <td>//input[@id="reference"]</td>\n
-        <td>web.Page.UNG.Test</td>\n
       </tr>\n
       <tr>\n
         <td>type</td>\n
@@ -121,11 +101,6 @@
       </tr>\n
       <tr>\n
         <td>verifyValue</td>\n
-        <td>//input[@id="reference"]</td>\n
-        <td>web.Page.UNG.Test</td>\n
-      </tr>\n
-      <tr>\n
-        <td>verifyValue</td>\n
         <td>//input[@id="version"]</td>\n
         <td>002</td>\n
       </tr>\n
@@ -154,6 +129,11 @@
         <td>//a[@name="document_state"]</td>\n
         <td>Shared</td>\n
       </tr>\n
+      <tr>\n
+        <td>storeText</td>\n
+        <td>//span[@id="sharing_url"]</td>\n
+        <td>document_url</td>\n
+      </tr>      \n
       <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities"/>\n
       <tr>\n
         <td>openAndWait</td>\n
@@ -242,7 +222,7 @@
       </tr>\n
       <tr>\n
         <td>openAndWait</td>\n
-        <td>${ung_url}/?key=web.Page.UNG.Test</td>\n
+        <td>${document_url}</td>\n
         <td></td>\n
       </tr>\n
       <tr>\n
@@ -276,11 +256,6 @@
         <td>My Subject</td>\n
       </tr>\n
       <tr>\n
-        <td>type</td>\n
-        <td>//input[@id="reference"]</td>\n
-        <td>web.Page.Change.Reference</td>\n
-      </tr>\n
-      <tr>\n
         <td>clickAndWait</td>\n
         <td>//div[@class="ui-dialog-buttonset"]/button[1]</td>\n
         <td></td>\n
@@ -290,21 +265,7 @@
         <td>${ung_url}/WebSite_logout</td>\n
         <td></td>\n
       </tr>\n
-      <tr>\n
-        <td>type</td>\n
-        <td>__ac_name</td>\n
-        <td>ung_user</td>\n
-      </tr>\n
-      <tr>\n
-        <td>type</td>\n
-        <td>__ac_password</td>\n
-        <td>1234</td>\n
-      </tr>\n
-      <tr>\n
-        <td>clickAndWait</td>\n
-        <td>//input[@type="submit"]</td>\n
-        <td></td>\n
-      </tr>\n
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForUNG/macros/login" />\n
       <tr>\n
         <td>clickAndWait</td>\n
         <td>//table[@class="listbox your_listbox your_listbox-table"]/tbody/tr/td[3]/a</td>\n
@@ -319,11 +280,6 @@
         <td>click</td>\n
         <td>//p[@id="more_properties"]</td>\n
         <td></td>\n
-      </tr>\n
-      <tr>\n
-        <td>verifyValue</td>\n
-        <td>//input[@id="reference"]</td>\n
-        <td>web.Page.Change.Reference</td>\n
       </tr>\n
       <tr>\n
         <td>type</td>\n
