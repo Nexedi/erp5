@@ -59,7 +59,8 @@ if not gadget_id_list:\n
 gadget_id_list = gadget_id_list.split(",")\n
 knowledge_pad = portal_catalog.getResultValue(portal_type="Knowledge Pad",\n
                                               publication_section_uid=context.getUid(),\n
-                                              validation_state=["visible", "public"])\n
+                                              validation_state=["visible", "public"],\n
+                                              local_roles="Owner")\n
 \n
 for gadget_id in gadget_id_list:\n
  knowledge_box = knowledge_pad.newContent(portal_type="Knowledge Box")\n
