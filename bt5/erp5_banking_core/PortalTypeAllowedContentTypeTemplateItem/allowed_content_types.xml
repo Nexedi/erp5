@@ -27,8 +27,8 @@
   <item>Checkbook Model Check Amount Variation</item>
  </portal_type>
  <portal_type id="Checkbook Model Module">
-  <item>Checkbook Model</item>
   <item>Check Model</item>
+  <item>Checkbook Model</item>
  </portal_type>
  <portal_type id="Checkbook Module">
   <item>Checkbook</item>
