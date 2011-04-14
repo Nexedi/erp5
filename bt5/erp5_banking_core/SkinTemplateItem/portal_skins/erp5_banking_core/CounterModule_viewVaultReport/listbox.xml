@@ -540,7 +540,10 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
     </pickle>
     <pickle>
       <dictionary>
@@ -553,7 +556,10 @@
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <global name="Method" module="Products.Formulator.MethodField"/>
+      <tuple>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
+      </tuple>
     </pickle>
     <pickle>
       <dictionary>

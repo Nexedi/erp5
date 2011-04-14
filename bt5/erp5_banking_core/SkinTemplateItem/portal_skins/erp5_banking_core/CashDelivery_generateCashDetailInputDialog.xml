@@ -62,7 +62,6 @@
 from Products.ERP5Type.Cache import CachingMethod\n
 portal = context.getPortalObject()\n
 precision = 0\n
-\n
 if listbox is None:\n
   # This is the first time.\n
   cash_status_list          = cash_detail_dict[\'cash_status_list\']\n
