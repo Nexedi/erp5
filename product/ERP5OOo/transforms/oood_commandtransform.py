@@ -14,6 +14,7 @@ import re
 from lxml import etree
 from lxml import html
 from lxml.etree import ParseError, Element
+from lxml.etree import SubElement
 
 from urllib import unquote
 from urlparse import urlparse
@@ -29,6 +30,20 @@ from Products.ERP5OOo.Document.OOoDocument import OOoServerProxy
 from Products.ERP5OOo.Document.OOoDocument import enc
 from Products.ERP5OOo.Document.OOoDocument import dec
 
+def includeMetaContentType(html_node):
+  """XXX Temp workaround time to fix issue
+  in lxml when include_meta_content_type is not honoured
+  Force encondig into utf-8
+  """
+  head = html_node.find('head')
+  if head is None:
+    head = SubElement(html_node, 'head')
+  meta_content_type_node_list = head.xpath('meta[translate('\
+               'attribute::http-equiv, "CONTEYP", "conteyp") = "content-type"]')
+  for meta_content_type_node in meta_content_type_node_list:
+    head.remove(meta_content_type_node)
+  SubElement(head, 'meta', **{'http-equiv': 'Content-Type',
+                              'content': 'application/xhtml+xml; charset=utf-8'})
 
 CLEAN_RELATIVE_PATH = re.compile('^../')
 
@@ -194,8 +209,11 @@ class OOOdCommandTransform(commandtransform):
           parent_node.append(style_node)
           style_node.attrib.update({'type': 'text/css'})
           parent_node.remove(css_link_tag)
+
+    includeMetaContentType(xml_doc)
     xml_output = html.tostring(xml_doc, encoding='utf-8', method='xml',
                                include_meta_content_type=True)
+
     xml_output = xml_output.replace('<title/>', '<title></title>')
     return xml_output
 

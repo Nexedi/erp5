@@ -2,6 +2,7 @@
 from Products.PortalTransforms.interfaces import itransform
 from zope.interface import implements
 from oood_commandtransform import OOOdCommandTransform, OOoDocumentDataStream
+from  oood_commandtransform import includeMetaContentType
 from zLOG import LOG
 from lxml import etree, html
 from lxml.etree import Element, SubElement
@@ -32,6 +33,7 @@ class HTMLToOdt:
   def convert(self, orig, data, cache=None, filename=None, context=None, **kwargs):
     # Try to recover broken HTML documents, specially regarding encoding used
     html_node = etree.XML(orig, parser=html_parser)
+    includeMetaContentType(html_node)
     orig = html.tostring(html_node, encoding='utf-8', method='xml',
                          include_meta_content_type=True)
 
