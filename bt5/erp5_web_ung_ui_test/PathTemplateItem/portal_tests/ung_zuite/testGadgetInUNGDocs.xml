@@ -65,11 +65,6 @@
         <td>Add gadgets</td>\n
       </tr>\n
       <tr>\n
-        <td>click</td>\n
-        <td>//a[@id="add-gadgets"]</td>\n
-        <td></td>\n
-      </tr>\n
-      <tr>\n
         <td>verifyTextNotPresent</td>\n
         <td>Join ERP5 Network !</td>\n
         <td></td>\n
@@ -77,6 +72,11 @@
       <tr>\n
         <td>verifyElementNotPresent</td>\n
         <td>//a[@class="clickable-block block-remove"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//a[@id="add-gadgets"]</td>\n
         <td></td>\n
       </tr>\n
       <tr>\n
@@ -119,14 +119,134 @@
         <td>Are you sure you want to remove this gadget from your personalized page?</td>\n
         <td></td>\n
       </tr>\n
+      <span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities"/>\n
       <tr>\n
-        <td>clickAndWait</td>\n
-        <td>//a[@class="ung_docs"]</td>\n
+        <td>openAndWait</td>\n
+        <td>${ung_url}</td>\n
         <td></td>\n
       </tr>\n
       <tr>\n
-        <td>verifyElementPresent</td>\n
-        <td>//div[@id="page_wrapper"]/div[1]/h4</td>\n
+        <td>verifyText</td>\n
+        <td>//a[@id="add-gadgets"]/span</td>\n
+        <td>Add gadgets</td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//a[@id="add-gadgets"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//input[@id="erp5_rss"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//div[@class="ui-dialog-buttonset"]/button[1]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//span[@class="gadget_title"]</td>\n
+        <td>Feed Reader</td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//a[@class="clickable-block block-remove"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>assertConfirmation</td>\n
+        <td>Are you sure you want to remove this gadget from your personalized page?</td>\n
+        <td></td>\n
+      </tr>\n
+      <span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities"/>\n
+      <tr>\n
+        <td>openAndWait</td>\n
+        <td>${ung_url}</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyElementNotPresent</td>\n
+        <td>//a[@class="clickable-block block-remove"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//a[@id="add-gadgets"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <!-- Test add two gadgets -->\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//input[@id="erp5_documentation"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//input[@id="erp5_rss"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//div[@class="ui-dialog-buttonset"]/button[1]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//span[@class="gadget_title"]</td>\n
+        <td>Feed Reader</td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyTextPresent</td>\n
+        <td>Join ERP5 Network !</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//div[@id="portal-column-0"]/div[1]/h3/span/a[@title="Remove"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>assertConfirmation</td>\n
+        <td>Are you sure you want to remove this gadget from your personalized page?</td>\n
+        <td></td>\n
+      </tr>\n
+      <span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities"/>\n
+      <tr>\n
+        <td>openAndWait</td>\n
+        <td>${ung_url}</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyElementNotPresent</td>\n
+        <td>//div[@id="portal-column-0"]/div[2]/h3/span/a[@title="Remove"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyTextPresent</td>\n
+        <td>Join ERP5 Network !</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//a[@class="clickable-block block-remove"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>assertConfirmation</td>\n
+        <td>Are you sure you want to remove this gadget from your personalized page?</td>\n
+        <td></td>\n
+      </tr>\n
+      <span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities"/>\n
+      <tr>\n
+        <td>openAndWait</td>\n
+        <td>${ung_url}?reset:int=1</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyElementNotPresent</td>\n
+        <td>//a[@class="clickable-block block-remove"]</td>\n
         <td></td>\n
       </tr>\n
     </tbody>\n
