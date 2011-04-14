@@ -29,3 +29,7 @@ stock.mirror_date
 stop_date
 stop_date_range_max
 stop_date_range_min
+effective_date
+expiration_date
+versioning.effective_date
+versioning.expiration_date

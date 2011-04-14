@@ -11,6 +11,8 @@
  <key>delivery.stop_date</key>
  <key>delivery.stop_date_range_max</key>
  <key>delivery.stop_date_range_min</key>
+ <key>effective_date</key>
+ <key>expiration_date</key>
  <key>inventory.date</key>
  <key>inventory_stock.date</key>
  <key>inventory_stock.mirror_date</key>
@@ -30,4 +32,6 @@
  <key>stop_date</key>
  <key>stop_date_range_max</key>
  <key>stop_date_range_min</key>
+ <key>versioning.effective_date</key>
+ <key>versioning.expiration_date</key>
 </key_list>

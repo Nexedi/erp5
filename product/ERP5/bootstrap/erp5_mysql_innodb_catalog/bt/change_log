@@ -1,3 +1,6 @@
+2011-04-14 yusei
+* Add datetime key to effective_date and expiration_date on versioning table. They were missing.
+
 2011-02-28 Ivan
 * Deprecate 'advanced_search_text' &'quick_search_text' scriptable key
 * Add 'search_text' scriptable key
