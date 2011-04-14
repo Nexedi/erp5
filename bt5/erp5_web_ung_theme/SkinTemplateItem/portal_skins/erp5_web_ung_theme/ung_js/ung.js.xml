@@ -381,20 +381,20 @@ $().ready(function(){\n
     modal: true,\n
     buttons: {\n
       "Add": function(){\n
-         var gadgetId = null;\n
+         var gadgetIdList = Array();\n
          $("table#gadget-table tbody tr td input").each(function(){\n
            if (this.checked){\n
-             gadgetId = $(this).attr("id");\n
-             return false;\n
+             gadgetIdList.push($(this).attr("id"));\n
            };\n
          });\n
-         if (gadgetId == null){\n
+         if (gadgetIdList.length == 0){\n
            $(this).dialog("close");\n
          };\n
          var tabTitle = $("div#tabs ul li.tab_selected span").html();\n
          $.ajax({\n
-           url:"WebSection_addGadget",\n
-           data: "tab_title=" + tabTitle + "&gadget_id=" + gadgetId,\n
+           type: "post",    \n
+           url:"WebSection_addGadgetList",\n
+           data: [{name:"gadget_id_list", value: gadgetIdList}],\n
            success: function(data) {\n
              window.location.reload();\n
            }\n
