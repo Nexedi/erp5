@@ -1,7 +1,7 @@
 <hidden_content_type_list>
  <portal_type id="Cash Balance Regulation">
-  <item>Outgoing Cash Balance Regulation Line</item>
   <item>Incoming Cash Balance Regulation Line</item>
+  <item>Outgoing Cash Balance Regulation Line</item>
  </portal_type>
  <portal_type id="Cash Container">
   <item>Container Line</item>
@@ -10,15 +10,15 @@
   <item>Container Line</item>
  </portal_type>
  <portal_type id="Cash Exchange">
-  <item>Outgoing Cash Exchange Line</item>
   <item>Incoming Cash Exchange Line</item>
+  <item>Outgoing Cash Exchange Line</item>
  </portal_type>
  <portal_type id="Cash Movement">
   <item>Cash Delivery Line</item>
  </portal_type>
  <portal_type id="Cash Movement New Not Emitted">
-  <item>Cash Movement New Not Emitted Line</item>
   <item>Cash Movement New Not Emitted Container</item>
+  <item>Cash Movement New Not Emitted Line</item>
  </portal_type>
  <portal_type id="Cash Movement New Not Emitted Container">
   <item>Container Line</item>
@@ -35,12 +35,12 @@
   <item>Outgoing Cash To Currency Purchase Line</item>
  </portal_type>
  <portal_type id="Cash To Currency Sale">
-  <item>Outgoing Cash To Currency Sale Line</item>
   <item>Incoming Cash To Currency Sale Line</item>
+  <item>Outgoing Cash To Currency Sale Line</item>
  </portal_type>
  <portal_type id="Classification Survey">
-  <item>Outgoing Classification Survey Line</item>
   <item>Incoming Classification Survey Line</item>
+  <item>Outgoing Classification Survey Line</item>
  </portal_type>
  <portal_type id="Container Line">
   <item>Container Cell</item>
@@ -76,12 +76,12 @@
   <item>Cash Delivery Cell</item>
  </portal_type>
  <portal_type id="Internal Money Deposit">
-  <item>Cash Delivery Line</item>
   <item>Banking Operation Line</item>
+  <item>Cash Delivery Line</item>
  </portal_type>
  <portal_type id="Internal Money Payment">
-  <item>Cash Delivery Line</item>
   <item>Banking Operation Line</item>
+  <item>Cash Delivery Line</item>
  </portal_type>
  <portal_type id="Monetary Destruction">
   <item>Monetary Destruction Line</item>
@@ -114,16 +114,16 @@
   <item>Cash Delivery Line</item>
  </portal_type>
  <portal_type id="Money Deposit">
-  <item>Cash Delivery Line</item>
   <item>Banking Operation Line</item>
+  <item>Cash Delivery Line</item>
  </portal_type>
  <portal_type id="Money Deposit Rendering">
   <item>Cash Delivery Line</item>
  </portal_type>
  <portal_type id="Mutilated Banknote">
-  <item>Outgoing Mutilated Banknote Line</item>
   <item>Exchanged Mutilated Banknote Line</item>
   <item>Incoming Mutilated Banknote Line</item>
+  <item>Outgoing Mutilated Banknote Line</item>
  </portal_type>
  <portal_type id="Outgoing Cash Balance Regulation Line">
   <item>Cash Delivery Cell</item>
