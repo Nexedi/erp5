@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -135,99 +132,12 @@ counter_date.setReference(reference)\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change, *args, **kw</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>state_change</string>
-                            <string>args</string>
-                            <string>kw</string>
-                            <string>Products.DCWorkflow.DCWorkflow</string>
-                            <string>ValidationFailed</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
-                            <string>_getitem_</string>
-                            <string>counter_date</string>
-                            <string>_getattr_</string>
-                            <string>site_value</string>
-                            <string>None</string>
-                            <string>msg</string>
-                            <string>site_uid</string>
-                            <string>activity_tag</string>
-                            <string>context</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>x</string>
-                            <string>counter_date_list</string>
-                            <string>other_counter</string>
-                            <string>listbox</string>
-                            <string>start_date</string>
-                            <string>DateTime</string>
-                            <string>now</string>
-                            <string>len</string>
-                            <string>getattr</string>
-                            <string>not_working_day_list</string>
-                            <string>check_date_is_today</string>
-                            <string>line</string>
-                            <string>counter</string>
-                            <string>first_day_of_year</string>
-                            <string>previous_reference</string>
-                            <string>previous_counter_date</string>
-                            <string>int</string>
-                            <string>reference</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>openAllCounter</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>
