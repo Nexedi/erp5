@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>for line in context.contentValues(filter={\'portal_type\':portal_type}):\n
+            <value> <string>for line in context.objectValues(portal_type=portal_type):\n
   if line.getResourceId() == resource_id:\n
     return line\n
 return None\n
