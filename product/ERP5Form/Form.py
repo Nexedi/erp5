@@ -162,7 +162,6 @@ class TALESValue(StaticValue):
 
     kw['form'] = form
     kw['request'] = REQUEST
-    kw['REQUEST'] = REQUEST # For compatibility to relation string field. See MultiRelationStringField.get_value.
     kw['here'] = obj
     kw['context'] = obj
     kw['modules'] = SecureModuleImporter
