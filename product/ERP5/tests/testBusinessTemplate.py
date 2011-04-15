@@ -6940,6 +6940,68 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  def test_BusinessTemplateWithDocumentNonExistingBefore(self):
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckNoTrashBin \
+                       CheckSkinsLayers \
+                       \
+                       CreateDocument \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddDocumentToBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveDocument \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallWithoutForceBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckNoTrashBin \
+                       CheckSkinsLayers \
+                       CheckDocumentExists \
+                       UninstallBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckDocumentRemoved \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
   def test_BusinessTemplateWithDocumentPropertySheetMigrated(self):
     """Checks that if Business Template defines Document and PropertySheet
     Document is not removed after Property Sheet was migrated and Business Template
