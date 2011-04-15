@@ -628,7 +628,10 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <global name="Method" module="Products.Formulator.MethodField"/>
+      <tuple>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
+      </tuple>
     </pickle>
     <pickle>
       <dictionary>
