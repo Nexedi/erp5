@@ -2,19 +2,10 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ERP5Form" module="Products.ERP5Form.Form"/>
-        <tuple/>
-      </tuple>
+      <global name="ERP5Form" module="Products.ERP5Form.Form"/>
     </pickle>
     <pickle>
       <dictionary>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
         <item>
             <key> <string>_bind_names</string> </key>
             <value>
@@ -81,7 +72,9 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_translated_simulation_state_title</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -97,7 +90,6 @@
                         <string>my_source_reference</string>
                         <string>my_destination</string>
                         <string>my_imported</string>
-                        <string>my_translated_simulation_state_title</string>
                       </list>
                     </value>
                 </item>
