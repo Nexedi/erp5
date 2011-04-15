@@ -50,12 +50,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return site.getCodification()[-1] == \'0\'\n
+            <value> <string>raise NotImplementedError\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>site</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
