@@ -6863,7 +6863,7 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
                        UseImportBusinessTemplate \
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
-                       InstallBusinessTemplate \
+                       InstallWithoutForceBusinessTemplate \
                        Tic \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
@@ -6901,7 +6901,7 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
                        UseImportBusinessTemplate \
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
-                       InstallBusinessTemplate \
+                       InstallWithoutForceBusinessTemplate \
                        Tic \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
@@ -6929,7 +6929,7 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
                        UseImportBusinessTemplate \
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
-                       InstallBusinessTemplate \
+                       InstallWithoutForceBusinessTemplate \
                        Tic \
                        CheckUpdatedDocumentExists \
                        UninstallBusinessTemplate \
@@ -6960,7 +6960,7 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
                        UseImportBusinessTemplate \
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
-                       InstallBusinessTemplate \
+                       InstallWithoutForceBusinessTemplate \
                        Tic \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
@@ -7032,7 +7032,7 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
                        UseImportBusinessTemplate \
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
-                       InstallBusinessTemplate \
+                       InstallWithoutForceBusinessTemplate \
                        Tic \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
