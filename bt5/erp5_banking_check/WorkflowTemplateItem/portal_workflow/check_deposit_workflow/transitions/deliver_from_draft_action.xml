@@ -2,22 +2,17 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="TransitionDefinition" module="Products.DCWorkflow.Transitions"/>
-        <tuple/>
-      </tuple>
+      <global name="TransitionDefinition" module="Products.DCWorkflow.Transitions"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>actbox_category</string> </key>
             <value> <string>workflow</string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_icon</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
@@ -66,10 +61,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="Guard" module="Products.DCWorkflow.Guard"/>
-        <tuple/>
-      </tuple>
+      <global name="Guard" module="Products.DCWorkflow.Guard"/>
     </pickle>
     <pickle>
       <dictionary>

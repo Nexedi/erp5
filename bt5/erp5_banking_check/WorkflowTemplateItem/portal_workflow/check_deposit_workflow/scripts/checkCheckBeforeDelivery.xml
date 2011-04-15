@@ -2,28 +2,13 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>Python_magic</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>Script_magic</string> </key>
             <value> <int>3</int> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -118,18 +103,6 @@ context.validateSourceAndDestination(state_change)\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_filepath</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change, **kw</string> </value>
         </item>
@@ -142,74 +115,8 @@ context.validateSourceAndDestination(state_change)\n
             </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>state_change</string>
-                            <string>kw</string>
-                            <string>Products.DCWorkflow.DCWorkflow</string>
-                            <string>ValidationFailed</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
-                            <string>_getitem_</string>
-                            <string>obj</string>
-                            <string>_getattr_</string>
-                            <string>wf_h</string>
-                            <string>manual_validation</string>
-                            <string>_getiter_</string>
-                            <string>h</string>
-                            <string>bank_account_dict</string>
-                            <string>check_operation_line</string>
-                            <string>source_bank_account</string>
-                            <string>account_path</string>
-                            <string>check_price</string>
-                            <string>_write_</string>
-                            <string>context</string>
-                            <string>error</string>
-                            <string>msg</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>checkCheckBeforeDelivery</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>
