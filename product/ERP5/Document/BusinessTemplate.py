@@ -3427,14 +3427,14 @@ class DocumentTemplateItem(BaseTemplateItem):
     force = kw.get('force')
     if context.getTemplateFormatVersion() == 1:
       need_reset = isinstance(self, DocumentTemplateItem)
-      for id in self._objects.keys():
-        if update_dict.has_key(id) or force:
+      for key in self._objects.keys():
+        if update_dict.has_key(key) or force:
           if not force:
-            action = update_dict[id]
+            action = update_dict[key]
             if action == 'nothing':
               continue
-          text = self._objects[id]
-          path, name = posixpath.split(id)
+          text = self._objects[key]
+          path, name = posixpath.split(key)
           try:
             self.local_file_writer_name(name, text, create=0)
           except IOError, error:
@@ -3451,12 +3451,12 @@ class DocumentTemplateItem(BaseTemplateItem):
           self.local_file_importer_name(name)
     else:
       BaseTemplateItem.install(self, context, trashbin, **kw)
-      for id in self._archive.keys():
-        text = self._archive[id]
+      for key in self._archive.keys():
+        text = self._archive[key]
         # This raises an exception if the file exists.
-        self.local_file_writer_name(id, text, create=1)
+        self.local_file_writer_name(key, text, create=1)
         if self.local_file_importer_name is not None:
-          self.local_file_importer_name(id)
+          self.local_file_importer_name(key)
 
   def remove(self, context, **kw):
     """Conversion of magically uniqued paths to real ones"""
