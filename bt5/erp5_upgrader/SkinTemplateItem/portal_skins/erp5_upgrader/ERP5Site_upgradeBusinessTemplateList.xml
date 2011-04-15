@@ -82,10 +82,8 @@ bt5_id_list = dict([(x, True) for x in list(required_bt5_id_list) + \\\n
                                        list(reinstallable_bt5_id_list) \\\n
                     if x in available_bt5_id_list]).keys()\n
 \n
-# sort by dependencies\n
 bt5_list = [portal_templates.decodeRepositoryBusinessTemplateUid(x.uid) for x in \\\n
            available_bt5_list if x.title in bt5_id_list]\n
-bt5_list = portal_templates.sortBusinessTemplateList(bt5_list)\n
 \n
 installed_bt5_title_list = [o.getTitle() for o in portal_templates.getInstalledBusinessTemplateList()]\n
 \n
