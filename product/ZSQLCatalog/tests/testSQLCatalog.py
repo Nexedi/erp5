@@ -539,11 +539,29 @@ class TestSQLCatalog(unittest.TestCase):
       Fulltext searches must switch automatically to boolean mode if boolean
       operators are found in search value.
     """
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='match_boolean',
+                                fulltext=MatchList(['a*'])), operator='and'),
+                 {'fulltext': 'a*'})
+
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='match_boolean',
+                                fulltext=MatchList(['a* b'])), operator='and'),
+                 {'fulltext': 'a* b'})
+
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='match', fulltext='*a'),
+                                operator='and'),
+                 {'fulltext': '*a'})
+
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='match', fulltext='a'),
+                                operator='and'),
+                 {'fulltext': 'a'})
+
     self.catalog(ReferenceQuery(ReferenceQuery(operator='match', fulltext='a+b'), operator='and'),
                  {'fulltext': 'a+b'})
+
     self.catalog(ReferenceQuery(ReferenceQuery(operator='match_boolean',
       fulltext=MatchList(['a +b', '+b a'])), operator='and'),
                  {'fulltext': 'a +b'}, check_search_text=False)
+
     self.catalog(ReferenceQuery(ReferenceQuery(
         ReferenceQuery(operator='=', uid='foo'),
         ReferenceQuery(operator='match_boolean',
