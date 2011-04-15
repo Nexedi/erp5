@@ -5,13 +5,13 @@
   <item>Price</item>
  </portal_type>
  <portal_type id="Check Payment">
-  <item>ItemAggregation</item>
   <item>CheckPayment</item>
+  <item>ItemAggregation</item>
   <item>Price</item>
  </portal_type>
  <portal_type id="Checkbook Delivery">
-  <item>Price</item>
   <item>Amount</item>
+  <item>Price</item>
  </portal_type>
  <portal_type id="Checkbook Reception">
   <item>CheckbookReception</item>
@@ -28,28 +28,28 @@
   <item>Price</item>
  </portal_type>
  <portal_type id="Incoming Check Deposit Line">
-  <item>Arrow</item>
   <item>Amount</item>
-  <item>Task</item>
+  <item>Arrow</item>
   <item>Price</item>
+  <item>Task</item>
  </portal_type>
  <portal_type id="Outgoing Check Deposit Line">
   <item>Amount</item>
+  <item>Arrow</item>
   <item>Price</item>
   <item>Task</item>
-  <item>Arrow</item>
  </portal_type>
  <portal_type id="Stop Payment">
+  <item>Amount</item>
   <item>Price</item>
   <item>StopPayment</item>
-  <item>Amount</item>
  </portal_type>
  <portal_type id="Traveler Check Purchase">
   <item>Amount</item>
   <item>Price</item>
  </portal_type>
  <portal_type id="Traveler Check Sale">
-  <item>Price</item>
   <item>Amount</item>
+  <item>Price</item>
  </portal_type>
 </property_sheet_list>
