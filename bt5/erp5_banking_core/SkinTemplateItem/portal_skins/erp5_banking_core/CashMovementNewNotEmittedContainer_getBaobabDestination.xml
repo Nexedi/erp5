@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return context.getRootDeliveryValue().getBaobabDestination()\n
+            <value> <string>return context.getDeliveryValue().getBaobabDestination()\n
 </string> </value>
         </item>
         <item>
