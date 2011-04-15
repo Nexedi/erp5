@@ -11,7 +11,7 @@
  </portal_type>
  <portal_type id="Cash Inventory">
   <item>destination</item>
-  <item>price_currency</item>
   <item>destination_section</item>
+  <item>price_currency</item>
  </portal_type>
 </base_category_list>

@@ -13,7 +13,7 @@
  </chain>
  <chain>
   <type>Cash Inventory</type>
-  <workflow>inventory_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, inventory_workflow</workflow>
  </chain>
  <chain>
   <type>Cash Inventory Group</type>
