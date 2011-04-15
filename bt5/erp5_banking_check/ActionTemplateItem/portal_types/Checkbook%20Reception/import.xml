@@ -2,23 +2,22 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ActionInformation" module="Products.CMFCore.ActionInformation"/>
-        <tuple/>
-      </tuple>
+      <global name="ActionInformation" module="Products.CMFCore.ActionInformation"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>action</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>action_type/object_exchange</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -61,17 +60,14 @@
         </item>
         <item>
             <key> <string>visible</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>0</int> </value>
         </item>
       </dictionary>
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="Expression" module="Products.CMFCore.Expression"/>
-        <tuple/>
-      </tuple>
+      <global name="Expression" module="Products.CMFCore.Expression"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -84,10 +80,7 @@
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <tuple>
-        <global name="Expression" module="Products.CMFCore.Expression"/>
-        <tuple/>
-      </tuple>
+      <global name="Expression" module="Products.CMFCore.Expression"/>
     </pickle>
     <pickle>
       <dictionary>
