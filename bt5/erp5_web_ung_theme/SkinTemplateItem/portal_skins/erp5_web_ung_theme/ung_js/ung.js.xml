@@ -136,9 +136,9 @@ function waitCreateUNGUser(paramStr){\n
   });\n
 }\n
 \n
-function displayFormMessage(message){\n
+function displayFormMessage(message, delay){\n
   $("td#form-message").text(message);\n
-  $("td#form-message").fadeIn(300).delay(800).fadeOut(3000);\n
+  $("td#form-message").fadeIn(300).delay(delay).fadeOut(1000);\n
 }\n
 \n
 function displayLoginForm(){\n
@@ -167,15 +167,16 @@ function displayLoginForm(){\n
           formHash[paramList[i].name] = paramList[i].value;\n
         }\n
         if (formHash.password != formHash.confirm){\n
-          displayFormMessage("Please confirm your password correctly..");\n
+          displayFormMessage("Please confirm your password correctly..", 3500);\n
           return false;\n
         }\n
         $.getJSON(\'ERPSite_createUNGUser?\' + $("form#create-user").serialize(), function(response){\n
           if (response == null){\n
-            displayFormMessage(formHash.login_name + " is not available, please try another...");\n
+            displayFormMessage(formHash.login_name + " is not available, please try another...", 3500);\n
             return false;\n
           }\n
           else {\n
+            displayFormMessage("The user " + formHash.login_name + " will be created in few seconds...", 8000);\n
             var paramStr = "reference=" + formHash.login_name;\n
             setTimeout(waitCreateUNGUser(paramStr), 2000);      \n
           }\n
