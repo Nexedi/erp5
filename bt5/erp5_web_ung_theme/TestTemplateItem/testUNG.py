@@ -46,6 +46,7 @@ class TestUNG(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     return ('erp5_ingestion_mysql_innodb_catalog',
+            'erp5_full_text_myisam_catalog',
             'erp5_base',
             'erp5_jquery',
             'erp5_web',
@@ -385,19 +386,39 @@ class TestUNG(ERP5TypeTestCase):
     user = portal.ERP5Site_getAuthenticatedMemberPersonValue()
     self.assertEquals(user.getFirstName(), "UNG")
 
-  def testWebSection_addGadget(self):
+  def testWebSection_addGadgetList(self):
     """Test if gadgets are added correctly"""
     obj = self.portal.knowledge_pad_module.newContent(portal_type="Knowledge Pad")
     obj.edit(publication_section_value=self.portal.web_site_module.ung)
     obj.visible()
     self.stepTic()
     gadget = self.portal.portal_gadgets.searchFolder()[0]
-    gadget_id = gadget.getId()
-    self.portal.web_site_module.ung.WebSection_addGadget(gadget_id)
+    gadget_id_list = gadget.getId()
+    self.portal.web_site_module.ung.WebSection_addGadgetList(gadget_id_list)
     self.stepTic()
     gadget = self.portal.portal_catalog.getResultValue(portal_type="Gadget",
                                                        validation_state="visible")
-    self.assertEquals(gadget_id, gadget.getId())
+    self.assertEquals(gadget_id_list, gadget.getId())
+    self.portal.knowledge_pad_module.deleteContent(id=obj.getId())
+    self.stepTic()
+    obj = self.portal.knowledge_pad_module.newContent(portal_type="Knowledge Pad")
+    obj.edit(publication_section_value=self.portal.web_site_module.ung)
+    obj.visible()
+    self.stepTic()
+    gadget_id_list = []
+    path_list = []
+    gadget = self.portal.portal_gadgets.searchFolder()[0].getObject()
+    gadget_id_list.append(gadget.getId())
+    path_list.append(gadget.getRelativeUrl())
+    gadget = self.portal.portal_gadgets.searchFolder()[1].getObject()
+    gadget_id_list.append(gadget.getId())
+    path_list.append(gadget.getRelativeUrl())
+    self.portal.REQUEST.form["gadget_id_list"] = ",".join(gadget_id_list)
+    self.portal.web_site_module.ung.WebSection_addGadgetList()
+    self.stepTic()
+    self.assertEquals(len(obj.searchFolder()), 2)
+    self.assertEquals(sorted([x.getSpecialise() for x in obj.searchFolder()]),
+                      sorted(path_list))
 
   def testBase_getPreferencePathList(self):
     """Test if the paths of preference objects are returned correctly"""
@@ -410,7 +431,7 @@ class TestUNG(ERP5TypeTestCase):
     self.stepTic()
     preference_dict = json.loads(self.portal.Base_getPreferencePathList())
     self.assertEquals(preference_dict["preference"], "portal_preferences/ung_preference")
-  
+
   def testWebSection_getWebPageObjectList(self):
     """Test if the paths of preference objects are returned correctly"""
     self.portal.web_page_module.manage_delObjects(list(self.portal.web_page_module.objectIds()))
