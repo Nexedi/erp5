@@ -7,6 +7,63 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value> <string>bfe9d349650fcfb268d46d383695a470</string> </value>
+        </item>
+        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>
@@ -25,37 +82,12 @@
             <value> <string>web_table_template</string> </value>
         </item>
         <item>
-            <key> <string>isIndexable</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global id="1.1" name="PropertyGetter" module="Products.ERP5Type.Accessor.Constant"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>__name__</string> </key>
-                        <value> <string>isIndexable</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_id</string> </key>
-                        <value> <string>isIndexable</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>value</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
             <key> <string>isTemplate</string> </key>
             <value>
               <object>
-                <klass> <reference id="1.1"/> </klass>
+                <klass>
+                  <global name="PropertyGetter" module="Products.ERP5Type.Accessor.Constant"/>
+                </klass>
                 <tuple/>
                 <state>
                   <dictionary>
@@ -89,6 +121,209 @@
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<TABLE class="jSheet ui-widget-content" id="jSheet_0_0" border="1px" cellpadding="0" cellspacing="0" style="width: 1200px; ">\n
+<COLGROUP>\n
+<COL style="width: 120px; " width="120px"/>\n
+<COL style="width: 120px; " width="120px"/>\n
+<COL style="width: 120px; " width="120px"/>\n
+<COL style="width: 120px; " width="120px"/>\n
+<COL style="width: 120px; " width="120px"/>\n
+<COL style="width: 120px; " width="120px"/>\n
+<COL style="width: 120px; " width="120px"/>\n
+<COL style="width: 120px; " width="120px"/>\n
+<COL style="width: 120px; " width="120px"/>\n
+<COL style="width: 120px; " width="120px"/>\n
+</COLGROUP>\n
+<TBODY>\n
+<TR style="height: 18px; " height="18px">\n
+<TD id="0_table0_cell_c0_r0"/>\n
+<TD id="0_table0_cell_c1_r0"/>\n
+<TD id="0_table0_cell_c2_r0"/>\n
+<TD id="0_table0_cell_c3_r0"/>\n
+<TD id="0_table0_cell_c4_r0"/>\n
+<TD id="0_table0_cell_c5_r0"/>\n
+<TD id="0_table0_cell_c6_r0"/>\n
+<TD id="0_table0_cell_c7_r0"/>\n
+<TD id="0_table0_cell_c8_r0"/>\n
+<TD id="0_table0_cell_c9_r0"/>\n
+</TR>\n
+<TR style="height: 18px; " height="18px">\n
+<TD id="0_table0_cell_c0_r1"/>\n
+<TD id="0_table0_cell_c1_r1"/>\n
+<TD id="0_table0_cell_c2_r1"/>\n
+<TD id="0_table0_cell_c3_r1"/>\n
+<TD id="0_table0_cell_c4_r1"/>\n
+<TD id="0_table0_cell_c5_r1"/>\n
+<TD id="0_table0_cell_c6_r1"/>\n
+<TD id="0_table0_cell_c7_r1"/>\n
+<TD id="0_table0_cell_c8_r1"/>\n
+<TD id="0_table0_cell_c9_r1"/>\n
+</TR>\n
+<TR style="height: 18px; " height="18px">\n
+<TD id="0_table0_cell_c0_r2"/>\n
+<TD id="0_table0_cell_c1_r2"/>\n
+<TD id="0_table0_cell_c2_r2"/>\n
+<TD id="0_table0_cell_c3_r2"/>\n
+<TD id="0_table0_cell_c4_r2"/>\n
+<TD id="0_table0_cell_c5_r2"/>\n
+<TD id="0_table0_cell_c6_r2"/>\n
+<TD id="0_table0_cell_c7_r2"/>\n
+<TD id="0_table0_cell_c8_r2"/>\n
+<TD id="0_table0_cell_c9_r2"/>\n
+</TR>\n
+<TR style="height: 18px; " height="18px">\n
+<TD id="0_table0_cell_c0_r3"/>\n
+<TD id="0_table0_cell_c1_r3"/>\n
+<TD id="0_table0_cell_c2_r3"/>\n
+<TD id="0_table0_cell_c3_r3"/>\n
+<TD id="0_table0_cell_c4_r3"/>\n
+<TD id="0_table0_cell_c5_r3"/>\n
+<TD id="0_table0_cell_c6_r3"/>\n
+<TD id="0_table0_cell_c7_r3"/>\n
+<TD id="0_table0_cell_c8_r3"/>\n
+<TD id="0_table0_cell_c9_r3"/>\n
+</TR>\n
+<TR style="height: 18px; " height="18px">\n
+<TD id="0_table0_cell_c0_r4"/>\n
+<TD id="0_table0_cell_c1_r4"/>\n
+<TD id="0_table0_cell_c2_r4"/>\n
+<TD id="0_table0_cell_c3_r4"/>\n
+<TD id="0_table0_cell_c4_r4"/>\n
+<TD id="0_table0_cell_c5_r4"/>\n
+<TD id="0_table0_cell_c6_r4"/>\n
+<TD id="0_table0_cell_c7_r4"/>\n
+<TD id="0_table0_cell_c8_r4"/>\n
+<TD id="0_table0_cell_c9_r4"/>\n
+</TR>\n
+<TR style="height: 18px; " height="18px">\n
+<TD id="0_table0_cell_c0_r5"/>\n
+<TD id="0_table0_cell_c1_r5"/>\n
+<TD id="0_table0_cell_c2_r5"/>\n
+<TD id="0_table0_cell_c3_r5"/>\n
+<TD id="0_table0_cell_c4_r5"/>\n
+<TD id="0_table0_cell_c5_r5"/>\n
+<TD id="0_table0_cell_c6_r5"/>\n
+<TD id="0_table0_cell_c7_r5"/>\n
+<TD id="0_table0_cell_c8_r5"/>\n
+<TD id="0_table0_cell_c9_r5"/>\n
+</TR>\n
+<TR style="height: 18px; " height="18px">\n
+<TD id="0_table0_cell_c0_r6"/>\n
+<TD id="0_table0_cell_c1_r6"/>\n
+<TD id="0_table0_cell_c2_r6"/>\n
+<TD id="0_table0_cell_c3_r6"/>\n
+<TD id="0_table0_cell_c4_r6"/>\n
+<TD id="0_table0_cell_c5_r6"/>\n
+<TD id="0_table0_cell_c6_r6"/>\n
+<TD id="0_table0_cell_c7_r6"/>\n
+<TD id="0_table0_cell_c8_r6"/>\n
+<TD id="0_table0_cell_c9_r6"/>\n
+</TR>\n
+<TR style="height: 18px; " height="18px">\n
+<TD id="0_table0_cell_c0_r7"/>\n
+<TD id="0_table0_cell_c1_r7"/>\n
+<TD id="0_table0_cell_c2_r7"/>\n
+<TD id="0_table0_cell_c3_r7"/>\n
+<TD id="0_table0_cell_c4_r7"/>\n
+<TD id="0_table0_cell_c5_r7"/>\n
+<TD id="0_table0_cell_c6_r7"/>\n
+<TD id="0_table0_cell_c7_r7"/>\n
+<TD id="0_table0_cell_c8_r7"/>\n
+<TD id="0_table0_cell_c9_r7"/>\n
+</TR>\n
+<TR style="height: 18px; " height="18px">\n
+<TD id="0_table0_cell_c0_r8"/>\n
+<TD id="0_table0_cell_c1_r8"/>\n
+<TD id="0_table0_cell_c2_r8"/>\n
+<TD id="0_table0_cell_c3_r8"/>\n
+<TD id="0_table0_cell_c4_r8"/>\n
+<TD id="0_table0_cell_c5_r8"/>\n
+<TD id="0_table0_cell_c6_r8"/>\n
+<TD id="0_table0_cell_c7_r8"/>\n
+<TD id="0_table0_cell_c8_r8"/>\n
+<TD id="0_table0_cell_c9_r8"/>\n
+</TR>\n
+<TR style="height: 18px; ">\n
+<TD id="0_table0_cell_c0_r9"/>\n
+<TD id="0_table0_cell_c1_r9"/>\n
+<TD id="0_table0_cell_c2_r9"/>\n
+<TD id="0_table0_cell_c3_r9"/>\n
+<TD id="0_table0_cell_c4_r9"/>\n
+<TD id="0_table0_cell_c5_r9"/>\n
+<TD id="0_table0_cell_c6_r9"/>\n
+<TD id="0_table0_cell_c7_r9"/>\n
+<TD id="0_table0_cell_c8_r9"/>\n
+<TD id="0_table0_cell_c9_r9"/>\n
+</TR>\n
+<TR style="height: 18px; ">\n
+<TD id="0_table0_cell_c0_r10"/>\n
+<TD id="0_table0_cell_c1_r10"/>\n
+<TD id="0_table0_cell_c2_r10"/>\n
+<TD id="0_table0_cell_c3_r10"/>\n
+<TD id="0_table0_cell_c4_r10"/>\n
+<TD id="0_table0_cell_c5_r10"/>\n
+<TD id="0_table0_cell_c6_r10"/>\n
+<TD id="0_table0_cell_c7_r10"/>\n
+<TD id="0_table0_cell_c8_r10"/>\n
+<TD id="0_table0_cell_c9_r10"/>\n
+</TR>\n
+<TR style="height: 18px; ">\n
+<TD id="0_table0_cell_c0_r11"/>\n
+<TD id="0_table0_cell_c1_r11"/>\n
+<TD id="0_table0_cell_c2_r11"/>\n
+<TD id="0_table0_cell_c3_r11"/>\n
+<TD id="0_table0_cell_c4_r11"/>\n
+<TD id="0_table0_cell_c5_r11"/>\n
+<TD id="0_table0_cell_c6_r11"/>\n
+<TD id="0_table0_cell_c7_r11"/>\n
+<TD id="0_table0_cell_c8_r11"/>\n
+<TD id="0_table0_cell_c9_r11"/>\n
+</TR>\n
+<TR style="height: 18px; ">\n
+<TD id="0_table0_cell_c0_r12"/>\n
+<TD id="0_table0_cell_c1_r12"/>\n
+<TD id="0_table0_cell_c2_r12"/>\n
+<TD id="0_table0_cell_c3_r12"/>\n
+<TD id="0_table0_cell_c4_r12"/>\n
+<TD id="0_table0_cell_c5_r12"/>\n
+<TD id="0_table0_cell_c6_r12"/>\n
+<TD id="0_table0_cell_c7_r12"/>\n
+<TD id="0_table0_cell_c8_r12"/>\n
+<TD id="0_table0_cell_c9_r12"/>\n
+</TR>\n
+<TR style="height: 18px; ">\n
+<TD id="0_table0_cell_c0_r13"/>\n
+<TD id="0_table0_cell_c1_r13"/>\n
+<TD id="0_table0_cell_c2_r13"/>\n
+<TD id="0_table0_cell_c3_r13"/>\n
+<TD id="0_table0_cell_c4_r13"/>\n
+<TD id="0_table0_cell_c5_r13"/>\n
+<TD id="0_table0_cell_c6_r13"/>\n
+<TD id="0_table0_cell_c7_r13"/>\n
+<TD id="0_table0_cell_c8_r13"/>\n
+<TD id="0_table0_cell_c9_r13"/>\n
+</TR>\n
+<TR style="height: 18px; ">\n
+<TD id="0_table0_cell_c0_r14"/>\n
+<TD id="0_table0_cell_c1_r14"/>\n
+<TD id="0_table0_cell_c2_r14"/>\n
+<TD id="0_table0_cell_c3_r14"/>\n
+<TD id="0_table0_cell_c4_r14"/>\n
+<TD id="0_table0_cell_c5_r14"/>\n
+<TD id="0_table0_cell_c6_r14"/>\n
+<TD id="0_table0_cell_c7_r14"/>\n
+<TD id="0_table0_cell_c8_r14"/>\n
+<TD id="0_table0_cell_c9_r14"/>\n
+</TR>\n
+</TBODY>\n
+</TABLE>
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
