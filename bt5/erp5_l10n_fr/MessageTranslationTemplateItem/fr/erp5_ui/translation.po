@@ -1182,6 +1182,9 @@ msgstr "Disponible"
 msgid "Available Budget"
 msgstr "Budget disponible"
 
+msgid "Available Budget (${resource_title})"
+msgstr "Budget disponible (${resource_title})"
+
 msgid "BBAN"
 msgstr "N° de compte complet"
 
@@ -2418,6 +2421,9 @@ msgstr "Contraintes"
 msgid "Consumed Budget"
 msgstr "Budget consommé"
 
+msgid "Consumed Budget (${resource_title})"
+msgstr "Budget consommé (${resource_title})"
+
 msgid "Consumption"
 msgstr "Consommation"
 
@@ -2924,6 +2930,9 @@ msgstr "Courant"
 
 msgid "Current Budget"
 msgstr "Budget courant"
+
+msgid "Current Budget (${resource_title})"
+msgstr "Budget courant (${resource_title})"
 
 msgid "Current Description"
 msgstr "Description actuelle"
@@ -4240,6 +4249,9 @@ msgstr "Engagé"
 msgid "Engaged Budget"
 msgstr "Budget engagé"
 
+msgid "Engaged Budget (${resource_title})"
+msgstr "Budget engagé (${resource_title})"
+
 msgid "English"
 msgstr "Anglais"
 
@@ -4348,17 +4360,17 @@ msgstr "Les évènements dans cet état ont été envoyés au destinataire."
 msgid "Events to Declare"
 msgstr "Evènements à déclarer"
 
-msgid "Events to Validate"
-msgstr "Evènements à valider"
+msgid "Events to Receive"
+msgstr "Evènements à recevoir"
 
 msgid "Events to Send"
 msgstr "Evènements à envoyer"
 
-msgid "Events to Receive"
-msgstr "Evènements à recevoir"
-
 msgid "Events to Treat"
 msgstr "Evènements à traiter"
+
+msgid "Events to Validate"
+msgstr "Evènements à valider"
 
 msgid "Everybody"
 msgstr "Tout le monde"
@@ -5275,6 +5287,9 @@ msgstr "Date de début initiale"
 msgid "Initial Budget"
 msgstr "Budget initial"
 
+msgid "Initial Budget (${resource_title})"
+msgstr "Budget initial (${resource_title})"
+
 msgid "Initial Credit Balance"
 msgstr "Solde créditeur initial"
 
@@ -5389,6 +5404,9 @@ msgstr "Mouvements de livraison interne"
 msgid "Internal Packing Lists"
 msgstr "Livraisons internes"
 
+msgid "Internal Packing Lists Workflow"
+msgstr "Workflow des livraisons internes"
+
 msgid "Internal Packing Lists to Confirm"
 msgstr "Livraisons internes à confirmer"
 
@@ -5403,9 +5421,6 @@ msgstr "Livraisons internes à recevoir"
 
 msgid "Internal Packing Lists to Ship"
 msgstr "Livraisons internes à expédier"
-
-msgid "Internal Packing Lists Workflow"
-msgstr "Workflow des livraisons internes"
 
 msgid "Internal Reference"
 msgstr "Référence interne"
@@ -8936,6 +8951,9 @@ msgstr "Module des livraisons de vente"
 msgid "Sale Packing List Movements"
 msgstr "Mouvements de livraison de vente"
 
+msgid "Sale Packing List Workflow"
+msgstr "Workflow des livraisons de vente"
+
 msgid "Sale Packing List to Confirm"
 msgstr "Livraisons de vente à confirmer"
 
@@ -8962,9 +8980,6 @@ msgstr "Livraisons de vente à créer"
 
 msgid "Sale Packing List to ship"
 msgstr "Livraisons de vente à envoyer"
-
-msgid "Sale Packing List Workflow"
-msgstr "Workflow des livraisons de vente"
 
 msgid "Sale Packing Lists"
 msgstr "Livraisons de vente"
