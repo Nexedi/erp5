@@ -1979,7 +1979,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     complex_query = ComplexQuery(query1, query2, operator="AND")
     self.failIfDifferentSet([org_a.getPath() + '/default_address'],
         [x.path for x in self.getCatalogTool()(query=complex_query)])
-    # Then try without aliases
+    # Then try with aliases
     query1 = Query(parent_portal_type="Organisation", 
                    table_alias_list=(("catalog" , "parent"),))
     query2 = Query(grand_parent_portal_type="Organisation Module",
