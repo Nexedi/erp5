@@ -176,7 +176,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     html_text = to_utf8(html_text)
     text_content = document.asStrippedHTML()
-    match_string1 = """<div class="input">%s</div>""" % text_content
+    match_string1 = """<div class="input"><div class="page" >\n%s</div></div>""" % text_content
     match_string2 = """<div class="field page"""
     if html_text.find(match_string1) == -1:
       print html_text
