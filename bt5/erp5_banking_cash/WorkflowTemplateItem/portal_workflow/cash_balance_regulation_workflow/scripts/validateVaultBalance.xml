@@ -59,7 +59,7 @@ vault = transaction.getSource()\n
 \n
 \n
 if not (vault.endswith(\'encaisse_des_billets_et_monnaies\') or vault.endswith(\'encaisse_des_externes\')or \\\n
-  \'encaisse_des_devises\' in vault) :\n
+  \'encaisse_des_devises\' in vault):\n
    msg = Message(domain="ui", message="Invalid source.")\n
    raise ValidationFailed, (msg,)\n
 \n
