@@ -95,6 +95,7 @@
                         <string>your_reference</string>
                         <string>your_title</string>
                         <string>your_checkbook_model</string>
+                        <string>your_title_comment</string>
                       </list>
                     </value>
                 </item>
