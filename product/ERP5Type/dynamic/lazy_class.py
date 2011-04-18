@@ -266,6 +266,7 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
     - mro after:
       erp5.portal_type.XXX, *new_bases_fetched_from_ZODB
     """
+    __traceback_info__ = cls.__name__
     # Do not load the class again if it has already been loaded
     if not cls.__isghost__:
       return

@@ -53,7 +53,9 @@ class PropertySheet(Folder):
     """
     Create a new accessor holder from the Property Sheet
     """
-    accessor_holder = AccessorHolderType(self.getId())
+    my_id = self.getId()
+    __traceback_info__ = my_id
+    accessor_holder = AccessorHolderType(my_id)
 
     self.applyOnAccessorHolder(accessor_holder, expression_context, portal)
 
@@ -183,6 +185,7 @@ class PropertySheet(Folder):
         property_definition_list.append(property_definition)
 
     for property_definition in property_definition_list:
+      __traceback_info__ = property_definition
       try:
         property_definition.applyOnAccessorHolder(accessor_holder,
                                                   expression_context,
