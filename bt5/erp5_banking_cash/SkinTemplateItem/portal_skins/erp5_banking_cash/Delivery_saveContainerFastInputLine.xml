@@ -76,10 +76,17 @@ if len(old_line)>0:\n
     r = context.deleteContent(line_id)\n
 \n
 cash_container_item_dict = {}\n
-# construct dict of selected container\n
-for listbox_line in listbox:\n
-  if listbox_line[\'selection\']==1:\n
-    container = context.portal_catalog(uid=listbox_line[\'listbox_key\'])[0].getObject()\n
+unrestricted_catalog = context.CatalogTool_unrestrictedSearchResults\n
+\n
+# retreive selected rows\n
+portal = context.getPortalObject()\n
+list_selection_name = context.REQUEST[\'list_selection_name\']\n
+selection_tool = context.getPortalObject().portal_selections\n
+checked_uid_list = selection_tool.getSelectionCheckedUidsFor(list_selection_name)\n
+context.log("Checked uid list: %s" % checked_uid_list)\n
+\n
+for checked_uid in checked_uid_list:\n
+    container = unrestricted_catalog(uid=checked_uid)[0].getObject()\n
     container_dict = {}\n
     container_dict["reference"] = container.getReference()\n
     container_dict["range_start"] = container.getCashNumberRangeStart()\n
@@ -151,6 +158,8 @@ for cash_container in cash_container_item_dict.keys():\n
       cell.setMembershipCriterionCategoryList(container_dict[\'variation_category\'])\n
       cell.edit(force_update = 1,\n
                   price = movement_line.getResourceValue().getBasePrice())\n
+  # Call getPrice so lines are modified before being stored, not on indexation. Sigh.\n
+  container_line.getPrice()\n
 \n
 request  = context.REQUEST\n
 redirect_url = \'%s/view?%s\' % ( context.absolute_url()\n
@@ -164,6 +173,14 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
         <item>
             <key> <string>_params</string> </key>
             <value> <string>listbox=None, line_portal_type=None,container_line_portal_type=None,**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>

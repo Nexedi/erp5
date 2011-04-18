@@ -50,7 +50,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>def error(msg):\n
+            <value> <string>from zExceptions import Redirect\n
+def error(msg):\n
   raise Redirect(\'%s/view?portal_status_message=%s\' % (\n
     context.absolute_url(),\n
     context.Base_translateString(msg))\n
@@ -91,7 +92,7 @@ for o in context.portal_simulation.getCurrentTrackingList(**tracking_kw):\n
     continue\n
   container_line = container_line_list[0]\n
   append({\n
-    \'uid\': \'new_%s\' % (cash_container.getUid(), ),\n
+    \'uid\': cash_container.getUid(),\n
     \'reference\': cash_container.getReference(),\n
     \'cash_number_range_start\': cash_container.getCashNumberRangeStart(),\n
     \'cash_number_range_stop\': cash_container.getCashNumberRangeStop(),\n
