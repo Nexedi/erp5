@@ -532,6 +532,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     self.analyste_sref = self.banking.newContent(id='analyste_sref', portal_type='Category', codification='ASREF')
     self.gestionnaire_devise_a = self.banking.newContent(id='gestionnaire_cours_devise_a', portal_type='Category', codification='GCA')
     self.gestionnaire_devise_b = self.banking.newContent(id='gestionnaire_cours_devise_b', portal_type='Category', codification='GCB')
+    self.comptable_inter_site = self.banking.newContent(id='comptable_inter_site', portal_type='Category', codification='FXFIS')
 
     # get the base category group
     self.group_base_category = getattr(self.category_tool, 'group')
