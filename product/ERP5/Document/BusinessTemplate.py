@@ -3428,9 +3428,14 @@ class DocumentTemplateItem(BaseTemplateItem):
     if context.getTemplateFormatVersion() == 1:
       need_reset = isinstance(self, DocumentTemplateItem)
       for key in self._objects.keys():
-        if update_dict.has_key(key) or force:
+        # to achieve non data migration fresh installation parameters
+        # differ from upgrade parameteres, so here the check have to be
+        # care of both cases
+        upgraded_key = self._getKey(key)
+        if update_dict.has_key(key) or update_dict.has_key(upgraded_key) \
+            or force:
           if not force:
-            action = update_dict[key]
+            action = update_dict.get(key, update_dict.get(upgraded_key))
             if action == 'nothing':
               continue
           text = self._objects[key]
