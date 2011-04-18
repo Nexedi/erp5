@@ -67,11 +67,6 @@ if site_uid is None:\n
   msg = Message(domain=\'ui\',message="Sorry, the site is not defined")\n
   raise ValidationFailed (msg,)\n
 \n
-# Check if the start_date is in the current month\n
-if not accounting_date.getStartDate().isCurrentMonth():\n
-  msg = Message(domain=\'ui\', message=\'Date must be within the current month\')\n
-  raise ValidationFailed (msg,)\n
-\n
 opened_date_list = accounting_date.portal_catalog(portal_type="Accounting Date", simulation_state="opened", default_site_uid=accounting_date.getSiteUid())\n
 if len(opened_date_list) > 0:\n
   msg = Message(domain=\'ui\',message="Sorry, another accounting date is already opened")\n
