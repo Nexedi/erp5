@@ -59,7 +59,9 @@
         </item>
         <item>
             <key> <string>translation_domain</string> </key>
-            <value> <string>erp5_content</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
       </dictionary>
     </pickle>
