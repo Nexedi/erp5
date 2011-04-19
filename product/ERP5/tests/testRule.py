@@ -54,6 +54,9 @@ class TestRuleMixin(TestOrderMixin):
     assert rule.getVersion().startswith('testRule.')
     return rule
 
+  def _wipe(self, folder):
+    folder.manage_delObjects(list(folder.objectIds()))
+
   def afterSetUp(self):
     # delete rules
     rule_tool = self.portal.portal_rules
@@ -76,16 +79,15 @@ class TestRuleMixin(TestOrderMixin):
     else:
       self.pl = pl_module.objectValues()[0]
     #delete applied_rule
-    self.getSimulationTool().manage_delObjects(
-        ids=list(self.getSimulationTool().objectIds()))
+    self._wipe(self.getSimulationTool())
     # commit
     transaction.commit()
     self.tic()
 
 
   def beforeTearDown(self):
-    module = self.getSimulationTool()
-    module.manage_delObjects(list(module.objectIds()))
+    self._wipe(self.getSimulationTool())
+    self._wipe(self.portal.portal_skins.custom)
     transaction.commit()
     self.tic()
 
@@ -375,13 +377,20 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     """
     if not run: return
 
-    skin_folder = self.getPortal().portal_skins.custom
-    skin = createZODBPythonScript(skin_folder, 'delivery_rule_script', 'rule',
+    skin_folder = self.portal.portal_skins.custom
+    createZODBPythonScript(skin_folder, 'delivery_rule_script', 'rule',
         "return False")
-
-    skin_folder = self.getPortal().portal_skins.custom
-    skin = createZODBPythonScript(skin_folder, 'invoice_rule_script', 'rule',
+    createZODBPythonScript(skin_folder, 'invoice_rule_script', 'rule',
         "return context.getParentValue().getSpecialiseReference() == 'default_delivery_rule'")
+
+    # XXX-Leo: This script should become the default in erp5_simulation. Remove
+    # it from here when no longer needed:
+    createZODBPythonScript(skin_folder, 'RuleMixin_asPredicate', '',
+        """
+kw = dict(criterion_property_list=("start_date",),
+          membership_criterion_base_category_list=('trade_phase',),)
+return context.generatePredicate(**kw)
+        """.strip())
 
     delivery_rule = self.getRule('default_delivery_rule')
     delivery_rule.validate()
@@ -425,9 +434,9 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     self.assertEquals(root_applied_rule.objectCount(), 1)
     movement = root_applied_rule.objectValues()[0]
     self.assertEquals(movement.objectCount(), 1)
-    applied_rule = movement.objectValues()[0]
-    self.assertEquals(applied_rule.getSpecialise(),
-        invoicing_rule_1.getRelativeUrl())
+    invoicing_rule_1_applied_rule = movement.objectValues()[0]
+    self.assertEquals(invoicing_rule_1_applied_rule.getSpecialise(),
+                      invoicing_rule_1.getRelativeUrl())
 
     # add more invoicing_rule and test that nothing is changed
     ## same reference, higher version
@@ -457,8 +466,13 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     self.assertEquals(movement.objectCount(), 2)
     applied_rule_list = sorted(movement.objectValues(),
                           key=lambda x: x.getSpecialiseValue().getReference())
+    # check the 1st applied rule is an application of invoicing_rule_1
     self.assertEquals(applied_rule_list[0].getSpecialise(),
-        invoicing_rule_1.getRelativeUrl())
+                      invoicing_rule_1.getRelativeUrl())
+    # but also check it's the same applied rule as before instead of a new
+    # one with the same specialization
+    self.assertEqual(applied_rule_list[0],
+                      invoicing_rule_1_applied_rule)
     self.assertEquals(applied_rule_list[1].getSpecialise(),
         invoicing_rule_2.getRelativeUrl())
 
