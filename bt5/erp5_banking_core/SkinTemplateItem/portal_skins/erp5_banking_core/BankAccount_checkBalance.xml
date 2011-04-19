@@ -67,7 +67,7 @@ if src__:\n
 # XXX: BankAccount_getAvailablePosition returns position as a string for some reason...\n
 raw_account_balance = account_balance = float(account_balance)\n
 if round_balance:\n
-  account_balance = round(account_balance, resource.getQuantityPrecision())\n
+  account_balance = round(account_balance, payment_value.getPriceCurrencyValue().getQuantityPrecision())\n
 \n
 if account_balance - quantity < 0:\n
   # insufficient balance\n
