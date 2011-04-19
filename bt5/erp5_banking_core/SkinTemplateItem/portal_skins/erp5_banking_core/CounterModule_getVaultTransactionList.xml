@@ -68,8 +68,8 @@ if dictionaries:\n
 else:\n
   from Products.ERP5Type.Document import newTempBase\n
 \n
-from DateTime import DateTime\n
-begin = DateTime()\n
+#from DateTime import DateTime\n
+#begin = DateTime()\n
 \n
 if from_date is not None:\n
   if from_date == at_date:\n
@@ -186,8 +186,8 @@ if column_names == 1:\n
   column_list.append((\'general_total_price\', \'General TotalPrice\'))\n
   return column_list\n
 \n
-end = DateTime()\n
-context.log(\'before sql time:\',(end-begin)*86400)\n
+#end = DateTime()\n
+#context.log(\'before sql time:\',(end-begin)*86400)\n
 #context.log(\'node_category\',vault)\n
 #context.log(\'inventory_kw\',inventory_kw)\n
 display_simulation_state = 0\n
@@ -207,8 +207,8 @@ else: \n
 #                                                                , ignore_variation=0,src__=1\n
 #                                                               ,**inventory_kw\n
 #                                                              ))\n
-end = DateTime()\n
-context.log(\'sql request time:\',(end-begin)*86400)\n
+#end = DateTime()\n
+#context.log(\'sql request time:\',(end-begin)*86400)\n
 \n
 if summarise:\n
   total_quantity = 0\n
@@ -265,8 +265,8 @@ for vault_inventory in vault_inventory_list:\n
   resource_dict[resource] = 1\n
 \n
 \n
-end = DateTime()\n
-context.log(\'after first big loop:\',(end-begin)*86400)\n
+#end = DateTime()\n
+#context.log(\'after first big loop:\',(end-begin)*86400)\n
 \n
 #context.log(\'resource_dict\',resource_dict)\n
 #context.log(\'vault_inventory_dict\',vault_inventory_dict)\n
@@ -279,8 +279,8 @@ if vault_report_type == \'history\':\n
     for line in catalog_result_list:\n
       cache_dict[\'cache_explanation\'][line.uid] = line\n
 \n
-end = DateTime()\n
-context.log(\'after getting data into catalog:\',(end-begin)*86400)\n
+#end = DateTime()\n
+#context.log(\'after getting data into catalog:\',(end-begin)*86400)\n
 i = 0\n
 \n
 append = total_inventory_list.append\n
@@ -338,8 +338,8 @@ for resource in resource_dict.keys():\n
     append(newTempBase(context, "new_%03i" % i, **tmp_dict))\n
     i += 1\n
 \n
-end = DateTime()\n
-context.log(\'after second big loop:\',(end-begin)*86400)\n
+#end = DateTime()\n
+#context.log(\'after second big loop:\',(end-begin)*86400)\n
 \n
 def sort_base_price(a,b):\n
   return -cmp(a.base_price,b.base_price)\n
