@@ -82,7 +82,7 @@ if final_activity_tag is not None and previous_tag is not None:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>sql_catalog_id=None, passive_commit=1, final_activity_tag=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
