@@ -59,26 +59,37 @@
 payment_value = context.restrictedTraverse(payment)\n
 \n
 if not payment_value.BankAccount_isOpened():\n
-  return {\'error_code\':2} # closed account\n
+  return {\'error_code\': 2} # closed account\n
 \n
 account_balance = payment_value.BankAccount_getAvailablePosition(src__=src__)\n
 if src__:\n
   return account_balance\n
 # XXX: BankAccount_getAvailablePosition returns position as a string for some reason...\n
-account_balance = float(account_balance)\n
+raw_account_balance = account_balance = float(account_balance)\n
+if round_balance:\n
+  account_balance = round(account_balance, resource.getQuantityPrecision())\n
 \n
-if account_balance - quantity < 0 :\n
-  return {\'error_code\':1, \'balance\':account_balance} # insufficient balance\n
+if account_balance - quantity < 0:\n
+  # insufficient balance\n
+  return {\n
+    \'error_code\': 1,\n
+    \'balance\': account_balance,\n
+    \'raw_balance\': raw_account_balance,\n
+  }\n
 \n
 payment_value.serialize()\n
-return {\'error_code\':0, \'balance\':account_balance} # ok\n
+return {\n
+  \'error_code\': 0,\n
+  \'balance\': account_balance,\n
+  \'raw_balance\': raw_account_balance,\n
+}\n
 
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>payment, quantity, src__=0</string> </value>
+            <value> <string>payment, quantity, round_balance=True, src__=0</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
