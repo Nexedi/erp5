@@ -61,11 +61,11 @@ if stop_date is None:\n
   stop_date = DateTime().Date()\n
 \n
 resource_title = resource.getTitle()\n
-context.log("date %s %s" %(start_date, stop_date), "title = %s" %resource_title)\n
+#context.log("date %s %s" %(start_date, stop_date), "title = %s" %resource_title)\n
 \n
 if \'compte\' in resource_title:\n
   interval = getIntervalBetweenDates(start_date,stop_date)\n
-  context.log("interval", interval)\n
+  #context.log("interval", interval)\n
   if interval[\'year\'] == 3:\n
     if interval[\'month\'] > 0 or interval["day"] > 0:\n
       msg = Message(domain=\'ui\', message="Check $check is more than 3 years old.",\n
@@ -78,7 +78,7 @@ if \'compte\' in resource_title:\n
 \n
 elif \'virement\' in resource_title:\n
   interval = getIntervalBetweenDates(start_date, stop_date)\n
-  context.log("interval", interval)\n
+  #context.log("interval", interval)\n
   if interval[\'month\'] == 3:\n
     if interval["day"] > 0:\n
       msg = Message(domain=\'ui\', message="Check $check is more than 3 month old.",\n
