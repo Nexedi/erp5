@@ -50,18 +50,23 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if isinstance(site, str):\n
-  site = context.portal_categories.site.restrictedTraverse(site)\n
-\n
-orga_id = "site_%3s" %(site.getCodification())\n
-org = context.organisation_module[orga_id]\n
-\n
-return org\n
+            <value> <string>portal = context.getPortalObject()\n
+if isinstance(site, str):\n
+  site = portal.portal_categories.site.restrictedTraverse(site)\n
+return portal.organisation_module["site_%3s" % (site.getCodification(), )]\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
             <value> <string>site</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
