@@ -1514,7 +1514,7 @@ class TestCRMMailSend(BaseTestCRM):
       title = 'Incoming email'
       direction = 'in'
       portal_type = 'Note'
-      resource = resource['1'].getRelativeUrl()
+      resource = resource['1'].getCategoryRelativeUrl()
       person.Base_addEvent(title, direction, portal_type, resource)
 
       # Index Event
