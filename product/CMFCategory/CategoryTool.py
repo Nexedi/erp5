@@ -222,6 +222,9 @@ class CategoryTool( UniqueObject, Folder, Base ):
         relative_url = str(relative_url)
         if base_category is not None:
           relative_url = '%s/%s' % (base_category, relative_url)
+        relative_url = \
+        self._removeDuplicateBaseCategoryIdInCategoryPath(base_category,
+                                                                 relative_url)
         node = self.unrestrictedTraverse(relative_url)
         value = node
       except (TypeError, KeyError, NotFound):
@@ -567,6 +570,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
           else:
             category = my_category.getRelativeUrl()
           if my_base_category == category:
+            path = self._removeDuplicateBaseCategoryIdInCategoryPath(my_base_category, path)
             if spec_len == 0:
               if base:
                 membership.append(path)
@@ -825,6 +829,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
         for category_url in self._getCategoryList(context):
           my_base_category = category_url.split('/', 1)[0]
           if my_base_category == base_category:
+            category_url = self._removeDuplicateBaseCategoryIdInCategoryPath(my_base_category, category_url)
             #LOG("getSingleCategoryMembershipList",0,"%s %s %s %s" % (context.getRelativeUrl(),
             #                  my_base_category, base_category, category_url))
             if (checked_permission is None) or \
@@ -1738,6 +1743,24 @@ class CategoryTool( UniqueObject, Folder, Base ):
     _setProperty = Base._setProperty
     getProperty = Base.getProperty
     hasProperty = Base.hasProperty
+
+    def _removeDuplicateBaseCategoryIdInCategoryPath(self, base_category_id,
+                                                     path):
+      """Specific Handling to remove duplicated base_categories in path
+      values like in following example: 'region/region/europe/west'.
+
+      If duplicated id is a real subobject of base_category,
+      then the path its keept as it is
+      """
+      splitted_path = path.split('/', 2)
+      if len(splitted_path) >= 2 and base_category_id == splitted_path[1]:
+        # It needs to be checked.
+        base_category_value = self._getOb(base_category_id)
+        if base_category_value._getOb(splitted_path[1], None) is None:
+          # Duplicate found, strip len(base_category_id + '/') in path
+          path = path[len(base_category_id)+1:]
+      return path
+
 
 InitializeClass( CategoryTool )
 
