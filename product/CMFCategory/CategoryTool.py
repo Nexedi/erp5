@@ -823,11 +823,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       if getattr(aq_base(context), 'categories', _marker) is not _marker:
 
         for category_url in self._getCategoryList(context):
-          try:
-            index = category_url.index('/')
-            my_base_category = category_url[:index]
-          except ValueError:
-            my_base_category = category_url
+          my_base_category = category_url.split('/', 1)[0]
           if my_base_category == base_category:
             #LOG("getSingleCategoryMembershipList",0,"%s %s %s %s" % (context.getRelativeUrl(),
             #                  my_base_category, base_category, category_url))
