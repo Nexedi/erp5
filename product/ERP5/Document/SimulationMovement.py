@@ -317,18 +317,39 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
 
     return successor_trade_phase_list
 
-  security.declarePrivate('_getApplicableRuleList')
-  def _getApplicableRuleList(self):
-    """ Search rules that match this movement, but with future trade phases
+  security.declarePrivate('_asSuccessorContext')
+  def _asSuccessorContext(self):
+    """ Returns a version of self with future trade phases
     """
-    portal_rules = self.getPortalObject().portal_rules
     successor_trade_phase_list = self._getSuccessorTradePhaseList()
     context = self.asContext()
     context.edit(trade_phase_list=successor_trade_phase_list)
+    return context
+
+  security.declarePrivate('_checkSuccessorContext')
+  def _checkSuccessorContext(self):
+    # XXX turn this into a decorator?
+    if not (self.isTempObject() and
+            'trade_phase_list' in self._v_modified_property_dict):
+      raise RuntimeError(
+        'Method should only be called on self._asSuccessorContext()'
+      )
+ 
+  security.declarePrivate('_isSuccessorContext')
+  def _isRuleStillApplicable(self, rule):
+    self._checkSuccessorContext()
+    return rule.test(self)
+
+  security.declarePrivate('_getApplicableRuleList')
+  def _getApplicableRuleList(self):
+    """ Search rules that match this movement
+    """
+    self._checkSuccessorContext()
+    portal_rules = self.getPortalObject().portal_rules
     # XXX-Leo: According to JP, the 'version' search below is wrong and
     # should be replaced by a check that there are not two rules with the
     # same reference that can be returned.
-    return portal_rules.searchRuleList(context,
+    return portal_rules.searchRuleList(self,
                                        sort_on='version',
                                        sort_order='descending')
 
@@ -354,7 +375,8 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
 
     applied_rule_dict = {}
     applicable_rule_dict = {}
-    for rule in self._getApplicableRuleList():
+    successor_self = self._asSuccessorContext()
+    for rule in successor_self._getApplicableRuleList():
       reference = rule.getReference()
       if reference:
         # XXX-Leo: We should complain loudly if there is more than one
@@ -363,7 +385,11 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
 
     for applied_rule in list(self.objectValues()):
       rule = applied_rule.getSpecialiseValue()
-      if rule.test(self) or applied_rule._isTreeDelivered():
+      # check if applied rule is already expanded, or if its portal
+      # rule is still applicable to this Simulation Movement with
+      # successor trade_phases
+      if (successor_self._isRuleStillApplicable(rule) or
+          applied_rule._isTreeDelivered()):
         applied_rule_dict[rule.getReference()] = applied_rule
       else:
         self._delObject(applied_rule.getId())
