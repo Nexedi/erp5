@@ -63,8 +63,6 @@
                     <value>
                       <list>
                         <string>listbox</string>
-                        <string>listbox_destination_logical_path</string>
-                        <string>listbox_source_logical_path</string>
                       </list>
                     </value>
                 </item>
@@ -74,6 +72,8 @@
                       <list>
                         <string>listbox_start_date</string>
                         <string>listbox_source_total_asset_price</string>
+                        <string>listbox_destination_logical_path</string>
+                        <string>listbox_source_logical_path</string>
                       </list>
                     </value>
                 </item>
