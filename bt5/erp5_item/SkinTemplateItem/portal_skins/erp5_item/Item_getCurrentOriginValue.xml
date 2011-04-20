@@ -56,7 +56,7 @@ last_affectation_list = context.Item_getAffectationList(**kw)\n
 if not last_affectation_list:\n
   return None\n
 \n
-if last_affectation_list[-1].node_uid is not None:\n
+if last_affectation_list[-1].delivery_uid is not None:\n
   site = portal.portal_catalog.getObject(last_affectation_list[-1].delivery_uid)\n
   return site\n
 </string> </value>
