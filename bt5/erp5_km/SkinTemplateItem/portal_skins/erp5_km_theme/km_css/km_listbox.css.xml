@@ -343,8 +343,14 @@ div.listbox-search-mode div.maximal-width{\n
 }\n
 \n
 /* forum */\n
+.discussion-thread-listbox table.listbox{\n
+  border-collapse: separate;\n
+}\n
 .discussion-thread-listbox table.listbox tbody tr:hover td{\n
   background-color:#FFF;\n
+}\n
+.discussion-thread-listbox table.listbox tbody tr{\n
+  margin-bottom:5px;\n
 }\n
 \n
 .discussion-thread-listbox table.listbox thead{\n
