@@ -340,6 +340,15 @@ div.listbox-search-mode div.maximal-width{\n
   -moz-box-shadow:4px 4px 4px rgba(0, 0, 0, 0.5);\n
   -webkit-box-shadow:4px 4px 4px rgba(0, 0, 0, 0.5);\n
   min-height:180px;\n
+}\n
+\n
+/* forum */\n
+.discussion-thread-listbox table.listbox tbody tr:hover td{\n
+  background-color:#FFF;\n
+}\n
+\n
+.discussion-thread-listbox table.listbox thead{\n
+  display: none;\n
 }
 
 ]]></unicode> </value>
