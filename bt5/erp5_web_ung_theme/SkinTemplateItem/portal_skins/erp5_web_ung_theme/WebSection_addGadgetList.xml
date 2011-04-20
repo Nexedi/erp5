@@ -52,7 +52,7 @@
             <key> <string>_body</string> </key>
             <value> <string>portal_catalog = context.portal_catalog\n
 \n
-gadget_id_list = context.REQUEST.form.get("gadget_id_list")\n
+gadget_id_list = context.REQUEST.form.get("gadget_id_list", gadget_id_list)\n
 if not gadget_id_list:\n
   return None\n
 \n
@@ -74,7 +74,7 @@ for gadget_id in gadget_id_list:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>gadget_id_list=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
