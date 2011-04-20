@@ -155,16 +155,16 @@
         <td>//a[@name="document_title"]</td>\n
         <td>Web Table</td>\n
       </tr>\n
-        <tr>\n
-          <td>verifyElementPresent</td>\n
-          <td>//td[@id=\'0_table0_cell_c0_r1\']</td>\n
-          <td></td>\n
-        </tr>\n
-        <tr>\n
-          <td>verifyElementPresent</td>\n
-          <td>//td[@id=\'0_table0_cell_c1_r1\']</td>\n
-          <td></td>\n
-        </tr>\n
+      <tr>\n
+        <td>verifyElementPresent</td>\n
+        <td>//td[@id=\'0_table0_cell_c0_r1\']</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyElementPresent</td>\n
+        <td>//td[@id=\'0_table0_cell_c1_r1\']</td>\n
+        <td></td>\n
+      </tr>\n
       <tr>\n
         <td>verifyText</td>\n
         <td>//td[@id="jSheetTitle_0"]</td>\n
@@ -176,9 +176,29 @@
         <td>MENU</td>\n
       </tr>\n
       <tr>\n
-        <td>clickAndWait</td>\n
-        <td>//a[@class="ung_docs"]</td>\n
+        <td>runScript</td>\n
+        <td>$("#0_table0_cell_c0_r0").html("Gabriel")</td>\n
         <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>runScript</td>\n
+        <td>$("#0_table0_cell_c1_r1").html("Monnerat")</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//button[@class="save"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//td[@id=\'0_table0_cell_c0_r0\']</td>\n
+        <td>Gabriel</td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//td[@id=\'0_table0_cell_c1_r1\']</td>\n
+        <td>Monnerat</td>\n
       </tr>\n
       <tr>\n
         <td>openAndWait</td>\n
