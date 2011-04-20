@@ -37,8 +37,10 @@ from Products.ERP5.mixin.configurable import ConfigurableMixin
 from Products.ERP5.MovementCollectionDiff import _getPropertyAndCategoryList
 
 class ItemListSplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
-  """
-  QUESTION: is a solver a process ? (ie. subprocess of Solver Process)
+  """Target solver that split the prevision based on aggregated items.
+
+  It creates another prevision movement with the items that were in prevision
+  and have been removed in decision.
   """
   meta_type = 'ERP5 Item List Split Solver'
   portal_type = 'Item List Split Solver'

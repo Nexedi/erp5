@@ -35,7 +35,7 @@ from Products.ERP5.mixin.solver import SolverMixin
 from Products.ERP5.mixin.configurable import ConfigurableMixin
 
 class AdoptSolver(SolverMixin, ConfigurableMixin, XMLObject):
-  """
+  """Target solver that adopts the values from the prevision on the decision.
   """
   meta_type = 'ERP5 Adopt Solver'
   portal_type = 'Adopt Solver'
