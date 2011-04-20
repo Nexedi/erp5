@@ -93,7 +93,7 @@
 .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button { font-family: Verdana,Arial,sans-serif; font-size: 1em; }\n
 .ui-widget-content { border: 1px solid #aaaaaa; background: #ffffff url(jquery_sheet_image/ui-bg_flat_75_ffffff_40x100.png) 50% 50% repeat-x; color: #222222; }\n
 .ui-widget-content a { color: #222222; }\n
-.ui-widget-header { border: 1px solid #aaaaaa; background: #cccccc url(jquery_sheet_image/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x; color: #222222; font-weight: bold; }\n
+.ui-widget-header { border: 1px solid #aaaaaa; background: #cccccc url(jquery_sheet_image/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x; color: #222222; font-weight: normal !important; }\n
 .ui-widget-header a { color: #222222; }\n
 \n
 /* Interaction states\n
