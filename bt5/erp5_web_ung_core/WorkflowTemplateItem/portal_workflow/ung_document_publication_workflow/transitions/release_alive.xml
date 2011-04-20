@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="TransitionDefinition" module="Products.DCWorkflow.Transitions"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>actbox_category</string> </key>
+            <value> <string>workflow</string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_icon</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_name</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_url</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>after_script_name</string> </key>
+            <value> <string>archiveVersion</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>The release_alive workflow method sets the document state to released_alive and archives all previously released documents with same reference in the same language.</string> </value>
+        </item>
+        <item>
+            <key> <string>guard</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>release_alive</string> </value>
+        </item>
+        <item>
+            <key> <string>new_state_id</string> </key>
+            <value> <string>released_alive</string> </value>
+        </item>
+        <item>
+            <key> <string>script_name</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Release Document Alive</string> </value>
+        </item>
+        <item>
+            <key> <string>trigger_type</string> </key>
+            <value> <int>2</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

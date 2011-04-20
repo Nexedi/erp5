@@ -1,10 +1,14 @@
 <workflow_chain>
  <chain>
   <type>Web Illustration</type>
-  <workflow>document_conversion_interaction_workflow, document_publication_workflow, document_security_interaction_workflow, edit_workflow, processing_status_workflow</workflow>
+  <workflow>document_conversion_interaction_workflow, document_security_interaction_workflow, edit_workflow, processing_status_workflow, ung_document_publication_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Web Page</type>
+  <workflow>document_conversion_interaction_workflow, document_security_interaction_workflow, edit_workflow, processing_status_workflow, ung_document_publication_workflow</workflow>
  </chain>
  <chain>
   <type>Web Table</type>
-  <workflow>document_conversion_interaction_workflow, document_publication_workflow, document_security_interaction_workflow, edit_workflow, processing_status_workflow</workflow>
+  <workflow>document_conversion_interaction_workflow, document_security_interaction_workflow, edit_workflow, processing_status_workflow, ung_document_publication_workflow</workflow>
  </chain>
 </workflow_chain>
