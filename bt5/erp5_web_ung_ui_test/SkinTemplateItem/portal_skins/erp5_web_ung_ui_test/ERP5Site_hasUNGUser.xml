@@ -54,17 +54,7 @@
 \n
 user = portal.portal_catalog.getResultValue(portal_type="Person", reference="test_user")\n
 \n
-if not user:\n
-  person = portal.person_module.newContent(portal_type="Person")\n
-  person.edit(first_name="UNG User",\n
-              password="test_user",\n
-              reference="test_user")\n
-\n
-  assignment = person.newContent(portal_type=\'Assignment\')\n
-  assignment.setFunction("function/ung_user")\n
-  assignment.open()\n
-\n
-return True\n
+return user is not None\n
 </string> </value>
         </item>
         <item>
@@ -81,7 +71,7 @@ return True\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Site_createUNGUser</string> </value>
+            <value> <string>ERP5Site_hasUNGUser</string> </value>
         </item>
       </dictionary>
     </pickle>

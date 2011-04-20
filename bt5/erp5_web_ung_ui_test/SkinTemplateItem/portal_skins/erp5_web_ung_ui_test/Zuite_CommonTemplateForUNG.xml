@@ -47,11 +47,6 @@
     </tr>\n
     <tr>\n
       <td>openAndWait</td>\n
-      <td>${base_url}/ERP5Site_createUNGUser</td>\n
-      <td></td>\n
-    </tr>\n
-    <tr>\n
-      <td>openAndWait</td>\n
       <td>${base_url}/ERP5Site_cleanUpUNGTestEnvironment</td>\n
       <td></td>\n
     </tr>\n
@@ -61,6 +56,59 @@
       <td>${ung_url}/WebSite_logout</td>\n
       <td></td>\n
     </tr>\n
+    <tal:block tal:condition="python: not here.ERP5Site_hasUNGUser()">\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//td[@id="new-account-form"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//input[@name="firstname"]</td>\n
+        <td>UNG</td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//input[@name="lastname"]</td>\n
+        <td>User</td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//input[@name="email"]</td>\n
+        <td>example@example.com</td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//input[@name="login_name"]</td>\n
+        <td>test_user</td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//input[@name="password"]</td>\n
+        <td>test_user</td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//input[@name="confirm"]</td>\n
+        <td>test_user</td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//input[@value="Create Account"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>waitForPageToLoad</td>\n
+        <td>30000</td>\n
+        <td></td>\n
+      </tr>\n
+      <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities"/>\n
+      <tr>\n
+        <td>openAndWait</td>\n
+        <td>${ung_url}</td>\n
+        <td></td>\n
+      </tr>\n
+    </tal:block>\n
   </tal:block>\n
   <tal:block metal:define-macro="login">\n
     <tr>\n
