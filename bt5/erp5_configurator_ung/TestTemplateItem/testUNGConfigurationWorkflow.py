@@ -359,7 +359,7 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
     self.stepTic()
     gadget = self.portal.portal_gadgets.searchFolder()[0]
     gadget_id = gadget.getId()
-    self.portal.web_site_module.ung.WebSection_addGadget(gadget_id)
+    self.portal.web_site_module.ung.WebSection_addGadgetList(gadget_id)
     self.stepTic()
     box_list = pad.contentValues()
     self.assertEquals(len(box_list), 1)
