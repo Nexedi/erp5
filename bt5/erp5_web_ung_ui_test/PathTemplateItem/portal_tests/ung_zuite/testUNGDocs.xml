@@ -55,6 +55,36 @@
         <td></td>\n
       </tr>\n
       <tr>\n
+        <td>storeEval</td>\n
+        <td>selenium.browserbot.getCurrentWindow().document.location.href.split("WebIllustration_viewEditor")[0]</td>\n
+        <td>url</td>\n
+      </tr>\n
+      <tr>\n
+        <td>openAndWait</td>\n
+        <td>${url}/WebIllustration_setSampleinTextContent</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyTextPresent</td>\n
+        <td>Done.</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>openAndWait</td>\n
+        <td>${url}/WebIllustration_viewEditor?editable_mode:int=1</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>waitForCondition</td>\n
+        <td>selenium.isElementPresent("//ellipse[@id=\'svg_1\']")</td>\n
+        <td>9000</td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyAttribute</td>\n
+        <td>//ellipse[@id=\'svg_1\']@ry</td>\n
+        <td>46</td>\n
+      </tr>\n
+      <tr>\n
         <td>verifyText</td>\n
         <td>//a[@name="document_title"]</td>\n
         <td>Web Illustration</td>\n
