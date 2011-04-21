@@ -146,10 +146,6 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
-                        </tuple>
-                        <tuple>
                           <string>author</string>
                           <string>Author</string>
                         </tuple>
@@ -276,10 +272,6 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>reference</string>
-                          <string></string>
-                        </tuple>
-                        <tuple>
                           <string>modification_date</string>
                           <string></string>
                         </tuple>
@@ -318,10 +310,7 @@
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
+      <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
     <pickle>
       <dictionary>

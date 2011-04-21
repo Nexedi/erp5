@@ -128,10 +128,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -139,7 +136,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-python: \'<a class="bt-small" style="width:250px;" href="%s/discussion_thread_module/DiscussionThreadModule_viewCreateNewDiscussionThreadDialog?cancel_url=%s"><span><img src="km_img/icon-add.png" alt="+"/> Add New Discussion Thread</span></a>\' %(here.getWebSiteValue().absolute_url(), here.absolute_url())
+python: \'<a class="bt-small" style="width:100px;" href="%s/discussion_thread_module/DiscussionThreadModule_viewCreateNewDiscussionThreadDialog?cancel_url=%s"><span><img src="km_img/icon-add.png" alt="+"/>Post message</span></a>\' %(here.getWebSiteValue().absolute_url(), here.absolute_url())
 
 ]]></string> </value>
         </item>
