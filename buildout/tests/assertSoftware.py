@@ -2015,13 +2015,20 @@ class AssertGlib(AssertSoftwareMixin):
 
   def test_ld_libglib(self):
     self.assertLibraryList('parts/glib/lib/libglib-2.0.so',
-        self.core_lib_list, self.core_rpath_list)
+      self.core_lib_list + [
+      'libdl',
+      'librt',
+      ], [
+      'gettext',
+      'zlib',
+      ])
 
   def test_ld_libgmodule(self):
     self.assertLibraryList('parts/glib/lib/libgmodule-2.0.so',
       self.core_lib_list + [
       'libdl',
       'libglib-2.0',
+      'librt',
       ], self.rpath_list)
 
   def test_ld_libgobject(self):
@@ -2089,6 +2096,7 @@ class AssertGlib(AssertSoftwareMixin):
     self.assertLibraryList('parts/glib/bin/glib-compile-schemas',
       self.core_lib_list + [
       'libglib-2.0',
+      'librt',
       ], self.rpath_list)
 
   def test_ld_glibgenmarshal(self):
@@ -2129,6 +2137,7 @@ class AssertGlib(AssertSoftwareMixin):
     self.assertLibraryList('parts/glib/bin/gtester',
       self.core_lib_list + [
       'libglib-2.0',
+      'librt',
       ], self.rpath_list)
 
 class AssertLibuuid(AssertSoftwareMixin):
