@@ -96,7 +96,7 @@
                     <value>
                       <list>
                         <string>my_id</string>
-                        <string>my_type_factory_method_id</string>
+                        <string>my_type_class</string>
                         <string>my_type_init_script_id</string>
                         <string>my_type_add_permission</string>
                         <string>my_type_acquire_local_role</string>
