@@ -67,7 +67,7 @@ person.edit(first_name=form.get("firstname"),\n
             reference=form.get("login_name"))\n
 \n
 assignment = person.newContent(portal_type=\'Assignment\')\n
-assignment.setFunction("function/ung_user")\n
+assignment.setFunction("ung_user")\n
 assignment.open()\n
 \n
 person.validate()\n
