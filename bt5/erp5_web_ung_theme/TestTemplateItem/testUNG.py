@@ -454,7 +454,8 @@ class TestUNG(ERP5TypeTestCase):
     self.assertEquals(result_list[0].getPortalType(), "Web Table")
 
   def testWebPage_updateWebDocument(self):
-    """ """
+    """ Test if script load correctly the Web Page with data of one document
+    """
     portal = self.portal
     portal_preferences = portal.portal_preferences
     web_page_module = portal.web_page_module
