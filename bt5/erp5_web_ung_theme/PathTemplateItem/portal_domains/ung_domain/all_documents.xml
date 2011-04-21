@@ -124,6 +124,7 @@
                         <string>shared</string>
                         <string>translated</string>
                         <string>submitted</string>
+                        <string>cancelled</string>
                       </list>
                     </value>
                 </item>
