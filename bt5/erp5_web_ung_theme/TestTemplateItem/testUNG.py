@@ -160,6 +160,28 @@ class TestUNG(ERP5TypeTestCase):
     self.portal.WebSection_deleteObjectList()
     self.stepTic()
     self.assertEquals(len(self.portal.portal_catalog(relative_url=relative_url)), 0)
+    web_page = self.portal.web_page_module.newContent(portal_type="Web Page")
+    web_table = self.portal.web_page_module.newContent(portal_type="Web Table")
+    web_illustration = self.portal.web_page_module.newContent(portal_type="Web Illustration")
+    web_page.publish()
+    web_table.publish()
+    web_illustration.publish()
+    self.stepTic()
+    uid_list = [web_page.getUid(),
+               web_table.getUid(),
+               web_illustration.getUid()]
+    self.portal.REQUEST.set("uids", uid_list)
+    self.portal.web_site_module.ung.WebSection_deleteObjectList()
+    self.stepTic()
+    self.assertEquals(web_page.getValidationState(), "deleted")
+    self.assertEquals(web_table.getValidationState(), "deleted")
+    self.assertEquals(web_illustration.getValidationState(), "deleted")
+    self.portal.REQUEST.set("uids", uid_list)
+    self.portal.web_site_module.ung.WebSection_deleteObjectList()
+    self.stepTic()
+    self.assertFalse(uid_list[0] in self.portal.web_page_module.objectIds())
+    self.assertFalse(uid_list[1] in self.portal.web_page_module.objectIds())
+    self.assertFalse(uid_list[2] in self.portal.web_page_module.objectIds())
 
   def testERP5Site_userFollowUpWebPage(self):
     """Test if user is added in field Follow Up of Web Page"""
