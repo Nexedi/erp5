@@ -1,4 +1,5 @@
 Account
+AttributeUnicityConstraint
 AccountingPreference
 AccountingRuleCellLine
 AccountingTransactionBalanceConstraint
