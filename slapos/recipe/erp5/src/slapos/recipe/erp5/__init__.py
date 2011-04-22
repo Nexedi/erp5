@@ -55,6 +55,10 @@ class Recipe(BaseSlapRecipe):
     # self.cron_d is a directory, where cron jobs can be registered
     self.cron_d = self.installCrond()
     self.logrotate_d = self.installLogrotate()
+    self.killpidfromfile = zc.buildout.easy_install.scripts(
+        [('killpidfromfile', __name__ + '.killpidfromfile',
+          'killpidfromfile')], self.ws, sys.executable, self.bin_directory)[0]
+    self.path_list.append(self.killpidfromfile)
     ca_conf = self.installCertificateAuthority()
     memcached_conf = self.installMemcached(ip=self.getLocalIPv4Address(),
         port=11000)
@@ -460,12 +464,16 @@ class Recipe(BaseSlapRecipe):
     return []
 
   def installZeo(self, ip, port, name, path):
+    zeo_event_log = os.path.join(self.log_directory, 'zeo.log')
+    zeo_pid = os.path.join(self.run_directory, 'zeo.pid')
+    self.registerLogRotation('zeo', [zeo_event_log],
+        self.killpidfromfile + ' ' + zeo_pid + ' SIGUSR2')
     config = dict(
       zeo_ip=ip,
       zeo_port=port,
       zeo_storagename=name,
-      zeo_event_log=os.path.join(self.log_directory, 'zeo.log'),
-      zeo_pid=os.path.join(self.run_directory, 'zeo.pid'),
+      zeo_event_log=zeo_event_log,
+      zeo_pid=zeo_pid,
       zeo_zodb=path
     )
     zeo_conf_path = self.createConfigurationFile('zeo.conf',
