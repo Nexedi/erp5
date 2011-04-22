@@ -259,14 +259,13 @@ class Recipe(BaseSlapRecipe):
     timestamps = self.createDataDirectory('cronstamps')
     cron_d = os.path.join(self.etc_directory, 'cron.d')
     crontabs = os.path.join(self.etc_directory, 'crontabs')
-    logfile = os.path.join(self.log_directory, 'cron.log')
     self._createDirectory(cron_d)
     self._createDirectory(crontabs)
     wrapper = zc.buildout.easy_install.scripts([('crond',
       __name__ + '.execute', 'execute')], self.ws, sys.executable,
       self.wrapper_directory, arguments=[
         self.options['dcrond_binary'].strip(), '-s', cron_d, '-c', crontabs,
-        '-t', timestamps, '-L', logfile, '-f', '-l', '6', '-M', '/bin/true']
+        '-t', timestamps, '-f', '-l', '6', '-M', '/bin/true']
       )[0]
     self.path_list.append(wrapper)
     return cron_d
