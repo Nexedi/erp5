@@ -139,6 +139,9 @@ class Recipe(BaseSlapRecipe):
 
   def installKumo(self, ip, kumo_manager_port=13101, kumo_server_port=13201,
       kumo_server_listen_port=13202, kumo_gateway_port=13301):
+    # XXX: kumo is not storing pid in file, unless it is not running as daemon
+    #      but running daemons is incompatible with SlapOS, so there is currently
+    #      no way to have Kumo's pid files to rotate logs and send signals to them
     config = dict(
       kumo_gateway_binary=self.options['kumo_gateway_binary'],
       kumo_gateway_ip=ip,
