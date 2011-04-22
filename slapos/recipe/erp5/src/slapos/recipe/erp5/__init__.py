@@ -98,7 +98,8 @@ class Recipe(BaseSlapRecipe):
         "include %s" % logrotate_d)
     logrotate_cron = os.path.join(self.cron_d, 'logrotate')
     state_file = os.path.join(self.data_root_directory, 'logrotate.status')
-    open(logrotate_cron, 'w').write('0 0 * * * %s -s %s %s' % (self.options['logrotate_binary'], state_file, logrotate_conf))
+    open(logrotate_cron, 'w').write('0 0 * * * %s -s %s %s' %
+        (self.options['logrotate_binary'], state_file, logrotate_conf))
     self.path_list.extend([logrotate_d, logrotate_conf, logrotate_cron])
     return logrotate_d
 
