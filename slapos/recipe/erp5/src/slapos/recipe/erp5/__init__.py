@@ -103,6 +103,14 @@ class Recipe(BaseSlapRecipe):
     self.path_list.extend([logrotate_d, logrotate_conf, logrotate_cron])
     return logrotate_d
 
+  def registerLogRotation(self, name, log_file_list, postrotate_script):
+    """Register new log rotation requirement"""
+    open(os.path.join(self.logrotate_d, name), 'w').write(
+        self.substituteTemplate(self.getTemplateFilename(
+          'logrotate_entry.in'),
+          dict(file_list=['"'+q+'"' for q in log_file_list],
+            postrotate=postrotate_script)))
+
   def linkBinary(self):
     """Links binaries to instance's bin directory for easier exposal"""
     for linkline in self.options.get('link_binary_list', '').splitlines():
