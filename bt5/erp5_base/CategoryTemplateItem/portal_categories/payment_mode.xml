@@ -79,7 +79,7 @@
         </item>
         <item>
             <key> <string>acquisition_portal_type</string> </key>
-            <value> <string>python: context.getPortalPaymentConditionTypeList() + context.getPortalMovementTypeList() + context.getPortalDeliveryTypeList()</string> </value>
+            <value> <string>python: context.getPortalPaymentConditionTypeList() + context.getPortalMovementTypeList() + context.getPortalDeliveryTypeList() + context.getPortalSupplyTypeList() + context.getPortalSupplyPathTypeList()</string> </value>
         </item>
         <item>
             <key> <string>acquisition_sync_value</string> </key>
