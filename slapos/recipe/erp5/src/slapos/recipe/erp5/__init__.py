@@ -270,7 +270,7 @@ class Recipe(BaseSlapRecipe):
       __name__ + '.execute', 'execute')], self.ws, sys.executable,
       self.wrapper_directory, arguments=[
         self.options['dcrond_binary'].strip(), '-s', cron_d, '-c', crontabs,
-        '-t', timestamps, '-f', '-l', '6', '-M', catcher]
+        '-t', timestamps, '-f', '-l', '5', '-M', catcher]
       )[0]
     self.path_list.append(wrapper)
     return cron_d
