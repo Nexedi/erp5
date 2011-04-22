@@ -249,7 +249,7 @@ class Recipe(BaseSlapRecipe):
         openssl_binary=self.options['openssl_binary'],
         test_ca_path=ca_conf['certificate_authority_path'],
         call_list=[self.options['runTestSuite_binary'],
-          '--db_list', ', '.join(connection_string_list),
+          '--db_list', ','.join(connection_string_list),
           '--conversion_server_hostname=%(conversion_server_ip)s' % \
                                                          conversion_server_conf,
           '--conversion_server_port=%(conversion_server_port)s' % \
