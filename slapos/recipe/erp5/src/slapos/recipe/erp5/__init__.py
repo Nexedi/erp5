@@ -54,6 +54,7 @@ class Recipe(BaseSlapRecipe):
     self.requirements, self.ws = self.egg.working_set([__name__])
     # self.cron_d is a directory, where cron jobs can be registered
     self.cron_d = self.installCrond()
+    self.logrotate_d = self.installLogrotate()
     ca_conf = self.installCertificateAuthority()
     memcached_conf = self.installMemcached(ip=self.getLocalIPv4Address(),
         port=11000)
@@ -87,6 +88,19 @@ class Recipe(BaseSlapRecipe):
       kumo_url=kumo_conf['kumo_address']
     ))
     return self.path_list
+
+  def installLogrotate(self):
+    """Installs logortate main configuration file and registers its to cron"""
+    logrotate_d = os.path.abspath(os.path.join(self.etc_directory,
+      'logrotate.d'))
+    self._createDirectory(logrotate_d)
+    logrotate_conf = self.createConfigurationFile("logrotate.conf",
+        "include %s" % logrotate_d)
+    logrotate_cron = os.path.join(self.cron_d, 'logrotate')
+    state_file = os.path.join(self.data_root_directory, 'logrotate.status')
+    open(logrotate_cron, 'w').write('0 0 * * * %s -s %s %s' % (self.options['logrotate_binary'], state_file, logrotate_conf))
+    self.path_list.extend([logrotate_d, logrotate_conf, logrotate_cron])
+    return logrotate_d
 
   def linkBinary(self):
     """Links binaries to instance's bin directory for easier exposal"""
@@ -234,8 +248,8 @@ class Recipe(BaseSlapRecipe):
 
   def installCrond(self):
     timestamps = self.createDataDirectory('cronstamps')
-    cron_d = os.path.join(self.var_directory, 'cron.d')
-    crontabs = os.path.join(self.var_directory, 'crontabs')
+    cron_d = os.path.join(self.etc_directory, 'cron.d')
+    crontabs = os.path.join(self.etc_directory, 'crontabs')
     logfile = os.path.join(self.log_directory, 'cron.log')
     self._createDirectory(cron_d)
     self._createDirectory(crontabs)
