@@ -108,7 +108,7 @@ class Recipe(BaseSlapRecipe):
     open(os.path.join(self.logrotate_d, name), 'w').write(
         self.substituteTemplate(self.getTemplateFilename(
           'logrotate_entry.in'),
-          dict(file_list=['"'+q+'"' for q in log_file_list],
+          dict(file_list=' '.join(['"'+q+'"' for q in log_file_list]),
             postrotate=postrotate_script)))
 
   def linkBinary(self):
@@ -266,7 +266,7 @@ class Recipe(BaseSlapRecipe):
       __name__ + '.execute', 'execute')], self.ws, sys.executable,
       self.wrapper_directory, arguments=[
         self.options['dcrond_binary'].strip(), '-s', cron_d, '-c', crontabs,
-        '-t', timestamps, '-L', logfile, '-f', '-l', '10']
+        '-t', timestamps, '-L', logfile, '-f', '-l', '6']
       )[0]
     self.path_list.append(wrapper)
     return cron_d
