@@ -51,4 +51,8 @@
   <type>Currency Exchange Line</type>
   <workflow>-validation_workflow, currency_exchange_line_interaction_workflow, currency_exchange_line_workflow, edit_workflow</workflow>
  </chain>
+ <chain>
+  <type>Person</type>
+  <workflow>-user_account_workflow</workflow>
+ </chain>
 </workflow_chain>
