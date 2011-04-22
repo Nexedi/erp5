@@ -50,29 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Errors import SimulationError\n
-\n
-\n
-if context.getTradePhase() is None:\n
-  # XXX-Leo: Maybe refactor this block into a Delivery_getTradePhase script\n
-  business_link = context.Delivery_getBusinessLink()\n
-  # context = context.asContext(trade_phase=business_link.getTradePhase()) is not working...\n
-  context = context.asContext()\n
-  context.setTradePhase(business_link.getTradePhase())\n
-\n
-rule_list = context.getPortalObject().portal_rules.searchRuleList(context)\n
-\n
-if not len(rule_list):\n
-  # No applied rule will be created.\n
-  # XXX-Leo: Should we check self.isSimulated() and raise an error if not? \n
-  return None\n
-\n
-try:\n
-  rule, = rule_list\n
-except ValueError:\n
-  raise SimulationError(\'Exactly one root rule should match %r, got %r\' %\n
-                        (context.getPath(), rule_list))\n
-return rule.getReference()\n
+            <value> <string>return \'default_order_rule\'\n
 </string> </value>
         </item>
         <item>
@@ -80,16 +58,8 @@ return rule.getReference()\n
             <value> <string></string> </value>
         </item>
         <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
-            <value> <string>Delivery_getRuleReference</string> </value>
+            <value> <string>SaleOrder_getRuleReference</string> </value>
         </item>
       </dictionary>
     </pickle>
