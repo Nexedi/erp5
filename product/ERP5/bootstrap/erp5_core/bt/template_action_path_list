@@ -37,6 +37,8 @@ Category Existence Constraint | predicate
 Category Existence Constraint | view
 Category Membership Arity Constraint | predicate
 Category Membership Arity Constraint | view
+Category Membership State Constraint | predicate
+Category Membership State Constraint | view
 Category Property | view
 Category Related Membership Arity Constraint | predicate
 Category Related Membership Arity Constraint | view
