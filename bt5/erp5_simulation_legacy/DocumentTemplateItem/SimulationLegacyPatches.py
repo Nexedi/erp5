@@ -143,15 +143,18 @@ def patch():
 
   SimulationMovement.isBuildable = isBuildable
 
-  def _getApplicableRuleList(self):
-    """ Search rules that match this movement, but don't try to look up
-        successor trade_phases
+  def _asSuccessorContext(self):
+    """ Legacy SimulationMovement doesn't try to look up successor trade phases
     """
-    portal_rules = self.getPortalObject().portal_rules
-    return portal_rules.searchRuleList(self,
-                                       sort_on='version',
-                                       sort_order='descending')
+    return self
 
-  SimulationMovement._getApplicableRuleList = _getApplicableRuleList
+  SimulationMovement._asSuccessorContext = _asSuccessorContext
+
+  def _checkSuccessorContext(self):
+    """ Legacy SimulationMovement doesn't try to look up successor trade phases
+    """
+    pass
+
+  SimulationMovement._checkSuccessorContext = _checkSuccessorContext
 
 patch()
