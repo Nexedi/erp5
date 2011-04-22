@@ -40,6 +40,7 @@ from Products.ERP5Type.Utils import setDefaultClassProperties
 from Products.ERP5Type import document_class_registry, mixin_class_registry
 from Products.ERP5Type.dynamic.accessor_holder import AccessorHolderModuleType, \
     createAllAccessorHolderList
+from Products.ERP5Type.TransactionalVariable import TransactionalResource
 
 from zLOG import LOG, ERROR, INFO, WARNING
 
@@ -337,7 +338,11 @@ def synchronizeDynamicModules(context, force=False):
 
   Base.aq_method_lock.acquire()
   try:
-    if portal.id not in _bootstrapped:
+    # Thanks to TransactionalResource, the '_bootstrapped' global variable
+    # is updated in a transactional way. Without it, it would be required to
+    # restart the instance if anything went wrong.
+    if portal.id not in _bootstrapped and \
+       TransactionalResource.registerOnce(__name__, 'bootstrap', portal.id):
       migrate = False
       from Products.ERP5Type.Tool.PropertySheetTool import PropertySheetTool
       from Products.ERP5Type.Tool.TypesTool import TypesTool
@@ -366,10 +371,12 @@ def synchronizeDynamicModules(context, force=False):
         if PickleUpdater.get:
           portal.migrateToPortalTypeClass()
         portal.portal_skins.changeSkin(None)
+        TransactionalResource(tpc_finish=lambda txn:
+            _bootstrapped.add(portal.id))
         LOG('ERP5Site', INFO, 'Transition successful, please update your'
             ' business templates')
-
-      _bootstrapped.add(portal.id)
+      else:
+        _bootstrapped.add(portal.id)
 
     LOG("ERP5Type.dynamic", 0, "Resetting dynamic classes")
     try:
