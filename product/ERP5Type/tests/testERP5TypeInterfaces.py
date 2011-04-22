@@ -54,9 +54,11 @@ implements_tuple_list = [
 class TestERP5TypeInterfaces(ERP5TypeTestCase):
   """Tests implementation of interfaces"""
 
-  def testTransactionalResource(self):
-    from Products.ERP5Type.TransactionalVariable import TransactionalResource
+  def testTransactionIDataManager(self):
+    from Products.ERP5Type.TransactionalVariable import \
+      TransactionalVariable, TransactionalResource
     from transaction.interfaces import IDataManager
+    verifyClass(IDataManager, TransactionalVariable)
     verifyClass(IDataManager, TransactionalResource)
 
 def makeTestMethod(import_tuple, interface):

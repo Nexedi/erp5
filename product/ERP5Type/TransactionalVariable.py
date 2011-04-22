@@ -56,33 +56,49 @@ Example::
 """
 
 import warnings
-from UserDict import IterableUserDict
-from Shared.DC.ZRDB.TM import TM
 from threading import local
+from transaction import get as get_transaction
 import transaction.interfaces
 import zope.interface
 
-class TransactionalVariable(TM, IterableUserDict):
+class TransactionalVariable(dict):
   """TransactionalVariable provides a dict-like look-n-feel.
   This class must not be used directly outside.
   """
-  _finalize = None
+  zope.interface.implements(transaction.interfaces.IDataManager)
 
-  def _begin(self, *ignored):
-    pass
+  _unregistered = True
 
-  def _finish(self, *ignored):
+  def sortKey(self):
+    return None
+
+  commit = tpc_vote = tpc_begin = tpc_abort = lambda self, transaction: None
+
+  def abort(self, txn):
+    self._unregistered = True
     self.clear()
 
-  def _abort(self, *ignored):
-    self.clear()
+  tpc_finish = abort
 
-  def __hash__(self):
-    return hash(id(self))
+  # override all methods that may add entries to the dict
 
   def __setitem__(self, key, value):
-    IterableUserDict.__setitem__(self, key, value)
-    self._register()
+    if self._unregistered:
+      get_transaction().join(self)
+      self._unregistered = False
+    return dict.__setitem__(self, key, value)
+
+  def setdefault(self, key, failobj=None):
+    if self._unregistered:
+      get_transaction().join(self)
+      self._unregistered = False
+    return dict.setdefault(self, key, failobj)
+
+  def update(self, *args, **kw):
+    if self._unregistered:
+      get_transaction().join(self)
+      self._unregistered = False
+    return dict.update(self, *args, **kw)
 
 transactional_variable_pool = local()
 
