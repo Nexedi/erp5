@@ -598,6 +598,8 @@ SSLRandomSeed connect builtin
 
   def installMysqlServer(self, ip, port, database='erp5', user='user',
       test_database='test_erp5', test_user='test_user'):
+    error_log = os.path.join(self.log_directory, 'mysqld.log')
+    slow_query_log = os.path.join(self.log_directory, 'mysql-slow.log')
     mysql_conf = dict(
         ip=ip,
         data_directory=os.path.join(self.data_root_directory,
@@ -605,9 +607,8 @@ SSLRandomSeed connect builtin
         tcp_port=port,
         pid_file=os.path.join(self.run_directory, 'mysqld.pid'),
         socket=os.path.join(self.run_directory, 'mysqld.sock'),
-        error_log=os.path.join(self.log_directory, 'mysqld.log'),
-        slow_query_log=os.path.join(self.log_directory,
-        'mysql-slow.log'),
+        error_log=error_log,
+        slow_query_log=slow_query_log,
         mysql_database=database,
         mysql_user=user,
         mysql_password=self.generatePassword(),
@@ -618,6 +619,11 @@ SSLRandomSeed connect builtin
             ('test_%i' % x,)*2 + (self.generatePassword(),) \
                  for x in xrange(0,100)],
     )
+    self.registerLogRotation('mysql', [error_log, slow_query_log],
+        '%(mysql_binary)s --no-defaults -B --user=root '
+        '--socket=%(mysql_socket)s -e "FLUSH LOGS"' % dict(
+          mysql_binary=self.options['mysql_binary'],
+          mysql_socket=mysql_conf['socket']))
     self._createDirectory(mysql_conf['data_directory'])
 
     mysql_conf_path = self.createConfigurationFile("my.cnf",
