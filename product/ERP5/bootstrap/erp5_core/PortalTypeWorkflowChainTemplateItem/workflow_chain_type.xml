@@ -16,6 +16,10 @@
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
+  <type>Attribute Unicity Constraint</type>
+  <workflow>dynamic_class_generation_interaction_workflow</workflow>
+ </chain>
+ <chain>
   <type>Base Category</type>
   <workflow>dynamic_class_generation_interaction_workflow, edit_workflow</workflow>
  </chain>

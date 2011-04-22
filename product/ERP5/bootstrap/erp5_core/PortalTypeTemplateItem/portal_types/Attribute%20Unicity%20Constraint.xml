@@ -33,15 +33,21 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Property Sheets are attached to Portal Types and are responsible for generation of Property and Category accessors. They also contain definitions of Constraints.</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
-            <key> <string>factory</string> </key>
-            <value> <string>addFolder</string> </value>
+            <key> <string>group_list</string> </key>
+            <value>
+              <tuple>
+                <string>constraint</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Property Sheet</string> </value>
+            <value> <string>Attribute Unicity Constraint</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>
@@ -61,16 +67,10 @@
         </item>
         <item>
             <key> <string>type_class</string> </key>
-            <value> <string>PropertySheet</string> </value>
+            <value> <string>AttributeUnicityConstraint</string> </value>
         </item>
         <item>
             <key> <string>type_interface</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>type_interface_list</string> </key>
             <value>
               <tuple/>
             </value>
@@ -80,16 +80,6 @@
             <value>
               <tuple/>
             </value>
-        </item>
-        <item>
-            <key> <string>type_mixin_list</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>type_new_class</string> </key>
-            <value> <int>0</int> </value>
         </item>
       </dictionary>
     </pickle>
@@ -102,7 +92,9 @@
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value> <string>erp5_content</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>
@@ -119,7 +111,9 @@
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value> <string>erp5_content</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>

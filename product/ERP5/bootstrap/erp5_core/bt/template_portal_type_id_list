@@ -9,6 +9,7 @@ Amount
 Application Id Generator
 Applied Rule
 Attribute Equality Constraint
+Attribute Unicity Constraint
 Base Category
 Base Domain
 Base Type

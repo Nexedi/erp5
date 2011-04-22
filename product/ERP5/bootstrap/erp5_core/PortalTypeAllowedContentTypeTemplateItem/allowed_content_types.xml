@@ -66,6 +66,7 @@
  <portal_type id="Property Sheet">
   <item>Acquired Property</item>
   <item>Attribute Equality Constraint</item>
+  <item>Attribute Unicity Constraint</item>
   <item>Category Existence Constraint</item>
   <item>Category Membership Arity Constraint</item>
   <item>Category Membership State Constraint</item>

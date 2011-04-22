@@ -12,6 +12,8 @@ Alarm | view
 Application Id Generator | view
 Attribute Equality Constraint | predicate
 Attribute Equality Constraint | view
+Attribute Unicity Constraint | predicate
+Attribute Unicity Constraint | view
 Base Category | view
 Base Domain | view
 Base Type | action_view

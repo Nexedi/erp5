@@ -29,6 +29,7 @@ Preference Type | Role Information
 Property Sheet Tool | Property Sheet
 Property Sheet | Acquired Property
 Property Sheet | Attribute Equality Constraint
+Property Sheet | Attribute Unicity Constraint
 Property Sheet | Category Existence Constraint
 Property Sheet | Category Membership Arity Constraint
 Property Sheet | Category Membership State Constraint
