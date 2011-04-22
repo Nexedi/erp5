@@ -507,6 +507,9 @@ class Recipe(BaseSlapRecipe):
         '%s.pid' % name)
     zope_config['lock-filename'] = os.path.join(self.run_directory,
         '%s.lock' % name)
+    self.registerLogRotation(name, [zope_config['event_log'],
+      zope_config['z2_log']], self.killpidfromfile + ' ' +
+      zope_config['pid-filename'] + ' SIGUSR2')
 
     prefixed_products = []
     for product in reversed(zope_config['products'].split()):
