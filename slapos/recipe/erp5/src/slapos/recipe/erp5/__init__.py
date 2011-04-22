@@ -262,6 +262,7 @@ class Recipe(BaseSlapRecipe):
     catcher = zc.buildout.easy_install.scripts([('catchcron',
       __name__ + '.catdatefile', 'catdatefile')], self.ws, sys.executable,
       self.bin_directory, arguments=[cron_output])[0]
+    self.path_list.append(catcher)
     cron_d = os.path.join(self.etc_directory, 'cron.d')
     crontabs = os.path.join(self.etc_directory, 'crontabs')
     self._createDirectory(cron_d)
