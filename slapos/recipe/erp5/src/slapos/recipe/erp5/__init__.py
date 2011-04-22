@@ -257,6 +257,11 @@ class Recipe(BaseSlapRecipe):
 
   def installCrond(self):
     timestamps = self.createDataDirectory('cronstamps')
+    cron_output = os.path.join(self.log_directory, 'cron-output')
+    self._createDirectory(cron_output)
+    catcher = zc.buildout.easy_install.scripts([('catchcron',
+      __name__ + '.catdatefile', 'catdatefile')], self.ws, sys.executable,
+      self.bin_directory, arguments=[cron_output])[0]
     cron_d = os.path.join(self.etc_directory, 'cron.d')
     crontabs = os.path.join(self.etc_directory, 'crontabs')
     self._createDirectory(cron_d)
@@ -265,7 +270,7 @@ class Recipe(BaseSlapRecipe):
       __name__ + '.execute', 'execute')], self.ws, sys.executable,
       self.wrapper_directory, arguments=[
         self.options['dcrond_binary'].strip(), '-s', cron_d, '-c', crontabs,
-        '-t', timestamps, '-f', '-l', '6', '-M', '/bin/true']
+        '-t', timestamps, '-f', '-l', '6', '-M', catcher]
       )[0]
     self.path_list.append(wrapper)
     return cron_d
