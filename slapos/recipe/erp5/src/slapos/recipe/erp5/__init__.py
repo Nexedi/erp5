@@ -564,6 +564,9 @@ class Recipe(BaseSlapRecipe):
         prefix + '-error.log')
     apache_conf['access_log'] = os.path.join(self.log_directory,
         prefix + '-access.log')
+    self.registerLogRotation(prefix, [apache_conf['error_log'],
+      apache_conf['access_log']], self.killpidfromfile + ' ' +
+      apache_conf['pid_file'] + ' SIGUSR1')
     return apache_conf
 
   def _writeApacheConfiguration(self, prefix, apache_conf, backend):
