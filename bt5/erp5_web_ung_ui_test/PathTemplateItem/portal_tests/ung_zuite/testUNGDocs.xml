@@ -605,6 +605,7 @@
         <td>//button[@class="delete"]</td>\n
         <td></td>\n
       </tr>\n
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForUNG/macros/delete-all-documents"/>\n
     </tbody>\n
   </table>\n
 </body>\n
