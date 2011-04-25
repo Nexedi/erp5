@@ -306,6 +306,7 @@
         <td>//input[@id="version"]</td>\n
         <td>003</td>\n
       </tr>\n
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForUNG/macros/delete-all-documents"/>\n
     </tbody>\n
   </table>\n
 </body>\n
