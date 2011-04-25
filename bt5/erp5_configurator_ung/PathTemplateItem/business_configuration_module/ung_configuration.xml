@@ -127,9 +127,7 @@
         </item>
         <item>
             <key> <string>configuration_after_script_id</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>BusinessConfiguration_afterUNGConfiguration</string> </value>
         </item>
         <item>
             <key> <string>creation_date</string> </key>
@@ -195,9 +193,7 @@
         </item>
         <item>
             <key> <string>user_interface_description_file_id</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>ung_configuration_ui_description.ods</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
