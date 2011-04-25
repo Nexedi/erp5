@@ -58,7 +58,7 @@ if REQUEST.has_key(\'portal_skin\'):\n
 REQUEST.RESPONSE.expireCookie(\'__ac\', path="/")\n
 REQUEST.RESPONSE.expireCookie(\'__key\', path="/")\n
 \n
-return Base_redirect(context.absolute_url())\n
+return context.Base_redirect(context.absolute_url())\n
 </string> </value>
         </item>
         <item>
