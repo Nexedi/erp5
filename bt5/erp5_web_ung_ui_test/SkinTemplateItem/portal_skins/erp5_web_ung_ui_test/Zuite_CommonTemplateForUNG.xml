@@ -179,6 +179,44 @@
       <td></td>\n
     </tr>\n
   </tal:block>\n
+  <tal:block metal:define-macro="delete-all-documents">\n
+    <tr>\n
+      <td>openAndWait</td>\n
+      <td>${ung_url}</td>\n
+      <td></td>\n
+    </tr>\n
+    <tr>\n
+      <td>click</td>\n
+      <td>//th[@class="listbox-table-select-cell"]/input[1]</td>\n
+      <td></td>\n
+    </tr>\n
+    <tr>\n
+      <td>clickAndWait</td>\n
+      <td>//button[@class="delete"]</td>\n
+      <td></td>\n
+    </tr>\n
+    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities"/>\n
+    <tr>\n
+      <td>openAndWait</td>\n
+      <td>${ung_url}</td>\n
+      <td></td>\n
+    </tr>\n
+    <tr>\n
+      <td>clickAndWait</td>\n
+      <td>//table[@class="your_listbox-table-domain-tree"]/tbody/tr[11]/td/a</td>\n
+      <td></td>\n
+    </tr>\n
+    <tr>\n
+      <td>click</td>\n
+      <td>//th[@class="listbox-table-select-cell"]/input[1]</td>\n
+      <td></td>\n
+    </tr>\n
+    <tr>\n
+      <td>clickAndWait</td>\n
+      <td>//button[@class="delete"]</td>\n
+      <td></td>\n
+    </tr>\n
+  </tal:block>\n
 </tal:block>
 
 ]]></unicode> </value>
