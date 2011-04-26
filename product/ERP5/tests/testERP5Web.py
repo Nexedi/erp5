@@ -432,12 +432,13 @@ Hé Hé Hé!""", page.asText().strip())
                       '13' : dict(language = 'en' , version = "3" , reference = "D"),
                       '14' : dict(language = 'ja' , version = "2" , reference = "E"),
                       '15' : dict(language = 'pt' , version = "2" , reference = "F"),
+                      '16' : dict(language = '' , version = "1" , reference = "A"),
                     }
     sequence_one = property_dict.keys()
     sequence_two = ['01', '13', '12', '09', '06', '15' , '04', '11', '02', '05', '03',
-                    '07', '10', '08', '14' ]
+                    '07', '10', '08', '14', '16']
     sequence_three = ['05', '12', '13', '14',  '06', '09', '10', '07', '03', '01', '02',
-                    '11', '04', '08' , '15']
+                    '11', '04', '08' , '15', '16']
 
     sequence_count = 0
     for sequence in [ sequence_one , sequence_two , sequence_three ]:
@@ -490,6 +491,11 @@ Hé Hé Hé!""", page.asText().strip())
       self.assertEqual(4, len(ja_document_value_list))
       self.assertEqual(['ja' , 'ja', 'ja', 'ja'],
                            [ w.getLanguage() for w in ja_document_value_list])
+
+      bg_document_value_list = websection.getDocumentValueList(language='bg')
+      self.assertEqual(1, len(bg_document_value_list))
+      self.assertEqual([''],
+                       [ w.getLanguage() for w in bg_document_value_list])
 
       # Testing for all_versions parameter
       en_document_value_list = websection.getDocumentValueList(all_versions=1)
@@ -551,6 +557,22 @@ Hé Hé Hé!""", page.asText().strip())
       self.assertEqual(['3'], [ w.getVersion() for w in ja_document_value_list \
                             if w.getLanguage() == 'en'])
 
+      bg_document_value_list = websection.WebSection_getDocumentValueListBase(all_languages=1,
+                                                                              language='bg')
+      self.assertEqual(6, len(bg_document_value_list))
+      self.assertEqual(0, len([ w.getLanguage() for w in bg_document_value_list \
+                              if w.getLanguage() == 'bg']))
+      self.assertEqual(3, len([ w.getLanguage() for w in bg_document_value_list \
+                              if w.getLanguage() == 'en']))
+      self.assertEqual(1, len([ w.getLanguage() for w in bg_document_value_list \
+                              if w.getLanguage() == 'pt']))
+      self.assertEqual(['3'], [ w.getVersion() for w in bg_document_value_list \
+                              if w.getLanguage() == 'pt'])
+      self.assertEqual(1, len([ w.getLanguage() for w in bg_document_value_list \
+                              if w.getLanguage() == 'ja']))
+      self.assertEqual(['3'], [ w.getVersion() for w in bg_document_value_list \
+                            if w.getLanguage() == 'ja'])
+
       # Tests for all_languages and all_versions
       en_document_value_list = websection.WebSection_getDocumentValueListBase(all_languages=1,
                                                                               all_versions=1)
@@ -566,7 +588,7 @@ Hé Hé Hé!""", page.asText().strip())
       for document_value_list in [ en_document_value_list, pt_document_value_list ,
                                    ja_document_value_list]:
 
-        self.assertEqual(15, len(document_value_list))
+        self.assertEqual(16, len(document_value_list))
         self.assertEqual(5, len([ w.getLanguage() for w in document_value_list \
                                 if w.getLanguage() == 'en']))
         self.assertEqual(5, len([ w.getLanguage() for w in en_document_value_list \
