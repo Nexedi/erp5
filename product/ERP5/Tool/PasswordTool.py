@@ -96,10 +96,17 @@ class PasswordTool(BaseTool):
     self._password_request_dict[random_url] = (user_login, expiration_date)
     return url
 
-  def mailPasswordResetRequest(self, user_login=None, REQUEST=None):
+  def mailPasswordResetRequest(self, user_login=None, REQUEST=None, 
+                              notification_message=None, sender=None):
     """
     Create a random string and expiration date for request
-    """
+    Parameters:
+    user_login -- Reference of the user to send password reset link
+    REQUEST -- Request object
+    notification_message -- Notification Message Document used to build the email. 
+                            As default, a standart text will be used.
+    sender -- Sender (Person or Organisation) of the email.
+            As default, the default email address will be used"""
     if REQUEST is None:
       REQUEST = get_request()
 
@@ -158,23 +165,35 @@ class PasswordTool(BaseTool):
     self._password_request_dict[random_url] = (user_login, expiration_date)
 
     # send mail
-    subject = translateString("[${instance_name}] Reset of your password",
-        mapping={'instance_name': self.getPortalObject().getTitle()})
-    subject = subject.translate()
-    message = translateString("\nYou requested to reset your ${instance_name}"\
-              " account password.\n\n" \
-              "Please copy and paste the following link into your browser: \n"\
-              "${reset_password_link}\n\n" \
-              "Please note that this link will be valid only one time, until "\
-              "${expiration_date}.\n" \
-              "After this date, or after having used this link, you will have to make " \
-              "a new request\n\n" \
-              "Thank you",
-              mapping={'instance_name':self.getPortalObject().getTitle(),
-                       'reset_password_link':url,
-                       'expiration_date':expiration_date})
-    message = message.translate()
-    self.getPortalObject().portal_notifications.sendMessage(sender=None, recipient=[user,], subject=subject, message=message)
+    message_dict = {'instance_name':self.getPortalObject().getTitle(),
+                    'reset_password_link':url,
+                    'expiration_date':expiration_date}
+
+    if notification_message is None:
+      subject = translateString("[${instance_name}] Reset of your password",
+          mapping={'instance_name': self.getPortalObject().getTitle()})
+      subject = subject.translate()
+      message = translateString("\nYou requested to reset your ${instance_name}"\
+                " account password.\n\n" \
+                "Please copy and paste the following link into your browser: \n"\
+                "${reset_password_link}\n\n" \
+                "Please note that this link will be valid only one time, until "\
+                "${expiration_date}.\n" \
+                "After this date, or after having used this link, you will have to make " \
+                "a new request\n\n" \
+                "Thank you",
+                mapping=message_dict)
+      message = message.translate()
+    else:
+      subject = notification_message.getTitle()
+      if notification_message.getContentType() == "text/html":
+        message = notification_message.asEntireHTML(substitution_method_parameter_dict=message_dict)
+      else:
+        message = notification_message.asText(substitution_method_parameter_dict=message_dict)
+
+    self.getPortalObject().portal_notifications.sendMessage(sender=sender, recipient=[user,],
+                                                            subject=subject, message=message)
+                                                            
     if REQUEST is not None:
       msg = translateString("An email has been sent to you.")
       parameter = urlencode(dict(portal_status_message=msg))
