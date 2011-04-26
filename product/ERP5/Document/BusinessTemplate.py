@@ -2237,7 +2237,7 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
       ob = types_tool.getTypeInfo(portal_type)
       # check properties corresponds to what is defined in site
       if ob is None:
-        raise ValueError, "Portal Type %s not found in site" %(portal_type,)
+        raise ValueError, "Portal Type %r not found in site" %(portal_type,)
       prop_value = getattr(ob, self.class_property, ())
       if allowed_type in prop_value:
         if self.class_property not in portal_type:
