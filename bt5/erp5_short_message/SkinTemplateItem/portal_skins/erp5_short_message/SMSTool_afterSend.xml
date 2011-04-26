@@ -53,12 +53,13 @@
             <value> <string>"""Save the message id of the relative document"""\n
 if document_relative_url:\n
   document = context.getPortalObject().restrictedTraverse(document_relative_url)\n
-  document.setDestinationReference(message_id_list[0])\n
+  document.edit(destination_reference=message_id_list[0],\n
+                gateway = gateway_relative_url)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>message_id_list, document_relative_url=None, **kw</string> </value>
+            <value> <string>message_id_list, document_relative_url=None, gateway_relative_url=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
