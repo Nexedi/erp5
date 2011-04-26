@@ -83,94 +83,12 @@ context.portal_sms.send(text=body,recipient=to_url,sender=from_url,sender_title=
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>from_url=None, from_title=None, to_url=None, reply_url=None, subject=None,            body=None, attachment_format=None, attachment_list=None,download=False,**kw</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>9</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>from_url</string>
-                            <string>from_title</string>
-                            <string>to_url</string>
-                            <string>reply_url</string>
-                            <string>subject</string>
-                            <string>body</string>
-                            <string>attachment_format</string>
-                            <string>attachment_list</string>
-                            <string>download</string>
-                            <string>kw</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>person</string>
-                            <string>recipient_phone_list</string>
-                            <string>None</string>
-                            <string>ValueError</string>
-                            <string>phone</string>
-                            <string>sender_phone</string>
-                            <string>_apply_</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <int>0</int>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>ShortMessage_send</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

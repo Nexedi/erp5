@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="ERP5TypeInformation" module="Products.ERP5Type.ERP5Type"/>
+      <global name="Base Type" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -38,12 +38,8 @@
             </value>
         </item>
         <item>
-            <key> <string>factory</string> </key>
-            <value> <string>addEssendexGateway</string> </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
-            <value> <string>Essendex Gateway</string> </value>
+            <value> <string>Mobyt Gateway</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>
@@ -63,7 +59,7 @@
         </item>
         <item>
             <key> <string>type_class</string> </key>
-            <value> <string>EssendexGateway</string> </value>
+            <value> <string>MobytGateway</string> </value>
         </item>
         <item>
             <key> <string>type_mixin</string> </key>

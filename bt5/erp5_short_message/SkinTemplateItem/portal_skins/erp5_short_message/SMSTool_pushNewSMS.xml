@@ -92,63 +92,8 @@ event.setDestinationValue(searchParentOfTelephoneNumber(recipient))\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>message_id, sender, recipient, text_content, message_type, reception_date</string> </value>
-        </item>
-        <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>6</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>message_id</string>
-                            <string>sender</string>
-                            <string>recipient</string>
-                            <string>text_content</string>
-                            <string>message_type</string>
-                            <string>reception_date</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>module</string>
-                            <string>event</string>
-                            <string>searchParentOfTelephoneNumber</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -157,12 +102,6 @@ event.setDestinationValue(searchParentOfTelephoneNumber(recipient))\n
         <item>
             <key> <string>title</string> </key>
             <value> <string>XXX</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>
