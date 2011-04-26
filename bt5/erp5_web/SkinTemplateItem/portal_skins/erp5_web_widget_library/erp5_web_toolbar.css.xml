@@ -212,12 +212,13 @@ div.web-toolbar div.menu ul li{\n
 div.web-toolbar div.menu div.field{\n
   margin-bottom:0.2em!important;\n
 }\n
-div.web-toolbar div.menu ul li a:active,a:visited,a:link{\n
+div.web-toolbar div.menu ul li a:active,\n
+div.web-toolbar div.menu ul li a:visited,\n
+div.web-toolbar div.menu ul li a:link{\n
   color:auto !important;\n
 }\n
 \n
-</tal:block>\n
-
+</tal:block>
 
 ]]></unicode> </value>
         </item>
