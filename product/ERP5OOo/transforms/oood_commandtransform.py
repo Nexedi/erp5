@@ -37,7 +37,8 @@ def includeMetaContentType(html_node):
   """
   head = html_node.find('head')
   if head is None:
-    head = SubElement(html_node, 'head')
+    head = Element('head')
+    html_node.insert(0, head)
   meta_content_type_node_list = head.xpath('meta[translate('\
                'attribute::http-equiv, "CONTEYP", "conteyp") = "content-type"]')
   for meta_content_type_node in meta_content_type_node_list:
