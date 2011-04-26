@@ -317,11 +317,6 @@
         <td></td>\n
       </tr>\n
       <tr>\n
-        <td>setTimeout</td>\n
-        <td>2000</td>\n
-        <td></td>\n
-      </tr>\n
-      <tr>\n
         <td>verifyText</td>\n
         <td>//td[@class="listbox-table-no-result-row"]/span</td>\n
         <td>No result.</td>\n
