@@ -212,10 +212,9 @@ class OOOdCommandTransform(commandtransform):
           parent_node.remove(css_link_tag)
 
     includeMetaContentType(xml_doc)
-    xml_output = html.tostring(xml_doc, encoding='utf-8', method='xml',
+    xml_output = html.tostring(xml_doc, encoding='utf-8',
                                include_meta_content_type=True)
 
-    xml_output = xml_output.replace('<title/>', '<title></title>')
     return xml_output
 
   def convertTo(self, format):

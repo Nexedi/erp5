@@ -34,12 +34,9 @@ class HTMLToOdt:
     # Try to recover broken HTML documents, specially regarding encoding used
     html_node = etree.XML(orig, parser=html_parser)
     includeMetaContentType(html_node)
-    orig = html.tostring(html_node, encoding='utf-8', method='xml',
+    orig = html.tostring(html_node, encoding='utf-8',
                          include_meta_content_type=True)
 
-    # workaround a Bug in LibreOffice HTML import filter.
-    # https://bugs.freedesktop.org/show_bug.cgi?id=36080
-    orig = orig.replace('<title/>', '<title></title>')
     doc = OOOdCommandTransform(context, filename, orig, self.inputs[0])
     odt = doc.convertTo('odt')
     if cache is not None:
