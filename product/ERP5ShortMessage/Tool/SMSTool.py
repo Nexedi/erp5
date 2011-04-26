@@ -76,7 +76,8 @@ class SMSTool(BaseTool):
         send_activate_kw.update(**activate_kw)
       self.activate(**send_activate_kw).SMSTool_afterSend(
               message_id_list, 
-              document_relative_url=document_relative_url, **kw)
+              document_relative_url=document_relative_url, 
+              gateway_relative_url=gateway.getRelativeUrl(),**kw)
 
   security.declareProtected(ManagePortal, 'getMessageStatus')
   def getMessageStatus(self,message_id, gateway_reference='default'):
