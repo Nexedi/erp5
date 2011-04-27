@@ -81,11 +81,32 @@ msgstr "${template_title} (Modèle)"
 msgid "${this_portal_type} related to ${that_portal_type} : ${that_title}."
 msgstr "${this_portal_type} lié au ${that_portal_type} : ${that_title}."
 
+msgid "${timedif} day ago"
+msgstr "Il y a ${timedif} jour"
+
 msgid "${timedif} days ago"
 msgstr "Il y a ${timedif} jours"
 
+msgid "${timedif} hour ago"
+msgstr "Il y a ${timedif} heure"
+
+msgid "${timedif} hours ago"
+msgstr "Il y a ${timedif} heures"
+
 msgid "${timedif} min ago"
 msgstr "Il y a ${timedif} minutes"
+
+msgid "${timedif} minute ago"
+msgstr "Il y a ${timedif} minute"
+
+msgid "${timedif} minutes ago"
+msgstr "Il y a ${timedif} minutes"
+
+msgid "${timedif} second ago"
+msgstr "Il y a ${timedif} second"
+
+msgid "${timedif} seconds ago"
+msgstr "Il y a ${timedif} seconds"
 
 msgid "${timedif}h ago"
 msgstr "Il y a ${timedif} heures"
@@ -6145,6 +6166,12 @@ msgstr "Plus de nouvelles..."
 msgid "More tasks..."
 msgstr "Plus de taches..."
 
+msgid "More than 1 month"
+msgstr "Il y a plus de 1 mois"
+
+msgid "More than 1 year"
+msgstr "Il y a plus de 1 an"
+
 msgid "Motive"
 msgstr "Motif"
 
@@ -6466,6 +6493,9 @@ msgstr "Notification de l'alarme"
 
 msgid "November"
 msgstr "Novembre"
+
+msgid "Now"
+msgstr "Maintenant"
 
 msgid "Number"
 msgstr "Numéro"
@@ -12182,6 +12212,9 @@ msgstr "Année"
 
 msgid "Year / Month / Day"
 msgstr "Année / Mois / Jour"
+
+msgid "Yesterday"
+msgstr "Hier"
 
 msgid "You already have such gadgets."
 msgstr "Ce gadget existe déja."
