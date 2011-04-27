@@ -122,7 +122,7 @@
       </tr>\n
       <tr>\n
         <td>verifyText</td>\n
-        <td>//div[@class=" navigation-right"]/fieldset/div/div/a[2]</td>\n
+        <td>//div[@class=\' navigation-right\']/fieldset/div[2]/div/div/a[2]</td>\n
         <td>ung_user</td>\n
       </tr>\n
     </tbody>\n
