@@ -44,17 +44,24 @@ function changeLanguage(language){\n
   });\n
 }\n
 \n
-function getWebEditorName(){\n
-  currentUrlSplitted = window.location.href.split("?")[0].split("/");\n
-  return currentUrlSplitted[currentUrlSplitted.length-1];\n
+function getPortalTypeFromContext(){\n
+  var response = $.ajax({\n
+                    url: "getPortalType",\n
+                    method: "GET",\n
+                    async: false,\n
+                }).responseText;\n
+  return response;\n
 }\n
 \n
 function getUrlParameterList(){\n
   var argumentList = {};\n
-  resultList = window.location.href.split("?")[1].split("&");\n
-  for (var i=0;i<resultList.length;i++){\n
-    parameterList = (resultList[i].replace(":int","")).split("=");\n
-    argumentList[parameterList[0]] = parameterList[1];\n
+  var resultList = window.location.href.split("?");\n
+  if (resultList.length > 1) {\n
+    var parameterList = resultList[1].split("&");\n
+    for (var i=0;i<parameterList.length;i++){\n
+      parameter = (parameterList[i].replace(":int","")).split("=");\n
+      argumentList[parameter[0]] = parameter[1];\n
+    }\n
   }\n
   return argumentList;\n
 }\n
@@ -214,20 +221,20 @@ $().ready(function(){\n
   if ($("a#login").html() != null){\n
     displayLoginForm();\n
   }\n
-  if ($("div.gadget-column").length == 0 && window.location.href.split("?").length > 1) {\n
+  if ($("div.gadget-column").length == 0) {\n
     parameterList = getUrlParameterList();\n
     if (parameterList.hasOwnProperty("upload_document") == true){\n
       $("a[name=\'document_title\'], a[name=\'document_state\'], div.header-right, div.content").hide();\n
       $("a#loading_message").show();\n
       setTimeout(checkConversion(), 1000);\n
     }\n
-    switch (getWebEditorName()) {\n
-      case "WebPage_viewEditor":\n
+    switch (getPortalTypeFromContext()) {\n
+      case "Web Page":\n
         $("div.content").css({"position":"fixed", "bottom": "0px",\n
                               "left": "0px", "right": "0px"});\n
         $("div.content").css({"top": "5em"});\n
         break;\n
-      case "WebTable_viewEditor":\n
+      case "Web Table":\n
         $("div.content").css({"position":"fixed", "bottom": "0px",\n
                               "left": "0px", "right": "0px"});\n
         $("div.content").css({"top": "6em"});\n
