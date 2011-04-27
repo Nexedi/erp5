@@ -538,18 +538,6 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
       if run_only:
         ERP5TypeTestLoader.filter_test_list = None
 
-    if not isinstance(Storage, ClientStorage):
-      # Remove nodes that were registered during previous execution.
-      # Set an empty dict (instead of delete the property)
-      # in order to avoid conflicts on / when several ZEO clients registers.
-      from BTrees.OIBTree import OIBTree
-      app = ZopeTestCase.app()
-      app.test_processing_nodes = OIBTree()
-      import transaction
-      transaction.commit()
-      ZopeTestCase.close(app)
-      del app
-
     if zeo_client_pid_list is None:
       result = suite()
     else:
@@ -558,6 +546,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
       _print('done (%.3fs)\n' % (time.time() - _start))
       result = TestRunner(verbosity=verbosity).run(suite)
   finally:
+    ProcessingNodeTestCase.unregisterNode()
     Storage.close()
     if zeo_client_pid_list is not None:
       # Wait that child processes exit. Stop ZEO storage (if any) after all
