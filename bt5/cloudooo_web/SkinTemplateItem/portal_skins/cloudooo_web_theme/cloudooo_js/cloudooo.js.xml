@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="DTMLDocument" module="OFS.DTMLDocument"/>
-        <tuple/>
-      </tuple>
+      <global name="DTMLDocument" module="OFS.DTMLDocument"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -52,51 +49,50 @@ $.extend({\n
 \n
 var checkState_call_count = 0\n
 function checkState(message){\n
-  \n
   checkState_call_count += 1\n
   var checkState_call_str = ["",".","..","..."]\n
   $("#transition-message").html(message+checkState_call_str[checkState_call_count%4])\n
-  $.get("Document_getPropertiesAsJSON", { }, function(data, textStatus, XMLHttpRequest){\n
-    if (textStatus == "timeout" || textStatus == "error" || textStatus == "parsererror")\n
-    {\n
+  $.get("Document_getPropertiesAsJSON", {}, function(data, textStatus, XMLHttpRequest){\n
+    if (textStatus == "timeout" || textStatus == "error" || textStatus == "parsererror"){\n
       $("title").html("Error during conversion");\n
       $("#transition-message").html("An error occurs during the process. Please resend your file");\n
     }\n
-    else{\n
+    else {\n
       //TextStatus is "notmodified","success"\n
       json = jQuery.parseJSON( data );\n
-      if ((json.processing == "converted") || (json.processing == "conversion_failed") || (json.processing == "empty"))\n
-      {\n
+      if ((json.processing == "converted") || (json.processing == "conversion_failed") || (json.processing == "empty")){\n
         $("title").html("Finish");\n
         $("#transition-message").html("The conversion process is finish. You will be redirect in 3 seconds.");\n
-        setTimeout("$(location).attr(\'href\',\'"+json.permanent_url+"\')",3000);\n
+        setTimeout("$(location).attr(\'href\',\'"+json.permanent_url+"\')", 3000);\n
       }\n
-      else if (json.processing == "process_error")\n
-      {\n
-        $("title").html("Error during conversion");\n
-        $("#transition-message").html("An error occurs during the process. Please resend your file");\n
-      }\n
-      else\n
-      {\n
-        //Wait 1/2s and recall the function\n
-        setTimeout("checkState(\'"+message+"\')",500);\n
+      else {\n
+        if (json.processing == "process_error") {\n
+          $("title").html("Error during conversion");\n
+          $("#transition-message").html("An error occurs during the process. Please resend your file");\n
+        }\n
+        else {\n
+          setTimeout("checkState(\'"+message+"\')", 500);\n
+        }\n
       }\n
     }\n
-   });\n
+  });\n
 }\n
 \n
 function createBookmark(title,url) {\n
-\tif ($.browser.mozilla == true) { // Mozilla Firefox Bookmark\n
-\t\twindow.sidebar.addPanel(title, url,"");\n
-\t} else if($.browser.msie == true ) { // IE Favorite\n
-\t\twindow.external.AddFavorite( url, title);\n
-        } else { //Opera or other\n
-                alert(\'Please use CTRL + D to bookmark this website.\'); \n
-        } \n
+  if ($.browser.mozilla == true) {\n
+    window.sidebar.addPanel(title, url, "");\n
+  } \n
+  else {\n
+    if($.browser.msie == true) {\n
+      window.external.AddFavorite( url, title);\n
+    }\n
+    else {\n
+      alert(\'Please use CTRL + D to bookmark this website.\'); \n
+    }\n
+  }\n
 }\n
  \n
-function generateLink(id,title,url)\n
- {\n
+function generateLink(id, title, url){\n
   var link_title ;\n
   if ($.browser.msie == true) {\n
     link_title = "Add to Favorites";\n
@@ -115,14 +111,13 @@ function generateLink(id,title,url)\n
 }\n
 \n
 function contentMaximise(){\n
-    $("#content").removeClass("twocolumns");\n
-    $("#sidebar").hide();\n
+  $("#content").removeClass("twocolumns");\n
+  $("#sidebar").hide();\n
 }\n
 \n
 function contentMinimise(){\n
-    $("#content").addClass("twocolumns");\n
-\n
-    $("#sidebar").show();\n
+  $("#content").addClass("twocolumns");\n
+  $("#sidebar").show();\n
 }
 
 ]]></string> </value>
