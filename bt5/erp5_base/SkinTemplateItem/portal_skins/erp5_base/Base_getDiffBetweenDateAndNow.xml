@@ -52,14 +52,14 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-import DateTime\n
 if not date:\n
-  return date\n
+  return \'\'\n
 try:\n
-  now =  DateTime.DateTime(DateTime.now())\n
-  date = DateTime.DateTime(date)\n
-except :\n
-  return date  \n
+  now =  DateTime()\n
+  date = DateTime(date)\n
+except:\n
+  return \'\'  \n
+Base_translateString = context.Base_translateString\n
 diff = now - date\n
 if diff < 1:\n
   hours = diff*24.0\n
@@ -68,24 +68,24 @@ if diff < 1:\n
     if minutes < 1:\n
       seconds = minutes*60.0\n
       if seconds < 1:\n
-        return \'Now\'\n
+        return Base_translateString(\'Now\')\n
       if 2 > seconds > 1: \n
-        return str(int(seconds)) +\' second ago\'\n
-      return str(int(seconds)) +\' seconds ago\' \n
+        return Base_translateString(\'${timedif} second ago\', mapping={\'timedif\':int(seconds)})\n
+      return Base_translateString(\'${timedif} seconds ago\', mapping={\'timedif\':int(seconds)})\n
     if 2 > minutes > 1:\n
-      return str(int(minutes)) +\' minute ago\'  \n
-    return str(int(minutes)) +\' minutes ago\' \n
+      return Base_translateString(\'${timedif} minute ago\', mapping={\'timedif\':int(minutes)})\n
+    return Base_translateString(\'${timedif} minutes ago\', mapping={\'timedif\':int(minutes)})\n
   if 2 > hours > 1:\n
-    return str(int(hours)) +\' hour ago\' \n
-  return str(int(hours)) +\' hours ago\'\n
+    return Base_translateString(\'${timedif} hour ago\', mapping={\'timedif\':int(hours)})\n
+  return Base_translateString(\'${timedif} hours ago\', mapping={\'timedif\':int(hours)})\n
 else:\n
   if diff > 365.25:\n
-    return \'More than 1 year\'\n
+    return Base_translateString(\'More than 1 year\')\n
   elif diff > 30:\n
-    return \'More than 1 month\'\n
+    return Base_translateString(\'More than 1 month\')\n
   elif 2 > diff > 1:\n
-    return \'Yesterday\'\n
-  return str(int(diff))+\' days ago\'\n
+    return Base_translateString(\'Yesterday\')\n
+  return Base_translateString(\'${timedif} days ago\', mapping={\'timedif\':int(diff)})\n
 
 
 ]]></string> </value>
