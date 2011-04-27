@@ -67,7 +67,7 @@ person = module.newContent(portal_type=\'Person\',\n
                   description=context.REQUEST.get(\'HTTP_X_FORWARDED_FOR\',\'Found no ip\'),\n
                  )\n
 person.setGroup(reference)\n
-assignment = person.newContent(portal_type="Assignment", group="my_group")\n
+assignment = person.newContent(portal_type="Assignment", group="cloudooo_group")\n
 assignment.open()\n
 person.validate()\n
 \n
@@ -83,7 +83,7 @@ document = context.Base_contribute(file=file,\n
                                    cancel_url=None,\n
                                    batch_mode=False,\n
                                    max_repeat=0,\n
-                                   editable_mode = 1,\n
+                                   editable_mode=1,\n
                                    follow_up_list=None,\n
                                    user_login=reference,\n
                                    reference=reference\n
