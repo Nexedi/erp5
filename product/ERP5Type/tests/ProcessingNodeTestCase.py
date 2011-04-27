@@ -44,18 +44,21 @@ def patchActivityTool():
 
   @patch
   def getDistributingNode(self):
-    return self.getPhysicalRoot().test_distributing_node
+    return getattr(self.getPhysicalRoot(), 'test_distributing_node', '')
 
+  # A property to catch setattr on 'distributingNode' would not work
+  # because self would lose all acquisition wrappers.
+  class SetDistributingNodeProxy(object):
+    def __init__(self, ob):
+      self._ob = ob
+    def __getattr__(self, attr):
+      m = getattr(self._ob, attr).im_func
+      return lambda *args, **kw: m(self, *args, **kw)
   @patch
   def manage_setDistributingNode(self, distributingNode, REQUEST=None):
-    # A property to catch setattr on 'distributingNode' doesn't work
-    # because self would lose all acquisition wrappers.
-    previous_node = self.distributingNode
-    try:
-      self._orig_manage_setDistributingNode(distributingNode, REQUEST=REQUEST)
-      self.getPhysicalRoot().test_distributing_node = self.distributingNode
-    finally:
-      self.distributingNode = previous_node
+    proxy = SetDistributingNodeProxy(self)
+    proxy._orig_manage_setDistributingNode(distributingNode, REQUEST=REQUEST)
+    self.getPhysicalRoot().test_distributing_node = proxy.distributingNode
 
   # When there is more than 1 node, prevent the distributing node from
   # processing activities.
@@ -123,6 +126,8 @@ class ProcessingNodeTestCase(backportUnittest.TestCase, ZopeTestCase.TestCase):
     currentNode = activity_tool.getCurrentNode()
     if distributing:
       activity_tool.manage_setDistributingNode(currentNode)
+    elif currentNode == activity_tool.getDistributingNode():
+      activity_tool.manage_setDistributingNode('')
     if processing:
       activity_tool.manage_addToProcessingList((currentNode,))
     else:

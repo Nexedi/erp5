@@ -1,6 +1,7 @@
 import errno
 import os
 import shutil
+import signal
 import socket
 import sys
 import glob
@@ -114,6 +115,7 @@ while not zeo_client:
     else:
       zeo_client_pid_list = activity_node = None
       os.close(r)
+      signal.signal(signal.SIGINT, signal.SIG_IGN)
   elif activity_node is not None:
     # run ZEO server but no need to fork
     zeo_server_pid = 0

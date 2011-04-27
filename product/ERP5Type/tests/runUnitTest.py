@@ -497,7 +497,8 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
       signum_set.remove(signal.SIGHUP)
     else:
       raise KeyboardInterrupt
-  signal.signal(signal.SIGINT, shutdown)
+  if signal.getsignal(signal.SIGINT) is not signal.SIG_IGN:
+    signal.signal(signal.SIGINT, shutdown)
   signal.signal(signal.SIGHUP, shutdown)
 
   try:
