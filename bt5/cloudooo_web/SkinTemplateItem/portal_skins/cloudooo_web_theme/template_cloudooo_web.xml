@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -37,7 +34,7 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <!-- ERP5 WEB INTEGRATION -->\n
 <tal:block metal:define-macro="master">\n
@@ -62,12 +59,10 @@
                         has_breadcrumb_area python:len(breadcrumb_area);\n
                         side_area python:aggregate.get(\'side\', []);\n
                         has_side_area python:len(side_area);\n
-                        css_url_list python: [  \n
-                                    \'/cloudooo_style/cloudooo.css\',\n
-] + [additional_css for additional_css in section.getLayoutProperty(\'layout_additional_css\', [])] ;\n
+                        css_url_list python: [\'/cloudooo_style/cloudooo.css\'] + [additional_css for additional_css in section.getLayoutProperty(\'layout_additional_css\', [])];\n
                         global css_list_template python:[\'%s%s\' % (portal_path,item) for item in css_url_list];   \n
-                        js_url_list python: [\'/jquery-ui-1.8.2/js/jquery-1.4.2.min.js\',\'/cloudooo_js/cloudooo.js\',\'/jquery-ui-1.8.2/js/jquery-ui-1.8.2.custom.min.js\'];                   \n
-                        global js_list python:[\'%s%s\' % (portal_path,item) for item in js_url_list];   ">\n
+                        js_url_list python: [\'/jquery/core/jquery.js\',\'/cloudooo_js/cloudooo.js\',\'/jquery/ui/js/jquery-ui.js\'];                   \n
+                        global js_list python:[\'%s%s\' % (portal_path,item) for item in js_url_list];">\n
 \n
     <tal:block metal:use-macro="here/template_erp5_xhtml_style/macros/master">\n
       <tal:block metal:fill-slot="head">\n
@@ -151,7 +146,7 @@
   </tal:block>        \n
 </tal:block>
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -166,8 +161,12 @@
             <value> <string>template_cloudooo_web</string> </value>
         </item>
         <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <unicode></unicode> </value>
         </item>
       </dictionary>
     </pickle>
