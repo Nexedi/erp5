@@ -93,9 +93,6 @@ msgstr "Il y a ${timedif} heure"
 msgid "${timedif} hours ago"
 msgstr "Il y a ${timedif} heures"
 
-msgid "${timedif} min ago"
-msgstr "Il y a ${timedif} minutes"
-
 msgid "${timedif} minute ago"
 msgstr "Il y a ${timedif} minute"
 
@@ -107,9 +104,6 @@ msgstr "Il y a ${timedif} second"
 
 msgid "${timedif} seconds ago"
 msgstr "Il y a ${timedif} seconds"
-
-msgid "${timedif}h ago"
-msgstr "Il y a ${timedif} heures"
 
 msgid "${transaction_title} (Transaction Reference = ${transaction_reference}, Creation Date = ${creation_date}  Currency = ${currency_title})"
 msgstr "${transaction_title} (Référence de la transaction= ${transaction_reference}, Date de création = ${creation_date}  Devise = ${currency_title})"
