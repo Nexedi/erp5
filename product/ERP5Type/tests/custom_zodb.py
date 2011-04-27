@@ -20,6 +20,7 @@ instance_home = os.environ['INSTANCE_HOME']
 zserver_list = os.environ.get('zserver', '').split(',')
 os.environ['zserver'] = zserver_list[0]
 
+neo_storage = 'neo_storage' in os.environ
 zeo_client = os.environ.get('zeo_client')
 if zeo_client:
   zeo_client = zeo_client.rsplit(':', 1)
@@ -28,7 +29,8 @@ if zeo_client:
 try:
   activity_node = int(os.environ['activity_node'])
 except KeyError:
-  activity_node = (zeo_client or 'zeo_server' in os.environ) and 1 or None
+  activity_node = (zeo_client or neo_storage or 'zeo_server' in os.environ
+                  ) and 1 or None
 
 data_fs_path = os.environ.get('erp5_tests_data_fs_path',
                               os.path.join(instance_home, 'var', 'Data.fs'))
@@ -88,7 +90,7 @@ for static_dir in static_dir_list:
     os.mkdir(static_dir)
 
 zeo_server_pid = None
-zeo_client_pid_list = []
+node_pid_list = []
 
 ZEvent = sys.modules.get('ZServer.PubCore.ZEvent')
 def fork():
@@ -103,43 +105,61 @@ def fork():
     instance_random.seed(instance_random.random())
   return pid
 
-while not zeo_client:
-  if activity_node:
-    r, zeo_client = os.pipe()
-    zeo_server_pid = fork()
-    if zeo_server_pid:
-      save_mysql = None
-      os.close(zeo_client)
-      zeo_client = eval(os.fdopen(r).read())
-      continue
-    else:
-      zeo_client_pid_list = activity_node = None
-      os.close(r)
-      signal.signal(signal.SIGINT, signal.SIG_IGN)
-  elif activity_node is not None:
-    # run ZEO server but no need to fork
-    zeo_server_pid = 0
-
-  if save:
-    Storage = FileStorage(data_fs_path)
-  elif load:
-    Storage = FileStorage(data_fs_path, read_only=True)
-    Storage._is_read_only = False # XXX for Zope 2.8
-    Storage = DemoStorage(base=Storage)
-  else:
-    Storage = DemoStorage()
-  break
-else:
+def forkNodes():
+  global node_pid_list
   for i in xrange(1, activity_node):
     pid = fork()
     if not pid:
-      zeo_client_pid_list = None
+      node_pid_list = None
       os.environ['zserver'] = i < len(zserver_list) and zserver_list[i] or ''
       break
-    zeo_client_pid_list.append(pid)
-  # Zope 2.12: do not import ClientStorage before forking due to client trigger
-  from ZEO.ClientStorage import ClientStorage
-  Storage = ClientStorage(zeo_client)
+    node_pid_list.append(pid)
 
-if zeo_client_pid_list is not None:
+if neo_storage:
+  if load or save or zeo_client:
+    raise Exception("--neo_storage conflicts with --load/save/zeo_client")
+  from neo.tests.functional import NEOCluster
+  neo_cluster = NEOCluster(range(2), partitions=4, adapter='BTree',
+                           temp_dir=os.getcwd(), verbose=False)
+  sigint = signal.signal(signal.SIGINT, signal.SIG_IGN)
+  neo_cluster.start()
+  signal.signal(signal.SIGINT, sigint)
+  forkNodes()
+  Storage = neo_cluster.getZODBStorage()
+else:
+  neo_cluster = None
+  while not zeo_client:
+    if activity_node:
+      r, zeo_client = os.pipe()
+      zeo_server_pid = fork()
+      if zeo_server_pid:
+        save_mysql = None
+        os.close(zeo_client)
+        zeo_client = eval(os.fdopen(r).read())
+        continue
+      else:
+        node_pid_list = activity_node = None
+        os.close(r)
+        signal.signal(signal.SIGINT, signal.SIG_IGN)
+    elif activity_node is not None:
+      # run ZEO server but no need to fork
+      zeo_server_pid = 0
+
+    if save:
+      Storage = FileStorage(data_fs_path)
+    elif load:
+      Storage = FileStorage(data_fs_path, read_only=True)
+      Storage._is_read_only = False # XXX for Zope 2.8
+      Storage = DemoStorage(base=Storage)
+    else:
+      Storage = DemoStorage()
+    break
+  else:
+    forkNodes()
+    # Zope 2.12: do not import ClientStorage
+    # before forking due to client trigger
+    from ZEO.ClientStorage import ClientStorage
+    Storage = ClientStorage(zeo_client)
+
+if node_pid_list is not None:
   _print("Instance at %r loaded ... " % instance_home)

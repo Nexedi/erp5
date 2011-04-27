@@ -128,6 +128,8 @@ Options:
                              Make ZServer listen on given host:port
                              If used with --activity_node=, this can be a
                              comma-separated list of addresses.
+  --neo_storage              Use a volatile NEO storage instead of a DemoStorage
+                             (not compatible with --save or --load).
   --products_path=path,path  Comma-separated list of products paths locations
                              which shall be used in test environment.
   --sys_path=path,path       Comma-separated list of paths which will be used to
@@ -486,12 +488,12 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
 
   import Lifetime
   from ZEO.ClientStorage import ClientStorage
-  from Zope2.custom_zodb import \
-      save_mysql, zeo_server_pid, zeo_client_pid_list, Storage
+  from Zope2.custom_zodb import Storage, save_mysql, \
+      node_pid_list, neo_cluster, zeo_server_pid
   def shutdown(signum, frame, signum_set=set()):
     Lifetime.shutdown(0)
     signum_set.add(signum)
-    if zeo_client_pid_list is None and len(signum_set) > 1:
+    if node_pid_list is None and len(signum_set) > 1:
       # in case of ^C, a child should also receive a SIGHUP from the parent,
       # so we merge the first 2 different signals in a single exception
       signum_set.remove(signal.SIGHUP)
@@ -508,7 +510,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
                       or not load)
     if zeo_server_pid == 0:
       suite = ZEOServerTestCase('asyncore_loop')
-    elif zeo_client_pid_list is None or not test_list:
+    elif node_pid_list is None or not test_list:
       suite = ProcessingNodeTestCase('processing_node')
       if not (dummy or load):
         _print('WARNING: either --save or --load should be used because static'
@@ -538,7 +540,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
       if run_only:
         ERP5TypeTestLoader.filter_test_list = None
 
-    if zeo_client_pid_list is None:
+    if node_pid_list is None:
       result = suite()
     else:
       if not test_list:
@@ -548,16 +550,18 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   finally:
     ProcessingNodeTestCase.unregisterNode()
     Storage.close()
-    if zeo_client_pid_list is not None:
+    if node_pid_list is not None:
       # Wait that child processes exit. Stop ZEO storage (if any) after all
       # other nodes disconnected.
-      for pid in zeo_client_pid_list:
+      for pid in node_pid_list:
         os.kill(pid, signal.SIGHUP)
-      for pid in zeo_client_pid_list:
+      for pid in node_pid_list:
         os.waitpid(pid, 0)
       if zeo_server_pid:
         os.kill(zeo_server_pid, signal.SIGHUP)
         os.waitpid(zeo_server_pid, 0)
+      if neo_cluster:
+        neo_cluster.stop()
 
   if save:
     os.chdir(instance_home)
@@ -584,7 +588,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
           if e.errno != errno.ENOENT:
             raise
         os.rename(static_dir, backup_path)
-    elif zeo_client_pid_list is not None:
+    elif node_pid_list is not None:
       _print('WARNING: No static files saved. You will have to do it manually.')
 
   return result
@@ -633,6 +637,7 @@ def main(argument_list=None):
         "zeo_client=",
         "zeo_server=",
         "zserver=",
+        "neo_storage",
         "products_path=",
         "sys_path=",
         "instance_home=",
@@ -732,6 +737,8 @@ def main(argument_list=None):
       os.environ["zeo_server"] = arg
     elif opt == "--zserver":
       os.environ["zserver"] = arg
+    elif opt == "--neo_storage":
+      os.environ["neo_storage"] = ""
     elif opt == "--products_path":
       os.environ["PRODUCTS_PATH"] = arg
     elif opt == "--sys_path":
