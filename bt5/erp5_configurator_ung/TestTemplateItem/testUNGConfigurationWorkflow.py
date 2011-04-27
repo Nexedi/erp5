@@ -456,7 +456,7 @@ class TestUNGConfiguratorWorkflowFranceLanguage(TestUNGConfiguratorWorkflowMixin
     self.assertEquals(person.getLastName(), 'Creator')
     assignment = person.contentValues(portal_type="Assignment")[0]
     self.assertEquals(assignment.getValidationState(), "open")
-    self.assertEquals(assignment.getFunction(), "function/ung_user")
+    self.assertEquals(assignment.getFunction(), "ung_user")
     person = portal_catalog.getResultValue(portal_type="Person",
                                            reference="french_assignee")
     self.assertEquals(person.getValidationState(), 'validated')
@@ -464,7 +464,7 @@ class TestUNGConfiguratorWorkflowFranceLanguage(TestUNGConfiguratorWorkflowMixin
     self.assertEquals(person.getLastName(), 'Assignee')
     assignment = person.contentValues(portal_type="Assignment")[0]
     self.assertEquals(assignment.getValidationState(), "open")
-    self.assertEquals(assignment.getFunction(), "function/ung_user")
+    self.assertEquals(assignment.getFunction(), "ung_user")
     person = portal_catalog.getResultValue(portal_type="Person",
                                            reference="french_assignor")
     self.assertEquals(person.getValidationState(), 'validated')
@@ -472,7 +472,7 @@ class TestUNGConfiguratorWorkflowFranceLanguage(TestUNGConfiguratorWorkflowMixin
     self.assertEquals(person.getLastName(), 'Assignor')
     assignment = person.contentValues(portal_type="Assignment")[0]
     self.assertEquals(assignment.getValidationState(), "open")
-    self.assertEquals(assignment.getFunction(), "function/ung_user")
+    self.assertEquals(assignment.getFunction(), "ung_user")
 
   def stepCheckWebSiteRoles(self, sequence=None, sequence_list=None, **kw):
     """ Check permission of Web Site with normal user """
@@ -551,7 +551,7 @@ class TestUNGConfiguratorWorkflowBrazilLanguage(TestUNGConfiguratorWorkflowMixin
     self.assertEquals(person.getLastName(), 'Creator')
     assignment = person.contentValues(portal_type="Assignment")[0]
     self.assertEquals(assignment.getValidationState(), "open")
-    self.assertEquals(assignment.getFunction(), "function/ung_user")
+    self.assertEquals(assignment.getFunction(), "ung_user")
     person = portal_catalog.getResultValue(portal_type="Person",
                                            reference="person_assignee")
     self.assertEquals(person.getValidationState(), 'validated')
@@ -559,7 +559,7 @@ class TestUNGConfiguratorWorkflowBrazilLanguage(TestUNGConfiguratorWorkflowMixin
     self.assertEquals(person.getLastName(), 'Assignee')
     assignment = person.contentValues(portal_type="Assignment")[0]
     self.assertEquals(assignment.getValidationState(), "open")
-    self.assertEquals(assignment.getFunction(), "function/ung_user")
+    self.assertEquals(assignment.getFunction(), "ung_user")
     person = portal_catalog.getResultValue(portal_type="Person",
                                            reference="person_assignor")
     self.assertEquals(person.getValidationState(), 'validated')
@@ -567,7 +567,7 @@ class TestUNGConfiguratorWorkflowBrazilLanguage(TestUNGConfiguratorWorkflowMixin
     self.assertEquals(person.getLastName(), 'Assignor')
     assignment = person.contentValues(portal_type="Assignment")[0]
     self.assertEquals(assignment.getValidationState(), "open")
-    self.assertEquals(assignment.getFunction(), "function/ung_user")
+    self.assertEquals(assignment.getFunction(), "ung_user")
 
   def stepCheckWebSiteRoles(self, sequence=None, sequence_list=None, **kw):
     """ Check permission of Web Site with normal user """
