@@ -159,7 +159,7 @@ function matchRightFieldset(element, ignored) {\n
 \n
 function fixLeftRightHeightAndFocus(fix_height) {\n
   if (fix_height == 1) {\n
-    buildTables(document.getElementsByTagName(\'fieldset\'),\n
+     buildTables(document.getElementsByTagName(\'fieldset\'),\n
                 matchLeftFieldset, matchRightFieldset,\n
                 "fake");\n
   }\n
@@ -330,11 +330,46 @@ var rewriteIndentedSelect = function() {\n
   }\n
 }\n
 \n
+function queryStringToArray(query_string){\n
+  /*\n
+    Turn a query string into a "dictionary"\n
+  */\n
+  var final ={};\n
+  var b = query_string.split(\'&\');\n
+  $.each(b, function(x,y){\n
+    var temp = y.split(\'=\');\n
+    final[temp[0]] = temp[1];});\n
+  return final  \n
+}\n
+\n
+function submitLinkAsHtmlForm(event){\n
+  /*\n
+  Parse link into form arguments and pass everything as a \n
+  form (together with rest of page\'s input elements).\n
+  */\n
+  url = $(this).attr("href")\n
+  form = $("form")\n
+  method = url.substring(0, url.indexOf(\'?\'))\n
+  query_string = url.substring(url.indexOf(\'?\')+1)\n
+  params = queryStringToArray(query_string)\n
+  $.each(params, function(key, value) {\n
+    if (!$(\'*[name="\' + key + \'"]\').length){\n
+      // key not part of HTML namespace\n
+      form.append(\'<input type="hidden" name="\' + key+ \'" value="\' + value + \'">\');\n
+    }});\n
+  // submit form  \n
+  form.attr("action", method)\n
+  form.submit()\n
+  event.stopPropagation()  \n
+  return false;\n
+}\n
+\n
 if (navigator.userAgent.toLowerCase().indexOf(\'firefox\') != -1)\n
   $(document).ready(rewriteIndentedSelect);\n
 $(document).ready(resizeIFrameOnLoad);\n
 $(document).ready(addOnChangeEventHandler);\n
-$(document).ready(indexAllCheckBoxesAtBTInstallationOnLoad);
+$(document).ready(indexAllCheckBoxesAtBTInstallationOnLoad);\n
+
 
 ]]></string> </value>
         </item>
