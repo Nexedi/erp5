@@ -35,6 +35,8 @@ Cache Factory | statistics
 Cache Factory | view
 Cache Tool | statistics
 Cache Tool | view
+Category Acquired Membership State Constraint | predicate
+Category Acquired Membership State Constraint | view
 Category Existence Constraint | predicate
 Category Existence Constraint | view
 Category Membership Arity Constraint | predicate

@@ -17,6 +17,7 @@ Business Template
 Cache Factory
 Cache Tool
 Category
+Category Acquired Membership State Constraint
 Category Existence Constraint
 Category Membership Arity Constraint
 Category Membership State Constraint
