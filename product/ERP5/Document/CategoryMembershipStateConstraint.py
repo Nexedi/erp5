@@ -45,6 +45,14 @@ class CategoryMembershipStateConstraint(ConstraintMixin):
 
   _message_id_tuple = ('message_different_state',)
 
+  def _getObjectCategoryMembershipList(self, obj, base_category, 
+                                       portal_type_list):
+    """
+    Calculate the object category membership list.
+    This method was created to allow CategoryAcquiredMembershipStateConstraint
+    class to simply surcharge it.
+    """
+    return obj.getValueList(base_category, portal_type=portal_type_list)
 
   def _checkConsistency(self, obj, fixit=0):
     """Check the object's consistency.
@@ -62,8 +70,8 @@ class CategoryMembershipStateConstraint(ConstraintMixin):
     workflow_state_list = evaluateExpressionFromString(expression_context,
                                                 workflow_state_list_expression)
 
-    membership_list = obj.getValueList(base_category,
-                                       portal_type=portal_type_list)
+    membership_list = self._getObjectCategoryMembershipList(obj, base_category,
+                                                            portal_type_list)
 
     for membership in membership_list:
       current_state = membership.getProperty(workflow_variable)
