@@ -30,7 +30,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>icon</string> </key>
@@ -86,7 +88,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${portal_url}/images/cash_out.png</string> </value>
+            <value> <string>string:${portal_url}/banking_images/cash_out.png</string> </value>
         </item>
       </dictionary>
     </pickle>
