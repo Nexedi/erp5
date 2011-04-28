@@ -112,7 +112,6 @@
     <tal:block tal:define="global box_relative_url python: request.get(\'box_relative_url\', \'\');\n
                            global box python: real_context.restrictedTraverse(box_relative_url); \n
                            global box_id python: \'%s_content\' %box_relative_url.replace(\'/\', \'_\');\n
-                           global box_id python: \'%s_content\' %real_context.getRelativeUrl().replace(\'/\', \'_\');\n
                            global dom_id python: request.get(\'dom_id\',None) or box_id;\n
                            global field_prefix string:${box_id}_">\n
       <input tal:condition="python:form_id" \n
