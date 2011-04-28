@@ -326,13 +326,8 @@ def getWorklistListQuery(grouped_worklist_dict):
       criterion_value_to_worklist_dict = \
         criterion_value_to_worklist_dict_dict.setdefault(criterion_value, {})
       criterion_value_to_worklist_dict[worklist_id] = None
-  total_criterion_id_list = total_criterion_id_dict.keys()
-  def criterion_id_cmp(criterion_id_a, criterion_id_b):
-    return cmp(max([len(x) for x in \
-                    total_criterion_id_dict[criterion_id_a].itervalues()]),
-               max([len(x) for x in \
-                    total_criterion_id_dict[criterion_id_b].itervalues()]))
-  total_criterion_id_list.sort(criterion_id_cmp)
+  total_criterion_id_list = sorted(total_criterion_id_dict, key=lambda y: max(
+    len(x) for x in total_criterion_id_dict[y].itervalues()))
   query = generateNestedQuery(priority_list=total_criterion_id_list,
                               criterion_dict=total_criterion_id_dict)
   assert query is not None
@@ -518,14 +513,13 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
           for key, value in grouped_worklist_result.iteritems():
             worklist_result_dict[key] = value + worklist_result_dict.get(key, 0)
       if not src__:
-        action_list = generateActionList(worklist_metadata=worklist_metadata,
-                                         worklist_result=worklist_result_dict,
-                                         portal_url=portal_url)
-        def get_action_ident(action):
-          return '/'.join((action['workflow_id'], action['worklist_id']))
-        def action_cmp(action_a, action_b):
-          return cmp(get_action_ident(action_a), get_action_ident(action_b))
-        action_list.sort(action_cmp)
+        action_list = sorted(
+          generateActionList(
+            worklist_metadata=worklist_metadata,
+            worklist_result=worklist_result_dict,
+            portal_url=portal_url),
+          key=lambda x: '/'.join((x['workflow_id'], x['worklist_id'])),
+        )
       return action_list
     user = str(_getAuthenticatedUser(self))
     if src__:
