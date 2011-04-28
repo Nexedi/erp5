@@ -3,7 +3,7 @@
   <role id='admin'>
    <item>Owner</item>
   </role>
-  <role id='my_group'>
+  <role id='cloudooo_group'>
    <item>Auditor</item>
   </role>
  </local_roles>
