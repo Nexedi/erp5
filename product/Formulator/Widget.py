@@ -1485,8 +1485,10 @@ class DateTimeWidget(Widget):
     # Is it still usefull to test the None value,
     # as DateTimeField should be considerer as the other field
     # and get an empty string as default value?
-    if value in (None, ''):
-      return ''
+    if not isinstance(value, DateTime):
+      if value is None:
+        value = ''
+      return value
 
     use_ampm = field.get_value('ampm_time_style')
     use_timezone = field.get_value('timezone_style')
