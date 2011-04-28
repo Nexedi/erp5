@@ -1,6 +1,7 @@
 Acquired Property | dynamic_class_generation_interaction_workflow
 Action Information | base_type_interaction_workflow
 Alarm | edit_workflow
+Attribute Blacklisted Constraint | dynamic_class_generation_interaction_workflow
 Attribute Equality Constraint | dynamic_class_generation_interaction_workflow
 Attribute Unicity Constraint | dynamic_class_generation_interaction_workflow
 Base Category | dynamic_class_generation_interaction_workflow

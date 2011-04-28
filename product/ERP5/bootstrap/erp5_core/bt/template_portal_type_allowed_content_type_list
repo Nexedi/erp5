@@ -28,6 +28,7 @@ Preference Type | Action Information
 Preference Type | Role Information
 Property Sheet Tool | Property Sheet
 Property Sheet | Acquired Property
+Property Sheet | Attribute Blacklisted Constraint
 Property Sheet | Attribute Equality Constraint
 Property Sheet | Attribute Unicity Constraint
 Property Sheet | Category Acquired Membership State Constraint

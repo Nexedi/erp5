@@ -10,6 +10,8 @@ Alarm | solve
 Alarm | standard_report
 Alarm | view
 Application Id Generator | view
+Attribute Blacklisted Constraint | predicate
+Attribute Blacklisted Constraint | view
 Attribute Equality Constraint | predicate
 Attribute Equality Constraint | view
 Attribute Unicity Constraint | predicate

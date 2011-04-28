@@ -65,6 +65,7 @@
  </portal_type>
  <portal_type id="Property Sheet">
   <item>Acquired Property</item>
+  <item>Attribute Blacklisted Constraint</item>
   <item>Attribute Equality Constraint</item>
   <item>Attribute Unicity Constraint</item>
   <item>Category Acquired Membership State Constraint</item>
