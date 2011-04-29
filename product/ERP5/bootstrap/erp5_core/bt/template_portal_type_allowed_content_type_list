@@ -42,6 +42,7 @@ Property Sheet | Dynamic Category Property
 Property Sheet | Property Existence Constraint
 Property Sheet | Property Type Validity Constraint
 Property Sheet | Standard Property
+Property Sheet | String Attribute Match Constraint
 Property Sheet | TALES Constraint
 Simulation Movement | Applied Rule
 Simulation Tool | Applied Rule

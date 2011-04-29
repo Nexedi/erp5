@@ -79,6 +79,7 @@
   <item>Property Existence Constraint</item>
   <item>Property Type Validity Constraint</item>
   <item>Standard Property</item>
+  <item>String Attribute Match Constraint</item>
   <item>TALES Constraint</item>
  </portal_type>
  <portal_type id="Property Sheet Tool">

@@ -31,5 +31,6 @@ Property Sheet Tool | dynamic_class_generation_interaction_workflow
 Property Sheet | dynamic_class_generation_interaction_workflow
 Property Type Validity Constraint | dynamic_class_generation_interaction_workflow
 Standard Property | dynamic_class_generation_interaction_workflow
+String Attribute Match Constraint | dynamic_class_generation_interaction_workflow
 System Preference | preference_workflow
 TALES Constraint | dynamic_class_generation_interaction_workflow

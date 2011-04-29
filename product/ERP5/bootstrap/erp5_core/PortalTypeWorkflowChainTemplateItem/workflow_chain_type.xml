@@ -120,6 +120,10 @@
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
+  <type>String Attribute Match Constraint</type>
+  <workflow>dynamic_class_generation_interaction_workflow</workflow>
+ </chain>
+ <chain>
   <type>System Preference</type>
   <workflow>preference_workflow</workflow>
  </chain>
