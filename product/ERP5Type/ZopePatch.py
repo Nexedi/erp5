@@ -71,6 +71,7 @@ from Products.ERP5Type.patches import ZODBConnection
 # dropped support for older versions.
 from Products.ERP5Type.patches import TransactionAddBeforeCommitHook
 from Products.ERP5Type.patches import ZopePageTemplate
+from Products.ERP5Type.patches import ZopePageTemplateUtils
 
 # These symbols are required for backward compatibility
 from Products.ERP5Type.patches.PropertyManager import ERP5PropertyManager
