@@ -137,6 +137,9 @@
                         <string>my_view_mode_id_as_reference</string>
                         <string>my_view_mode_read_only_reference</string>
                         <string>my_email_field</string>
+                        <string>listbox_creation_date</string>
+                        <string>listbox_modification_date</string>
+                        <string>listbox_owner_title</string>
                       </list>
                     </value>
                 </item>
