@@ -67,7 +67,11 @@ _cfg = _getConfiguration()
 DevelopmentMode = _cfg.debug_mode
 # backward compatibility
 INSTANCE_HOME = _cfg.instancehome
-SOFTWARE_HOME = _cfg.softwarehome
+try:
+  SOFTWARE_HOME = _cfg.softwarehome
+except AttributeError:
+  # Not present when imported from ZEO (for conflict resolution).
+  pass
 
 # don't tempt potential users by leaving these lying around
 del _cfg, _getConfiguration
