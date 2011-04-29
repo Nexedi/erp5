@@ -82,13 +82,13 @@ Test domain tree of Account Module\n
 <tr>\n
   <td>clickAndWait</td>\n
   <!-- XXX it should probably be the category `id`, not the title. -->\n
-  <td>//table[//table[@class="listbox-table-domain-tree"]]//tr[2]//a[@class="tree-closed"]</td>\n
+  <td>//table[//table[@class="listbox-table-domain-tree"]]//tr[2]//button[@class="tree-closed"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
   <!-- XXX it should probably be the category `id`, not the title. -->\n
-  <td>//table[//table[@class="listbox-table-domain-tree"]]//tr[3]//a[@class="tree-closed"]</td>\n
+  <td>//table[//table[@class="listbox-table-domain-tree"]]//tr[3]//button[@class="tree-closed"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -145,7 +145,7 @@ Test domain tree of Account Module\n
 -->\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//table[@class="listbox-table-domain-tree"]//tr[7]//a[@class="tree-closed"]</td>\n
+  <td>//table[@class="listbox-table-domain-tree"]//tr[7]//button[@class="tree-closed"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
