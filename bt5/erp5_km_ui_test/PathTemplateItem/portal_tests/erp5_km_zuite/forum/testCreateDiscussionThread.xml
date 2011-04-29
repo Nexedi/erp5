@@ -75,19 +75,13 @@
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>link=Add New Discussion Thread</td>\n
-<!--  <td>//div[@id=\'main_content\']/fieldset[1]/div/div/div/div/a/span</td>-->\n
+  <td>link=Post message</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
   <td>field_your_title</td>\n
   <td>Thread 1</td>\n
-</tr>\n
-<tr>\n
-  <td>type</td>\n
-  <td>field_my_reference</td>\n
-  <td>thread-1</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
