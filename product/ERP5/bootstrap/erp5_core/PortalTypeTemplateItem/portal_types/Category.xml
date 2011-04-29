@@ -87,7 +87,7 @@ be a problem).</string> </value>
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value> <none/> </value>
+            <value> <string>erp5_content</string>  </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>
