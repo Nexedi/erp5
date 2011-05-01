@@ -1139,6 +1139,12 @@ span.date-format {\n
 span#no-input-file {\n
   display: none;\n
   color: #f61717;\n
+}\n
+\n
+.tree-open, .tree-closed {\n
+  border: none;\n
+  background: #FFF;\n
+  cursor: pointer;\n
 }
 
 ]]></string> </value>
