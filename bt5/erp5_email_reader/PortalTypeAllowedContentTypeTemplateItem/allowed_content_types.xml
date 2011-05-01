@@ -1,0 +1,8 @@
+<allowed_content_type_list>
+ <portal_type id="Email Reader">
+  <item>Email Thread</item>
+ </portal_type>
+ <portal_type id="Email Thread Module">
+  <item>Email Thread</item>
+ </portal_type>
+</allowed_content_type_list>

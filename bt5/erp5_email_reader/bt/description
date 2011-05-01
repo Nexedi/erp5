@@ -1,0 +1,1 @@
+This business template provide the features of an Email reader to ERP5. It consists of a DMS external source, a WebSite and a gadget. The external source is capable of reading email from any POP/IMAP server, store it and index it into ERP5. The WebSite provides a email focused user interface. Gadgets provide access to email from ERP5 main page or from ERP5 KM.

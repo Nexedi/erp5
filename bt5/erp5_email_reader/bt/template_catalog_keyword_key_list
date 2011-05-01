@@ -1,0 +1,4 @@
+email_thread.sender
+email_thread.recipient
+email_thread.cc_recipient
+email_thread.bcc_recipient

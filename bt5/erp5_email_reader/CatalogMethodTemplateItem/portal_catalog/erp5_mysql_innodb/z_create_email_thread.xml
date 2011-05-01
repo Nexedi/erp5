@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="SQL" module="Products.ZSQLMethods.SQL"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_col</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>arguments_src</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>connection_id</string> </key>
+            <value> <string>erp5_sql_connection</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>z_create_email_thread</string> </value>
+        </item>
+        <item>
+            <key> <string>src</string> </key>
+            <value> <string>CREATE TABLE `email_thread` (\n
+  `uid` BIGINT UNSIGNED NOT NULL,\n
+  `sender` varchar(40),\n
+  `recipient` varchar(255),\n
+  `cc_recipient` varchar(255),\n
+  `bcc_recipient` varchar(255),\n
+  `start_date` datetime,\n
+  `validation_state` varchar(20),  \n
+  PRIMARY KEY `uid` (`uid`),\n
+  KEY `sender` (`sender`),\n
+  KEY `recipient` (`recipient`),\n
+  KEY `cc_recipient` (`cc_recipient`),\n
+  KEY `bcc_recipient` (`bcc_recipient`),\n
+  KEY `validation_state` (`validation_state`),\n
+  KEY `start_date` (`start_date`, `validation_state`)\n
+) TYPE = InnoDB;</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

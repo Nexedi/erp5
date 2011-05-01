@@ -1,0 +1,8 @@
+erp5_mysql_innodb/z0_drop_crawler
+erp5_mysql_innodb/z0_drop_email_thread
+erp5_mysql_innodb/z0_uncatalog_crawler
+erp5_mysql_innodb/z0_uncatalog_email_thread
+erp5_mysql_innodb/z_catalog_crawler_list
+erp5_mysql_innodb/z_catalog_email_thread_list
+erp5_mysql_innodb/z_create_crawler
+erp5_mysql_innodb/z_create_email_thread

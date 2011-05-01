@@ -1,0 +1,7 @@
+2011-02-07 gabriel
+* Added erp5_crm as dependency
+* Update Fields
+* Add scripts that are missing
+
+2011-02-04 gabriel
+* Add Email Thread Module to filter Email Thread objects
