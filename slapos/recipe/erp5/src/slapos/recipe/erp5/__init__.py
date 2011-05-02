@@ -93,6 +93,39 @@ class Recipe(BaseSlapRecipe):
     ))
     return self.path_list
 
+  def _requestZeoFileStorage(self, server_name, storage_name):
+    """Local, slap.request compatible, call to ask for filestorage on Zeo
+
+    filter_kw can be used to select specific Zeo server
+
+    Someday in future it will be possible to invoke:
+
+    self.request(
+      software_release=self.computer_partition.getSoftwareRelease().getURI(),
+      software_type='Zeo Server',
+      partition_reference=storage_name,
+      filter_kw={'server_name': server_name},
+      shared=True
+    )
+
+    Thanks to this it will be possible to select precisely on which server
+    which storage will be placed.
+    """
+    base_port = 35001
+    if getattr(self, '_zeo_storage_dict', None) is None:
+      self._zeo_storage_dict = {}
+    if getattr(self, '_zeo_storage_port_dict', None) is None:
+      self._zeo_storage_port_dict = {}
+    self._zeo_storage_port_dict.setdefault(server_name,
+        base_port+len(self._zeo_storage_port_dict))
+    self._zeo_storage_dict[server_name] = self._zeo_storage_dict.get(
+        server_name, []) + [storage_name]
+    return dict(
+      ip=self.getLocalIPv4Address(),
+      port=self._zeo_storage_port_dict[server_name],
+      storage_name=storage_name
+    )
+
   def installLogrotate(self):
     """Installs logortate main configuration file and registers its to cron"""
     logrotate_d = os.path.abspath(os.path.join(self.etc_directory,
