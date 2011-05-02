@@ -16,6 +16,7 @@ Category Membership Arity Constraint | dynamic_class_generation_interaction_work
 Category Membership State Constraint | dynamic_class_generation_interaction_workflow
 Category Property | dynamic_class_generation_interaction_workflow
 Category Related Membership Arity Constraint | dynamic_class_generation_interaction_workflow
+Category Related Membership State Constraint | dynamic_class_generation_interaction_workflow
 Category Tool | dynamic_class_generation_interaction_workflow
 Category | edit_workflow
 Content Existence Constraint | dynamic_class_generation_interaction_workflow

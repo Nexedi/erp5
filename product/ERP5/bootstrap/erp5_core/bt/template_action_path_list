@@ -48,6 +48,8 @@ Category Membership State Constraint | view
 Category Property | view
 Category Related Membership Arity Constraint | predicate
 Category Related Membership Arity Constraint | view
+Category Related Membership State Constraint | predicate
+Category Related Membership State Constraint | view
 Category Tool | export_category_list
 Category Tool | fast_input
 Category Tool | view
