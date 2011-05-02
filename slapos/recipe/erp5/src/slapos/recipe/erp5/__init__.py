@@ -520,7 +520,8 @@ class Recipe(BaseSlapRecipe):
       storage_definition_list = []
       for storage_name in sorted(self._zeo_storage_dict[zeo_server]):
         storage_number += 1
-        path = os.path.join(zodb_dir, 'zodb_%s.fs' % storage_number)
+        path = os.path.join(zodb_dir, 'zodb_%s_%s.fs' % (zeo_number,
+          storage_number))
         storage_definition_list.append("""<filestorage %(storage_name)s>
   path %(path)s
 </filestorage>"""% dict(storage_name=storage_name, path=path))
