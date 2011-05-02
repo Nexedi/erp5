@@ -2165,10 +2165,6 @@ class Catalog(Folder,
     # buildSQLQuery level, we must store them into final ComplexQuery, which
     # will handle them.
     unknown_column_dict = {}
-    # implicit_table_list: contains all tables explicitely given as par of
-    # column names with empty values. This is for backward compatibility. See
-    # comment about empty values.
-    implicit_table_list = []
     # empty_value_dict: contains all keys whose value causes them to be
     # discarded.
     empty_value_dict = {}
@@ -2185,14 +2181,7 @@ class Catalog(Folder,
             or value['query'] == ''
             or (isinstance(value['query'], (list, tuple))
               and len(value['query']) == 0)))):
-        # We have an empty value:
-        # - do not create a query from it
-        # - if key has a dot, add its left part to the list of "hint" tables
-        #   This is for backward compatibility, when giving a mapped column
-        #   with an empty value caused a join with catalog to appear in
-        #   resulting where-expression)
-        if '.' in key:
-          implicit_table_list.append(key)
+        # We have an empty value, do not create a query from it
         empty_value_dict[key] = value
       else:
         script = self.getScriptableKeyScript(key)
@@ -2235,7 +2224,8 @@ class Catalog(Folder,
       LOG('SQLCatalog', WARNING, 'Discarding columns with empty values: %r' % (empty_value_dict, ))
     if len(unknown_column_dict):
       LOG('SQLCatalog', WARNING, 'Unknown columns %r, skipped.' % (unknown_column_dict.keys(), ))
-    return ComplexQuery(query_list, logical_operator=operator, unknown_column_dict=unknown_column_dict, implicit_table_list=implicit_table_list)
+    return ComplexQuery(query_list, logical_operator=operator,
+        unknown_column_dict=unknown_column_dict)
 
   @profiler_decorator
   def buildOrderByList(self, sort_on=None, sort_order=None, order_by_expression=None):
