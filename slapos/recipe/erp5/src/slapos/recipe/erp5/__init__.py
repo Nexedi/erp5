@@ -506,6 +506,8 @@ class Recipe(BaseSlapRecipe):
     zeo_number = 0
     for zeo_server in sorted(self._zeo_storage_dict.iterkeys()):
       zeo_number += 1
+      server_dir = os.path.join(zodb_dir, str(zeo_number))
+      self._createDirectory(server_dir)
       zeo_event_log = os.path.join(self.log_directory, 'zeo-%s.log'% zeo_number)
       zeo_pid = os.path.join(self.run_directory, 'zeo-%s.pid'% zeo_number)
       self.registerLogRotation('zeo', [zeo_event_log],
@@ -520,8 +522,7 @@ class Recipe(BaseSlapRecipe):
       storage_definition_list = []
       for storage_name in sorted(self._zeo_storage_dict[zeo_server]):
         storage_number += 1
-        path = os.path.join(zodb_dir, 'zodb_%s_%s.fs' % (zeo_number,
-          storage_number))
+        path = os.path.join(server_dir, 'zodb_%s.fs' % storage_number)
         storage_definition_list.append("""<filestorage %(storage_name)s>
   path %(path)s
 </filestorage>"""% dict(storage_name=storage_name, path=path))
