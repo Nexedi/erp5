@@ -499,30 +499,47 @@ class Recipe(BaseSlapRecipe):
                              bt5_repository_list]))
     return []
 
-  def installZeo(self, ip, port, name, path):
-    zeo_event_log = os.path.join(self.log_directory, 'zeo.log')
-    zeo_pid = os.path.join(self.run_directory, 'zeo.pid')
-    self.registerLogRotation('zeo', [zeo_event_log],
-        self.killpidfromfile + ' ' + zeo_pid + ' SIGUSR2')
-    config = dict(
-      zeo_ip=ip,
-      zeo_port=port,
-      zeo_storagename=name,
-      zeo_event_log=zeo_event_log,
-      zeo_pid=zeo_pid,
-      zeo_zodb=path
-    )
-    zeo_conf_path = self.createConfigurationFile('zeo.conf',
-      self.substituteTemplate(self.getTemplateFilename('zeo.conf.in'), config))
-    self.path_list.append(zeo_conf_path)
-    wrapper = zc.buildout.easy_install.scripts([('zeo', __name__ + '.execute',
-      'execute')], self.ws, sys.executable, self.wrapper_directory, arguments=[
-        self.options['runzeo_binary'].strip(), '-C', zeo_conf_path]
-      )[0]
-    self.path_list.append(wrapper)
-    return dict(
-      zeo_address='%s:%s' % (config['zeo_ip'], config['zeo_port']),
-      zeo_storagename=config['zeo_storagename'])
+  def installZeo(self, ip):
+    zodb_dir = os.path.join(self.data_root_directory, 'zodb')
+    self._createDirectory(zodb_dir)
+    zeo_configuration_list = []
+    zeo_number = 0
+    for zeo_server in sorted(self._zeo_storage_dict.iterkeys()):
+      zeo_number += 1
+      zeo_event_log = os.path.join(self.log_directory, 'zeo-%s.log'% zeo_number)
+      zeo_pid = os.path.join(self.run_directory, 'zeo-%s.pid'% zeo_number)
+      self.registerLogRotation('zeo', [zeo_event_log],
+          self.killpidfromfile + ' ' + zeo_pid + ' SIGUSR2')
+      config = dict(
+        zeo_ip=ip,
+        zeo_port=self._zeo_storage_port_dict[zeo_server],
+        zeo_event_log=zeo_event_log,
+        zeo_pid=zeo_pid,
+      )
+      storage_number = 0
+      storage_definition_list = []
+      for storage_name in sorted(self._zeo_storage_dict[zeo_server]):
+        storage_number += 1
+        path = os.path.join(zodb_dir, 'zodb_%s.fs' % storage_number)
+        storage_definition_list.append("""<filestorage %(storage_name)s>
+  path %(path)s
+</filestorage>"""% dict(storage_name=storage_name, path=path))
+        zeo_configuration_list.append(dict(
+          ip=ip,
+          port=config['zeo_port'],
+          path=path,
+          storage_name=storage_name,
+          ))
+      config['zeo_filestorage_snippet'] = '\n'.join(storage_definition_list)
+      zeo_conf_path = self.createConfigurationFile('zeo-%s.conf' % zeo_number,
+        self.substituteTemplate(self.getTemplateFilename('zeo.conf.in'), config))
+      self.path_list.append(zeo_conf_path)
+      wrapper = zc.buildout.easy_install.scripts([('zeo', __name__ + '.execute',
+        'execute')], self.ws, sys.executable, self.wrapper_directory, arguments=[
+          self.options['runzeo_binary'].strip(), '-C', zeo_conf_path]
+        )[0]
+      self.path_list.append(wrapper)
+    return zeo_configuration_list
 
   def installZope(self, ip, port, name, zeo_address=None, zeo_storagename=None,
       zodb_root_path=None, with_timerservice=False):

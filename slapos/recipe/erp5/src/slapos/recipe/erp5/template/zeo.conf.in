@@ -6,9 +6,7 @@
   pid-filename %(zeo_pid)s
 </zeo>
 
-<filestorage %(zeo_storagename)s>
-  path %(zeo_zodb)s
-</filestorage>
+%(zeo_filestorage_snippet)s
 
 <eventlog>
   <logfile>
