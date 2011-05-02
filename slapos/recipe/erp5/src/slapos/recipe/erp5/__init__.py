@@ -533,7 +533,7 @@ class Recipe(BaseSlapRecipe):
       zeo_conf_path = self.createConfigurationFile('zeo-%s.conf' % zeo_number,
         self.substituteTemplate(self.getTemplateFilename('zeo.conf.in'), config))
       self.path_list.append(zeo_conf_path)
-      wrapper = zc.buildout.easy_install.scripts([('zeo-%s' % zeo_number,
+      wrapper = zc.buildout.easy_install.scripts([('zeo_%s' % zeo_number,
         __name__ + '.execute', 'execute')], self.ws, sys.executable,
         self.wrapper_directory, arguments=[
           self.options['runzeo_binary'].strip(), '-C', zeo_conf_path]
