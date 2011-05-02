@@ -43,14 +43,7 @@ lock-filename %(lock-filename)s
 </http-server>
 
 # ZODB configuration
-<zodb_db main>
-  mount-point /
-  <zeoclient>
-    server %(zeo_address)s
-    storage %(zeo_storagename)s
-    name %(zeo_storagename)s
-  </zeoclient>
-</zodb_db>
+%(zodb_configuration_string)s
 <zoperunner>
     program $INSTANCE/bin/runzope
 </zoperunner>

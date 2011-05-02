@@ -502,7 +502,7 @@ class Recipe(BaseSlapRecipe):
   def installZeo(self, ip):
     zodb_dir = os.path.join(self.data_root_directory, 'zodb')
     self._createDirectory(zodb_dir)
-    zeo_configuration_list = []
+    zeo_configuration_dict = {}
     zeo_number = 0
     for zeo_server in sorted(self._zeo_storage_dict.iterkeys()):
       zeo_number += 1
@@ -524,12 +524,11 @@ class Recipe(BaseSlapRecipe):
         storage_definition_list.append("""<filestorage %(storage_name)s>
   path %(path)s
 </filestorage>"""% dict(storage_name=storage_name, path=path))
-        zeo_configuration_list.append(dict(
+        zeo_configuration_dict[storage_name] = dict(
           ip=ip,
           port=config['zeo_port'],
-          path=path,
-          storage_name=storage_name,
-          ))
+          path=path
+          )
       config['zeo_filestorage_snippet'] = '\n'.join(storage_definition_list)
       zeo_conf_path = self.createConfigurationFile('zeo-%s.conf' % zeo_number,
         self.substituteTemplate(self.getTemplateFilename('zeo.conf.in'), config))
@@ -539,18 +538,18 @@ class Recipe(BaseSlapRecipe):
           self.options['runzeo_binary'].strip(), '-C', zeo_conf_path]
         )[0]
       self.path_list.append(wrapper)
-    return zeo_configuration_list
+    return zeo_configuration_dict
 
-  def installZope(self, ip, port, name, zeo_address=None, zeo_storagename=None,
-      zodb_root_path=None, with_timerservice=False):
+  def installZope(self, ip, port, name, zodb_root_path=None,
+      with_timerservice=False, zodb_configuration_string=None):
     # Create zope configuration file
     zope_config = dict(
         products=self.options['products'],
     )
-    if zeo_address is not None and zeo_storagename is not None:
-      zope_config.update(zeo_address=zeo_address, zeo_storagename=zeo_storagename)
-    elif zodb_root_path is not None:
+    if zodb_configuration_string is None:
       zope_config.update(zodb_root_path=zodb_root_path)
+    else:
+      zope_config.update(zodb_configuration_string=zodb_configuration_string)
     zope_config['instance'] = self.erp5_directory
     zope_config['event_log'] = os.path.join(self.log_directory,
         '%s-event.log' % name)
@@ -577,7 +576,7 @@ class Recipe(BaseSlapRecipe):
     zope_config['path'] = ':'.join([self.bin_directory] +
         os.environ['PATH'].split(':'))
 
-    if zeo_address is None:
+    if zodb_configuration_string is None:
       zope_wrapper_template_location = self.getTemplateFilename(
           'zope.conf.simple.in')
       with_timerservice = True
