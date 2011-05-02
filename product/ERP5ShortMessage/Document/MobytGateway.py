@@ -88,9 +88,9 @@ class MobytGateway(XMLObject):
       assert len(lines) == 1, "Multi lines response is not managed %s" % lines
       line = lines[0]
       parts = line.split(' ')
-      #Remove \n et \r from value
+      #Format is 'Status Message'
       result['status'] = parts[0]
-      result['status_info'] = parts[1]
+      result['status_info'] = ' '.join(parts[1:])
 
       return result
     
