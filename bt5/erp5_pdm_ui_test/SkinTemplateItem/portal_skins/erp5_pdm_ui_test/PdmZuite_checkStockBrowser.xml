@@ -43,7 +43,7 @@
     <!-- Click on + link -->\n
     <tr>\n
       <td>clickAndWait</td>\n
-      <td tal:content="python: \'link=%s\' % link_title">link=node</td>\n
+      <td tal:content=\'string://button[@value="site/${link_title}.0"]\'>link=node</td>\n
       <td></td>\n
     </tr>\n
 \n
@@ -109,7 +109,7 @@
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
-            <value> <string>utf-8</string> </value>
+            <value> <string>iso-8859-15</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
