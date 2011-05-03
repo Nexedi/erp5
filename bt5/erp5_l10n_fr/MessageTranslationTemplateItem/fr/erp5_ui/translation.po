@@ -1278,6 +1278,9 @@ msgstr "Code établ."
 msgid "Bank Country Code"
 msgstr "Code pays"
 
+msgid "Bank Organisation"
+msgstr "Banque"
+
 msgid "Bank account must be defined for bank type accounts"
 msgstr "Le compte en banque doit être spécifié pour les lignes mouvementant des comptes de type Banque"
 
@@ -3063,6 +3066,9 @@ msgstr "La date n'est pas dans une période comptable ouverte pour la section so
 msgid "Date must be defined"
 msgstr "La date doit être définie"
 
+msgid "Date of Signature"
+msgstr "Date de signature"
+
 msgid "Date transaction takes effect"
 msgstr "La date à laquelle la transaction est effective."
 
@@ -3699,6 +3705,12 @@ msgstr "Recherche"
 
 msgid "Dimension"
 msgstr "Valeur Mesure"
+
+msgid "Direct Debit Mandate"
+msgstr "Mandat bancaire"
+
+msgid "Direct Debit Mandates"
+msgstr "Mandats bancaires"
 
 msgid "Direction"
 msgstr "Direction"
@@ -5443,6 +5455,12 @@ msgstr "Référence interne"
 msgid "International Form"
 msgstr "Mode international"
 
+msgid "Invalid BIC."
+msgstr "BIC invalide."
+
+msgid "Invalid IBAN."
+msgstr "IBAN invalide."
+
 msgid "Invalidate"
 msgstr "Invalider"
 
@@ -5895,6 +5913,9 @@ msgstr "Créer un modèle"
 
 msgid "Manage Business Templates"
 msgstr "Gérer les Business Templates"
+
+msgid "Mandate End Date"
+msgstr "Date de fin du mandat"
 
 msgid "Manual Price"
 msgstr "Prix manuel"
