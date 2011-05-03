@@ -33,8 +33,6 @@ from Products.ERP5Type.Core.Predicate import Predicate
 
 class SolverTypeInformation(Predicate, ERP5TypeInformation):
   """
-    EXPERIMENTAL - DO NOT USE THIS CLASS BESIDES R&D
-
     A Type Information class which (will) implement
     all Solver related methods
   """
