@@ -570,7 +570,7 @@ fieldset.left{\n
 \n
 div.required label{\n
   background-image:url("km_img/required_mark.png");\n
-  background-position:left center;\n
+  background-position:0 0.5em;\n
   background-repeat:no-repeat;\n
   padding-left: 10px;\n
 }\n
