@@ -28,6 +28,7 @@ from slapos.lib.recipe.BaseSlapRecipe import BaseSlapRecipe
 import binascii
 import os
 import pkg_resources
+import pprint
 import hashlib
 import sys
 import zc.buildout
@@ -544,6 +545,35 @@ class Recipe(BaseSlapRecipe):
         )[0]
       self.path_list.append(wrapper)
     return zeo_configuration_dict
+
+  def installTidStorage(self, ip, port, known_tid_storage_identifier_dict,
+      access_url):
+    """Install TidStorage with all required backup tools
+
+      known_tid_storage_identifier_dict is a dictionary of:
+      ((ip, port), storagename): (filestorage path, url for serialize)
+      url for serialize will be merged with access_url by internal tidstorage
+
+      """
+    backup_base_path = self.createBackupDirectory('zodb')
+    # it is time to fill known_tid_storage_identifier_dict with backup
+    # destination
+    raise NotImplementedError
+    for k, v in known_tid_storage_identifier_dict.iteritems():
+      # generate unique name for each backup
+      name = '_'.join(['_'.join([str(q) for q in k[0]]), k[1]])
+      destination = os.path.join(backup_base_path, name)
+      self._createDirectory(destination)
+      known_tid_storage_identifier_dict[k] = (v[0], destination, v[1])
+    self.createConfigurationFile('tidstorage.py', self.substituteTemplate(
+      self.getTemplateFilename('tidstorage.py.in'), dict(
+        known_tid_storage_identifier_dict=pprint.pformat(known_tid_storage_identifier_dict),
+        base_url='s/%%' % access_url,
+        host=ip,
+        port=port,
+        timestamp_file_path=os.path.join(self.log_directory, 'repozo_tidstorage_timestamp.log'),
+      )))
+    raise NotImplementedError
 
   def installZope(self, ip, port, name, zodb_configuration_string,
       with_timerservice=False):
