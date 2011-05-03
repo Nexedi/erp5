@@ -72,7 +72,9 @@ class Recipe(BaseSlapRecipe):
     zodb_root_path = os.path.join(zodb_dir, 'root.fs')
     zope_access = self.installZope(ip=self.getLocalIPv4Address(),
           port=12000 + 1, name='zope_%s' % 1,
-          zodb_root_path=zodb_root_path)
+          zodb_configuration_string=self.substituteTemplate(
+            self.getTemplateFilename('zope-zodb-snippet.conf.in'),
+            dict(zodb_root_path=zodb_root_path)), with_timerservice=True)
     apache_conf = dict(
         apache_login=self.installLoginApache(ip=self.getGlobalIPv6Address(),
           port=13000, backend=zope_access, key=ca_conf['login_key'],
@@ -543,16 +545,13 @@ class Recipe(BaseSlapRecipe):
       self.path_list.append(wrapper)
     return zeo_configuration_dict
 
-  def installZope(self, ip, port, name, zodb_root_path=None,
-      with_timerservice=False, zodb_configuration_string=None):
+  def installZope(self, ip, port, name, zodb_configuration_string,
+      with_timerservice=False):
     # Create zope configuration file
     zope_config = dict(
         products=self.options['products'],
     )
-    if zodb_configuration_string is None:
-      zope_config.update(zodb_root_path=zodb_root_path)
-    else:
-      zope_config.update(zodb_configuration_string=zodb_configuration_string)
+    zope_config['zodb_configuration_string'] = zodb_configuration_string
     zope_config['instance'] = self.erp5_directory
     zope_config['event_log'] = os.path.join(self.log_directory,
         '%s-event.log' % name)
@@ -579,13 +578,7 @@ class Recipe(BaseSlapRecipe):
     zope_config['path'] = ':'.join([self.bin_directory] +
         os.environ['PATH'].split(':'))
 
-    if zodb_configuration_string is None:
-      zope_wrapper_template_location = self.getTemplateFilename(
-          'zope.conf.simple.in')
-      with_timerservice = True
-    else:
-      zope_wrapper_template_location = self.getTemplateFilename('zope.conf.in')
-
+    zope_wrapper_template_location = self.getTemplateFilename('zope.conf.in')
     zope_conf_content = self.substituteTemplate(
         zope_wrapper_template_location, zope_config)
     if with_timerservice:

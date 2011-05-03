@@ -1,0 +1,6 @@
+<zodb_db root>
+    <filestorage>
+      path %(zodb_root_path)s
+    </filestorage>
+    mount-point /
+</zodb_db>
