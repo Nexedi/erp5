@@ -2,7 +2,10 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
     </pickle>
     <pickle>
       <dictionary>
@@ -170,7 +173,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"Modified version for ERP5 to append the ignore_layout parameter etc. in the URL."\n
+            <value> <string>"Modified version for ERP5 to append the default action (/view) in the URL."\n
 \n
 from Products.CMFCore.utils import getToolByName\n
 ptool = getToolByName(script, \'portal_properties\')\n
@@ -181,7 +184,7 @@ param = int(context.REQUEST.get(\'ignore_layout\', 0)) and \'?ignore_layout:int=
 if include_root:\n
     result.append( { \'id\'      : \'root\'\n
                    , \'title\'   : ptool.title()\n
-                   , \'url\'     : \'%s%s\' % (portal_url, param)\n
+                   , \'url\'     : \'%s/view%s\' % (portal_url, param)\n
                    }\n
                  )\n
 \n
@@ -190,29 +193,106 @@ portal = utool.getPortalObject()\n
 \n
 obj = portal\n
 now = []\n
+module = True\n
 for name in relative:\n
     obj = obj.restrictedTraverse(name)\n
     now.append(name)\n
-    try:\n
-      title = obj.getCompactTranslatedTitle()\n
-    except AttributeError:\n
-      # Some objects do not have getCompactTranslatedTitle.\n
-      # UI related codes must run at any cases even if context is non-erp5 objects.\n
-      # Otherwise some error messages can be overridden by getCompactTranslatedTitle attribute error.\n
+    if module:\n
+      try:\n
+        title = obj.getTranslatedTitleOrId()\n
+      except AttributeError:\n
+        title = obj.Title()\n
+    else:\n
       title = obj.Title()\n
     if not name == \'talkback\':\n
         result.append( { \'id\'      : name\n
                        , \'title\'   : title\n
-                       , \'url\'     : \'%s/%s%s\' % (portal_url, \'/\'.join(now), param)\n
+                       , \'url\'     : \'%s/%s/view%s\' % (portal_url, \'/\'.join(now), param)\n
                        }\n
                     )\n
+    module = False\n
 \n
 return result\n
 </string> </value>
         </item>
         <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string>include_root=1</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>include_root</string>
+                            <string>Products.CMFCore.utils</string>
+                            <string>getToolByName</string>
+                            <string>script</string>
+                            <string>ptool</string>
+                            <string>utool</string>
+                            <string>portal_url</string>
+                            <string>result</string>
+                            <string>int</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>param</string>
+                            <string>relative</string>
+                            <string>portal</string>
+                            <string>obj</string>
+                            <string>now</string>
+                            <string>True</string>
+                            <string>module</string>
+                            <string>_getiter_</string>
+                            <string>name</string>
+                            <string>title</string>
+                            <string>AttributeError</string>
+                            <string>False</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>1</int>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -221,6 +301,12 @@ return result\n
         <item>
             <key> <string>title</string> </key>
             <value> <string>Return breadcrumbs</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
       </dictionary>
     </pickle>
