@@ -567,11 +567,13 @@ class Recipe(BaseSlapRecipe):
       known_tid_storage_identifier_dict[k] = (v[0], destination, v[1])
     self.createConfigurationFile('tidstorage.py', self.substituteTemplate(
       self.getTemplateFilename('tidstorage.py.in'), dict(
-        known_tid_storage_identifier_dict=pprint.pformat(known_tid_storage_identifier_dict),
+        known_tid_storage_identifier_dict=pprint.pformat(
+          known_tid_storage_identifier_dict),
         base_url='s/%%' % access_url,
         host=ip,
         port=port,
-        timestamp_file_path=os.path.join(self.log_directory, 'repozo_tidstorage_timestamp.log'),
+        timestamp_file_path=os.path.join(self.log_directory,
+          'repozo_tidstorage_timestamp.log'),
       )))
     raise NotImplementedError
 
