@@ -204,6 +204,7 @@ class MobytGateway(XMLObject):
         LOG("MobytGateway", INFO, params)
         result =  {'status': "Test"}
       else:
+        LOG('MobytGateway, sending to with params', 0, (base_url, params))
         params = urllib.urlencode(params)
         page = urllib.urlopen(base_url, params)
         result = self._fetchSendResponseAsDict(page)
