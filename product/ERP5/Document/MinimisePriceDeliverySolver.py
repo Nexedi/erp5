@@ -77,8 +77,11 @@ class MinimisePriceDeliverySolver(FIFODeliverySolver):
         else:
           result.append((movement, remaining_quantity))
           movement_quantity = quantity - remaining_quantity
+          delivery_ratio = 1.
+          if new_quantity:
+            delivery_ratio = movement_quantity / new_quantity
           movement.edit(quantity=movement_quantity,
-                        delivery_ratio=movement_quantity / new_quantity,
+                        delivery_ratio=delivery_ratio,
                         activate_kw=activate_kw)
           remaining_quantity = 0
     # Return movement, split_quantity tuples
