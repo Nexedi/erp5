@@ -1748,17 +1748,11 @@ class CategoryTool( UniqueObject, Folder, Base ):
                                                      path):
       """Specific Handling to remove duplicated base_categories in path
       values like in following example: 'region/region/europe/west'.
-
-      If duplicated id is a real subobject of base_category,
-      then the path its keept as it is
       """
       splitted_path = path.split('/', 2)
       if len(splitted_path) >= 2 and base_category_id == splitted_path[1]:
-        # It needs to be checked.
-        base_category_value = self._getOb(base_category_id)
-        if base_category_value._getOb(splitted_path[1], None) is None:
-          # Duplicate found, strip len(base_category_id + '/') in path
-          path = path[len(base_category_id)+1:]
+        # Duplicate found, strip len(base_category_id + '/') in path
+        path = path[len(base_category_id)+1:]
       return path
 
 

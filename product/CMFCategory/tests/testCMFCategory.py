@@ -1024,8 +1024,8 @@ class TestCMFCategory(ERP5TypeTestCase):
     are cleaned up by Getters to avoid accessing base_category through
     implicit Acquisition.
 
-    If region is a sub Category of Base Category region,
-    Relative Url must not be stripped
+    Even if region is a sub Category of Base Category region,
+    Relative Url must be stripped.
     """
     portal_categories = self.getCategoriesTool()
     organisation = self.getOrganisationModule().newContent(
@@ -1049,13 +1049,13 @@ class TestCMFCategory(ERP5TypeTestCase):
     new_region = new_region.newContent(portal_type='Category', id='europe')
     new_region = new_region.newContent(portal_type='Category', id='west')
 
-    self.assertEquals(organisation.getRegion(), 'region/europe/west')
-    self.assertEquals(organisation.getRegionList(), ['region/europe/west'])
+    self.assertEquals(organisation.getRegion(), 'europe/west')
+    self.assertEquals(organisation.getRegionList(), ['europe/west'])
     self.assertEquals(organisation.getRegionValue().getPortalType(), 'Category')
-    self.assertNotEquals(organisation.getRegionValue(), old_west_region)
+    self.assertEquals(organisation.getRegionValue(), old_west_region)
 
-    self.assertEquals(person.getRegion(), 'region/europe/west')
-    self.assertEquals(person.getRegionList(), ['region/europe/west'])
+    self.assertEquals(person.getRegion(), 'europe/west')
+    self.assertEquals(person.getRegionList(), ['europe/west'])
 
     # Let's continue with resource because its ID conflict with 
     # "traversing namespaces" names
