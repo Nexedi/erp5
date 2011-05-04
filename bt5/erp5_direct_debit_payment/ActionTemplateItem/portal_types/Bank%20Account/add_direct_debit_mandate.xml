@@ -16,13 +16,13 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>action_type/object_jump</string>
+                <string>action_type/object_action</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>category</string> </key>
-            <value> <string>object_jump</string> </value>
+            <value> <string>object_action</string> </value>
         </item>
         <item>
             <key> <string>condition</string> </key>
@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>jump_direct_debit_mandate_list</string> </value>
+            <value> <string>add_direct_debit_mandate</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -62,7 +62,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Direct Debit Mandates</string> </value>
+            <value> <string>Create Direct Debit Mandate</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -79,11 +79,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-string:${object_url}/Base_jumpToRelatedObject?base_category=source_payment&portal_type=Direct+Debit+Mandate
-
-]]></string> </value>
+            <value> <string>string:${object_url}/BankAccount_viewCreateDirectDebitMandateDialog</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -96,7 +92,7 @@ string:${object_url}/Base_jumpToRelatedObject?base_category=source_payment&porta
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python:portal.Base_checkPermission(\'direct_debit_mandate_module\', \'View\')</string> </value>
+            <value> <string>python:portal.Base_checkPermission(\'direct_debit_mandate_module\', \'Add portal content\')</string> </value>
         </item>
       </dictionary>
     </pickle>

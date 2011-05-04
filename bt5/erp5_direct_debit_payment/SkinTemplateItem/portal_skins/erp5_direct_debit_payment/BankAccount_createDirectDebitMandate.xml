@@ -50,24 +50,26 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Initialize an unique reference on direct debit mandate, and set an initial version.\n
-"""\n
-reference = context.getPortalObject().portal_ids.generateNewId(\n
-  id_group=\'direct_debit_mandate.reference\',\n
-  id_generator=\'uid\',\n
-  default=1)\n
+            <value> <string>from Products.ERP5Type.Message import translateString\n
 \n
-context.setReference(\'%05d\' % reference)\n
-context.setVersion(\'001\')\n
+direct_debit_mandate = context.getPortalObject().direct_debit_mandate_module.newContent(\n
+  portal_type=\'Direct Debit Mandate\',\n
+  source_value=context.getParentValue(),\n
+  source_payment_value=context,\n
+  destination=destination,\n
+  start_date=start_date)\n
+\n
+return direct_debit_mandate.Base_redirect(\'view\',\n
+    keep_items=dict(portal_status_message=translateString(\'Direct debit mandate created.\')))\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>destination, start_date</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DirectDebitMandate_init</string> </value>
+            <value> <string>BankAccount_createDirectDebitMandate</string> </value>
         </item>
       </dictionary>
     </pickle>
