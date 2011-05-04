@@ -243,12 +243,13 @@ class RuleMixin(Predicate):
     """
     result_list = []
     for divergence_tester in self._getDivergenceTesterList(
-      exclude_quantity=False):
-      result = divergence_tester.explain(movement)
-      if isinstance(result, (list, tuple)): # for compatibility
-        result_list.extend(result)
-      elif result is not None:
-        result_list.append(result)
+                                          exclude_quantity=False):
+      if divergence_tester.test(movement):
+        result = divergence_tester.explain(movement)
+        if isinstance(result, (list, tuple)): # for compatibility
+          result_list.extend(result)
+        elif result is not None:
+          result_list.append(result)
     return result_list
 
   # Placeholder for methods to override
