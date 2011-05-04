@@ -574,7 +574,7 @@ class Recipe(BaseSlapRecipe):
           dict(
         known_tid_storage_identifier_dict=pprint.pformat(
           known_tid_storage_identifier_dict),
-        base_url='%s/%%' % access_url,
+        base_url='%s/%%s/serialize' % access_url,
         host=ip,
         port=port,
         timestamp_file_path=timestamp_file_path,
