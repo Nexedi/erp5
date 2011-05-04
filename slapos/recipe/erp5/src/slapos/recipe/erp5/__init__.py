@@ -604,6 +604,7 @@ class Recipe(BaseSlapRecipe):
     tidstorage_repozo_cron = os.path.join(self.cron_d, 'tidstorage_repozo')
     open(tidstorage_repozo_cron, 'w').write('0 0 * * * %s' % tidstorage_repozo)
     self.path_list.append(tidstorage_repozo_cron)
+    return dict(host=ip, port=port)
 
   def installZope(self, ip, port, name, zodb_configuration_string,
       with_timerservice=False):
