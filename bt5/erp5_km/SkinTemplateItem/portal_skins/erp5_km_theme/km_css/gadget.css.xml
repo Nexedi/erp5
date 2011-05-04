@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts00797726.15</string> </value>
+            <value> <string>ts04498752.63</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/css</string> </value>
+            <value> <string>text/css; charset=utf-8</string> </value>
         </item>
         <item>
             <key> <string>data</string> </key>
@@ -31,8 +31,6 @@
 /*     - missing docstring                                      */\n
 /*     - add dynamic properties                                 */\n
 /****************************************************************/\n
-\n
-<tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\');"/>\n
 \n
 /* CSS Web layout (one column) for Gadgets */\n
 \n
@@ -707,7 +705,7 @@ div.block fieldset.gadget-profile div.field{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>12075</int> </value>
+            <value> <int>11966</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
