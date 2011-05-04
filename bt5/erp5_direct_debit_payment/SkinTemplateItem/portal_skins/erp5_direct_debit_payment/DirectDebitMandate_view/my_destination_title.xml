@@ -118,12 +118,12 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Organisation</string>
-                          <string>Organisation</string>
+                          <string>Person</string>
+                          <string>Person</string>
                         </tuple>
                         <tuple>
-                          <string>Person</string>
-                          <string>Person</string>
+                          <string>Organisation</string>
+                          <string>Organisation</string>
                         </tuple>
                       </list>
                     </value>
@@ -133,12 +133,12 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>OrganisationModule_viewOrganisationList/listbox</string>
-                          <string>Organisations</string>
-                        </tuple>
-                        <tuple>
                           <string>PersonModule_viewPersonList/listbox</string>
                           <string>Persons</string>
+                        </tuple>
+                        <tuple>
+                          <string>OrganisationModule_viewOrganisationList/listbox</string>
+                          <string>Organisations</string>
                         </tuple>
                         <tuple>
                           <string>Base_viewRelatedObjectListBase/listbox</string>
@@ -153,7 +153,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Creditor</string> </value>
+                    <value> <string>Debtor</string> </value>
                 </item>
               </dictionary>
             </value>

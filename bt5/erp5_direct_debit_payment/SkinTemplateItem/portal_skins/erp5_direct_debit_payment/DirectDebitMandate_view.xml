@@ -98,9 +98,9 @@
                         <string>my_title</string>
                         <string>my_reference</string>
                         <string>my_version</string>
-                        <string>my_destination_title</string>
-                        <string>my_source_payment_title</string>
                         <string>my_source_title</string>
+                        <string>my_source_payment_title</string>
+                        <string>my_destination_title</string>
                       </list>
                     </value>
                 </item>

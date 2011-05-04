@@ -96,11 +96,11 @@
                         </tuple>
                         <tuple>
                           <string>source_title</string>
-                          <string>Debtor</string>
+                          <string>Creditor</string>
                         </tuple>
                         <tuple>
                           <string>destination_title</string>
-                          <string>Creditor</string>
+                          <string>Debtor</string>
                         </tuple>
                         <tuple>
                           <string>translated_validation_state_title</string>
@@ -163,11 +163,11 @@
                         </tuple>
                         <tuple>
                           <string>source_title</string>
-                          <string>Debtor</string>
+                          <string>Creditor</string>
                         </tuple>
                         <tuple>
                           <string>destination_title</string>
-                          <string>Creditor</string>
+                          <string>Debtor</string>
                         </tuple>
                         <tuple>
                           <string>translated_validation_state_title</string>
