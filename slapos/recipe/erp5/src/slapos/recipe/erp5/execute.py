@@ -5,11 +5,9 @@ import subprocess
 import time
 
 
-def execute(args=None):
+def execute(args):
   """Portable execution with process replacement"""
   # Note: Candidate for slapos.lib.recipe
-  if args is None:
-    args = []
   os.execv(args[0], args + sys.argv[1:])
 
 child_pg = None
