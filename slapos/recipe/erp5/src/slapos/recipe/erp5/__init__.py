@@ -607,7 +607,7 @@ class Recipe(BaseSlapRecipe):
     return dict(host=ip, port=port)
 
   def installZope(self, ip, port, name, zodb_configuration_string,
-      with_timerservice=False):
+      with_timerservice=False, tidstorage_config=None):
     # Create zope configuration file
     zope_config = dict(
         products=self.options['products'],
@@ -645,6 +645,11 @@ class Recipe(BaseSlapRecipe):
     if with_timerservice:
       zope_conf_content += self.substituteTemplate(
           self.getTemplateFilename('zope.conf.timerservice.in'), zope_config)
+    if tidstorage_config is not None:
+      zope_conf_content += self.substituteTemplate(
+          self.getTemplateFilename('zope-tidstorage-snippet.conf.in'),
+          tidstorage_config)
+
     zope_conf_path = self.createConfigurationFile("%s.conf" % name,
         zope_conf_content)
     self.path_list.append(zope_conf_path)
