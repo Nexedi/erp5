@@ -2691,6 +2691,9 @@ msgstr "Champ d'exploration"
 msgid "Create Default Web Page"
 msgstr "Créer une page web par défaut"
 
+msgid "Create Direct Debit Mandate"
+msgstr "Créer un mandat bancaire"
+
 msgid "Create Document"
 msgstr "Créer un document"
 
@@ -3711,6 +3714,9 @@ msgstr "Mandat bancaire"
 
 msgid "Direct Debit Mandates"
 msgstr "Mandats bancaires"
+
+msgid "Direct debit mandate created."
+msgstr "Mandat bancaire crée."
 
 msgid "Direction"
 msgstr "Direction"
