@@ -41,11 +41,12 @@ class MovementCollectionDiff(object):
   # Declarative interfaces
   zope.interface.implements(interfaces.IMovementCollectionDiff,)
 
-  def __init__(self):
+  def __init__(self, property_id_set=None):
     self._deletable_movement_list = []
     self._new_movement_list = []
     self._updatable_movement_list = []
     self._property_dict_dict = {}
+    self._property_id_set = property_id_set
 
   def getDeletableMovementList(self):
     """
@@ -88,11 +89,13 @@ class MovementCollectionDiff(object):
     """
     property_dict = self._property_dict_dict.get(movement)
     if property_dict is None:
-      property_dict = _getPropertyList(movement)
-      property_dict.update(_getCategoryList(movement, acquire=False))
-      return property_dict
-    else:
-      return property_dict
+      if self._property_id_set is not None:
+        property_dict = _getPropertyDict(movement,
+              property_id_set=self._property_id_set)
+      else:
+        property_dict = _getPropertyList(movement)
+        property_dict.update(_getCategoryList(movement, acquire=False))
+    return property_dict
 
   def addUpdatableMovement(self, movement, property_dict):
     """
@@ -111,6 +114,13 @@ def _getPropertyAndCategoryList(document):
   property_dict = {}
   property_dict.update(_getPropertyList(document))
   property_dict.update(_getCategoryList(document))
+  return property_dict
+
+def _getPropertyDict(document, property_id_set=None):
+  assert property_id_set is not None
+  property_dict = {}
+  for property_id in property_id_set:
+    property_dict[property_id] = document.getProperty(property_id)
   return property_dict
 
 def _getPropertyList(document, acquire=True):

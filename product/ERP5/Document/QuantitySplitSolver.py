@@ -34,7 +34,7 @@ from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.mixin.solver import SolverMixin
 from Products.ERP5.mixin.configurable import ConfigurableMixin
-from Products.ERP5.MovementCollectionDiff import _getPropertyAndCategoryList
+from Products.ERP5.MovementCollectionDiff import _getPropertyDict
 
 class QuantitySplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
   """Target solver that split the prevision based on quantity.
@@ -91,7 +91,9 @@ class QuantitySplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
           split_index += 1
           new_id = "%s_split_%s" % (simulation_movement.getId(), split_index)
         # Copy at same level
-        kw = _getPropertyAndCategoryList(simulation_movement)
+        rule = applied_rule.getSpecialiseValue()
+        kw = _getPropertyDict(simulation_movement,
+                  property_id_set=rule.getUpdatablePropertyIdSet())
         kw.update({'portal_type':simulation_movement.getPortalType(),
                    'id':new_id,
                    'delivery':None,
@@ -111,7 +113,6 @@ class QuantitySplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
         # XXX we need to call expand on both simulation_movement and new_movement here?
         # simulation_movement.expand(activate_kw=activate_kw)
         # new_movement.expand(activate_kw=activate_kw)
-
     # Finish solving
     if self.getPortalObject().portal_workflow.isTransitionPossible(
       self, 'succeed'):

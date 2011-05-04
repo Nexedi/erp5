@@ -31,6 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, interfaces
+from Products.ERP5Type.Cache import caching_instance_method
 from Products.ERP5Type.Core.Predicate import Predicate
 from Products.ERP5.MovementCollectionDiff import _getPropertyAndCategoryList
 
@@ -192,6 +193,15 @@ class RuleMixin(Predicate):
       return False
     return super(RuleMixin, self).test(*args, **kw)
 
+  @caching_instance_method(id="Rule.getUpdatablePropertyIdSet",
+    cache_factory='erp5_content_long',
+    cache_id_generator=lambda method_id, document: document.getUid())
+  def getUpdatablePropertyIdSet(self):
+    property_id_set = set()
+    [property_id_set.update(x.getTestedPropertyList()) for x in \
+                           self._getUpdatingTesterList()]
+    return property_id_set
+
   def expand(self, applied_rule, **kw):
     """
     Expand this applied rule to create new documents inside the
@@ -205,7 +215,9 @@ class RuleMixin(Predicate):
     # Update movements
     #  NOTE-JPS: it is OK to make rounding a standard parameter of rules
     #            although rounding in simulation is not recommended at all
-    self.updateMovementCollection(applied_rule, movement_generator=self._getMovementGenerator(applied_rule))
+    self.updateMovementCollection(applied_rule,
+                    movement_generator=self._getMovementGenerator(applied_rule),
+                    property_id_set=self.getUpdatablePropertyIdSet())
     # And forward expand
     for movement in applied_rule.getMovementList():
       movement.expand(**kw)
@@ -298,7 +310,7 @@ class RuleMixin(Predicate):
     return filter(lambda x:x.isMatchingProvider(), self.objectValues(
       portal_type=self.getPortalDivergenceTesterTypeList()))
 
-  def _getUpdatingTesterList(self, exclude_quantity=True):
+  def _getUpdatingTesterList(self, exclude_quantity=False):
     """
     Return the applicable divergence testers which must be used to
     update movements. (ie. not all divergence testers of the Rule)
@@ -384,7 +396,7 @@ class RuleMixin(Predicate):
     #  ie. what comes in must either go out or has been lost
     divergence_tester_list = self._getDivergenceTesterList()
     profit_tester_list = divergence_tester_list
-    updating_tester_list = self._getUpdatingTesterList()
+    updating_tester_list = self._getUpdatingTesterList(exclude_quantity=True)
     profit_updating_tester_list = updating_tester_list
     quantity_tester_list = self._getQuantityTesterList()
     compensated_quantity = 0.0

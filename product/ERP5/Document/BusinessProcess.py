@@ -701,9 +701,17 @@ class BusinessProcess(Path, XMLObject):
       movement._edit(**kw)
       business_link = self.getBusinessLinkValueList(trade_phase=trade_phase,
                                                     context=movement)
-      movement._setCausalityList([trade_model_path.getRelativeUrl()]
-        + [x.getRelativeUrl() for x in business_link]
-        + movement.getCausalityList())
+      # we have to exclude trade model path and business link in causality list
+      # because original amount might come from another generatedAmountList
+      # calculation
+      causality_list = [trade_model_path.getRelativeUrl()] \
+          + [x.getRelativeUrl() for x in business_link]
+      excluded_portal_type_set = set(self.getPortalTradeModelPathTypeList()
+                                     + self.getPortalBusinessLinkTypeList())
+      for causality_value in movement.getCausalityValueList():
+        if not(causality_value.getPortalType() in excluded_portal_type_set):
+          causality_list.append(causality_value.getRelativeUrl())
+      movement._setCausalityList(causality_list)
       result.append(movement)
 
     if not explanation.getSpecialiseValue().getSameTotalQuantity():
@@ -756,7 +764,7 @@ class BusinessProcess(Path, XMLObject):
       property_dict = _getPropertyAndCategoryList(amount)
     else:
       property_dict = {}
-      for tester in rule._getUpdatingTesterList(exclude_quantity=False):
+      for tester in rule._getUpdatingTesterList():
         property_dict.update(tester.getUpdatablePropertyDict(
           amount, None))
 

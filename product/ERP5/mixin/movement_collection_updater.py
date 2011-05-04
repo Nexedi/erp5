@@ -51,7 +51,8 @@ class MovementCollectionUpdaterMixin:
 
   # Implementation of IMovementCollectionUpdater
   def getMovementCollectionDiff(self, context, rounding=False,
-                                movement_generator=None):
+                                movement_generator=None,
+                                property_id_set=None):
     """
     Return a IMovementCollectionDiff by comparing movements
     the list of movements of context and the list of movements
@@ -63,6 +64,8 @@ class MovementCollectionUpdaterMixin:
     movement_generator -- an optional IMovementGenerator
                           (if not specified, a context implicit
                           IMovementGenerator will be used)
+
+    property_id_set -- a set listing properties we are looking in movements
     """
     # We suppose here that we have an IMovementCollection in hand
     decision_movement_list = context.getMovementList()
@@ -138,7 +141,8 @@ class MovementCollectionUpdaterMixin:
         prevision_to_decision_map.append((prevision_movement, map_list))
 
     # Third, time to create the diff
-    movement_collection_diff = MovementCollectionDiff()
+    movement_collection_diff = MovementCollectionDiff(
+                                   property_id_set=property_id_set)
     for (prevision_movement, decision_movement_list) in prevision_to_decision_map:
       self._extendMovementCollectionDiff(movement_collection_diff, prevision_movement,
                                          decision_movement_list)
@@ -146,7 +150,8 @@ class MovementCollectionUpdaterMixin:
     return movement_collection_diff
 
   def updateMovementCollection(self, context, rounding=False,
-                               movement_generator=None):
+                               movement_generator=None,
+                               property_id_set=None):
     """
     Invoke getMovementCollectionDiff and update context with
     the resulting IMovementCollectionDiff.
@@ -157,9 +162,12 @@ class MovementCollectionUpdaterMixin:
     movement_generator -- an optional IMovementGenerator
                           (if not specified, a context implicit
                           IMovementGenerator will be used)
+
+    property_id_set -- a set listing properties we are looking in movements
     """
     movement_diff = self.getMovementCollectionDiff(context,
-                 rounding=rounding, movement_generator=movement_generator)
+                 rounding=rounding, movement_generator=movement_generator,
+                 property_id_set=property_id_set)
 
     # Apply Diff
     for movement in movement_diff.getDeletableMovementList():
