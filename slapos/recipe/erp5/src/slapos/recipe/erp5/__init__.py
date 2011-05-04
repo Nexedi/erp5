@@ -513,7 +513,7 @@ class Recipe(BaseSlapRecipe):
       self._createDirectory(server_dir)
       zeo_event_log = os.path.join(self.log_directory, 'zeo-%s.log'% zeo_number)
       zeo_pid = os.path.join(self.run_directory, 'zeo-%s.pid'% zeo_number)
-      self.registerLogRotation('zeo', [zeo_event_log],
+      self.registerLogRotation('zeo-%s' % zeo_number, [zeo_event_log],
           self.killpidfromfile + ' ' + zeo_pid + ' SIGUSR2')
       config = dict(
         zeo_ip=ip,
@@ -558,23 +558,37 @@ class Recipe(BaseSlapRecipe):
     backup_base_path = self.createBackupDirectory('zodb')
     # it is time to fill known_tid_storage_identifier_dict with backup
     # destination
-    raise NotImplementedError
     for k, v in known_tid_storage_identifier_dict.iteritems():
       # generate unique name for each backup
       name = '_'.join(['_'.join([str(q) for q in k[0]]), k[1]])
       destination = os.path.join(backup_base_path, name)
       self._createDirectory(destination)
       known_tid_storage_identifier_dict[k] = (v[0], destination, v[1])
-    self.createConfigurationFile('tidstorage.py', self.substituteTemplate(
-      self.getTemplateFilename('tidstorage.py.in'), dict(
+    logfile = os.path.join(self.log_directory, 'tidstorage.log')
+    pidfile = os.path.join(self.run_directory, 'tidstorage.pid')
+    timestamp_file_path = os.path.join(self.log_directory,
+          'repozo_tidstorage_timestamp.log')
+    tidstorage_config = self.createConfigurationFile('tidstorage.py',
+        self.substituteTemplate(self.getTemplateFilename('tidstorage.py.in'),
+          dict(
         known_tid_storage_identifier_dict=pprint.pformat(
           known_tid_storage_identifier_dict),
-        base_url='s/%%' % access_url,
+        base_url='%s/%%' % access_url,
         host=ip,
         port=port,
-        timestamp_file_path=os.path.join(self.log_directory,
-          'repozo_tidstorage_timestamp.log'),
+        timestamp_file_path=timestamp_file_path,
+        logfile=logfile,
+        pidfile=pidfile
       )))
+    tidstorage_server = zc.buildout.easy_install.scripts([('tidstoraged',
+      __name__ + '.execute', 'execute')], self.ws, sys.executable,
+      self.wrapper_directory, arguments=[
+        self.options['tidstoraged_binary'], '--nofork', '--config',
+        tidstorage_config])[0]
+    self.registerLogRotation('tidsorage', [logfile, timestamp_file_path],
+          self.killpidfromfile + ' ' + pidfile + ' SIGHUP')
+    self.path_list.append(tidstorage_config)
+    self.path_list.append(tidstorage_server)
     raise NotImplementedError
 
   def installZope(self, ip, port, name, zodb_configuration_string,
