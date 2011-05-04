@@ -226,6 +226,8 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     """Lookup business path and, if any, return True whenever
     simulation_state is in one of the frozen states defined on business path
     """
+    if self._baseGetFrozen():
+      return True
     business_link =  self.getCausalityValue(
                          portal_type=self.getPortalBusinessLinkTypeList())
     if business_link is None:
@@ -235,7 +237,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
         return True
       if self._baseIsFrozen() == 0:
         self._baseSetFrozen(None)
-      return self._baseGetFrozen() or False
+      return False
     return self.getSimulationState() in business_link.getFrozenStateList()
 
   security.declareProtected( Permissions.AccessContentsInformation,
